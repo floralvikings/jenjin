@@ -130,10 +130,11 @@ public class Client extends Thread
 	}
 
 	/**
-	 * Add a task to the repeated queue of this client.
+	 * Add a task to the repeated queue of this client.  Should be called to extend client functionality.
 	 *
 	 * @param r The task to be performed.
 	 */
+	@SuppressWarnings("unused")
 	protected void addRepeatedTask(Runnable r)
 	{
 		synchronized (repeatedTasks)

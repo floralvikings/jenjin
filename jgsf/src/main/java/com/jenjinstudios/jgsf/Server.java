@@ -161,6 +161,7 @@ public abstract class Server extends Thread
 	 *
 	 * @param r The {@code Runnable} containing the task to be repeated.
 	 */
+	@SuppressWarnings("unused")
 	public void addRepeatedTask(Runnable r)
 	{
 		synchronized (repeatedTasks)
