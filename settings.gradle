@@ -1,0 +1,5 @@
+rootProject.name = 'Jenjin'
+include ':jgsf', ':jgcf'
+
+project(':jgsf').projectDir = "$rootDir/jgsf" as File
+project(':jgcf').projectDir = "$rootDir/jgcf" as File

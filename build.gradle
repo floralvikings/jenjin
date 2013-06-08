@@ -1,0 +1,93 @@
+allprojects {
+
+    apply plugin: 'maven'
+    apply plugin: 'idea'
+
+
+    group = 'com.jenjinstudios'
+    version = '1.0'
+
+}
+
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'idea'
+    sourceCompatibility = 7
+    targetCompatibility = 7
+
+    repositories {
+        mavenLocal()
+
+        mavenRepo url: "http://repo.maven.apache.org/maven2"
+    }
+
+    dependencies {
+        testCompile 'junit:junit:4.11'
+    }
+
+    test {
+        workingDir = project.rootDir
+    }
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '1.4'
+}
+
+idea {
+    project {
+        languageLevel = 'JDK_1_7'
+    }
+}
+
+clean.doFirst {
+    cleanLibs()
+}
+
+
+void cleanLibs() {
+    File libDir = new File("lib/")
+    deleteRecursively(libDir)
+}
+
+void deleteRecursively(File file) {
+    //list all the directory contents
+    String[] fileList = file.list()
+
+    for (String temp : fileList) {
+        //construct the file structure
+        File fileDelete = new File(file, temp)
+
+        //recursive delete
+        delete(fileDelete)
+    }
+
+    //check the directory again, if empty then delete it
+    if (file.list() == null || file.list().length == 0) {
+        println "Deleting: " + file
+        file.delete();
+    }
+}
+
+void downloadLibFile(String address) {
+    String libDir = "lib/"
+    downloadFile(address, libDir)
+}
+
+void downloadFile(String address, String dest) {
+    String fileName = address.tokenize("/").getAt(-1)
+    String downloadLoc = dest + fileName
+    File dFile = new File(downloadLoc)
+
+    if (dFile.exists()) {
+        println fileName + " already exists: skipping..."
+        return
+    }
+    println "Downloading: " + fileName
+    dFile.getParentFile().mkdirs()
+    dFile.createNewFile()
+    def file = new FileOutputStream(dFile)
+    def out = new BufferedOutputStream(file)
+    out << new URL(address).openStream()
+    out.close()
+}
