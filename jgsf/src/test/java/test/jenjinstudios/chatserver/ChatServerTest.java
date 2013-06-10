@@ -19,7 +19,7 @@ import static org.junit.Assert.assertTrue;
  */
 public class ChatServerTest
 {
-	/** The SQLHanlder to be used for testing. */
+	/** The SQLHandler to be used for testing. */
 	private static SQLHandler sqlHandler;
 	/** The ChatServer to be used for testing. */
 	private static ChatServer server;
