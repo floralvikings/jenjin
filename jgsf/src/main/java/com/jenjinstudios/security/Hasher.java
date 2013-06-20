@@ -11,6 +11,10 @@ import java.security.NoSuchAlgorithmException;
  */
 public class Hasher
 {
+	public static final long BIT_MASK = 0xffffffffL;
+	public static final long FNV_BASIS = 0x811c9dc5L;
+	public static final long FNV_PRIME = (1 << 24) + 0x193;
+
 	/**
 	 * Return a SHA1 hash of the given string.
 	 *
@@ -40,5 +44,35 @@ public class Hasher
 		{
 			return null;
 		}
+	}
+
+	/**
+	 * Get the FNV-1a_32 Hash of a given array of bytes.
+	 *
+	 * @param bytes The bytes which will be hashed.
+	 * @return The hashed value.
+	 */
+	public static long getFNV1aHash(byte[] bytes)
+	{
+		long hash = FNV_BASIS;
+		for (byte aByte : bytes)
+		{
+			hash ^= 0xFF & aByte;
+			hash *= FNV_PRIME;
+			hash &= BIT_MASK;
+		}
+
+		return (hash == 0) ? Integer.MAX_VALUE : hash;
+	}
+
+	/**
+	 * Get a String representation of a FNV-1a_32 hash of a given String.
+	 *
+	 * @param input The string to hash.
+	 * @return The String representation of the hash.
+	 */
+	public static String getFNV1aString(String input)
+	{
+		return Long.toHexString(getFNV1aHash(input.getBytes())).toUpperCase();
 	}
 }
