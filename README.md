@@ -30,15 +30,13 @@ This database must contain a table called "users" laid out in the following way:
 **users**
 
 
-| username      | password                                 | loggedin   |
-| ------------- | -----------------------------------------| -----------|
-| TestAccount01 | 82f8809f42d911d1bd5199021d69d15ea91d1fad | 0          |
-| TestAccount02 | 82f8809f42d911d1bd5199021d69d15ea91d1fad | 0          |
+| username      | password                                                          | salt                                             | loggedin   |
+| ------------- | ------------------------------------------------------------------| -------------------------------------------------|------------|
+| TestAccount01 | e240ead2b4980bdfedc8cd5df5a2c11c881a4a5deb5aaac338ccb1377225396a  | 3bec05e23c362e98a6cc59562fb942fdd7ae683f0f263eee | 0          |
+| TestAccount02 | a6e02642ec5b0ef52dfbb7b473150cc5116936a5b705a501abfc7c3e6dc5d809  | 777993500bd89be2669d9956a93d1d6e3cbe7889598a673f | 0          |
 
 Any tests that utilize the login functionality will fail without this table.
 
-The database uses a SHA1 hash to secure passwords; this is a known security issue
-and a fix is on the way.
 
 ##Dependencies
 
