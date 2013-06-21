@@ -31,9 +31,9 @@ This database must contain a table called "users" laid out in the following way:
 
 
 | username      | password                                                          | salt                                             | loggedin   |
-| ------------- | ------------------------------------------------------------------| -------------------------------------------------|------------|
-| TestAccount01 | 910aca6b0695823b46f3f1f7159d649567616cf372bcd53590f6bf447e3d4fbd  | 3bec05e23c362e98a6cc59562fb942fdd7ae683f0f263eee | 0          |
-| TestAccount02 | 8ea23cbda53b058a8a49dca4c798d08b3a2e520d6b41c9ad24f08d78ba01317d  | 777993500bd89be2669d9956a93d1d6e3cbe7889598a673f | 0          |
+| ------------- | ----------------------------------------------------------------- | ------------------------------------------------ | ---------- |
+| TestAccount01 | 8b678bbcf5cf2a60c6dc631b01d6b3c77d142d05eb521a62f73014cc987e0156  | 66db065da6853ec1dafb45933c77b3fdac9ce354a391e8d3 | 0          |
+| TestAccount02 | 650f00f552d4df0147d236e240ccfc490444f4b358c4ff1d79f5fd90f57243bd  | e3c42b85a183d3f654a3d2bb3bc5ea607d0fb529d9b890d3 | 0          |
 
 Any tests that utilize the login functionality will fail without this table.
 
