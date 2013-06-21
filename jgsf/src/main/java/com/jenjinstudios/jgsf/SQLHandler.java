@@ -1,8 +1,13 @@
 package com.jenjinstudios.jgsf;
 
+import com.jenjinstudios.security.Hasher;
+
 import java.sql.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import static java.sql.ResultSet.CONCUR_UPDATABLE;
+import static java.sql.ResultSet.TYPE_SCROLL_SENSITIVE;
 
 /**
  * The SQLHandler class is responsible for connecting to and querying the SQL database associated with a given Server.
@@ -29,6 +34,8 @@ public class SQLHandler
 	private boolean connected;
 	/** The connection used to communicate with the SQL database. */
 	private Connection dbConnection;
+	/** The string used to get all information about the user. */
+	private final String USER_QUERY;
 
 	/**
 	 * Create a new SQLHandler with the given database information, and connect to the database.
@@ -54,6 +61,8 @@ public class SQLHandler
 		{
 			LOGGER.log(Level.SEVERE, "Unable to register Drizzle driver!");
 		}
+		USER_QUERY = "SELECT username, loggedin, salt, password FROM " + dbName + ".users WHERE username = ?";
+
 		connectToDatabase();
 	}
 
@@ -74,33 +83,23 @@ public class SQLHandler
 		boolean success = false;
 		if (!connected)
 			return success;
-		String loggedInQuery;
-		loggedInQuery = "SELECT " + loggedInColumn + ",username FROM " + dbName + ".users WHERE username = ? AND " +
-				"password = ?";
 		try
 		{
-			// Check to see if the user is already logged in.
-			PreparedStatement loggedInCheck;
-			loggedInCheck = dbConnection.prepareStatement(loggedInQuery,
-					ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
-			loggedInCheck.setString(1, username);
-			loggedInCheck.setString(2, password);
-			ResultSet loggedInResults = loggedInCheck.executeQuery();
-			loggedInResults.next();
-			boolean isLoggedIn = loggedInResults.getBoolean(loggedInColumn);
-			if (isLoggedIn)
-			{
-				loggedInCheck.close();
+			ResultSet results = makeUserQuery(username);
+			results.next();
+			// Determine if the user is logged in.  If yes, end of method.
+			boolean loggedIn = results.getBoolean(loggedInColumn);
+			if (loggedIn)
 				return success;
-			}
-			String updateLoggedInQuery = "UPDATE " + dbName + ".users SET " + loggedInColumn + "=1 WHERE " +
-					"username = ? AND password = ?";
-			PreparedStatement loggedInUpdate;
-			loggedInUpdate = dbConnection.prepareStatement(updateLoggedInQuery);
-			loggedInUpdate.setString(1, username);
-			loggedInUpdate.setString(2, password);
-			loggedInUpdate.executeUpdate();
-			loggedInCheck.close();
+			// Hash the user-supplied password with the salt in the database.
+			String hashedPassword = Hasher.getHashedString(password, results.getString("salt"));
+			// Determine if the correct password was supplied.
+			boolean passwordCorrect = hashedPassword.equalsIgnoreCase(results.getString("password"));
+			results.getStatement().close();
+			if (!passwordCorrect)
+				return success;
+
+			updateLoggedinColumn(username, true);
 			success = true;
 		} catch (SQLException | IndexOutOfBoundsException e)
 		{
@@ -124,34 +123,21 @@ public class SQLHandler
 		boolean success = false;
 		if (!connected)
 			return success;
-		String loggedInQuery;
-		loggedInQuery = "SELECT " + loggedInColumn + ",username FROM " + dbName + ".users WHERE username = ?";
 		try
 		{
-			// Check to see if the user is already logged in.
-			PreparedStatement loggedInCheck = dbConnection.prepareStatement(loggedInQuery,
-					ResultSet.TYPE_SCROLL_SENSITIVE,
-					ResultSet.CONCUR_UPDATABLE);
-			loggedInCheck.setString(1, username);
-			ResultSet loggedInResults = loggedInCheck.executeQuery();
-			loggedInResults.next();
-			boolean isLoggedIn = loggedInResults.getBoolean(loggedInColumn);
-			if (!isLoggedIn)
-			{
-				loggedInCheck.close();
+			ResultSet results = makeUserQuery(username);
+			results.next();
+			// Determine if the user is logged in.  If no, end of method.
+			boolean loggedIn = results.getBoolean(loggedInColumn);
+			results.getStatement().close();
+			if (!loggedIn)
 				return success;
-			}
-			String updateLoggedInQuery = "UPDATE " + dbName + ".users SET " + loggedInColumn + "=0 WHERE " +
-					"username = ?";
-			PreparedStatement loggedInUpdate;
-			loggedInUpdate = dbConnection.prepareStatement(updateLoggedInQuery);
-			loggedInUpdate.setString(1, username);
-			loggedInUpdate.executeUpdate();
-			loggedInCheck.close();
+
+			updateLoggedinColumn(username, false);
 			success = true;
-		} catch (SQLException e)
+		} catch (SQLException | IndexOutOfBoundsException e)
 		{
-			LOGGER.log(Level.INFO, "Failed to log out user: {0}", username);
+			LOGGER.log(Level.FINE, "Failed to log in user: {0}", username);
 			success = false;
 		}
 		return success;
@@ -176,5 +162,39 @@ public class SQLHandler
 	public boolean isConnected()
 	{
 		return connected;
+	}
+
+	/**
+	 * Query the database for user info.
+	 *
+	 * @param username The username of the user we're looking for.
+	 * @return The ResultSet returned by the query.
+	 * @throws SQLException If there is a SQL error.
+	 */
+	private ResultSet makeUserQuery(String username) throws SQLException
+	{
+		PreparedStatement statement = dbConnection.prepareStatement(USER_QUERY, TYPE_SCROLL_SENSITIVE, CONCUR_UPDATABLE);
+		statement.setString(1, username);
+		return statement.executeQuery();
+	}
+
+
+	/**
+	 * Update the loggedin column to reflect the supplied boolean.
+	 *
+	 * @param username The user being queried.
+	 * @param status   The new status of the loggedin column.
+	 * @throws SQLException If there is a SQL error.
+	 */
+	private void updateLoggedinColumn(String username, boolean status) throws SQLException
+	{
+		String newValue = status ? "1" : "0";
+		String updateLoggedInQuery = "UPDATE " + dbName + ".users SET " + loggedInColumn + "=" + newValue + " WHERE " +
+				"username = ?";
+		PreparedStatement updateLoggedin;
+		updateLoggedin = dbConnection.prepareStatement(updateLoggedInQuery);
+		updateLoggedin.setString(1, username);
+		updateLoggedin.executeUpdate();
+		updateLoggedin.close();
 	}
 }

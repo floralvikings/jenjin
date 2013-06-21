@@ -5,7 +5,7 @@ allprojects {
 
 
     group = 'com.jenjinstudios'
-    version = '1.0'
+    version = '1.1'
 
 }
 
