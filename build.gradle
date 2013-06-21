@@ -41,14 +41,10 @@ idea {
 }
 
 clean.doFirst {
-    cleanLibs()
+    deleteRecursively(new File("FileOne.txt"))
+    deleteRecursively(new File("DirectoryOne/"));
 }
 
-
-void cleanLibs() {
-    File libDir = new File("lib/")
-    deleteRecursively(libDir)
-}
 
 void deleteRecursively(File file) {
     //list all the directory contents
@@ -67,27 +63,4 @@ void deleteRecursively(File file) {
         println "Deleting: " + file
         file.delete();
     }
-}
-
-void downloadLibFile(String address) {
-    String libDir = "lib/"
-    downloadFile(address, libDir)
-}
-
-void downloadFile(String address, String dest) {
-    String fileName = address.tokenize("/").getAt(-1)
-    String downloadLoc = dest + fileName
-    File dFile = new File(downloadLoc)
-
-    if (dFile.exists()) {
-        println fileName + " already exists: skipping..."
-        return
-    }
-    println "Downloading: " + fileName
-    dFile.getParentFile().mkdirs()
-    dFile.createNewFile()
-    def file = new FileOutputStream(dFile)
-    def out = new BufferedOutputStream(file)
-    out << new URL(address).openStream()
-    out.close()
 }
