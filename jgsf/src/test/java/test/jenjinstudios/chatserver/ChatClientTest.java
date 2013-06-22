@@ -1,9 +1,10 @@
 package test.jenjinstudios.chatserver;
 
-import com.jenjinstudios.chatserver.ChatServer;
+import com.jenjinstudios.chatserver.ChatClientHandler;
 import com.jenjinstudios.jgcf.Client;
 import com.jenjinstudios.jgsf.ClientHandler;
 import com.jenjinstudios.jgsf.SQLHandler;
+import com.jenjinstudios.jgsf.Server;
 import com.jenjinstudios.message.ChatBroadcast;
 import com.jenjinstudios.message.ChatMessage;
 import org.junit.*;
@@ -22,7 +23,7 @@ import static org.junit.Assert.*;
 public class ChatClientTest
 {
 	/** The chat server used for testing. */
-	private static ChatServer chatServer;
+	private static Server<ChatClientHandler> chatServer;
 	/** This client should login successfully. */
 	private static Client goodClient01;
 	/** This client should login successfully. */
@@ -43,9 +44,20 @@ public class ChatClientTest
 		/* The SQLHandler used for testing. */
 		SQLHandler sqlHandler = new SQLHandler("localhost", "jenjinst_chatservertest", "jenjinst_cstest",
 				"chat_test");
-		chatServer = new ChatServer();
+		chatServer = new Server<>(50, 51019, ChatClientHandler.class);
 		chatServer.setSQLHandler(sqlHandler);
 		chatServer.blockingStart();
+	}
+
+	/**
+	 * Shut the server down when all is said and done.
+	 *
+	 * @throws IOException If there is an error shutting down the server.
+	 */
+	@AfterClass
+	public static void destroy() throws IOException
+	{
+		chatServer.shutdown();
 	}
 
 	/** Set up clients for each test. */
@@ -172,16 +184,5 @@ public class ChatClientTest
 		assertFalse(sameClient.isLoggedIn());
 		// It is important to note that if the server dies the entire database will be corrupted.  Recommend using an
 		// hourly auto-backup in case of server failure.
-	}
-
-	/**
-	 * Shut the server down when all is said and done.
-	 *
-	 * @throws IOException If there is an error shutting down the server.
-	 */
-	@AfterClass
-	public static void destroy() throws IOException
-	{
-		chatServer.shutdown();
 	}
 }

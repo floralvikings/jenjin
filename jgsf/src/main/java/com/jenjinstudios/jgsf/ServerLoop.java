@@ -34,6 +34,7 @@ public class ServerLoop extends TimerTask
 	 *
 	 * @param server The server for which this server loop works.
 	 */
+	@SuppressWarnings("unchecked")
 	public ServerLoop(Server server)
 	{
 		this.server = server;
