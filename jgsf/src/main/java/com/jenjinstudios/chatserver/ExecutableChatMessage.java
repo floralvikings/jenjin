@@ -2,6 +2,7 @@ package com.jenjinstudios.chatserver;
 
 import com.jenjinstudios.jgsf.ClientHandler;
 import com.jenjinstudios.jgsf.ExecutableMessage;
+import com.jenjinstudios.jgsf.Server;
 import com.jenjinstudios.message.ChatBroadcast;
 import com.jenjinstudios.message.ChatMessage;
 
@@ -18,7 +19,7 @@ public class ExecutableChatMessage extends ExecutableMessage
 	/** The String containing the message to send. */
 	private final ChatMessage msg;
 	/** The server which will be executing this message. */
-	private final ChatServer server;
+	private final Server<ChatClientHandler> server;
 	/** The client handler which created this executable message. */
 	private final ChatClientHandler handler;
 	/** Whether or not the client has permission to send this message. */
@@ -34,7 +35,7 @@ public class ExecutableChatMessage extends ExecutableMessage
 	{
 		super(handler, msg);
 		this.msg = msg;
-		this.server = (ChatServer) handler.getServer();
+		this.server = handler.getServer();
 		this.handler = handler;
 	}
 
@@ -44,7 +45,7 @@ public class ExecutableChatMessage extends ExecutableMessage
 		if (!permission)
 			return;
 
-		ArrayList<ClientHandler> clientHandlers = server.getClientHandlers();
+		ArrayList<ChatClientHandler> clientHandlers = server.getClientHandlers();
 		for (ClientHandler h : clientHandlers)
 		{
 			if (h == null)
