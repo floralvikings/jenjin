@@ -17,7 +17,7 @@ import java.util.logging.Logger;
  *
  * @author Caleb Brinkman
  */
-public abstract class Server extends Thread
+public class Server<T extends ClientHandler> extends Thread
 {
 
 	/** The logger used by this class. */
@@ -26,12 +26,14 @@ public abstract class Server extends Thread
 	public final int UPS;
 	/** The period of the update in milliseconds. */
 	public final int PERIOD;
+	/** The port on which this server will run. */
+	public final int PORT;
 	/** The list of {@code ClientListener}s working for this server. */
-	protected final LinkedList<ClientListener> clientListeners;
+	protected final LinkedList<ClientListener<T>> clientListeners;
 	/** The list of {@code ClientHandler}s working for this server. */
-	protected final ArrayList<ClientHandler> clientHandlers;
+	protected final ArrayList<T> clientHandlers;
 	/** The map of clients stored by username. */
-	protected final TreeMap<String, ClientHandler> clientsByUsername;
+	protected final TreeMap<String, T> clientsByUsername;
 	/** Tasks to be repeated in the main loop. */
 	private final LinkedList<Runnable> repeatedTasks;
 	/** Synced tasks scheduled by client handlers. */
@@ -50,19 +52,22 @@ public abstract class Server extends Thread
 	private boolean connectedToDB;
 	/** The maximum number of clients allowed to connect. */
 	private int maxClients = 100;
-
+	/** The class for ClientHandlers. */
+	private Class<T> handlerClass;
 
 	/**
 	 * Construct a new Server without a SQLHandler.
 	 *
 	 * @param ups The cycles per second at which this server will run.
 	 */
-	public Server(int ups)
+	public Server(int ups, int port, Class<T> handlerClass)
 	{
 		super("Server");
 		LOGGER.log(Level.FINE, "Initializing Server.");
 		UPS = ups;
+		PORT = port;
 		PERIOD = 1000 / ups;
+		this.handlerClass = handlerClass;
 		clientsByUsername = new TreeMap<>();
 		clientListeners = new LinkedList<>();
 		clientHandlers = new ArrayList<>();
@@ -73,6 +78,7 @@ public abstract class Server extends Thread
 		sqlHandler = null;
 		numClients = 0;
 		MessageRegistry.registerAllBaseMessages();
+		addListener();
 	}
 
 	/**
@@ -98,12 +104,17 @@ public abstract class Server extends Thread
 		return serverLoop != null ? serverLoop.getCycleStart() : -1;
 	}
 
-	/**
-	 * Start a new Client Listener on the specified port.
-	 *
-	 * @param port The port number on which to listen.
-	 */
-	public abstract void addListener(int port);
+	/** Start a new Client Listener on the specified port. */
+	public void addListener()
+	{
+		try
+		{
+			clientListeners.add(new ClientListener<>(this, PORT, handlerClass));
+		} catch (IOException e)
+		{
+			LOGGER.log(Level.SEVERE, "Error adding client listener", e);
+		}
+	}
 
 	/**
 	 * Schedule a client to be removed during the next update.
@@ -130,11 +141,11 @@ public abstract class Server extends Thread
 	public boolean getNewClients()
 	{
 		boolean clientsAdded = false;
-		for (ClientListener l : clientListeners)
+		for (ClientListener<T> l : clientListeners)
 		{
-			LinkedList<ClientHandler> nc = l.getNewClients();
+			LinkedList<T> nc = l.getNewClients();
 			clientsAdded = !nc.isEmpty();
-			for (ClientHandler h : nc)
+			for (T h : nc)
 			{
 				int nullIndex = clientHandlers.indexOf(null);
 				clientHandlers.set(nullIndex, h);
@@ -151,7 +162,7 @@ public abstract class Server extends Thread
 	 *
 	 * @return The list of client handlers.
 	 */
-	public ArrayList<ClientHandler> getClientHandlers()
+	public ArrayList<T> getClientHandlers()
 	{
 		return clientHandlers;
 	}
@@ -232,7 +243,7 @@ public abstract class Server extends Thread
 					+ "any active client listeners.");
 		}
 
-		for (ClientListener listener : clientListeners)
+		for (ClientListener<T> listener : clientListeners)
 		{
 			listener.listen();
 		}
@@ -277,7 +288,7 @@ public abstract class Server extends Thread
 		}
 		synchronized (clientListeners)
 		{
-			for (ClientListener l : clientListeners)
+			for (ClientListener<T> l : clientListeners)
 			{
 				l.stopListening();
 			}
@@ -323,9 +334,10 @@ public abstract class Server extends Thread
 	 * @param username The username assigned to the ClientHandler.
 	 * @param handler  The ClientHandler that has had a username set.
 	 */
+	@SuppressWarnings("unchecked")
 	protected void clientUsernameSet(String username, ClientHandler handler)
 	{
-		clientsByUsername.put(username, handler);
+		clientsByUsername.put(username, (T) handler);
 	}
 
 	/**

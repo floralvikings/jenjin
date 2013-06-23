@@ -1,6 +1,7 @@
 package com.jenjinstudios.downloadserver;
 
 import com.jenjinstudios.clientutil.file.FileUtil;
+import com.jenjinstudios.jgsf.ClientHandler;
 import com.jenjinstudios.jgsf.Server;
 
 import java.io.File;
@@ -13,7 +14,7 @@ import java.util.logging.Logger;
  *
  * @author Caleb Brinkman
  */
-public class DownloadServer extends Server
+public class DownloadServer extends Server<ClientHandler>
 {
 	/** The Logger for this class. */
 	protected static final Logger LOGGER = Logger.getLogger(DownloadServer.class.getName());
@@ -36,7 +37,7 @@ public class DownloadServer extends Server
 	 */
 	public DownloadServer(String clientFileDirectory)
 	{
-		super(UPS);
+		super(UPS, PORT, ClientHandler.class);
 		rootDirectory = clientFileDirectory;
 		File rootFile = new File(rootDirectory);
 		String path = rootFile.getAbsolutePath();
@@ -48,22 +49,6 @@ public class DownloadServer extends Server
 		fileHashArray = new String[fileListArray.length];
 		for (int i = 0; i < fileListArray.length; i++)
 			fileHashArray[i] = FileUtil.getMD5Checksum(fileListArray[i]);
-		addListener(PORT);
-	}
-
-	@Override
-	public void addListener(int port)
-	{
-		synchronized (clientListeners)
-		{
-			try
-			{
-				clientListeners.add(new DownloadListener(this, port));
-			} catch (Exception ex)
-			{
-				LOGGER.log(Level.SEVERE, "Error adding client", ex);
-			}
-		}
 	}
 
 	/**
