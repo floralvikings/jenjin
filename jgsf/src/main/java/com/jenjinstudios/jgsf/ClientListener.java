@@ -1,29 +1,35 @@
 package com.jenjinstudios.jgsf;
 
 import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.LinkedList;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Listens for incoming client connections on behalf of a Server.
  *
  * @author Caleb Brinkman
  */
-public abstract class ClientListener implements Runnable
+public class ClientListener<T extends ClientHandler> implements Runnable
 {
+	private static final Logger LOGGER = Logger.getLogger(ClientListener.class.getName());
 	/** The port on which this object listens. */
 	public final int PORT;
 	/** The list of new clients. */
-	private final LinkedList<ClientHandler> newClientHandlers;
+	private final LinkedList<T> newClientHandlers;
 	/** Flags whether this should be listening. */
 	private volatile boolean listening;
 	/** The server socket. */
 	ServerSocket serverSock;
 	/** The server. */
 	private final Server server;
+	/** The constructor called to create new handlers. */
+	private Constructor<T> handlerConstructor;
 
 	/**
 	 * Construct a new ClientListener for the given server on the given port.
@@ -32,10 +38,20 @@ public abstract class ClientListener implements Runnable
 	 * @param p The port on which to listen.
 	 * @throws IOException If there is an error listening on the port.
 	 */
-	public ClientListener(Server s, int p) throws IOException
+	public ClientListener(Server s, int p, Class<T> handlerClass) throws IOException
 	{
 		server = s;
 		PORT = p;
+		/* The class of client handlers created by this listener. */
+		try
+		{
+			handlerConstructor = handlerClass.getConstructor(Server.class, Socket.class);
+
+		} catch (NoSuchMethodException e)
+		{
+			LOGGER.log(Level.SEVERE, "Unable to find ClientHandler constructor: " + handlerClass.getName(), e);
+			System.exit(0);
+		}
 		listening = false;
 		newClientHandlers = new LinkedList<>();
 		serverSock = new ServerSocket(PORT);
@@ -46,9 +62,9 @@ public abstract class ClientListener implements Runnable
 	 *
 	 * @return A {@code LinkedList} containing the new clients.
 	 */
-	public LinkedList<ClientHandler> getNewClients()
+	public LinkedList<T> getNewClients()
 	{
-		LinkedList<ClientHandler> temp = new LinkedList<>();
+		LinkedList<T> temp = new LinkedList<>();
 		synchronized (newClientHandlers)
 		{
 			if (newClientHandlers.isEmpty())
@@ -85,7 +101,7 @@ public abstract class ClientListener implements Runnable
 	 *
 	 * @param h The handler for the new client.
 	 */
-	public void addNewClient(ClientHandler h)
+	public void addNewClient(T h)
 	{
 		synchronized (newClientHandlers)
 		{
@@ -98,16 +114,15 @@ public abstract class ClientListener implements Runnable
 	 *
 	 * @param sock The connection to the new client.
 	 */
-	public abstract void addNewClient(Socket sock);
-
-	/**
-	 * Get the server for which this listener is listening.
-	 *
-	 * @return The server for which this listener is listening.
-	 */
-	public Server getServer()
+	public void addNewClient(Socket sock)
 	{
-		return server;
+		try
+		{
+			addNewClient(handlerConstructor.newInstance(server, sock));
+		} catch (InstantiationException | IllegalAccessException | InvocationTargetException e)
+		{
+			LOGGER.log(Level.SEVERE, "Unable to instantiate client handler!", e);
+		}
 	}
 
 	@Override
