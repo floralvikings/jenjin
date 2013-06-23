@@ -14,16 +14,16 @@ public class Hasher
 	/**
 	 * Return a SHA1 hash of the given string.
 	 *
-	 * @param pw The string to hash.
+	 * @param input The string to hash.
 	 * @return a SHA1 hash of the given string.
 	 */
-	public static String getHashedString(String pw)
+	public static String getHashedString(String input)
 	{
 		try
 		{
 			//Convert the pass to an md5 hash string
-			byte[] pwbytes = pw.getBytes("UTF-8");
-			MessageDigest md = MessageDigest.getInstance("SHA-1");
+			byte[] pwbytes = input.getBytes("UTF-8");
+			MessageDigest md = MessageDigest.getInstance("SHA-256");
 			byte[] encryption = md.digest(pwbytes);
 			StringBuilder hexString = new StringBuilder();
 			for (byte anEncryption : encryption)
@@ -40,5 +40,10 @@ public class Hasher
 		{
 			return null;
 		}
+	}
+
+	public static String getHashedString(String input, String salt)
+	{
+		return getHashedString(salt + input);
 	}
 }

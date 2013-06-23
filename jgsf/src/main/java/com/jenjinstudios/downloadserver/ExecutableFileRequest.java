@@ -1,6 +1,7 @@
 package com.jenjinstudios.downloadserver;
 
 import com.jenjinstudios.clientutil.file.FileUtil;
+import com.jenjinstudios.jgsf.ClientHandler;
 import com.jenjinstudios.jgsf.ExecutableMessage;
 import com.jenjinstudios.message.FileListMessage;
 import com.jenjinstudios.message.FileMessage;
@@ -18,7 +19,7 @@ import java.io.IOException;
 public class ExecutableFileRequest extends ExecutableMessage
 {
 	/** The client handler which created this executable message. */
-	private final DownloadClientHandler clientHandler;
+	private final ClientHandler clientHandler;
 	/** The server which will execute this message. */
 	private final DownloadServer server;
 	/** The message sent by the client. */
@@ -34,7 +35,7 @@ public class ExecutableFileRequest extends ExecutableMessage
 	 * @param clientHandler The client handler that created this executable message.
 	 * @param message       The FileRequest from the client.
 	 */
-	public ExecutableFileRequest(DownloadClientHandler clientHandler, FileRequest message)
+	public ExecutableFileRequest(ClientHandler clientHandler, FileRequest message)
 	{
 		super(clientHandler, message);
 		this.message = message;

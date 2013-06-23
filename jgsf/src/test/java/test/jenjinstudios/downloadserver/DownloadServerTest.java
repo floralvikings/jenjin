@@ -29,7 +29,7 @@ public class DownloadServerTest
 	@Before
 	public void setUp() throws InterruptedException
 	{
-		downloadServer = new DownloadServer("jgsa/src/test/resources/");
+		downloadServer = new DownloadServer("jgsf/src/test/resources/");
 		downloadServer.blockingStart();
 	}
 

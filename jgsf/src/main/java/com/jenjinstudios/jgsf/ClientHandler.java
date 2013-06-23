@@ -18,7 +18,7 @@ import java.util.logging.Logger;
  *
  * @author Caleb Brinkman
  */
-public abstract class ClientHandler extends Thread
+public class ClientHandler extends Thread
 {
 	/** The Socket the handler uses to communicate. */
 	private final Socket sock;
@@ -27,7 +27,7 @@ public abstract class ClientHandler extends Thread
 	/** Flags whether the socket is connected. */
 	private boolean linkOpen;
 	/** The server. */
-	private final Server server;
+	private final Server<? extends ClientHandler> server;
 	/** The id of the client handler. */
 	private int handlerId = -1;
 	/** Flags whether the user is logged in. */
@@ -50,7 +50,7 @@ public abstract class ClientHandler extends Thread
 	 * @param sk The socket used to communicate with the client.
 	 * @throws IOException If the socket is unable to connect.
 	 */
-	public ClientHandler(Server s, Socket sk) throws IOException
+	public ClientHandler(Server<? extends ClientHandler> s, Socket sk) throws IOException
 	{
 		super("ClientHandler: " + sk.getInetAddress());
 		server = s;
@@ -87,10 +87,14 @@ public abstract class ClientHandler extends Thread
 	}
 
 	/** Update anything that needs to be taken care of before broadcast. */
-	public abstract void update();
+	public void update()
+	{
+	}
 
 	/** Reset anything that needs to be taken care of after broadcast. */
-	public abstract void refresh();
+	public void refresh()
+	{
+	}
 
 	/** Send all messages in the message queue to the client. */
 	public void broadcast()
@@ -148,7 +152,7 @@ public abstract class ClientHandler extends Thread
 	 *
 	 * @return The server for which this client handler works.
 	 */
-	public Server getServer()
+	public Server<? extends ClientHandler> getServer()
 	{
 		return server;
 	}

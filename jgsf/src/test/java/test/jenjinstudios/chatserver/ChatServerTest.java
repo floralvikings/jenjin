@@ -1,7 +1,8 @@
 package test.jenjinstudios.chatserver;
 
-import com.jenjinstudios.chatserver.ChatServer;
+import com.jenjinstudios.chatserver.ChatClientHandler;
 import com.jenjinstudios.jgsf.SQLHandler;
+import com.jenjinstudios.jgsf.Server;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -13,7 +14,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
- * Test various functionalities of the ChatServer.
+ * Test various Chat functions of the Server.
  *
  * @author Caleb Brinkman
  */
@@ -21,9 +22,8 @@ public class ChatServerTest
 {
 	/** The SQLHandler to be used for testing. */
 	private static SQLHandler sqlHandler;
-	/** The ChatServer to be used for testing. */
-	private static ChatServer server;
-
+	/** The Server to be used for testing. */
+	private static Server<ChatClientHandler> server;
 
 	/**
 	 * Set up and start the chat server.
@@ -33,10 +33,21 @@ public class ChatServerTest
 	@BeforeClass
 	public static void construct() throws SQLException
 	{
-		server = new ChatServer();
+		server = new Server<>(50, 51019, ChatClientHandler.class);
 		sqlHandler = new SQLHandler("localhost", "jenjinst_chatservertest", "jenjinst_cstest", "chat_test");
 		server.setSQLHandler(sqlHandler);
 		server.blockingStart();
+	}
+
+	/**
+	 * Destroy the server after testing.
+	 *
+	 * @throws IOException If there is an error in closing streams or sockets.
+	 */
+	@AfterClass
+	public static void destroy() throws IOException
+	{
+		server.shutdown();
 	}
 
 	/** Test the SQLHandler's connection. */
@@ -66,16 +77,5 @@ public class ChatServerTest
 	{
 		server.setMaxClients(1000);
 		assertEquals(1000, server.getMaxClients());
-	}
-
-	/**
-	 * Destroy the server after testing.
-	 *
-	 * @throws IOException If there is an error in closing streams or sockets.
-	 */
-	@AfterClass
-	public static void destroy() throws IOException
-	{
-		server.shutdown();
 	}
 }

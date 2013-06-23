@@ -37,6 +37,8 @@ This database must contain a table called "users" laid out in the following way:
 
 Any tests that utilize the login functionality will fail without this table.
 
+The password and salt fields are necessary for the salted SAH256 hashing that is done to user passwords.
+
 
 ##Dependencies
 

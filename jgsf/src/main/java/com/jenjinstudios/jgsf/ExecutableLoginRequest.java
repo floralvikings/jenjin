@@ -1,7 +1,6 @@
 package com.jenjinstudios.jgsf;
 
 import com.jenjinstudios.message.LoginRequest;
-import com.jenjinstudios.security.Hasher;
 
 /**
  * Executes the necessary actions to deal with a login response.
@@ -42,8 +41,7 @@ public class ExecutableLoginRequest extends ExecutableMessage
 	{
 		if (sqlHandler == null || clientHandler.isLoggedIn())
 			return;
-		String hashPass = Hasher.getHashedString(loginRequest.password);
-		boolean success = sqlHandler.logInUser(loginRequest.username, hashPass);
+		boolean success = sqlHandler.logInUser(loginRequest.username, loginRequest.password);
 		clientHandler.queueLoginStatus(success);
 		if (success)
 			clientHandler.setUsername(loginRequest.username);

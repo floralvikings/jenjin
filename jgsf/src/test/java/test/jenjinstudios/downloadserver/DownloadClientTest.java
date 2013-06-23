@@ -34,7 +34,7 @@ public class DownloadClientTest
 	@Before
 	public void setUp() throws InterruptedException
 	{
-		downloadServer = new DownloadServer("jgsa/src/test/resources/");
+		downloadServer = new DownloadServer("jgsf/src/test/resources/");
 		downloadServer.blockingStart();
 
 		client = new Client("localhost", DownloadServer.PORT);
