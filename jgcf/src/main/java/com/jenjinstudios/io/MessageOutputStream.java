@@ -1,7 +1,5 @@
 package com.jenjinstudios.io;
 
-import com.jenjinstudios.message.FileMessage;
-
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -39,8 +37,6 @@ public class MessageOutputStream extends DataOutputStream
 		Object[] args = message.getArgs();
 		int id = message.getID();
 		writeShort(id);
-		if (message instanceof FileMessage)
-			System.out.println();
 		for (Object arg : args)
 			writeArgument(arg);
 	}
