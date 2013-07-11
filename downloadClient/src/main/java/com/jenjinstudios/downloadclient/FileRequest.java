@@ -10,7 +10,7 @@ import com.jenjinstudios.io.BaseMessage;
 public class FileRequest extends BaseMessage
 {
 	/** The message registration id used by this message type. */
-	public static final short ID = 9;
+	public static final short ID = 100;
 	/** The name of the file being requested. */
 	public final String fileName;
 
@@ -21,13 +21,7 @@ public class FileRequest extends BaseMessage
 	 */
 	public FileRequest(String fileName)
 	{
-		super(fileName);
+		super(ID, fileName);
 		this.fileName = fileName;
-	}
-
-	@Override
-	public short getID()
-	{
-		return ID;
 	}
 }

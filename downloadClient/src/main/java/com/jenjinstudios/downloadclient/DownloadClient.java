@@ -39,12 +39,13 @@ public class DownloadClient extends Client
 	 */
 	protected void processFileMessage(FileMessage message) throws IOException
 	{
+		// Get the file name from the message
 		String fileName = message.FILENAME;
 		File newFile = new File(fileName);
-		// Create directories for the parent file
+		// Create directories, if needed
 		File parent = newFile.getParentFile();
-		if (parent != null && parent.mkdirs())
-			LOGGER.log(Level.FINER, "Creating new directory for {0}", fileName);
+		if (parent != null) //noinspection ResultOfMethodCallIgnored
+			parent.mkdirs();
 		// Delete the file if it already exists
 		if (newFile.exists())
 			if (!newFile.delete())
@@ -52,10 +53,11 @@ public class DownloadClient extends Client
 		// Try and create the new file
 		if (!newFile.createNewFile())
 			throw new IOException("Error creating new file: " + fileName);
-		// Output the message bytes to the file.
+		// Write the bytes from the message into the file.
 		FileOutputStream outputStream = new FileOutputStream(newFile);
 		outputStream.write(message.BYTES);
 		outputStream.close();
+		// increment the number of received files.
 		numReceivedFiles++;
 		if (numReceivedFiles == fileList.size() - 1)
 			receivedAllFiles = true;
@@ -70,14 +72,14 @@ public class DownloadClient extends Client
 	 */
 	protected void processFileListMessage(FileListMessage message)
 	{
+		// We only want to process the file list once.
 		if (fileList != null)
 			return;
-
+		// Initialize the file list.
 		fileList = new ArrayList<>();
 		String[] files = message.FILE_LIST;
 		String[] hashes = message.MD5_HASH_LIST;
-
-
+		// Iterate through the files and check if the hash for the client side file is correct.
 		for (int i = 0; i < files.length; i++)
 		{
 			String currentFileName = files[i];
@@ -89,6 +91,7 @@ public class DownloadClient extends Client
 		}
 	}
 
+	@Override
 	public void processMessage(Object message) throws IOException
 	{
 		if (message instanceof FileMessage)

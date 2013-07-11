@@ -26,8 +26,6 @@ public class ExecutableFileRequest extends ExecutableMessage
 	private final FileRequest message;
 	/** The requested file. */
 	private final String requestedFile;
-	/** Flags whether this request is for a specific file or a list. */
-	private final boolean listRequest;
 
 	/**
 	 * Cosntruct a new ExecutableFileRequest with the specified information.
@@ -42,35 +40,43 @@ public class ExecutableFileRequest extends ExecutableMessage
 		this.clientHandler = clientHandler;
 		this.server = (DownloadServer) clientHandler.getServer();
 		requestedFile = this.message.fileName;
-		listRequest = requestedFile.equals("");
 	}
 
+	/** Determine and queue the appropriate message(s) to send to the client. */
 	@Override
 	public void runSynced()
 	{
-
-	}
-
-	/** Determine and queue the appropriate message to send to the client. */
-	@Override
-	public void runASync()
-	{
-		if (listRequest)
+		if (requestedFile.equals(""))
 		{
-			clientHandler.queueMessage(new FileListMessage(server.getFileListArray(), server.getFileHashArray()));
-		} else      // if requesting specific file
+			// If the file message is requesting a blank string, it means to send a file list.
+			String[] fileArray = server.getFileListArray();
+			String[] hashArray = server.getFileHashArray();
+			FileListMessage listMessage = new FileListMessage(fileArray, hashArray);
+			clientHandler.queueMessage(listMessage);
+		} else
 		{
+			// We have to append the server's root directory to the beginning of the requested file name
 			String fileName = server.getRootDirectory() + message.fileName;
 			try
 			{
+				// This grabs the bytes from the file
 				byte[] bytes = FileUtil.getFileBytes(new File(fileName));
+				// Makes the message
 				FileMessage fileMessage = new FileMessage(requestedFile, bytes);
+				// And adds it to the client handler's "outgoing" queue.
 				clientHandler.queueMessage(fileMessage);
 			} catch (IOException e)
 			{
 				// Client requested invalid file.  Ignore.
 			}
 		}
+	}
+
+
+	@Override
+	public void runASync()
+	{
+
 	}
 
 }

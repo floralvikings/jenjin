@@ -15,12 +15,6 @@ public class LogoutRequest extends BaseMessage
 	/** Construct a new LogoutRequest. */
 	public LogoutRequest()
 	{
-		super();
-	}
-
-	@Override
-	public short getID()
-	{
-		return ID;
+		super(ID);
 	}
 }

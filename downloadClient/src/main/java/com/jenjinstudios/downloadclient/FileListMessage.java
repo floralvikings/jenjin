@@ -10,7 +10,7 @@ import com.jenjinstudios.io.BaseMessage;
 public class FileListMessage extends BaseMessage
 {
 	/** The Message Registration ID of this message type. */
-	public static final short ID = 7;
+	public static final short ID = 101;
 	/** The list of files. */
 	public final String[] FILE_LIST;
 	/** The list of file hashes. */
@@ -24,14 +24,8 @@ public class FileListMessage extends BaseMessage
 	 */
 	public FileListMessage(String[] fileList, String[] hashes)
 	{
-		super(fileList, hashes);
+		super(ID, fileList, hashes);
 		this.FILE_LIST = fileList;
 		this.MD5_HASH_LIST = hashes;
-	}
-
-	@Override
-	public short getID()
-	{
-		return ID;
 	}
 }

@@ -24,7 +24,7 @@ public class ChatBroadcast extends BaseMessage
 	 */
 	public ChatBroadcast(String username, String message)
 	{
-		super(username, message);
+		super(ID, username, message);
 		USERNAME = username;
 		MESSAGE = message;
 	}
@@ -32,11 +32,5 @@ public class ChatBroadcast extends BaseMessage
 	public String toString()
 	{
 		return USERNAME + ": " + MESSAGE;
-	}
-
-	@Override
-	public short getID()
-	{
-		return ID;
 	}
 }

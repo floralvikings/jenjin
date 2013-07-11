@@ -26,7 +26,7 @@ public class ChatMessage extends BaseMessage
 	 */
 	public ChatMessage(String message, Integer groupID)
 	{
-		super(message, groupID);
+		super(ID, message, groupID);
 		MESSAGE = message;
 		GROUP_ID = groupID;
 	}
@@ -45,11 +45,5 @@ public class ChatMessage extends BaseMessage
 	public String toString()
 	{
 		return MESSAGE;
-	}
-
-	@Override
-	public short getID()
-	{
-		return ID;
 	}
 }

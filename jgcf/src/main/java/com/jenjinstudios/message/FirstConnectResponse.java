@@ -21,13 +21,7 @@ public class FirstConnectResponse extends BaseMessage
 	 */
 	public FirstConnectResponse(Integer ups)
 	{
-		super(ups);
+		super(ID, ups);
 		UPS = ups;
-	}
-
-
-	public short getID()
-	{
-		return ID;
 	}
 }

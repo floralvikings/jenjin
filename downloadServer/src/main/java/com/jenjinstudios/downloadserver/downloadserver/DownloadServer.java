@@ -6,8 +6,6 @@ import com.jenjinstudios.jgsf.Server;
 
 import java.io.File;
 import java.util.TreeSet;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Implementation of a download server used to send a group of files.
@@ -16,8 +14,6 @@ import java.util.logging.Logger;
  */
 public class DownloadServer extends Server<ClientHandler>
 {
-	/** The Logger for this class. */
-	protected static final Logger LOGGER = Logger.getLogger(DownloadServer.class.getName());
 	/** The updates-per-second of this server. */
 	public static final int UPS = 50;
 	/** The port on which this server listens. */
@@ -40,10 +36,7 @@ public class DownloadServer extends Server<ClientHandler>
 		super(UPS, PORT, ClientHandler.class);
 		rootDirectory = clientFileDirectory;
 		File rootFile = new File(rootDirectory);
-		String path = rootFile.getAbsolutePath();
 		TreeSet<File> fileList = FileUtil.getContentsRecursive(rootFile);
-		if (fileList.isEmpty())
-			LOGGER.log(Level.WARNING, "No files found in specified directory... Maybe you forgot the slash? {0}", path);
 		File[] fileListArray = fileList.toArray(new File[fileList.size()]);
 		strippedArray = FileUtil.stripDirectory(rootDirectory, fileListArray);
 		fileHashArray = new String[fileListArray.length];

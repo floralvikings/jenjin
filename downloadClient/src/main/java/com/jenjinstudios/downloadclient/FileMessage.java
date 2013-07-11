@@ -24,14 +24,8 @@ public class FileMessage extends BaseMessage
 	 */
 	public FileMessage(String filename, byte[] fileBytes)
 	{
-		super(filename, fileBytes);
+		super(ID, filename, fileBytes);
 		FILENAME = filename;
 		BYTES = fileBytes;
-	}
-
-	@Override
-	public short getID()
-	{
-		return ID;
 	}
 }
