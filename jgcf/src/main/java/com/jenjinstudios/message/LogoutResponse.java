@@ -21,13 +21,7 @@ public class LogoutResponse extends BaseMessage
 	 */
 	public LogoutResponse(Boolean success)
 	{
-		super(success);
+		super(ID, success);
 		SUCCESS = success;
-	}
-
-	@Override
-	public short getID()
-	{
-		return ID;
 	}
 }

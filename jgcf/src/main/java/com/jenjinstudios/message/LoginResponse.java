@@ -24,14 +24,8 @@ public class LoginResponse extends BaseMessage
 	 */
 	public LoginResponse(Boolean success, Long loginTime)
 	{
-		super(success, loginTime);
+		super(ID, success, loginTime);
 		SUCCESS = success;
 		LOGIN_TIME = loginTime;
-	}
-
-	@Override
-	public short getID()
-	{
-		return ID;
 	}
 }

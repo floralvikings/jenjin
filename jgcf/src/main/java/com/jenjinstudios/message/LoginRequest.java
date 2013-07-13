@@ -24,14 +24,8 @@ public class LoginRequest extends BaseMessage
 	 */
 	public LoginRequest(String username, String password)
 	{
-		super(username, password);
+		super(ID, username, password);
 		this.username = username;
 		this.password = password;
-	}
-
-	@Override
-	public short getID()
-	{
-		return ID;
 	}
 }
