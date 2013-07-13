@@ -1,16 +1,12 @@
 package com.jenjinstudios.jgcf;
 
-import com.jenjinstudios.clientutil.file.FileUtil;
 import com.jenjinstudios.io.BaseMessage;
 import com.jenjinstudios.io.MessageInputStream;
 import com.jenjinstudios.io.MessageOutputStream;
 import com.jenjinstudios.message.*;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.Socket;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -32,8 +28,8 @@ public class Client extends Thread
 	private final String ADDRESS;
 	/** The collection of messages to send at the next broadcast. */
 	private final LinkedList<BaseMessage> outgoingMessages;
-	/** The list of received chat messages. */
-	private final LinkedList<ChatBroadcast> chatMessages;
+	/** The list of tasks that this client will execute each update cycle. */
+	private final LinkedList<Runnable> repeatedTasks;
 	/** The period of the update in milliseconds. */
 	private int period;
 	/** The socket used to connect to the server. */
@@ -44,8 +40,6 @@ public class Client extends Thread
 	private Timer sendMessagesTimer;
 	/** Flags whether the client threads should be running. */
 	private volatile boolean running;
-	/** The FileListMessage sent by the server, if any. */
-	private ArrayList<String> fileList;
 	/** Whether the user is logged in. */
 	private boolean loggedIn;
 	/** The inputstream used to read messages from the server. */
@@ -54,10 +48,6 @@ public class Client extends Thread
 	private MessageOutputStream outputStream;
 	/** The time at which this client was successfully logged in. */
 	private long loggedInTime;
-	/** Counts the number of files downloaded. */
-	private int numReceivedFiles;
-	/** Flags whether the client has received files. */
-	private boolean receivedAllFiles;
 	/** flags whether the login response has been received. */
 	private volatile boolean receivedLoginResponse;
 	/** flags whether the logout response has been received. */
@@ -66,10 +56,7 @@ public class Client extends Thread
 	private String username;
 	/** The password this client will use when logging in. */
 	private String password;
-	/** The list of tasks that this client will execute each update cycle. */
-	private final LinkedList<Runnable> repeatedTasks;
-	/** Flags whether the file list has been received. */
-	private volatile boolean hasReceivedFileList;
+
 
 	/**
 	 * Construct a new client and attempt to connect to the server over the specified port.
@@ -83,7 +70,6 @@ public class Client extends Thread
 		PORT = port;
 		connected = false;
 		outgoingMessages = new LinkedList<>();
-		chatMessages = new LinkedList<>();
 		repeatedTasks = new LinkedList<>();
 		if (MessageRegistry.hasMessagesRegistered())
 			return;
@@ -171,68 +157,6 @@ public class Client extends Thread
 	}
 
 	/**
-	 * Request the list of files that can be downloaded.  It is important to note that the message sent does nothing on
-	 * the server by default.  The com.jenjinstudios.downloadserver module contains an implementation of Server that
-	 * allows for this functionality.  This method blocks until the file list has been received.
-	 */
-	public final void requestFileList()
-	{
-		queueMessage(new FileRequest(""));
-		while (!hasReceivedFileList)
-			try
-			{
-				Thread.sleep(1);
-			} catch (InterruptedException e)
-			{
-				LOGGER.log(Level.INFO, "Interrupted", e);
-			}
-	}
-
-	/** Request all files needed that have been pulled from the FileListMessage sent from the server. */
-	public final void requestNeededFiles()
-	{
-		if (fileList == null)
-			return;
-		for (String fileName : fileList)
-			queueMessage(new FileRequest(fileName));
-		while (!receivedAllFiles)
-			try
-			{
-				Thread.sleep(1);
-			} catch (InterruptedException e)
-			{
-				LOGGER.log(Level.INFO, "Interrupted", e);
-			}
-	}
-
-	/**
-	 * Send a chat message to the server.
-	 *
-	 * @param message The message to send to the server.
-	 */
-	public final void sendChatMessage(ChatMessage message)
-	{
-		queueMessage(message);
-	}
-
-	/**
-	 * Get all the chat messages collected since the last check.
-	 *
-	 * @return A {@code LinkedList} of all the ChatMessages collected since the last time this method was
-	 *         called.
-	 */
-	public final LinkedList<ChatBroadcast> getChatMessages()
-	{
-		LinkedList<ChatBroadcast> temp;
-		synchronized (chatMessages)
-		{
-			temp = new LinkedList<>(chatMessages);
-			chatMessages.clear();
-		}
-		return temp;
-	}
-
-	/**
 	 * Send the specified message.  This method should only be called from the client update thread.
 	 *
 	 * @param message The message to be sent.
@@ -252,17 +176,7 @@ public class Client extends Thread
 	 */
 	protected void processMessage(Object message) throws IOException
 	{
-		if (message instanceof FileMessage)
-		{
-			processFileMessage((FileMessage) message);
-		} else if (message instanceof FileListMessage)
-		{
-			processFileListMessage((FileListMessage) message);
-			hasReceivedFileList = true;
-		} else if (message instanceof ChatBroadcast)
-		{
-			processChatBroadcast((ChatBroadcast) message);
-		} else if (message instanceof LoginResponse)
+		if (message instanceof LoginResponse)
 		{
 			processLoginResponse((LoginResponse) message);
 		} else if (message instanceof LogoutResponse)
@@ -286,79 +200,6 @@ public class Client extends Thread
 			return;
 		loggedInTime = message.LOGIN_TIME;
 		super.setName("Client: " + username);
-	}
-
-	/**
-	 * Add a chat message to the incoming chat message queue.
-	 *
-	 * @param message The chat message that hasbeen received.
-	 */
-	protected void processChatBroadcast(ChatBroadcast message)
-	{
-		synchronized (chatMessages)
-		{
-			chatMessages.add(message);
-		}
-	}
-
-	/**
-	 * Create the file sent by the file message.  This implementation assumes that if you have received this message,
-	 * the file should be downloaded.  Therefore, it overwrites any files already in place.  This behavior is intended,
-	 * as only needed files should actually be requested and therefore sent.
-	 *
-	 * @param message The {@code FileMessage} sent from the server.
-	 * @throws IOException if there is an error downloading or writing the file.
-	 */
-	protected void processFileMessage(FileMessage message) throws IOException
-	{
-		String fileName = message.FILENAME;
-		File newFile = new File(fileName);
-		// Create directories for the parent file
-		File parent = newFile.getParentFile();
-		if (parent != null && parent.mkdirs())
-			LOGGER.log(Level.FINER, "Creating new directory for {0}", fileName);
-		// Delete the file if it already exists
-		if (newFile.exists())
-			if (!newFile.delete())
-				throw new IOException("Unable to delete file: " + fileName);
-		// Try and create the new file
-		if (!newFile.createNewFile())
-			throw new IOException("Error creating new file: " + fileName);
-		// Output the message bytes to the file.
-		FileOutputStream outputStream = new FileOutputStream(newFile);
-		outputStream.write(message.BYTES);
-		outputStream.close();
-		numReceivedFiles++;
-		if (numReceivedFiles == fileList.size() - 1)
-			receivedAllFiles = true;
-	}
-
-	/**
-	 * Process a {@code FileListMessage} as sent from the server.  The file list is assumed to be an array of
-	 * {@code File} objects, to be downloaded directly into the runtime directory.  If the file list has already
-	 * been requested and received, this does nothing.
-	 *
-	 * @param message The message from the server.
-	 */
-	protected void processFileListMessage(FileListMessage message)
-	{
-		if (fileList != null)
-			return;
-
-		fileList = new ArrayList<>();
-		String[] files = message.FILE_LIST;
-		String[] hashes = message.MD5_HASH_LIST;
-
-
-		for (int i = 0; i < files.length; i++)
-		{
-			String currentFileName = files[i];
-			File currentFile = new File(currentFileName);
-			String currentHash = hashes[i];
-			// Check to see if the file doesn't exist, and if it does, make sure the checksum is correct
-			if (!currentFile.exists() || !FileUtil.getMD5Checksum(currentFile).equals(currentHash))
-				fileList.add(currentFile.getPath());
-		}
 	}
 
 	/** Tell the client threads to stop running. */
@@ -477,16 +318,6 @@ public class Client extends Thread
 	}
 
 	/**
-	 * Get the File List sent by the server, if any.
-	 *
-	 * @return The list of files sent by the server that this client will need to download.
-	 */
-	public ArrayList<String> getFileList()
-	{
-		return fileList;
-	}
-
-	/**
 	 * Get whether this client is logged in.
 	 *
 	 * @return true if this client has received a successful LoginResponse
@@ -504,16 +335,6 @@ public class Client extends Thread
 	public long getLoggedInTime()
 	{
 		return loggedInTime;
-	}
-
-	/**
-	 * Get whether the client has received files.
-	 *
-	 * @return true if the client has received all needed files from the server.
-	 */
-	public boolean hasReceivedAllFiles()
-	{
-		return receivedAllFiles;
 	}
 
 	/** The ClientLoop class is essentially what amounts to the output thread. */

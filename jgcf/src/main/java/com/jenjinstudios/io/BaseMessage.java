@@ -11,15 +11,17 @@ public abstract class BaseMessage implements Serializable
 {
 	/** The arguments to be passed to the message. */
 	private final Object[] args;
+	private final short ID;
 
 	/**
 	 * Construct a new message using the given ID and arguments.
 	 *
 	 * @param args The arguments used to create the message.
 	 */
-	protected BaseMessage(Object... args)
+	protected BaseMessage(short id, Object... args)
 	{
 		this.args = args;
+		this.ID = id;
 	}
 
 	/**
@@ -27,7 +29,10 @@ public abstract class BaseMessage implements Serializable
 	 *
 	 * @return The ID of this message
 	 */
-	public abstract short getID();
+	public short getID()
+	{
+		return ID;
+	}
 
 	/**
 	 * Get the arguments for this message.
