@@ -2,16 +2,15 @@ package test.jenjinstudios.chatserver;
 
 import com.jenjinstudios.chatclient.ChatClient;
 import com.jenjinstudios.chatserver.ChatClientHandler;
-import com.jenjinstudios.message.BaseMessage;
-import com.jenjinstudios.jgsf.SQLHandler;
 import com.jenjinstudios.jgsf.Server;
+import com.jenjinstudios.message.BaseMessage;
 import org.junit.*;
 
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.LinkedList;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Test the chat functionality of the client.
@@ -35,11 +34,7 @@ public class ChatClientTest
 	@BeforeClass
 	public static void construct() throws SQLException
 	{
-		/* The SQLHandler used for testing. */
-		SQLHandler sqlHandler = new SQLHandler("localhost", "jenjinst_chatservertest", "jenjinst_cstest",
-				"chat_test");
 		chatServer = new Server<>(50, 51019, ChatClientHandler.class);
-		chatServer.setSQLHandler(sqlHandler);
 		chatServer.blockingStart();
 	}
 
@@ -58,10 +53,10 @@ public class ChatClientTest
 	@Before
 	public void setUpClients()
 	{
-		goodClient01 = new ChatClient("localhost", 51019, "TestAccount01", "testPassword");
+		goodClient01 = new ChatClient("localhost", 51019, "TestAccount01");
 		goodClient01.blockingStart();
 
-		goodClient02 = new ChatClient("127.0.0.1", 51019, "TestAccount02", "testPassword");
+		goodClient02 = new ChatClient("127.0.0.1", 51019, "TestAccount02");
 		goodClient02.blockingStart();
 	}
 
@@ -74,7 +69,7 @@ public class ChatClientTest
 	}
 
 	/**
-	 * Test the chat functioality.
+	 * Test the chat functionality.
 	 *
 	 * @throws InterruptedException If there is an error during thread sleep.
 	 */
@@ -83,17 +78,11 @@ public class ChatClientTest
 	{
 		String message = "Hello world.";
 
-		goodClient01.sendLoginRequest();
-		assertTrue(goodClient01.isLoggedIn());
-
-		goodClient02.sendLoginRequest();
-		assertTrue(goodClient02.isLoggedIn());
-
 		goodClient01.sendChatMessage(new BaseMessage(ChatClient.CHAT_MESSAGE_ID, message, 0));
 
 		// A few lines to block until the second client receives the message.  5 second timeout.
 		long startTime = System.currentTimeMillis();
-		LinkedList<BaseMessage> receivedMessages = goodClient02.getChatMessages();
+		LinkedList<BaseMessage> receivedMessages = new LinkedList<>();
 		while (receivedMessages.isEmpty() && (System.currentTimeMillis() - startTime) < 5000)
 			receivedMessages = goodClient02.getChatMessages();
 
@@ -106,9 +95,5 @@ public class ChatClientTest
 		}
 
 		assertTrue(receivedMessage.contains(message));
-
-		goodClient01.sendLogoutRequest();
-		goodClient02.sendLogoutRequest();
 	}
-
 }

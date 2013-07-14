@@ -19,7 +19,7 @@ public class ChatClientHandler extends ClientHandler
 	private HashSet<Integer> groupPermissions;
 	/** The chat group ID numbers to which this client belongs. */
 	private HashSet<Integer> chatGroups;
-	/** The server this clienthandler will work for. */
+	/** The server this client handler will work for. */
 	private Server<ChatClientHandler> server;
 
 	/**
