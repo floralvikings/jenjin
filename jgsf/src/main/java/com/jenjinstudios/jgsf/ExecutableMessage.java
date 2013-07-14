@@ -137,9 +137,12 @@ public abstract class ExecutableMessage implements Cloneable
 				executableMessageClasses.put(baseMessageID, (Class<? extends ExecutableMessage>) executableMessageClass);
 			}
 
-		} catch (ParserConfigurationException | SAXException | IOException | ClassNotFoundException e)
+		} catch (ParserConfigurationException | SAXException | IOException e)
 		{
 			LOGGER.log(Level.SEVERE, "Unable to read Messages.xml", e);
+		} catch (ClassNotFoundException ex)
+		{
+			LOGGER.log(Level.INFO, "Class not found for message.", ex);
 		}
 	}
 

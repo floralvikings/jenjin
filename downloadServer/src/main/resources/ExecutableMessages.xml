@@ -1,5 +1,5 @@
 <executable_message_registry>
-    <executable_message>
+    <executable_message override="true">
         <base_message_id>102</base_message_id>
         <class_name>com.jenjinstudios.downloadserver.ExecutableFileRequest</class_name>
     </executable_message>

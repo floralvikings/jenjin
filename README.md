@@ -6,7 +6,7 @@ Programmed in Java, and built with Gradle, it is runnable on virtually any Opera
 system.
 
 The project is made up of a Server and Client framework, code-named the Jenjin
-Game Server Architecture and Jenjin Game Client, respectively.
+Game Server Framework and Jenjin Game Client Framework, respectively.
 
 ***
 
@@ -38,6 +38,13 @@ This database must contain a table called "users" laid out in the following way:
 Any tests that utilize the login functionality will fail without this table.
 
 The password and salt fields are necessary for the salted SAH256 hashing that is done to user passwords.
+
+## Known Issues
+The current implementation of the JGSF and JGCF do not implement any password encryption; although passwords are expected
+to be hashed and salted in the database, the password is sent from the client to the server over an unencrypted socket.
+
+Ther is currently no fix planned for this, as the login functionality currently implemented by the Jenjin is not intended
+for production, but simply an example.
 
 
 ##Dependencies
