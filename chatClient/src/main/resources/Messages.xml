@@ -1,0 +1,13 @@
+<base_messages>
+
+    <message name="ChatBroadcast" id="200">
+        <argument>String</argument>
+        <argument>String</argument>
+    </message>
+
+    <message name="ChatMessage" id="201">
+        <argument>String</argument>
+        <argument>int</argument>
+    </message>
+
+</base_messages>

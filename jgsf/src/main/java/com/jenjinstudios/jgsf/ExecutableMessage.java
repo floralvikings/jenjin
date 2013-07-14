@@ -1,12 +1,23 @@
 package com.jenjinstudios.jgsf;
 
-import com.jenjinstudios.io.BaseMessage;
+import com.jenjinstudios.clientutil.file.FileUtil;
+import com.jenjinstudios.message.BaseMessage;
 import org.reflections.Reflections;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Set;
-import java.util.TreeMap;
+import java.nio.file.Paths;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -23,10 +34,11 @@ public abstract class ExecutableMessage implements Cloneable
 	/** The reflections object used for finding classes. */
 	private static final Reflections reflections = new Reflections();
 	/** The collection of ExecutableMessage classes. */
-	private static final Set<Class<? extends ExecutableMessage>> executableMessageClasses = reflections
-			.getSubTypesOf(ExecutableMessage.class);
-	/** The collection of constructors. */
-	private static final TreeMap<String, Constructor<? extends ExecutableMessage>> constructors = getConstructors();
+	private static final HashMap<Short, Class<? extends ExecutableMessage>> executableMessageClasses = new HashMap<>();
+	/** Keeps track of whether XML messages have been registered. */
+	private static boolean messagesRegistered = false;
+	/** The file name for ExecutableMessage registry files. */
+	private static final String execMessageFileName = "ExecutableMessages.xml";
 
 	/**
 	 * Construct a new ExecutableMessage.  Must be implemented by subclasses.
@@ -36,6 +48,10 @@ public abstract class ExecutableMessage implements Cloneable
 	 */
 	protected ExecutableMessage(ClientHandler handler, BaseMessage message)
 	{
+		if(message.getID() != getBaseMessageID())
+		{
+			throw new IllegalArgumentException("BaseMessage supplied to " + getClass().getName() + " constructor has invalid ID.");
+		}
 	}
 
 	/** Run the synced portion of this message. */
@@ -45,29 +61,10 @@ public abstract class ExecutableMessage implements Cloneable
 	public abstract void runASync();
 
 	/**
-	 * Get a tree map of constructors for each ExecutableMessage.
-	 *
-	 * @return A tree map of constructors for each ExecutalMessage.
+	 * Get the ID number of the BaseMessage type associated with this ExecutableMessage.
+	 * @return The ID of the message type process by this ExecutableMessage.
 	 */
-	@SuppressWarnings("unchecked")
-	private static TreeMap<String, Constructor<? extends ExecutableMessage>> getConstructors()
-	{
-		TreeMap<String, Constructor<? extends ExecutableMessage>> constructors = new TreeMap<>();
-
-		for (Class<? extends ExecutableMessage> c : executableMessageClasses)
-			try
-			{
-				Constructor<? extends ExecutableMessage> current;
-				// Have to suppress this warning because Java is dumb.
-				current = (Constructor<? extends ExecutableMessage>) c.getConstructors()[0];
-				constructors.put(current.getParameterTypes()[1].getName(), current);
-			} catch (Exception e)
-			{
-				LOGGER.log(Level.SEVERE, "Incorrect Constructor for class: " + c.getName(), e);
-			}
-
-		return constructors;
-	}
+	public abstract short getBaseMessageID();
 
 	/**
 	 * Get the class of the ExecutableMessage that handles the given BaseMessage.
@@ -79,16 +76,84 @@ public abstract class ExecutableMessage implements Cloneable
 	public static ExecutableMessage getExecutableMessageFor(ClientHandler handler, BaseMessage message)
 	{
 		ExecutableMessage r = null;
-		String messageClassName = message.getClass().getName();
-		Constructor<? extends ExecutableMessage> constructor = constructors.get(messageClassName);
-		if (constructor != null)
-			try
-			{
-				r = constructor.newInstance(handler, message);
-			} catch (InstantiationException | IllegalAccessException | InvocationTargetException e)
-			{
-				LOGGER.log(Level.SEVERE, "Incorrect Constructor Found For Class: " + constructor.getName(), e);
-			}
+		if(!messagesRegistered) registerMessages();
+
+		Class<? extends ExecutableMessage> execClass = executableMessageClasses.get(message.getID());
+
+		try
+		{
+			Constructor<? extends ExecutableMessage> execConstructor;
+			//noinspection unchecked
+			execConstructor = (Constructor<? extends ExecutableMessage>) execClass.getConstructors()[0];
+			r = execConstructor.newInstance(handler, message);
+		} catch ( InvocationTargetException | InstantiationException | IllegalAccessException e)
+		{
+			LOGGER.log(Level.SEVERE, "Constructor not correct for: " + execClass.getName(), e);
+		}
+
 		return r;
+	}
+
+	/**
+	 * Register all ExecutableMessages found in registry files.
+	 */
+	private static void registerMessages()
+	{
+		ArrayList<File> execMessageFiles = findExecMessageFiles();
+		for(File xmlFile : execMessageFiles) parseXmlFile(xmlFile);
+		messagesRegistered = true;
+	}
+
+	/**
+	 * Parse the given XML file for registry information.
+	 * @param xmlFile The XML file to be parsed.
+	 */
+	private static void parseXmlFile(File xmlFile)
+	{
+		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+		try
+		{
+			DocumentBuilder builder = factory.newDocumentBuilder();
+			Document doc = builder.parse(xmlFile);
+
+			doc.getDocumentElement().normalize();
+
+			NodeList nList = doc.getElementsByTagName("executable_message");
+
+			for(int i=0; i<nList.getLength(); i++)
+			{
+				Element element;
+				if(nList.item(i) instanceof  Element)
+					element = (Element) nList.item(i);
+				else
+					continue;
+
+				Node baseMessageIDNode = element.getElementsByTagName("base_message_id").item(0);
+				String baseMessageIDText = baseMessageIDNode.getTextContent();
+				short baseMessageID = Short.parseShort(baseMessageIDText);
+
+				Node executableMessageClassNode = element.getElementsByTagName("class_name").item(0);
+				String executableMessageClassName = executableMessageClassNode.getTextContent();
+				Class<?> executableMessageClass = Class.forName(executableMessageClassName);
+
+				//noinspection unchecked
+				executableMessageClasses.put(baseMessageID, (Class<? extends ExecutableMessage>) executableMessageClass);
+			}
+
+		} catch (ParserConfigurationException | SAXException | IOException | ClassNotFoundException e)
+		{
+			LOGGER.log(Level.SEVERE, "Unable to read Messages.xml", e);
+		}
+	}
+
+	/**
+	 * Find files that match the format for ExecutableMessage registry.
+	 * @return An ArrayList of XML files.
+	 */
+	public static ArrayList<File> findExecMessageFiles()
+	{
+		String rootDir = Paths.get("").toAbsolutePath().toString() + File.separator;
+		File rootFile = new File(rootDir);
+		return FileUtil.findFilesWithName(rootFile, execMessageFileName);
 	}
 }

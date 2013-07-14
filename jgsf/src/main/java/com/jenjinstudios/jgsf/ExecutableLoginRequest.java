@@ -1,6 +1,7 @@
 package com.jenjinstudios.jgsf;
 
-import com.jenjinstudios.message.LoginRequest;
+import com.jenjinstudios.jgcf.Client;
+import com.jenjinstudios.message.BaseMessage;
 
 /**
  * Executes the necessary actions to deal with a login response.
@@ -11,7 +12,7 @@ import com.jenjinstudios.message.LoginRequest;
 public class ExecutableLoginRequest extends ExecutableMessage
 {
 	/** The login request to be handled by this executable message. */
-	private final LoginRequest loginRequest;
+	private final BaseMessage message;
 	/** The client handler which created this executable message. */
 	private final ClientHandler clientHandler;
 	/** The SQL handler used by this executable message. */
@@ -23,10 +24,10 @@ public class ExecutableLoginRequest extends ExecutableMessage
 	 * @param clientHandler The handler which created this executable message.
 	 * @param loginRequest  The request sent by the client.
 	 */
-	public ExecutableLoginRequest(ClientHandler clientHandler, LoginRequest loginRequest)
+	public ExecutableLoginRequest(ClientHandler clientHandler, BaseMessage loginRequest)
 	{
 		super(clientHandler, loginRequest);
-		this.loginRequest = loginRequest;
+		this.message = loginRequest;
 		this.clientHandler = clientHandler;
 		sqlHandler = clientHandler.getServer().getSqlHandler();
 	}
@@ -41,10 +42,18 @@ public class ExecutableLoginRequest extends ExecutableMessage
 	{
 		if (sqlHandler == null || clientHandler.isLoggedIn())
 			return;
-		boolean success = sqlHandler.logInUser(loginRequest.username, loginRequest.password);
+		String username = (String) message.getArgs()[0];
+		String password = (String) message.getArgs()[1];
+		boolean success = sqlHandler.logInUser(username, password);
 		clientHandler.queueLoginStatus(success);
 		if (success)
-			clientHandler.setUsername(loginRequest.username);
+			clientHandler.setUsername(username);
+	}
+
+	@Override
+	public short getBaseMessageID()
+	{
+		return Client.LOGIN_REQ_ID;
 	}
 
 }

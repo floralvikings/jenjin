@@ -2,7 +2,7 @@ package test.jenjinstudios.downloadserver;
 
 import com.jenjinstudios.clientutil.file.FileUtil;
 import com.jenjinstudios.downloadclient.DownloadClient;
-import com.jenjinstudios.downloadserver.downloadserver.DownloadServer;
+import com.jenjinstudios.downloadserver.DownloadServer;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -39,9 +39,7 @@ public class DownloadClientTest
 
 		client = new DownloadClient("localhost", DownloadServer.PORT);
 		client.blockingStart();
-
 		client.requestFileList();
-
 		client.requestNeededFiles();
 	}
 

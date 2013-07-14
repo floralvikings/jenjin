@@ -1,0 +1,24 @@
+<base_messages>
+
+    <message name="FirstConnectResponse" id="0">
+        <argument>int</argument>
+    </message>
+
+    <message name="LoginRequest" id="1">
+        <argument>String</argument>
+        <argument>String</argument>
+    </message>
+
+    <message name="LoginResponse" id="2">
+        <argument>boolean</argument>
+        <argument>long</argument>
+    </message>
+
+    <message name="LogoutRequest" id="3">
+    </message>
+
+    <message name="LogoutResponse" id="4">
+        <argument>boolean</argument>
+    </message>
+
+</base_messages>

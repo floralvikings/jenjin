@@ -1,6 +1,6 @@
 package com.jenjinstudios.jgsf;
 
-import com.jenjinstudios.message.MessageRegistry;
+import com.jenjinstudios.io.MessageRegistry;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -17,23 +17,24 @@ import java.util.logging.Logger;
  *
  * @author Caleb Brinkman
  */
+@SuppressWarnings("SameParameterValue")
 public class Server<T extends ClientHandler> extends Thread
 {
 
 	/** The logger used by this class. */
-	protected static final Logger LOGGER = Logger.getLogger(Server.class.getName());
+	static final Logger LOGGER = Logger.getLogger(Server.class.getName());
 	/** The updates per second. */
 	public final int UPS;
 	/** The period of the update in milliseconds. */
-	public final int PERIOD;
+	private final int PERIOD;
 	/** The port on which this server will run. */
-	public final int PORT;
+	private final int PORT;
 	/** The list of {@code ClientListener}s working for this server. */
-	protected final LinkedList<ClientListener<T>> clientListeners;
+	private final LinkedList<ClientListener<T>> clientListeners;
 	/** The list of {@code ClientHandler}s working for this server. */
-	protected final ArrayList<T> clientHandlers;
+	private final ArrayList<T> clientHandlers;
 	/** The map of clients stored by username. */
-	protected final TreeMap<String, T> clientsByUsername;
+	private final TreeMap<String, T> clientsByUsername;
 	/** Tasks to be repeated in the main loop. */
 	private final LinkedList<Runnable> repeatedTasks;
 	/** Synced tasks scheduled by client handlers. */
@@ -53,12 +54,14 @@ public class Server<T extends ClientHandler> extends Thread
 	/** The maximum number of clients allowed to connect. */
 	private int maxClients = 100;
 	/** The class for ClientHandlers. */
-	private Class<T> handlerClass;
+	private final Class<T> handlerClass;
 
 	/**
 	 * Construct a new Server without a SQLHandler.
 	 *
 	 * @param ups The cycles per second at which this server will run.
+	 * @param port The port number on which this server will listen.
+	 * @param handlerClass The class of ClientHandler used by this Server.
 	 */
 	public Server(int ups, int port, Class<T> handlerClass)
 	{
@@ -77,7 +80,7 @@ public class Server<T extends ClientHandler> extends Thread
 		syncedTasks = new LinkedList<>();
 		sqlHandler = null;
 		numClients = 0;
-		MessageRegistry.registerAllBaseMessages();
+		MessageRegistry.registerXmlMessages();
 		addListener();
 	}
 
@@ -105,7 +108,7 @@ public class Server<T extends ClientHandler> extends Thread
 	}
 
 	/** Start a new Client Listener on the specified port. */
-	public void addListener()
+	void addListener()
 	{
 		try
 		{
@@ -121,7 +124,7 @@ public class Server<T extends ClientHandler> extends Thread
 	 *
 	 * @param handler The client handler to be removed.
 	 */
-	protected void removeClient(ClientHandler handler)
+	void removeClient(ClientHandler handler)
 	{
 		synchronized (clientHandlers)
 		{
@@ -335,7 +338,7 @@ public class Server<T extends ClientHandler> extends Thread
 	 * @param handler  The ClientHandler that has had a username set.
 	 */
 	@SuppressWarnings("unchecked")
-	protected void clientUsernameSet(String username, ClientHandler handler)
+	void clientUsernameSet(String username, ClientHandler handler)
 	{
 		clientsByUsername.put(username, (T) handler);
 	}
@@ -376,7 +379,7 @@ public class Server<T extends ClientHandler> extends Thread
 	 *
 	 * @return The list of repeated tasks to be executed by this server.
 	 */
-	protected LinkedList<Runnable> getRepeatedTasks()
+	LinkedList<Runnable> getRepeatedTasks()
 	{
 		return repeatedTasks;
 	}
@@ -386,7 +389,7 @@ public class Server<T extends ClientHandler> extends Thread
 	 *
 	 * @return The list of syncrhonized tasks scheduled by ClientHandlers.
 	 */
-	protected LinkedList<ExecutableMessage> getSyncedTasks()
+	LinkedList<ExecutableMessage> getSyncedTasks()
 	{
 		return syncedTasks;
 	}

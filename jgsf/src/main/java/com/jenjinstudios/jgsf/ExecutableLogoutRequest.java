@@ -1,6 +1,7 @@
 package com.jenjinstudios.jgsf;
 
-import com.jenjinstudios.message.LogoutRequest;
+import com.jenjinstudios.jgcf.Client;
+import com.jenjinstudios.message.BaseMessage;
 
 /**
  * Executable message to handle client logging out.
@@ -14,21 +15,19 @@ public class ExecutableLogoutRequest extends ExecutableMessage
 	private final ClientHandler clientHandler;
 	/** The SQLHandler used to log out the client. */
 	private final SQLHandler sqlHandler;
-	/** The LogoutRequest for which this class is created. */
-	private final LogoutRequest logoutRequest;
 
 	/**
 	 * Construct a new ExecutableLogoutRequest.
 	 *
 	 * @param clientHandler The client handler which created this message.
-	 * @param logoutRequest The message used to create this ExecutableMessage.
+	 * @param message The message used to create this ExecutableMessage.
 	 */
-	public ExecutableLogoutRequest(ClientHandler clientHandler, LogoutRequest logoutRequest)
+	public ExecutableLogoutRequest(ClientHandler clientHandler, BaseMessage message)
 	{
-		super(clientHandler, logoutRequest);
+		super(clientHandler, message);
 		this.clientHandler = clientHandler;
 		sqlHandler = clientHandler.getServer().getSqlHandler();
-		this.logoutRequest = logoutRequest;
+		/* The LogoutRequest for which this class is created. */
 	}
 
 	@Override
@@ -42,6 +41,12 @@ public class ExecutableLogoutRequest extends ExecutableMessage
 		if (sqlHandler == null || !clientHandler.isLoggedIn())
 			return;
 		clientHandler.queueLogoutStatus(sqlHandler.logOutUser(clientHandler.getUsername()));
+	}
+
+	@Override
+	public short getBaseMessageID()
+	{
+		return Client.LOGOUT_REQ_ID;
 	}
 
 }
