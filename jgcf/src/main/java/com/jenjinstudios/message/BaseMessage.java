@@ -64,7 +64,7 @@ public class BaseMessage implements Serializable
 	 */
 	private boolean isInvalid()
 	{
-		boolean valid = true;
+		boolean invalid = false;
 		LinkedList<Class> argumentClasses = MessageRegistry.getArgumentClasses(ID);
 		// Must be the same number of arguments.
 		if(args.length == argumentClasses.size())
@@ -75,10 +75,10 @@ public class BaseMessage implements Serializable
 				String className = current.getName().toLowerCase();
 				String argClassName = args[i].getClass().getName().toLowerCase();
 				if(!className.contains(argClassName) && !argClassName.contains(className))
-					valid = false;
+					invalid = true;
 			}
 		}else
-			valid = false;
-		return valid;
+			invalid = true;
+		return invalid;
 	}
 }
