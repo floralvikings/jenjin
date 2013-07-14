@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -66,7 +67,7 @@ public class FileUtil
 	 * @param target    The File to be stripped.
 	 * @return The new file name.
 	 */
-	public static String stripDirectory(String directory, File target)
+	private static String stripDirectory(String directory, File target)
 	{
 		return target.getPath().replace(directory, "");
 	}
@@ -161,5 +162,27 @@ public class FileUtil
 		}
 		if (offset < bytes.length) throw new IOException("File was read incorrectly");
 		return bytes;
+	}
+
+	/**
+	 * Search a directory and subdirectories for files with the given name.
+	 * @param dir The directory in which to start looking.
+	 * @param fileName The name of the file(s) for which to look.
+	 * @return An ArrayList of files in the given directory or a subdirectory, with the supplied file name.
+	 */
+	public static ArrayList<File> findFilesWithName(File dir, String fileName)
+	{
+		ArrayList<File> files = new ArrayList<>();
+		File[] contents = dir.listFiles();
+		if(contents != null)
+			for(File f : contents)
+			{
+				if(f.isDirectory())
+					files.addAll(findFilesWithName(f, fileName));
+				if(f.getName().equals(fileName))
+					files.add(f);
+			}
+
+		return files;
 	}
 }

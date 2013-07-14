@@ -14,10 +14,11 @@ import static java.sql.ResultSet.TYPE_SCROLL_SENSITIVE;
  *
  * @author Caleb Brinkman
  */
+@SuppressWarnings("SameParameterValue")
 public class SQLHandler
 {
 	/** The Logger used for this class. */
-	public static final Logger LOGGER = Logger.getLogger(SQLHandler.class.getName());
+	private static final Logger LOGGER = Logger.getLogger(SQLHandler.class.getName());
 	/** The String used in connection protocol. */
 	private static final String connectionStringProtocol = "jdbc:mysql:thin://";
 	/** The username used to access the database. */

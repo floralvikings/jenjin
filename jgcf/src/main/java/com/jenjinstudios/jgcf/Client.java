@@ -1,9 +1,9 @@
 package com.jenjinstudios.jgcf;
 
-import com.jenjinstudios.io.BaseMessage;
+import com.jenjinstudios.message.BaseMessage;
 import com.jenjinstudios.io.MessageInputStream;
 import com.jenjinstudios.io.MessageOutputStream;
-import com.jenjinstudios.message.*;
+import com.jenjinstudios.io.MessageRegistry;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -56,6 +56,16 @@ public class Client extends Thread
 	private String username;
 	/** The password this client will use when logging in. */
 	private String password;
+	/** The ID for the FirstConnectResponse message. */
+	public static final short FIRST_CONNECT_ID = 0;
+	/** The ID for the LoginRequest message. */
+	public static final short LOGIN_REQ_ID = 1;
+	/** The ID for the LoginResponse message. */
+	public static final short LOGIN_RESP_ID = 2;
+	/** The ID for the LogoutRequest message. */
+	public static final short LOGOUT_REQ_ID = 3;
+	/** The ID for the LogoutResponse message. */
+	public static final short LOGOUT_RESP_ID = 4;
 
 
 	/**
@@ -64,7 +74,7 @@ public class Client extends Thread
 	 * @param address The address of the server to which to connect
 	 * @param port    The port over which to connect to the server.
 	 */
-	public Client(String address, int port)
+	protected Client(String address, int port)
 	{
 		ADDRESS = address;
 		PORT = port;
@@ -73,7 +83,7 @@ public class Client extends Thread
 		repeatedTasks = new LinkedList<>();
 		if (MessageRegistry.hasMessagesRegistered())
 			return;
-		MessageRegistry.registerAllBaseMessages();
+		MessageRegistry.registerXmlMessages();
 	}
 
 	/**
@@ -103,10 +113,10 @@ public class Client extends Thread
 		{
 			socket = new Socket(ADDRESS, PORT);
 			inputStream = new MessageInputStream(socket.getInputStream());
-			FirstConnectResponse firstConnectResponse = (FirstConnectResponse) inputStream.readMessage();
+			BaseMessage firstConnectResponse = inputStream.readMessage();
 			outputStream = new MessageOutputStream(socket.getOutputStream());
 			/* The ups of this client. */
-			int ups = firstConnectResponse.UPS;
+			int ups = (int) firstConnectResponse.getArgs()[0];
 			period = 1000 / ups;
 			connected = true;
 		} catch (IOException ex)
@@ -148,6 +158,7 @@ public class Client extends Thread
 	 *
 	 * @param message The message to add to the outgoing queue.
 	 */
+	@SuppressWarnings("WeakerAccess")
 	public void queueMessage(BaseMessage message)
 	{
 		synchronized (outgoingMessages)
@@ -174,16 +185,18 @@ public class Client extends Thread
 	 * @param message The message to be processed.
 	 * @throws IOException If there is an IO error.
 	 */
-	protected void processMessage(Object message) throws IOException
+	protected void processMessage(BaseMessage message) throws IOException
 	{
-		if (message instanceof LoginResponse)
+		if (message.getID() == LOGIN_RESP_ID)
 		{
-			processLoginResponse((LoginResponse) message);
-		} else if (message instanceof LogoutResponse)
+			processLoginResponse(message);
+		} else
 		{
-			receivedLogoutResponse = true;
-			LogoutResponse logoutResponse = (LogoutResponse) message;
-			loggedIn = !logoutResponse.SUCCESS;
+			if (message.getID() == LOGOUT_RESP_ID)
+			{
+				receivedLogoutResponse = true;
+				loggedIn = !( (boolean) message.getArgs()[0]);
+			}
 		}
 	}
 
@@ -192,13 +205,13 @@ public class Client extends Thread
 	 *
 	 * @param message The login response.
 	 */
-	protected void processLoginResponse(LoginResponse message)
+	void processLoginResponse(BaseMessage message)
 	{
 		receivedLoginResponse = true;
-		loggedIn = message.SUCCESS;
+		loggedIn = (boolean) message.getArgs()[0];
 		if (!loggedIn)
 			return;
-		loggedInTime = message.LOGIN_TIME;
+		loggedInTime = (long) message.getArgs()[1];
 		super.setName("Client: " + username);
 	}
 
@@ -237,7 +250,7 @@ public class Client extends Thread
 			return;
 		}
 		receivedLoginResponse = false;
-		queueMessage(new LoginRequest(username, password));
+		queueMessage(new BaseMessage(LOGIN_REQ_ID, username, password));
 		while (!receivedLoginResponse)
 			try
 			{
@@ -252,7 +265,7 @@ public class Client extends Thread
 	public void sendLogoutRequest()
 	{
 		receivedLogoutResponse = false;
-		queueMessage(new LogoutRequest());
+		queueMessage(new BaseMessage(LOGOUT_REQ_ID));
 		while (!receivedLogoutResponse)
 			try
 			{
@@ -285,7 +298,7 @@ public class Client extends Thread
 		sendMessagesTimer.scheduleAtFixedRate(new ClientLoop(), 0, period);
 		try
 		{
-			Object currentMessage;
+			BaseMessage currentMessage;
 			while ((currentMessage = inputStream.readMessage()) != null && running)
 				processMessage(currentMessage);
 		} catch (IOException ex)

@@ -17,7 +17,7 @@ public class Hasher
 	 * @param input The string to hash.
 	 * @return a SHA1 hash of the given string.
 	 */
-	public static String getHashedString(String input)
+	private static String getHashedString(String input)
 	{
 		try
 		{
@@ -42,6 +42,12 @@ public class Hasher
 		}
 	}
 
+	/**
+	 * Get a salted, SHA256 hashed string for the supplied string and salt.
+	 * @param input The string to be hashed.
+	 * @param salt The salt to be applied before hashing.
+	 * @return The hashed and salted string.
+	 */
 	public static String getHashedString(String input, String salt)
 	{
 		return getHashedString(salt + input);
