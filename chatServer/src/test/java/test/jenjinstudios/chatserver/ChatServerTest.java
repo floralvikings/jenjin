@@ -1,7 +1,6 @@
 package test.jenjinstudios.chatserver;
 
 import com.jenjinstudios.chatserver.ChatClientHandler;
-import com.jenjinstudios.jgsf.SQLHandler;
 import com.jenjinstudios.jgsf.Server;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -20,8 +19,6 @@ import static org.junit.Assert.assertTrue;
  */
 public class ChatServerTest
 {
-	/** The SQLHandler to be used for testing. */
-	private static SQLHandler sqlHandler;
 	/** The Server to be used for testing. */
 	private static Server<ChatClientHandler> server;
 
@@ -34,8 +31,6 @@ public class ChatServerTest
 	public static void construct() throws SQLException
 	{
 		server = new Server<>(50, 51019, ChatClientHandler.class);
-		sqlHandler = new SQLHandler("localhost", "jenjinst_chatservertest", "jenjinst_cstest", "chat_test");
-		server.setSQLHandler(sqlHandler);
 		server.blockingStart();
 	}
 
@@ -50,25 +45,11 @@ public class ChatServerTest
 		server.shutdown();
 	}
 
-	/** Test the SQLHandler's connection. */
-	@Test
-	public void testSQLHandlerConnected()
-	{
-		assertTrue(sqlHandler.isConnected());
-	}
-
 	/** Test the server's initialization status. */
 	@Test
 	public void testIsInitialized()
 	{
 		assertTrue(server.isInitialized());
-	}
-
-	/** Verify that the server has connected to the database. */
-	@Test
-	public void testIsConnectedToDB()
-	{
-		assertTrue(server.isConnectedToDB());
 	}
 
 	/** Test the get and set functionality for max clients. */

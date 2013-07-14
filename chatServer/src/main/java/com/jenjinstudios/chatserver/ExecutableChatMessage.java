@@ -65,7 +65,7 @@ public class ExecutableChatMessage extends ExecutableMessage
 	public void runASync()
 	{
 		int groupID = (int) msg.getArgs()[1];
-		permission = handler.hasChatPermission(groupID) && handler.isLoggedIn();
+		permission = handler.hasChatPermission(groupID);
 	}
 
 	@Override
