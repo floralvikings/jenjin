@@ -1,6 +1,7 @@
 package com.jenjinstudios.downloadclient;
 
 import com.jenjinstudios.clientutil.file.FileUtil;
+import com.jenjinstudios.message.BaseMessage;
 import com.jenjinstudios.jgcf.Client;
 
 import java.io.File;
@@ -10,7 +11,11 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/** @author Caleb Brinkman */
+/**
+ * The client class for the Download program tutorial.
+ * @author Caleb Brinkman
+ */
+@SuppressWarnings("SameParameterValue")
 public class DownloadClient extends Client
 {
 	/** The logger associated with this class. */
@@ -23,7 +28,18 @@ public class DownloadClient extends Client
 	private volatile boolean hasReceivedFileList;
 	/** The FileListMessage sent by the server, if any. */
 	private ArrayList<String> fileList;
+	/** The ID for FileListRequest messages. */
+	public static final short FILE_LIST_ID = 100;
+	/** The ID for FileMessage messages. */
+	public static final short FILE_MESSAGE_ID = 101;
+	/** The ID for FileRequest messages. */
+	public static final short FILE_REQ_ID = 102;
 
+	/**
+	 * Construct a new download client.
+	 * @param address The address of the server.
+	 * @param port The port over which to communicate.
+	 */
 	public DownloadClient(String address, int port)
 	{
 		super(address, port);
@@ -37,10 +53,10 @@ public class DownloadClient extends Client
 	 * @param message The {@code FileMessage} sent from the server.
 	 * @throws java.io.IOException if there is an error downloading or writing the file.
 	 */
-	protected void processFileMessage(FileMessage message) throws IOException
+	void processFileMessage(BaseMessage message) throws IOException
 	{
 		// Get the file name from the message
-		String fileName = message.FILENAME;
+		String fileName = (String) message.getArgs()[0];
 		File newFile = new File(fileName);
 		// Create directories, if needed
 		File parent = newFile.getParentFile();
@@ -55,7 +71,8 @@ public class DownloadClient extends Client
 			throw new IOException("Error creating new file: " + fileName);
 		// Write the bytes from the message into the file.
 		FileOutputStream outputStream = new FileOutputStream(newFile);
-		outputStream.write(message.BYTES);
+		byte[] fileBytes = (byte[]) message.getArgs()[1];
+		outputStream.write(fileBytes);
 		outputStream.close();
 		// increment the number of received files.
 		numReceivedFiles++;
@@ -70,15 +87,15 @@ public class DownloadClient extends Client
 	 *
 	 * @param message The message from the server.
 	 */
-	protected void processFileListMessage(FileListMessage message)
+	void processFileListMessage(BaseMessage message)
 	{
 		// We only want to process the file list once.
 		if (fileList != null)
 			return;
 		// Initialize the file list.
 		fileList = new ArrayList<>();
-		String[] files = message.FILE_LIST;
-		String[] hashes = message.MD5_HASH_LIST;
+		String[] files = (String[]) message.getArgs()[0];
+		String[] hashes = (String[]) message.getArgs()[1];
 		// Iterate through the files and check if the hash for the client side file is correct.
 		for (int i = 0; i < files.length; i++)
 		{
@@ -92,14 +109,15 @@ public class DownloadClient extends Client
 	}
 
 	@Override
-	public void processMessage(Object message) throws IOException
+	public void processMessage(BaseMessage message) throws IOException
 	{
-		if (message instanceof FileMessage)
+		short id = message.getID();
+		if (id == FILE_MESSAGE_ID)
 		{
-			processFileMessage((FileMessage) message);
-		} else if (message instanceof FileListMessage)
+			processFileMessage(message);
+		} else if (id == FILE_LIST_ID)
 		{
-			processFileListMessage((FileListMessage) message);
+			processFileListMessage(message);
 			hasReceivedFileList = true;
 		} else
 			super.processMessage(message);
@@ -132,7 +150,7 @@ public class DownloadClient extends Client
 	 */
 	public final void requestFileList()
 	{
-		queueMessage(new FileRequest(""));
+		queueMessage(new BaseMessage(FILE_REQ_ID, ""));
 		while (!hasReceivedFileList)
 			try
 			{
@@ -149,7 +167,7 @@ public class DownloadClient extends Client
 		if (fileList == null)
 			return;
 		for (String fileName : fileList)
-			queueMessage(new FileRequest(fileName));
+			queueMessage(new BaseMessage(FILE_REQ_ID, fileName));
 		while (!receivedAllFiles)
 			try
 			{

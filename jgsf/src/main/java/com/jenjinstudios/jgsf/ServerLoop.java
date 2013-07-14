@@ -10,10 +10,10 @@ import java.util.logging.Logger;
  *
  * @author Caleb Brinkman
  */
-public class ServerLoop extends TimerTask
+class ServerLoop extends TimerTask
 {
 	/** The logger for this class. */
-	public static final Logger LOGGER = Logger.getLogger(ServerLoop.class.getName());
+	private static final Logger LOGGER = Logger.getLogger(ServerLoop.class.getName());
 	/** The time in nanoseconds of the last 50 update cycles. */
 	private final long[] last50Cycles;
 	/** The server for which this loop runs. */
@@ -99,7 +99,7 @@ public class ServerLoop extends TimerTask
 	 *
 	 * @return The average UPS for the past 50 updates.
 	 */
-	protected double getAverageUPS()
+	double getAverageUPS()
 	{
 		return averageUPS;
 	}
@@ -109,7 +109,7 @@ public class ServerLoop extends TimerTask
 	 *
 	 * @return The start time of the current cycle.
 	 */
-	protected long getCycleStart()
+	long getCycleStart()
 	{
 		return cycleStart;
 	}

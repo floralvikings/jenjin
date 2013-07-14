@@ -1,10 +1,10 @@
 package com.jenjinstudios.chatserver;
 
+import com.jenjinstudios.chatclient.ChatClient;
+import com.jenjinstudios.message.BaseMessage;
 import com.jenjinstudios.jgsf.ClientHandler;
 import com.jenjinstudios.jgsf.ExecutableMessage;
 import com.jenjinstudios.jgsf.Server;
-import com.jenjinstudios.chatclient.ChatBroadcast;
-import com.jenjinstudios.chatclient.ChatMessage;
 
 import java.util.ArrayList;
 
@@ -17,7 +17,7 @@ import java.util.ArrayList;
 public class ExecutableChatMessage extends ExecutableMessage
 {
 	/** The String containing the message to send. */
-	private final ChatMessage msg;
+	private final BaseMessage msg;
 	/** The server which will be executing this message. */
 	private final Server<ChatClientHandler> server;
 	/** The client handler which created this executable message. */
@@ -31,7 +31,7 @@ public class ExecutableChatMessage extends ExecutableMessage
 	 * @param handler The client handler which created this executable message.
 	 * @param msg     The message to be sent.
 	 */
-	public ExecutableChatMessage(ChatClientHandler handler, ChatMessage msg)
+	public ExecutableChatMessage(ChatClientHandler handler, BaseMessage msg)
 	{
 		super(handler, msg);
 		this.msg = msg;
@@ -51,15 +51,27 @@ public class ExecutableChatMessage extends ExecutableMessage
 			if (h == null)
 				continue;
 			ChatClientHandler currentHandler = (ChatClientHandler) h;
-			if (currentHandler.inChatGroup(msg.GROUP_ID))
-				currentHandler.queueMessage(new ChatBroadcast(handler.getUsername(), msg.MESSAGE));
+			int groupID = (int) msg.getArgs()[1];
+			String message = (String) msg.getArgs()[0];
+			if (currentHandler.inChatGroup(groupID))
+			{
+				BaseMessage response = new BaseMessage(ChatClient.CHAT_BROADCAST_ID, handler.getUsername(), message);
+				currentHandler.queueMessage(response);
+			}
 		}
 	}
 
 	@Override
 	public void runASync()
 	{
-		permission = handler.hasChatPermission(msg.GROUP_ID) && handler.isLoggedIn();
+		int groupID = (int) msg.getArgs()[1];
+		permission = handler.hasChatPermission(groupID) && handler.isLoggedIn();
+	}
+
+	@Override
+	public short getBaseMessageID()
+	{
+		return ChatClient.CHAT_MESSAGE_ID;
 	}
 
 }

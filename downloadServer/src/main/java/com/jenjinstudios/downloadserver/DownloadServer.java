@@ -1,4 +1,4 @@
-package com.jenjinstudios.downloadserver.downloadserver;
+package com.jenjinstudios.downloadserver;
 
 import com.jenjinstudios.clientutil.file.FileUtil;
 import com.jenjinstudios.jgsf.ClientHandler;
@@ -12,6 +12,7 @@ import java.util.TreeSet;
  *
  * @author Caleb Brinkman
  */
+@SuppressWarnings("SameParameterValue")
 public class DownloadServer extends Server<ClientHandler>
 {
 	/** The updates-per-second of this server. */

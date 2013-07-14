@@ -1,16 +1,32 @@
 package com.jenjinstudios.chatclient;
 
+import com.jenjinstudios.message.BaseMessage;
 import com.jenjinstudios.jgcf.Client;
 
 import java.io.IOException;
 import java.util.LinkedList;
 
-/** @author Caleb Brinkman */
+/**
+ * The client for the Chat program tutorial.
+ * @author Caleb Brinkman
+ */
+@SuppressWarnings("SameParameterValue")
 public class ChatClient extends Client
 {
 	/** The list of received chat messages. */
-	private final LinkedList<ChatBroadcast> chatMessages;
+	private final LinkedList<BaseMessage> chatMessages;
+	/** The ID number for the ChatBroadcast message. */
+	public static final short CHAT_BROADCAST_ID = 200;
+	/** The ID number for the ChatMessage message. */
+	public static final short CHAT_MESSAGE_ID = 201;
 
+	/**
+	 * Construct a new ChatClient.
+	 * @param address The address of the server.
+	 * @param port The port over which to communicate with the server.
+	 * @param username The user's username.
+	 * @param password The user's password.
+	 */
 	public ChatClient(String address, int port, String username, String password)
 	{
 		super(address, port, username, password);
@@ -22,7 +38,7 @@ public class ChatClient extends Client
 	 *
 	 * @param message The message to send to the server.
 	 */
-	public final void sendChatMessage(ChatMessage message)
+	public final void sendChatMessage(BaseMessage message)
 	{
 		queueMessage(message);
 	}
@@ -33,9 +49,9 @@ public class ChatClient extends Client
 	 * @return A {@code LinkedList} of all the ChatMessages collected since the last time this method was
 	 *         called.
 	 */
-	public final LinkedList<ChatBroadcast> getChatMessages()
+	public final LinkedList<BaseMessage> getChatMessages()
 	{
-		LinkedList<ChatBroadcast> temp;
+		LinkedList<BaseMessage> temp;
 		synchronized (chatMessages)
 		{
 			temp = new LinkedList<>(chatMessages);
@@ -49,7 +65,7 @@ public class ChatClient extends Client
 	 *
 	 * @param message The chat message that hasbeen received.
 	 */
-	protected void processChatBroadcast(ChatBroadcast message)
+	void processChatBroadcast(BaseMessage message)
 	{
 		synchronized (chatMessages)
 		{
@@ -64,10 +80,10 @@ public class ChatClient extends Client
 	 * @param message The message to be processed.
 	 * @throws java.io.IOException If there is an IO error.
 	 */
-	protected void processMessage(Object message) throws IOException
+	protected void processMessage(BaseMessage message) throws IOException
 	{
-		if (message instanceof ChatBroadcast)
-			processChatBroadcast((ChatBroadcast) message);
+		if (message.getID() == CHAT_BROADCAST_ID)
+			processChatBroadcast(message);
 		else
 			super.processMessage(message);
 	}

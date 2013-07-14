@@ -1,11 +1,9 @@
 package com.jenjinstudios.jgsf;
 
-import com.jenjinstudios.io.BaseMessage;
+import com.jenjinstudios.message.BaseMessage;
 import com.jenjinstudios.io.MessageInputStream;
 import com.jenjinstudios.io.MessageOutputStream;
-import com.jenjinstudios.message.FirstConnectResponse;
-import com.jenjinstudios.message.LoginResponse;
-import com.jenjinstudios.message.LogoutResponse;
+import com.jenjinstudios.jgcf.Client;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -59,7 +57,7 @@ public class ClientHandler extends Thread
 		inputStream = new MessageInputStream(sock.getInputStream());
 		outputStream = new MessageOutputStream(sock.getOutputStream());
 		linkOpen = true;
-		queueMessage(new FirstConnectResponse(server.UPS));
+		queueMessage(new BaseMessage(Client.FIRST_CONNECT_ID, server.UPS));
 	}
 
 	/**
@@ -87,11 +85,13 @@ public class ClientHandler extends Thread
 	}
 
 	/** Update anything that needs to be taken care of before broadcast. */
+	@SuppressWarnings("EmptyMethod")
 	public void update()
 	{
 	}
 
 	/** Reset anything that needs to be taken care of after broadcast. */
+	@SuppressWarnings("EmptyMethod")
 	public void refresh()
 	{
 	}
@@ -158,7 +158,7 @@ public class ClientHandler extends Thread
 	}
 
 	/** Close the link with the client, if possible. */
-	public final void closeLink()
+	final void closeLink()
 	{
 		if (linkOpen)
 		{
@@ -185,7 +185,7 @@ public class ClientHandler extends Thread
 	{
 		loggedIn = success;
 		loggedInTime = server.getCycleStartTime();
-		queueMessage(new LoginResponse(success, loggedInTime));
+		queueMessage(new BaseMessage(Client.LOGIN_RESP_ID, success, loggedInTime));
 	}
 
 	/**
@@ -196,7 +196,7 @@ public class ClientHandler extends Thread
 	public void queueLogoutStatus(boolean success)
 	{
 		loggedIn = !success;
-		queueMessage(new LogoutResponse(success));
+		queueMessage(new BaseMessage(Client.LOGOUT_RESP_ID, success));
 	}
 
 	/** Enter a loop that receives and processes messages until the link is closed. */

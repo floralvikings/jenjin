@@ -1,6 +1,6 @@
 package com.jenjinstudios.io;
 
-import com.jenjinstudios.message.MessageRegistry;
+import com.jenjinstudios.message.BaseMessage;
 
 import java.io.DataInputStream;
 import java.io.EOFException;
@@ -37,16 +37,11 @@ public class MessageInputStream extends DataInputStream
 		try
 		{
 			short id = readShort();
-			LinkedList<String> classNames = MessageRegistry.getClassNames(id);
-			LinkedList<Class> classes = new LinkedList<>();
-			for (String s : classNames) classes.add(Class.forName(s));
+			LinkedList<Class> classes = MessageRegistry.getArgumentClasses(id);
 			Class<?>[] classArray = new Class[classes.size()];
 			classes.toArray(classArray);
-			Class<?> messageClass = Class.forName(MessageRegistry.getMessageClass(id));
-			Object[] args = readMessageArgs(classNames);
-			Object message = messageClass.getConstructor(classArray).newInstance(args);
-			if (!(message instanceof BaseMessage)) throw new IOException("Message not BaseMessage");
-			return (BaseMessage) message;
+			Object[] args = readMessageArgs(classes);
+			return new BaseMessage(id, args);
 		} catch (EOFException | SocketException e)
 		{
 			return null;
@@ -60,17 +55,17 @@ public class MessageInputStream extends DataInputStream
 	/**
 	 * Read from the DataInputStream an array of Objects to be passed as arguments to a message.
 	 *
-	 * @param classNames The class names of the arguments to be read.
+	 * @param classes The class names of the arguments to be read.
 	 * @return An Object[] containing the message arguments.
 	 * @throws IOException If there is an IO error
 	 */
-	private Object[] readMessageArgs(LinkedList<String> classNames) throws IOException
+	private Object[] readMessageArgs(LinkedList<Class> classes) throws IOException
 	{
-		Object[] args = new Object[classNames.size()];
+		Object[] args = new Object[classes.size()];
 
 		for (int i = 0; i < args.length; i++)
 		{
-			String currentClass = classNames.pop();
+			String currentClass = classes.pop().getName();
 			switch (currentClass)
 			{
 				case "java.lang.String":

@@ -1,5 +1,7 @@
 package com.jenjinstudios.io;
 
+import com.jenjinstudios.message.BaseMessage;
+
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
