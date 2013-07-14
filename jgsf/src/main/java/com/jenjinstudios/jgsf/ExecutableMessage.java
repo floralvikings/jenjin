@@ -2,7 +2,6 @@ package com.jenjinstudios.jgsf;
 
 import com.jenjinstudios.clientutil.file.FileUtil;
 import com.jenjinstudios.message.BaseMessage;
-import org.reflections.Reflections;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -31,8 +30,6 @@ public abstract class ExecutableMessage implements Cloneable
 {
 	/** The Logger for this class. */
 	private static final Logger LOGGER = Logger.getLogger(ExecutableMessage.class.getName());
-	/** The reflections object used for finding classes. */
-	private static final Reflections reflections = new Reflections();
 	/** The collection of ExecutableMessage classes. */
 	private static final HashMap<Short, Class<? extends ExecutableMessage>> executableMessageClasses = new HashMap<>();
 	/** Keeps track of whether XML messages have been registered. */
