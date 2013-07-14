@@ -10,4 +10,8 @@
         <argument>int</argument>
     </message>
 
+
+    <message name="ChatUserName" id="202">
+        <argument>String</argument>
+    </message>
 </base_messages>

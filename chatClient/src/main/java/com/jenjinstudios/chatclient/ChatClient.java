@@ -19,18 +19,20 @@ public class ChatClient extends Client
 	public static final short CHAT_BROADCAST_ID = 200;
 	/** The ID number for the ChatMessage message. */
 	public static final short CHAT_MESSAGE_ID = 201;
+	/** The ID number for the ChatUsername message. */
+	public static final short CHAT_USERNAME_ID = 202;
 
 	/**
 	 * Construct a new ChatClient.
 	 * @param address The address of the server.
 	 * @param port The port over which to communicate with the server.
 	 * @param username The user's username.
-	 * @param password The user's password.
 	 */
-	public ChatClient(String address, int port, String username, String password)
+	public ChatClient(String address, int port, String username)
 	{
-		super(address, port, username, password);
+		super(address, port);
 		chatMessages = new LinkedList<>();
+		queueMessage(new BaseMessage(CHAT_USERNAME_ID, username));
 	}
 
 	/**

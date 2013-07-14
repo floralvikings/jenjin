@@ -3,4 +3,9 @@
         <base_message_id>201</base_message_id>
         <class_name>com.jenjinstudios.chatserver.ExecutableChatMessage</class_name>
     </executable_message>
+
+    <executable_message>
+        <base_message_id>202</base_message_id>
+        <class_name>com.jenjinstudios.chatserver.ExecutableChatUsername</class_name>
+    </executable_message>
 </executable_message_registry>
