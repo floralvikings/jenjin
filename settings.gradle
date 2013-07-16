@@ -1,9 +1,7 @@
 rootProject.name = 'Jenjin'
-include ':jgsf', ':jgcf', ':downloadServer', ':downloadClient', ':chatClient', ':chatServer'
+include ':jgsf', ':jgcf', ':chatClient', ':chatServer'
 
 project(':jgsf').projectDir = "$rootDir/jgsf" as File
 project(':jgcf').projectDir = "$rootDir/jgcf" as File
-project(':downloadServer').projectDir = "$rootDir/downloadServer" as File
-project(':downloadClient').projectDir = "$rootDir/downloadClient" as File
 project(':chatServer').projectDir = "$rootDir/chatServer" as File
 project(':chatClient').projectDir = "$rootDir/chatClient" as File
