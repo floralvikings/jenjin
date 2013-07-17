@@ -3,7 +3,6 @@ package test.jenjinstudios.chatserver;
 import com.jenjinstudios.chatclient.ChatClient;
 import com.jenjinstudios.chatserver.ChatClientHandler;
 import com.jenjinstudios.jgsf.Server;
-import com.jenjinstudios.message.BaseMessage;
 import org.junit.*;
 
 import java.io.IOException;
@@ -78,11 +77,11 @@ public class ChatClientTest
 	{
 		String message = "Hello world.";
 
-		goodClient01.sendChatMessage(new BaseMessage(ChatClient.CHAT_MESSAGE_ID, message, 0));
+		goodClient01.sendChatMessage(message);
 
 		// A few lines to block until the second client receives the message.  5 second timeout.
 		long startTime = System.currentTimeMillis();
-		LinkedList<BaseMessage> receivedMessages = new LinkedList<>();
+		LinkedList<String> receivedMessages = new LinkedList<>();
 		while (receivedMessages.isEmpty() && (System.currentTimeMillis() - startTime) < 5000)
 			receivedMessages = goodClient02.getChatMessages();
 
@@ -90,8 +89,7 @@ public class ChatClientTest
 
 		if (!receivedMessages.isEmpty())
 		{
-			BaseMessage currentMessage = receivedMessages.pop();
-			receivedMessage = currentMessage.getArgs()[0] + ": " + currentMessage.getArgs()[1];
+			receivedMessage = receivedMessages.pop();
 		}
 
 		assertTrue(receivedMessage.contains(message));

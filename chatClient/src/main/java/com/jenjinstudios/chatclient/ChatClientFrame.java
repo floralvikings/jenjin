@@ -1,7 +1,5 @@
 package com.jenjinstudios.chatclient;
 
-import com.jenjinstudios.message.BaseMessage;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -27,8 +25,6 @@ public class ChatClientFrame extends JFrame implements WindowListener, ActionLis
 	private MessagePanel messagePanel;
 	/** The panel used to send messages to the server. */
 	private MessageInputPanel messageInputPanel;
-	/** The username used by the client frame. */
-	private String username = "Anonymous";
 
 
 	/** Construct a new ChatClientFrame with the specified client. */
@@ -36,7 +32,8 @@ public class ChatClientFrame extends JFrame implements WindowListener, ActionLis
 	{
 		super("Chat Client");
 
-		username = JOptionPane.showInputDialog(this, "Please enter a username:", "Username", JOptionPane.PLAIN_MESSAGE);
+		/* The username used by the client frame. */
+		String username = JOptionPane.showInputDialog(this, "Please enter a username:", "Username", JOptionPane.PLAIN_MESSAGE);
 
 		client = new ChatClient(address, port, username);
 		client.blockingStart();
@@ -65,11 +62,10 @@ public class ChatClientFrame extends JFrame implements WindowListener, ActionLis
 
 		while (frame.isVisible())
 		{
-			LinkedList<BaseMessage> chatMessages = frame.client.getChatMessages();
+			LinkedList<String> chatMessages = frame.client.getChatMessages();
 			while (!chatMessages.isEmpty())
 			{
-				BaseMessage baseMessage = chatMessages.pop();
-				String message = baseMessage.getArgs()[0] + ": " + baseMessage.getArgs()[1];
+				String message = chatMessages.pop();
 				frame.messagePanel.getMessageArea().append(message + "\n");
 			}
 		}
@@ -108,7 +104,7 @@ public class ChatClientFrame extends JFrame implements WindowListener, ActionLis
 		if (e.getSource() == messageInputPanel.getSendButton())
 		{
 			String messageText = messageInputPanel.getMessageField().getText();
-			client.sendChatMessage(new BaseMessage(ChatClient.CHAT_MESSAGE_ID, messageText, 0));
+			client.sendChatMessage(messageText);
 			messageInputPanel.getMessageField().setText("");
 		}
 	}

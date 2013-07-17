@@ -155,7 +155,17 @@ public class MessageRegistry
 		LinkedList<Class> temp = new LinkedList<>();
 		synchronized (argumentRegistry)
 		{
-			temp.addAll(Arrays.asList(argumentRegistry.get(id)));
+			if(!messagesRegistered)
+				registerXmlMessages();
+			Class[] args = argumentRegistry.get(id);
+			if(args != null)
+			{
+				List<Class> argsList = Arrays.asList(args);
+				temp.addAll(argsList);
+			}else
+			{
+				LOGGER.log(Level.SEVERE, "Message ID not found in registry: " + id);
+			}
 		}
 		return temp;
 	}

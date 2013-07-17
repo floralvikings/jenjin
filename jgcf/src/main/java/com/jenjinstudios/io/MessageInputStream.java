@@ -46,9 +46,6 @@ public class MessageInputStream extends DataInputStream
 		{
 			return null;
 			// This means the stream has closed.
-		} catch (Exception e)
-		{
-			throw new IOException(e);
 		}
 	}
 

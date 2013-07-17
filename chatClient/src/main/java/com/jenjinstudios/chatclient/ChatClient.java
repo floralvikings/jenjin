@@ -1,7 +1,7 @@
 package com.jenjinstudios.chatclient;
 
-import com.jenjinstudios.message.BaseMessage;
 import com.jenjinstudios.jgcf.Client;
+import com.jenjinstudios.message.BaseMessage;
 
 import java.io.IOException;
 import java.util.LinkedList;
@@ -40,9 +40,19 @@ public class ChatClient extends Client
 	 *
 	 * @param message The message to send to the server.
 	 */
-	public final void sendChatMessage(BaseMessage message)
+	public final void sendChatMessage(String message)
 	{
-		queueMessage(message);
+		sendChatMessage(message, 0);
+	}
+
+	/**
+	 * Send a chat message to the server.
+	 * @param message The message to send.
+	 * @param group The group to send the message to.
+	 */
+	public final void sendChatMessage(String message, int group)
+	{
+		queueMessage(new BaseMessage(CHAT_MESSAGE_ID, message, group));
 	}
 
 	/**
@@ -51,13 +61,17 @@ public class ChatClient extends Client
 	 * @return A {@code LinkedList} of all the ChatMessages collected since the last time this method was
 	 *         called.
 	 */
-	public final LinkedList<BaseMessage> getChatMessages()
+	public final LinkedList<String> getChatMessages()
 	{
-		LinkedList<BaseMessage> temp;
+		LinkedList<String> temp;
 		synchronized (chatMessages)
 		{
-			temp = new LinkedList<>(chatMessages);
-			chatMessages.clear();
+			temp = new LinkedList<>();
+			while(!chatMessages.isEmpty())
+			{
+				BaseMessage current = chatMessages.pop();
+				temp.add(current.getArgs()[0] + ": " + current.getArgs()[1]);
+			}
 		}
 		return temp;
 	}
