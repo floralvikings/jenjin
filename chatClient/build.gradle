@@ -4,3 +4,22 @@ description = ''
 dependencies {
     compile project(':jgcf')
 }
+
+jar{
+    from configurations.runtime.collect { it.isDirectory() ? it : zipTree(it) }
+    from configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    manifest{
+        from('src/main/java/META-INF/MANIFEST.MF')
+    }
+}
+
+jar.doLast{
+    copyResources()
+}
+
+void copyResources(){
+    copy{
+        from 'src/main/resources'
+        into 'build/libs/resources'
+    }
+}

@@ -1,6 +1,7 @@
 package com.jenjinstudios.jgsf;
 
 import com.jenjinstudios.clientutil.file.FileUtil;
+import com.jenjinstudios.io.MessageRegistry;
 import com.jenjinstudios.message.BaseMessage;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -12,13 +13,20 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.net.URL;
 import java.nio.file.Paths;
-import java.util.*;
+import java.security.CodeSource;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 /**
  * The {@code ExecutableMessage} class should be extended to create self-handling messages on the server.
@@ -65,7 +73,7 @@ public abstract class ExecutableMessage implements Cloneable
 
 	/**
 	 * Get the class of the ExecutableMessage that handles the given BaseMessage.
-	 *
+	 *`
 	 * @param handler The client handler to use the ExecutableMessage.
 	 * @param message The message.
 	 * @return The class of the ExecutableMessage that handles the given BaseMessage.
@@ -74,6 +82,7 @@ public abstract class ExecutableMessage implements Cloneable
 	{
 		ExecutableMessage r = null;
 		if(!messagesRegistered) registerMessages();
+		if(!MessageRegistry.hasMessagesRegistered()) MessageRegistry.registerXmlMessages();
 
 		Class<? extends ExecutableMessage> execClass = executableMessageClasses.get(message.getID());
 
@@ -96,53 +105,85 @@ public abstract class ExecutableMessage implements Cloneable
 	 */
 	private static void registerMessages()
 	{
-		ArrayList<File> execMessageFiles = findExecMessageFiles();
-		for(File xmlFile : execMessageFiles) parseXmlFile(xmlFile);
-		messagesRegistered = true;
+		try
+		{
+			CodeSource src = ExecutableMessage.class.getProtectionDomain().getCodeSource();
+
+			if( src != null )
+			{
+				URL jar = src.getLocation();
+				ZipInputStream zip = new ZipInputStream( jar.openStream());
+				ZipEntry ze;
+				while( ( ze = zip.getNextEntry() ) != null )
+				{
+					String entryName = ze.getName();
+					if( entryName.contains("ExecutableMessages.xml") )
+					{
+						parseXmlStream(ExecutableMessage.class.getClassLoader().getResourceAsStream(entryName));
+					}
+				}
+			}
+			ArrayList<File> execMessageFiles = findExecMessageFiles();
+			for(File xmlFile : execMessageFiles) parseXmlFile(xmlFile);
+			messagesRegistered = true;
+		}
+		catch(IOException | ClassNotFoundException | ParserConfigurationException | SAXException e)
+		{
+			e.printStackTrace();
+		}
 	}
 
 	/**
 	 * Parse the given XML file for registry information.
 	 * @param xmlFile The XML file to be parsed.
+	 * @throws java.io.IOException If this exception occurs.
+	 * @throws ClassNotFoundException If this exception occurs.
+	 * @throws javax.xml.parsers.ParserConfigurationException If this exception occurs.
+	 * @throws org.xml.sax.SAXException If this exception occurs.
 	 */
-	private static void parseXmlFile(File xmlFile)
+	private static void parseXmlFile(File xmlFile) throws ParserConfigurationException, IOException, SAXException, ClassNotFoundException
 	{
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-		try
+
+		parseXmlStream(new FileInputStream(xmlFile));
+	}
+
+	/**
+	 * Parse the XML stream.
+	 * @param inputStream The stream to be parsed
+	 * @throws ParserConfigurationException If this exception occurs.
+	 * @throws IOException If this exception occurs.
+	 * @throws SAXException If this exception occurs.
+	 * @throws ClassNotFoundException If this exception occurs.
+	 */
+	private static void parseXmlStream(InputStream inputStream) throws ParserConfigurationException, IOException, SAXException, ClassNotFoundException
+	{
+		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder builder = factory.newDocumentBuilder();
+		Document doc = builder.parse(inputStream);
+
+		doc.getDocumentElement().normalize();
+
+		NodeList nList = doc.getElementsByTagName("executable_message");
+
+		for(int i=0; i<nList.getLength(); i++)
 		{
-			DocumentBuilder builder = factory.newDocumentBuilder();
-			Document doc = builder.parse(xmlFile);
+			Element element;
+			if(nList.item(i) instanceof  Element)
+				element = (Element) nList.item(i);
+			else
+				continue;
 
-			doc.getDocumentElement().normalize();
+			Node baseMessageIDNode = element.getElementsByTagName("base_message_id").item(0);
+			String baseMessageIDText = baseMessageIDNode.getTextContent();
+			short baseMessageID = Short.parseShort(baseMessageIDText);
 
-			NodeList nList = doc.getElementsByTagName("executable_message");
+			Node executableMessageClassNode = element.getElementsByTagName("class_name").item(0);
+			String executableMessageClassName = executableMessageClassNode.getTextContent();
+			Class<?> executableMessageClass = Class.forName(executableMessageClassName);
 
-			for(int i=0; i<nList.getLength(); i++)
-			{
-				Element element;
-				if(nList.item(i) instanceof  Element)
-					element = (Element) nList.item(i);
-				else
-					continue;
-
-				Node baseMessageIDNode = element.getElementsByTagName("base_message_id").item(0);
-				String baseMessageIDText = baseMessageIDNode.getTextContent();
-				short baseMessageID = Short.parseShort(baseMessageIDText);
-
-				Node executableMessageClassNode = element.getElementsByTagName("class_name").item(0);
-				String executableMessageClassName = executableMessageClassNode.getTextContent();
-				Class<?> executableMessageClass = Class.forName(executableMessageClassName);
-
-				//noinspection unchecked
-				executableMessageClasses.put(baseMessageID, (Class<? extends ExecutableMessage>) executableMessageClass);
-			}
-
-		} catch (ParserConfigurationException | SAXException | IOException e)
-		{
-			LOGGER.log(Level.SEVERE, "Unable to read Messages.xml", e);
-		} catch (ClassNotFoundException ex)
-		{
-			LOGGER.log(Level.INFO, "Class not found for message.", ex);
+			//noinspection unchecked
+			executableMessageClasses.put(baseMessageID, (Class<? extends ExecutableMessage>) executableMessageClass);
 		}
 	}
 

@@ -35,24 +35,14 @@ public class ChatClient extends Client
 		queueMessage(new BaseMessage(CHAT_USERNAME_ID, username));
 	}
 
-	/**
-	 * Send a chat message to the server.
-	 *
-	 * @param message The message to send to the server.
-	 */
-	public final void sendChatMessage(String message)
-	{
-		sendChatMessage(message, 0);
-	}
 
 	/**
 	 * Send a chat message to the server.
 	 * @param message The message to send.
-	 * @param group The group to send the message to.
 	 */
-	public final void sendChatMessage(String message, int group)
+	public final void sendChatMessage(String message)
 	{
-		queueMessage(new BaseMessage(CHAT_MESSAGE_ID, message, group));
+		queueMessage(new BaseMessage(CHAT_MESSAGE_ID, message));
 	}
 
 	/**

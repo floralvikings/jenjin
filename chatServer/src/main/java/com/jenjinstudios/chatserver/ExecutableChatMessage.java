@@ -1,10 +1,10 @@
 package com.jenjinstudios.chatserver;
 
 import com.jenjinstudios.chatclient.ChatClient;
-import com.jenjinstudios.message.BaseMessage;
 import com.jenjinstudios.jgsf.ClientHandler;
 import com.jenjinstudios.jgsf.ExecutableMessage;
 import com.jenjinstudios.jgsf.Server;
+import com.jenjinstudios.message.BaseMessage;
 
 import java.util.ArrayList;
 
@@ -22,8 +22,6 @@ public class ExecutableChatMessage extends ExecutableMessage
 	private final Server<ChatClientHandler> server;
 	/** The client handler which created this executable message. */
 	private final ChatClientHandler handler;
-	/** Whether or not the client has permission to send this message. */
-	private boolean permission = false;
 
 	/**
 	 * Create a chat message with the given string.
@@ -42,30 +40,21 @@ public class ExecutableChatMessage extends ExecutableMessage
 	@Override
 	public void runSynced()
 	{
-		if (!permission)
-			return;
-
 		ArrayList<ChatClientHandler> clientHandlers = server.getClientHandlers();
 		for (ClientHandler h : clientHandlers)
 		{
 			if (h == null)
 				continue;
 			ChatClientHandler currentHandler = (ChatClientHandler) h;
-			int groupID = (int) msg.getArgs()[1];
 			String message = (String) msg.getArgs()[0];
-			if (currentHandler.inChatGroup(groupID))
-			{
-				BaseMessage response = new BaseMessage(ChatClient.CHAT_BROADCAST_ID, handler.getUsername(), message);
-				currentHandler.queueMessage(response);
-			}
+			BaseMessage response = new BaseMessage(ChatClient.CHAT_BROADCAST_ID, handler.getUsername(), message);
+			currentHandler.queueMessage(response);
 		}
 	}
 
 	@Override
 	public void runASync()
 	{
-		int groupID = (int) msg.getArgs()[1];
-		permission = handler.hasChatPermission(groupID);
 	}
 
 	@Override

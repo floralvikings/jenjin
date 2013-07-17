@@ -34,7 +34,7 @@ public class BaseMessage implements Serializable
 			for(int i=0; i< args.length; i++)
 				classes[i] = args[i].getClass();
 			throw new IllegalArgumentException("Incorrect arguments for BaseMessage ID: " + ID +
-					", " + Arrays.toString(classes) + ", " + MessageRegistry.getArgumentClasses(ID));
+					": Supplied " + Arrays.toString(classes) + ", Required " + MessageRegistry.getArgumentClasses(ID));
 		}
 	}
 

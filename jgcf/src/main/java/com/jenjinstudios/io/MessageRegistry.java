@@ -11,11 +11,17 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.nio.file.Paths;
+import java.security.CodeSource;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 /**
  * Handles the registration of message classes and the information on how to reconstruct them from raw data.
@@ -34,50 +40,85 @@ public class MessageRegistry
 	private static final String messageFileName = "Messages.xml";
 
 	/**
-	 * Register all messages found in registry files.
+	 * Register all messages found in registry files.  Also checks the JAR file.
 	 */
 	public static void registerXmlMessages()
 	{
+		try
+		{
 
-		ArrayList<File> messageFiles = findMessageFiles();
-		for(File f : messageFiles) parseXmlFile(f);
-		messagesRegistered = true;
+			// Search the JAR
+			CodeSource src = MessageRegistry.class.getProtectionDomain().getCodeSource();
+
+			if( src != null )
+			{
+				URL jar = src.getLocation();
+				ZipInputStream zip = new ZipInputStream( jar.openStream());
+				ZipEntry ze;
+				while( ( ze = zip.getNextEntry() ) != null )
+				{
+					String entryName = ze.getName();
+					if( entryName.equals("Messages.xml") )
+						parseXmlStream(MessageRegistry.class.getClassLoader().getResourceAsStream(entryName));
+				}
+			}
+
+			// Search the directories
+			ArrayList<File> messageFiles = findMessageFiles();
+			for(File f : messageFiles) parseXmlFile(f);
+			messagesRegistered = true;
+
+		}
+		catch (IOException | SAXException | ParserConfigurationException e)
+		{
+			LOGGER.log(Level.INFO, "Unable to parse JAR file.", e);
+		}
 	}
 
 	/**
 	 * Parse the given XML file and register message therein.
 	 * @param xmlFile The XML file to be parsed.
+	 * @throws java.io.IOException If this exception occurs.
+	 * @throws javax.xml.parsers.ParserConfigurationException If this exception occurs.
+	 * @throws org.xml.sax.SAXException If this exception occurs.
 	 */
-	private static void parseXmlFile(File xmlFile)
+	private static void parseXmlFile(File xmlFile) throws IOException, SAXException, ParserConfigurationException
+	{
+		InputStream xmlStream = new FileInputStream(xmlFile);
+		parseXmlStream(xmlStream);
+	}
+
+	/**
+	 * Parse a stream for XML messages.
+	 * @param stream The stream to parse.
+	 * @throws java.io.IOException If this exception occurs.
+	 * @throws javax.xml.parsers.ParserConfigurationException If this exception occurs.
+	 * @throws org.xml.sax.SAXException If this exception occurs.
+	 */
+	private static void parseXmlStream(InputStream stream) throws IOException, SAXException, ParserConfigurationException
 	{
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-		try
+		DocumentBuilder builder = factory.newDocumentBuilder();
+		Document doc = builder.parse(stream);
+
+		doc.getDocumentElement().normalize();
+
+		NodeList nList = doc.getElementsByTagName("message");
+
+		for (int i = 0; i < nList.getLength(); i++)
 		{
-			DocumentBuilder builder = factory.newDocumentBuilder();
-			Document doc = builder.parse(xmlFile);
+			Node node = nList.item(i);
 
-			doc.getDocumentElement().normalize();
+			short id;
+			Class[] argClasses;
+			Element element = (Element) node;
 
-			NodeList nList = doc.getElementsByTagName("message");
+			id = Short.parseShort(element.getAttribute("id"));
 
-			for (int i = 0; i < nList.getLength(); i++)
-			{
-				Node node = nList.item(i);
+			NodeList argElements = element.getElementsByTagName("argument");
+			argClasses = parseArgumentNodes(argElements);
 
-				short id;
-				Class[] argClasses;
-				Element element = (Element) node;
-
-				id = Short.parseShort(element.getAttribute("id"));
-
-				NodeList argElements = element.getElementsByTagName("argument");
-				argClasses = parseArgumentNodes(argElements);
-
-				registerMessage(id, argClasses);
-			}
-		} catch (ParserConfigurationException | SAXException | IOException e)
-		{
-			LOGGER.log(Level.SEVERE, "Unable to read Messages.xml", e);
+			registerMessage(id, argClasses);
 		}
 	}
 
