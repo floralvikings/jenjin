@@ -26,7 +26,9 @@ public class Driver
 		BufferedReader commandLineReader = new BufferedReader(new InputStreamReader(System.in));
 		String readLine = commandLineReader.readLine();
 
-		while(!readLine.equals("quit"))
+		System.out.println("Enter \"q\" to quit.");
+
+		while(!readLine.equals("q"))
 			readLine = commandLineReader.readLine();
 
 		chatServer.shutdown();
