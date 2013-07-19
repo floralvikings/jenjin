@@ -7,17 +7,13 @@ dependencies {
 }
 
 jar{
+    from configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
     from configurations.runtime.collect { it.isDirectory() ? it : zipTree(it) }
-    from configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
     manifest{
-        from('src/main/java/META-INF/MANIFEST.MF')
-    }
-}
-
-jar{
-    from configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
-    manifest{
-        from('src/main/java/META-INF/MANIFEST.MF')
+        attributes(
+                'Manifest-Version': '1.0',
+                'Main-Class': 'com.jenjinstudios.chatserver.Driver'
+        )
     }
 }
 
