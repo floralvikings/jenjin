@@ -19,7 +19,7 @@ class ServerLoop extends TimerTask
 	/** The server for which this loop runs. */
 	private final Server server;
 	/** The list of synchronized tasks to be executed by the loop. */
-	private final LinkedList<ExecutableMessage> syncedTasks;
+	private final LinkedList<Runnable> syncedTasks;
 	/** The list of repeated tasks to be executed by the loop. */
 	private final LinkedList<Runnable> repeatedTasks;
 	/** The start time, in nanoseconds, of the current cycle. */
@@ -65,7 +65,7 @@ class ServerLoop extends TimerTask
 		{
 			while (!syncedTasks.isEmpty())
 			{
-				syncedTasks.remove().runSynced();
+				syncedTasks.remove().run();
 			}
 		}
 	}

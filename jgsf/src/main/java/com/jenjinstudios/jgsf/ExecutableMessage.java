@@ -34,7 +34,7 @@ import java.util.zip.ZipInputStream;
  * @author Caleb Brinkman
  */
 @SuppressWarnings("unused")
-public abstract class ExecutableMessage implements Cloneable
+public abstract class ExecutableMessage implements Runnable
 {
 	/** The Logger for this class. */
 	private static final Logger LOGGER = Logger.getLogger(ExecutableMessage.class.getName());
@@ -70,6 +70,14 @@ public abstract class ExecutableMessage implements Cloneable
 	 * @return The ID of the message type process by this ExecutableMessage.
 	 */
 	public abstract short getBaseMessageID();
+
+	/**
+	 * Calls the {@code runSynced} method.
+	 */
+	public final void run()
+	{
+		runSynced();
+	}
 
 	/**
 	 * Get the class of the ExecutableMessage that handles the given BaseMessage.

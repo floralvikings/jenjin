@@ -38,7 +38,7 @@ public class Server<T extends ClientHandler> extends Thread
 	/** Tasks to be repeated in the main loop. */
 	private final LinkedList<Runnable> repeatedTasks;
 	/** Synced tasks scheduled by client handlers. */
-	private final LinkedList<ExecutableMessage> syncedTasks;
+	private final LinkedList<Runnable> syncedTasks;
 	/** The SQLHandler used by this Server. */
 	private SQLHandler sqlHandler;
 	/** The timer that controls the server loop. */
@@ -189,7 +189,7 @@ public class Server<T extends ClientHandler> extends Thread
 	 *
 	 * @param r The {@code ExecutableMessage} to add.
 	 */
-	public void addSyncedTask(ExecutableMessage r)
+	public void addSyncedTask(Runnable r)
 	{
 		synchronized (syncedTasks)
 		{
@@ -389,7 +389,7 @@ public class Server<T extends ClientHandler> extends Thread
 	 *
 	 * @return The list of syncrhonized tasks scheduled by ClientHandlers.
 	 */
-	LinkedList<ExecutableMessage> getSyncedTasks()
+	LinkedList<Runnable> getSyncedTasks()
 	{
 		return syncedTasks;
 	}
