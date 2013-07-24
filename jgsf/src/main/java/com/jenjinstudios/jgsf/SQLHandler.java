@@ -1,6 +1,6 @@
 package com.jenjinstudios.jgsf;
 
-import com.jenjinstudios.security.Hasher;
+import com.jenjinstudios.util.Hasher;
 
 import java.sql.*;
 import java.util.logging.Level;

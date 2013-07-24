@@ -1,4 +1,4 @@
-package com.jenjinstudios.security;
+package com.jenjinstudios.util;
 
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;

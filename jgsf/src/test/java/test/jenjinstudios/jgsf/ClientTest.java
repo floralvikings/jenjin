@@ -40,6 +40,7 @@ public class ClientTest
 		/* The SQLHandler used for testing. */
 		SQLHandler sqlHandler = new SQLHandler("localhost", "jenjinst_chatservertest", "jenjinst_cstest",
 				"chat_test");
+		assertTrue(sqlHandler.isConnected());
 		server = new Server<>(50, 51019, ClientHandler.class);
 		server.setSQLHandler(sqlHandler);
 		server.blockingStart();
