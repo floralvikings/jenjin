@@ -3,8 +3,9 @@ package com.jenjinstudios.jgsf;
 import com.jenjinstudios.io.MessageInputStream;
 import com.jenjinstudios.io.MessageOutputStream;
 import com.jenjinstudios.jgcf.Client;
-import com.jenjinstudios.message.BaseMessage;
-import com.jenjinstudios.message.ExecutableMessage;
+import com.jenjinstudios.jgcf.message.BaseMessage;
+import com.jenjinstudios.jgcf.message.ExecutableMessage;
+import com.jenjinstudios.jgsf.message.ServerExecutableMessage;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -132,6 +133,7 @@ public class ClientHandler extends Thread
 		// proper logout, so we handle the query directly instead of in an executable message.
 		// This is a big no-no, but this can be caused by an unexpected server or client shutdown, which means that
 		// there may not be time to finish any executable messages created.  I'm not happy about it but there it is.
+		// TODO Make this better.
 		if (isLoggedIn())
 			loggedIn = !server.getSqlHandler().logOutUser(username);
 		closeLink();
@@ -218,21 +220,30 @@ public class ClientHandler extends Thread
 					break;
 				}
 				Server.LOGGER.log(Level.FINE, "Message received: {0}", message);
-				ExecutableMessage exec;
-				exec = ServerExecutableMessage.getServerExecutableMessageFor(this, message);
-				if (exec != null)
-				{
-					exec.runASync();
-					getServer().addSyncedTask(exec);
-				} else
-				{
-					this.shutdown();
-				}
+				processMessage(message);
 			} catch (Exception ex)
 			{
 				Server.LOGGER.log(Level.SEVERE, "Exception with client handler.", ex);
 				shutdown();
 			}
+		}
+	}
+
+	/**
+	 * Process the given message.
+	 * @param message The message to be processed.
+	 */
+	private void processMessage(BaseMessage message)
+	{
+		ExecutableMessage exec;
+		exec = ServerExecutableMessage.getServerExecutableMessageFor(this, message);
+		if (exec != null)
+		{
+			exec.runASync();
+			getServer().addSyncedTask(exec);
+		} else
+		{
+			this.shutdown();
 		}
 	}
 

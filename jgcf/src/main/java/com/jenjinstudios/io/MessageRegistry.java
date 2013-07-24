@@ -193,6 +193,8 @@ public class MessageRegistry
 	 */
 	public static LinkedList<Class> getArgumentClasses(short id)
 	{
+		if(!hasMessagesRegistered())
+			registerXmlMessages();
 		LinkedList<Class> temp = new LinkedList<>();
 		synchronized (argumentRegistry)
 		{

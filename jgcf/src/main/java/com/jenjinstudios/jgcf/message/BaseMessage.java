@@ -1,4 +1,4 @@
-package com.jenjinstudios.message;
+package com.jenjinstudios.jgcf.message;
 
 import com.jenjinstudios.io.MessageRegistry;
 

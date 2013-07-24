@@ -1,15 +1,15 @@
 package com.jenjinstudios.jgcf;
 
-import com.jenjinstudios.message.BaseMessage;
 import com.jenjinstudios.io.MessageInputStream;
 import com.jenjinstudios.io.MessageOutputStream;
-import com.jenjinstudios.io.MessageRegistry;
+import com.jenjinstudios.jgcf.message.BaseMessage;
+import com.jenjinstudios.jgcf.message.ClientExecutableMessage;
+import com.jenjinstudios.jgcf.message.ExecutableMessage;
 
 import java.io.IOException;
 import java.net.Socket;
 import java.util.LinkedList;
 import java.util.Timer;
-import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -20,6 +20,16 @@ import java.util.logging.Logger;
  */
 public class Client extends Thread
 {
+	/** The ID for the FirstConnectResponse message. */
+	public static final short FIRST_CONNECT_ID = 0;
+	/** The ID for the LoginRequest message. */
+	public static final short LOGIN_REQ_ID = 1;
+	/** The ID for the LoginResponse message. */
+	public static final short LOGIN_RESP_ID = 2;
+	/** The ID for the LogoutRequest message. */
+	public static final short LOGOUT_REQ_ID = 3;
+	/** The ID for the LogoutResponse message. */
+	public static final short LOGOUT_RESP_ID = 4;
 	/** The logger associated with this class. */
 	private static final Logger LOGGER = Logger.getLogger(Client.class.getName());
 	/** The port over which the client communicates with the server. */
@@ -29,7 +39,9 @@ public class Client extends Thread
 	/** The collection of messages to send at the next broadcast. */
 	private final LinkedList<BaseMessage> outgoingMessages;
 	/** The list of tasks that this client will execute each update cycle. */
-	private final LinkedList<Runnable> repeatedTasks;
+	private final LinkedList<Runnable> repeatedSyncedTasks;
+	/** The "one-shot" tasks to be executed in the current client loop. */
+	private final LinkedList<Runnable> syncedTasks;
 	/** The period of the update in milliseconds. */
 	private int period;
 	/** The socket used to connect to the server. */
@@ -56,16 +68,6 @@ public class Client extends Thread
 	private String username;
 	/** The password this client will use when logging in. */
 	private String password;
-	/** The ID for the FirstConnectResponse message. */
-	public static final short FIRST_CONNECT_ID = 0;
-	/** The ID for the LoginRequest message. */
-	public static final short LOGIN_REQ_ID = 1;
-	/** The ID for the LoginResponse message. */
-	public static final short LOGIN_RESP_ID = 2;
-	/** The ID for the LogoutRequest message. */
-	public static final short LOGOUT_REQ_ID = 3;
-	/** The ID for the LogoutResponse message. */
-	public static final short LOGOUT_RESP_ID = 4;
 
 
 	/**
@@ -80,10 +82,8 @@ public class Client extends Thread
 		PORT = port;
 		connected = false;
 		outgoingMessages = new LinkedList<>();
-		repeatedTasks = new LinkedList<>();
-		if (MessageRegistry.hasMessagesRegistered())
-			return;
-		MessageRegistry.registerXmlMessages();
+		repeatedSyncedTasks = new LinkedList<>();
+		syncedTasks = new LinkedList<>();
 	}
 
 	/**
@@ -133,9 +133,9 @@ public class Client extends Thread
 	@SuppressWarnings("unused")
 	protected void addRepeatedTask(Runnable r)
 	{
-		synchronized (repeatedTasks)
+		synchronized (repeatedSyncedTasks)
 		{
-			repeatedTasks.add(r);
+			repeatedSyncedTasks.add(r);
 		}
 	}
 
@@ -144,7 +144,7 @@ public class Client extends Thread
 	 *
 	 * @throws IOException If there is an error writing to the output stream.
 	 */
-	private void sendAllMessages() throws IOException
+	protected void sendAllMessages() throws IOException
 	{
 		synchronized (outgoingMessages)
 		{
@@ -187,32 +187,19 @@ public class Client extends Thread
 	 */
 	protected void processMessage(BaseMessage message) throws IOException
 	{
-		if (message.getID() == LOGIN_RESP_ID)
+		ExecutableMessage exec;
+		exec = ClientExecutableMessage.getClientExecutableMessageFor(this, message);
+		if (exec != null)
 		{
-			processLoginResponse(message);
+			exec.runASync();
+			synchronized (syncedTasks)
+			{
+				syncedTasks.add(exec);
+			}
 		} else
 		{
-			if (message.getID() == LOGOUT_RESP_ID)
-			{
-				receivedLogoutResponse = true;
-				loggedIn = !( (boolean) message.getArgs()[0]);
-			}
+			this.shutdown();
 		}
-	}
-
-	/**
-	 * Process a login response message.
-	 *
-	 * @param message The login response.
-	 */
-	void processLoginResponse(BaseMessage message)
-	{
-		receivedLoginResponse = true;
-		loggedIn = (boolean) message.getArgs()[0];
-		if (!loggedIn)
-			return;
-		loggedInTime = (long) message.getArgs()[1];
-		super.setName("Client: " + username);
 	}
 
 	/** Tell the client threads to stop running. */
@@ -295,7 +282,7 @@ public class Client extends Thread
 			connect();
 		running = true;
 		sendMessagesTimer = new Timer("Client Update Loop", false);
-		sendMessagesTimer.scheduleAtFixedRate(new ClientLoop(), 0, period);
+		sendMessagesTimer.scheduleAtFixedRate(new ClientLoop(this), 0, period);
 		try
 		{
 			BaseMessage currentMessage;
@@ -350,21 +337,75 @@ public class Client extends Thread
 		return loggedInTime;
 	}
 
-	/** The ClientLoop class is essentially what amounts to the output thread. */
-	private class ClientLoop extends TimerTask
+	/**
+	 * Get the list of repeating tasks.
+	 *
+	 * @return The list of repeating tasks.
+	 */
+	public LinkedList<Runnable> getRepeatedSyncedTasks()
 	{
-		@Override
-		public void run()
+		return repeatedSyncedTasks;
+	}
+
+	/**
+	 * The "one-shot" tasks to be executed in the current client loop.
+	 *
+	 * @return The list of Synced Tasks
+	 */
+	protected LinkedList<Runnable> getSyncedTasks()
+	{
+		LinkedList<Runnable> temp = new LinkedList<>();
+		synchronized (syncedTasks)
 		{
-			for (Runnable r : repeatedTasks)
-				r.run();
-			try
-			{
-				sendAllMessages();
-			} catch (IOException e)
-			{
-				e.printStackTrace();
-			}
+			temp.addAll(syncedTasks);
+			syncedTasks.removeAll(temp);
 		}
+		return temp;
+
+	}
+
+	/**
+	 * Set whether this client is logged in.
+	 * @param l Whether this client is logged in.
+	 */
+	public void setLoggedIn(boolean l)
+	{
+		loggedIn = l;
+	}
+
+	/**
+	 * Set whether this client has received a login response.
+	 * @param receivedLoginResponse Whether this client has received a login response.
+	 */
+	public void setReceivedLoginResponse(boolean receivedLoginResponse)
+	{
+		this.receivedLoginResponse = receivedLoginResponse;
+	}
+
+	/**
+	 * Set the logged in time for this client.
+	 * @param loggedInTime The logged in time for this client.
+	 */
+	public void setLoggedInTime(long loggedInTime)
+	{
+		this.loggedInTime = loggedInTime;
+	}
+
+	/**
+	 * Get the username of this client.
+	 * @return The username of this client.
+	 */
+	public String getUsername()
+	{
+		return username;
+	}
+
+	/**
+	 * Set whether this client has received a logout response.
+	 * @param receivedLogoutResponse Whether this client has received a logout response.
+	 */
+	public void setReceivedLogoutResponse(boolean receivedLogoutResponse)
+	{
+		this.receivedLogoutResponse = receivedLogoutResponse;
 	}
 }

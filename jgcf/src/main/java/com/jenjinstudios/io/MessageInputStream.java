@@ -1,6 +1,6 @@
 package com.jenjinstudios.io;
 
-import com.jenjinstudios.message.BaseMessage;
+import com.jenjinstudios.jgcf.message.BaseMessage;
 
 import java.io.DataInputStream;
 import java.io.EOFException;

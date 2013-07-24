@@ -1,7 +1,9 @@
-package com.jenjinstudios.jgsf;
+package com.jenjinstudios.jgsf.message;
 
 import com.jenjinstudios.jgcf.Client;
-import com.jenjinstudios.message.BaseMessage;
+import com.jenjinstudios.jgcf.message.BaseMessage;
+import com.jenjinstudios.jgsf.ClientHandler;
+import com.jenjinstudios.jgsf.SQLHandler;
 
 /**
  * Executes the necessary actions to deal with a login response.

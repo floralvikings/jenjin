@@ -1,7 +1,6 @@
-package com.jenjinstudios.message;
+package com.jenjinstudios.jgcf.message;
 
 import com.jenjinstudios.clientutil.file.FileUtil;
-import com.jenjinstudios.io.MessageRegistry;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -15,14 +14,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.security.CodeSource;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -108,48 +104,6 @@ public abstract class ExecutableMessage implements Runnable
 		{
 			e.printStackTrace();
 		}
-	}
-
-	/**
-	 * Get the class of the ExecutableMessage that handles the given BaseMessage.
-	 *
-	 * @param message The message.
-	 * @return The class of the ExecutableMessage that handles the given BaseMessage.
-	 */
-	@SuppressWarnings("unchecked")
-	public static ExecutableMessage getExecutableMessageFor(BaseMessage message)
-	{
-		ExecutableMessage r = null;
-		if (!ExecutableMessage.areMessagesRegistered()) registerMessages();
-		if (!MessageRegistry.hasMessagesRegistered()) MessageRegistry.registerXmlMessages();
-
-		Class<? extends ExecutableMessage> execClass = executableMessageClasses.get(message.getID());
-
-		try
-		{
-			Constructor<? extends ExecutableMessage>[] execConstructors;
-			Constructor<? extends ExecutableMessage> execConstructor = null;
-			execConstructors = (Constructor<? extends ExecutableMessage>[]) execClass.getConstructors();
-			for (Constructor<? extends ExecutableMessage> constructor : execConstructors)
-			{
-				// Check to see if the first argument is a ClientHandler
-				if (BaseMessage.class.isAssignableFrom(constructor.getParameterTypes()[0]))
-					execConstructor = constructor;
-			}
-			if (execConstructor != null)
-			{
-				r = execConstructor.newInstance(message);
-			} else
-			{
-				LOGGER.log(Level.SEVERE, "No constructor containing ClientHandler as first argument type found for {0}",
-						execClass.getName());
-			}
-		} catch (InvocationTargetException | InstantiationException | IllegalAccessException e)
-		{
-			LOGGER.log(Level.SEVERE, "Constructor not correct for: " + execClass.getName(), e);
-		}
-
-		return r;
 	}
 
 	/**

@@ -1,8 +1,9 @@
-package com.jenjinstudios.jgsf;
+package com.jenjinstudios.jgsf.message;
 
 import com.jenjinstudios.io.MessageRegistry;
-import com.jenjinstudios.message.BaseMessage;
-import com.jenjinstudios.message.ExecutableMessage;
+import com.jenjinstudios.jgcf.message.BaseMessage;
+import com.jenjinstudios.jgcf.message.ExecutableMessage;
+import com.jenjinstudios.jgsf.ClientHandler;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -45,13 +46,15 @@ public abstract class ServerExecutableMessage extends ExecutableMessage
 	public static ExecutableMessage getServerExecutableMessageFor(ClientHandler handler, BaseMessage message)
 	{
 		ExecutableMessage r = null;
+		// Register messages if it hasn't been done already.
 		if (!ExecutableMessage.areMessagesRegistered()) registerMessages();
+		// Again, register XML messages if not done already.
 		if (!MessageRegistry.hasMessagesRegistered()) MessageRegistry.registerXmlMessages();
-
+		// Get the executable message classes registered.
 		Class<? extends ExecutableMessage> execClass = executableMessageClasses.get(message.getID());
-
 		try
 		{
+			// Get and parse the Constructors for the ExecutableMessage class retrieved.
 			Constructor<? extends ExecutableMessage>[] execConstructors;
 			Constructor<? extends ExecutableMessage> execConstructor = null;
 			execConstructors = (Constructor<? extends ExecutableMessage>[]) execClass.getConstructors();

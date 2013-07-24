@@ -13,6 +13,7 @@ import static org.junit.Assert.*;
 
 /**
  * The client class for the Chat program tutorial.
+ *
  * @author Caleb Brinkman
  */
 public class ClientTest
@@ -70,6 +71,14 @@ public class ClientTest
 
 		badClient = new Client("127.0.0.1", 51019, "TestAccount02", "This is an incorrect password.  Teehee.");
 		badClient.blockingStart();
+
+		Assert.assertTrue(goodClient01.isRunning());
+
+		Assert.assertTrue(goodClient02.isRunning());
+
+		Assert.assertTrue(sameClient.isRunning());
+
+		Assert.assertTrue(badClient.isRunning());
 	}
 
 	/** Destroy clients after each test. */
@@ -125,8 +134,11 @@ public class ClientTest
 		assertFalse(sameClient.isLoggedIn());
 	}
 
-	/** Test the emergency logout functionality.
-	 * @throws InterruptedException If the sleep is interrupted. */
+	/**
+	 * Test the emergency logout functionality.
+	 *
+	 * @throws InterruptedException If the sleep is interrupted.
+	 */
 	@Test
 	public void testEmergencyLogout() throws InterruptedException
 	{
