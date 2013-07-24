@@ -11,9 +11,9 @@ import java.util.logging.Logger;
 
 /**
  * The ServerExecutableMessage class is invoked to respond to messages server-side.
- * @author Caleb Brinkman
  *
- * */
+ * @author Caleb Brinkman
+ */
 public abstract class ServerExecutableMessage extends ExecutableMessage
 {
 	/** The Logger for this class. */
