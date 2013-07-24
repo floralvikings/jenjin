@@ -9,12 +9,8 @@ import com.jenjinstudios.message.BaseMessage;
  * @author Caleb Brinkman
  */
 @SuppressWarnings("unused")
-public class ExecutableLoginRequest extends ExecutableMessage
+public class ExecutableLoginRequest extends ServerExecutableMessage
 {
-	/** The login request to be handled by this executable message. */
-	private final BaseMessage message;
-	/** The client handler which created this executable message. */
-	private final ClientHandler clientHandler;
 	/** The SQL handler used by this executable message. */
 	private final SQLHandler sqlHandler;
 
@@ -27,8 +23,6 @@ public class ExecutableLoginRequest extends ExecutableMessage
 	public ExecutableLoginRequest(ClientHandler clientHandler, BaseMessage loginRequest)
 	{
 		super(clientHandler, loginRequest);
-		this.message = loginRequest;
-		this.clientHandler = clientHandler;
 		sqlHandler = clientHandler.getServer().getSqlHandler();
 	}
 
@@ -40,14 +34,14 @@ public class ExecutableLoginRequest extends ExecutableMessage
 	@Override
 	public void runASync()
 	{
-		if (sqlHandler == null || clientHandler.isLoggedIn())
+		if (sqlHandler == null || getClientHandler().isLoggedIn())
 			return;
-		String username = (String) message.getArgs()[0];
-		String password = (String) message.getArgs()[1];
+		String username = (String) getMessage().getArgs()[0];
+		String password = (String) getMessage().getArgs()[1];
 		boolean success = sqlHandler.logInUser(username, password);
-		clientHandler.queueLoginStatus(success);
+		getClientHandler().sendLoginStatus(success);
 		if (success)
-			clientHandler.setUsername(username);
+			getClientHandler().setUsername(username);
 	}
 
 	@Override

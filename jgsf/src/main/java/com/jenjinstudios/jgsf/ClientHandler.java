@@ -1,9 +1,10 @@
 package com.jenjinstudios.jgsf;
 
-import com.jenjinstudios.message.BaseMessage;
 import com.jenjinstudios.io.MessageInputStream;
 import com.jenjinstudios.io.MessageOutputStream;
 import com.jenjinstudios.jgcf.Client;
+import com.jenjinstudios.message.BaseMessage;
+import com.jenjinstudios.message.ExecutableMessage;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -181,7 +182,7 @@ public class ClientHandler extends Thread
 	 *
 	 * @param success Whether the attempt was successful.
 	 */
-	public void queueLoginStatus(boolean success)
+	public void sendLoginStatus(boolean success)
 	{
 		loggedIn = success;
 		loggedInTime = server.getCycleStartTime();
@@ -193,7 +194,7 @@ public class ClientHandler extends Thread
 	 *
 	 * @param success Whether the attempt was successful.
 	 */
-	public void queueLogoutStatus(boolean success)
+	public void sendLogoutStatus(boolean success)
 	{
 		loggedIn = !success;
 		queueMessage(new BaseMessage(Client.LOGOUT_RESP_ID, success));
@@ -212,12 +213,13 @@ public class ClientHandler extends Thread
 				message = inputStream.readMessage();
 				if (message == null)
 				{
+					Server.LOGGER.log(Level.FINE, "Received null message, shutting down ClientHandler");
 					shutdown();
 					break;
 				}
 				Server.LOGGER.log(Level.FINE, "Message received: {0}", message);
 				ExecutableMessage exec;
-				exec = ExecutableMessage.getExecutableMessageFor(this, message);
+				exec = ServerExecutableMessage.getServerExecutableMessageFor(this, message);
 				if (exec != null)
 				{
 					exec.runASync();

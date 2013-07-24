@@ -9,9 +9,7 @@ import org.junit.*;
 import java.io.IOException;
 import java.sql.SQLException;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
  * The client class for the Chat program tutorial.
@@ -127,15 +125,19 @@ public class ClientTest
 		assertFalse(sameClient.isLoggedIn());
 	}
 
-	/** Test the emergency logout funcionality. */
+	/** Test the emergency logout functionality.
+	 * @throws InterruptedException If the sleep is interrupted. */
 	@Test
-	public void testEmergencyLogout()
+	public void testEmergencyLogout() throws InterruptedException
 	{
 		// This client logs in and shuts down before sending a proper logout request.
 		// The server should auto logout the client
 		goodClient01.sendLoginRequest();
+		assertTrue(goodClient01.isLoggedIn());
 		goodClient01.shutdown();
-
+		// Have to sleep.  It's HIGHLY unlikely that a client will try logging in less than the minimum sleep resolution
+		// after a broken connection.
+		Thread.sleep(100);
 		// sameClient logs in, and should be able to successfully since the server auto logged out the failed connection.
 		sameClient.sendLoginRequest();
 		assertTrue(sameClient.isLoggedIn());

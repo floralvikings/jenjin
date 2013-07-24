@@ -9,10 +9,8 @@ import com.jenjinstudios.message.BaseMessage;
  * @author Caleb Brinkman
  */
 @SuppressWarnings("unused")
-public class ExecutableLogoutRequest extends ExecutableMessage
+public class ExecutableLogoutRequest extends ServerExecutableMessage
 {
-	/** The client handler which created this message. */
-	private final ClientHandler clientHandler;
 	/** The SQLHandler used to log out the client. */
 	private final SQLHandler sqlHandler;
 
@@ -20,14 +18,12 @@ public class ExecutableLogoutRequest extends ExecutableMessage
 	 * Construct a new ExecutableLogoutRequest.
 	 *
 	 * @param clientHandler The client handler which created this message.
-	 * @param message The message used to create this ExecutableMessage.
+	 * @param message       The message used to create this ExecutableMessage.
 	 */
 	public ExecutableLogoutRequest(ClientHandler clientHandler, BaseMessage message)
 	{
 		super(clientHandler, message);
-		this.clientHandler = clientHandler;
 		sqlHandler = clientHandler.getServer().getSqlHandler();
-		/* The LogoutRequest for which this class is created. */
 	}
 
 	@Override
@@ -38,9 +34,9 @@ public class ExecutableLogoutRequest extends ExecutableMessage
 	@Override
 	public void runASync()
 	{
-		if (sqlHandler == null || !clientHandler.isLoggedIn())
+		if (sqlHandler == null || !getClientHandler().isLoggedIn())
 			return;
-		clientHandler.queueLogoutStatus(sqlHandler.logOutUser(clientHandler.getUsername()));
+		getClientHandler().sendLogoutStatus(sqlHandler.logOutUser(getClientHandler().getUsername()));
 	}
 
 	@Override
