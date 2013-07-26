@@ -175,7 +175,7 @@ public class Client extends Thread
 	 */
 	private void sendMessage(BaseMessage message) throws IOException
 	{
-		outputStream.writeMessage(message);
+		outputStream.writeMessage(message, false);
 	}
 
 	/**

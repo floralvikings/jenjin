@@ -119,7 +119,7 @@ public class ClientHandler extends Thread
 	{
 		try
 		{
-			outputStream.writeMessage(o);
+			outputStream.writeMessage(o, false);
 		} catch (Exception ex)
 		{
 			shutdown();
