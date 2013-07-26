@@ -28,8 +28,12 @@ public class MessageOutputStream
 	private PrivateKey privateKey;
 	/** The public key used to encrypt outgoing strings. */
 	private PublicKey publicKey;
+	/** The public key sent to the receiving end of this string. */
+	private PublicKey outgoingKey;
 	/** The output stream used by this message stream. */
 	private final DataOutputStream outputStream;
+	/** Flags whether this stream has sent the public key. */
+	private boolean hasSentKey;
 
 	/**
 	 * Creates a new message output stream to write data to the specified
@@ -45,7 +49,6 @@ public class MessageOutputStream
 	{
 		outputStream = new DataOutputStream(out);
 		privateKey = null;
-		String keyString = NO_ENCRYPTION_KEY;
 		try
 		{
 			KeyPairGenerator kpg = KeyPairGenerator.getInstance("RSA");
@@ -55,13 +58,11 @@ public class MessageOutputStream
 			// Here we need to send out public key; it's important to note that the public key generate here is
 			// NOT the one used to send encrypted messages from this stream.  To do that, a public key must be set
 			// using the setPublicKey method.
-			PublicKey outgoingKey = kp.getPublic();
-			keyString = new String(outgoingKey.getEncoded());
+			outgoingKey = kp.getPublic();
 		} catch (NoSuchAlgorithmException ex)
 		{
 			LOGGER.log(Level.SEVERE, "Unable to find RSA algorithm; strings will not be encrypted!", ex);
 		}
-		outputStream.writeUTF(keyString);
 	}
 
 	/**
@@ -73,6 +74,14 @@ public class MessageOutputStream
 	 */
 	public void writeMessage(BaseMessage message, boolean encryptStrings) throws IOException
 	{
+		if(!hasSentKey)
+		{
+			String keyString = NO_ENCRYPTION_KEY;
+			if(outgoingKey != null)
+				keyString = new String(outgoingKey.getEncoded());
+			outputStream.writeUTF(keyString);
+			hasSentKey = true;
+		}
 		Object[] args = message.getArgs();
 		int id = message.getID();
 		outputStream.writeShort(id);
