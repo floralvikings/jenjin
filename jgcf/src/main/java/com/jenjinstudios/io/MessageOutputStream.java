@@ -141,8 +141,6 @@ public class MessageOutputStream extends DataOutputStream
 			LOGGER.log(Level.WARNING, "Unable to encrypt string; strings will not be encrypted!", e);
 			return raw;
 		}
-
-		// TODO encrypt string with public key here.
 		return encrypted;
 	}
 
