@@ -18,7 +18,7 @@ import java.util.logging.Logger;
  *
  * @author Caleb Brinkman
  */
-public class MessageOutputStream extends DataOutputStream
+public class MessageOutputStream
 {
 	/** The logger for this class. */
 	private static final Logger LOGGER = Logger.getLogger(MessageOutputStream.class.getName());
@@ -28,6 +28,8 @@ public class MessageOutputStream extends DataOutputStream
 	private PrivateKey privateKey;
 	/** The public key used to encrypt outgoing strings. */
 	private PublicKey publicKey;
+	/** The output stream used by this message stream. */
+	private final DataOutputStream outputStream;
 
 	/**
 	 * Creates a new message output stream to write data to the specified
@@ -41,7 +43,7 @@ public class MessageOutputStream extends DataOutputStream
 	 */
 	public MessageOutputStream(OutputStream out) throws IOException
 	{
-		super(out);
+		outputStream = new DataOutputStream(out);
 		privateKey = null;
 		String keyString = NO_ENCRYPTION_KEY;
 		try
@@ -59,7 +61,7 @@ public class MessageOutputStream extends DataOutputStream
 		{
 			LOGGER.log(Level.SEVERE, "Unable to find RSA algorithm; strings will not be encrypted!", ex);
 		}
-		writeUTF(keyString);
+		outputStream.writeUTF(keyString);
 	}
 
 	/**
@@ -73,7 +75,7 @@ public class MessageOutputStream extends DataOutputStream
 	{
 		Object[] args = message.getArgs();
 		int id = message.getID();
-		writeShort(id);
+		outputStream.writeShort(id);
 		for (Object arg : args)
 			writeArgument(arg, encryptStrings);
 	}
@@ -88,12 +90,12 @@ public class MessageOutputStream extends DataOutputStream
 	private void writeArgument(Object arg, boolean encryptStrings) throws IOException
 	{
 		if (arg instanceof String) writeString((String) arg, encryptStrings);
-		else if (arg instanceof Integer) writeInt((int) arg);
-		else if (arg instanceof Long) writeLong((long) arg);
-		else if (arg instanceof Float) writeFloat((float) arg);
-		else if (arg instanceof Double) writeDouble((double) arg);
-		else if (arg instanceof Boolean) writeBoolean((boolean) arg);
-		else if (arg instanceof Byte) writeByte((byte) arg);
+		else if (arg instanceof Integer) outputStream.writeInt((int) arg);
+		else if (arg instanceof Long) outputStream.writeLong((long) arg);
+		else if (arg instanceof Float) outputStream.writeFloat((float) arg);
+		else if (arg instanceof Double) outputStream.writeDouble((double) arg);
+		else if (arg instanceof Boolean) outputStream.writeBoolean((boolean) arg);
+		else if (arg instanceof Byte) outputStream.writeByte((byte) arg);
 		else if (arg instanceof byte[]) writeByteArray((byte[]) arg);
 		else if (arg instanceof String[]) writeStringArray((String[]) arg, encryptStrings);
 	}
@@ -111,10 +113,10 @@ public class MessageOutputStream extends DataOutputStream
 		if (encrypt)
 			encryptedString = encrypt(s);
 		if (s.equals(encryptedString))
-			super.writeBoolean(false);
+			outputStream.writeBoolean(false);
 		else
-			super.writeBoolean(true);
-		super.writeUTF(encryptedString);
+			outputStream.writeBoolean(true);
+		outputStream.writeUTF(encryptedString);
 	}
 
 	/**
@@ -164,7 +166,7 @@ public class MessageOutputStream extends DataOutputStream
 	private void writeStringArray(String[] strings, boolean encryptStrings) throws IOException
 	{
 		int stringsLength = strings.length;
-		writeInt(stringsLength);
+		outputStream.writeInt(stringsLength);
 		for (String string : strings) writeString(string, encryptStrings);
 	}
 
@@ -177,8 +179,8 @@ public class MessageOutputStream extends DataOutputStream
 	private void writeByteArray(byte[] bytes) throws IOException
 	{
 		int bytesLength = bytes.length;
-		writeInt(bytesLength);
-		write(bytes);
+		outputStream.writeInt(bytesLength);
+		outputStream.write(bytes);
 	}
 
 	/**
