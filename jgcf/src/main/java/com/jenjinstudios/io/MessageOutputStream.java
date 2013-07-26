@@ -22,13 +22,12 @@ public class MessageOutputStream extends DataOutputStream
 {
 	/** The logger for this class. */
 	private static final Logger LOGGER = Logger.getLogger(MessageOutputStream.class.getName());
+	/** The string to send so that the receiving stream knows that there will be no string encryption. */
+	private static final String NO_ENCRYPTION_KEY = "NO_ENCRYPTION_KEY";
 	/** The private key used to decrypt responses to this stream. */
 	private PrivateKey privateKey;
 	/** The public key used to encrypt outgoing strings. */
 	private PublicKey publicKey;
-	/** The xform used to encrypt strings. */
-	private final String XFORM = "RSA/ECB/PKCS1Padding";
-
 
 	/**
 	 * Creates a new message output stream to write data to the specified
@@ -38,22 +37,29 @@ public class MessageOutputStream extends DataOutputStream
 	 * @param out the underlying output stream, to be saved for later
 	 *            use.
 	 * @see java.io.FilterOutputStream#out
+	 * @throws java.io.IOException If there is an error sending the public key.
 	 */
-	public MessageOutputStream(OutputStream out)
+	public MessageOutputStream(OutputStream out) throws IOException
 	{
 		super(out);
-		// TODO Create public/private key pair and send out public key.
 		privateKey = null;
+		String keyString = NO_ENCRYPTION_KEY;
 		try
 		{
 			KeyPairGenerator kpg = KeyPairGenerator.getInstance("RSA");
 			kpg.initialize(512);
 			KeyPair kp = kpg.generateKeyPair();
 			privateKey = kp.getPrivate();
+			// Here we need to send out public key; it's important to note that the public key generate here is
+			// NOT the one used to send encrypted messages from this stream.  To do that, a public key must be set
+			// using the setPublicKey method.
+			PublicKey outgoingKey = kp.getPublic();
+			keyString = new String(outgoingKey.getEncoded());
 		} catch (NoSuchAlgorithmException ex)
 		{
 			LOGGER.log(Level.SEVERE, "Unable to find RSA algorithm; strings will not be encrypted!", ex);
 		}
+		writeUTF(keyString);
 	}
 
 	/**
@@ -94,16 +100,17 @@ public class MessageOutputStream extends DataOutputStream
 
 	/**
 	 * Write a string to the output stream, specifying whether the string should be encrypted with this stream's public key.
-	 * @param s The string to write.
+	 *
+	 * @param s       The string to write.
 	 * @param encrypt Whether the string should be encrypted.
 	 * @throws IOException If there is an IO error.
 	 */
 	public void writeString(String s, boolean encrypt) throws IOException
 	{
 		String encryptedString = s;
-		if(encrypt)
+		if (encrypt)
 			encryptedString = encrypt(s);
-		if(s.equals(encryptedString))
+		if (s.equals(encryptedString))
 			super.writeBoolean(false);
 		else
 			super.writeBoolean(true);
@@ -112,13 +119,14 @@ public class MessageOutputStream extends DataOutputStream
 
 	/**
 	 * Encrypt the given string with this stream's public key.
+	 *
 	 * @param raw The string to be encrypted.
 	 * @return The encrypted string.
 	 */
 	private String encrypt(String raw)
 	{
 		// If there's no public key, we can't encrypt it.
-		if(publicKey == null)
+		if (publicKey == null)
 		{
 			LOGGER.log(Level.WARNING, "No public key set; unable to encrypt strings!");
 			return raw;
@@ -127,6 +135,8 @@ public class MessageOutputStream extends DataOutputStream
 		Cipher cipher;
 		try
 		{
+			/* The xform used to encrypt strings. */
+			String XFORM = "RSA/ECB/PKCS1Padding";
 			cipher = Cipher.getInstance(XFORM);
 			cipher.init(Cipher.ENCRYPT_MODE, publicKey);
 			byte[] encryptedBytes = cipher.doFinal(raw.getBytes());
@@ -147,8 +157,7 @@ public class MessageOutputStream extends DataOutputStream
 	/**
 	 * Write an array of strings to the output stream, preceded by the array length.
 	 *
-	 *
-	 * @param strings The array of string strings.
+	 * @param strings        The array of string strings.
 	 * @param encryptStrings Whether the strings being written should be encrypted.
 	 * @throws IOException If there is an IO error.
 	 */
@@ -174,6 +183,7 @@ public class MessageOutputStream extends DataOutputStream
 
 	/**
 	 * Get the private key used to decrypt responses to this stream.
+	 *
 	 * @return The private key used to decrypt responses to this stream.
 	 */
 	public PrivateKey getPrivateKey()
@@ -183,11 +193,12 @@ public class MessageOutputStream extends DataOutputStream
 
 	/**
 	 * Set the public key used to encrypt outgoing strings.
+	 *
 	 * @param publicKey The public key.
 	 */
 	public void setPublicKey(PublicKey publicKey)
 	{
-		if(publicKey == null)
+		if (publicKey == null)
 			this.publicKey = publicKey;
 	}
 }
