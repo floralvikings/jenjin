@@ -23,7 +23,7 @@ public class MessageOutputStream
 	/** The logger for this class. */
 	private static final Logger LOGGER = Logger.getLogger(MessageOutputStream.class.getName());
 	/** The string to send so that the receiving stream knows that there will be no string encryption. */
-	private static final String NO_ENCRYPTION_KEY = "NO_ENCRYPTION_KEY";
+	public static final String NO_ENCRYPTION_KEY = "NO_ENCRYPTION_KEY";
 	/** The private key used to decrypt responses to this stream. */
 	private PrivateKey privateKey;
 	/** The public key used to encrypt outgoing strings. */
