@@ -32,8 +32,6 @@ public class MessageOutputStream
 	private PublicKey outgoingKey;
 	/** The output stream used by this message stream. */
 	private final DataOutputStream outputStream;
-	/** Flags whether this stream has sent the public key. */
-	private boolean hasSentKey;
 
 	/**
 	 * Creates a new message output stream to write data to the specified
@@ -63,6 +61,11 @@ public class MessageOutputStream
 		{
 			LOGGER.log(Level.SEVERE, "Unable to find RSA algorithm; strings will not be encrypted!", ex);
 		}
+
+		String keyString = NO_ENCRYPTION_KEY;
+		if(outgoingKey != null)
+			keyString = new String(outgoingKey.getEncoded());
+		outputStream.writeUTF(keyString);
 	}
 
 	/**
@@ -74,14 +77,6 @@ public class MessageOutputStream
 	 */
 	public void writeMessage(BaseMessage message, boolean encryptStrings) throws IOException
 	{
-		if(!hasSentKey)
-		{
-			String keyString = NO_ENCRYPTION_KEY;
-			if(outgoingKey != null)
-				keyString = new String(outgoingKey.getEncoded());
-			outputStream.writeUTF(keyString);
-			hasSentKey = true;
-		}
 		Object[] args = message.getArgs();
 		int id = message.getID();
 		outputStream.writeShort(id);

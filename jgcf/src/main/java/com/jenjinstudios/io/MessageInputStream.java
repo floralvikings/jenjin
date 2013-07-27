@@ -27,8 +27,6 @@ public class MessageInputStream
 	private static final Logger LOGGER = Logger.getLogger(MessageInputStream.class.getName());
 	/** The output stream used by this message stream. */
 	private final DataInputStream inputStream;
-	/** Flags whether the public encryption key has been retrieved from the other end of this stream. */
-	private boolean hasReceivedKey;
 	/** The public key used to encrypt outgoing strings. */
 	private PublicKey publicKey;
 
@@ -36,10 +34,27 @@ public class MessageInputStream
 	 * Construct a new {@code MessageInputStream} from the given InputStream.
 	 *
 	 * @param inputStream The InputStream from which messages will be read.
+	 * @throws java.io.IOException If there is an IO error.
 	 */
-	public MessageInputStream(InputStream inputStream)
+	public MessageInputStream(InputStream inputStream) throws IOException
 	{
 		this.inputStream = new DataInputStream(inputStream);
+
+		String keyString = this.inputStream.readUTF();
+		if(!keyString.equals(MessageOutputStream.NO_ENCRYPTION_KEY))
+			LOGGER.log(Level.WARNING, "No public encryption key received!");
+		else
+		{
+			try
+			{
+				KeyFactory rsaKeyFac = KeyFactory.getInstance("RSA");
+				X509EncodedKeySpec keySpec = new X509EncodedKeySpec(keyString.getBytes());
+				publicKey = rsaKeyFac.generatePublic(keySpec);
+			}catch(NoSuchAlgorithmException | InvalidKeySpecException ex)
+			{
+				LOGGER.log(Level.WARNING, "Unable to generate key from string: ", ex);
+			}
+		}
 	}
 
 	/**
@@ -50,25 +65,6 @@ public class MessageInputStream
 	 */
 	public BaseMessage readMessage() throws IOException
 	{
-		if(!hasReceivedKey)
-		{
-			String keyString = inputStream.readUTF();
-			if(!keyString.equals(MessageOutputStream.NO_ENCRYPTION_KEY))
-				LOGGER.log(Level.WARNING, "No public encryption key received!");
-			else
-			{
-				try
-				{
-					KeyFactory rsaKeyFac = KeyFactory.getInstance("RSA");
-					X509EncodedKeySpec keySpec = new X509EncodedKeySpec(keyString.getBytes());
-					publicKey = rsaKeyFac.generatePublic(keySpec);
-				}catch(NoSuchAlgorithmException | InvalidKeySpecException ex)
-				{
-					LOGGER.log(Level.WARNING, "Unable to generate key from string: ", ex);
-				}
-			}
-			hasReceivedKey = true;
-		}
 		try
 		{
 			short id = inputStream.readShort();
