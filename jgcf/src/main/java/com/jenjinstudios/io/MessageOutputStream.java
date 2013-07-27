@@ -20,6 +20,8 @@ import java.util.logging.Logger;
  */
 public class MessageOutputStream
 {
+	/** The xform used to encrypt strings. */
+	public static final String XFORM = "RSA/ECB/PKCS1Padding";
 	/** The logger for this class. */
 	private static final Logger LOGGER = Logger.getLogger(MessageOutputStream.class.getName());
 	/** The string to send so that the receiving stream knows that there will be no string encryption. */
@@ -141,8 +143,6 @@ public class MessageOutputStream
 		Cipher cipher;
 		try
 		{
-			/* The xform used to encrypt strings. */
-			String XFORM = "RSA/ECB/PKCS1Padding";
 			cipher = Cipher.getInstance(XFORM);
 			cipher.init(Cipher.ENCRYPT_MODE, publicKey);
 			byte[] encryptedBytes = cipher.doFinal(raw.getBytes());

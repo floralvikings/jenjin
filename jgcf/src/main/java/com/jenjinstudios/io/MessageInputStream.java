@@ -2,14 +2,16 @@ package com.jenjinstudios.io;
 
 import com.jenjinstudios.jgcf.message.BaseMessage;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import java.io.DataInputStream;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.SocketException;
-import java.security.KeyFactory;
-import java.security.NoSuchAlgorithmException;
-import java.security.PublicKey;
+import java.security.*;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.LinkedList;
@@ -27,8 +29,10 @@ public class MessageInputStream
 	private static final Logger LOGGER = Logger.getLogger(MessageInputStream.class.getName());
 	/** The output stream used by this message stream. */
 	private final DataInputStream inputStream;
-	/** The public key used to encrypt outgoing strings. */
+	/** The public key used by the application on this end of the stream to write encrypted strings to the other end. */
 	private PublicKey publicKey;
+	/** The private key used to decrypt messages sent from the other side.*/
+	private PrivateKey privateKey;
 
 	/**
 	 * Construct a new {@code MessageInputStream} from the given InputStream.
@@ -41,8 +45,10 @@ public class MessageInputStream
 		this.inputStream = new DataInputStream(inputStream);
 
 		String keyString = this.inputStream.readUTF();
+
 		if(!keyString.equals(MessageOutputStream.NO_ENCRYPTION_KEY))
 			LOGGER.log(Level.WARNING, "No public encryption key received!");
+
 		else
 		{
 			try
@@ -97,7 +103,7 @@ public class MessageInputStream
 			switch (currentClass)
 			{
 				case "java.lang.String":
-					args[i] = inputStream.readUTF();
+					args[i] = readString(inputStream);
 					break;
 				case "int":
 				case "java.lang.Integer":
@@ -141,6 +147,38 @@ public class MessageInputStream
 	}
 
 	/**
+	 * Read a string from the input stream, determining if it is encrypted and decrypting it if necessary.
+	 * @param inputStream The input stream used to read.
+	 * @return The read, decrypted string.
+	 * @throws IOException If there is an IO error.
+	 */
+	private String readString(DataInputStream inputStream) throws IOException
+	{
+		boolean encrypted = inputStream.readBoolean();
+		String received = inputStream.readUTF();
+		if(encrypted)
+		{
+			byte[] encryptedBytes = received.getBytes();
+			try
+			{
+				Cipher cipher = Cipher.getInstance(MessageOutputStream.XFORM);
+				cipher.init(Cipher.DECRYPT_MODE, privateKey);
+				received = new String(cipher.doFinal(encryptedBytes));
+			} catch (NoSuchAlgorithmException | NoSuchPaddingException e)
+			{
+				LOGGER.log(Level.SEVERE, "Unable to find RSA algorithm; strings will not be decrypted!", e);
+			} catch (InvalidKeyException e)
+			{
+				LOGGER.log(Level.SEVERE, "Invalid key when decrypting string: ", e );
+			} catch (BadPaddingException | IllegalBlockSizeException e)
+			{
+				LOGGER.log(Level.SEVERE, "Unable to decrypt strings: ", e );
+			}
+		}
+		return received;
+	}
+
+	/**
 	 * Read an array of bytes from the DataInputStream.
 	 *
 	 * @return The read array of bytes.
@@ -168,7 +206,7 @@ public class MessageInputStream
 		int size = inputStream.readInt();
 		strings = new String[size];
 		for (int i = 0; i < strings.length; i++)
-			strings[i] = inputStream.readUTF();
+			strings[i] = readString(inputStream);
 		return strings;
 	}
 
@@ -179,5 +217,14 @@ public class MessageInputStream
 	public PublicKey getPublicKey()
 	{
 		return publicKey;
+	}
+
+	/**
+	 * Set the private key for this stream.
+	 * @param privateKey The private key to be used by this stream.
+	 */
+	public void setPrivateKey(PrivateKey privateKey)
+	{
+		this.privateKey = privateKey;
 	}
 }
