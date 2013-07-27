@@ -14,8 +14,11 @@ import java.util.LinkedList;
  *
  * @author Caleb Brinkman
  */
-public class MessageInputStream extends DataInputStream
+public class MessageInputStream
 {
+	/** The output stream used by this message stream. */
+	private final DataInputStream inputStream;
+
 	/**
 	 * Construct a new {@code MesageInputStream} from the given InputStream.
 	 *
@@ -23,7 +26,7 @@ public class MessageInputStream extends DataInputStream
 	 */
 	public MessageInputStream(InputStream inputStream)
 	{
-		super(inputStream);
+		this.inputStream = new DataInputStream(inputStream);
 	}
 
 	/**
@@ -36,7 +39,7 @@ public class MessageInputStream extends DataInputStream
 	{
 		try
 		{
-			short id = readShort();
+			short id = inputStream.readShort();
 			LinkedList<Class> classes = MessageRegistry.getArgumentClasses(id);
 			Class<?>[] classArray = new Class[classes.size()];
 			classes.toArray(classArray);
@@ -66,35 +69,35 @@ public class MessageInputStream extends DataInputStream
 			switch (currentClass)
 			{
 				case "java.lang.String":
-					args[i] = readUTF();
+					args[i] = inputStream.readUTF();
 					break;
 				case "int":
 				case "java.lang.Integer":
-					args[i] = readInt();
+					args[i] = inputStream.readInt();
 					break;
 				case "java.lang.Long":
 				case "long":
-					args[i] = readLong();
+					args[i] = inputStream.readLong();
 					break;
 				case "double":
 				case "java.lang.Double":
-					args[i] = readDouble();
+					args[i] = inputStream.readDouble();
 					break;
 				case "float":
 				case "java.lang.Float":
-					args[i] = readFloat();
+					args[i] = inputStream.readFloat();
 					break;
 				case "short":
 				case "java.lang.Short":
-					args[i] = readShort();
+					args[i] = inputStream.readShort();
 					break;
 				case "boolean":
 				case "java.lang.Boolean":
-					args[i] = readBoolean();
+					args[i] = inputStream.readBoolean();
 					break;
 				case "byte":
 				case "java.lang.Byte":
-					args[i] = readByte();
+					args[i] = inputStream.readByte();
 					break;
 				case "[Ljava.lang.Byte;":
 				case "[B":
@@ -118,9 +121,9 @@ public class MessageInputStream extends DataInputStream
 	private byte[] readByteArray() throws IOException
 	{
 		byte[] bytes;
-		int size = readInt();
+		int size = inputStream.readInt();
 		bytes = new byte[size];
-		int read = read(bytes, 0, size);
+		int read = inputStream.read(bytes, 0, size);
 		if (read != size) throw new IOException("Incorrect number of bytes read for byte array.");
 		return bytes;
 	}
@@ -134,10 +137,10 @@ public class MessageInputStream extends DataInputStream
 	private String[] readStringArray() throws IOException
 	{
 		String[] strings;
-		int size = readInt();
+		int size = inputStream.readInt();
 		strings = new String[size];
 		for (int i = 0; i < strings.length; i++)
-			strings[i] = readUTF();
+			strings[i] = inputStream.readUTF();
 		return strings;
 	}
 
