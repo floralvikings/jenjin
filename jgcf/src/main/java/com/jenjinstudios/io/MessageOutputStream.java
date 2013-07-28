@@ -207,4 +207,13 @@ public class MessageOutputStream
 		if (publicKey == null)
 			this.publicKey = publicKey;
 	}
+
+	/**
+	 * Close the output stream.
+	 * @throws IOException If there is an IO error.
+	 */
+	public void close() throws IOException
+	{
+		outputStream.close();
+	}
 }

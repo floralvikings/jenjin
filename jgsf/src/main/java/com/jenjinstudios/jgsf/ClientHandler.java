@@ -58,6 +58,8 @@ public class ClientHandler extends Thread
 		broadcastMessages = new LinkedList<>();
 		inputStream = new MessageInputStream(sock.getInputStream());
 		outputStream = new MessageOutputStream(sock.getOutputStream());
+		outputStream.setPublicKey(inputStream.getPublicKey());
+		inputStream.setPrivateKey(outputStream.getPrivateKey());
 		linkOpen = true;
 		queueMessage(new BaseMessage(Client.FIRST_CONNECT_ID, server.UPS));
 	}

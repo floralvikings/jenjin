@@ -227,4 +227,13 @@ public class MessageInputStream
 	{
 		this.privateKey = privateKey;
 	}
+
+	/**
+	 * Close the input stream.
+	 * @throws java.io.IOException If there is an IO error.
+	 */
+	public void close() throws IOException
+	{
+		inputStream.close();
+	}
 }

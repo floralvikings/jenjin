@@ -115,6 +115,8 @@ public class Client extends Thread
 			inputStream = new MessageInputStream(socket.getInputStream());
 			BaseMessage firstConnectResponse = inputStream.readMessage();
 			outputStream = new MessageOutputStream(socket.getOutputStream());
+			outputStream.setPublicKey(inputStream.getPublicKey());
+			inputStream.setPrivateKey(outputStream.getPrivateKey());
 			/* The ups of this client. */
 			int ups = (int) firstConnectResponse.getArgs()[0];
 			period = 1000 / ups;
