@@ -59,7 +59,7 @@ public class MessageInputStream
 		{
 			String keyString = this.inputStream.readUTF();
 
-			if(!keyString.equals(MessageOutputStream.NO_ENCRYPTION_KEY))
+			if(keyString.equals(MessageOutputStream.NO_ENCRYPTION_KEY))
 				LOGGER.log(Level.WARNING, "No public encryption key received!");
 
 			else
