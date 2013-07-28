@@ -33,6 +33,8 @@ public class MessageInputStream
 	private PublicKey publicKey;
 	/** The private key used to decrypt messages sent from the other side.*/
 	private PrivateKey privateKey;
+	/** Flags whether the key has been received. */
+	private boolean hasReceivedKey;
 
 	/**
 	 * Construct a new {@code MessageInputStream} from the given InputStream.
@@ -43,26 +45,6 @@ public class MessageInputStream
 	public MessageInputStream(InputStream inputStream) throws IOException
 	{
 		this.inputStream = new DataInputStream(inputStream);
-
-
-		// TODO Move this into a separate method called when sending first message.
-		String keyString = this.inputStream.readUTF();
-
-		if(!keyString.equals(MessageOutputStream.NO_ENCRYPTION_KEY))
-			LOGGER.log(Level.WARNING, "No public encryption key received!");
-
-		else
-		{
-			try
-			{
-				KeyFactory rsaKeyFac = KeyFactory.getInstance("RSA");
-				X509EncodedKeySpec keySpec = new X509EncodedKeySpec(keyString.getBytes());
-				publicKey = rsaKeyFac.generatePublic(keySpec);
-			}catch(NoSuchAlgorithmException | InvalidKeySpecException ex)
-			{
-				LOGGER.log(Level.WARNING, "Unable to generate key from string: ", ex);
-			}
-		}
 	}
 
 	/**
@@ -73,6 +55,27 @@ public class MessageInputStream
 	 */
 	public BaseMessage readMessage() throws IOException
 	{
+		if(!hasReceivedKey)
+		{
+			String keyString = this.inputStream.readUTF();
+
+			if(!keyString.equals(MessageOutputStream.NO_ENCRYPTION_KEY))
+				LOGGER.log(Level.WARNING, "No public encryption key received!");
+
+			else
+			{
+				try
+				{
+					KeyFactory rsaKeyFac = KeyFactory.getInstance("RSA");
+					X509EncodedKeySpec keySpec = new X509EncodedKeySpec(keyString.getBytes());
+					publicKey = rsaKeyFac.generatePublic(keySpec);
+				}catch(NoSuchAlgorithmException | InvalidKeySpecException ex)
+				{
+					LOGGER.log(Level.WARNING, "Unable to generate key from string: ", ex);
+				}
+			}
+			hasReceivedKey = true;
+		}
 		try
 		{
 			short id = inputStream.readShort();
