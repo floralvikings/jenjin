@@ -44,6 +44,8 @@ public class MessageInputStream
 	{
 		this.inputStream = new DataInputStream(inputStream);
 
+
+		// TODO Move this into a separate method called when sending first message.
 		String keyString = this.inputStream.readUTF();
 
 		if(!keyString.equals(MessageOutputStream.NO_ENCRYPTION_KEY))

@@ -49,6 +49,7 @@ public class MessageOutputStream
 	{
 		outputStream = new DataOutputStream(out);
 		privateKey = null;
+
 		try
 		{
 			KeyPairGenerator kpg = KeyPairGenerator.getInstance("RSA");
@@ -63,7 +64,7 @@ public class MessageOutputStream
 		{
 			LOGGER.log(Level.SEVERE, "Unable to find RSA algorithm; strings will not be encrypted!", ex);
 		}
-
+		// TODO Move into separate method and call when sending first message.
 		String keyString = NO_ENCRYPTION_KEY;
 		if(outgoingKey != null)
 			keyString = new String(outgoingKey.getEncoded());
