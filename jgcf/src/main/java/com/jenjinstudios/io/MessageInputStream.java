@@ -6,6 +6,7 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
+import javax.xml.bind.DatatypeConverter;
 import java.io.DataInputStream;
 import java.io.EOFException;
 import java.io.IOException;
@@ -67,7 +68,7 @@ public class MessageInputStream
 				try
 				{
 					KeyFactory rsaKeyFac = KeyFactory.getInstance("RSA");
-					X509EncodedKeySpec keySpec = new X509EncodedKeySpec(keyString.getBytes());
+					X509EncodedKeySpec keySpec = new X509EncodedKeySpec(DatatypeConverter.parseHexBinary(keyString));
 					publicKey = rsaKeyFac.generatePublic(keySpec);
 				}catch(NoSuchAlgorithmException | InvalidKeySpecException ex)
 				{

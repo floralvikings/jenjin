@@ -6,6 +6,7 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
+import javax.xml.bind.DatatypeConverter;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -82,7 +83,11 @@ public class MessageOutputStream
 		{
 			String keyString = NO_ENCRYPTION_KEY;
 			if(outgoingKey != null)
-				keyString = new String(outgoingKey.getEncoded());
+			{
+				byte[] keyBytes = outgoingKey.getEncoded();
+
+				keyString = DatatypeConverter.printHexBinary(keyBytes);
+			}
 			outputStream.writeUTF(keyString);
 			hasSentKey = true;
 		}
