@@ -17,6 +17,8 @@ public class BaseMessage implements Serializable
 	private final Object[] args;
 	/** The ID used to register and create this message. */
 	private final short ID;
+	/** Flags whether this message is encrypted. */
+	private boolean encrypted;
 
 	/**
 	 * Construct a new message using the given ID and arguments.
@@ -80,5 +82,23 @@ public class BaseMessage implements Serializable
 		}else
 			invalid = true;
 		return invalid;
+	}
+
+	/**
+	 * Get whether this message is encrypted.
+	 * @return Whether this message is encrypted.
+	 */
+	public boolean isEncrypted()
+	{
+		return encrypted;
+	}
+
+	/**
+	 * Set whether this message is encrypted.
+	 * @param encrypted Whether this message should be encrypted.
+	 */
+	public void setEncrypted(boolean encrypted)
+	{
+		this.encrypted = encrypted;
 	}
 }

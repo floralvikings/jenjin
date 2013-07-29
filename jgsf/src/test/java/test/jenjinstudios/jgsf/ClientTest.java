@@ -4,7 +4,9 @@ import com.jenjinstudios.jgcf.Client;
 import com.jenjinstudios.jgsf.ClientHandler;
 import com.jenjinstudios.jgsf.SQLHandler;
 import com.jenjinstudios.jgsf.Server;
-import org.junit.*;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -22,12 +24,8 @@ public class ClientTest
 	private static Server<ClientHandler> server;
 	/** This client should login successfully. */
 	private static Client goodClient01;
-	/** This client should login successfully. */
-	private static Client goodClient02;
 	/** This client will have the same credentials as goodClient01. */
 	private static Client sameClient;
-	/** This client should fail to login. */
-	private static Client badClient;
 
 	/**
 	 * Set up and run a server for this test.
@@ -57,74 +55,61 @@ public class ClientTest
 		server.shutdown();
 	}
 
-	/** Set up clients for each test. */
-	@Before
-	public void setUpClients()
-	{
-		goodClient01 = new Client("localhost", 51019, "TestAccount01", "testPassword");
-		goodClient01.blockingStart();
-
-		goodClient02 = new Client("127.0.0.1", 51019, "TestAccount02", "testPassword");
-		goodClient02.blockingStart();
-
-		sameClient = new Client("127.0.0.1", 51019, "TestAccount01", "testPassword");
-		sameClient.blockingStart();
-
-		badClient = new Client("127.0.0.1", 51019, "TestAccount02", "This is an incorrect password.  Teehee.");
-		badClient.blockingStart();
-
-		Assert.assertTrue(goodClient01.isRunning());
-
-		Assert.assertTrue(goodClient02.isRunning());
-
-		Assert.assertTrue(sameClient.isRunning());
-
-		Assert.assertTrue(badClient.isRunning());
-	}
-
-	/** Destroy clients after each test. */
-	@After
-	public void destroyClients()
-	{
-		goodClient01.shutdown();
-		goodClient02.shutdown();
-		sameClient.shutdown();
-		badClient.shutdown();
-	}
-
 	/** Test the login and logout functionality. */
 	@Test
 	public void testLoginLogout()
 	{
+		goodClient01 = new Client("localhost", 51019, "TestAccount01", "testPassword");
+		goodClient01.blockingStart();
+
 		goodClient01.sendLoginRequest();
 		assertTrue(goodClient01.isLoggedIn());
 
 		goodClient01.sendLogoutRequest();
 		assertFalse(goodClient01.isLoggedIn());
+
+		goodClient01.shutdown();
 	}
 
 	/** Test the submission of an incorrect password. */
 	@Test
 	public void testIncorrectPassword()
 	{
+		/* This client should fail to login. */
+		Client badClient = new Client("127.0.0.1", 51019, "TestAccount02", "This is an incorrect password.  Teehee.");
+		badClient.blockingStart();
+
 		badClient.sendLoginRequest();
 		assertFalse(badClient.isLoggedIn());
+
+		badClient.shutdown();
 	}
 
 	/** Test the login time. */
 	@Test
 	public void testGetLoggedInTime()
 	{
+		goodClient01 = new Client("localhost", 51019, "TestAccount01", "testPassword");
+		goodClient01.blockingStart();
+
 		goodClient01.sendLoginRequest();
 		ClientHandler handler = server.getClientHandlerByUsername("TestAccount01");
 		assertEquals(handler.getLoggedInTime(), goodClient01.getLoggedInTime());
 		goodClient01.sendLogoutRequest();
+
+		goodClient01.shutdown();
 	}
 
 	/** Test the login functionality for when clients are already logged in. */
 	@Test
 	public void testAlreadyLoggedIn()
 	{
+		goodClient01 = new Client("localhost", 51019, "TestAccount01", "testPassword");
+		goodClient01.blockingStart();
+
+		sameClient = new Client("127.0.0.1", 51019, "TestAccount01", "testPassword");
+		sameClient.blockingStart();
+
 		goodClient01.sendLoginRequest();
 		assertTrue(goodClient01.isLoggedIn());
 
@@ -133,6 +118,9 @@ public class ClientTest
 
 		goodClient01.sendLogoutRequest();
 		assertFalse(sameClient.isLoggedIn());
+
+		goodClient01.shutdown();
+		sameClient.shutdown();
 	}
 
 	/**
@@ -143,6 +131,12 @@ public class ClientTest
 	@Test
 	public void testEmergencyLogout() throws InterruptedException
 	{
+		goodClient01 = new Client("localhost", 51019, "TestAccount01", "testPassword");
+		goodClient01.blockingStart();
+
+		sameClient = new Client("127.0.0.1", 51019, "TestAccount01", "testPassword");
+		sameClient.blockingStart();
+
 		// This client logs in and shuts down before sending a proper logout request.
 		// The server should auto logout the client
 		goodClient01.sendLoginRequest();
@@ -159,5 +153,8 @@ public class ClientTest
 		assertFalse(sameClient.isLoggedIn());
 		// It is important to note that if the server dies the entire database will be corrupted.  Recommend using an
 		// hourly auto-backup in case of server failure.
+
+		goodClient01.shutdown();
+		sameClient.shutdown();
 	}
 }

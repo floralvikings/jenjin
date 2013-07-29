@@ -6,6 +6,7 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
+import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
 import java.io.DataInputStream;
 import java.io.EOFException;
@@ -15,6 +16,7 @@ import java.net.SocketException;
 import java.security.*;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.X509EncodedKeySpec;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -41,11 +43,32 @@ public class MessageInputStream
 	 * Construct a new {@code MessageInputStream} from the given InputStream.
 	 *
 	 * @param inputStream The InputStream from which messages will be read.
+	 * @param privateKey The private key used to decrypt outgoing messages.
 	 * @throws java.io.IOException If there is an IO error.
 	 */
-	public MessageInputStream(InputStream inputStream) throws IOException
+	public MessageInputStream(InputStream inputStream, PrivateKey privateKey) throws IOException
 	{
 		this.inputStream = new DataInputStream(inputStream);
+		this.privateKey = privateKey;
+
+		byte[] keyBytes = new byte[94];
+		int read = this.inputStream.read(keyBytes);
+
+		if(Arrays.equals(keyBytes, MessageOutputStream.NO_ENCRYPTION_KEY) || read!=keyBytes.length)
+			LOGGER.log(Level.WARNING, "No public encryption key received!");
+
+		else
+		{
+			try
+			{
+				KeyFactory rsaKeyFac = KeyFactory.getInstance("RSA");
+				X509EncodedKeySpec keySpec = new X509EncodedKeySpec(keyBytes);
+				publicKey = rsaKeyFac.generatePublic(keySpec);
+			}catch(NoSuchAlgorithmException | InvalidKeySpecException ex)
+			{
+				LOGGER.log(Level.WARNING, "Unable to generate key from string: ", ex);
+			}
+		}
 	}
 
 	/**
@@ -58,23 +81,7 @@ public class MessageInputStream
 	{
 		if(!hasReceivedKey)
 		{
-			String keyString = this.inputStream.readUTF();
 
-			if(keyString.equals(MessageOutputStream.NO_ENCRYPTION_KEY))
-				LOGGER.log(Level.WARNING, "No public encryption key received!");
-
-			else
-			{
-				try
-				{
-					KeyFactory rsaKeyFac = KeyFactory.getInstance("RSA");
-					X509EncodedKeySpec keySpec = new X509EncodedKeySpec(DatatypeConverter.parseHexBinary(keyString));
-					publicKey = rsaKeyFac.generatePublic(keySpec);
-				}catch(NoSuchAlgorithmException | InvalidKeySpecException ex)
-				{
-					LOGGER.log(Level.WARNING, "Unable to generate key from string: ", ex);
-				}
-			}
 			hasReceivedKey = true;
 		}
 		try
@@ -161,26 +168,42 @@ public class MessageInputStream
 	private String readString(DataInputStream inputStream) throws IOException
 	{
 		boolean encrypted = inputStream.readBoolean();
-		String received = inputStream.readUTF();
+		String received = null;
 		if(encrypted)
 		{
-			byte[] encryptedBytes = received.getBytes();
 			try
 			{
-				Cipher cipher = Cipher.getInstance(MessageOutputStream.XFORM);
-				cipher.init(Cipher.DECRYPT_MODE, privateKey);
+				// Get the encrypted AES key string
+				String secretKeyString = inputStream.readUTF();
+				// Decrypt the AES key using the RSA private key.
+				Cipher keyStringCipher = Cipher.getInstance(MessageOutputStream.XFORM);
+				keyStringCipher.init(Cipher.DECRYPT_MODE, privateKey);
+				byte[] secretKeyBytes = keyStringCipher.doFinal(DatatypeConverter.parseHexBinary(secretKeyString));
+				// Get the message
+				received = inputStream.readUTF();
+				// Grab the bytes from the message.
+				byte[] encryptedBytes = DatatypeConverter.parseHexBinary(received);
+				// Decrypt the message based on the decrypted AES key.
+				SecretKeySpec messageKey = new SecretKeySpec(secretKeyBytes, "AES/ECB/NoPadding");
+				Cipher cipher = Cipher.getInstance("AES/ECB/NoPadding");
+				cipher.init(Cipher.DECRYPT_MODE, messageKey);
 				received = new String(cipher.doFinal(encryptedBytes));
 			} catch (NoSuchAlgorithmException | NoSuchPaddingException e)
 			{
-				LOGGER.log(Level.SEVERE, "Unable to find RSA algorithm; strings will not be decrypted!", e);
+				LOGGER.log(Level.SEVERE, "Unable to find algorithm; strings will not be decrypted!", e);
 			} catch (InvalidKeyException e)
 			{
 				LOGGER.log(Level.SEVERE, "Invalid key when decrypting string: ", e );
 			} catch (BadPaddingException | IllegalBlockSizeException e)
 			{
 				LOGGER.log(Level.SEVERE, "Unable to decrypt strings: ", e );
+			} finally
+			{
+				if(received == null)
+					received = inputStream.readUTF();
 			}
-		}
+		}else
+			received = inputStream.readUTF();
 		return received;
 	}
 
@@ -223,15 +246,6 @@ public class MessageInputStream
 	public PublicKey getPublicKey()
 	{
 		return publicKey;
-	}
-
-	/**
-	 * Set the private key for this stream.
-	 * @param privateKey The private key to be used by this stream.
-	 */
-	public void setPrivateKey(PrivateKey privateKey)
-	{
-		this.privateKey = privateKey;
 	}
 
 	/**

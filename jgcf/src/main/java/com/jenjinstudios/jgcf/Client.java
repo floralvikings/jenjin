@@ -8,6 +8,7 @@ import com.jenjinstudios.jgcf.message.ExecutableMessage;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.security.*;
 import java.util.LinkedList;
 import java.util.Timer;
 import java.util.logging.Level;
@@ -112,11 +113,27 @@ public class Client extends Thread
 		try
 		{
 			socket = new Socket(ADDRESS, PORT);
-			inputStream = new MessageInputStream(socket.getInputStream());
-			BaseMessage firstConnectResponse = inputStream.readMessage();
-			outputStream = new MessageOutputStream(socket.getOutputStream());
+			PrivateKey privateKey = null;
+			PublicKey outgoingKey = null;
+			try
+			{
+				KeyPairGenerator kpg = KeyPairGenerator.getInstance("RSA");
+				kpg.initialize(512);
+				KeyPair kp = kpg.generateKeyPair();
+				privateKey = kp.getPrivate();
+				// Here we need to send out public key; it's important to note that the public key generate here is
+				// NOT the one used to send encrypted messages from this stream.  To do that, a public key must be set
+				// using the setPublicKey method.
+				outgoingKey = kp.getPublic();
+			} catch (NoSuchAlgorithmException ex)
+			{
+				LOGGER.log(Level.SEVERE, "Unable to find RSA algorithm; strings will not be encrypted!", ex);
+			}
+			outputStream = new MessageOutputStream(socket.getOutputStream(), outgoingKey);
+			inputStream = new MessageInputStream(socket.getInputStream(), privateKey);
+
 			outputStream.setPublicKey(inputStream.getPublicKey());
-			inputStream.setPrivateKey(outputStream.getPrivateKey());
+			BaseMessage firstConnectResponse = inputStream.readMessage();
 			/* The ups of this client. */
 			int ups = (int) firstConnectResponse.getArgs()[0];
 			period = 1000 / ups;
@@ -163,6 +180,19 @@ public class Client extends Thread
 	@SuppressWarnings("WeakerAccess")
 	public void queueMessage(BaseMessage message)
 	{
+		queueMessage(message, false);
+	}
+
+	/**
+	 * Queue a message in the outgoing messages. This method is thread safe.
+	 *
+	 * @param message The message to add to the outgoing queue.
+	 * @param encrypted Whether the message should be encrypted.
+	 */
+	@SuppressWarnings("WeakerAccess")
+	public void queueMessage(BaseMessage message, boolean encrypted)
+	{
+		message.setEncrypted(encrypted);
 		synchronized (outgoingMessages)
 		{
 			outgoingMessages.add(message);
@@ -177,7 +207,7 @@ public class Client extends Thread
 	 */
 	private void sendMessage(BaseMessage message) throws IOException
 	{
-		outputStream.writeMessage(message, false);
+		outputStream.writeMessage(message);
 	}
 
 	/**
@@ -239,7 +269,7 @@ public class Client extends Thread
 			return;
 		}
 		receivedLoginResponse = false;
-		queueMessage(new BaseMessage(LOGIN_REQ_ID, username, password));
+		queueMessage(new BaseMessage(LOGIN_REQ_ID, username, password), true);
 		while (!receivedLoginResponse)
 			try
 			{
