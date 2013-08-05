@@ -9,7 +9,6 @@ import com.jenjinstudios.jgsf.message.ServerExecutableMessage;
 
 import java.io.IOException;
 import java.net.Socket;
-import java.security.*;
 import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -21,8 +20,6 @@ import java.util.logging.Logger;
  */
 public class ClientHandler extends Thread
 {
-	/** The Logger for this class. */
-	private static final Logger LOGGER = Logger.getLogger(ClientHandler.class.getName());
 	/** The Socket the handler uses to communicate. */
 	private final Socket sock;
 	/** The list of messages to be broadcast after the world update. */
@@ -59,26 +56,12 @@ public class ClientHandler extends Thread
 		server = s;
 		sock = sk;
 		broadcastMessages = new LinkedList<>();
-		PublicKey outgoingKey = null;
-		PrivateKey privateKey = null;
-		try
-		{
-			KeyPairGenerator kpg = KeyPairGenerator.getInstance("RSA");
-			kpg.initialize(512);
-			KeyPair kp = kpg.generateKeyPair();
-			privateKey = kp.getPrivate();
-			// Here we need to send out public key; it's important to note that the public key generate here is
-			// NOT the one used to send encrypted messages from this stream.  To do that, a public key must be set
-			// using the setPublicKey method.
-			outgoingKey = kp.getPublic();
-		} catch (NoSuchAlgorithmException ex)
-		{
-			LOGGER.log(Level.SEVERE, "Unable to find RSA algorithm; strings will not be encrypted!", ex);
-		}
-		outputStream = new MessageOutputStream(sock.getOutputStream(), outgoingKey);
-		inputStream = new MessageInputStream(sock.getInputStream(), privateKey);
-		outputStream.setPublicKey(inputStream.getPublicKey());
+
+		outputStream = new MessageOutputStream(sock.getOutputStream());
+		inputStream = new MessageInputStream(sock.getInputStream());
+
 		linkOpen = true;
+
 		queueMessage(new BaseMessage(Client.FIRST_CONNECT_ID, server.UPS));
 	}
 

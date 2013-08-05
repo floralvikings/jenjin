@@ -92,6 +92,8 @@ public class ClientTest
 		goodClient01 = new Client("localhost", 51019, "TestAccount01", "testPassword");
 		goodClient01.blockingStart();
 
+		assertTrue(goodClient01.isRunning());
+
 		goodClient01.sendLoginRequest();
 		ClientHandler handler = server.getClientHandlerByUsername("TestAccount01");
 		assertEquals(handler.getLoggedInTime(), goodClient01.getLoggedInTime());

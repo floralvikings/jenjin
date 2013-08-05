@@ -8,7 +8,6 @@ import com.jenjinstudios.jgcf.message.ExecutableMessage;
 
 import java.io.IOException;
 import java.net.Socket;
-import java.security.*;
 import java.util.LinkedList;
 import java.util.Timer;
 import java.util.logging.Level;
@@ -113,26 +112,10 @@ public class Client extends Thread
 		try
 		{
 			socket = new Socket(ADDRESS, PORT);
-			PrivateKey privateKey = null;
-			PublicKey outgoingKey = null;
-			try
-			{
-				KeyPairGenerator kpg = KeyPairGenerator.getInstance("RSA");
-				kpg.initialize(512);
-				KeyPair kp = kpg.generateKeyPair();
-				privateKey = kp.getPrivate();
-				// Here we need to send out public key; it's important to note that the public key generate here is
-				// NOT the one used to send encrypted messages from this stream.  To do that, a public key must be set
-				// using the setPublicKey method.
-				outgoingKey = kp.getPublic();
-			} catch (NoSuchAlgorithmException ex)
-			{
-				LOGGER.log(Level.SEVERE, "Unable to find RSA algorithm; strings will not be encrypted!", ex);
-			}
-			outputStream = new MessageOutputStream(socket.getOutputStream(), outgoingKey);
-			inputStream = new MessageInputStream(socket.getInputStream(), privateKey);
 
-			outputStream.setPublicKey(inputStream.getPublicKey());
+			outputStream = new MessageOutputStream(socket.getOutputStream());
+			inputStream = new MessageInputStream(socket.getInputStream());
+
 			BaseMessage firstConnectResponse = inputStream.readMessage();
 			/* The ups of this client. */
 			int ups = (int) firstConnectResponse.getArgs()[0];
@@ -265,7 +248,7 @@ public class Client extends Thread
 	{
 		if (username == null || password == null)
 		{
-			LOGGER.log(Level.WARNING, "Attmepted to login without username/password");
+			LOGGER.log(Level.WARNING, "Attempted to login without username or password");
 			return;
 		}
 		receivedLoginResponse = false;

@@ -2,24 +2,12 @@ package com.jenjinstudios.io;
 
 import com.jenjinstudios.jgcf.message.BaseMessage;
 
-import javax.crypto.BadPaddingException;
-import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
-import javax.crypto.spec.SecretKeySpec;
-import javax.xml.bind.DatatypeConverter;
 import java.io.DataInputStream;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.SocketException;
-import java.security.*;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.X509EncodedKeySpec;
-import java.util.Arrays;
 import java.util.LinkedList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Reads messages registered with the MessageRegistry class from stream.
@@ -28,47 +16,19 @@ import java.util.logging.Logger;
  */
 public class MessageInputStream
 {
-	/** The logger for this class. */
-	private static final Logger LOGGER = Logger.getLogger(MessageInputStream.class.getName());
 	/** The output stream used by this message stream. */
 	private final DataInputStream inputStream;
-	/** The public key used by the application on this end of the stream to write encrypted strings to the other end. */
-	private PublicKey publicKey;
-	/** The private key used to decrypt messages sent from the other side.*/
-	private PrivateKey privateKey;
-	/** Flags whether the key has been received. */
-	private boolean hasReceivedKey;
 
 	/**
 	 * Construct a new {@code MessageInputStream} from the given InputStream.
 	 *
+	 *
 	 * @param inputStream The InputStream from which messages will be read.
-	 * @param privateKey The private key used to decrypt outgoing messages.
 	 * @throws java.io.IOException If there is an IO error.
 	 */
-	public MessageInputStream(InputStream inputStream, PrivateKey privateKey) throws IOException
+	public MessageInputStream(InputStream inputStream) throws IOException
 	{
 		this.inputStream = new DataInputStream(inputStream);
-		this.privateKey = privateKey;
-
-		byte[] keyBytes = new byte[94];
-		int read = this.inputStream.read(keyBytes);
-
-		if(Arrays.equals(keyBytes, MessageOutputStream.NO_ENCRYPTION_KEY) || read!=keyBytes.length)
-			LOGGER.log(Level.WARNING, "No public encryption key received!");
-
-		else
-		{
-			try
-			{
-				KeyFactory rsaKeyFac = KeyFactory.getInstance("RSA");
-				X509EncodedKeySpec keySpec = new X509EncodedKeySpec(keyBytes);
-				publicKey = rsaKeyFac.generatePublic(keySpec);
-			}catch(NoSuchAlgorithmException | InvalidKeySpecException ex)
-			{
-				LOGGER.log(Level.WARNING, "Unable to generate key from string: ", ex);
-			}
-		}
 	}
 
 	/**
@@ -79,11 +39,6 @@ public class MessageInputStream
 	 */
 	public BaseMessage readMessage() throws IOException
 	{
-		if(!hasReceivedKey)
-		{
-
-			hasReceivedKey = true;
-		}
 		try
 		{
 			short id = inputStream.readShort();
@@ -161,6 +116,7 @@ public class MessageInputStream
 
 	/**
 	 * Read a string from the input stream, determining if it is encrypted and decrypting it if necessary.
+	 *
 	 * @param inputStream The input stream used to read.
 	 * @return The read, decrypted string.
 	 * @throws IOException If there is an IO error.
@@ -168,41 +124,12 @@ public class MessageInputStream
 	private String readString(DataInputStream inputStream) throws IOException
 	{
 		boolean encrypted = inputStream.readBoolean();
-		String received = null;
-		if(encrypted)
+		String received;
+		if (encrypted)
 		{
-			try
-			{
-				// Get the encrypted AES key string
-				String secretKeyString = inputStream.readUTF();
-				// Decrypt the AES key using the RSA private key.
-				Cipher keyStringCipher = Cipher.getInstance(MessageOutputStream.XFORM);
-				keyStringCipher.init(Cipher.DECRYPT_MODE, privateKey);
-				byte[] secretKeyBytes = keyStringCipher.doFinal(DatatypeConverter.parseHexBinary(secretKeyString));
-				// Get the message
-				received = inputStream.readUTF();
-				// Grab the bytes from the message.
-				byte[] encryptedBytes = DatatypeConverter.parseHexBinary(received);
-				// Decrypt the message based on the decrypted AES key.
-				SecretKeySpec messageKey = new SecretKeySpec(secretKeyBytes, "AES/ECB/NoPadding");
-				Cipher cipher = Cipher.getInstance("AES/ECB/NoPadding");
-				cipher.init(Cipher.DECRYPT_MODE, messageKey);
-				received = new String(cipher.doFinal(encryptedBytes));
-			} catch (NoSuchAlgorithmException | NoSuchPaddingException e)
-			{
-				LOGGER.log(Level.SEVERE, "Unable to find algorithm; strings will not be decrypted!", e);
-			} catch (InvalidKeyException e)
-			{
-				LOGGER.log(Level.SEVERE, "Invalid key when decrypting string: ", e );
-			} catch (BadPaddingException | IllegalBlockSizeException e)
-			{
-				LOGGER.log(Level.SEVERE, "Unable to decrypt strings: ", e );
-			} finally
-			{
-				if(received == null)
-					received = inputStream.readUTF();
-			}
-		}else
+			// TODO Get encrypted string here.
+			received = inputStream.readUTF();
+		} else
 			received = inputStream.readUTF();
 		return received;
 	}
@@ -240,16 +167,8 @@ public class MessageInputStream
 	}
 
 	/**
-	 * Get the public key used to encrypt messages.
-	 * @return The public key used to encrypt messages.
-	 */
-	public PublicKey getPublicKey()
-	{
-		return publicKey;
-	}
-
-	/**
 	 * Close the input stream.
+	 *
 	 * @throws java.io.IOException If there is an IO error.
 	 */
 	public void close() throws IOException
