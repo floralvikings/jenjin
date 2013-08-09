@@ -20,16 +20,6 @@ import java.util.logging.Logger;
  */
 public class Client extends Thread
 {
-	/** The ID for the FirstConnectResponse message. */
-	public static final short FIRST_CONNECT_ID = 0;
-	/** The ID for the LoginRequest message. */
-	public static final short LOGIN_REQ_ID = 1;
-	/** The ID for the LoginResponse message. */
-	public static final short LOGIN_RESP_ID = 2;
-	/** The ID for the LogoutRequest message. */
-	public static final short LOGOUT_REQ_ID = 3;
-	/** The ID for the LogoutResponse message. */
-	public static final short LOGOUT_RESP_ID = 4;
 	/** The logger associated with this class. */
 	private static final Logger LOGGER = Logger.getLogger(Client.class.getName());
 	/** The port over which the client communicates with the server. */
@@ -54,7 +44,7 @@ public class Client extends Thread
 	private volatile boolean running;
 	/** Whether the user is logged in. */
 	private boolean loggedIn;
-	/** The inputstream used to read messages from the server. */
+	/** The input stream used to read messages from the server. */
 	private MessageInputStream inputStream;
 	/** The output stream used to write messages to the server. */
 	private MessageOutputStream outputStream;
@@ -151,7 +141,7 @@ public class Client extends Thread
 		synchronized (outgoingMessages)
 		{
 			while (!outgoingMessages.isEmpty())
-				sendMessage(outgoingMessages.pop());
+				outputStream.writeMessage(outgoingMessages.pop());
 		}
 	}
 
@@ -160,23 +150,12 @@ public class Client extends Thread
 	 *
 	 * @param message The message to add to the outgoing queue.
 	 */
-	public void queueMessage(Message message)
+	public void sendMessage(Message message)
 	{
 		synchronized (outgoingMessages)
 		{
 			outgoingMessages.add(message);
 		}
-	}
-
-	/**
-	 * Send the specified message.  This method should only be called from the client update thread.
-	 *
-	 * @param message The message to be sent.
-	 * @throws IOException if there is an error writing to the message stream.
-	 */
-	private void sendMessage(Message message) throws IOException
-	{
-		outputStream.writeMessage(message);
 	}
 
 	/**
@@ -238,7 +217,12 @@ public class Client extends Thread
 			return;
 		}
 		receivedLoginResponse = false;
-		queueMessage(new Message(LOGIN_REQ_ID, username, password));
+		// Create the login request.
+		Message loginRequest = new Message("LoginRequest");
+		loginRequest.setArgument("username", username);
+		loginRequest.setArgument("password", password);
+
+		sendMessage(loginRequest);
 		while (!receivedLoginResponse)
 			try
 			{
@@ -253,7 +237,8 @@ public class Client extends Thread
 	public void sendLogoutRequest()
 	{
 		receivedLogoutResponse = false;
-		queueMessage(new Message(LOGOUT_REQ_ID));
+		Message logoutRequest = new Message("LogoutRequest");
+		sendMessage(logoutRequest);
 		while (!receivedLogoutResponse)
 			try
 			{

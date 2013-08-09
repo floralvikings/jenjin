@@ -2,7 +2,6 @@ package com.jenjinstudios.jgsf;
 
 import com.jenjinstudios.io.MessageInputStream;
 import com.jenjinstudios.io.MessageOutputStream;
-import com.jenjinstudios.jgcf.Client;
 import com.jenjinstudios.jgsf.message.ServerExecutableMessage;
 import com.jenjinstudios.message.ExecutableMessage;
 import com.jenjinstudios.message.Message;
@@ -62,7 +61,9 @@ public class ClientHandler extends Thread
 
 		linkOpen = true;
 
-		queueMessage(new Message(Client.FIRST_CONNECT_ID, server.UPS));
+		Message firstConnectResponse = new Message("FirstConnectResponse");
+		firstConnectResponse.setArgument("ups", server.UPS);
+		queueMessage(firstConnectResponse);
 	}
 
 	/**
@@ -191,7 +192,10 @@ public class ClientHandler extends Thread
 	{
 		loggedIn = success;
 		loggedInTime = server.getCycleStartTime();
-		queueMessage(new Message(Client.LOGIN_RESP_ID, success, loggedInTime));
+		Message loginResponse = new Message("LoginResponse");
+		loginResponse.setArgument("success", success);
+		loginResponse.setArgument("loginTime", loggedInTime);
+		queueMessage(loginResponse);
 	}
 
 	/**
@@ -202,7 +206,9 @@ public class ClientHandler extends Thread
 	public void sendLogoutStatus(boolean success)
 	{
 		loggedIn = !success;
-		queueMessage(new Message(Client.LOGOUT_RESP_ID, success));
+		Message logoutResponse = new Message("LogoutResponse");
+		logoutResponse.setArgument("success", success);
+		queueMessage(logoutResponse);
 	}
 
 	/** Enter a loop that receives and processes messages until the link is closed. */

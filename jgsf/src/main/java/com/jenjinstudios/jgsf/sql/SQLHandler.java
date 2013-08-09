@@ -1,4 +1,4 @@
-package com.jenjinstudios.jgsf;
+package com.jenjinstudios.jgsf.sql;
 
 import com.jenjinstudios.util.Hash;
 

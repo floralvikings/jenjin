@@ -2,8 +2,8 @@ package test.jenjinstudios.jgsf;
 
 import com.jenjinstudios.jgcf.Client;
 import com.jenjinstudios.jgsf.ClientHandler;
-import com.jenjinstudios.jgsf.SQLHandler;
 import com.jenjinstudios.jgsf.Server;
+import com.jenjinstudios.jgsf.sql.SQLHandler;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -54,13 +54,13 @@ public class ClientTest
 	/**
 	 * Shut the server down when all is said and done.
 	 *
-	 * @throws java.io.IOException If there is an error shutting down the server.
+	 * @throws java.io.IOException  If there is an error shutting down the server.
 	 * @throws InterruptedException If there is interrupt.
 	 */
 	@AfterClass
 	public static void destroy() throws IOException, InterruptedException
 	{
-		while((System.currentTimeMillis() - startTime) < 1500)
+		while ((System.currentTimeMillis() - startTime) < 1500)
 			Thread.sleep(1);
 		assertEquals(50, server.getAverageUPS(), 0.05);
 		server.shutdown();
