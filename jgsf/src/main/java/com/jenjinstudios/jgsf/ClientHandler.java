@@ -3,8 +3,8 @@ package com.jenjinstudios.jgsf;
 import com.jenjinstudios.io.MessageInputStream;
 import com.jenjinstudios.io.MessageOutputStream;
 import com.jenjinstudios.jgcf.Client;
-import com.jenjinstudios.jgcf.message.BaseMessage;
 import com.jenjinstudios.jgcf.message.ExecutableMessage;
+import com.jenjinstudios.jgcf.message.Message;
 import com.jenjinstudios.jgsf.message.ServerExecutableMessage;
 
 import java.io.IOException;
@@ -23,7 +23,7 @@ public class ClientHandler extends Thread
 	/** The Socket the handler uses to communicate. */
 	private final Socket sock;
 	/** The list of messages to be broadcast after the world update. */
-	private final LinkedList<BaseMessage> broadcastMessages;
+	private final LinkedList<Message> broadcastMessages;
 	/** Flags whether the socket is connected. */
 	private boolean linkOpen;
 	/** The server. */
@@ -62,7 +62,7 @@ public class ClientHandler extends Thread
 
 		linkOpen = true;
 
-		queueMessage(new BaseMessage(Client.FIRST_CONNECT_ID, server.UPS));
+		queueMessage(new Message(Client.FIRST_CONNECT_ID, server.UPS));
 	}
 
 	/**
@@ -70,7 +70,7 @@ public class ClientHandler extends Thread
 	 *
 	 * @param o The object (message) to be sent to the client.
 	 */
-	public void queueMessage(BaseMessage o)
+	public void queueMessage(Message o)
 	{
 		synchronized (broadcastMessages)
 		{
@@ -118,7 +118,7 @@ public class ClientHandler extends Thread
 	 *
 	 * @param o The message to send to the client.
 	 */
-	private void sendMessage(BaseMessage o)
+	private void sendMessage(Message o)
 	{
 		try
 		{
@@ -191,7 +191,7 @@ public class ClientHandler extends Thread
 	{
 		loggedIn = success;
 		loggedInTime = server.getCycleStartTime();
-		queueMessage(new BaseMessage(Client.LOGIN_RESP_ID, success, loggedInTime));
+		queueMessage(new Message(Client.LOGIN_RESP_ID, success, loggedInTime));
 	}
 
 	/**
@@ -202,7 +202,7 @@ public class ClientHandler extends Thread
 	public void sendLogoutStatus(boolean success)
 	{
 		loggedIn = !success;
-		queueMessage(new BaseMessage(Client.LOGOUT_RESP_ID, success));
+		queueMessage(new Message(Client.LOGOUT_RESP_ID, success));
 	}
 
 	/** Enter a loop that receives and processes messages until the link is closed. */
@@ -210,7 +210,7 @@ public class ClientHandler extends Thread
 	public void run()
 	{
 		Server.LOGGER.log(Level.FINE, "Client Handler Started. Link open:{0}", linkOpen);
-		BaseMessage message;
+		Message message;
 		while (linkOpen)
 		{
 			try
@@ -236,7 +236,7 @@ public class ClientHandler extends Thread
 	 * Process the given message.
 	 * @param message The message to be processed.
 	 */
-	private void processMessage(BaseMessage message)
+	private void processMessage(Message message)
 	{
 		ExecutableMessage exec;
 		exec = ServerExecutableMessage.getServerExecutableMessageFor(this, message);

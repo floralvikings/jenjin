@@ -4,6 +4,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -20,6 +21,8 @@ public class MessageType
 	public final String name;
 	/** The argumentTypes for this message type. */
 	public final ArgumentType[] argumentTypes;
+	/** The argument types for this message, sorted by name. */
+	private final TreeMap<String, ArgumentType> argumentTypeTreeMap;
 	/** The class of the executable message associated with this type. */
 	public final Class<? extends ExecutableMessage> executableMessageClass;
 
@@ -37,6 +40,20 @@ public class MessageType
 		this.name = name;
 		this.argumentTypes = argumentTypes;
 		this.executableMessageClass = executableMessageClass;
+		argumentTypeTreeMap = new TreeMap<>();
+
+		for(ArgumentType argumentType : this.argumentTypes)
+			argumentTypeTreeMap.put(argumentType.name, argumentType);
+	}
+
+	/**
+	 * Get the argument type with the given name.
+	 * @param name The name of the argument.
+	 * @return The ArgumentType with the given name.
+	 */
+	public ArgumentType getArgumentType(String name)
+	{
+		return argumentTypeTreeMap.get(name);
 	}
 
 	/**
@@ -147,28 +164,28 @@ public class MessageType
 		switch (className)
 		{
 			case "boolean":
-				type = boolean.class;
+				type = Boolean.class;
 				break;
 			case "byte":
-				type = byte.class;
+				type = Byte.class;
 				break;
 			case "short":
-				type = short.class;
+				type = Short.class;
 				break;
 			case "char":
-				type = char.class;
+				type = Character.class;
 				break;
 			case "int":
-				type = int.class;
+				type = Integer.class;
 				break;
 			case "long":
-				type = long.class;
+				type = Long.class;
 				break;
 			case "float":
-				type = float.class;
+				type = Float.class;
 				break;
 			case "double":
-				type = double.class;
+				type = Double.class;
 				break;
 			case "String":
 				// TODO Handle encrypted messages

@@ -2,9 +2,9 @@ package com.jenjinstudios.jgcf;
 
 import com.jenjinstudios.io.MessageInputStream;
 import com.jenjinstudios.io.MessageOutputStream;
-import com.jenjinstudios.jgcf.message.BaseMessage;
 import com.jenjinstudios.jgcf.message.ClientExecutableMessage;
 import com.jenjinstudios.jgcf.message.ExecutableMessage;
+import com.jenjinstudios.jgcf.message.Message;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -37,7 +37,7 @@ public class Client extends Thread
 	/** The address of the server to which this client will connect. */
 	private final String ADDRESS;
 	/** The collection of messages to send at the next broadcast. */
-	private final LinkedList<BaseMessage> outgoingMessages;
+	private final LinkedList<Message> outgoingMessages;
 	/** The list of tasks that this client will execute each update cycle. */
 	private final LinkedList<Runnable> repeatedSyncedTasks;
 	/** The "one-shot" tasks to be executed in the current client loop. */
@@ -116,7 +116,7 @@ public class Client extends Thread
 			outputStream = new MessageOutputStream(socket.getOutputStream());
 			inputStream = new MessageInputStream(socket.getInputStream());
 
-			BaseMessage firstConnectResponse = inputStream.readMessage();
+			Message firstConnectResponse = inputStream.readMessage();
 			/* The ups of this client. */
 			int ups = (int) firstConnectResponse.getArgs()[0];
 			period = 1000 / ups;
@@ -160,7 +160,7 @@ public class Client extends Thread
 	 *
 	 * @param message The message to add to the outgoing queue.
 	 */
-	public void queueMessage(BaseMessage message)
+	public void queueMessage(Message message)
 	{
 		synchronized (outgoingMessages)
 		{
@@ -174,7 +174,7 @@ public class Client extends Thread
 	 * @param message The message to be sent.
 	 * @throws IOException if there is an error writing to the message stream.
 	 */
-	private void sendMessage(BaseMessage message) throws IOException
+	private void sendMessage(Message message) throws IOException
 	{
 		outputStream.writeMessage(message);
 	}
@@ -186,7 +186,7 @@ public class Client extends Thread
 	 * @param message The message to be processed.
 	 * @throws IOException If there is an IO error.
 	 */
-	protected void processMessage(BaseMessage message) throws IOException
+	protected void processMessage(Message message) throws IOException
 	{
 		ExecutableMessage exec;
 		exec = ClientExecutableMessage.getClientExecutableMessageFor(this, message);
@@ -238,7 +238,7 @@ public class Client extends Thread
 			return;
 		}
 		receivedLoginResponse = false;
-		queueMessage(new BaseMessage(LOGIN_REQ_ID, username, password));
+		queueMessage(new Message(LOGIN_REQ_ID, username, password));
 		while (!receivedLoginResponse)
 			try
 			{
@@ -253,7 +253,7 @@ public class Client extends Thread
 	public void sendLogoutRequest()
 	{
 		receivedLogoutResponse = false;
-		queueMessage(new BaseMessage(LOGOUT_REQ_ID));
+		queueMessage(new Message(LOGOUT_REQ_ID));
 		while (!receivedLogoutResponse)
 			try
 			{
@@ -286,7 +286,7 @@ public class Client extends Thread
 		sendMessagesTimer.scheduleAtFixedRate(new ClientLoop(this), 0, period);
 		try
 		{
-			BaseMessage currentMessage;
+			Message currentMessage;
 			while ((currentMessage = inputStream.readMessage()) != null && running)
 				processMessage(currentMessage);
 		} catch (IOException ex)

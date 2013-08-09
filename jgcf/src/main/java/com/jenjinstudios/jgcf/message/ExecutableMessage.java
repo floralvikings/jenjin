@@ -8,18 +8,18 @@ package com.jenjinstudios.jgcf.message;
 @SuppressWarnings("unused")
 public abstract class ExecutableMessage implements Runnable
 {
-	/** The BaseMessage for this ExecutableMessage. */
-	private final BaseMessage message;
+	/** The Message for this ExecutableMessage. */
+	private final Message message;
 
 	/**
-	 * Construct an ExecutableMessage with the given BaseMessage.
+	 * Construct an ExecutableMessage with the given Message.
 	 *
-	 * @param message The BaseMessage.
+	 * @param message The Message.
 	 */
-	protected ExecutableMessage(BaseMessage message)
+	protected ExecutableMessage(Message message)
 	{
 		if (!getClass().isAssignableFrom(MessageRegistry.getMessageType(message.getID()).executableMessageClass))
-			throw new IllegalArgumentException("BaseMessage supplied to " + getClass().getName() + "is invalid.");
+			throw new IllegalArgumentException("Message supplied to " + getClass().getName() + "is invalid.");
 
 		this.message = message;
 	}
@@ -37,11 +37,11 @@ public abstract class ExecutableMessage implements Runnable
 	}
 
 	/**
-	 * The BaseMessage for this ExecutableMessage.
+	 * The Message for this ExecutableMessage.
 	 *
-	 * @return The BaseMessage used by this ExecutableMessage
+	 * @return The Message used by this ExecutableMessage
 	 */
-	public BaseMessage getMessage()
+	public Message getMessage()
 	{
 		return message;
 	}

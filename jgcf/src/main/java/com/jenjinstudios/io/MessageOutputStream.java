@@ -1,7 +1,7 @@
 package com.jenjinstudios.io;
 
 import com.jenjinstudios.jgcf.message.ArgumentType;
-import com.jenjinstudios.jgcf.message.BaseMessage;
+import com.jenjinstudios.jgcf.message.Message;
 import com.jenjinstudios.jgcf.message.MessageRegistry;
 import com.jenjinstudios.jgcf.message.MessageType;
 
@@ -35,12 +35,12 @@ public class MessageOutputStream
 	}
 
 	/**
-	 * Write the given {@code BaseMessage} to the output stream.
+	 * Write the given {@code Message} to the output stream.
 	 *
-	 * @param message The BaseMessage to be written to the stream.
+	 * @param message The Message to be written to the stream.
 	 * @throws IOException If there is an IO error.
 	 */
-	public void writeMessage(BaseMessage message) throws IOException
+	public void writeMessage(Message message) throws IOException
 	{
 		Object[] args = message.getArgs();
 		MessageType messageType = MessageRegistry.getMessageType(message.getID());

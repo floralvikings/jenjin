@@ -1,6 +1,6 @@
 package com.jenjinstudios.io;
 
-import com.jenjinstudios.jgcf.message.BaseMessage;
+import com.jenjinstudios.jgcf.message.Message;
 import com.jenjinstudios.jgcf.message.MessageRegistry;
 
 import java.io.DataInputStream;
@@ -33,12 +33,12 @@ public class MessageInputStream
 	}
 
 	/**
-	 * Read a BaseMessage or subclass from the DataStream.
+	 * Read a Message or subclass from the DataStream.
 	 *
-	 * @return The BaseMessage constructed form the data stream.
+	 * @return The Message constructed form the data stream.
 	 * @throws IOException If there is an IO error.
 	 */
-	public BaseMessage readMessage() throws IOException
+	public Message readMessage() throws IOException
 	{
 		try
 		{
@@ -47,7 +47,7 @@ public class MessageInputStream
 			Class<?>[] classArray = new Class[classes.size()];
 			classes.toArray(classArray);
 			Object[] args = readMessageArgs(classes);
-			return new BaseMessage(id, args);
+			return new Message(id, args);
 		} catch (EOFException | SocketException e)
 		{
 			return null;

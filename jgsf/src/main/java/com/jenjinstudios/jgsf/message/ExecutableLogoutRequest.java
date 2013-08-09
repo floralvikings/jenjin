@@ -1,6 +1,6 @@
 package com.jenjinstudios.jgsf.message;
 
-import com.jenjinstudios.jgcf.message.BaseMessage;
+import com.jenjinstudios.jgcf.message.Message;
 import com.jenjinstudios.jgsf.ClientHandler;
 import com.jenjinstudios.jgsf.SQLHandler;
 
@@ -21,7 +21,7 @@ public class ExecutableLogoutRequest extends ServerExecutableMessage
 	 * @param clientHandler The client handler which created this message.
 	 * @param message       The message used to create this ExecutableMessage.
 	 */
-	public ExecutableLogoutRequest(ClientHandler clientHandler, BaseMessage message)
+	public ExecutableLogoutRequest(ClientHandler clientHandler, Message message)
 	{
 		super(clientHandler, message);
 		sqlHandler = clientHandler.getServer().getSqlHandler();

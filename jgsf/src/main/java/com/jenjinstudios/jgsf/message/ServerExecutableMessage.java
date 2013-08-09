@@ -1,7 +1,7 @@
 package com.jenjinstudios.jgsf.message;
 
-import com.jenjinstudios.jgcf.message.BaseMessage;
 import com.jenjinstudios.jgcf.message.ExecutableMessage;
+import com.jenjinstudios.jgcf.message.Message;
 import com.jenjinstudios.jgcf.message.MessageRegistry;
 import com.jenjinstudios.jgcf.message.MessageType;
 import com.jenjinstudios.jgsf.ClientHandler;
@@ -29,21 +29,21 @@ public abstract class ServerExecutableMessage extends ExecutableMessage
 	 * @param handler The handler using this ExecutableMessage.
 	 * @param message The message.
 	 */
-	protected ServerExecutableMessage(ClientHandler handler, BaseMessage message)
+	protected ServerExecutableMessage(ClientHandler handler, Message message)
 	{
 		super(message);
 		clientHandler = handler;
 	}
 
 	/**
-	 * Get the class of the ExecutableMessage that handles the given BaseMessage.
+	 * Get the class of the ExecutableMessage that handles the given Message.
 	 *
 	 * @param handler The client handler to use the ExecutableMessage.
 	 * @param message The message.
-	 * @return The class of the ExecutableMessage that handles the given BaseMessage.
+	 * @return The class of the ExecutableMessage that handles the given Message.
 	 */
 	@SuppressWarnings("unchecked")
-	public static ExecutableMessage getServerExecutableMessageFor(ClientHandler handler, BaseMessage message)
+	public static ExecutableMessage getServerExecutableMessageFor(ClientHandler handler, Message message)
 	{
 		ExecutableMessage r = null;
 		MessageType messageType = MessageRegistry.getMessageType(message.getID());

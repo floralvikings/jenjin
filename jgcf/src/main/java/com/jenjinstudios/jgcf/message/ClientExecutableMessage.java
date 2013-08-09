@@ -20,26 +20,26 @@ public abstract class ClientExecutableMessage extends ExecutableMessage
 	private final Client client;
 
 	/**
-	 * Construct an ExecutableMessage with the given BaseMessage.
+	 * Construct an ExecutableMessage with the given Message.
 	 *
 	 * @param client The client invoking this message.
-	 * @param message The BaseMessage.
+	 * @param message The Message.
 	 */
-	protected ClientExecutableMessage(Client client, BaseMessage message)
+	protected ClientExecutableMessage(Client client, Message message)
 	{
 		super(message);
 		this.client = client;
 	}
 
 	/**
-	 * Get the class of the ExecutableMessage that handles the given BaseMessage.
+	 * Get the class of the ExecutableMessage that handles the given Message.
 	 *
 	 * @param client  The client invoking the message.
 	 * @param message The message.
-	 * @return The class of the ExecutableMessage that handles the given BaseMessage.
+	 * @return The class of the ExecutableMessage that handles the given Message.
 	 */
 	@SuppressWarnings("unchecked")
-	public static ExecutableMessage getClientExecutableMessageFor(Client client, BaseMessage message)
+	public static ExecutableMessage getClientExecutableMessageFor(Client client, Message message)
 	{
 		ExecutableMessage r = null;
 

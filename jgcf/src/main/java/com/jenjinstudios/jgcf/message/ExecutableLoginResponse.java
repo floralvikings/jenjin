@@ -11,12 +11,12 @@ import com.jenjinstudios.jgcf.Client;
 public class ExecutableLoginResponse extends ClientExecutableMessage
 {
 	/**
-	 * Construct an ExecutableMessage with the given BaseMessage.
+	 * Construct an ExecutableMessage with the given Message.
 	 *
 	 * @param client The client invoking this message.
-	 * @param message The BaseMessage.
+	 * @param message The Message.
 	 */
-	public ExecutableLoginResponse(Client client, BaseMessage message)
+	public ExecutableLoginResponse(Client client, Message message)
 	{
 		super(client, message);
 	}
