@@ -1,8 +1,9 @@
 package com.jenjinstudios.jgsf.message;
 
-import com.jenjinstudios.io.MessageRegistry;
 import com.jenjinstudios.jgcf.message.BaseMessage;
 import com.jenjinstudios.jgcf.message.ExecutableMessage;
+import com.jenjinstudios.jgcf.message.MessageRegistry;
+import com.jenjinstudios.jgcf.message.MessageType;
 import com.jenjinstudios.jgsf.ClientHandler;
 
 import java.lang.reflect.Constructor;
@@ -20,8 +21,7 @@ public abstract class ServerExecutableMessage extends ExecutableMessage
 	/** The Logger for this class. */
 	private static final Logger LOGGER = Logger.getLogger(ServerExecutableMessage.class.getName());
 	/** The ClientHandler for this object. */
-	private static ClientHandler clientHandler;
-
+	private final ClientHandler clientHandler;
 
 	/**
 	 * Construct a new ExecutableMessage.  Must be implemented by subclasses.
@@ -46,12 +46,9 @@ public abstract class ServerExecutableMessage extends ExecutableMessage
 	public static ExecutableMessage getServerExecutableMessageFor(ClientHandler handler, BaseMessage message)
 	{
 		ExecutableMessage r = null;
-		// Register messages if it hasn't been done already.
-		if (!ExecutableMessage.areMessagesRegistered()) registerMessages();
-		// Again, register XML messages if not done already.
-		if (!MessageRegistry.hasMessagesRegistered()) MessageRegistry.registerXmlMessages();
+		MessageType messageType = MessageRegistry.getMessageType(message.getID());
 		// Get the executable message classes registered.
-		Class<? extends ExecutableMessage> execClass = executableMessageClasses.get(message.getID());
+		Class<? extends ExecutableMessage> execClass = messageType.executableMessageClass;
 		try
 		{
 			// Get and parse the Constructors for the ExecutableMessage class retrieved.
@@ -85,7 +82,7 @@ public abstract class ServerExecutableMessage extends ExecutableMessage
 	 *
 	 * @return The ClientHandler invoking this message.
 	 */
-	public static ClientHandler getClientHandler()
+	public ClientHandler getClientHandler()
 	{
 		return clientHandler;
 	}

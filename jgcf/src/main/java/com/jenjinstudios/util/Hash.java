@@ -5,11 +5,11 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 /**
- * The {@code Hasher} class contains methods for getting encrypted strings.
+ * The {@code Hash} class contains methods for getting encrypted strings.
  *
  * @author Caleb Brinkman
  */
-public class Hasher
+public class Hash
 {
 	/**
 	 * Return a SHA1 hash of the given string.

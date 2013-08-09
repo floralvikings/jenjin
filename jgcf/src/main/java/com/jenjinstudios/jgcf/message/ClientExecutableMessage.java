@@ -1,6 +1,5 @@
 package com.jenjinstudios.jgcf.message;
 
-import com.jenjinstudios.io.MessageRegistry;
 import com.jenjinstudios.jgcf.Client;
 
 import java.lang.reflect.Constructor;
@@ -43,10 +42,9 @@ public abstract class ClientExecutableMessage extends ExecutableMessage
 	public static ExecutableMessage getClientExecutableMessageFor(Client client, BaseMessage message)
 	{
 		ExecutableMessage r = null;
-		if (!ExecutableMessage.areMessagesRegistered()) registerMessages();
-		if (!MessageRegistry.hasMessagesRegistered()) MessageRegistry.registerXmlMessages();
 
-		Class<? extends ExecutableMessage> execClass = executableMessageClasses.get(message.getID());
+		MessageType messageType = MessageRegistry.getMessageType(message.getID());
+		Class<? extends ExecutableMessage> execClass = messageType.executableMessageClass;
 
 		try
 		{

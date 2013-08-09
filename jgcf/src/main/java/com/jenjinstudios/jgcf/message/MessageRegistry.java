@@ -1,9 +1,8 @@
-package com.jenjinstudios.io;
+package com.jenjinstudios.jgcf.message;
 
 import com.jenjinstudios.util.FileUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
@@ -17,7 +16,9 @@ import java.io.InputStream;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.security.CodeSource;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
@@ -32,12 +33,14 @@ public class MessageRegistry
 {
 	/** The logger for this class. */
 	private static final Logger LOGGER = Logger.getLogger(MessageRegistry.class.getName());
-	/** The collection of message argument class names. */
-	private static final TreeMap<Short, Class[]> argumentRegistry = new TreeMap<>();
 	/** Flags whether messages have been registered. */
 	private static boolean messagesRegistered;
 	/** The file name of message registry classed. */
 	private static final String messageFileName = "Messages.xml";
+	/** A map that stores messages types sorted by ID. */
+	private static final TreeMap<Short, MessageType> messageTypesByID = new TreeMap<>();
+	/** A map that stores message types sorted by name. */
+	private static final TreeMap<String, MessageType> messageTypesByName = new TreeMap<>();
 
 	/**
 	 * Register all messages found in registry files.  Also checks the JAR file.
@@ -68,10 +71,9 @@ public class MessageRegistry
 			for(File f : messageFiles) parseXmlFile(f);
 			messagesRegistered = true;
 
-		}
-		catch (IOException | SAXException | ParserConfigurationException e)
+		}catch (IOException | SAXException | ParserConfigurationException e)
 		{
-			LOGGER.log(Level.INFO, "Unable to parse JAR file.", e);
+			LOGGER.log(Level.INFO, "Unable to parse XML files.", e);
 		}
 	}
 
@@ -103,90 +105,49 @@ public class MessageRegistry
 
 		doc.getDocumentElement().normalize();
 
-		NodeList nList = doc.getElementsByTagName("message");
+		NodeList messageElements = doc.getElementsByTagName("message");
 
-		for (int i = 0; i < nList.getLength(); i++)
+		for (int i = 0; i < messageElements.getLength(); i++)
 		{
-			Node node = nList.item(i);
-
-			short id;
-			Class[] argClasses;
-			Element element = (Element) node;
-
-			id = Short.parseShort(element.getAttribute("id"));
-
-			NodeList argElements = element.getElementsByTagName("argument");
-			argClasses = parseArgumentNodes(argElements);
-
-			registerMessage(id, argClasses);
-		}
-	}
-
-	/**
-	 * Add the given message ID and argument classes to the registry.
-	 * @param id The ID of the message type.
-	 * @param argClasses The classes of the arguments to be used by the message.
-	 */
-	private static void registerMessage(short id, Class[] argClasses)
-	{
-		argumentRegistry.put(id, argClasses);
-	}
-
-	/**
-	 * Parse argument XML nodes in the XML registry file and return the classes contained therein.  This class should
-	 * only be called using XML elements called "argument."
-	 * @param argElements The NodeList containing the argument elements.
-	 * @return An Array of Class objects representing the types of arguments found.
-	 */
-	private static Class[] parseArgumentNodes(NodeList argElements)
-	{
-		Class[] args = new Class[argElements.getLength()];
-		for (int i = 0; i < argElements.getLength(); i++)
-		{
-			String className = argElements.item(i).getTextContent();
-
-			switch (className)
+			Element currentMessageElement = (Element) messageElements.item(i);
+			MessageType messageType = MessageType.parseMessageElement(currentMessageElement);
+			if(messageType != null)
 			{
-				case "boolean":
-					args[i] = boolean.class;
-					break;
-				case "byte":
-					args[i] = byte.class;
-					break;
-				case "short":
-					args[i] = short.class;
-					break;
-				case "char":
-					args[i] = char.class;
-					break;
-				case "int":
-					args[i] = int.class;
-					break;
-				case "long":
-					args[i] = long.class;
-					break;
-				case "float":
-					args[i] = float.class;
-					break;
-				case "double":
-					args[i] = double.class;
-					break;
-				case "String":
-					args[i] = String.class;
-					break;
-				case "byte[]":
-					args[i] = byte[].class;
-					break;
-				case "String[]":
-					args[i] = String[].class;
-					break;
+				// Add the message type to the two trees.
+				messageTypesByID.put(messageType.id, messageType);
+				messageTypesByName.put(messageType.name, messageType);
 			}
 		}
-		return args;
 	}
 
 	/**
-	 * Get the class names of arguments for the class with the given registration ID.
+	 * Get the message type with the given name.
+	 * @param name The name of the message type.
+	 * @return The MessageType with the given name.
+	 */
+	public static MessageType getMessageType(String name)
+	{
+		if(!messagesRegistered)
+			registerXmlMessages();
+
+		return messageTypesByName.get(name);
+	}
+
+	/**
+	 * Get the MessageType with the given ID.
+	 * @param id The id.
+	 * @return The MessageType with the given ID.
+	 */
+	public static MessageType getMessageType(short id)
+	{
+		if(!messagesRegistered)
+			registerXmlMessages();
+
+		return messageTypesByID.get(id);
+	}
+
+	/**
+	 * Get the class names of argumentTypes for the class with the given registration ID.
 	 *
 	 * @param id The ID to lookup.
 	 * @return A LinkedList of class names.
@@ -195,20 +156,14 @@ public class MessageRegistry
 	{
 		if(!hasMessagesRegistered())
 			registerXmlMessages();
+
 		LinkedList<Class> temp = new LinkedList<>();
-		synchronized (argumentRegistry)
+
+		synchronized (messageTypesByID)
 		{
-			if(!messagesRegistered)
-				registerXmlMessages();
-			Class[] args = argumentRegistry.get(id);
-			if(args != null)
-			{
-				List<Class> argsList = Arrays.asList(args);
-				temp.addAll(argsList);
-			}else
-			{
-				LOGGER.log(Level.SEVERE, "Message ID not found in registry: " + id);
-			}
+			MessageType type = messageTypesByID.get(id);
+			for(int i=0; i<type.argumentTypes.length; i++)
+				temp.add(type.argumentTypes[i].type);
 		}
 		return temp;
 	}

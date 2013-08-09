@@ -1,6 +1,6 @@
 package com.jenjinstudios.jgsf;
 
-import com.jenjinstudios.io.MessageRegistry;
+import com.jenjinstudios.jgcf.message.MessageRegistry;
 
 import java.io.IOException;
 import java.sql.SQLException;

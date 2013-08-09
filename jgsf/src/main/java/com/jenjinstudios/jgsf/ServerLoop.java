@@ -15,7 +15,7 @@ class ServerLoop extends TimerTask
 	/** The logger for this class. */
 	private static final Logger LOGGER = Logger.getLogger(ServerLoop.class.getName());
 	/** The time in nanoseconds of the last 50 update cycles. */
-	private final long[] last50Cycles;
+	private final long[] lastCycles;
 	/** The server for which this loop runs. */
 	private final Server server;
 	/** The list of synchronized tasks to be executed by the loop. */
@@ -40,7 +40,7 @@ class ServerLoop extends TimerTask
 		this.server = server;
 		syncedTasks = this.server.getSyncedTasks();
 		repeatedTasks = this.server.getRepeatedTasks();
-		last50Cycles = new long[50];
+		lastCycles = new long[server.UPS];
 		cycleNum = 0;
 	}
 
@@ -50,11 +50,11 @@ class ServerLoop extends TimerTask
 		long oldCycleStart = cycleStart;
 		cycleStart = System.nanoTime();
 		cycleNum++;
-		last50Cycles[(int) cycleNum % 50] = cycleStart - oldCycleStart;
+		lastCycles[(int) cycleNum % lastCycles.length] = cycleStart - oldCycleStart;
 		long total = 0;
-		for (long l : last50Cycles)
+		for (long l : lastCycles)
 			total += l;
-		double averageLength = (total / last50Cycles.length);
+		double averageLength = (total / lastCycles.length);
 		averageUPS = 1000000000 / averageLength;
 	}
 

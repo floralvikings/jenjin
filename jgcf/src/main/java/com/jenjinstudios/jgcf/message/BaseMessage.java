@@ -1,8 +1,5 @@
 package com.jenjinstudios.jgcf.message;
 
-import com.jenjinstudios.io.MessageRegistry;
-
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.LinkedList;
 
@@ -11,31 +8,29 @@ import java.util.LinkedList;
  *
  * @author Caleb Brinkman
  */
-public class BaseMessage implements Serializable
+public class BaseMessage
 {
-	/** The arguments to be passed to the message. */
+	/** The argumentTypes to be passed to the message. */
 	private final Object[] args;
 	/** The ID used to register and create this message. */
 	private final short ID;
-	/** Flags whether this message is encrypted. */
-	private boolean encrypted;
 
 	/**
-	 * Construct a new message using the given ID and arguments.
+	 * Construct a new message using the given ID and argumentTypes.
 	 *
-	 * @param id The ID number of the message type.
-	 * @param args The arguments used to create the message.
+	 * @param id   The ID number of the message type.
+	 * @param args The argumentTypes used to create the message.
 	 */
 	public BaseMessage(short id, Object... args)
 	{
 		this.args = args;
 		this.ID = id;
-		if(isInvalid())
+		if (isInvalid())
 		{
 			Class[] classes = new Class[args.length];
-			for(int i=0; i< args.length; i++)
+			for (int i = 0; i < args.length; i++)
 				classes[i] = args[i].getClass();
-			throw new IllegalArgumentException("Incorrect arguments for BaseMessage ID: " + ID +
+			throw new IllegalArgumentException("Incorrect argumentTypes for BaseMessage ID: " + ID +
 					": Supplied " + Arrays.toString(classes) + ", Required " + MessageRegistry.getArgumentClasses(ID));
 		}
 	}
@@ -51,9 +46,9 @@ public class BaseMessage implements Serializable
 	}
 
 	/**
-	 * Get the arguments for this message.
+	 * Get the argumentTypes for this message.
 	 *
-	 * @return The arguments for this message.
+	 * @return The argumentTypes for this message.
 	 */
 	public final Object[] getArgs()
 	{
@@ -62,43 +57,27 @@ public class BaseMessage implements Serializable
 
 	/**
 	 * Determine if this message is invalid.
+	 *
 	 * @return Whether this message in invalid.
 	 */
 	private boolean isInvalid()
 	{
 		boolean invalid = false;
 		LinkedList<Class> argumentClasses = MessageRegistry.getArgumentClasses(ID);
-		// Must be the same number of arguments.
-		if(args.length == argumentClasses.size())
+		// Must be the same number of argumentTypes.
+		if (args.length == argumentClasses.size())
 		{
-			for(int i=0; i<argumentClasses.size(); i++)
+			for (int i = 0; i < argumentClasses.size(); i++)
 			{
 				Class current = argumentClasses.get(i);
 				String className = current.getName().toLowerCase();
 				String argClassName = args[i].getClass().getName().toLowerCase();
-				if(!className.contains(argClassName) && !argClassName.contains(className))
+				if (!className.contains(argClassName) && !argClassName.contains(className))
 					invalid = true;
 			}
-		}else
+		} else
 			invalid = true;
 		return invalid;
 	}
 
-	/**
-	 * Get whether this message is encrypted.
-	 * @return Whether this message is encrypted.
-	 */
-	public boolean isEncrypted()
-	{
-		return encrypted;
-	}
-
-	/**
-	 * Set whether this message is encrypted.
-	 * @param encrypted Whether this message should be encrypted.
-	 */
-	public void setEncrypted(boolean encrypted)
-	{
-		this.encrypted = encrypted;
-	}
 }

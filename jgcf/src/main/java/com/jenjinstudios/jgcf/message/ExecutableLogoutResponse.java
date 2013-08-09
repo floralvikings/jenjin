@@ -33,9 +33,4 @@ public class ExecutableLogoutResponse extends ClientExecutableMessage
 	{
 	}
 
-	@Override
-	public short getBaseMessageID()
-	{
-		return Client.LOGOUT_RESP_ID;
-	}
 }

@@ -1,6 +1,5 @@
 package com.jenjinstudios.jgsf.message;
 
-import com.jenjinstudios.jgcf.Client;
 import com.jenjinstudios.jgcf.message.BaseMessage;
 import com.jenjinstudios.jgsf.ClientHandler;
 import com.jenjinstudios.jgsf.SQLHandler;
@@ -44,12 +43,6 @@ public class ExecutableLoginRequest extends ServerExecutableMessage
 		getClientHandler().sendLoginStatus(success);
 		if (success)
 			getClientHandler().setUsername(username);
-	}
-
-	@Override
-	public short getBaseMessageID()
-	{
-		return Client.LOGIN_REQ_ID;
 	}
 
 }

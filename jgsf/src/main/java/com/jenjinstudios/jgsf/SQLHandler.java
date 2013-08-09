@@ -1,6 +1,6 @@
 package com.jenjinstudios.jgsf;
 
-import com.jenjinstudios.util.Hasher;
+import com.jenjinstudios.util.Hash;
 
 import java.sql.*;
 import java.util.logging.Level;
@@ -93,7 +93,7 @@ public class SQLHandler
 			if (loggedIn)
 				return success;
 			// Hash the user-supplied password with the salt in the database.
-			String hashedPassword = Hasher.getHashedString(password, results.getString("salt"));
+			String hashedPassword = Hash.getHashedString(password, results.getString("salt"));
 			// Determine if the correct password was supplied.
 			boolean passwordCorrect = hashedPassword.equalsIgnoreCase(results.getString("password"));
 			results.getStatement().close();

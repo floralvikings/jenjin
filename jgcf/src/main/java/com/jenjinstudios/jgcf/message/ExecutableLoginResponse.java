@@ -38,9 +38,4 @@ public class ExecutableLoginResponse extends ClientExecutableMessage
 	{
 	}
 
-	@Override
-	public short getBaseMessageID()
-	{
-		return Client.LOGIN_RESP_ID;
-	}
 }

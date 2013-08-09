@@ -1,24 +1,26 @@
 <base_messages>
 
     <message name="FirstConnectResponse" id="0">
-        <argument>int</argument>
+        <argument type="int" name="ups" />
     </message>
 
     <message name="LoginRequest" id="1">
-        <argument>String</argument>
-        <argument>String</argument>
+        <argument type="String" name="username" encrypt="true" />
+        <argument type="String" name="password" encrypt="true" />
     </message>
 
     <message name="LoginResponse" id="2">
-        <argument>boolean</argument>
-        <argument>long</argument>
+        <argument type="boolean" name="success" />
+        <argument type="long" name="loginTime" />
+        <executable language="java" side="client">com.jenjinstudios.jgcf.message.ExecutableLoginResponse</executable>
     </message>
 
     <message name="LogoutRequest" id="3">
     </message>
 
     <message name="LogoutResponse" id="4">
-        <argument>boolean</argument>
+        <argument type="boolean" name="success" />
+        <executable language="java" side="client">com.jenjinstudios.jgcf.message.ExecutableLogoutResponse</executable>
     </message>
 
 </base_messages>

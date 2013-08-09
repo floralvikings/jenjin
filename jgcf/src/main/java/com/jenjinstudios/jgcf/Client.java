@@ -160,22 +160,8 @@ public class Client extends Thread
 	 *
 	 * @param message The message to add to the outgoing queue.
 	 */
-	@SuppressWarnings("WeakerAccess")
 	public void queueMessage(BaseMessage message)
 	{
-		queueMessage(message, false);
-	}
-
-	/**
-	 * Queue a message in the outgoing messages. This method is thread safe.
-	 *
-	 * @param message The message to add to the outgoing queue.
-	 * @param encrypted Whether the message should be encrypted.
-	 */
-	@SuppressWarnings("WeakerAccess")
-	public void queueMessage(BaseMessage message, boolean encrypted)
-	{
-		message.setEncrypted(encrypted);
 		synchronized (outgoingMessages)
 		{
 			outgoingMessages.add(message);
@@ -252,7 +238,7 @@ public class Client extends Thread
 			return;
 		}
 		receivedLoginResponse = false;
-		queueMessage(new BaseMessage(LOGIN_REQ_ID, username, password), true);
+		queueMessage(new BaseMessage(LOGIN_REQ_ID, username, password));
 		while (!receivedLoginResponse)
 			try
 			{

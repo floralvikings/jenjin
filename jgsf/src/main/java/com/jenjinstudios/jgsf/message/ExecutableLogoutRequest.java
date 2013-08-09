@@ -1,6 +1,5 @@
 package com.jenjinstudios.jgsf.message;
 
-import com.jenjinstudios.jgcf.Client;
 import com.jenjinstudios.jgcf.message.BaseMessage;
 import com.jenjinstudios.jgsf.ClientHandler;
 import com.jenjinstudios.jgsf.SQLHandler;
@@ -39,12 +38,6 @@ public class ExecutableLogoutRequest extends ServerExecutableMessage
 		if (sqlHandler == null || !getClientHandler().isLoggedIn())
 			return;
 		getClientHandler().sendLogoutStatus(sqlHandler.logOutUser(getClientHandler().getUsername()));
-	}
-
-	@Override
-	public short getBaseMessageID()
-	{
-		return Client.LOGOUT_REQ_ID;
 	}
 
 }

@@ -1,6 +1,7 @@
 package com.jenjinstudios.io;
 
 import com.jenjinstudios.jgcf.message.BaseMessage;
+import com.jenjinstudios.jgcf.message.MessageRegistry;
 
 import java.io.DataInputStream;
 import java.io.EOFException;
@@ -55,10 +56,10 @@ public class MessageInputStream
 	}
 
 	/**
-	 * Read from the DataInputStream an array of Objects to be passed as arguments to a message.
+	 * Read from the DataInputStream an array of Objects to be passed as argumentTypes to a message.
 	 *
-	 * @param classes The class names of the arguments to be read.
-	 * @return An Object[] containing the message arguments.
+	 * @param classes The class names of the argumentTypes to be read.
+	 * @return An Object[] containing the message argumentTypes.
 	 * @throws IOException If there is an IO error
 	 */
 	private Object[] readMessageArgs(LinkedList<Class> classes) throws IOException

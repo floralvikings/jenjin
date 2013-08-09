@@ -1,6 +1,9 @@
 package com.jenjinstudios.io;
 
+import com.jenjinstudios.jgcf.message.ArgumentType;
 import com.jenjinstudios.jgcf.message.BaseMessage;
+import com.jenjinstudios.jgcf.message.MessageRegistry;
+import com.jenjinstudios.jgcf.message.MessageType;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -23,8 +26,8 @@ public class MessageOutputStream
 	 *
 	 * @param out the underlying output stream, to be saved for later
 	 *            use.
-	 * @see java.io.FilterOutputStream#out
 	 * @throws java.io.IOException If there is an error sending the public key.
+	 * @see java.io.FilterOutputStream#out
 	 */
 	public MessageOutputStream(OutputStream out) throws IOException
 	{
@@ -34,17 +37,18 @@ public class MessageOutputStream
 	/**
 	 * Write the given {@code BaseMessage} to the output stream.
 	 *
-	 *
-	 * @param message        The BaseMessage to be written to the stream.
+	 * @param message The BaseMessage to be written to the stream.
 	 * @throws IOException If there is an IO error.
 	 */
 	public void writeMessage(BaseMessage message) throws IOException
 	{
 		Object[] args = message.getArgs();
+		MessageType messageType = MessageRegistry.getMessageType(message.getID());
+		ArgumentType[] argumentTypes = messageType.argumentTypes;
 		int id = message.getID();
 		outputStream.writeShort(id);
-		for (Object arg : args)
-			writeArgument(arg, message.isEncrypted());
+		for (int i = 0; i < args.length; i++)
+			writeArgument(args[i], argumentTypes[i].encrypt);
 	}
 
 	/**
@@ -65,6 +69,7 @@ public class MessageOutputStream
 		else if (arg instanceof Byte) outputStream.writeByte((byte) arg);
 		else if (arg instanceof byte[]) writeByteArray((byte[]) arg);
 		else if (arg instanceof String[]) writeStringArray((String[]) arg, encryptStrings);
+		else throw new IOException("Invalid argument type passed to MessageOutputStream: " + arg);
 	}
 
 	/**
@@ -113,6 +118,7 @@ public class MessageOutputStream
 
 	/**
 	 * Close the output stream.
+	 *
 	 * @throws IOException If there is an IO error.
 	 */
 	public void close() throws IOException

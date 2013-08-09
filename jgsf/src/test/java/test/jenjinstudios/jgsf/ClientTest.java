@@ -26,6 +26,8 @@ public class ClientTest
 	private static Client goodClient01;
 	/** This client will have the same credentials as goodClient01. */
 	private static Client sameClient;
+	/** The time this test suite started. */
+	private static long startTime;
 
 	/**
 	 * Set up and run a server for this test.
@@ -42,16 +44,25 @@ public class ClientTest
 		server = new Server<>(50, 51019, ClientHandler.class);
 		server.setSQLHandler(sqlHandler);
 		server.blockingStart();
+
+		startTime = System.currentTimeMillis();
+
+		assertTrue(server.isInitialized());
+		assertTrue(server.isConnectedToDB());
 	}
 
 	/**
 	 * Shut the server down when all is said and done.
 	 *
 	 * @throws java.io.IOException If there is an error shutting down the server.
+	 * @throws InterruptedException If there is interrupt.
 	 */
 	@AfterClass
-	public static void destroy() throws IOException
+	public static void destroy() throws IOException, InterruptedException
 	{
+		while((System.currentTimeMillis() - startTime) < 1500)
+			Thread.sleep(1);
+		assertEquals(50, server.getAverageUPS(), 0.05);
 		server.shutdown();
 	}
 
@@ -59,11 +70,15 @@ public class ClientTest
 	@Test
 	public void testLoginLogout()
 	{
+		assertEquals(0, server.getNumClients());
+
 		goodClient01 = new Client("localhost", 51019, "TestAccount01", "testPassword");
 		goodClient01.blockingStart();
 
 		goodClient01.sendLoginRequest();
 		assertTrue(goodClient01.isLoggedIn());
+
+		assertEquals(1, server.getNumClients());
 
 		goodClient01.sendLogoutRequest();
 		assertFalse(goodClient01.isLoggedIn());
