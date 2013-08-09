@@ -1,4 +1,4 @@
-package com.jenjinstudios.jgcf.message;
+package com.jenjinstudios.message;
 
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -10,7 +10,9 @@ import java.util.logging.Logger;
 
 /**
  * This class is used to define the ID, name, and Argument Types for each type of message contained in the XML files.
- * @author Caleb Brinkman */
+ *
+ * @author Caleb Brinkman
+ */
 public class MessageType
 {
 	/** The Logger for this class. */
@@ -29,9 +31,9 @@ public class MessageType
 	/**
 	 * Construct a new MessageType with the given information.
 	 *
-	 * @param id        The ID of the message type.
-	 * @param name      The name of the message type.
-	 * @param argumentTypes The argumentTypes of the message type.
+	 * @param id                     The ID of the message type.
+	 * @param name                   The name of the message type.
+	 * @param argumentTypes          The argumentTypes of the message type.
 	 * @param executableMessageClass The class of the ExecutableMessage
 	 */
 	public MessageType(short id, String name, ArgumentType[] argumentTypes, Class<? extends ExecutableMessage> executableMessageClass)
@@ -42,12 +44,13 @@ public class MessageType
 		this.executableMessageClass = executableMessageClass;
 		argumentTypeTreeMap = new TreeMap<>();
 
-		for(ArgumentType argumentType : this.argumentTypes)
+		for (ArgumentType argumentType : this.argumentTypes)
 			argumentTypeTreeMap.put(argumentType.name, argumentType);
 	}
 
 	/**
 	 * Get the argument type with the given name.
+	 *
 	 * @param name The name of the argument.
 	 * @return The ArgumentType with the given name.
 	 */
@@ -59,6 +62,7 @@ public class MessageType
 	/**
 	 * Get a message type by parsing the XML element specified.  Returns null if the element could not be properly
 	 * parsed.
+	 *
 	 * @param messageElement The XML Element.
 	 * @return A MessageType retrieved from the XML element.
 	 */
@@ -84,7 +88,7 @@ public class MessageType
 
 		MessageType messageType = null;
 
-		if(argumentTypes != null)
+		if (argumentTypes != null)
 			messageType = new MessageType(id, name, argumentTypes, executableMessageClass);
 
 		return messageType;
@@ -93,6 +97,7 @@ public class MessageType
 	/**
 	 * Parse the supplied XML element looking for an executable tag with the attribute language="java".  If multiple
 	 * executable tags with the language="java" attribute exist, the last one found is used.
+	 *
 	 * @param messageElement The message XML element.
 	 * @return The class derived from the XML element.
 	 */
@@ -102,16 +107,16 @@ public class MessageType
 		String executableMessageClassName = null;
 		Class<? extends ExecutableMessage> executableMessageClass = null;
 		// Parse executable tags for those containing language="java"
-		for(int i=0; i<executableNodes.getLength(); i++)
+		for (int i = 0; i < executableNodes.getLength(); i++)
 		{
 			Node currentExecutableNode = executableNodes.item(i);
-			Element currentExecutableElement = (Element)currentExecutableNode;
+			Element currentExecutableElement = (Element) currentExecutableNode;
 			String languageAttribute = currentExecutableElement.getAttribute("language");
 			// If it's in java, set the executable message class name.
-			if(languageAttribute.equalsIgnoreCase("java"))
+			if (languageAttribute.equalsIgnoreCase("java"))
 				executableMessageClassName = currentExecutableElement.getTextContent();
 		}
-		if(executableMessageClassName != null)
+		if (executableMessageClassName != null)
 		{
 			try
 			{
@@ -126,6 +131,7 @@ public class MessageType
 
 	/**
 	 * Parse the given XML element for argument elements.
+	 *
 	 * @param messageElement The XML element.
 	 * @return An array of discovered ArgumentTypes.
 	 */
@@ -134,14 +140,14 @@ public class MessageType
 		ArgumentType[] argumentTypes;
 		NodeList argumentNodes = messageElement.getElementsByTagName("argument");
 		argumentTypes = new ArgumentType[argumentNodes.getLength()];
-		for(int i=0; i<argumentNodes.getLength(); i++)
+		for (int i = 0; i < argumentNodes.getLength(); i++)
 		{
 			Element currentArgElement = (Element) argumentNodes.item(i);
 			String name = currentArgElement.getAttribute("name");
 			Class type = parseClassName(currentArgElement.getAttribute("type"));
 			boolean encrypt = Boolean.parseBoolean(currentArgElement.getAttribute("encrypt"));
 
-			if(name == null || type == null)
+			if (name == null || type == null)
 			{
 				argumentTypes = null;
 				break;
@@ -154,6 +160,7 @@ public class MessageType
 
 	/**
 	 * Derive a class from an argument element type attribute.
+	 *
 	 * @param className The name of the class as read from the XML file.
 	 * @return The class type if a correct string is parsed.  Null otherwise.
 	 */

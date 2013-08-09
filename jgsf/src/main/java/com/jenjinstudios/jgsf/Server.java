@@ -1,6 +1,6 @@
 package com.jenjinstudios.jgsf;
 
-import com.jenjinstudios.jgcf.message.MessageRegistry;
+import com.jenjinstudios.message.MessageRegistry;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -59,8 +59,8 @@ public class Server<T extends ClientHandler> extends Thread
 	/**
 	 * Construct a new Server without a SQLHandler.
 	 *
-	 * @param ups The cycles per second at which this server will run.
-	 * @param port The port number on which this server will listen.
+	 * @param ups          The cycles per second at which this server will run.
+	 * @param port         The port number on which this server will listen.
 	 * @param handlerClass The class of ClientHandler used by this Server.
 	 */
 	public Server(int ups, int port, Class<T> handlerClass)

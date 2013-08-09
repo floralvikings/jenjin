@@ -1,8 +1,8 @@
 package com.jenjinstudios.jgsf.message;
 
-import com.jenjinstudios.jgcf.message.Message;
 import com.jenjinstudios.jgsf.ClientHandler;
 import com.jenjinstudios.jgsf.SQLHandler;
+import com.jenjinstudios.message.Message;
 
 /**
  * Executable message to handle client logging out.

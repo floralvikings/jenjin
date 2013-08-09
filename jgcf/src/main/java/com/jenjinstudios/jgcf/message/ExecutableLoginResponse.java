@@ -1,6 +1,7 @@
 package com.jenjinstudios.jgcf.message;
 
 import com.jenjinstudios.jgcf.Client;
+import com.jenjinstudios.message.Message;
 
 /**
  * This class is used to respond to a LoginResponse.
@@ -13,7 +14,7 @@ public class ExecutableLoginResponse extends ClientExecutableMessage
 	/**
 	 * Construct an ExecutableMessage with the given Message.
 	 *
-	 * @param client The client invoking this message.
+	 * @param client  The client invoking this message.
 	 * @param message The Message.
 	 */
 	public ExecutableLoginResponse(Client client, Message message)

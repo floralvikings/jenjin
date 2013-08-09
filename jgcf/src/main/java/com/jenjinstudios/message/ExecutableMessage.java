@@ -1,4 +1,4 @@
-package com.jenjinstudios.jgcf.message;
+package com.jenjinstudios.message;
 
 /**
  * The {@code ExecutableMessage} class should be extended to create self-handling messages on the server.

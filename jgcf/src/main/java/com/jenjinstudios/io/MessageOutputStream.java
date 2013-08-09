@@ -1,9 +1,9 @@
 package com.jenjinstudios.io;
 
-import com.jenjinstudios.jgcf.message.ArgumentType;
-import com.jenjinstudios.jgcf.message.Message;
-import com.jenjinstudios.jgcf.message.MessageRegistry;
-import com.jenjinstudios.jgcf.message.MessageType;
+import com.jenjinstudios.message.ArgumentType;
+import com.jenjinstudios.message.Message;
+import com.jenjinstudios.message.MessageRegistry;
+import com.jenjinstudios.message.MessageType;
 
 import java.io.DataOutputStream;
 import java.io.IOException;

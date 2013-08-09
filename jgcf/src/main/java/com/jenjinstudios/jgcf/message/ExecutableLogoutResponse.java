@@ -1,6 +1,7 @@
 package com.jenjinstudios.jgcf.message;
 
 import com.jenjinstudios.jgcf.Client;
+import com.jenjinstudios.message.Message;
 
 /**
  * This class responds to a LogoutResponse message.
@@ -13,7 +14,7 @@ public class ExecutableLogoutResponse extends ClientExecutableMessage
 	/**
 	 * Construct an ExecutableMessage with the given Message.
 	 *
-	 * @param client The client invoking this class.
+	 * @param client  The client invoking this class.
 	 * @param message The Message.
 	 */
 	public ExecutableLogoutResponse(Client client, Message message)

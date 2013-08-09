@@ -3,8 +3,8 @@ package com.jenjinstudios.jgcf;
 import com.jenjinstudios.io.MessageInputStream;
 import com.jenjinstudios.io.MessageOutputStream;
 import com.jenjinstudios.jgcf.message.ClientExecutableMessage;
-import com.jenjinstudios.jgcf.message.ExecutableMessage;
-import com.jenjinstudios.jgcf.message.Message;
+import com.jenjinstudios.message.ExecutableMessage;
+import com.jenjinstudios.message.Message;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -367,6 +367,7 @@ public class Client extends Thread
 
 	/**
 	 * Set whether this client is logged in.
+	 *
 	 * @param l Whether this client is logged in.
 	 */
 	public void setLoggedIn(boolean l)
@@ -376,6 +377,7 @@ public class Client extends Thread
 
 	/**
 	 * Set whether this client has received a login response.
+	 *
 	 * @param receivedLoginResponse Whether this client has received a login response.
 	 */
 	public void setReceivedLoginResponse(boolean receivedLoginResponse)
@@ -385,6 +387,7 @@ public class Client extends Thread
 
 	/**
 	 * Set the logged in time for this client.
+	 *
 	 * @param loggedInTime The logged in time for this client.
 	 */
 	public void setLoggedInTime(long loggedInTime)
@@ -394,6 +397,7 @@ public class Client extends Thread
 
 	/**
 	 * Get the username of this client.
+	 *
 	 * @return The username of this client.
 	 */
 	public String getUsername()
@@ -403,6 +407,7 @@ public class Client extends Thread
 
 	/**
 	 * Set whether this client has received a logout response.
+	 *
 	 * @param receivedLogoutResponse Whether this client has received a logout response.
 	 */
 	public void setReceivedLogoutResponse(boolean receivedLogoutResponse)

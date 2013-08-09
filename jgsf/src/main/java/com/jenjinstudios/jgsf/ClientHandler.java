@@ -3,9 +3,9 @@ package com.jenjinstudios.jgsf;
 import com.jenjinstudios.io.MessageInputStream;
 import com.jenjinstudios.io.MessageOutputStream;
 import com.jenjinstudios.jgcf.Client;
-import com.jenjinstudios.jgcf.message.ExecutableMessage;
-import com.jenjinstudios.jgcf.message.Message;
 import com.jenjinstudios.jgsf.message.ServerExecutableMessage;
+import com.jenjinstudios.message.ExecutableMessage;
+import com.jenjinstudios.message.Message;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -234,6 +234,7 @@ public class ClientHandler extends Thread
 
 	/**
 	 * Process the given message.
+	 *
 	 * @param message The message to be processed.
 	 */
 	private void processMessage(Message message)

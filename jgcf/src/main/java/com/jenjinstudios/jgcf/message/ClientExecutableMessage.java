@@ -1,6 +1,10 @@
 package com.jenjinstudios.jgcf.message;
 
 import com.jenjinstudios.jgcf.Client;
+import com.jenjinstudios.message.ExecutableMessage;
+import com.jenjinstudios.message.Message;
+import com.jenjinstudios.message.MessageRegistry;
+import com.jenjinstudios.message.MessageType;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -22,7 +26,7 @@ public abstract class ClientExecutableMessage extends ExecutableMessage
 	/**
 	 * Construct an ExecutableMessage with the given Message.
 	 *
-	 * @param client The client invoking this message.
+	 * @param client  The client invoking this message.
 	 * @param message The Message.
 	 */
 	protected ClientExecutableMessage(Client client, Message message)

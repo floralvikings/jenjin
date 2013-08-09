@@ -1,7 +1,7 @@
 package com.jenjinstudios.io;
 
-import com.jenjinstudios.jgcf.message.Message;
-import com.jenjinstudios.jgcf.message.MessageRegistry;
+import com.jenjinstudios.message.Message;
+import com.jenjinstudios.message.MessageRegistry;
 
 import java.io.DataInputStream;
 import java.io.EOFException;
@@ -22,7 +22,6 @@ public class MessageInputStream
 
 	/**
 	 * Construct a new {@code MessageInputStream} from the given InputStream.
-	 *
 	 *
 	 * @param inputStream The InputStream from which messages will be read.
 	 * @throws java.io.IOException If there is an IO error.

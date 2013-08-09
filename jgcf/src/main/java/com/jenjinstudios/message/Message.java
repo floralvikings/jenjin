@@ -1,4 +1,4 @@
-package com.jenjinstudios.jgcf.message;
+package com.jenjinstudios.message;
 
 import java.util.TreeMap;
 
@@ -72,6 +72,7 @@ public class Message
 
 	/**
 	 * Get the argument with the given name.
+	 *
 	 * @param argumentName The name of the argument.
 	 * @return The argument with the specified name.
 	 */
