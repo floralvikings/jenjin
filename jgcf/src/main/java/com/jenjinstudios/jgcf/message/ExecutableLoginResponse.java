@@ -26,10 +26,10 @@ public class ExecutableLoginResponse extends ClientExecutableMessage
 	{
 		Client client = getClient();
 		client.setReceivedLoginResponse(true);
-		client.setLoggedIn((boolean) getMessage().getArgs()[0]);
+		client.setLoggedIn((boolean) getMessage().getArgument("success"));
 		if (!client.isLoggedIn())
 			return;
-		client.setLoggedInTime((long) getMessage().getArgs()[1]);
+		client.setLoggedInTime((long) getMessage().getArgument("loginTime"));
 		client.setName("Client: " + client.getUsername());
 	}
 

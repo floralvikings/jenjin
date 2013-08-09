@@ -25,7 +25,7 @@ public class ExecutableLogoutResponse extends ClientExecutableMessage
 	public void runSynced()
 	{
 		getClient().setReceivedLogoutResponse(true);
-		getClient().setLoggedIn(!((boolean) getMessage().getArgs()[0]));
+		getClient().setLoggedIn(!((boolean) getMessage().getArgument("success")));
 	}
 
 	@Override

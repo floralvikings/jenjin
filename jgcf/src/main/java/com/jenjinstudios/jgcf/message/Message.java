@@ -38,7 +38,8 @@ public class Message
 	}
 
 	/**
-	 * Construct a new Message using the MessageType specified by the given name.
+	 * Construct a new Message using the MessageType specified by the given name; every argument in this message must
+	 * be set using the {@code setArgument} method before it can be sent properly over socket.
 	 *
 	 * @param name The name of the MessageType being filled by this message.
 	 */
@@ -67,6 +68,16 @@ public class Message
 			throw new IllegalArgumentException("Invalid argument type for Message: " + argument +
 					" (Expected " + argType.type + ", got " + argument.getClass() + ")");
 		argumentsByName.put(argumentName, argument);
+	}
+
+	/**
+	 * Get the argument with the given name.
+	 * @param argumentName The name of the argument.
+	 * @return The argument with the specified name.
+	 */
+	public Object getArgument(String argumentName)
+	{
+		return argumentsByName.get(argumentName);
 	}
 
 	/**

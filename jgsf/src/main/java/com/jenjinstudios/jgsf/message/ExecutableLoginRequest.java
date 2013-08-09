@@ -37,8 +37,8 @@ public class ExecutableLoginRequest extends ServerExecutableMessage
 	{
 		if (sqlHandler == null || getClientHandler().isLoggedIn())
 			return;
-		String username = (String) getMessage().getArgs()[0];
-		String password = (String) getMessage().getArgs()[1];
+		String username = (String) getMessage().getArgument("username");
+		String password = (String) getMessage().getArgument("password");
 		boolean success = sqlHandler.logInUser(username, password);
 		getClientHandler().sendLoginStatus(success);
 		if (success)

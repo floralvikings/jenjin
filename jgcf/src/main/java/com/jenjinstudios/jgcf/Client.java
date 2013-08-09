@@ -118,7 +118,7 @@ public class Client extends Thread
 
 			Message firstConnectResponse = inputStream.readMessage();
 			/* The ups of this client. */
-			int ups = (int) firstConnectResponse.getArgs()[0];
+			int ups = (int) firstConnectResponse.getArgument("ups");
 			period = 1000 / ups;
 			connected = true;
 		} catch (IOException ex)
