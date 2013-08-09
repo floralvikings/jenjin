@@ -1,8 +1,8 @@
 package com.jenjinstudios.jgsf.message;
 
 import com.jenjinstudios.jgsf.ClientHandler;
-import com.jenjinstudios.jgsf.sql.SQLHandler;
 import com.jenjinstudios.message.Message;
+import com.jenjinstudios.sql.SQLHandler;
 
 /**
  * Executes the necessary actions to deal with a login response.

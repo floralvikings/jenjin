@@ -3,7 +3,7 @@ package test.jenjinstudios.jgsf;
 import com.jenjinstudios.jgcf.Client;
 import com.jenjinstudios.jgsf.ClientHandler;
 import com.jenjinstudios.jgsf.Server;
-import com.jenjinstudios.jgsf.sql.SQLHandler;
+import com.jenjinstudios.sql.SQLHandler;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
