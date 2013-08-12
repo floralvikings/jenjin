@@ -15,17 +15,18 @@ import java.util.logging.Logger;
  *
  * @author Caleb Brinkman
  */
-public class ClientListener<T extends ClientHandler> implements Runnable
+class ClientListener<T extends ClientHandler> implements Runnable
 {
+	/** The Logger for this class. */
 	private static final Logger LOGGER = Logger.getLogger(ClientListener.class.getName());
 	/** The port on which this object listens. */
-	public final int PORT;
+	private final int PORT;
 	/** The list of new clients. */
 	private final LinkedList<T> newClientHandlers;
 	/** Flags whether this should be listening. */
 	private volatile boolean listening;
 	/** The server socket. */
-	ServerSocket serverSock;
+	private ServerSocket serverSock;
 	/** The server. */
 	private final Server server;
 	/** The constructor called to create new handlers. */
@@ -36,6 +37,7 @@ public class ClientListener<T extends ClientHandler> implements Runnable
 	 *
 	 * @param s The server for which this listener will listen.
 	 * @param p The port on which to listen.
+	 * @param handlerClass The class of the ClientHandler to be used by this server.
 	 * @throws IOException If there is an error listening on the port.
 	 */
 	public ClientListener(Server s, int p, Class<T> handlerClass) throws IOException
@@ -101,7 +103,7 @@ public class ClientListener<T extends ClientHandler> implements Runnable
 	 *
 	 * @param h The handler for the new client.
 	 */
-	public void addNewClient(T h)
+	void addNewClient(T h)
 	{
 		synchronized (newClientHandlers)
 		{
@@ -114,11 +116,13 @@ public class ClientListener<T extends ClientHandler> implements Runnable
 	 *
 	 * @param sock The connection to the new client.
 	 */
-	public void addNewClient(Socket sock)
+	void addNewClient(Socket sock)
 	{
 		try
 		{
-			addNewClient(handlerConstructor.newInstance(server, sock));
+			T newHandler = handlerConstructor.newInstance(server, sock);
+
+			addNewClient(newHandler);
 		} catch (InstantiationException | IllegalAccessException | InvocationTargetException e)
 		{
 			LOGGER.log(Level.SEVERE, "Unable to instantiate client handler!", e);

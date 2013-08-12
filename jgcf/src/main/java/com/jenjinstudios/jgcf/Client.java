@@ -1,15 +1,16 @@
 package com.jenjinstudios.jgcf;
 
-import com.jenjinstudios.io.BaseMessage;
 import com.jenjinstudios.io.MessageInputStream;
 import com.jenjinstudios.io.MessageOutputStream;
-import com.jenjinstudios.message.*;
+import com.jenjinstudios.jgcf.message.ClientExecutableMessage;
+import com.jenjinstudios.message.ExecutableMessage;
+import com.jenjinstudios.message.Message;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.security.*;
 import java.util.LinkedList;
 import java.util.Timer;
-import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -27,9 +28,11 @@ public class Client extends Thread
 	/** The address of the server to which this client will connect. */
 	private final String ADDRESS;
 	/** The collection of messages to send at the next broadcast. */
-	private final LinkedList<BaseMessage> outgoingMessages;
+	private final LinkedList<Message> outgoingMessages;
 	/** The list of tasks that this client will execute each update cycle. */
-	private final LinkedList<Runnable> repeatedTasks;
+	private final LinkedList<Runnable> repeatedSyncedTasks;
+	/** The "one-shot" tasks to be executed in the current client loop. */
+	private final LinkedList<Runnable> syncedTasks;
 	/** The period of the update in milliseconds. */
 	private int period;
 	/** The socket used to connect to the server. */
@@ -42,7 +45,7 @@ public class Client extends Thread
 	private volatile boolean running;
 	/** Whether the user is logged in. */
 	private boolean loggedIn;
-	/** The inputstream used to read messages from the server. */
+	/** The input stream used to read messages from the server. */
 	private MessageInputStream inputStream;
 	/** The output stream used to write messages to the server. */
 	private MessageOutputStream outputStream;
@@ -56,6 +59,12 @@ public class Client extends Thread
 	private String username;
 	/** The password this client will use when logging in. */
 	private String password;
+	/** The public key sent to the server. */
+	private PublicKey publicKey;
+	/** The private key sent to the server. */
+	private PrivateKey privateKey;
+	/** The AES key of this client. */
+	private byte[] aesKey;
 
 
 	/**
@@ -64,16 +73,27 @@ public class Client extends Thread
 	 * @param address The address of the server to which to connect
 	 * @param port    The port over which to connect to the server.
 	 */
-	public Client(String address, int port)
+	protected Client(String address, int port)
 	{
 		ADDRESS = address;
 		PORT = port;
 		connected = false;
 		outgoingMessages = new LinkedList<>();
-		repeatedTasks = new LinkedList<>();
-		if (MessageRegistry.hasMessagesRegistered())
-			return;
-		MessageRegistry.registerAllBaseMessages();
+		repeatedSyncedTasks = new LinkedList<>();
+		syncedTasks = new LinkedList<>();
+
+		try
+		{
+			KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
+			keyPairGenerator.initialize(512);
+			KeyPair keyPair = keyPairGenerator.generateKeyPair();
+			privateKey = keyPair.getPrivate();
+			publicKey = keyPair.getPublic();
+		} catch (NoSuchAlgorithmException e)
+		{
+			LOGGER.log(Level.SEVERE, "Unable to create RSA key pair!", e);
+		}
+
 	}
 
 	/**
@@ -102,13 +122,16 @@ public class Client extends Thread
 		try
 		{
 			socket = new Socket(ADDRESS, PORT);
-			inputStream = new MessageInputStream(socket.getInputStream());
-			FirstConnectResponse firstConnectResponse = (FirstConnectResponse) inputStream.readMessage();
+
 			outputStream = new MessageOutputStream(socket.getOutputStream());
+			inputStream = new MessageInputStream(socket.getInputStream());
+
+			Message firstConnectResponse = inputStream.readMessage();
 			/* The ups of this client. */
-			int ups = firstConnectResponse.UPS;
+			int ups = (int) firstConnectResponse.getArgument("ups");
 			period = 1000 / ups;
 			connected = true;
+
 		} catch (IOException ex)
 		{
 			LOGGER.log(Level.SEVERE, "Unable to connect to server.", ex);
@@ -123,9 +146,9 @@ public class Client extends Thread
 	@SuppressWarnings("unused")
 	protected void addRepeatedTask(Runnable r)
 	{
-		synchronized (repeatedTasks)
+		synchronized (repeatedSyncedTasks)
 		{
-			repeatedTasks.add(r);
+			repeatedSyncedTasks.add(r);
 		}
 	}
 
@@ -134,12 +157,12 @@ public class Client extends Thread
 	 *
 	 * @throws IOException If there is an error writing to the output stream.
 	 */
-	private void sendAllMessages() throws IOException
+	protected void sendAllMessages() throws IOException
 	{
 		synchronized (outgoingMessages)
 		{
 			while (!outgoingMessages.isEmpty())
-				sendMessage(outgoingMessages.pop());
+				outputStream.writeMessage(outgoingMessages.pop());
 		}
 	}
 
@@ -148,23 +171,12 @@ public class Client extends Thread
 	 *
 	 * @param message The message to add to the outgoing queue.
 	 */
-	public void queueMessage(BaseMessage message)
+	public void sendMessage(Message message)
 	{
 		synchronized (outgoingMessages)
 		{
 			outgoingMessages.add(message);
 		}
-	}
-
-	/**
-	 * Send the specified message.  This method should only be called from the client update thread.
-	 *
-	 * @param message The message to be sent.
-	 * @throws IOException if there is an error writing to the message stream.
-	 */
-	private void sendMessage(BaseMessage message) throws IOException
-	{
-		outputStream.writeMessage(message);
 	}
 
 	/**
@@ -174,32 +186,21 @@ public class Client extends Thread
 	 * @param message The message to be processed.
 	 * @throws IOException If there is an IO error.
 	 */
-	protected void processMessage(Object message) throws IOException
+	protected void processMessage(Message message) throws IOException
 	{
-		if (message instanceof LoginResponse)
+		ExecutableMessage exec;
+		exec = ClientExecutableMessage.getClientExecutableMessageFor(this, message);
+		if (exec != null)
 		{
-			processLoginResponse((LoginResponse) message);
-		} else if (message instanceof LogoutResponse)
+			exec.runASync();
+			synchronized (syncedTasks)
+			{
+				syncedTasks.add(exec);
+			}
+		} else
 		{
-			receivedLogoutResponse = true;
-			LogoutResponse logoutResponse = (LogoutResponse) message;
-			loggedIn = !logoutResponse.SUCCESS;
+			this.shutdown();
 		}
-	}
-
-	/**
-	 * Process a login response message.
-	 *
-	 * @param message The login response.
-	 */
-	protected void processLoginResponse(LoginResponse message)
-	{
-		receivedLoginResponse = true;
-		loggedIn = message.SUCCESS;
-		if (!loggedIn)
-			return;
-		loggedInTime = message.LOGIN_TIME;
-		super.setName("Client: " + username);
 	}
 
 	/** Tell the client threads to stop running. */
@@ -233,11 +234,16 @@ public class Client extends Thread
 	{
 		if (username == null || password == null)
 		{
-			LOGGER.log(Level.WARNING, "Attmepted to login without username/password");
+			LOGGER.log(Level.WARNING, "Attempted to login without username or password");
 			return;
 		}
 		receivedLoginResponse = false;
-		queueMessage(new LoginRequest(username, password));
+		// Create the login request.
+		Message loginRequest = new Message("LoginRequest");
+		loginRequest.setArgument("username", username);
+		loginRequest.setArgument("password", password);
+
+		sendMessage(loginRequest);
 		while (!receivedLoginResponse)
 			try
 			{
@@ -252,7 +258,8 @@ public class Client extends Thread
 	public void sendLogoutRequest()
 	{
 		receivedLogoutResponse = false;
-		queueMessage(new LogoutRequest());
+		Message logoutRequest = new Message("LogoutRequest");
+		sendMessage(logoutRequest);
 		while (!receivedLogoutResponse)
 			try
 			{
@@ -267,13 +274,17 @@ public class Client extends Thread
 	public void blockingStart()
 	{
 		start();
-		while (!running) try
+		try
 		{
-			Thread.sleep(1);
+			while (!running)
+				Thread.sleep(1);
+			while (aesKey == null)
+				Thread.sleep(1);
 		} catch (InterruptedException e)
 		{
 			LOGGER.log(Level.WARNING, "Issue with client blockingStart", e);
 		}
+
 	}
 
 	public final void run()
@@ -282,10 +293,16 @@ public class Client extends Thread
 			connect();
 		running = true;
 		sendMessagesTimer = new Timer("Client Update Loop", false);
-		sendMessagesTimer.scheduleAtFixedRate(new ClientLoop(), 0, period);
+		sendMessagesTimer.scheduleAtFixedRate(new ClientLoop(this), 0, period);
+
+		Message publicKeyMessage = new Message("PublicKeyMessage");
+		publicKeyMessage.setArgument("key", publicKey.getEncoded());
+
+		sendMessage(publicKeyMessage);
+
 		try
 		{
-			Object currentMessage;
+			Message currentMessage;
 			while ((currentMessage = inputStream.readMessage()) != null && running)
 				processMessage(currentMessage);
 		} catch (IOException ex)
@@ -328,6 +345,16 @@ public class Client extends Thread
 	}
 
 	/**
+	 * Set whether this client is logged in.
+	 *
+	 * @param l Whether this client is logged in.
+	 */
+	public void setLoggedIn(boolean l)
+	{
+		loggedIn = l;
+	}
+
+	/**
 	 * Get the time at which this client was successfully logged in.
 	 *
 	 * @return The time of the start of the server cycle during which this client was logged in.
@@ -337,21 +364,92 @@ public class Client extends Thread
 		return loggedInTime;
 	}
 
-	/** The ClientLoop class is essentially what amounts to the output thread. */
-	private class ClientLoop extends TimerTask
+	/**
+	 * Set the logged in time for this client.
+	 *
+	 * @param loggedInTime The logged in time for this client.
+	 */
+	public void setLoggedInTime(long loggedInTime)
 	{
-		@Override
-		public void run()
+		this.loggedInTime = loggedInTime;
+	}
+
+	/**
+	 * Get the list of repeating tasks.
+	 *
+	 * @return The list of repeating tasks.
+	 */
+	public LinkedList<Runnable> getRepeatedSyncedTasks()
+	{
+		return repeatedSyncedTasks;
+	}
+
+	/**
+	 * The "one-shot" tasks to be executed in the current client loop.
+	 *
+	 * @return The list of Synced Tasks
+	 */
+	protected LinkedList<Runnable> getSyncedTasks()
+	{
+		LinkedList<Runnable> temp = new LinkedList<>();
+		synchronized (syncedTasks)
 		{
-			for (Runnable r : repeatedTasks)
-				r.run();
-			try
-			{
-				sendAllMessages();
-			} catch (IOException e)
-			{
-				e.printStackTrace();
-			}
+			temp.addAll(syncedTasks);
+			syncedTasks.removeAll(temp);
 		}
+		return temp;
+
+	}
+
+	/**
+	 * Set whether this client has received a login response.
+	 *
+	 * @param receivedLoginResponse Whether this client has received a login response.
+	 */
+	public void setReceivedLoginResponse(boolean receivedLoginResponse)
+	{
+		this.receivedLoginResponse = receivedLoginResponse;
+	}
+
+	/**
+	 * Get the username of this client.
+	 *
+	 * @return The username of this client.
+	 */
+	public String getUsername()
+	{
+		return username;
+	}
+
+	/**
+	 * Set whether this client has received a logout response.
+	 *
+	 * @param receivedLogoutResponse Whether this client has received a logout response.
+	 */
+	public void setReceivedLogoutResponse(boolean receivedLogoutResponse)
+	{
+		this.receivedLogoutResponse = receivedLogoutResponse;
+	}
+
+	/**
+	 * Get the private key.
+	 *
+	 * @return The private key.
+	 */
+	public PrivateKey getPrivateKey()
+	{
+		return privateKey;
+	}
+
+	/**
+	 * Set the AES key used by this client.
+	 *
+	 * @param key The key used by this client.
+	 */
+	public void setAESKey(byte[] key)
+	{
+		aesKey = key;
+		inputStream.setAESKey(key);
+		outputStream.setAesKey(key);
 	}
 }

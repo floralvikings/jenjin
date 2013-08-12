@@ -1,11 +1,10 @@
 package com.jenjinstudios.jgsf;
 
-import com.jenjinstudios.io.BaseMessage;
 import com.jenjinstudios.io.MessageInputStream;
 import com.jenjinstudios.io.MessageOutputStream;
-import com.jenjinstudios.message.FirstConnectResponse;
-import com.jenjinstudios.message.LoginResponse;
-import com.jenjinstudios.message.LogoutResponse;
+import com.jenjinstudios.jgsf.message.ServerExecutableMessage;
+import com.jenjinstudios.message.ExecutableMessage;
+import com.jenjinstudios.message.Message;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -23,11 +22,11 @@ public class ClientHandler extends Thread
 	/** The Socket the handler uses to communicate. */
 	private final Socket sock;
 	/** The list of messages to be broadcast after the world update. */
-	private final LinkedList<BaseMessage> broadcastMessages;
-	/** Flags whether the socket is connected. */
-	private boolean linkOpen;
+	private final LinkedList<Message> broadcastMessages;
 	/** The server. */
 	private final Server<? extends ClientHandler> server;
+	/** Flags whether the socket is connected. */
+	private boolean linkOpen;
 	/** The id of the client handler. */
 	private int handlerId = -1;
 	/** Flags whether the user is logged in. */
@@ -56,10 +55,15 @@ public class ClientHandler extends Thread
 		server = s;
 		sock = sk;
 		broadcastMessages = new LinkedList<>();
-		inputStream = new MessageInputStream(sock.getInputStream());
+
 		outputStream = new MessageOutputStream(sock.getOutputStream());
+		inputStream = new MessageInputStream(sock.getInputStream());
+
 		linkOpen = true;
-		queueMessage(new FirstConnectResponse(server.UPS));
+
+		Message firstConnectResponse = new Message("FirstConnectResponse");
+		firstConnectResponse.setArgument("ups", server.UPS);
+		queueMessage(firstConnectResponse);
 	}
 
 	/**
@@ -67,7 +71,7 @@ public class ClientHandler extends Thread
 	 *
 	 * @param o The object (message) to be sent to the client.
 	 */
-	public void queueMessage(BaseMessage o)
+	public void queueMessage(Message o)
 	{
 		synchronized (broadcastMessages)
 		{
@@ -87,11 +91,13 @@ public class ClientHandler extends Thread
 	}
 
 	/** Update anything that needs to be taken care of before broadcast. */
+	@SuppressWarnings("EmptyMethod")
 	public void update()
 	{
 	}
 
 	/** Reset anything that needs to be taken care of after broadcast. */
+	@SuppressWarnings("EmptyMethod")
 	public void refresh()
 	{
 	}
@@ -113,7 +119,7 @@ public class ClientHandler extends Thread
 	 *
 	 * @param o The message to send to the client.
 	 */
-	private void sendMessage(BaseMessage o)
+	private void sendMessage(Message o)
 	{
 		try
 		{
@@ -131,6 +137,7 @@ public class ClientHandler extends Thread
 		// proper logout, so we handle the query directly instead of in an executable message.
 		// This is a big no-no, but this can be caused by an unexpected server or client shutdown, which means that
 		// there may not be time to finish any executable messages created.  I'm not happy about it but there it is.
+		// TODO Make this better.
 		if (isLoggedIn())
 			loggedIn = !server.getSqlHandler().logOutUser(username);
 		closeLink();
@@ -158,7 +165,7 @@ public class ClientHandler extends Thread
 	}
 
 	/** Close the link with the client, if possible. */
-	public final void closeLink()
+	final void closeLink()
 	{
 		if (linkOpen)
 		{
@@ -181,11 +188,14 @@ public class ClientHandler extends Thread
 	 *
 	 * @param success Whether the attempt was successful.
 	 */
-	public void queueLoginStatus(boolean success)
+	public void sendLoginStatus(boolean success)
 	{
 		loggedIn = success;
 		loggedInTime = server.getCycleStartTime();
-		queueMessage(new LoginResponse(success, loggedInTime));
+		Message loginResponse = new Message("LoginResponse");
+		loginResponse.setArgument("success", success);
+		loginResponse.setArgument("loginTime", loggedInTime);
+		queueMessage(loginResponse);
 	}
 
 	/**
@@ -193,10 +203,12 @@ public class ClientHandler extends Thread
 	 *
 	 * @param success Whether the attempt was successful.
 	 */
-	public void queueLogoutStatus(boolean success)
+	public void sendLogoutStatus(boolean success)
 	{
 		loggedIn = !success;
-		queueMessage(new LogoutResponse(success));
+		Message logoutResponse = new Message("LogoutResponse");
+		logoutResponse.setArgument("success", success);
+		queueMessage(logoutResponse);
 	}
 
 	/** Enter a loop that receives and processes messages until the link is closed. */
@@ -204,7 +216,7 @@ public class ClientHandler extends Thread
 	public void run()
 	{
 		Server.LOGGER.log(Level.FINE, "Client Handler Started. Link open:{0}", linkOpen);
-		BaseMessage message;
+		Message message;
 		while (linkOpen)
 		{
 			try
@@ -212,25 +224,36 @@ public class ClientHandler extends Thread
 				message = inputStream.readMessage();
 				if (message == null)
 				{
+					Server.LOGGER.log(Level.FINE, "Received null message, shutting down ClientHandler");
 					shutdown();
 					break;
 				}
 				Server.LOGGER.log(Level.FINE, "Message received: {0}", message);
-				ExecutableMessage exec;
-				exec = ExecutableMessage.getExecutableMessageFor(this, message);
-				if (exec != null)
-				{
-					exec.runASync();
-					getServer().addSyncedTask(exec);
-				} else
-				{
-					this.shutdown();
-				}
+				processMessage(message);
 			} catch (Exception ex)
 			{
 				Server.LOGGER.log(Level.SEVERE, "Exception with client handler.", ex);
 				shutdown();
 			}
+		}
+	}
+
+	/**
+	 * Process the given message.
+	 *
+	 * @param message The message to be processed.
+	 */
+	private void processMessage(Message message)
+	{
+		ExecutableMessage exec;
+		exec = ServerExecutableMessage.getServerExecutableMessageFor(this, message);
+		if (exec != null)
+		{
+			exec.runASync();
+			getServer().addSyncedTask(exec);
+		} else
+		{
+			this.shutdown();
 		}
 	}
 
@@ -274,4 +297,16 @@ public class ClientHandler extends Thread
 	{
 		return handlerId;
 	}
+
+	/**
+	 * Set the AES key used to encrypt and decrypt messages.
+	 *
+	 * @param key The AES key bytes used to encrypt and decrypt messages.
+	 */
+	public void setAesKey(byte[] key)
+	{
+		inputStream.setAESKey(key);
+		outputStream.setAesKey(key);
+	}
+
 }
