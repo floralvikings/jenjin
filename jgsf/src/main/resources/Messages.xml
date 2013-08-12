@@ -32,7 +32,7 @@
 
     <message name="AESKeyMessage" id="6">
         <executable language="java" side="client">com.jenjinstudios.jgcf.message.ExecutableAESKeyMessage</executable>
-        <argument type="byte" name="key"/>
+        <argument type="byte[]" name="key"/>
     </message>
 
 </base_messages>

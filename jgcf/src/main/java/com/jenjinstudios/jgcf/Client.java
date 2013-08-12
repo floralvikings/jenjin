@@ -8,6 +8,7 @@ import com.jenjinstudios.message.Message;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.security.*;
 import java.util.LinkedList;
 import java.util.Timer;
 import java.util.logging.Level;
@@ -58,6 +59,12 @@ public class Client extends Thread
 	private String username;
 	/** The password this client will use when logging in. */
 	private String password;
+	/** The public key sent to the server. */
+	private PublicKey publicKey;
+	/** The private key sent to the server. */
+	private PrivateKey privateKey;
+	/** The AES key of this client. */
+	private byte[] aesKey;
 
 
 	/**
@@ -74,6 +81,19 @@ public class Client extends Thread
 		outgoingMessages = new LinkedList<>();
 		repeatedSyncedTasks = new LinkedList<>();
 		syncedTasks = new LinkedList<>();
+
+		try
+		{
+			KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
+			keyPairGenerator.initialize(512);
+			KeyPair keyPair = keyPairGenerator.generateKeyPair();
+			privateKey = keyPair.getPrivate();
+			publicKey = keyPair.getPublic();
+		} catch (NoSuchAlgorithmException e)
+		{
+			LOGGER.log(Level.SEVERE, "Unable to create RSA key pair!", e);
+		}
+
 	}
 
 	/**
@@ -111,6 +131,7 @@ public class Client extends Thread
 			int ups = (int) firstConnectResponse.getArgument("ups");
 			period = 1000 / ups;
 			connected = true;
+
 		} catch (IOException ex)
 		{
 			LOGGER.log(Level.SEVERE, "Unable to connect to server.", ex);
@@ -253,13 +274,17 @@ public class Client extends Thread
 	public void blockingStart()
 	{
 		start();
-		while (!running) try
+		try
 		{
-			Thread.sleep(1);
+			while (!running)
+				Thread.sleep(1);
+			while (aesKey == null)
+				Thread.sleep(1);
 		} catch (InterruptedException e)
 		{
 			LOGGER.log(Level.WARNING, "Issue with client blockingStart", e);
 		}
+
 	}
 
 	public final void run()
@@ -269,6 +294,12 @@ public class Client extends Thread
 		running = true;
 		sendMessagesTimer = new Timer("Client Update Loop", false);
 		sendMessagesTimer.scheduleAtFixedRate(new ClientLoop(this), 0, period);
+
+		Message publicKeyMessage = new Message("PublicKeyMessage");
+		publicKeyMessage.setArgument("key", publicKey.getEncoded());
+
+		sendMessage(publicKeyMessage);
+
 		try
 		{
 			Message currentMessage;
@@ -314,6 +345,16 @@ public class Client extends Thread
 	}
 
 	/**
+	 * Set whether this client is logged in.
+	 *
+	 * @param l Whether this client is logged in.
+	 */
+	public void setLoggedIn(boolean l)
+	{
+		loggedIn = l;
+	}
+
+	/**
 	 * Get the time at which this client was successfully logged in.
 	 *
 	 * @return The time of the start of the server cycle during which this client was logged in.
@@ -321,6 +362,16 @@ public class Client extends Thread
 	public long getLoggedInTime()
 	{
 		return loggedInTime;
+	}
+
+	/**
+	 * Set the logged in time for this client.
+	 *
+	 * @param loggedInTime The logged in time for this client.
+	 */
+	public void setLoggedInTime(long loggedInTime)
+	{
+		this.loggedInTime = loggedInTime;
 	}
 
 	/**
@@ -351,16 +402,6 @@ public class Client extends Thread
 	}
 
 	/**
-	 * Set whether this client is logged in.
-	 *
-	 * @param l Whether this client is logged in.
-	 */
-	public void setLoggedIn(boolean l)
-	{
-		loggedIn = l;
-	}
-
-	/**
 	 * Set whether this client has received a login response.
 	 *
 	 * @param receivedLoginResponse Whether this client has received a login response.
@@ -368,16 +409,6 @@ public class Client extends Thread
 	public void setReceivedLoginResponse(boolean receivedLoginResponse)
 	{
 		this.receivedLoginResponse = receivedLoginResponse;
-	}
-
-	/**
-	 * Set the logged in time for this client.
-	 *
-	 * @param loggedInTime The logged in time for this client.
-	 */
-	public void setLoggedInTime(long loggedInTime)
-	{
-		this.loggedInTime = loggedInTime;
 	}
 
 	/**
@@ -398,5 +429,27 @@ public class Client extends Thread
 	public void setReceivedLogoutResponse(boolean receivedLogoutResponse)
 	{
 		this.receivedLogoutResponse = receivedLogoutResponse;
+	}
+
+	/**
+	 * Get the private key.
+	 *
+	 * @return The private key.
+	 */
+	public PrivateKey getPrivateKey()
+	{
+		return privateKey;
+	}
+
+	/**
+	 * Set the AES key used by this client.
+	 *
+	 * @param key The key used by this client.
+	 */
+	public void setAESKey(byte[] key)
+	{
+		aesKey = key;
+		inputStream.setAESKey(key);
+		outputStream.setAesKey(key);
 	}
 }

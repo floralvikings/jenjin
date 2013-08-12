@@ -23,10 +23,10 @@ public class ClientHandler extends Thread
 	private final Socket sock;
 	/** The list of messages to be broadcast after the world update. */
 	private final LinkedList<Message> broadcastMessages;
-	/** Flags whether the socket is connected. */
-	private boolean linkOpen;
 	/** The server. */
 	private final Server<? extends ClientHandler> server;
+	/** Flags whether the socket is connected. */
+	private boolean linkOpen;
 	/** The id of the client handler. */
 	private int handlerId = -1;
 	/** Flags whether the user is logged in. */
@@ -297,4 +297,16 @@ public class ClientHandler extends Thread
 	{
 		return handlerId;
 	}
+
+	/**
+	 * Set the AES key used to encrypt and decrypt messages.
+	 *
+	 * @param key The AES key bytes used to encrypt and decrypt messages.
+	 */
+	public void setAesKey(byte[] key)
+	{
+		inputStream.setAESKey(key);
+		outputStream.setAesKey(key);
+	}
+
 }

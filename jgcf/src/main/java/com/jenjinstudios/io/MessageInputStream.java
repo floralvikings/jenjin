@@ -3,12 +3,19 @@ package com.jenjinstudios.io;
 import com.jenjinstudios.message.Message;
 import com.jenjinstudios.message.MessageRegistry;
 
+import javax.crypto.*;
+import javax.crypto.spec.SecretKeySpec;
+import javax.xml.bind.DatatypeConverter;
 import java.io.DataInputStream;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.SocketException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Reads messages registered with the MessageRegistry class from stream.
@@ -17,8 +24,16 @@ import java.util.LinkedList;
  */
 public class MessageInputStream
 {
+	/** The Logger for this class. */
+	private static final Logger LOGGER = Logger.getLogger(MessageInputStream.class.getName());
 	/** The output stream used by this message stream. */
 	private final DataInputStream inputStream;
+	/** The AES key used to encrypt outgoing messages. */
+	private SecretKey aesKey;
+	/** The cipher used to decrypt messages. */
+	private Cipher aesDecryptCipher;
+	/** The default value used when no AES key can be used. */
+	public static final byte[] NO_KEY = new byte[1];
 
 	/**
 	 * Construct a new {@code MessageInputStream} from the given InputStream.
@@ -124,13 +139,25 @@ public class MessageInputStream
 	private String readString(DataInputStream inputStream) throws IOException
 	{
 		boolean encrypted = inputStream.readBoolean();
-		String received;
+		String received = inputStream.readUTF();
 		if (encrypted)
 		{
-			// TODO Get encrypted string here.
-			received = inputStream.readUTF();
-		} else
-			received = inputStream.readUTF();
+			if (aesKey == null)
+			{
+				LOGGER.log(Level.WARNING, "AES key not properly set, unable to decrypt messages.");
+			} else
+			{
+				try
+				{
+					byte[] encBytes = DatatypeConverter.parseHexBinary(received);
+					byte[] decBytes = aesDecryptCipher.doFinal(encBytes);
+					received = new String(decBytes, "UTF-8");
+				} catch (IllegalBlockSizeException | BadPaddingException e)
+				{
+					LOGGER.log(Level.WARNING, "Unable to decrypt message!", e);
+				}
+			}
+		}
 		return received;
 	}
 
@@ -175,4 +202,24 @@ public class MessageInputStream
 	{
 		inputStream.close();
 	}
+
+	/**
+	 * Set the AES key used to decrypt messages.
+	 *
+	 * @param key The AES key used to decrypt messages.
+	 */
+	public void setAESKey(byte[] key)
+	{
+		try
+		{
+			aesKey = new SecretKeySpec(key, "AES");
+			aesDecryptCipher = Cipher.getInstance("AES");
+			aesDecryptCipher.init(Cipher.DECRYPT_MODE, aesKey);
+		} catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException e)
+		{
+			LOGGER.log(Level.SEVERE, "Unable to create cipher, messages will not be decrypted.", e);
+			aesKey = null;
+		}
+	}
+
 }

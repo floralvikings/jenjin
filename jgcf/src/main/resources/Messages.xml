@@ -25,4 +25,14 @@
         <executable language="java" side="client">com.jenjinstudios.jgcf.message.ExecutableLogoutResponse</executable>
     </message>
 
+    <message name="PublicKeyMessage" id="5">
+        <executable language="java" side="server">com.jenjinstudios.jgsf.message.ExecutablePublicKeyMessage</executable>
+        <argument type="byte[]" name="key"/>
+    </message>
+
+    <message name="AESKeyMessage" id="6">
+        <executable language="java" side="client">com.jenjinstudios.jgcf.message.ExecutableAESKeyMessage</executable>
+        <argument type="byte[]" name="key"/>
+    </message>
+
 </base_messages>
