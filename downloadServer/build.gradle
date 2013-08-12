@@ -1,7 +1,0 @@
-description = ''
-
-
-dependencies {
-    compile project(':jgsf')
-    compile project(':downloadClient')
-}
