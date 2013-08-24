@@ -27,7 +27,7 @@ public class Server<T extends ClientHandler> extends Thread
 	/** The updates per second. */
 	public final int UPS;
 	/** The period of the update in milliseconds. */
-	private final int PERIOD;
+	public final int PERIOD;
 	/** The port on which this server will run. */
 	private final int PORT;
 	/** The list of {@code ClientListener}s working for this server. */
@@ -55,7 +55,7 @@ public class Server<T extends ClientHandler> extends Thread
 	/** The maximum number of clients allowed to connect. */
 	private int maxClients = 100;
 	/** The class for ClientHandlers. */
-	private final Class<T> handlerClass;
+	private final Class<? extends T> handlerClass;
 
 	/**
 	 * Construct a new Server without a SQLHandler.
@@ -64,7 +64,7 @@ public class Server<T extends ClientHandler> extends Thread
 	 * @param port         The port number on which this server will listen.
 	 * @param handlerClass The class of ClientHandler used by this Server.
 	 */
-	public Server(int ups, int port, Class<T> handlerClass)
+	public Server(int ups, int port, Class<? extends T> handlerClass)
 	{
 		super("Server");
 		LOGGER.log(Level.FINE, "Initializing Server.");
@@ -109,11 +109,12 @@ public class Server<T extends ClientHandler> extends Thread
 	}
 
 	/** Start a new Client Listener on the specified port. */
+	@SuppressWarnings("unchecked")
 	void addListener()
 	{
 		try
 		{
-			clientListeners.add(new ClientListener<>(this, PORT, handlerClass));
+			clientListeners.add((ClientListener<T>) new ClientListener<>(this, PORT, handlerClass));
 		} catch (IOException e)
 		{
 			LOGGER.log(Level.SEVERE, "Error adding client listener", e);

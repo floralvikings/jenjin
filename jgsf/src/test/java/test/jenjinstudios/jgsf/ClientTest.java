@@ -62,7 +62,7 @@ public class ClientTest
 	{
 		while ((System.currentTimeMillis() - startTime) < 1500)
 			Thread.sleep(1);
-		assertEquals(50, server.getAverageUPS(), 0.05);
+		assertEquals(50, server.getAverageUPS(), 0.1);
 		server.shutdown();
 	}
 
