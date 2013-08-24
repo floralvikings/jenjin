@@ -12,7 +12,7 @@ Game Server Framework and Jenjin Game Client Framework, respectively.
 
 ##Building and Testing
 
-The Jenjin is built using Gradle, and can be build with a simple command on
+The Jenjin is built using Gradle, and can be built with a simple command on
 any operating system that supports Java; simply run
 
 `gradlew build`
