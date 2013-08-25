@@ -22,8 +22,8 @@ in the root project directory.  Windows users may need to run
 `gradlew.bat build`
 
 In order for the tests to run properly, you must be running a MySQL server on localhost on port 3306,
-with a database named "jenjinst_chatservertest", a user with permission to SELECT and UPDATE named "jenjinst_cstest" with
-a password "chat_test"
+with a database named "jenjin_test", a user with permission to SELECT and UPDATE named "jenjin_user" with
+a password "jenjin_password"
 
 This database must contain a table called "users" laid out in the following way:
 
