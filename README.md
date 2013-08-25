@@ -39,13 +39,6 @@ Any tests that utilize the login functionality will fail without this table.
 
 The password and salt fields are necessary for the salted SAH256 hashing that is done to user passwords.
 
-## Known Issues
-The current implementation of the JGSF and JGCF do not implement any password encryption; although passwords are expected
-to be hashed and salted in the database, the password is sent from the client to the server over an unencrypted socket.
-
-Ther is currently no fix planned for this, as the login functionality currently implemented by the Jenjin is not intended
-for production, but simply an example.
-
 
 ##Dependencies
 
