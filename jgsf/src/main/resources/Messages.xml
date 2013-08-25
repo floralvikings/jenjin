@@ -35,4 +35,38 @@
         <argument type="byte[]" name="key"/>
     </message>
 
+    <message name="StateChangeRequest" id="7">
+        <executable language="java" side="server">com.jenjinstudios.jgsf.world.message.ExecutableStateChangeRequest
+        </executable>
+        <argument type="int" name="direction"/>
+        <argument type="double" name="angle"/>
+        <argument type="int" name="stepsFromLast"/>
+    </message>
+
+    <message name="ActorVisibleMessage" id="8">
+        <executable language="java" side="client">com.jenjinstudios.jgcf.world.message.ExecutableActorVisibleMessage
+        </executable>
+        <argument type="String" name="name" encrypt="true"/>
+        <argument type="float" name="xCoordinate"/>
+        <argument type="float" name="zCoordinate"/>
+        <argument type="int" name="direction"/>
+        <argument type="double" name="angle"/>
+        <argument type="int" name="stepsFromLast"/>
+    </message>
+
+    <message name="StateChangeMessage" id="9">
+        <executable language="java" side="client">com.jenjinstudios.jgcf.world.message.ExecutableStateChangeMessage
+        </executable>
+        <argument type="int" name="direction"/>
+        <argument type="double" name="angle"/>
+        <argument type="int" name="stepsUntilChange"/>
+    </message>
+
+    <message name="ForceStateMessage" id="10">
+        <executable language="java" side="client">com.jenjinstudios.jgcf.world.message.ExecutableForceStateMessage
+        </executable>
+        <argument type="int" name="direction"/>
+        <argument type="double" name="angle"/>
+        <argument type="int" name="stepsFromLast"/>
+    </message>
 </base_messages>
