@@ -71,4 +71,29 @@
         <argument type="double" name="angle"/>
         <argument type="int" name="stepsFromLast"/>
     </message>
+
+    <message name="WorldLoginRequest" id="11">
+        <executable language="java" side="server">com.jenjinstudios.jgsf.world.message.ExecutableWorldLoginRequest
+        </executable>
+        <argument type="String" name="username" encrypt="true"/>
+        <argument type="String" name="password" encrypt="true"/>
+    </message>
+
+    <message name="WorldLogoutRequest" id="12">
+        <executable language="java" side="server">com.jenjinstudios.jgsf.world.message.ExecutableWorldLogoutRequest
+        </executable>
+    </message>
+
+    <message name="WorldLoginResponse" id="13">
+        <argument type="boolean" name="success"/>
+        <argument type="long" name="loginTime"/>
+        <executable language="java" side="client">com.jenjinstudios.jgcf.world.message.ExecutableWorldLoginResponse
+        </executable>
+    </message>
+
+    <message name="WorldLogoutResponse" id="13">
+        <argument type="boolean" name="success"/>
+        <executable language="java" side="client">com.jenjinstudios.jgcf.world.message.ExecutableWorldLogoutResponse
+        </executable>
+    </message>
 </base_messages>
