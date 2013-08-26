@@ -12,6 +12,9 @@ import java.net.Socket;
  */
 public class WorldClientHandler extends ClientHandler
 {
+	/** The WorldServer owning this handler. */
+	private final WorldServer server;
+
 	/**
 	 * Construct a new Client Handler using the given socket.  When constructing a new ClientHandler, it is necessary
 	 * to send the client a FirstConnectResponse message with the server's UPS
@@ -23,5 +26,12 @@ public class WorldClientHandler extends ClientHandler
 	public WorldClientHandler(WorldServer s, Socket sk) throws IOException
 	{
 		super(s, sk);
+		server = s;
+	}
+
+	@Override
+	public WorldServer getServer()
+	{
+		return server;
 	}
 }

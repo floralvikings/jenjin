@@ -77,4 +77,13 @@ public class WorldServer extends Server<WorldClientHandler>
 		this(new World());
 	}
 
+	/**
+	 * Get the world used by this server.
+	 *
+	 * @return The world used by this server.
+	 */
+	public World getWorld()
+	{
+		return world;
+	}
 }

@@ -1,6 +1,6 @@
 package com.jenjinstudios.jgsf.world.message;
 
-import com.jenjinstudios.jgsf.message.ServerExecutableMessage;
+import com.jenjinstudios.jgsf.world.World;
 import com.jenjinstudios.jgsf.world.WorldClientHandler;
 import com.jenjinstudios.message.Message;
 
@@ -9,7 +9,7 @@ import com.jenjinstudios.message.Message;
  *
  * @author Caleb Brinkman
  */
-public class ExecutableStateChangeRequest extends ServerExecutableMessage
+public class ExecutableStateChangeRequest extends WorldExecutableMessage
 {
 	/**
 	 * Construct a new ExecutableMessage.  Must be implemented by subclasses.
@@ -25,6 +25,7 @@ public class ExecutableStateChangeRequest extends ServerExecutableMessage
 	@Override
 	public void runSynced()
 	{
+		World world = getClientHandler().getServer().getWorld();
 	}
 
 	@Override
