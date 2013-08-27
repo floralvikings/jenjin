@@ -16,7 +16,7 @@ public class WorldClientHandler extends ClientHandler
 	/** The WorldServer owning this handler. */
 	private final WorldServer server;
 	/** The ID of the player controlled by this clienthandler. */
-	private int playerID = -1;
+	private long playerID = -1;
 	/** The Actor managed by this handler. */
 	private Actor actor;
 
@@ -45,7 +45,7 @@ public class WorldClientHandler extends ClientHandler
 	 *
 	 * @param id The new ID.
 	 */
-	public void setPlayerID(int id)
+	public void setPlayerID(long id)
 	{
 		if (playerID != -1)
 			playerID = id;
@@ -56,7 +56,7 @@ public class WorldClientHandler extends ClientHandler
 	 *
 	 * @return The player id.
 	 */
-	public int getPlayerID()
+	public long getPlayerID()
 	{
 		return playerID;
 	}
@@ -70,5 +70,6 @@ public class WorldClientHandler extends ClientHandler
 	{
 		this.actor = actor;
 		setUsername(actor.getName());
+		setPlayerID(actor.getId());
 	}
 }

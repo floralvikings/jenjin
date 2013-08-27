@@ -75,4 +75,11 @@ public class ActorTest
 		Thread.sleep(server.PERIOD * 10);
 		Assert.assertEquals("State 6: ", new Vector2D(-35.355, 35.355), actor.getVector2D());
 	}
+
+	/** Test the login and logout functionality of the WorldServer. */
+	@Test
+	public void testLoginLogout()
+	{
+
+	}
 }
