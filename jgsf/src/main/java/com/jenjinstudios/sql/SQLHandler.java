@@ -17,6 +17,9 @@ import static java.sql.ResultSet.TYPE_SCROLL_SENSITIVE;
 @SuppressWarnings("SameParameterValue")
 public class SQLHandler
 {
+
+	/** The name of the column in the user table specifying whether the user is currently logged in. */
+	public static final String LOGGED_IN_COLUMN = "loggedin";
 	/** The Logger used for this class. */
 	private static final Logger LOGGER = Logger.getLogger(SQLHandler.class.getName());
 	/** The String used in connection protocol. */
@@ -29,14 +32,12 @@ public class SQLHandler
 	private final String dbName;
 	/** The url used to connect with the SQL database. */
 	private final String dbUrl;
-	/** The name of the column in the user table specifying whether the user is currently logged in. */
-	private final String loggedInColumn;
+	/** The string used to get all information about the user. */
+	private final String USER_QUERY;
 	/** Flags whether this SQLHandler is connected to the database. */
 	private boolean connected;
 	/** The connection used to communicate with the SQL database. */
 	private Connection dbConnection;
-	/** The string used to get all information about the user. */
-	private final String USER_QUERY;
 
 	/**
 	 * Create a new SQLHandler with the given database information, and connect to the database.
@@ -54,7 +55,6 @@ public class SQLHandler
 		this.dbPassword = dbPassword;
 		this.dbName = dbName;
 		dbUrl = connectionStringProtocol + dbAddress + "/" + dbName;
-		loggedInColumn = "loggedin";
 		try
 		{
 			Class.forName("org.drizzle.jdbc.DrizzleDriver").newInstance();
@@ -62,7 +62,7 @@ public class SQLHandler
 		{
 			LOGGER.log(Level.SEVERE, "Unable to register Drizzle driver!");
 		}
-		USER_QUERY = "SELECT username, loggedin, salt, password FROM " + dbName + ".users WHERE username = ?";
+		USER_QUERY = "SELECT * FROM " + dbName + ".users WHERE username = ?";
 
 		connectToDatabase();
 	}
@@ -89,7 +89,7 @@ public class SQLHandler
 			ResultSet results = makeUserQuery(username);
 			results.next();
 			// Determine if the user is logged in.  If yes, end of method.
-			boolean loggedIn = results.getBoolean(loggedInColumn);
+			boolean loggedIn = results.getBoolean(LOGGED_IN_COLUMN);
 			if (loggedIn)
 				return success;
 			// Hash the user-supplied password with the salt in the database.
@@ -129,7 +129,7 @@ public class SQLHandler
 			ResultSet results = makeUserQuery(username);
 			results.next();
 			// Determine if the user is logged in.  If no, end of method.
-			boolean loggedIn = results.getBoolean(loggedInColumn);
+			boolean loggedIn = results.getBoolean(LOGGED_IN_COLUMN);
 			results.getStatement().close();
 			if (!loggedIn)
 				return success;
@@ -143,6 +143,7 @@ public class SQLHandler
 		}
 		return success;
 	}
+
 
 	/**
 	 * Attempt to connect to the database.
@@ -172,13 +173,12 @@ public class SQLHandler
 	 * @return The ResultSet returned by the query.
 	 * @throws SQLException If there is a SQL error.
 	 */
-	private ResultSet makeUserQuery(String username) throws SQLException
+	protected ResultSet makeUserQuery(String username) throws SQLException
 	{
 		PreparedStatement statement = dbConnection.prepareStatement(USER_QUERY, TYPE_SCROLL_SENSITIVE, CONCUR_UPDATABLE);
 		statement.setString(1, username);
 		return statement.executeQuery();
 	}
-
 
 	/**
 	 * Update the loggedin column to reflect the supplied boolean.
@@ -187,10 +187,10 @@ public class SQLHandler
 	 * @param status   The new status of the loggedin column.
 	 * @throws SQLException If there is a SQL error.
 	 */
-	private void updateLoggedinColumn(String username, boolean status) throws SQLException
+	protected void updateLoggedinColumn(String username, boolean status) throws SQLException
 	{
 		String newValue = status ? "1" : "0";
-		String updateLoggedInQuery = "UPDATE " + dbName + ".users SET " + loggedInColumn + "=" + newValue + " WHERE " +
+		String updateLoggedInQuery = "UPDATE " + dbName + ".users SET " + LOGGED_IN_COLUMN + "=" + newValue + " WHERE " +
 				"username = ?";
 		PreparedStatement updateLoggedin;
 		updateLoggedin = dbConnection.prepareStatement(updateLoggedInQuery);

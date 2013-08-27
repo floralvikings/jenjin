@@ -1,6 +1,7 @@
 package com.jenjinstudios.jgsf.world;
 
 import com.jenjinstudios.jgsf.ClientHandler;
+import com.jenjinstudios.jgsf.world.actor.Actor;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -14,6 +15,10 @@ public class WorldClientHandler extends ClientHandler
 {
 	/** The WorldServer owning this handler. */
 	private final WorldServer server;
+	/** The ID of the player controlled by this clienthandler. */
+	private int playerID = -1;
+	/** The Actor managed by this handler. */
+	private Actor actor;
 
 	/**
 	 * Construct a new Client Handler using the given socket.  When constructing a new ClientHandler, it is necessary
@@ -33,5 +38,37 @@ public class WorldClientHandler extends ClientHandler
 	public WorldServer getServer()
 	{
 		return server;
+	}
+
+	/**
+	 * Set the player ID, id it is not already set.
+	 *
+	 * @param id The new ID.
+	 */
+	public void setPlayerID(int id)
+	{
+		if (playerID != -1)
+			playerID = id;
+	}
+
+	/**
+	 * Get the player's ID.
+	 *
+	 * @return The player id.
+	 */
+	public int getPlayerID()
+	{
+		return playerID;
+	}
+
+	/**
+	 * Set the Actor managed by this handler.
+	 *
+	 * @param actor The actor to be managed by this handler.
+	 */
+	public void setActor(Actor actor)
+	{
+		this.actor = actor;
+		setUsername(actor.getName());
 	}
 }

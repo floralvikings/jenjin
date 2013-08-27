@@ -1,6 +1,10 @@
 package com.jenjinstudios.jgsf.world;
 
 import com.jenjinstudios.jgsf.Server;
+import com.jenjinstudios.jgsf.world.sql.WorldSQLHandler;
+import com.jenjinstudios.sql.SQLHandler;
+
+import java.sql.SQLException;
 
 /**
  * The WorldServer class is responsible for updating a game world.
@@ -15,6 +19,8 @@ public class WorldServer extends Server<WorldClientHandler>
 	public static final int DEFAULT_PORT = 51015;
 	/** The world used by this server. */
 	private final World world;
+	/** The SQLHandler for this world server. */
+	private WorldSQLHandler sqlHandler;
 
 	/**
 	 * Construct a new Server without a SQLHandler.
@@ -85,5 +91,30 @@ public class WorldServer extends Server<WorldClientHandler>
 	public World getWorld()
 	{
 		return world;
+	}
+
+	@Override
+	public WorldSQLHandler getSqlHandler()
+	{
+		return sqlHandler;
+	}
+
+	/**
+	 * Set the SQLHandler.
+	 *
+	 * @param sqlHandler The WorldSQLHandler.
+	 * @throws SQLException If there is a SQL exception.
+	 */
+	public void setSQLHandler(WorldSQLHandler sqlHandler) throws SQLException
+	{
+		super.setSQLHandler(sqlHandler);
+		this.sqlHandler = sqlHandler;
+	}
+
+	public void setSQLHandler(SQLHandler sqlHandler) throws SQLException
+	{
+		if (!(sqlHandler instanceof WorldSQLHandler))
+			throw new IllegalArgumentException("SQL Handler is not instance of WorldSQLHandler");
+		setSQLHandler((WorldSQLHandler) sqlHandler);
 	}
 }
