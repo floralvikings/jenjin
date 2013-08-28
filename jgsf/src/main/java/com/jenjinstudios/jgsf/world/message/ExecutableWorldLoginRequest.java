@@ -16,6 +16,8 @@ public class ExecutableWorldLoginRequest extends WorldExecutableMessage
 {
 	/** The SQL handler used by this executable message. */
 	private final WorldSQLHandler sqlHandler;
+	/** The player added to the world. */
+	private Actor player;
 
 	/**
 	 * Construct a new ExecutableMessage.  Must be implemented by subclasses.
@@ -32,6 +34,8 @@ public class ExecutableWorldLoginRequest extends WorldExecutableMessage
 	@Override
 	public void runSynced()
 	{
+		if (player != null)
+			getClientHandler().getServer().getWorld().addObject(player);
 	}
 
 	@Override
@@ -41,6 +45,7 @@ public class ExecutableWorldLoginRequest extends WorldExecutableMessage
 			return;
 		String username = (String) getMessage().getArgument("username");
 		String password = (String) getMessage().getArgument("password");
+		/* The map used to create the player. */
 		TreeMap<String, Object> playerInfo = sqlHandler.logIntoWorld(username, password);
 
 		boolean success = playerInfo != null;
@@ -51,15 +56,15 @@ public class ExecutableWorldLoginRequest extends WorldExecutableMessage
 
 		if (success)
 		{
-			Actor player = new Actor(username);
 			double xCoord = (double) playerInfo.get(WorldSQLHandler.X_COORD);
 			double zCoord = (double) playerInfo.get(WorldSQLHandler.Z_COORD);
+			player = new Actor(username);
 			player.setVector2D(xCoord, zCoord);
 			getClientHandler().setActor(player);
 			loginResponse.setArgument("loginTime", getClientHandler().getLoggedInTime());
 			loginResponse.setArgument("xCoord", xCoord);
 			loginResponse.setArgument("zCoord", zCoord);
-			getClientHandler().getServer().getWorld().addObject(player);
+
 		} else
 		{
 			loginResponse.setArgument("loginTime", getClientHandler().getLoggedInTime());
