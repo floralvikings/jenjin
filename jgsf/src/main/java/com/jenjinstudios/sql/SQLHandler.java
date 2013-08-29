@@ -138,7 +138,7 @@ public class SQLHandler
 			success = true;
 		} catch (SQLException | IndexOutOfBoundsException e)
 		{
-			LOGGER.log(Level.FINE, "Failed to log in user: {0}", username);
+			LOGGER.log(Level.FINE, "Failed to log out user: {0}", username);
 			success = false;
 		}
 		return success;
