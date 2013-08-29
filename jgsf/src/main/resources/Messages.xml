@@ -53,7 +53,12 @@
         <argument type="int" name="stepsFromLast" />
     </message>
 
-    <message name="StateChangeMessage" id="9">
+    <message name="ActorInvisibleMessage" id="9">
+        <executable language="java" side="client">com.jenjinstudios.jgcf.world.message.ExecutableActorInvisibleMessage</executable>
+        <argument type="int" name="id" />
+    </message>
+
+    <message name="StateChangeMessage" id="10">
         <executable language="java" side="client">com.jenjinstudios.jgcf.world.message.ExecutableStateChangeMessage</executable>
         <argument type="int" name="id" />
         <argument type="int" name="direction" />
@@ -61,24 +66,24 @@
         <argument type="int" name="stepsUntilChange" />
     </message>
 
-    <message name="ForceStateMessage" id="10">
+    <message name="ForceStateMessage" id="11">
         <executable language="java" side="client">com.jenjinstudios.jgcf.world.message.ExecutableForceStateMessage</executable>
         <argument type="int" name="direction" />
         <argument type="double" name="angle" />
         <argument type="int" name="stepsFromLast" />
     </message>
 
-    <message name="WorldLoginRequest" id="11">
+    <message name="WorldLoginRequest" id="12">
         <executable language="java" side="server">com.jenjinstudios.jgsf.world.message.ExecutableWorldLoginRequest</executable>
         <argument type="String" name="username" encrypt="true" />
         <argument type="String" name="password" encrypt="true" />
     </message>
 
-    <message name="WorldLogoutRequest" id="12">
+    <message name="WorldLogoutRequest" id="13">
         <executable language="java" side="server">com.jenjinstudios.jgsf.world.message.ExecutableWorldLogoutRequest</executable>
     </message>
 
-    <message name="WorldLoginResponse" id="13">
+    <message name="WorldLoginResponse" id="14">
         <argument type="boolean" name="success" />
         <argument type="long" name="loginTime" />
         <argument type="double" name="xCoord" />
@@ -86,7 +91,7 @@
         <executable language="java" side="client">com.jenjinstudios.jgcf.world.message.ExecutableWorldLoginResponse</executable>
     </message>
 
-    <message name="WorldLogoutResponse" id="13">
+    <message name="WorldLogoutResponse" id="15">
         <argument type="boolean" name="success" />
         <executable language="java" side="client">com.jenjinstudios.jgcf.world.message.ExecutableWorldLogoutResponse</executable>
     </message>

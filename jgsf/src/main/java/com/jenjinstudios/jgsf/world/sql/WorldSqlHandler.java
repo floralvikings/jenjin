@@ -1,7 +1,7 @@
 package com.jenjinstudios.jgsf.world.sql;
 
+import com.jenjinstudios.jgcf.world.math.Vector2D;
 import com.jenjinstudios.jgsf.world.actor.Actor;
-import com.jenjinstudios.jgsf.world.math.Vector2D;
 import com.jenjinstudios.sql.SQLHandler;
 import com.jenjinstudios.util.Hash;
 
