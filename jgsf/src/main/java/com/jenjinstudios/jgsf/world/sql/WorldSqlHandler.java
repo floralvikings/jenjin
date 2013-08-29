@@ -1,11 +1,13 @@
 package com.jenjinstudios.jgsf.world.sql;
 
+import com.jenjinstudios.jgsf.world.actor.Actor;
+import com.jenjinstudios.jgsf.world.math.Vector2D;
 import com.jenjinstudios.sql.SQLHandler;
 import com.jenjinstudios.util.Hash;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -42,13 +44,13 @@ public class WorldSQLHandler extends SQLHandler
 	 *
 	 * @param username The player's username.
 	 * @param password The player's password.
-	 * @return A {@code TreeMap} containing the player's information.
+	 * @return An actor pre-filled with the players information.
 	 */
-	public synchronized TreeMap<String, Object> logIntoWorld(String username, String password)
+	public synchronized Actor logInPlayer(String username, String password)
 	{
-		TreeMap<String, Object> playerInfo = null;
+		Actor player = null;
 		if (!isConnected())
-			return playerInfo;
+			return player;
 		try
 		{
 			ResultSet results = makeUserQuery(username);
@@ -56,24 +58,81 @@ public class WorldSQLHandler extends SQLHandler
 			// Determine if the user is logged in.  If yes, end of method.
 			boolean loggedIn = results.getBoolean(LOGGED_IN_COLUMN);
 			if (loggedIn)
-				return playerInfo;
+				return player;
 			// Hash the user-supplied password with the salt in the database.
 			String hashedPassword = Hash.getHashedString(password, results.getString("salt"));
 			// Determine if the correct password was supplied.
 			boolean passwordCorrect = hashedPassword.equalsIgnoreCase(results.getString("password"));
+			Vector2D coordinates = new Vector2D(results.getDouble(X_COORD), results.getDouble(Z_COORD));
+			// Any SQL stuff has to come before this line.
 			results.getStatement().close();
+			// If the password's bad, login fail.
 			if (!passwordCorrect)
-				return playerInfo;
-
+				return player;
+			// Update the logged in column.
 			updateLoggedinColumn(username, true);
-			playerInfo = new TreeMap<>();
-			playerInfo.put(X_COORD, results.getFloat(X_COORD));
-			playerInfo.put(Z_COORD, results.getFloat(Z_COORD));
+			player = new Actor(username);
+			player.setVector2D(coordinates);
 		} catch (SQLException | IndexOutOfBoundsException e)
 		{
-			LOGGER.log(Level.FINE, "Failed to log in user: {0}", username);
-			playerInfo = null;
+			LOGGER.log(Level.FINE, "Failed to log in user: " + username, e);
+			player = null;
 		}
-		return playerInfo;
+		return player;
+	}
+
+	/**
+	 * Log a player out of the world, storing their coordinates in the database.
+	 *
+	 * @param actor The actor to be logged out of the world.
+	 * @return Whether the actor was successfully logged out.
+	 */
+	public boolean logOutPlayer(Actor actor)
+	{
+		boolean success = false;
+		if (!isConnected())
+			return success;
+		String username = actor.getName();
+		try
+		{
+			ResultSet results = makeUserQuery(username);
+			results.next();
+			// Determine if the user is logged in.  If no, end of method.
+			boolean loggedIn = results.getBoolean(LOGGED_IN_COLUMN);
+			results.getStatement().close();
+			if (!loggedIn)
+				return success;
+
+			updateLoggedinColumn(username, false);
+			updatePlayer(actor);
+			success = true;
+		} catch (SQLException e)
+		{
+			LOGGER.log(Level.FINE, "Failed to log out user: {0}", username);
+			success = false;
+		}
+
+		return success;
+	}
+
+	/**
+	 * Update the coordinates of the given actor in the database.
+	 *
+	 * @param player The player to update.
+	 * @throws SQLException If there's a SQL exception.
+	 */
+	public void updatePlayer(Actor player) throws SQLException
+	{
+		String username = player.getName();
+		double xCoord = player.getVector2D().getXCoordinate();
+		double zCoord = player.getVector2D().getZCoordinate();
+
+		String updateLoggedInQuery = "UPDATE " + dbName + ".users SET " + X_COORD + "=" + xCoord + ", " + Z_COORD +
+				"=" + zCoord + " WHERE " + "username = ?";
+		PreparedStatement updatePlayerStatement;
+		updatePlayerStatement = super.dbConnection.prepareStatement(updateLoggedInQuery);
+		updatePlayerStatement.setString(1, username);
+		updatePlayerStatement.executeUpdate();
+		updatePlayerStatement.close();
 	}
 }

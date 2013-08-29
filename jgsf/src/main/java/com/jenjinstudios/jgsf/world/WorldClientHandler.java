@@ -72,4 +72,14 @@ public class WorldClientHandler extends ClientHandler
 		setUsername(actor.getName());
 		setPlayerID(actor.getId());
 	}
+
+	/**
+	 * Get the actor of this client handler.
+	 *
+	 * @return The actor controlled by this client handler.
+	 */
+	public Actor getActor()
+	{
+		return actor;
+	}
 }

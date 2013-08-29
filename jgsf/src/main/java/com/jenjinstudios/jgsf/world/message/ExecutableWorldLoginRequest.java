@@ -5,8 +5,6 @@ import com.jenjinstudios.jgsf.world.actor.Actor;
 import com.jenjinstudios.jgsf.world.sql.WorldSQLHandler;
 import com.jenjinstudios.message.Message;
 
-import java.util.TreeMap;
-
 /**
  * Handles requests to login to the world.
  *
@@ -46,9 +44,9 @@ public class ExecutableWorldLoginRequest extends WorldExecutableMessage
 		String username = (String) getMessage().getArgument("username");
 		String password = (String) getMessage().getArgument("password");
 		/* The map used to create the player. */
-		TreeMap<String, Object> playerInfo = sqlHandler.logIntoWorld(username, password);
+		player = sqlHandler.logInPlayer(username, password);
 
-		boolean success = playerInfo != null;
+		boolean success = player != null;
 		getClientHandler().setLoginStatus(success);
 
 		Message loginResponse = new Message("WorldLoginResponse");
@@ -56,14 +54,10 @@ public class ExecutableWorldLoginRequest extends WorldExecutableMessage
 
 		if (success)
 		{
-			double xCoord = (double) playerInfo.get(WorldSQLHandler.X_COORD);
-			double zCoord = (double) playerInfo.get(WorldSQLHandler.Z_COORD);
-			player = new Actor(username);
-			player.setVector2D(xCoord, zCoord);
 			getClientHandler().setActor(player);
 			loginResponse.setArgument("loginTime", getClientHandler().getLoggedInTime());
-			loginResponse.setArgument("xCoord", xCoord);
-			loginResponse.setArgument("zCoord", zCoord);
+			loginResponse.setArgument("xCoord", player.getVector2D().getXCoordinate());
+			loginResponse.setArgument("zCoord", player.getVector2D().getZCoordinate());
 
 		} else
 		{

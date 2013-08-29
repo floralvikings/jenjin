@@ -1,6 +1,7 @@
 package com.jenjinstudios.jgsf.world.message;
 
 import com.jenjinstudios.jgsf.world.WorldClientHandler;
+import com.jenjinstudios.jgsf.world.sql.WorldSQLHandler;
 import com.jenjinstudios.message.Message;
 
 /**
@@ -10,6 +11,9 @@ import com.jenjinstudios.message.Message;
  */
 public class ExecutableWorldLogoutRequest extends WorldExecutableMessage
 {
+	/** The SQLHandler used to log out the client. */
+	private final WorldSQLHandler sqlHandler;
+
 	/**
 	 * Construct a new ExecutableMessage.  Must be implemented by subclasses.
 	 *
@@ -19,6 +23,8 @@ public class ExecutableWorldLogoutRequest extends WorldExecutableMessage
 	protected ExecutableWorldLogoutRequest(WorldClientHandler handler, Message message)
 	{
 		super(handler, message);
+		sqlHandler = handler.getServer().getSqlHandler();
+
 	}
 
 	@Override
@@ -29,5 +35,13 @@ public class ExecutableWorldLogoutRequest extends WorldExecutableMessage
 	@Override
 	public void runASync()
 	{
+		if (sqlHandler != null && getClientHandler().isLoggedIn())
+		{
+			WorldClientHandler handler = getClientHandler();
+
+			boolean success = sqlHandler.logOutPlayer(handler.getActor());
+
+			handler.sendLogoutStatus(success);
+		}
 	}
 }

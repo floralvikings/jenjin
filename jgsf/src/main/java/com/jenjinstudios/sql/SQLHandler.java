@@ -29,7 +29,7 @@ public class SQLHandler
 	/** The password used to access the database. */
 	private final String dbPassword;
 	/** The name of the database used by this server. */
-	private final String dbName;
+	protected final String dbName;
 	/** The url used to connect with the SQL database. */
 	private final String dbUrl;
 	/** The string used to get all information about the user. */
@@ -37,7 +37,7 @@ public class SQLHandler
 	/** Flags whether this SQLHandler is connected to the database. */
 	private boolean connected;
 	/** The connection used to communicate with the SQL database. */
-	private Connection dbConnection;
+	protected Connection dbConnection;
 
 	/**
 	 * Create a new SQLHandler with the given database information, and connect to the database.
