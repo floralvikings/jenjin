@@ -35,6 +35,8 @@ public class World
 	 */
 	public void addObject(GameObject object)
 	{
+		if (object == null)
+			throw new IllegalArgumentException("addObject(GameObject obj) argument 0 not allowed to be null!");
 		object.setWorld(this);
 		object.setId(gameObjects.size());
 		gameObjects.add(object);
