@@ -1,4 +1,4 @@
-package com.jenjinstudios.jgsf.world.math;
+package com.jenjinstudios.jgcf.world.math;
 
 /**
  * This class is used to simplify rounding.

@@ -1,11 +1,11 @@
 package test.jenjinstudios.jgsf.world.actor;
 
+import com.jenjinstudios.jgcf.world.math.Vector2D;
 import com.jenjinstudios.jgcf.world.state.MoveDirection;
 import com.jenjinstudios.jgcf.world.state.MoveState;
 import com.jenjinstudios.jgsf.world.World;
 import com.jenjinstudios.jgsf.world.WorldServer;
 import com.jenjinstudios.jgsf.world.actor.Actor;
-import com.jenjinstudios.jgsf.world.math.Vector2D;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;

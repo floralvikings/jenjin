@@ -1,5 +1,7 @@
 package com.jenjinstudios.jgcf.world;
 
+import com.jenjinstudios.jgcf.world.math.Vector2D;
+
 /**
  * The {@code GameObjectInfo} class is used to manage information about game object received from the server.  This
  * information is all that is necessary to replicate the server-side state of the object with the same ID.  Changes
@@ -15,10 +17,8 @@ public class GameObjectInfo
 	private ZoneInfo zone;
 	/** The representation of the world in which this object exists. */
 	private ShallowWorld world;
-	/** The x coordinate of this object. */
-	private float xCoordinate;
-	/** The z coordinate of this object. */
-	private float zCoordinate;
+	/** The vector2D in the world at which the object is located. */
+	private Vector2D vector2D;
 	/** The direction in which this object is facing. */
 	private float direction;
 
@@ -40,46 +40,6 @@ public class GameObjectInfo
 	public void setDirection(float direction)
 	{
 		this.direction = direction;
-	}
-
-	/**
-	 * Get the z coordinate of this object.
-	 *
-	 * @return The z coordinate of this object.
-	 */
-	public float getzCoordinate()
-	{
-		return zCoordinate;
-	}
-
-	/**
-	 * Set the z coordinate of this object.
-	 *
-	 * @param zCoordinate The new z coordinate.
-	 */
-	public void setzCoordinate(float zCoordinate)
-	{
-		this.zCoordinate = zCoordinate;
-	}
-
-	/**
-	 * Get the x coordinate of this object.
-	 *
-	 * @return The x coordinate of this object.
-	 */
-	public float getxCoordinate()
-	{
-		return xCoordinate;
-	}
-
-	/**
-	 * Set the x coordinate of this object.
-	 *
-	 * @param xCoordinate The new x coordinate.
-	 */
-	public void setxCoordinate(float xCoordinate)
-	{
-		this.xCoordinate = xCoordinate;
 	}
 
 	/**
@@ -140,5 +100,31 @@ public class GameObjectInfo
 	public void setId(int id)
 	{
 		this.id = id;
+	}
+
+	/** Update this object. */
+	public void update()
+	{
+
+	}
+
+	/**
+	 * Get this object's current position.
+	 *
+	 * @return This object's current position.
+	 */
+	public Vector2D getVector2D()
+	{
+		return new Vector2D(vector2D);
+	}
+
+	/**
+	 * Set this object's current position.
+	 *
+	 * @param vector2D The new position.
+	 */
+	public void setVector2D(Vector2D vector2D)
+	{
+		this.vector2D = new Vector2D(vector2D);
 	}
 }

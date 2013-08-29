@@ -1,6 +1,6 @@
 package test.jenjinstudios.jgsf.world.math;
 
-import com.jenjinstudios.jgsf.world.math.Vector2D;
+import com.jenjinstudios.jgcf.world.math.Vector2D;
 import org.junit.Assert;
 import org.junit.Test;
 

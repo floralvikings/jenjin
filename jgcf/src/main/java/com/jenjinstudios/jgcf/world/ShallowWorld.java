@@ -39,7 +39,9 @@ public class ShallowWorld
 		object.setWorld(this);
 		object.setId(gameObjects.size());
 		gameObjects.add(object);
-		getZoneForCoordinates(object.getxCoordinate(), object.getzCoordinate()).addObject(object);
+		double xCoord = object.getVector2D().getXCoordinate();
+		double zCoord = object.getVector2D().getZCoordinate();
+		getZoneForCoordinates(xCoord, zCoord).addObject(object);
 	}
 
 	/**
@@ -49,7 +51,7 @@ public class ShallowWorld
 	 * @param z The z coordinate to test.
 	 * @return The zone at the specified coordinates.
 	 */
-	public ZoneInfo getZoneForCoordinates(float x, float z)
+	public ZoneInfo getZoneForCoordinates(double x, double z)
 	{
 		return zones[(int) x / ZoneInfo.SIZE][(int) z / ZoneInfo.SIZE];
 	}
@@ -66,10 +68,11 @@ public class ShallowWorld
 		return getZoneForCoordinates(x, z).getLocation((int) x % ZoneInfo.SIZE, (int) z % ZoneInfo.SIZE);
 	}
 
-	/** Upate all the objects in the game world. */
+	/** Update all the objects in the game world. */
 	public void update()
 	{
-
+		for (GameObjectInfo o : gameObjects)
+			o.update();
 	}
 
 	/** Reset any values that have to be reset after the update. */
