@@ -1,8 +1,8 @@
 package test.jenjinstudios.jgsf.world.sql;
 
-import com.jenjinstudios.jgcf.world.math.Vector2D;
-import com.jenjinstudios.jgsf.world.actor.Actor;
-import com.jenjinstudios.jgsf.world.sql.WorldSQLHandler;
+import com.jenjinstudios.math.Vector2D;
+import com.jenjinstudios.sql.WorldSQLHandler;
+import com.jenjinstudios.world.Actor;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

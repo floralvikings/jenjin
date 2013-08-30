@@ -1,6 +1,6 @@
 package test.jenjinstudios.jgsf.world;
 
-import com.jenjinstudios.jgsf.world.Location;
+import com.jenjinstudios.world.Location;
 import org.junit.Assert;
 import org.junit.Test;
 
