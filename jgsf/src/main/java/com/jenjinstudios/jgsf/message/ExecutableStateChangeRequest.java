@@ -2,7 +2,8 @@ package com.jenjinstudios.jgsf.message;
 
 import com.jenjinstudios.jgsf.WorldClientHandler;
 import com.jenjinstudios.message.Message;
-import com.jenjinstudios.world.World;
+import com.jenjinstudios.world.Actor;
+import com.jenjinstudios.world.state.MoveState;
 
 /**
  * Process a StateChangeRequest.
@@ -25,7 +26,13 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage
 	@Override
 	public void runSynced()
 	{
-		World world = getClientHandler().getServer().getWorld();
+		Actor player = getClientHandler().getActor();
+		MoveState newState;
+		int direction = (int) getMessage().getArgument("direction");
+		double angle = (double) getMessage().getArgument("angle");
+		int stepsFromLast = (int) getMessage().getArgument("stepsFromLast");
+		newState = new MoveState(direction, stepsFromLast, angle);
+		player.addMoveState(newState);
 	}
 
 	@Override
