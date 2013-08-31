@@ -1,9 +1,9 @@
 package test.jenjinstudios.jgsf.world;
 
-import com.jenjinstudios.jgsf.world.GameObject;
-import com.jenjinstudios.jgsf.world.World;
-import com.jenjinstudios.jgsf.world.Zone;
-import com.jenjinstudios.jgsf.world.math.Vector2D;
+import com.jenjinstudios.math.Vector2D;
+import com.jenjinstudios.world.GameObject;
+import com.jenjinstudios.world.World;
+import com.jenjinstudios.world.Zone;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

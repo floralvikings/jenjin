@@ -1,4 +1,4 @@
-package com.jenjinstudios.jgsf.world;
+package com.jenjinstudios.world;
 
 import java.util.TreeMap;
 

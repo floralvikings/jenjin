@@ -1,6 +1,6 @@
-package com.jenjinstudios.jgsf.world;
+package com.jenjinstudios.world;
 
-import com.jenjinstudios.jgsf.world.math.Vector2D;
+import com.jenjinstudios.math.Vector2D;
 
 import java.util.ArrayList;
 
@@ -35,6 +35,8 @@ public class World
 	 */
 	public void addObject(GameObject object)
 	{
+		if (object == null)
+			throw new IllegalArgumentException("addObject(GameObject obj) argument 0 not allowed to be null!");
 		object.setWorld(this);
 		object.setId(gameObjects.size());
 		gameObjects.add(object);

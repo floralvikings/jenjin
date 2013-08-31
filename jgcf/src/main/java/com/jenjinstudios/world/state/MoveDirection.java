@@ -1,4 +1,4 @@
-package com.jenjinstudios.jgcf.world.state;
+package com.jenjinstudios.world.state;
 
 import static java.lang.Math.PI;
 

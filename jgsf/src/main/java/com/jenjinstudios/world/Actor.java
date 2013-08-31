@@ -1,11 +1,10 @@
-package com.jenjinstudios.jgsf.world.actor;
+package com.jenjinstudios.world;
 
-import com.jenjinstudios.jgcf.world.state.MoveState;
-import com.jenjinstudios.jgsf.world.GameObject;
+import com.jenjinstudios.world.state.MoveState;
 
 import java.util.LinkedList;
 
-import static com.jenjinstudios.jgcf.world.state.MoveDirection.IDLE;
+import static com.jenjinstudios.world.state.MoveDirection.IDLE;
 
 /**
  * Implement a GameObject which is capable of movement.
@@ -26,16 +25,32 @@ public class Actor extends GameObject
 {
 	/** The length of each step. */
 	public static final float STEP_LENGTH = 5;
+	/** The default name of this actor. */
+	public static final String DEFAULT_NAME = "Actor";
 	/** The next move. */
 	private final LinkedList<MoveState> nextMoveStates;
 	/** The current move. */
 	private MoveState currentMoveState;
 	/** The number of steps taken since the last move. */
 	private int stepsTaken = 0;
+	/** The name of this actor. */
+	private String name;
 
 	/** Construct a new Actor. */
 	public Actor()
 	{
+		this(DEFAULT_NAME);
+
+	}
+
+	/**
+	 * Construct an Actor with the given name.
+	 *
+	 * @param name The name.
+	 */
+	public Actor(String name)
+	{
+		this.name = name;
 		currentMoveState = new MoveState(IDLE, 0, 0);
 		nextMoveStates = new LinkedList<>();
 	}
@@ -122,5 +137,15 @@ public class Actor extends GameObject
 			currentMoveState = nextMoveStates.remove();
 			stepsTaken = 0;
 		}
+	}
+
+	/**
+	 * Get the name of this actor.
+	 *
+	 * @return The name of this actor.
+	 */
+	public String getName()
+	{
+		return name;
 	}
 }

@@ -1,4 +1,4 @@
-package com.jenjinstudios.jgcf.world.state;
+package com.jenjinstudios.world.state;
 
 /**
  * The {@code MovementState} class is used to establish what an {@code Actor}'s movement state is.  The
@@ -14,7 +14,9 @@ public class MoveState
 	/** The direction of movement. */
 	public final MoveDirection direction;
 	/** The angle of movement. */
-	public final float moveAngle;
+	public final double moveAngle;
+	/** Caches the MoveDirection values. */
+	private final MoveDirection[] values = MoveDirection.values();
 
 	/**
 	 * Construct a new MoveState.
@@ -23,9 +25,9 @@ public class MoveState
 	 * @param stepsInLastMove The steps in the last movement.
 	 * @param moveAngle       The angle of movement.
 	 */
-	public MoveState(MoveDirection direction, int stepsInLastMove, float moveAngle)
+	public MoveState(int direction, int stepsInLastMove, double moveAngle)
 	{
-		this.direction = direction;
+		this.direction = values[direction];
 		this.stepsInLastMove = stepsInLastMove;
 		this.moveAngle = moveAngle;
 	}
