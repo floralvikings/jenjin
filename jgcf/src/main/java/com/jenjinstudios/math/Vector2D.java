@@ -1,4 +1,4 @@
-package com.jenjinstudios.jgsf.world.math;
+package com.jenjinstudios.math;
 
 /**
  * Stores a set of x and z coordinates.

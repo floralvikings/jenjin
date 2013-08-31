@@ -1,4 +1,4 @@
-package com.jenjinstudios.jgsf.world;
+package com.jenjinstudios.world;
 
 /**
  * Represents a location in the location grid of a Zone.

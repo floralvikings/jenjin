@@ -1,15 +1,14 @@
-package com.jenjinstudios.jgcf.world.message;
+package com.jenjinstudios.jgcf.message;
 
 import com.jenjinstudios.jgcf.Client;
-import com.jenjinstudios.jgcf.message.ClientExecutableMessage;
 import com.jenjinstudios.message.Message;
 
 /**
- * Process an ActorVisibleMessage.
+ * Process a StateChangeMessage.
  *
  * @author Caleb Brinkman
  */
-public class ExecutableActorVisibleMessage extends ClientExecutableMessage
+public class ExecutableStateChangeMessage extends ClientExecutableMessage
 {
 	/**
 	 * Construct an ExecutableMessage with the given Message.
@@ -17,7 +16,7 @@ public class ExecutableActorVisibleMessage extends ClientExecutableMessage
 	 * @param client  The client invoking this message.
 	 * @param message The Message.
 	 */
-	protected ExecutableActorVisibleMessage(Client client, Message message)
+	protected ExecutableStateChangeMessage(Client client, Message message)
 	{
 		super(client, message);
 	}

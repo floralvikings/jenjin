@@ -1,6 +1,6 @@
-package com.jenjinstudios.jgsf.world;
+package com.jenjinstudios.world;
 
-import com.jenjinstudios.jgsf.world.math.Vector2D;
+import com.jenjinstudios.math.Vector2D;
 
 /**
  * Represents an object that exists in the game world.

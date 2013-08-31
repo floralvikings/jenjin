@@ -1,4 +1,4 @@
-package com.jenjinstudios.jgcf.world;
+package com.jenjinstudios.world;
 
 /**
  * The {@code LocationInfo} class is used to construct location properties as received from the server.

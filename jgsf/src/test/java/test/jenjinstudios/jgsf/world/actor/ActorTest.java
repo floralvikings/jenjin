@@ -1,11 +1,11 @@
 package test.jenjinstudios.jgsf.world.actor;
 
-import com.jenjinstudios.jgcf.world.state.MoveDirection;
-import com.jenjinstudios.jgcf.world.state.MoveState;
-import com.jenjinstudios.jgsf.world.World;
-import com.jenjinstudios.jgsf.world.WorldServer;
-import com.jenjinstudios.jgsf.world.actor.Actor;
-import com.jenjinstudios.jgsf.world.math.Vector2D;
+import com.jenjinstudios.jgsf.WorldServer;
+import com.jenjinstudios.math.Vector2D;
+import com.jenjinstudios.world.Actor;
+import com.jenjinstudios.world.World;
+import com.jenjinstudios.world.state.MoveDirection;
+import com.jenjinstudios.world.state.MoveState;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -74,5 +74,12 @@ public class ActorTest
 		Assert.assertEquals("State 5: ", new Vector2D(-35.355, 35.355), actor.getVector2D());
 		Thread.sleep(server.PERIOD * 10);
 		Assert.assertEquals("State 6: ", new Vector2D(-35.355, 35.355), actor.getVector2D());
+	}
+
+	/** Test the login and logout functionality of the WorldServer. */
+	@Test
+	public void testLoginLogout()
+	{
+
 	}
 }

@@ -18,7 +18,7 @@ import static org.junit.Assert.*;
  *
  * @author Caleb Brinkman
  */
-public class ClientTest
+public class ServerTest
 {
 	/** The chat server used for testing. */
 	private static Server<ClientHandler> server;
