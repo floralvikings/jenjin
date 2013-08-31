@@ -101,6 +101,7 @@ public class MessageType
 	 * @param messageElement The message XML element.
 	 * @return The class derived from the XML element.
 	 */
+	@SuppressWarnings("unchecked")
 	private static Class<? extends ExecutableMessage> getExecutableMessageClass(Element messageElement)
 	{
 		NodeList executableNodes = messageElement.getElementsByTagName("executable");

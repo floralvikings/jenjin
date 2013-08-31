@@ -18,7 +18,7 @@ import static org.junit.Assert.*;
  *
  * @author Caleb Brinkman
  */
-public class ClientTest
+public class ServerTest
 {
 	/** The chat server used for testing. */
 	private static Server<ClientHandler> server;
@@ -38,8 +38,8 @@ public class ClientTest
 	public static void construct() throws SQLException
 	{
 		/* The SQLHandler used for testing. */
-		SQLHandler sqlHandler = new SQLHandler("localhost", "jenjinst_chatservertest", "jenjinst_cstest",
-				"chat_test");
+		SQLHandler sqlHandler = new SQLHandler("localhost", "jenjin_test", "jenjin_user",
+				"jenjin_password");
 		assertTrue(sqlHandler.isConnected());
 		server = new Server<>(50, 51019, ClientHandler.class);
 		server.setSQLHandler(sqlHandler);
@@ -62,7 +62,7 @@ public class ClientTest
 	{
 		while ((System.currentTimeMillis() - startTime) < 1500)
 			Thread.sleep(1);
-		assertEquals(50, server.getAverageUPS(), 0.05);
+		assertEquals(50, server.getAverageUPS(), 0.1);
 		server.shutdown();
 	}
 

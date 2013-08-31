@@ -40,7 +40,14 @@ public class ExecutableLoginRequest extends ServerExecutableMessage
 		String username = (String) getMessage().getArgument("username");
 		String password = (String) getMessage().getArgument("password");
 		boolean success = sqlHandler.logInUser(username, password);
-		getClientHandler().sendLoginStatus(success);
+
+		getClientHandler().setLoginStatus(success);
+
+		Message loginResponse = new Message("LoginResponse");
+		loginResponse.setArgument("success", success);
+		loginResponse.setArgument("loginTime", getClientHandler().getLoggedInTime());
+		getClientHandler().queueMessage(loginResponse);
+
 		if (success)
 			getClientHandler().setUsername(username);
 	}

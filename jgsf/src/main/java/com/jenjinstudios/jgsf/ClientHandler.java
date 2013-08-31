@@ -188,14 +188,11 @@ public class ClientHandler extends Thread
 	 *
 	 * @param success Whether the attempt was successful.
 	 */
-	public void sendLoginStatus(boolean success)
+	public void setLoginStatus(boolean success)
 	{
 		loggedIn = success;
 		loggedInTime = server.getCycleStartTime();
-		Message loginResponse = new Message("LoginResponse");
-		loginResponse.setArgument("success", success);
-		loginResponse.setArgument("loginTime", loggedInTime);
-		queueMessage(loginResponse);
+
 	}
 
 	/**
