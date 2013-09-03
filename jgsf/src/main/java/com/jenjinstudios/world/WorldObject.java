@@ -7,7 +7,7 @@ import com.jenjinstudios.math.Vector2D;
  *
  * @author Caleb Brinkman
  */
-public class GameObject
+public class WorldObject
 {
 	/** The vector2D in the world at which the object is located. */
 	private Vector2D vector2D;
@@ -20,8 +20,8 @@ public class GameObject
 	/** The world in which this object exists. */
 	private World world;
 
-	/** Construct a new GameObject. */
-	public GameObject()
+	/** Construct a new WorldObject. */
+	public WorldObject()
 	{
 		vector2D = new Vector2D(0, 0);
 	}
@@ -152,7 +152,7 @@ public class GameObject
 		this.world = world;
 	}
 
-	/** Update this GameObject. */
+	/** Update this WorldObject. */
 	public void update()
 	{
 

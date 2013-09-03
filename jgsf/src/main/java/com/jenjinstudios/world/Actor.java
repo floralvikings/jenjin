@@ -7,7 +7,7 @@ import java.util.LinkedList;
 import static com.jenjinstudios.world.state.MoveDirection.IDLE;
 
 /**
- * Implement a GameObject which is capable of movement.
+ * Implement a WorldObject which is capable of movement.
  * </p>
  * Actors start with a {@code MoveState} with {@code MoveiDirection.IDLE}.  Each update, the Actor checks to see
  * if there are any MoveStates in the queue.  If there are, it checks the first state in line for the number of steps
@@ -21,7 +21,7 @@ import static com.jenjinstudios.world.state.MoveDirection.IDLE;
  *
  * @author Caleb Brinkman
  */
-public class Actor extends GameObject
+public class Actor extends WorldObject
 {
 	/** The length of each step. */
 	public static final float STEP_LENGTH = 5;

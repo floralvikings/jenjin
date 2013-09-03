@@ -1,22 +1,22 @@
 package test.jenjinstudios.world;
 
 import com.jenjinstudios.math.Vector2D;
-import com.jenjinstudios.world.GameObject;
 import com.jenjinstudios.world.World;
+import com.jenjinstudios.world.WorldObject;
 import com.jenjinstudios.world.Zone;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 /**
- * Test GameObject class.
+ * Test WorldObject class.
  *
  * @author Caleb Brinkman
  */
-public class GameObjectTest
+public class WorldObjectTest
 {
-	/** The GameObject used for testing. */
-	private GameObject gameObject;
+	/** The WorldObject used for testing. */
+	private WorldObject worldObject;
 	/** The direction used for testing. */
 	private float direction;
 	/** The x coordinate used for testing. */
@@ -38,7 +38,7 @@ public class GameObjectTest
 	@Before
 	public void setUp() throws Exception
 	{
-		gameObject = new GameObject();
+		worldObject = new WorldObject();
 		direction = 2.15f;
 		xCoordinate = 5.20f;
 		zCoordinate = 7.23f;
@@ -46,8 +46,8 @@ public class GameObjectTest
 		id = 123;
 		world = new World();
 		/* The zone used for testing. */
-		gameObject.setVector2D(vector2D);
-		world.addObject(gameObject);
+		worldObject.setVector2D(vector2D);
+		world.addObject(worldObject);
 	}
 
 	/**
@@ -58,8 +58,8 @@ public class GameObjectTest
 	@Test
 	public void testSetDirection() throws Exception
 	{
-		gameObject.setDirection(direction);
-		Assert.assertEquals(direction, gameObject.getDirection(), 0);
+		worldObject.setDirection(direction);
+		Assert.assertEquals(direction, worldObject.getDirection(), 0);
 	}
 
 	/**
@@ -70,11 +70,11 @@ public class GameObjectTest
 	@Test
 	public void testSetCoordinates() throws Exception
 	{
-		gameObject.setVector2D(vector2D);
-		Assert.assertTrue(vector2D.equals(gameObject.getVector2D()));
+		worldObject.setVector2D(vector2D);
+		Assert.assertTrue(vector2D.equals(worldObject.getVector2D()));
 
-		gameObject.setVector2D(xCoordinate, zCoordinate);
-		Assert.assertTrue(vector2D.equals(gameObject.getVector2D()));
+		worldObject.setVector2D(xCoordinate, zCoordinate);
+		Assert.assertTrue(vector2D.equals(worldObject.getVector2D()));
 	}
 
 	/**
@@ -86,8 +86,8 @@ public class GameObjectTest
 	public void testSetZone() throws Exception
 	{
 		Zone newZone = new Zone(5, 7);
-		gameObject.setZone(newZone);
-		Assert.assertTrue(newZone == gameObject.getZone());
+		worldObject.setZone(newZone);
+		Assert.assertTrue(newZone == worldObject.getZone());
 	}
 
 	/**
@@ -98,8 +98,8 @@ public class GameObjectTest
 	@Test
 	public void testGetLocation() throws Exception
 	{
-		gameObject.setVector2D(vector2D);
-		Assert.assertTrue(gameObject.getLocation() == world.getLocationForCoordinates(vector2D));
+		worldObject.setVector2D(vector2D);
+		Assert.assertTrue(worldObject.getLocation() == world.getLocationForCoordinates(vector2D));
 	}
 
 	/**
@@ -110,9 +110,9 @@ public class GameObjectTest
 	@Test
 	public void testSetId() throws Exception
 	{
-		GameObject gameObject1 = new GameObject();
-		gameObject1.setId(id);
-		Assert.assertEquals(id, gameObject1.getId());
+		WorldObject worldObject1 = new WorldObject();
+		worldObject1.setId(id);
+		Assert.assertEquals(id, worldObject1.getId());
 	}
 
 	/**
@@ -123,6 +123,6 @@ public class GameObjectTest
 	@Test
 	public void testSetWorld() throws Exception
 	{
-		Assert.assertTrue(world == gameObject.getWorld());
+		Assert.assertTrue(world == worldObject.getWorld());
 	}
 }

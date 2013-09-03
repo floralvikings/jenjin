@@ -13,7 +13,7 @@ public class Zone
 	/** The size of the Zone's Location Grid. */
 	public static final int SIZE = 5;
 	/** The GameObjects contained in this Zone. */
-	private final TreeMap<Integer, GameObject> gameObjects;
+	private final TreeMap<Integer, WorldObject> gameObjects;
 	/** The x coordinate of this Zone in the World zone grid. */
 	private final int xCoordinate;
 	/** The z coordinate of this Zone in the World zone grid. */
@@ -43,7 +43,7 @@ public class Zone
 	 *
 	 * @param o The object to add.
 	 */
-	public void addObject(GameObject o)
+	public void addObject(WorldObject o)
 	{
 		if (o.getZone() != null) o.getZone().removeObject(o.getId());
 		gameObjects.put(o.getId(), o);

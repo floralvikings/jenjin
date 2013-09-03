@@ -16,13 +16,13 @@ public class World
 	/** The zone grid. */
 	private final Zone[][] zones;
 	/** The GameObjects contained in the world. */
-	private final ArrayList<GameObject> gameObjects;
+	private final ArrayList<WorldObject> worldObjects;
 
 	/** Construct a new World. */
 	public World()
 	{
 		zones = new Zone[SIZE][SIZE];
-		gameObjects = new ArrayList<>();
+		worldObjects = new ArrayList<>();
 		for (int x = 0; x < SIZE; x++)
 			for (int z = 0; z < SIZE; z++)
 				zones[x][z] = new Zone(x, z);
@@ -33,13 +33,13 @@ public class World
 	 *
 	 * @param object The object to add.
 	 */
-	public void addObject(GameObject object)
+	public void addObject(WorldObject object)
 	{
 		if (object == null)
-			throw new IllegalArgumentException("addObject(GameObject obj) argument 0 not allowed to be null!");
+			throw new IllegalArgumentException("addObject(WorldObject obj) argument 0 not allowed to be null!");
 		object.setWorld(this);
-		object.setId(gameObjects.size());
-		gameObjects.add(object);
+		object.setId(worldObjects.size());
+		worldObjects.add(object);
 		getZoneForCoordinates(object.getVector2D()).addObject(object);
 	}
 
@@ -92,7 +92,7 @@ public class World
 	/** Update all objects in the world. */
 	public void update()
 	{
-		for (GameObject o : gameObjects)
+		for (WorldObject o : worldObjects)
 			o.update();
 	}
 }
