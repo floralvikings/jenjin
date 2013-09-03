@@ -16,7 +16,7 @@ public class MoveState
 	/** The angle of movement. */
 	public final double moveAngle;
 	/** Caches the MoveDirection values. */
-	private final MoveDirection[] values = MoveDirection.values();
+	private static final MoveDirection[] values = MoveDirection.values();
 
 	/**
 	 * Construct a new MoveState.
@@ -27,7 +27,19 @@ public class MoveState
 	 */
 	public MoveState(int direction, int stepsInLastMove, double moveAngle)
 	{
-		this.direction = values[direction];
+		this(values[direction], stepsInLastMove, moveAngle);
+	}
+
+	/**
+	 * Construct a new MoveState.
+	 *
+	 * @param direction       The direction of movement.
+	 * @param stepsInLastMove The steps in the last movement.
+	 * @param moveAngle       The angle of movement.
+	 */
+	public MoveState(MoveDirection direction, int stepsInLastMove, double moveAngle)
+	{
+		this.direction = direction;
 		this.stepsInLastMove = stepsInLastMove;
 		this.moveAngle = moveAngle;
 	}
