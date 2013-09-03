@@ -1,4 +1,4 @@
-package test.jenjinstudios.jgsf.world;
+package test.jenjinstudios.world;
 
 import com.jenjinstudios.math.Vector2D;
 import com.jenjinstudios.world.GameObject;

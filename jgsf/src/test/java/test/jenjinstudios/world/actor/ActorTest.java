@@ -1,4 +1,4 @@
-package test.jenjinstudios.jgsf.world.actor;
+package test.jenjinstudios.world.actor;
 
 import com.jenjinstudios.jgsf.WorldServer;
 import com.jenjinstudios.math.Vector2D;
