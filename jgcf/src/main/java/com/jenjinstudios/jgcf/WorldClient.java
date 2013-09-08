@@ -9,17 +9,20 @@ import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/** @author Caleb Brinkman */
+/**
+ * The WorldClient class is used to connect to a WorldServer and stores information about the environment immediately
+ * surrounding the player.
+ *
+ * @author Caleb Brinkman
+ */
 public class WorldClient extends Client
 {
 	/** The logger associated with this class. */
 	private static final Logger LOGGER = Logger.getLogger(WorldClient.class.getName());
 	/** Actors other than the player. */
-	private final TreeMap<Integer, ClientObject> nonPlayerObjects;
+	private final TreeMap<Integer, ClientObject> visibleObjects;
 	/** The password used to login to the world. */
 	private final String password;
-	/** The loop used to update non-player objects. */
-	private final UpdateLoop updateLoop;
 	/** The actor representing the player controlled by this client. */
 	private ClientActor player;
 
@@ -35,10 +38,11 @@ public class WorldClient extends Client
 	public WorldClient(String address, int port, String username, String password)
 	{
 		super(address, port, username, password);
-		nonPlayerObjects = new TreeMap<>();
+		visibleObjects = new TreeMap<>();
 		this.password = password;
 		// Create the update loop and add it to the task list.
-		updateLoop = new UpdateLoop();
+		/* The loop used to update non-player objects. */
+		UpdateLoop updateLoop = new UpdateLoop();
 		addRepeatedTask(updateLoop);
 	}
 
@@ -97,12 +101,24 @@ public class WorldClient extends Client
 		@Override
 		public void run()
 		{
-			Set<Integer> keys = nonPlayerObjects.keySet();
+			Set<Integer> keys = visibleObjects.keySet();
 			for (int i : keys)
 			{
-				ClientObject currentObject = nonPlayerObjects.get(i);
+				ClientObject currentObject = visibleObjects.get(i);
 				currentObject.update();
 			}
 		}
+	}
+
+	/**
+	 * Set the player being controlled by this client.
+	 *
+	 * @param player The player to be controlled by this client.
+	 */
+	public void setPlayer(ClientActor player)
+	{
+		if (this.player != null)
+			throw new IllegalStateException("Player already set!");
+		this.player = player;
 	}
 }
