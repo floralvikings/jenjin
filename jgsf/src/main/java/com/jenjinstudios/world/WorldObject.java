@@ -17,6 +17,8 @@ public class WorldObject
 	private int id = Integer.MIN_VALUE;
 	/** The world in which this object exists. */
 	private World world;
+	/** The location in which this object is residing. */
+	private Location location;
 
 	/** Construct a new WorldObject. */
 	public WorldObject()
@@ -62,6 +64,16 @@ public class WorldObject
 	public void setVector2D(Vector2D vector2D)
 	{
 		this.vector2D = new Vector2D(vector2D);
+		Location oldLocation = location;
+		// TODO This call is somewhat intensive, and will probably need some optimization.
+		// We can probably just store the "edge" of the current location, and check against that.  It depends on
+		// how intensive the calculation of the location within the world turns out to be.
+		location = world.getLocationForCoordinates(this.vector2D);
+		if (oldLocation != location)
+		{
+			oldLocation.removeObject(this);
+			location.addObject(this);
+		}
 	}
 
 	/**
@@ -72,8 +84,7 @@ public class WorldObject
 	 */
 	public void setVector2D(double x, double z)
 	{
-		vector2D.setXCoordinate(x);
-		vector2D.setZCoordinate(z);
+		setVector2D(new Vector2D(x, z));
 	}
 
 	/**
@@ -93,7 +104,7 @@ public class WorldObject
 	 */
 	public Location getLocation()
 	{
-		return world.getLocationForCoordinates(vector2D);
+		return location;
 	}
 
 	/**
