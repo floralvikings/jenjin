@@ -1,5 +1,7 @@
 package com.jenjinstudios.world;
 
+import java.util.TreeMap;
+
 /**
  * Represents a location in the world's location grid.
  *
@@ -15,6 +17,8 @@ public class Location
 	public final int Z_COORDINATE;
 	/** The property of this location. */
 	private Property property;
+	/** The objects residing in this location. */
+	private final TreeMap<Integer, WorldObject> objects;
 
 	/**
 	 * Construct a new location at the given position in a zone grid.
@@ -27,6 +31,7 @@ public class Location
 		X_COORDINATE = x;
 		Z_COORDINATE = z;
 		property = Property.OPEN;
+		objects = new TreeMap<>();
 	}
 
 	/**
@@ -56,5 +61,17 @@ public class Location
 		OPEN,
 		/** Specifies that the location is closed, and cannot be entered by objects. */
 		CLOSED
+	}
+
+	/**
+	 * Get the objects residing in this location, as an array.
+	 *
+	 * @return An array containing all objects residing in this location.
+	 */
+	public WorldObject[] getObjects()
+	{
+		WorldObject[] r = new WorldObject[objects.size()];
+		objects.values().toArray(r);
+		return r;
 	}
 }
