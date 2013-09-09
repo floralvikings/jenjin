@@ -15,10 +15,10 @@ public class Location
 	public final int X_COORDINATE;
 	/** The z coordinate of the location in it's zone's grid. */
 	public final int Z_COORDINATE;
-	/** The property of this location. */
-	private Property property;
 	/** The objects residing in this location. */
 	private final TreeMap<Integer, WorldObject> objects;
+	/** The property of this location. */
+	private Property property;
 
 	/**
 	 * Construct a new location at the given position in a zone grid.
@@ -54,15 +54,6 @@ public class Location
 		this.property = property;
 	}
 
-	/** Specifies a property of a location. */
-	public enum Property
-	{
-		/** Specifies that the location is open, and can be entered by objects. */
-		OPEN,
-		/** Specifies that the location is closed, and cannot be entered by objects. */
-		CLOSED
-	}
-
 	/**
 	 * Get the objects residing in this location, as an array.
 	 *
@@ -73,5 +64,34 @@ public class Location
 		WorldObject[] r = new WorldObject[objects.size()];
 		objects.values().toArray(r);
 		return r;
+	}
+
+	/**
+	 * Add the object to this location's object map.
+	 *
+	 * @param object The object to add.
+	 */
+	public void addObject(WorldObject object)
+	{
+		objects.put(object.getId(), object);
+	}
+
+	/**
+	 * Remove an object from this location's object map.
+	 *
+	 * @param object The object to remove.
+	 */
+	public void removeObject(WorldObject object)
+	{
+		objects.remove(object.getId());
+	}
+
+	/** Specifies a property of a location. */
+	public enum Property
+	{
+		/** Specifies that the location is open, and can be entered by objects. */
+		OPEN,
+		/** Specifies that the location is closed, and cannot be entered by objects. */
+		CLOSED
 	}
 }
