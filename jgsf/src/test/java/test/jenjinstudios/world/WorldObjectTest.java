@@ -3,7 +3,6 @@ package test.jenjinstudios.world;
 import com.jenjinstudios.math.Vector2D;
 import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.WorldObject;
-import com.jenjinstudios.world.Zone;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -75,19 +74,6 @@ public class WorldObjectTest
 
 		worldObject.setVector2D(xCoordinate, zCoordinate);
 		Assert.assertTrue(vector2D.equals(worldObject.getVector2D()));
-	}
-
-	/**
-	 * Test the zone methods.
-	 *
-	 * @throws Exception If there is an exception.
-	 */
-	@Test
-	public void testSetZone() throws Exception
-	{
-		Zone newZone = new Zone(5, 7);
-		worldObject.setZone(newZone);
-		Assert.assertTrue(newZone == worldObject.getZone());
 	}
 
 	/**

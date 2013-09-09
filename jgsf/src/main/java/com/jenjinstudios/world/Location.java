@@ -1,7 +1,7 @@
 package com.jenjinstudios.world;
 
 /**
- * Represents a location in the location grid of a Zone.
+ * Represents a location in the world's location grid.
  *
  * @author Caleb Brinkman
  */

@@ -11,8 +11,6 @@ public class WorldObject
 {
 	/** The vector2D in the world at which the object is located. */
 	private Vector2D vector2D;
-	/** The zone in which this object is located. */
-	private Zone zone;
 	/** The direction in which this object is facing. */
 	private float direction;
 	/** The ID number of this object. */
@@ -86,26 +84,6 @@ public class WorldObject
 	public int getId()
 	{
 		return id;
-	}
-
-	/**
-	 * Get this object's zone.
-	 *
-	 * @return this object's zone.
-	 */
-	public Zone getZone()
-	{
-		return zone;
-	}
-
-	/**
-	 * Set this object's zone.
-	 *
-	 * @param zone The new zone.
-	 */
-	public void setZone(Zone zone)
-	{
-		this.zone = zone;
 	}
 
 	/**

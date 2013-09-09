@@ -11,21 +11,21 @@ import java.util.ArrayList;
  */
 public class World
 {
-	/** The size of the world's zone grid. */
+	/** The size of the world's location grid. */
 	public final int SIZE = 3;
-	/** The zone grid. */
-	private final Zone[][] zones;
+	/** The grid of locations in the game world. */
+	private final Location[][] locationGrid;
 	/** The GameObjects contained in the world. */
 	private final ArrayList<WorldObject> worldObjects;
 
 	/** Construct a new World. */
 	public World()
 	{
-		zones = new Zone[SIZE][SIZE];
+		locationGrid = new Location[SIZE][SIZE];
 		worldObjects = new ArrayList<>();
 		for (int x = 0; x < SIZE; x++)
 			for (int z = 0; z < SIZE; z++)
-				zones[x][z] = new Zone(x, z);
+				locationGrid[x][z] = new Location(x, z);
 	}
 
 	/**
@@ -40,30 +40,6 @@ public class World
 		object.setWorld(this);
 		object.setId(worldObjects.size());
 		worldObjects.add(object);
-		getZoneForCoordinates(object.getVector2D()).addObject(object);
-	}
-
-	/**
-	 * Get the zone from the zone grid that contains the specified vector2D.
-	 *
-	 * @param vector2D The vector2D
-	 * @return The zone that contains the specified vector2D.
-	 */
-	public Zone getZoneForCoordinates(Vector2D vector2D)
-	{
-		return getZoneForCoordinates(vector2D.getXCoordinate(), vector2D.getZCoordinate());
-	}
-
-	/**
-	 * Get the zone that contains the specified coordinates.
-	 *
-	 * @param x The x coordinate.
-	 * @param z The z coordinate
-	 * @return The zone that contains the specified coordinates.
-	 */
-	public Zone getZoneForCoordinates(double x, double z)
-	{
-		return zones[(int) x / Zone.SIZE][(int) z / Zone.SIZE];
 	}
 
 	/**
@@ -75,7 +51,7 @@ public class World
 	 */
 	public Location getLocationForCoordinates(double x, double z)
 	{
-		return getZoneForCoordinates(x, z).getLocation((int) x % Zone.SIZE, (int) z % Zone.SIZE);
+		return locationGrid[(int) x / Location.SIZE][(int) z / Location.SIZE];
 	}
 
 	/**
