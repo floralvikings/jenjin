@@ -121,6 +121,7 @@ public class Actor extends WorldObject
 
 		if (!isIdle)
 		{
+			// TODO This will be used a lot; could it be optimized?
 			double twoPi = (2 * Math.PI);
 			stepAngle = stepAngle < 0 ? twoPi + stepAngle : stepAngle % twoPi;
 			setVector2D(getVector2D().getVectorInDirection(STEP_LENGTH, stepAngle));
