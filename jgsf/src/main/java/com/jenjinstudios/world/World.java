@@ -12,7 +12,7 @@ import java.util.ArrayList;
 public class World
 {
 	/** The size of the world's location grid. */
-	public final int SIZE = 3;
+	public final int SIZE = 10;
 	/** The grid of locations in the game world. */
 	private final Location[][] locationGrid;
 	/** The GameObjects contained in the world. */
@@ -70,5 +70,38 @@ public class World
 	{
 		for (WorldObject o : worldObjects)
 			o.update();
+	}
+
+	/**
+	 * Get an area of location objects.
+	 *
+	 * @param center The center of the area to return.
+	 * @param radius The radius of the area.
+	 * @return An ArrayList containing all valid locations in the specified area.
+	 */
+	public ArrayList<Location> getLocationArea(Location center, int radius)
+	{
+		// Make the array list with an initial size of area
+		ArrayList<Location> areaGrid = new ArrayList<>();
+		// Get the top-right corner of the grid.
+		int xStart = center.X_COORDINATE - radius;
+		int zStart = center.Z_COORDINATE - radius;
+		int xEnd = center.X_COORDINATE + radius;
+		int zEnd = center.Z_COORDINATE + radius;
+
+		for (int x = xStart; x < xEnd; x++)
+			for (int z = zStart; z < zEnd; z++)
+			{
+				try
+				{
+					areaGrid.add(locationGrid[x][z]);
+				} catch (ArrayIndexOutOfBoundsException ignored)
+				{
+					// Just means we're near the end of the world =)
+				}
+			}
+
+
+		return areaGrid;
 	}
 }
