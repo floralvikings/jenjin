@@ -25,7 +25,7 @@ import static com.jenjinstudios.world.state.MoveDirection.IDLE;
 public class Actor extends WorldObject
 {
 	/** The radius of the square of visible locations. */
-	public static final int VIEW_RADIUS = 5;
+	public static final int VIEW_RADIUS = 4;
 	/** The length of each step. */
 	public static final float STEP_LENGTH = 5;
 	/** The default name of this actor. */
@@ -85,7 +85,7 @@ public class Actor extends WorldObject
 		// Take a step.
 		step();
 		// If we're in a new locations after stepping, update the visible array.
-		if (oldLocation != getLocation())
+		if (oldLocation != getLocation() || visibleLocations.isEmpty())
 			resetVisibleLocations();
 		// Reset the array of visible actors.
 		resetVisibleObjects();
