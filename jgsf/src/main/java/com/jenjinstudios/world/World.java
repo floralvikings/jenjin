@@ -17,6 +17,8 @@ public class World
 	private final Location[][] locationGrid;
 	/** The GameObjects contained in the world. */
 	private final ArrayList<WorldObject> worldObjects;
+	/** The number of objects currently in the world. */
+	private int objectCount;
 
 	/** Construct a new World. */
 	public World()
@@ -40,6 +42,19 @@ public class World
 		object.setWorld(this);
 		object.setId(worldObjects.size());
 		worldObjects.add(object);
+		objectCount++;
+	}
+
+	/**
+	 * Remove an object from the world.  Specifically, sets the index of the given object in the world's array to
+	 * null.
+	 *
+	 * @param object The object to remove.
+	 */
+	public void removeObject(WorldObject object)
+	{
+		worldObjects.set(object.getId(), null);
+		objectCount--;
 	}
 
 	/**
@@ -103,5 +118,15 @@ public class World
 
 
 		return areaGrid;
+	}
+
+	/**
+	 * Get the number of objects currently in the world.
+	 *
+	 * @return The number of objects currently in the world.
+	 */
+	public int getObjectCount()
+	{
+		return objectCount;
 	}
 }
