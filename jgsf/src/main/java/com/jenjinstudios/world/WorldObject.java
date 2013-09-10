@@ -143,6 +143,7 @@ public class WorldObject
 			throw new IllegalArgumentException("The world has already been set for this object.");
 		this.world = world;
 		location = world.getLocationForCoordinates(this.vector2D);
+		location.addObject(this);
 	}
 
 	/** Update this WorldObject. */
