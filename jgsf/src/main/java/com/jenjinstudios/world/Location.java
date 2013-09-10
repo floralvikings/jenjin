@@ -1,5 +1,6 @@
 package com.jenjinstudios.world;
 
+import java.util.ArrayList;
 import java.util.TreeMap;
 
 /**
@@ -59,11 +60,9 @@ public class Location
 	 *
 	 * @return An array containing all objects residing in this location.
 	 */
-	public WorldObject[] getObjects()
+	public ArrayList<WorldObject> getObjects()
 	{
-		WorldObject[] r = new WorldObject[objects.size()];
-		objects.values().toArray(r);
-		return r;
+		return new ArrayList<>(objects.values());
 	}
 
 	/**
