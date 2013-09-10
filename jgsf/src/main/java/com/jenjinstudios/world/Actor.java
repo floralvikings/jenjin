@@ -82,10 +82,8 @@ public class Actor extends WorldObject
 	{
 		// Store the current location (before step)
 		Location oldLocation = getLocation();
-		// Get the angle in which the player will be moving.
-		double stepAngle = calculateStepAngle();
 		// Take a step.
-		step(stepAngle);
+		step();
 		// If we're in a new locations after stepping, update the visible array.
 		if (oldLocation != getLocation())
 			resetVisibleLocations();
@@ -110,12 +108,8 @@ public class Actor extends WorldObject
 		visibleObjects.addAll(currentlyVisible);
 	}
 
-	/**
-	 * Take a step using the current movement state.
-	 *
-	 * @param stepAngle The angle in which the actor should step.
-	 */
-	private void step(double stepAngle)
+	/** Take a step using the current movement state. */
+	private void step()
 	{
 		stepsTaken++;
 		MoveState nextState;
@@ -128,14 +122,15 @@ public class Actor extends WorldObject
 		if (nextState != null)
 			changeState();
 
+		// Get the angle in which the player will be moving.
+		double stepAngle = calculateStepAngle();
 
-		if (currentMoveState.direction != IDLE)
-		{
-			// TODO This will be used a lot; could it be optimized?
-			double twoPi = (2 * Math.PI);
-			stepAngle = stepAngle < 0 ? twoPi + stepAngle : stepAngle % twoPi;
-			setVector2D(getVector2D().getVectorInDirection(STEP_LENGTH, stepAngle));
-		}
+		if (currentMoveState.direction == IDLE) return;
+
+		// TODO This will be used a lot; could it be optimized?
+		double twoPi = (2 * Math.PI);
+		stepAngle = stepAngle < 0 ? twoPi + stepAngle : stepAngle % twoPi;
+		setVector2D(getVector2D().getVectorInDirection(STEP_LENGTH, stepAngle));
 	}
 
 	/**

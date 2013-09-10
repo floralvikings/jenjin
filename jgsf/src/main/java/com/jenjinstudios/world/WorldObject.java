@@ -68,11 +68,14 @@ public class WorldObject
 		// TODO This call is somewhat intensive, and will probably need some optimization.
 		// We can probably just store the "edge" of the current location, and check against that.  It depends on
 		// how intensive the calculation of the location within the world turns out to be.
-		location = world.getLocationForCoordinates(this.vector2D);
-		if (oldLocation != location)
+		if (world != null)
 		{
-			oldLocation.removeObject(this);
-			location.addObject(this);
+			location = world.getLocationForCoordinates(this.vector2D);
+			if (oldLocation != location)
+			{
+				oldLocation.removeObject(this);
+				location.addObject(this);
+			}
 		}
 	}
 
@@ -98,16 +101,6 @@ public class WorldObject
 	}
 
 	/**
-	 * Get this object's location.
-	 *
-	 * @return This object's location.
-	 */
-	public Location getLocation()
-	{
-		return location;
-	}
-
-	/**
 	 * Set this object's ID number if it has not already been set.
 	 *
 	 * @param id The new ID number.
@@ -117,6 +110,16 @@ public class WorldObject
 		if (this.id != Integer.MIN_VALUE)
 			throw new IllegalArgumentException("This object's ID has already been set.");
 		this.id = id;
+	}
+
+	/**
+	 * Get this object's location.
+	 *
+	 * @return This object's location.
+	 */
+	public Location getLocation()
+	{
+		return location;
 	}
 
 	/**
@@ -139,6 +142,7 @@ public class WorldObject
 		if (this.world != null)
 			throw new IllegalArgumentException("The world has already been set for this object.");
 		this.world = world;
+		location = world.getLocationForCoordinates(this.vector2D);
 	}
 
 	/** Update this WorldObject. */

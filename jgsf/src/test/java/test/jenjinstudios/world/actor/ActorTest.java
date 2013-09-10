@@ -56,13 +56,17 @@ public class ActorTest
 	public void testAddMoveState() throws Exception
 	{
 		Actor actor = new Actor();
+
+		world.addObject(actor);
+		Assert.assertEquals(1, world.getObjectCount());
+
 		actor.setVector2D(0, 0);
 		actor.addMoveState(new MoveState(MoveDirection.FRONT, 10, 0));
 		actor.addMoveState(new MoveState(MoveDirection.BACK, 10, 0));
 		actor.addMoveState(new MoveState(MoveDirection.IDLE, 10, 0));
-		actor.addMoveState(new MoveState(MoveDirection.BACK_LEFT, 10, 0));
+		actor.addMoveState(new MoveState(MoveDirection.FRONT_LEFT, 10, 0));
 		actor.addMoveState(new MoveState(MoveDirection.IDLE, 10, 0));
-		world.addObject(actor);
+
 		Assert.assertEquals("State 1: ", new Vector2D(0, 0), actor.getVector2D());
 		Thread.sleep(server.PERIOD * 10);
 		Assert.assertEquals("State 2: ", new Vector2D(50, 0), actor.getVector2D());
@@ -71,9 +75,12 @@ public class ActorTest
 		Thread.sleep(server.PERIOD * 10);
 		Assert.assertEquals("State 4: ", new Vector2D(0, 0), actor.getVector2D());
 		Thread.sleep(server.PERIOD * 10);
-		Assert.assertEquals("State 5: ", new Vector2D(-35.355, 35.355), actor.getVector2D());
+		Assert.assertEquals("State 5: ", new Vector2D(35.355, 35.355), actor.getVector2D());
 		Thread.sleep(server.PERIOD * 10);
-		Assert.assertEquals("State 6: ", new Vector2D(-35.355, 35.355), actor.getVector2D());
+		Assert.assertEquals("State 6: ", new Vector2D(35.355, 35.355), actor.getVector2D());
+
+		world.removeObject(actor);
+		Assert.assertEquals(0, world.getObjectCount());
 	}
 
 	/** Test the login and logout functionality of the WorldServer. */
