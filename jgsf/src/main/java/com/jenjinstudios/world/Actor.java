@@ -2,6 +2,7 @@ package com.jenjinstudios.world;
 
 import com.jenjinstudios.world.state.MoveState;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 import static com.jenjinstudios.world.state.MoveDirection.IDLE;
@@ -23,12 +24,18 @@ import static com.jenjinstudios.world.state.MoveDirection.IDLE;
  */
 public class Actor extends WorldObject
 {
+	/** The radius of the square of visible locations. */
+	public static final int VIEW_RADIUS = 5;
 	/** The length of each step. */
 	public static final float STEP_LENGTH = 5;
 	/** The default name of this actor. */
 	public static final String DEFAULT_NAME = "Actor";
 	/** The next move. */
 	private final LinkedList<MoveState> nextMoveStates;
+	/** The array of visible locations. */
+	private final ArrayList<Location> visibleLocations;
+	/** The container for visible objects. */
+	private final ArrayList<WorldObject> visibleObjects;
 	/** The current move. */
 	private MoveState currentMoveState;
 	/** The number of steps taken since the last move. */
@@ -53,6 +60,8 @@ public class Actor extends WorldObject
 		this.name = name;
 		currentMoveState = new MoveState(IDLE, 0, 0);
 		nextMoveStates = new LinkedList<>();
+		visibleObjects = new ArrayList<>();
+		visibleLocations = new ArrayList<>();
 	}
 
 	/**
@@ -71,16 +80,46 @@ public class Actor extends WorldObject
 	@Override
 	public void update()
 	{
-		step();
+		// Store the current location (before step)
+		Location oldLocation = getLocation();
+		// Get the angle in which the player will be moving.
+		double stepAngle = calculateStepAngle();
+		// Take a step.
+		step(stepAngle);
+		// If we're in a new locations after stepping, update the visible array.
+		if (oldLocation != getLocation())
+			resetVisibleLocations();
+		// Reset the array of visible actors.
+		resetVisibleObjects();
 	}
 
-	/** Take a step using the current movement state. */
-	private void step()
+	/** Resets the array of currently visible location. */
+	private void resetVisibleLocations()
+	{
+		visibleLocations.clear();
+		visibleLocations.addAll(getWorld().getLocationArea(getLocation(), VIEW_RADIUS));
+	}
+
+	/** Reset the current list of visible objects. */
+	private void resetVisibleObjects()
+	{
+		ArrayList<WorldObject> currentlyVisible = new ArrayList<>();
+		for (Location loc : visibleLocations)
+			currentlyVisible.addAll(loc.getObjects());
+		visibleObjects.clear();
+		visibleObjects.addAll(currentlyVisible);
+	}
+
+	/**
+	 * Take a step using the current movement state.
+	 *
+	 * @param stepAngle The angle in which the actor should step.
+	 */
+	private void step(double stepAngle)
 	{
 		stepsTaken++;
 		MoveState nextState;
-		double stepAngle = getDirection();
-		boolean isIdle = false;
+
 		synchronized (nextMoveStates)
 		{
 			nextState = nextMoveStates.peek();
@@ -89,10 +128,28 @@ public class Actor extends WorldObject
 		if (nextState != null)
 			changeState();
 
+
+		if (currentMoveState.direction != IDLE)
+		{
+			// TODO This will be used a lot; could it be optimized?
+			double twoPi = (2 * Math.PI);
+			stepAngle = stepAngle < 0 ? twoPi + stepAngle : stepAngle % twoPi;
+			setVector2D(getVector2D().getVectorInDirection(STEP_LENGTH, stepAngle));
+		}
+	}
+
+	/**
+	 * Calculate the angle of the direction in which the actor should step.
+	 *
+	 * @return The angle of the direction in which the actor should step.
+	 */
+	private double calculateStepAngle()
+	{
+		double stepAngle = getDirection();
+
 		switch (currentMoveState.direction)
 		{
 			case IDLE:
-				isIdle = true;
 				break;
 			case FRONT:
 				break;
@@ -118,16 +175,7 @@ public class Actor extends WorldObject
 				stepAngle = (getDirection() + Math.PI * 0.25);
 				break;
 		}
-
-		if (!isIdle)
-		{
-			// TODO This will be used a lot; could it be optimized?
-			double twoPi = (2 * Math.PI);
-			stepAngle = stepAngle < 0 ? twoPi + stepAngle : stepAngle % twoPi;
-			setVector2D(getVector2D().getVectorInDirection(STEP_LENGTH, stepAngle));
-		}
-
-
+		return stepAngle;
 	}
 
 	/** Change to the next state. */
@@ -148,5 +196,15 @@ public class Actor extends WorldObject
 	public String getName()
 	{
 		return name;
+	}
+
+	/**
+	 * The container for visible objects.
+	 *
+	 * @return An ArrayList containing all objects visible to this actor.
+	 */
+	public ArrayList<WorldObject> getVisibleObjects()
+	{
+		return visibleObjects;
 	}
 }
