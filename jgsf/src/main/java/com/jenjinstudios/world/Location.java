@@ -86,6 +86,12 @@ public class Location
 		objects.remove(object.getId());
 	}
 
+	@Override
+	public String toString()
+	{
+		return "(" + X_COORDINATE + ", " + Z_COORDINATE + ")";
+	}
+
 	/** Specifies a property of a location. */
 	public enum Property
 	{
