@@ -42,6 +42,8 @@ public class Actor extends WorldObject
 	private MoveState currentMoveState;
 	/** The number of steps taken since the last move. */
 	private int stepsTaken = 0;
+	/** The number of steps in the last completed move. */
+	private int stepsInLastMove;
 	/** Flags whether this actor has changed to a new state during this update. */
 	private boolean newState;
 
@@ -182,10 +184,12 @@ public class Actor extends WorldObject
 	/** Change to the next state. */
 	private void changeState()
 	{
-		newState = true;
-		if (stepsTaken >= currentMoveState.stepsInLastMove)
+		// TODO The correction of position will need to take place here.
+		if (stepsTaken >= currentMoveState.stepsUntilChange)
 		{
+			stepsInLastMove = currentMoveState.stepsUntilChange;
 			currentMoveState = nextMoveStates.remove();
+			newState = true;
 			stepsTaken = 0;
 		}
 	}
@@ -255,8 +259,18 @@ public class Actor extends WorldObject
 	 *
 	 * @return The number of steps taken since the last state change.
 	 */
-	public int getStepsFromLast()
+	public int getStepsTaken()
 	{
 		return stepsTaken;
+	}
+
+	/**
+	 * Get the steps taken to complete the previous move.
+	 *
+	 * @return The steps taken to complete the previous move.
+	 */
+	public int getStepsInLastMove()
+	{
+		return stepsInLastMove;
 	}
 }

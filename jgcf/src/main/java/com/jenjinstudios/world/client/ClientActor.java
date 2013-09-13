@@ -133,7 +133,7 @@ public class ClientActor extends ClientObject
 	/** Change to the next state. */
 	private void changeState()
 	{
-		if (stepsTaken >= currentMoveState.stepsInLastMove)
+		if (stepsTaken >= currentMoveState.stepsUntilChange)
 		{
 			currentMoveState = nextMoveStates.remove();
 			stepsTaken = 0;

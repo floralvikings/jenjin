@@ -1,5 +1,6 @@
 package com.jenjinstudios.jgsf;
 
+import com.jenjinstudios.message.Message;
 import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.WorldObject;
 
@@ -52,6 +53,16 @@ public class WorldClientHandler extends ClientHandler
 	}
 
 	/**
+	 * Get the actor of this client handler.
+	 *
+	 * @return The actor controlled by this client handler.
+	 */
+	public Actor getActor()
+	{
+		return actor;
+	}
+
+	/**
 	 * Set the Actor managed by this handler.
 	 *
 	 * @param actor The actor to be managed by this handler.
@@ -63,34 +74,52 @@ public class WorldClientHandler extends ClientHandler
 		setPlayerID(actor.getId());
 	}
 
-	/**
-	 * Get the actor of this client handler.
-	 *
-	 * @return The actor controlled by this client handler.
-	 */
-	public Actor getActor()
-	{
-		return actor;
-	}
-
 	@Override
 	public void update()
 	{
 		for (WorldObject object : actor.getNewlyVisibleObjects())
 		{
-			// TODO Send a message for each newly visible object
+			Message newlyVisibleMessage;
+			if (object instanceof Actor)
+			{
+				newlyVisibleMessage = new Message("ActorVisibleMessage");
+				Actor newActor = (Actor) object;
+				newlyVisibleMessage.setArgument("name", newActor.getName());
+				newlyVisibleMessage.setArgument("id", newActor.getId());
+				newlyVisibleMessage.setArgument("xCoordinate", newActor.getVector2D().getXCoordinate());
+				newlyVisibleMessage.setArgument("zCoordinate", newActor.getVector2D().getZCoordinate());
+				newlyVisibleMessage.setArgument("direction", newActor.getCurrentDirection());
+				newlyVisibleMessage.setArgument("angle", newActor.getCurrentAngle());
+				newlyVisibleMessage.setArgument("stepsFromLast", newActor.getStepsTaken());
+
+			} else
+			{
+				newlyVisibleMessage = new Message("ObjectVisibleMessage");
+				newlyVisibleMessage.setArgument("name", object.getName());
+				newlyVisibleMessage.setArgument("id", object.getId());
+				newlyVisibleMessage.setArgument("xCoordinate", object.getVector2D().getXCoordinate());
+				newlyVisibleMessage.setArgument("zCoordinate", object.getVector2D().getZCoordinate());
+			}
+			queueMessage(newlyVisibleMessage);
 		}
 
 		for (WorldObject object : actor.getNewlyInvisibleObjects())
 		{
-			// TODO Send a message for each newly invisible object.
+			Message newlyInvisibleMessage = new Message("ObjectInvisibleMessage");
+			newlyInvisibleMessage.setArgument("id", object.getId());
+			queueMessage(newlyInvisibleMessage);
 		}
 
 		for (WorldObject object : actor.getVisibleObjects())
 		{
-			if (!(object instanceof Actor) || ((Actor) object).isNewState())
+			Actor changedActor;
+			if (!(object instanceof Actor) || (changedActor = (Actor) object).isNewState())
 				continue;
-			// TODO Send new move states.
+			Message newState = new Message("StateChangeMessage");
+			newState.setArgument("id", changedActor.getId());
+			newState.setArgument("direction", changedActor.getCurrentDirection());
+			newState.setArgument("angle", changedActor.getCurrentDirection());
+			newState.setArgument("stepsUntilChange", changedActor.getStepsInLastMove());
 		}
 	}
 }
