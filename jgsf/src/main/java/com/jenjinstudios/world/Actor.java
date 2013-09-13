@@ -249,4 +249,14 @@ public class Actor extends WorldObject
 	{
 		return currentMoveState.moveAngle;
 	}
+
+	/**
+	 * Get the number of steps taken since the last state change.
+	 *
+	 * @return The number of steps taken since the last state change.
+	 */
+	public int getStepsFromLast()
+	{
+		return stepsTaken;
+	}
 }
