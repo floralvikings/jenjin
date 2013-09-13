@@ -36,12 +36,18 @@ public class Actor extends WorldObject
 	private final ArrayList<Location> visibleLocations;
 	/** The container for visible objects. */
 	private final ArrayList<WorldObject> visibleObjects;
+	/** The list of newly visible objects. */
+	private final ArrayList<WorldObject> newlyVisibleObjects;
+	/** The list of newly invisible objects. */
+	private final ArrayList<WorldObject> newlyInvisibleObjects;
 	/** The current move. */
 	private MoveState currentMoveState;
 	/** The number of steps taken since the last move. */
 	private int stepsTaken = 0;
 	/** The name of this actor. */
 	private String name;
+	/** Flags whether this actor has changed to a new state during this update. */
+	private boolean newState;
 
 	/** Construct a new Actor. */
 	public Actor()
@@ -62,6 +68,8 @@ public class Actor extends WorldObject
 		nextMoveStates = new LinkedList<>();
 		visibleObjects = new ArrayList<>();
 		visibleLocations = new ArrayList<>();
+		newlyVisibleObjects = new ArrayList<>();
+		newlyInvisibleObjects = new ArrayList<>();
 	}
 
 	/**
@@ -80,6 +88,7 @@ public class Actor extends WorldObject
 	@Override
 	public void update()
 	{
+		newState = false;
 		// Store the current location (before step)
 		Location oldLocation = getLocation();
 		// Take a step.
@@ -104,7 +113,9 @@ public class Actor extends WorldObject
 		ArrayList<WorldObject> currentlyVisible = new ArrayList<>();
 		for (Location loc : visibleLocations)
 			currentlyVisible.addAll(loc.getObjects());
-		visibleObjects.clear();
+		newlyVisibleObjects.clear();
+		newlyVisibleObjects.addAll(currentlyVisible);
+		newlyVisibleObjects.removeAll(visibleObjects);
 		visibleObjects.addAll(currentlyVisible);
 	}
 
@@ -176,6 +187,7 @@ public class Actor extends WorldObject
 	/** Change to the next state. */
 	private void changeState()
 	{
+		newState = true;
 		if (stepsTaken >= currentMoveState.stepsInLastMove)
 		{
 			currentMoveState = nextMoveStates.remove();
@@ -201,5 +213,35 @@ public class Actor extends WorldObject
 	public ArrayList<WorldObject> getVisibleObjects()
 	{
 		return visibleObjects;
+	}
+
+	/**
+	 * Get newly visible objects.
+	 *
+	 * @return A list of all objects newly visible.
+	 */
+	public ArrayList<WorldObject> getNewlyVisibleObjects()
+	{
+		return newlyVisibleObjects;
+	}
+
+	/**
+	 * Get newly invisible objects.
+	 *
+	 * @return A list of all objects newly invisible.
+	 */
+	public ArrayList<WorldObject> getNewlyInvisibleObjects()
+	{
+		return newlyInvisibleObjects;
+	}
+
+	/**
+	 * Get whether this actor has initialized a new state during this update.
+	 *
+	 * @return Whether the actor has changed moved states since the beginning of this update.
+	 */
+	public boolean isNewState()
+	{
+		return newState;
 	}
 }

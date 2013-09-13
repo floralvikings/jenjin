@@ -1,6 +1,7 @@
 package com.jenjinstudios.jgsf;
 
 import com.jenjinstudios.world.Actor;
+import com.jenjinstudios.world.WorldObject;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -51,16 +52,6 @@ public class WorldClientHandler extends ClientHandler
 	}
 
 	/**
-	 * Get the player's ID.
-	 *
-	 * @return The player id.
-	 */
-	public long getPlayerID()
-	{
-		return playerID;
-	}
-
-	/**
 	 * Set the Actor managed by this handler.
 	 *
 	 * @param actor The actor to be managed by this handler.
@@ -80,5 +71,26 @@ public class WorldClientHandler extends ClientHandler
 	public Actor getActor()
 	{
 		return actor;
+	}
+
+	@Override
+	public void update()
+	{
+		for (WorldObject object : actor.getNewlyVisibleObjects())
+		{
+			// TODO Send a message for each newly visible object
+		}
+
+		for (WorldObject object : actor.getNewlyInvisibleObjects())
+		{
+			// TODO Send a message for each newly invisible object.
+		}
+
+		for (WorldObject object : actor.getVisibleObjects())
+		{
+			if (!(object instanceof Actor) || ((Actor) object).isNewState())
+				continue;
+			// TODO Send new move states.
+		}
 	}
 }
