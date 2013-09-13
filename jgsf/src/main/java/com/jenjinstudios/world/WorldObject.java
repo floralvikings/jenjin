@@ -19,11 +19,26 @@ public class WorldObject
 	private World world;
 	/** The location in which this object is residing. */
 	private Location location;
+	/** The name of this actor. */
+	private String name;
+	/** The default name of this actor. */
+	public static final String DEFAULT_NAME = "Object";
 
 	/** Construct a new WorldObject. */
 	public WorldObject()
 	{
+		this(DEFAULT_NAME);
+	}
+
+	/**
+	 * Construct a new WorldObject.
+	 *
+	 * @param name The name of this object.
+	 */
+	public WorldObject(String name)
+	{
 		vector2D = new Vector2D(0, 0);
+		this.name = name;
 	}
 
 	/**
@@ -144,6 +159,16 @@ public class WorldObject
 		this.world = world;
 		location = world.getLocationForCoordinates(this.vector2D);
 		location.addObject(this);
+	}
+
+	/**
+	 * Get the name of this actor.
+	 *
+	 * @return The name of this actor.
+	 */
+	public String getName()
+	{
+		return name;
 	}
 
 	/** Update this WorldObject. */

@@ -28,8 +28,6 @@ public class Actor extends WorldObject
 	public static final int VIEW_RADIUS = 4;
 	/** The length of each step. */
 	public static final float STEP_LENGTH = 5;
-	/** The default name of this actor. */
-	public static final String DEFAULT_NAME = "Actor";
 	/** The next move. */
 	private final LinkedList<MoveState> nextMoveStates;
 	/** The array of visible locations. */
@@ -44,8 +42,6 @@ public class Actor extends WorldObject
 	private MoveState currentMoveState;
 	/** The number of steps taken since the last move. */
 	private int stepsTaken = 0;
-	/** The name of this actor. */
-	private String name;
 	/** Flags whether this actor has changed to a new state during this update. */
 	private boolean newState;
 
@@ -53,7 +49,6 @@ public class Actor extends WorldObject
 	public Actor()
 	{
 		this(DEFAULT_NAME);
-
 	}
 
 	/**
@@ -63,7 +58,7 @@ public class Actor extends WorldObject
 	 */
 	public Actor(String name)
 	{
-		this.name = name;
+		super(name);
 		currentMoveState = new MoveState(IDLE, 0, 0);
 		nextMoveStates = new LinkedList<>();
 		visibleObjects = new ArrayList<>();
@@ -193,16 +188,6 @@ public class Actor extends WorldObject
 			currentMoveState = nextMoveStates.remove();
 			stepsTaken = 0;
 		}
-	}
-
-	/**
-	 * Get the name of this actor.
-	 *
-	 * @return The name of this actor.
-	 */
-	public String getName()
-	{
-		return name;
 	}
 
 	/**
