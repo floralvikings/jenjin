@@ -239,4 +239,14 @@ public class Actor extends WorldObject
 	{
 		return currentMoveState.direction.ordinal();
 	}
+
+	/**
+	 * Get the direction in which the object is currently facing.
+	 *
+	 * @return The direction in which the object is currently facing.
+	 */
+	public double getCurrentAngle()
+	{
+		return currentMoveState.moveAngle;
+	}
 }
