@@ -42,7 +42,7 @@
         <argument type="int" name="stepsFromLast" />
     </message>
 
-    <message name="ActorVisibleMessage" id="8">
+    <message name="ObjectVisibleMessage" id="8">
         <executable language="java" side="client">com.jenjinstudios.jgcf.message.ExecutableActorVisibleMessage</executable>
         <argument type="String" name="name" encrypt="true" />
         <argument type="int" name="id" />
@@ -53,7 +53,7 @@
         <argument type="int" name="stepsFromLast" />
     </message>
 
-    <message name="ActorInvisibleMessage" id="9">
+    <message name="ObjectInvisibleMessage" id="9">
         <executable language="java" side="client">com.jenjinstudios.jgcf.message.ExecutableActorInvisibleMessage</executable>
         <argument type="int" name="id" />
     </message>
