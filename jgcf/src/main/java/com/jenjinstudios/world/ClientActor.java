@@ -4,8 +4,6 @@ import com.jenjinstudios.world.state.MoveState;
 
 import java.util.LinkedList;
 
-import static com.jenjinstudios.world.state.MoveDirection.IDLE;
-
 /**
  * The {@code ClientActor} class is used to represent a server-side {@code Actor} object on the client side.  It is an
  * object capable of movement.
@@ -36,6 +34,7 @@ public class ClientActor extends ClientObject
 	private int stepsTaken = 0;
 	/** The name of this actor. */
 	private String name;
+	private double angle;
 
 	/**
 	 * Construct a new Actor.
@@ -57,7 +56,6 @@ public class ClientActor extends ClientObject
 	{
 		super(id);
 		this.name = name;
-		currentMoveState = new MoveState(IDLE, 0, 0);
 		nextMoveStates = new LinkedList<>();
 	}
 
@@ -153,5 +151,37 @@ public class ClientActor extends ClientObject
 	public String getName()
 	{
 		return name;
+	}
+
+	/**
+	 * Set the current angle of this actor.
+	 *
+	 * @param angle The angle for the actor.
+	 */
+	public void setAngle(double angle)
+	{
+		this.angle = angle;
+	}
+
+	/**
+	 * Set the number of steps taken since the last move.
+	 *
+	 * @param stepsTaken The number of steps taken since the last move.
+	 */
+	public void setStepsTaken(int stepsTaken)
+	{
+		this.stepsTaken = stepsTaken;
+	}
+
+	/**
+	 * Sets the current move state.  Should only be called when the actor is created.
+	 *
+	 * @param currentMoveState The current move state.
+	 */
+	public void setCurrentMoveState(MoveState currentMoveState)
+	{
+		if (this.currentMoveState != null)
+			throw new IllegalStateException("Cannot set current move state: state already set!");
+		this.currentMoveState = currentMoveState;
 	}
 }

@@ -90,7 +90,8 @@ public class WorldClientHandler extends ClientHandler
 				newlyVisibleMessage.setArgument("zCoordinate", newActor.getVector2D().getZCoordinate());
 				newlyVisibleMessage.setArgument("direction", newActor.getCurrentDirection());
 				newlyVisibleMessage.setArgument("angle", newActor.getCurrentAngle());
-				newlyVisibleMessage.setArgument("stepsFromLast", newActor.getStepsTaken());
+				newlyVisibleMessage.setArgument("stepsTaken", newActor.getStepsTaken());
+				newlyVisibleMessage.setArgument("stepsUntilChange", newActor.getCurrentMoveState().stepsUntilChange);
 
 			} else
 			{

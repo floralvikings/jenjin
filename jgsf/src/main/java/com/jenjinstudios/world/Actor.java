@@ -273,4 +273,14 @@ public class Actor extends WorldObject
 	{
 		return stepsInLastMove;
 	}
+
+	/**
+	 * Get the actor's current move state.
+	 *
+	 * @return The actor's current move state.
+	 */
+	public MoveState getCurrentMoveState()
+	{
+		return currentMoveState;
+	}
 }

@@ -3,6 +3,7 @@ package com.jenjinstudios.jgcf.message;
 import com.jenjinstudios.jgcf.WorldClient;
 import com.jenjinstudios.message.Message;
 import com.jenjinstudios.world.ClientActor;
+import com.jenjinstudios.world.state.MoveState;
 
 /**
  * Process an ActorVisibleMessage.
@@ -40,8 +41,13 @@ public class ExecutableActorVisibleMessage extends WorldClientExecutableMessage
 		double zCoord = (double) message.getArgument("zCoord");
 		int direction = (int) message.getArgument("direction");
 		double angle = (double) message.getArgument("angle");
-		int stepsFromLast = (int) message.getArgument("stepsFromLast");
+		int stepsFromLast = (int) message.getArgument("stepsTaken");
+		int stepsUntilChange = (int) message.getArgument("stepsUntilChange");
 
 		newlyVisible = new ClientActor(id, name);
+		newlyVisible.setVector2D(xCoord, zCoord);
+		MoveState state = new MoveState(direction, stepsUntilChange, angle);
+		newlyVisible.setCurrentMoveState(state);
+		newlyVisible.setStepsTaken(stepsFromLast);
 	}
 }

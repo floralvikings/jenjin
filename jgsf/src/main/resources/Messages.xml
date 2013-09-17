@@ -58,7 +58,8 @@
         <argument type="double" name="zCoordinate" />
         <argument type="int" name="direction" />
         <argument type="double" name="angle" />
-        <argument type="int" name="stepsFromLast" />
+        <argument type="int" name="stepsTaken" />
+        <argument type="int" name="stepsUntilChange" />
     </message>
 
     <message name="ObjectInvisibleMessage" id="10">
