@@ -34,7 +34,6 @@ public class ClientActor extends ClientObject
 	private int stepsTaken = 0;
 	/** The name of this actor. */
 	private String name;
-	private double angle;
 
 	/**
 	 * Construct a new Actor.
@@ -151,16 +150,6 @@ public class ClientActor extends ClientObject
 	public String getName()
 	{
 		return name;
-	}
-
-	/**
-	 * Set the current angle of this actor.
-	 *
-	 * @param angle The angle for the actor.
-	 */
-	public void setAngle(double angle)
-	{
-		this.angle = angle;
 	}
 
 	/**

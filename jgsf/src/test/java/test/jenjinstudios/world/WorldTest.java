@@ -7,7 +7,11 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 
-/** @author Caleb Brinkman */
+/**
+ * Tests the World class.
+ *
+ * @author Caleb Brinkman
+ */
 public class WorldTest
 {
 	/**
