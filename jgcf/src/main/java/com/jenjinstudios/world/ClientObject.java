@@ -1,4 +1,4 @@
-package com.jenjinstudios.world.client;
+package com.jenjinstudios.world;
 
 import com.jenjinstudios.math.Vector2D;
 

@@ -2,7 +2,7 @@ package com.jenjinstudios.jgcf.message;
 
 import com.jenjinstudios.jgcf.WorldClient;
 import com.jenjinstudios.message.Message;
-import com.jenjinstudios.world.client.ClientActor;
+import com.jenjinstudios.world.ClientActor;
 
 /**
  * Handles login responses from the server.

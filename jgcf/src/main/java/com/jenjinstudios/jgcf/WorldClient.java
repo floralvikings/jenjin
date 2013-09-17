@@ -1,8 +1,8 @@
 package com.jenjinstudios.jgcf;
 
 import com.jenjinstudios.message.Message;
-import com.jenjinstudios.world.client.ClientActor;
-import com.jenjinstudios.world.client.ClientObject;
+import com.jenjinstudios.world.ClientActor;
+import com.jenjinstudios.world.ClientObject;
 
 import java.util.Set;
 import java.util.TreeMap;
