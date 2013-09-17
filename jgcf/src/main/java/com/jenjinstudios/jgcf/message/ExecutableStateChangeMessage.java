@@ -8,7 +8,7 @@ import com.jenjinstudios.message.Message;
  *
  * @author Caleb Brinkman
  */
-public class ExecutableStateChangeMessage extends ClientWorldExecutableMessage
+public class ExecutableStateChangeMessage extends WorldClientExecutableMessage
 {
 	/**
 	 * Construct an ExecutableMessage with the given Message.

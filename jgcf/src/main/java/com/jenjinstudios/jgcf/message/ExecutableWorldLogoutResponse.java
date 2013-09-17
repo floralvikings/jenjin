@@ -8,7 +8,7 @@ import com.jenjinstudios.message.Message;
  *
  * @author Caleb Brinkman
  */
-public class ExecutableWorldLogoutResponse extends ClientWorldExecutableMessage
+public class ExecutableWorldLogoutResponse extends WorldClientExecutableMessage
 {
 	/**
 	 * Construct an ExecutableMessage with the given Message.

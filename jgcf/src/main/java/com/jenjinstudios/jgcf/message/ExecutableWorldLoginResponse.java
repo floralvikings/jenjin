@@ -9,7 +9,7 @@ import com.jenjinstudios.world.client.ClientActor;
  *
  * @author Caleb Brinkman
  */
-public class ExecutableWorldLoginResponse extends ClientWorldExecutableMessage
+public class ExecutableWorldLoginResponse extends WorldClientExecutableMessage
 {
 	/**
 	 * Construct an ExecutableMessage with the given Message.

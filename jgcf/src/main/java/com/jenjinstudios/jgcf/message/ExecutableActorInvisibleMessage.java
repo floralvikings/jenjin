@@ -1,6 +1,6 @@
 package com.jenjinstudios.jgcf.message;
 
-import com.jenjinstudios.jgcf.Client;
+import com.jenjinstudios.jgcf.WorldClient;
 import com.jenjinstudios.message.Message;
 
 /**
@@ -8,7 +8,7 @@ import com.jenjinstudios.message.Message;
  *
  * @author Caleb Brinkman
  */
-public class ExecutableActorInvisibleMessage extends ClientExecutableMessage
+public class ExecutableActorInvisibleMessage extends WorldClientExecutableMessage
 {
 	/**
 	 * Construct an ExecutableMessage with the given Message.
@@ -16,7 +16,7 @@ public class ExecutableActorInvisibleMessage extends ClientExecutableMessage
 	 * @param client  The client invoking this message.
 	 * @param message The Message.
 	 */
-	protected ExecutableActorInvisibleMessage(Client client, Message message)
+	protected ExecutableActorInvisibleMessage(WorldClient client, Message message)
 	{
 		super(client, message);
 	}

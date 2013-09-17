@@ -8,7 +8,7 @@ import com.jenjinstudios.message.Message;
  *
  * @author Caleb Brinkman
  */
-public abstract class ClientWorldExecutableMessage extends ClientExecutableMessage
+public abstract class WorldClientExecutableMessage extends ClientExecutableMessage
 {
 	/** The WorldClient invoking this message. */
 	private WorldClient client;
@@ -19,7 +19,7 @@ public abstract class ClientWorldExecutableMessage extends ClientExecutableMessa
 	 * @param client  The client invoking this message.
 	 * @param message The Message.
 	 */
-	protected ClientWorldExecutableMessage(WorldClient client, Message message)
+	protected WorldClientExecutableMessage(WorldClient client, Message message)
 	{
 		super(client, message);
 		this.client = client;
