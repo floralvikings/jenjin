@@ -58,9 +58,10 @@ public class ExecutableWorldLoginRequest extends WorldExecutableMessage
 			loginResponse.setArgument("loginTime", getClientHandler().getLoggedInTime());
 			loginResponse.setArgument("xCoord", player.getVector2D().getXCoordinate());
 			loginResponse.setArgument("zCoord", player.getVector2D().getZCoordinate());
-
+			loginResponse.setArgument("id", player.getId());
 		} else
 		{
+			loginResponse.setArgument("id", -1);
 			loginResponse.setArgument("loginTime", getClientHandler().getLoggedInTime());
 			loginResponse.setArgument("xCoord", 0);
 			loginResponse.setArgument("zCoord", 0);

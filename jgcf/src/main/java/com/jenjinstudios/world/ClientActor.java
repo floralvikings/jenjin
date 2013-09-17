@@ -37,20 +37,25 @@ public class ClientActor extends ClientObject
 	/** The name of this actor. */
 	private String name;
 
-	/** Construct a new Actor. */
-	public ClientActor()
+	/**
+	 * Construct a new Actor.
+	 *
+	 * @param id The actor's ID.
+	 */
+	public ClientActor(short id)
 	{
-		this(DEFAULT_NAME);
-
+		this(id, DEFAULT_NAME);
 	}
 
 	/**
 	 * Construct an Actor with the given name.
 	 *
+	 * @param id   The Actor's ID.
 	 * @param name The name.
 	 */
-	public ClientActor(String name)
+	public ClientActor(int id, String name)
 	{
+		super(id);
 		this.name = name;
 		currentMoveState = new MoveState(IDLE, 0, 0);
 		nextMoveStates = new LinkedList<>();

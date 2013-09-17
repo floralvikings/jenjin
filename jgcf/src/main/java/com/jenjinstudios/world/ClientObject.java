@@ -16,10 +16,15 @@ public class ClientObject
 	/** The ID number of this object. */
 	private int id = Integer.MIN_VALUE;
 
-	/** Construct a new WorldObject. */
-	public ClientObject()
+	/**
+	 * Construct a new WorldObject.
+	 *
+	 * @param id The ID of the object.
+	 */
+	public ClientObject(int id)
 	{
 		vector2D = new Vector2D(0, 0);
+		setId(id);
 	}
 
 	/**
@@ -83,7 +88,6 @@ public class ClientObject
 	{
 		return id;
 	}
-
 
 	/**
 	 * Set this object's ID number if it has not already been set.

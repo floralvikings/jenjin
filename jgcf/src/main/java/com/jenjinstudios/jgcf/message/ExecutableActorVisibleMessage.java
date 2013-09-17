@@ -2,6 +2,7 @@ package com.jenjinstudios.jgcf.message;
 
 import com.jenjinstudios.jgcf.WorldClient;
 import com.jenjinstudios.message.Message;
+import com.jenjinstudios.world.ClientActor;
 
 /**
  * Process an ActorVisibleMessage.
@@ -10,6 +11,9 @@ import com.jenjinstudios.message.Message;
  */
 public class ExecutableActorVisibleMessage extends WorldClientExecutableMessage
 {
+	/** The newly visible actor. */
+	ClientActor newlyVisible;
+
 	/**
 	 * Construct an ExecutableMessage with the given Message.
 	 *
@@ -29,5 +33,15 @@ public class ExecutableActorVisibleMessage extends WorldClientExecutableMessage
 	@Override
 	public void runASync()
 	{
+		Message message = getMessage();
+		String name = (String) message.getArgument("name");
+		int id = (int) message.getArgument("id");
+		double xCoord = (double) message.getArgument("xCoord");
+		double zCoord = (double) message.getArgument("zCoord");
+		int direction = (int) message.getArgument("direction");
+		double angle = (double) message.getArgument("angle");
+		int stepsFromLast = (int) message.getArgument("stepsFromLast");
+
+		newlyVisible = new ClientActor(id, name);
 	}
 }

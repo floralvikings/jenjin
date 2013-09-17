@@ -92,6 +92,7 @@
     </message>
 
     <message name="WorldLoginResponse" id="15">
+        <argument type="int" name="id" />
         <argument type="boolean" name="success" />
         <argument type="long" name="loginTime" />
         <argument type="double" name="xCoord" />
