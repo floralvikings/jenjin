@@ -11,6 +11,9 @@ import com.jenjinstudios.world.ClientActor;
  */
 public class ExecutableWorldLoginResponse extends WorldClientExecutableMessage
 {
+	/** The player created as indicated by the world login response. */
+	private ClientActor player;
+
 	/**
 	 * Construct an ExecutableMessage with the given Message.
 	 *
@@ -28,21 +31,21 @@ public class ExecutableWorldLoginResponse extends WorldClientExecutableMessage
 		WorldClient client = getClient();
 		client.setReceivedLoginResponse(true);
 		client.setLoggedIn((boolean) getMessage().getArgument("success"));
+
 		if (!client.isLoggedIn())
 			return;
+
 		client.setLoggedInTime((long) getMessage().getArgument("loginTime"));
 		client.setName(client.getUsername());
-
-		double xCoord = (double) getMessage().getArgument("xCoord");
-		double zCoord = (double) getMessage().getArgument("zCoord");
-		ClientActor player = new ClientActor(client.getUsername());
-		player.setVector2D(xCoord, zCoord);
-
 		client.setPlayer(player);
 	}
 
 	@Override
 	public void runASync()
 	{
+		double xCoord = (double) getMessage().getArgument("xCoord");
+		double zCoord = (double) getMessage().getArgument("zCoord");
+		player = new ClientActor(getClient().getUsername());
+		player.setVector2D(xCoord, zCoord);
 	}
 }
