@@ -29,6 +29,7 @@ public class ExecutableActorVisibleMessage extends WorldClientExecutableMessage
 	@Override
 	public void runSynced()
 	{
+		getClient().addNewVisible(newlyVisible);
 	}
 
 	@Override
