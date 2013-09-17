@@ -43,7 +43,7 @@
     </message>
 
     <message name="ObjectVisibleMessage" id="8">
-        <executable language="java" side="client">com.jenjinstudios.jgcf.message.ExecutableActorVisibleMessage</executable>
+        <executable language="java" side="client">com.jenjinstudios.jgcf.message.ExecutableObjectVisibleMessage</executable>
         <argument type="String" name="name" encrypt="true" />
         <argument type="int" name="id" />
         <argument type="double" name="xCoordinate" />
@@ -62,7 +62,7 @@
     </message>
 
     <message name="ObjectInvisibleMessage" id="10">
-        <executable language="java" side="client">com.jenjinstudios.jgcf.message.ExecutableActorInvisibleMessage</executable>
+        <executable language="java" side="client">com.jenjinstudios.jgcf.message.ExecutableObjectInvisibleMessage</executable>
         <argument type="int" name="id" />
     </message>
 
