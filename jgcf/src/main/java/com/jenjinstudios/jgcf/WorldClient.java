@@ -97,21 +97,11 @@ public class WorldClient extends Client
 	/**
 	 * Remove an object from the player's view.
 	 *
-	 * @param object the object to remove.
+	 * @param id the id of the object to remove.
 	 */
-	public void removeVisible(ClientObject object)
+	public void removeVisible(int id)
 	{
-		visibleObjects.remove(object.getId());
-	}
-
-	/**
-	 * Get the player associated with this client.
-	 *
-	 * @return The player associated with this client.
-	 */
-	public ClientActor getPlayer()
-	{
-		return player;
+		visibleObjects.remove(id);
 	}
 
 	/**

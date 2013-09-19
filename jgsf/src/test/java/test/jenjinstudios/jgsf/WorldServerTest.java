@@ -6,6 +6,7 @@ import com.jenjinstudios.math.Vector2D;
 import com.jenjinstudios.sql.WorldSQLHandler;
 import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.World;
+import com.jenjinstudios.world.WorldObject;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -93,5 +94,13 @@ public class WorldServerTest
 		Thread.sleep(worldServer.PERIOD);
 		Assert.assertEquals(1, worldClient.getVisibleObjects().size());
 
+		// Now add a new Object, and make sure the player can see it.
+		WorldObject testObject01 = new Actor("TestActor01");
+		testObject01.setVector2D(10, 10);
+		world.addObject(testObject01);
+		Thread.sleep(worldServer.PERIOD);
+		Assert.assertEquals(2, player.getVisibleObjects().size());
+		Thread.sleep(worldServer.PERIOD);
+		Assert.assertEquals(2, worldClient.getVisibleObjects().size());
 	}
 }

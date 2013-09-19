@@ -115,6 +115,7 @@ public class Actor extends WorldObject
 		newlyVisibleObjects.clear();
 		newlyVisibleObjects.addAll(currentlyVisible);
 		newlyVisibleObjects.removeAll(visibleObjects);
+		visibleObjects.clear();
 		visibleObjects.addAll(currentlyVisible);
 	}
 
