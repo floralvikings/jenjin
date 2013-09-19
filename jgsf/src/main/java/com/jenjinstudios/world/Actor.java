@@ -109,7 +109,9 @@ public class Actor extends WorldObject
 	{
 		ArrayList<WorldObject> currentlyVisible = new ArrayList<>();
 		for (Location loc : visibleLocations)
-			currentlyVisible.addAll(loc.getObjects());
+			for (WorldObject object : loc.getObjects())
+				if (object != this)
+					currentlyVisible.add(object);
 		newlyVisibleObjects.clear();
 		newlyVisibleObjects.addAll(currentlyVisible);
 		newlyVisibleObjects.removeAll(visibleObjects);
