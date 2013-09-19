@@ -184,9 +184,8 @@ public class Client extends Thread
 	 * contain functionality necessary to communicate with a DownloadServer or a ChatServer.
 	 *
 	 * @param message The message to be processed.
-	 * @throws IOException If there is an IO error.
 	 */
-	protected void processMessage(Message message) throws IOException
+	protected void processMessage(Message message)
 	{
 		ExecutableMessage exec;
 		exec = ClientExecutableMessage.getClientExecutableMessageFor(this, message);

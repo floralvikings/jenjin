@@ -141,11 +141,4 @@ public class ActorTest
 		world.removeObject(object04);
 		world.removeObject(object05);
 	}
-
-	/** Test the login and logout functionality of the WorldServer. */
-	@Test
-	public void testLoginLogout()
-	{
-
-	}
 }

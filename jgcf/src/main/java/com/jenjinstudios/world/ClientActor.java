@@ -24,8 +24,6 @@ public class ClientActor extends ClientObject
 {
 	/** The length of each step. */
 	public static final float STEP_LENGTH = 5;
-	/** The default name of this actor. */
-	public static final String DEFAULT_NAME = "Actor";
 	/** The next move. */
 	private final LinkedList<MoveState> nextMoveStates;
 	/** The current move. */
@@ -33,17 +31,7 @@ public class ClientActor extends ClientObject
 	/** The number of steps taken since the last move. */
 	private int stepsTaken = 0;
 	/** The name of this actor. */
-	private String name;
-
-	/**
-	 * Construct a new Actor.
-	 *
-	 * @param id The actor's ID.
-	 */
-	public ClientActor(short id)
-	{
-		this(id, DEFAULT_NAME);
-	}
+	private final String name;
 
 	/**
 	 * Construct an Actor with the given name.

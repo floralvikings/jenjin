@@ -20,7 +20,7 @@ public class WorldObject
 	/** The location in which this object is residing. */
 	private Location location;
 	/** The name of this actor. */
-	private String name;
+	private final String name;
 	/** The default name of this actor. */
 	public static final String DEFAULT_NAME = "Object";
 

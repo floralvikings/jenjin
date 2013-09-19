@@ -11,7 +11,7 @@ import com.jenjinstudios.message.Message;
 public abstract class WorldClientExecutableMessage extends ClientExecutableMessage
 {
 	/** The WorldClient invoking this message. */
-	private WorldClient client;
+	private final WorldClient client;
 
 	/**
 	 * Construct an ExecutableMessage with the given Message.
