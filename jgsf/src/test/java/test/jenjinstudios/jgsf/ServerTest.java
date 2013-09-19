@@ -168,7 +168,7 @@ public class ServerTest
 		goodClient01.shutdown();
 		// Have to sleep.  It's HIGHLY unlikely that a client will try logging in less than the minimum sleep resolution
 		// after a broken connection.
-		Thread.sleep(100);
+		Thread.sleep(server.PERIOD);
 		// sameClient logs in, and should be able to successfully since the server auto logged out the failed connection.
 		sameClient.sendLoginRequest();
 		assertTrue(sameClient.isLoggedIn());
