@@ -328,7 +328,7 @@ public class Server<T extends ClientHandler> extends Thread
 	 * @param username The username of the client to look up.
 	 * @return The client with the username specified; null if there is no client with this username.
 	 */
-	public ClientHandler getClientHandlerByUsername(String username)
+	public T getClientHandlerByUsername(String username)
 	{
 		return clientsByUsername.get(username);
 	}
