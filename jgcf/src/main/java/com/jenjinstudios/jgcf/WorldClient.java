@@ -85,18 +85,6 @@ public class WorldClient extends Client
 	}
 
 	/**
-	 * Set the player being controlled by this client.
-	 *
-	 * @param player The player to be controlled by this client.
-	 */
-	public void setPlayer(ClientActor player)
-	{
-		if (this.player != null)
-			throw new IllegalStateException("Player already set!");
-		this.player = player;
-	}
-
-	/**
 	 * Add an object to the list of visible objects.  This method should be called synchronously.
 	 *
 	 * @param object The object to add to the visible objects list.
@@ -114,6 +102,28 @@ public class WorldClient extends Client
 	public void removeVisible(ClientObject object)
 	{
 		visibleObjects.remove(object.getId());
+	}
+
+	/**
+	 * Get the player associated with this client.
+	 *
+	 * @return The player associated with this client.
+	 */
+	public ClientActor getPlayer()
+	{
+		return player;
+	}
+
+	/**
+	 * Set the player being controlled by this client.
+	 *
+	 * @param player The player to be controlled by this client.
+	 */
+	public void setPlayer(ClientActor player)
+	{
+		if (this.player != null)
+			throw new IllegalStateException("Player already set!");
+		this.player = player;
 	}
 
 	/** The UpdateLoop class is used to update all wold objects. */
