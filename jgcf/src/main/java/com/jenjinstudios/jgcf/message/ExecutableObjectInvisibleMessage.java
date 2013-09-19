@@ -10,6 +10,9 @@ import com.jenjinstudios.message.Message;
  */
 public class ExecutableObjectInvisibleMessage extends WorldClientExecutableMessage
 {
+	/** The ID of the object to be made invisible. */
+	private int id;
+
 	/**
 	 * Construct an ExecutableMessage with the given Message.
 	 *
@@ -24,10 +27,12 @@ public class ExecutableObjectInvisibleMessage extends WorldClientExecutableMessa
 	@Override
 	public void runSynced()
 	{
+		getClient().removeVisible(id);
 	}
 
 	@Override
 	public void runASync()
 	{
+		id = (int) getMessage().getArgument("id");
 	}
 }
