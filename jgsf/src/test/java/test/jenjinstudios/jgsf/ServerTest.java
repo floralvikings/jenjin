@@ -60,6 +60,13 @@ public class ServerTest
 	@AfterClass
 	public static void destroy() throws IOException, InterruptedException
 	{
+		if (goodClient01 != null)
+		{
+			if (goodClient01.isLoggedIn())
+				goodClient01.sendLogoutRequest();
+			goodClient01.shutdown();
+		}
+
 		while ((System.currentTimeMillis() - startTime) < 1500)
 			Thread.sleep(1);
 		assertEquals(50, server.getAverageUPS(), 0.1);

@@ -1,6 +1,6 @@
 package com.jenjinstudios.jgcf.message;
 
-import com.jenjinstudios.jgcf.Client;
+import com.jenjinstudios.jgcf.WorldClient;
 import com.jenjinstudios.message.Message;
 
 /**
@@ -8,15 +8,18 @@ import com.jenjinstudios.message.Message;
  *
  * @author Caleb Brinkman
  */
-public class ExecutableActorInvisibleMessage extends ClientExecutableMessage
+public class ExecutableObjectInvisibleMessage extends WorldClientExecutableMessage
 {
+	/** The ID of the object to be made invisible. */
+	private int id;
+
 	/**
 	 * Construct an ExecutableMessage with the given Message.
 	 *
 	 * @param client  The client invoking this message.
 	 * @param message The Message.
 	 */
-	protected ExecutableActorInvisibleMessage(Client client, Message message)
+	public ExecutableObjectInvisibleMessage(WorldClient client, Message message)
 	{
 		super(client, message);
 	}
@@ -24,10 +27,12 @@ public class ExecutableActorInvisibleMessage extends ClientExecutableMessage
 	@Override
 	public void runSynced()
 	{
+		getClient().removeVisible(id);
 	}
 
 	@Override
 	public void runASync()
 	{
+		id = (int) getMessage().getArgument("id");
 	}
 }

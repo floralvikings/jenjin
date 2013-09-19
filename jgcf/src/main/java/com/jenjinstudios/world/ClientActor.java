@@ -4,19 +4,26 @@ import com.jenjinstudios.world.state.MoveState;
 
 import java.util.LinkedList;
 
-import static com.jenjinstudios.world.state.MoveDirection.IDLE;
-
 /**
- * Represents a "shallow" copy of a server-side actor.
+ * The {@code ClientActor} class is used to represent a server-side {@code Actor} object on the client side.  It is an
+ * object capable of movement.
+ * <p/>
+ * Actors start with a {@code MoveState} with {@code MoveiDirection.IDLE}.  Each update, the Actor checks to see
+ * if there are any MoveStates in the queue.  If there are, it checks the first state in line for the number of steps
+ * needed before the state changes.  Once the number of steps has been reached, the state switches to that of the first
+ * position in the queue, and the Actor's step counter is reset.  If an Actor "oversteps," which is determined if the
+ * Actor has taken more than the required number of steps to change state, the Actor is moved back by the "overstepped"
+ * number of states, the Actor's state is updated, and the Actor then takes the number of extra steps in the correct
+ * direction.
+ * <p/>
+ * An Actor's state is considered "changed" when the Actor is facing a new direction or moving in a new direction.
  *
  * @author Caleb Brinkman
  */
-public class ActorInfo extends GameObjectInfo
+public class ClientActor extends ClientObject
 {
 	/** The length of each step. */
 	public static final float STEP_LENGTH = 5;
-	/** The default name of this actor. */
-	public static final String DEFAULT_NAME = "Actor";
 	/** The next move. */
 	private final LinkedList<MoveState> nextMoveStates;
 	/** The current move. */
@@ -24,24 +31,18 @@ public class ActorInfo extends GameObjectInfo
 	/** The number of steps taken since the last move. */
 	private int stepsTaken = 0;
 	/** The name of this actor. */
-	private String name;
-
-	/** Construct a new Actor. */
-	public ActorInfo()
-	{
-		this(DEFAULT_NAME);
-
-	}
+	private final String name;
 
 	/**
 	 * Construct an Actor with the given name.
 	 *
+	 * @param id   The Actor's ID.
 	 * @param name The name.
 	 */
-	public ActorInfo(String name)
+	public ClientActor(int id, String name)
 	{
+		super(id);
 		this.name = name;
-		currentMoveState = new MoveState(IDLE, 0, 0);
 		nextMoveStates = new LinkedList<>();
 	}
 
@@ -122,7 +123,7 @@ public class ActorInfo extends GameObjectInfo
 	/** Change to the next state. */
 	private void changeState()
 	{
-		if (stepsTaken >= currentMoveState.stepsInLastMove)
+		if (stepsTaken >= currentMoveState.stepsUntilChange)
 		{
 			currentMoveState = nextMoveStates.remove();
 			stepsTaken = 0;
@@ -137,5 +138,27 @@ public class ActorInfo extends GameObjectInfo
 	public String getName()
 	{
 		return name;
+	}
+
+	/**
+	 * Set the number of steps taken since the last move.
+	 *
+	 * @param stepsTaken The number of steps taken since the last move.
+	 */
+	public void setStepsTaken(int stepsTaken)
+	{
+		this.stepsTaken = stepsTaken;
+	}
+
+	/**
+	 * Sets the current move state.  Should only be called when the actor is created.
+	 *
+	 * @param currentMoveState The current move state.
+	 */
+	public void setCurrentMoveState(MoveState currentMoveState)
+	{
+		if (this.currentMoveState != null)
+			throw new IllegalStateException("Cannot set current move state: state already set!");
+		this.currentMoveState = currentMoveState;
 	}
 }
