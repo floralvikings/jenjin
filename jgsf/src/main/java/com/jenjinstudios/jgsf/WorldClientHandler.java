@@ -126,4 +126,14 @@ public class WorldClientHandler extends ClientHandler
 			newState.setArgument("stepsUntilChange", changedActor.getStepsInLastMove());
 		}
 	}
+
+	/**
+	 * Get the player associated with this client handler.
+	 *
+	 * @return The player associated with this client handler.
+	 */
+	public Actor getPlayer()
+	{
+		return actor;
+	}
 }
