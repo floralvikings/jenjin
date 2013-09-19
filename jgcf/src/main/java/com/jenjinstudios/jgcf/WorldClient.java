@@ -126,6 +126,16 @@ public class WorldClient extends Client
 		this.player = player;
 	}
 
+	/**
+	 * Get the map of visible objects.
+	 *
+	 * @return The map of visible objects.
+	 */
+	public TreeMap<Integer, ClientObject> getVisibleObjects()
+	{
+		return visibleObjects;
+	}
+
 	/** The UpdateLoop class is used to update all wold objects. */
 	private class UpdateLoop implements Runnable
 	{
