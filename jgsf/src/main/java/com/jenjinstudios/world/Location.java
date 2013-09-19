@@ -1,7 +1,10 @@
 package com.jenjinstudios.world;
 
+import java.util.ArrayList;
+import java.util.TreeMap;
+
 /**
- * Represents a location in the location grid of a Zone.
+ * Represents a location in the world's location grid.
  *
  * @author Caleb Brinkman
  */
@@ -13,6 +16,8 @@ public class Location
 	public final int X_COORDINATE;
 	/** The z coordinate of the location in it's zone's grid. */
 	public final int Z_COORDINATE;
+	/** The objects residing in this location. */
+	private final TreeMap<Integer, WorldObject> objects;
 	/** The property of this location. */
 	private Property property;
 
@@ -27,6 +32,7 @@ public class Location
 		X_COORDINATE = x;
 		Z_COORDINATE = z;
 		property = Property.OPEN;
+		objects = new TreeMap<>();
 	}
 
 	/**
@@ -47,6 +53,42 @@ public class Location
 	public void setProperty(Property property)
 	{
 		this.property = property;
+	}
+
+	/**
+	 * Get the objects residing in this location, as an array.
+	 *
+	 * @return An array containing all objects residing in this location.
+	 */
+	public ArrayList<WorldObject> getObjects()
+	{
+		return new ArrayList<>(objects.values());
+	}
+
+	/**
+	 * Add the object to this location's object map.
+	 *
+	 * @param object The object to add.
+	 */
+	public void addObject(WorldObject object)
+	{
+		objects.put(object.getId(), object);
+	}
+
+	/**
+	 * Remove an object from this location's object map.
+	 *
+	 * @param object The object to remove.
+	 */
+	public void removeObject(WorldObject object)
+	{
+		objects.remove(object.getId());
+	}
+
+	@Override
+	public String toString()
+	{
+		return "(" + X_COORDINATE + ", " + Z_COORDINATE + ")";
 	}
 
 	/** Specifies a property of a location. */

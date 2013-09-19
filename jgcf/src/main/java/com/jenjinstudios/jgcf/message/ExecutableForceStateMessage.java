@@ -16,7 +16,7 @@ public class ExecutableForceStateMessage extends ClientExecutableMessage
 	 * @param client  The client invoking this message.
 	 * @param message The Message.
 	 */
-	protected ExecutableForceStateMessage(Client client, Message message)
+	public ExecutableForceStateMessage(Client client, Message message)
 	{
 		super(client, message);
 	}

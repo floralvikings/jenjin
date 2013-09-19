@@ -23,7 +23,7 @@ public class ExecutableWorldLoginRequest extends WorldExecutableMessage
 	 * @param handler The handler using this ExecutableMessage.
 	 * @param message The message.
 	 */
-	protected ExecutableWorldLoginRequest(WorldClientHandler handler, Message message)
+	public ExecutableWorldLoginRequest(WorldClientHandler handler, Message message)
 	{
 		super(handler, message);
 		sqlHandler = handler.getServer().getSqlHandler();
@@ -58,12 +58,13 @@ public class ExecutableWorldLoginRequest extends WorldExecutableMessage
 			loginResponse.setArgument("loginTime", getClientHandler().getLoggedInTime());
 			loginResponse.setArgument("xCoord", player.getVector2D().getXCoordinate());
 			loginResponse.setArgument("zCoord", player.getVector2D().getZCoordinate());
-
+			loginResponse.setArgument("id", player.getId());
 		} else
 		{
+			loginResponse.setArgument("id", -1);
 			loginResponse.setArgument("loginTime", getClientHandler().getLoggedInTime());
-			loginResponse.setArgument("xCoord", 0);
-			loginResponse.setArgument("zCoord", 0);
+			loginResponse.setArgument("xCoord", 0d);
+			loginResponse.setArgument("zCoord", 0d);
 		}
 
 		getClientHandler().queueMessage(loginResponse);

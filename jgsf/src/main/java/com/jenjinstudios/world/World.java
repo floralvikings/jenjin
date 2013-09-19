@@ -11,21 +11,23 @@ import java.util.ArrayList;
  */
 public class World
 {
-	/** The size of the world's zone grid. */
-	public final int SIZE = 3;
-	/** The zone grid. */
-	private final Zone[][] zones;
+	/** The size of the world's location grid. */
+	public final int SIZE = 10;
+	/** The grid of locations in the game world. */
+	private final Location[][] locationGrid;
 	/** The GameObjects contained in the world. */
-	private final ArrayList<GameObject> gameObjects;
+	private final ArrayList<WorldObject> worldObjects;
+	/** The number of objects currently in the world. */
+	private int objectCount;
 
 	/** Construct a new World. */
 	public World()
 	{
-		zones = new Zone[SIZE][SIZE];
-		gameObjects = new ArrayList<>();
+		locationGrid = new Location[SIZE][SIZE];
+		worldObjects = new ArrayList<>();
 		for (int x = 0; x < SIZE; x++)
 			for (int z = 0; z < SIZE; z++)
-				zones[x][z] = new Zone(x, z);
+				locationGrid[x][z] = new Location(x, z);
 	}
 
 	/**
@@ -33,37 +35,32 @@ public class World
 	 *
 	 * @param object The object to add.
 	 */
-	public void addObject(GameObject object)
+	public void addObject(WorldObject object)
 	{
 		if (object == null)
-			throw new IllegalArgumentException("addObject(GameObject obj) argument 0 not allowed to be null!");
+			throw new IllegalArgumentException("addObject(WorldObject obj) argument 0 not allowed to be null!");
 		object.setWorld(this);
-		object.setId(gameObjects.size());
-		gameObjects.add(object);
-		getZoneForCoordinates(object.getVector2D()).addObject(object);
+		object.setId(worldObjects.size());
+		synchronized (worldObjects)
+		{
+			worldObjects.add(object);
+		}
+		objectCount++;
 	}
 
 	/**
-	 * Get the zone from the zone grid that contains the specified vector2D.
+	 * Remove an object from the world.  Specifically, sets the index of the given object in the world's array to
+	 * null.
 	 *
-	 * @param vector2D The vector2D
-	 * @return The zone that contains the specified vector2D.
+	 * @param object The object to remove.
 	 */
-	public Zone getZoneForCoordinates(Vector2D vector2D)
+	public void removeObject(WorldObject object)
 	{
-		return getZoneForCoordinates(vector2D.getXCoordinate(), vector2D.getZCoordinate());
-	}
-
-	/**
-	 * Get the zone that contains the specified coordinates.
-	 *
-	 * @param x The x coordinate.
-	 * @param z The z coordinate
-	 * @return The zone that contains the specified coordinates.
-	 */
-	public Zone getZoneForCoordinates(double x, double z)
-	{
-		return zones[(int) x / Zone.SIZE][(int) z / Zone.SIZE];
+		synchronized (worldObjects)
+		{
+			worldObjects.set(object.getId(), null);
+		}
+		objectCount--;
 	}
 
 	/**
@@ -75,7 +72,7 @@ public class World
 	 */
 	public Location getLocationForCoordinates(double x, double z)
 	{
-		return getZoneForCoordinates(x, z).getLocation((int) x % Zone.SIZE, (int) z % Zone.SIZE);
+		return locationGrid[(int) x / Location.SIZE][(int) z / Location.SIZE];
 	}
 
 	/**
@@ -92,7 +89,54 @@ public class World
 	/** Update all objects in the world. */
 	public void update()
 	{
-		for (GameObject o : gameObjects)
-			o.update();
+		synchronized (worldObjects)
+		{
+			for (WorldObject o : worldObjects)
+				if (o != null)
+					o.update();
+		}
+	}
+
+	/**
+	 * Get an area of location objects.
+	 *
+	 * @param center The center of the area to return.
+	 * @param radius The radius of the area.
+	 * @return An ArrayList containing all valid locations in the specified area.
+	 */
+	public ArrayList<Location> getLocationArea(Location center, int radius)
+	{
+		// Make the array list with an initial size of area
+		ArrayList<Location> areaGrid = new ArrayList<>();
+		// Get the top-right corner of the grid.
+		int xStart = center.X_COORDINATE - radius;
+		int zStart = center.Z_COORDINATE - radius;
+		int xEnd = center.X_COORDINATE + radius;
+		int zEnd = center.Z_COORDINATE + radius;
+
+		for (int x = xStart; x < xEnd; x++)
+			for (int z = zStart; z < zEnd; z++)
+			{
+				try
+				{
+					areaGrid.add(locationGrid[x][z]);
+				} catch (ArrayIndexOutOfBoundsException ignored)
+				{
+					// Just means we're near the end of the world =)
+				}
+			}
+
+
+		return areaGrid;
+	}
+
+	/**
+	 * Get the number of objects currently in the world.
+	 *
+	 * @return The number of objects currently in the world.
+	 */
+	public int getObjectCount()
+	{
+		return objectCount;
 	}
 }

@@ -3,27 +3,28 @@ package com.jenjinstudios.world;
 import com.jenjinstudios.math.Vector2D;
 
 /**
- * Represents an object that exists in the game world.
+ * The {@code ClientObject} class is used to represent a server-side {@code WorldObject} on the client.
  *
  * @author Caleb Brinkman
  */
-public class GameObject
+public class ClientObject
 {
 	/** The vector2D in the world at which the object is located. */
 	private Vector2D vector2D;
-	/** The zone in which this object is located. */
-	private Zone zone;
 	/** The direction in which this object is facing. */
 	private float direction;
 	/** The ID number of this object. */
 	private int id = Integer.MIN_VALUE;
-	/** The world in which this object exists. */
-	private World world;
 
-	/** Construct a new GameObject. */
-	public GameObject()
+	/**
+	 * Construct a new WorldObject.
+	 *
+	 * @param id The ID of the object.
+	 */
+	public ClientObject(int id)
 	{
 		vector2D = new Vector2D(0, 0);
+		setId(id);
 	}
 
 	/**
@@ -89,36 +90,6 @@ public class GameObject
 	}
 
 	/**
-	 * Get this object's zone.
-	 *
-	 * @return this object's zone.
-	 */
-	public Zone getZone()
-	{
-		return zone;
-	}
-
-	/**
-	 * Set this object's zone.
-	 *
-	 * @param zone The new zone.
-	 */
-	public void setZone(Zone zone)
-	{
-		this.zone = zone;
-	}
-
-	/**
-	 * Get this object's location.
-	 *
-	 * @return This object's location.
-	 */
-	public Location getLocation()
-	{
-		return world.getLocationForCoordinates(vector2D);
-	}
-
-	/**
 	 * Set this object's ID number if it has not already been set.
 	 *
 	 * @param id The new ID number.
@@ -130,29 +101,7 @@ public class GameObject
 		this.id = id;
 	}
 
-	/**
-	 * Get the world in which this object is located.
-	 *
-	 * @return the world in which this object is located.
-	 */
-	public World getWorld()
-	{
-		return world;
-	}
-
-	/**
-	 * Set the world in which this object is located, if it hasn't already been set.
-	 *
-	 * @param world The new world.
-	 */
-	public void setWorld(World world)
-	{
-		if (this.world != null)
-			throw new IllegalArgumentException("The world has already been set for this object.");
-		this.world = world;
-	}
-
-	/** Update this GameObject. */
+	/** Update this ClientObject. */
 	public void update()
 	{
 

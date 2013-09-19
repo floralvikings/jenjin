@@ -1,4 +1,4 @@
-package test.jenjinstudios.jgsf.world.sql;
+package test.jenjinstudios.world.sql;
 
 import com.jenjinstudios.math.Vector2D;
 import com.jenjinstudios.sql.WorldSQLHandler;

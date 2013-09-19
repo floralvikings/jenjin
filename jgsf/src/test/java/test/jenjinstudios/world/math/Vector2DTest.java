@@ -1,4 +1,4 @@
-package test.jenjinstudios.jgsf.world.math;
+package test.jenjinstudios.world.math;
 
 import com.jenjinstudios.math.Vector2D;
 import org.junit.Assert;

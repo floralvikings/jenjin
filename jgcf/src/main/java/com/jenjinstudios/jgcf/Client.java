@@ -184,9 +184,8 @@ public class Client extends Thread
 	 * contain functionality necessary to communicate with a DownloadServer or a ChatServer.
 	 *
 	 * @param message The message to be processed.
-	 * @throws IOException If there is an IO error.
 	 */
-	protected void processMessage(Message message) throws IOException
+	protected void processMessage(Message message)
 	{
 		ExecutableMessage exec;
 		exec = ClientExecutableMessage.getClientExecutableMessageFor(this, message);
@@ -237,14 +236,16 @@ public class Client extends Thread
 			LOGGER.log(Level.WARNING, "Attempted to login without username or password");
 			return;
 		}
-		receivedLoginResponse = false;
+
 		// Create the login request.
 		Message loginRequest = new Message("LoginRequest");
 		loginRequest.setArgument("username", username);
 		loginRequest.setArgument("password", password);
 
+		// Send the request, continue when the response is received.
+		setReceivedLoginResponse(false);
 		sendMessage(loginRequest);
-		while (!receivedLoginResponse)
+		while (!hasReceivedLoginResponse())
 			try
 			{
 				Thread.sleep(1);
@@ -257,10 +258,13 @@ public class Client extends Thread
 	/** Queue a message to log the user out of the server. */
 	public void sendLogoutRequest()
 	{
-		receivedLogoutResponse = false;
+		// Create the message.
 		Message logoutRequest = new Message("LogoutRequest");
+
+		// Send the request, continue when response is received.
+		setReceivedLogoutResponse(false);
 		sendMessage(logoutRequest);
-		while (!receivedLogoutResponse)
+		while (!hasReceivedLogoutResponse())
 			try
 			{
 				Thread.sleep(1);
@@ -412,6 +416,16 @@ public class Client extends Thread
 	}
 
 	/**
+	 * Get whether this client has received a login response.
+	 *
+	 * @return Whether the client has received a login response.
+	 */
+	public boolean hasReceivedLoginResponse()
+	{
+		return receivedLoginResponse;
+	}
+
+	/**
 	 * Get the username of this client.
 	 *
 	 * @return The username of this client.
@@ -429,6 +443,16 @@ public class Client extends Thread
 	public void setReceivedLogoutResponse(boolean receivedLogoutResponse)
 	{
 		this.receivedLogoutResponse = receivedLogoutResponse;
+	}
+
+	/**
+	 * Get whether this client has received a logout response.
+	 *
+	 * @return Whether this client has received a logout response.
+	 */
+	public boolean hasReceivedLogoutResponse()
+	{
+		return receivedLogoutResponse;
 	}
 
 	/**
