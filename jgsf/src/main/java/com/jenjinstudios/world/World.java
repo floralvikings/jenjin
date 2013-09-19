@@ -41,7 +41,10 @@ public class World
 			throw new IllegalArgumentException("addObject(WorldObject obj) argument 0 not allowed to be null!");
 		object.setWorld(this);
 		object.setId(worldObjects.size());
-		worldObjects.add(object);
+		synchronized (worldObjects)
+		{
+			worldObjects.add(object);
+		}
 		objectCount++;
 	}
 
@@ -53,7 +56,10 @@ public class World
 	 */
 	public void removeObject(WorldObject object)
 	{
-		worldObjects.set(object.getId(), null);
+		synchronized (worldObjects)
+		{
+			worldObjects.set(object.getId(), null);
+		}
 		objectCount--;
 	}
 
@@ -83,9 +89,12 @@ public class World
 	/** Update all objects in the world. */
 	public void update()
 	{
-		for (WorldObject o : worldObjects)
-			if (o != null)
-				o.update();
+		synchronized (worldObjects)
+		{
+			for (WorldObject o : worldObjects)
+				if (o != null)
+					o.update();
+		}
 	}
 
 	/**
