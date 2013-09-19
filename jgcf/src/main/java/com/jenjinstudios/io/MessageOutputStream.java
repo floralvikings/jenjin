@@ -39,10 +39,9 @@ public class MessageOutputStream
 	 *
 	 * @param out the underlying output stream, to be saved for later
 	 *            use.
-	 * @throws java.io.IOException If there is an error sending the public key.
 	 * @see java.io.FilterOutputStream#out
 	 */
-	public MessageOutputStream(OutputStream out) throws IOException
+	public MessageOutputStream(OutputStream out)
 	{
 		outputStream = new DataOutputStream(out);
 	}

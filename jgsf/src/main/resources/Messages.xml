@@ -1,18 +1,18 @@
 <base_messages>
 
     <message name="FirstConnectResponse" id="0">
-        <argument type="int" name="ups"/>
+        <argument type="int" name="ups" />
     </message>
 
     <message name="LoginRequest" id="1">
-        <argument type="String" name="username" encrypt="true"/>
-        <argument type="String" name="password" encrypt="true"/>
+        <argument type="String" name="username" encrypt="true" />
+        <argument type="String" name="password" encrypt="true" />
         <executable language="java" side="server">com.jenjinstudios.jgsf.message.ExecutableLoginRequest</executable>
     </message>
 
     <message name="LoginResponse" id="2">
-        <argument type="boolean" name="success"/>
-        <argument type="long" name="loginTime"/>
+        <argument type="boolean" name="success" />
+        <argument type="long" name="loginTime" />
         <executable language="java" side="client">com.jenjinstudios.jgcf.message.ExecutableLoginResponse</executable>
     </message>
 
@@ -21,18 +21,88 @@
     </message>
 
     <message name="LogoutResponse" id="4">
-        <argument type="boolean" name="success"/>
+        <argument type="boolean" name="success" />
         <executable language="java" side="client">com.jenjinstudios.jgcf.message.ExecutableLogoutResponse</executable>
     </message>
 
     <message name="PublicKeyMessage" id="5">
         <executable language="java" side="server">com.jenjinstudios.jgsf.message.ExecutablePublicKeyMessage</executable>
-        <argument type="byte[]" name="key"/>
+        <argument type="byte[]" name="key" />
     </message>
 
     <message name="AESKeyMessage" id="6">
         <executable language="java" side="client">com.jenjinstudios.jgcf.message.ExecutableAESKeyMessage</executable>
-        <argument type="byte[]" name="key"/>
+        <argument type="byte[]" name="key" />
     </message>
 
+    <message name="StateChangeRequest" id="7">
+        <executable language="java" side="server">com.jenjinstudios.jgsf.message.ExecutableStateChangeRequest</executable>
+        <argument type="int" name="direction" />
+        <argument type="double" name="angle" />
+        <argument type="int" name="stepsFromLast" />
+    </message>
+
+    <message name="ObjectVisibleMessage" id="8">
+        <executable language="java" side="client">com.jenjinstudios.jgcf.message.ExecutableObjectVisibleMessage</executable>
+        <argument type="String" name="name" encrypt="true" />
+        <argument type="int" name="id" />
+        <argument type="double" name="xCoordinate" />
+        <argument type="double" name="zCoordinate" />
+    </message>
+
+    <message name="ActorVisibleMessage" id="9">
+        <executable language="java" side="client">com.jenjinstudios.jgcf.message.ExecutableActorVisibleMessage</executable>
+        <argument type="String" name="name" encrypt="true" />
+        <argument type="int" name="id" />
+        <argument type="double" name="xCoordinate" />
+        <argument type="double" name="zCoordinate" />
+        <argument type="int" name="direction" />
+        <argument type="double" name="angle" />
+        <argument type="int" name="stepsTaken" />
+        <argument type="int" name="stepsUntilChange" />
+    </message>
+
+    <message name="ObjectInvisibleMessage" id="10">
+        <executable language="java" side="client">com.jenjinstudios.jgcf.message.ExecutableObjectInvisibleMessage</executable>
+        <argument type="int" name="id" />
+    </message>
+
+    <message name="StateChangeMessage" id="11">
+        <executable language="java" side="client">com.jenjinstudios.jgcf.message.ExecutableStateChangeMessage</executable>
+        <argument type="int" name="id" />
+        <argument type="int" name="direction" />
+        <argument type="double" name="angle" />
+        <argument type="int" name="stepsUntilChange" />
+    </message>
+
+    <message name="ForceStateMessage" id="12">
+        <executable language="java" side="client">com.jenjinstudios.jgcf.message.ExecutableForceStateMessage</executable>
+        <argument type="int" name="direction" />
+        <argument type="double" name="angle" />
+        <argument type="int" name="stepsFromLast" />
+    </message>
+
+    <message name="WorldLoginRequest" id="13">
+        <executable language="java" side="server">com.jenjinstudios.jgsf.message.ExecutableWorldLoginRequest</executable>
+        <argument type="String" name="username" encrypt="true" />
+        <argument type="String" name="password" encrypt="true" />
+    </message>
+
+    <message name="WorldLogoutRequest" id="14">
+        <executable language="java" side="server">com.jenjinstudios.jgsf.message.ExecutableWorldLogoutRequest</executable>
+    </message>
+
+    <message name="WorldLoginResponse" id="15">
+        <argument type="int" name="id" />
+        <argument type="boolean" name="success" />
+        <argument type="long" name="loginTime" />
+        <argument type="double" name="xCoord" />
+        <argument type="double" name="zCoord" />
+        <executable language="java" side="client">com.jenjinstudios.jgcf.message.ExecutableWorldLoginResponse</executable>
+    </message>
+
+    <message name="WorldLogoutResponse" id="16">
+        <argument type="boolean" name="success" />
+        <executable language="java" side="client">com.jenjinstudios.jgcf.message.ExecutableWorldLogoutResponse</executable>
+    </message>
 </base_messages>

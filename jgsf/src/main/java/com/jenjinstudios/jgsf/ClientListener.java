@@ -35,8 +35,8 @@ class ClientListener<T extends ClientHandler> implements Runnable
 	/**
 	 * Construct a new ClientListener for the given server on the given port.
 	 *
-	 * @param s The server for which this listener will listen.
-	 * @param p The port on which to listen.
+	 * @param s            The server for which this listener will listen.
+	 * @param p            The port on which to listen.
 	 * @param handlerClass The class of the ClientHandler to be used by this server.
 	 * @throws IOException If there is an error listening on the port.
 	 */
@@ -47,7 +47,7 @@ class ClientListener<T extends ClientHandler> implements Runnable
 		/* The class of client handlers created by this listener. */
 		try
 		{
-			handlerConstructor = handlerClass.getConstructor(Server.class, Socket.class);
+			handlerConstructor = handlerClass.getConstructor(s.getClass(), Socket.class);
 
 		} catch (NoSuchMethodException e)
 		{
