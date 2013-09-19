@@ -23,7 +23,7 @@ public class ExecutableWorldLoginRequest extends WorldExecutableMessage
 	 * @param handler The handler using this ExecutableMessage.
 	 * @param message The message.
 	 */
-	protected ExecutableWorldLoginRequest(WorldClientHandler handler, Message message)
+	public ExecutableWorldLoginRequest(WorldClientHandler handler, Message message)
 	{
 		super(handler, message);
 		sqlHandler = handler.getServer().getSqlHandler();

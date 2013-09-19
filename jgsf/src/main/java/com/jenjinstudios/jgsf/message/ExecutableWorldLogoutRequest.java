@@ -3,6 +3,7 @@ package com.jenjinstudios.jgsf.message;
 import com.jenjinstudios.jgsf.WorldClientHandler;
 import com.jenjinstudios.message.Message;
 import com.jenjinstudios.sql.WorldSQLHandler;
+import com.jenjinstudios.world.Actor;
 
 /**
  * Handles requests to log out of the world.
@@ -20,7 +21,7 @@ public class ExecutableWorldLogoutRequest extends WorldExecutableMessage
 	 * @param handler The handler using this ExecutableMessage.
 	 * @param message The message.
 	 */
-	protected ExecutableWorldLogoutRequest(WorldClientHandler handler, Message message)
+	public ExecutableWorldLogoutRequest(WorldClientHandler handler, Message message)
 	{
 		super(handler, message);
 		sqlHandler = handler.getServer().getSqlHandler();
@@ -30,6 +31,8 @@ public class ExecutableWorldLogoutRequest extends WorldExecutableMessage
 	@Override
 	public void runSynced()
 	{
+		Actor clientActor = getClientHandler().getActor();
+		clientActor.getWorld().removeObject(clientActor);
 	}
 
 	@Override

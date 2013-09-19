@@ -84,7 +84,8 @@ public class World
 	public void update()
 	{
 		for (WorldObject o : worldObjects)
-			o.update();
+			if (o != null)
+				o.update();
 	}
 
 	/**

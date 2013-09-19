@@ -20,7 +20,7 @@ public class ExecutableWorldLoginResponse extends WorldClientExecutableMessage
 	 * @param client  The client invoking this message.
 	 * @param message The Message.
 	 */
-	protected ExecutableWorldLoginResponse(WorldClient client, Message message)
+	public ExecutableWorldLoginResponse(WorldClient client, Message message)
 	{
 		super(client, message);
 	}
@@ -43,7 +43,7 @@ public class ExecutableWorldLoginResponse extends WorldClientExecutableMessage
 	@Override
 	public void runASync()
 	{
-		int id = (int) getMessage().getArgument("int");
+		int id = (int) getMessage().getArgument("id");
 		double xCoord = (double) getMessage().getArgument("xCoord");
 		double zCoord = (double) getMessage().getArgument("zCoord");
 		player = new ClientActor(id, getClient().getUsername());

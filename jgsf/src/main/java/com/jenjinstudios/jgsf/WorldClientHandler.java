@@ -77,6 +77,9 @@ public class WorldClientHandler extends ClientHandler
 	@Override
 	public void update()
 	{
+		if (actor == null)
+			return;
+
 		for (WorldObject object : actor.getNewlyVisibleObjects())
 		{
 			Message newlyVisibleMessage;
@@ -119,7 +122,7 @@ public class WorldClientHandler extends ClientHandler
 			Message newState = new Message("StateChangeMessage");
 			newState.setArgument("id", changedActor.getId());
 			newState.setArgument("direction", changedActor.getCurrentDirection());
-			newState.setArgument("angle", changedActor.getCurrentDirection());
+			newState.setArgument("angle", changedActor.getCurrentAngle());
 			newState.setArgument("stepsUntilChange", changedActor.getStepsInLastMove());
 		}
 	}

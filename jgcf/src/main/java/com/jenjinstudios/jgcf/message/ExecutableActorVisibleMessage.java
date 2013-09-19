@@ -21,7 +21,7 @@ public class ExecutableActorVisibleMessage extends WorldClientExecutableMessage
 	 * @param client  The client invoking this message.
 	 * @param message The Message.
 	 */
-	protected ExecutableActorVisibleMessage(WorldClient client, Message message)
+	public ExecutableActorVisibleMessage(WorldClient client, Message message)
 	{
 		super(client, message);
 	}
@@ -38,8 +38,8 @@ public class ExecutableActorVisibleMessage extends WorldClientExecutableMessage
 		Message message = getMessage();
 		String name = (String) message.getArgument("name");
 		int id = (int) message.getArgument("id");
-		double xCoord = (double) message.getArgument("xCoord");
-		double zCoord = (double) message.getArgument("zCoord");
+		double xCoord = (double) message.getArgument("xCoordinate");
+		double zCoord = (double) message.getArgument("zCoordinate");
 		int direction = (int) message.getArgument("direction");
 		double angle = (double) message.getArgument("angle");
 		int stepsFromLast = (int) message.getArgument("stepsTaken");

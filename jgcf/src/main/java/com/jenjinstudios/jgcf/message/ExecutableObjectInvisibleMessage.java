@@ -16,7 +16,7 @@ public class ExecutableObjectInvisibleMessage extends WorldClientExecutableMessa
 	 * @param client  The client invoking this message.
 	 * @param message The Message.
 	 */
-	protected ExecutableObjectInvisibleMessage(WorldClient client, Message message)
+	public ExecutableObjectInvisibleMessage(WorldClient client, Message message)
 	{
 		super(client, message);
 	}
