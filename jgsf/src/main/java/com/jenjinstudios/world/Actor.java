@@ -285,4 +285,14 @@ public class Actor extends WorldObject
 	{
 		return currentMoveState;
 	}
+
+	/**
+	 * Get the currently visible locations.
+	 *
+	 * @return The array list of currently visible locations.
+	 */
+	public ArrayList<Location> getVisibleLocations()
+	{
+		return visibleLocations;
+	}
 }
