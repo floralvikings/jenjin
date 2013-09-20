@@ -18,7 +18,7 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage
 	 * @param handler The handler using this ExecutableMessage.
 	 * @param message The message.
 	 */
-	protected ExecutableStateChangeRequest(WorldClientHandler handler, Message message)
+	public ExecutableStateChangeRequest(WorldClientHandler handler, Message message)
 	{
 		super(handler, message);
 	}
