@@ -105,6 +105,26 @@ public class WorldClient extends Client
 	}
 
 	/**
+	 * Get the map of visible objects.
+	 *
+	 * @return The map of visible objects.
+	 */
+	public TreeMap<Integer, ClientObject> getVisibleObjects()
+	{
+		return visibleObjects;
+	}
+
+	/**
+	 * Get the player associated with this client.
+	 *
+	 * @return The player (ClientActor) associated with this client.
+	 */
+	public ClientActor getPlayer()
+	{
+		return player;
+	}
+
+	/**
 	 * Set the player being controlled by this client.
 	 *
 	 * @param player The player to be controlled by this client.
@@ -114,16 +134,6 @@ public class WorldClient extends Client
 		if (this.player != null)
 			throw new IllegalStateException("Player already set!");
 		this.player = player;
-	}
-
-	/**
-	 * Get the map of visible objects.
-	 *
-	 * @return The map of visible objects.
-	 */
-	public TreeMap<Integer, ClientObject> getVisibleObjects()
-	{
-		return visibleObjects;
 	}
 
 	/** The UpdateLoop class is used to update all wold objects. */

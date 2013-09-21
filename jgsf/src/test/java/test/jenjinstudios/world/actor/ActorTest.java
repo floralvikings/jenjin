@@ -1,7 +1,6 @@
 package test.jenjinstudios.world.actor;
 
 import com.jenjinstudios.jgsf.WorldServer;
-import com.jenjinstudios.math.Vector2D;
 import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.WorldObject;
@@ -69,18 +68,25 @@ public class ActorTest
 		actor.addMoveState(new MoveState(MoveDirection.IDLE, 10, 0));
 		actor.addMoveState(new MoveState(MoveDirection.FRONT_LEFT, 10, 0));
 		actor.addMoveState(new MoveState(MoveDirection.IDLE, 10, 0));
-
-		Assert.assertEquals("State 1: ", new Vector2D(0, 0), actor.getVector2D());
+		// By this point, there's probably been at least a single update.
+		Thread.sleep(server.PERIOD * 9);
+		Assert.assertEquals("State 1 X: ", 0, actor.getVector2D().getXCoordinate(), 5.0d);
+		Assert.assertEquals("State 1 Z: ", 0, actor.getVector2D().getZCoordinate(), 5.0d);
 		Thread.sleep(server.PERIOD * 10);
-		Assert.assertEquals("State 2: ", new Vector2D(50, 0), actor.getVector2D());
+		Assert.assertEquals("State 2 X: ", 50, actor.getVector2D().getXCoordinate(), 5.0d);
+		Assert.assertEquals("State 2 Z: ", 0, actor.getVector2D().getZCoordinate(), 5.0d);
 		Thread.sleep(server.PERIOD * 10);
-		Assert.assertEquals("State 3: ", new Vector2D(0, 0), actor.getVector2D());
+		Assert.assertEquals("State 3 X: ", 0, actor.getVector2D().getXCoordinate(), 5.0d);
+		Assert.assertEquals("State 3 Z: ", 0, actor.getVector2D().getZCoordinate(), 5.0d);
 		Thread.sleep(server.PERIOD * 10);
-		Assert.assertEquals("State 4: ", new Vector2D(0, 0), actor.getVector2D());
+		Assert.assertEquals("State 4 X: ", 0, actor.getVector2D().getXCoordinate(), 5.0d);
+		Assert.assertEquals("State 4 Z: ", 0, actor.getVector2D().getZCoordinate(), 5.0d);
 		Thread.sleep(server.PERIOD * 10);
-		Assert.assertEquals("State 5: ", new Vector2D(35.355, 35.355), actor.getVector2D());
+		Assert.assertEquals("State 5 X: ", 35.555, actor.getVector2D().getXCoordinate(), 5.0d);
+		Assert.assertEquals("State 5 Z: ", 35.555, actor.getVector2D().getZCoordinate(), 5.0d);
 		Thread.sleep(server.PERIOD * 10);
-		Assert.assertEquals("State 6: ", new Vector2D(35.355, 35.355), actor.getVector2D());
+		Assert.assertEquals("State 6 X: ", 35.555, actor.getVector2D().getXCoordinate(), 5.0d);
+		Assert.assertEquals("State 6 Z: ", 35.555, actor.getVector2D().getZCoordinate(), 5.0d);
 
 		world.removeObject(actor);
 		Assert.assertEquals(0, world.getObjectCount());

@@ -188,7 +188,7 @@ public class Actor extends WorldObject
 	private void changeState()
 	{
 		// TODO The correction of position will need to take place here.
-		if (stepsTaken >= currentMoveState.stepsUntilChange)
+		if (stepsTaken >= nextMoveStates.peek().stepsUntilChange)
 		{
 			stepsInLastMove = currentMoveState.stepsUntilChange;
 			currentMoveState = nextMoveStates.remove();

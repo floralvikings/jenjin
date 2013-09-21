@@ -1,12 +1,15 @@
 package test.jenjinstudios.jgsf;
 
 import com.jenjinstudios.jgcf.WorldClient;
+import com.jenjinstudios.jgsf.WorldClientHandler;
 import com.jenjinstudios.jgsf.WorldServer;
 import com.jenjinstudios.math.Vector2D;
+import com.jenjinstudios.message.Message;
 import com.jenjinstudios.sql.WorldSQLHandler;
 import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.WorldObject;
+import com.jenjinstudios.world.state.MoveDirection;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -25,6 +28,10 @@ public class WorldServerTest
 	private World world;
 	/** The world client used to test. */
 	private WorldClient worldClient;
+	/** The WorldClientHandler used to test. */
+	private WorldClientHandler worldClientHandler;
+	/** The player used to test. */
+	private Actor player;
 
 	/**
 	 * Set up the client and server.
@@ -50,6 +57,13 @@ public class WorldServerTest
 		worldClient.loginToWorld();
 		int postLogin = world.getObjectCount();
 		Assert.assertEquals(preLogin + 1, postLogin);
+
+		worldClientHandler = worldServer.getClientHandlerByUsername("TestAccount01");
+		player = worldClientHandler.getPlayer();
+
+		// Hard set the player's position to 0
+		player.setVector2D(0, 0);
+		worldClient.getPlayer().setVector2D(0, 0);
 	}
 
 	/**
@@ -60,6 +74,9 @@ public class WorldServerTest
 	@After
 	public void tearDown() throws Exception
 	{
+		// Hard reset the player in case movement goes wrong.
+		player.setVector2D(0, 0);
+
 		// Test logging out.
 		int preLogout = world.getObjectCount();
 		worldClient.logoutOfWorld();
@@ -72,6 +89,41 @@ public class WorldServerTest
 	}
 
 	/**
+	 * Test the movement requests.
+	 *
+	 * @throws Exception If there's an exception.
+	 */
+	@Test
+	public void testMovement() throws Exception
+	{
+		// Make sure the actor moves, within reasonably accuracy accounting for time.
+		Message moveForwardMessage = new Message("StateChangeRequest");
+		moveForwardMessage.setArgument("direction", MoveDirection.FRONT.ordinal());
+		moveForwardMessage.setArgument("angle", 0d);
+		int updatesSinceLogin = (int) ((System.nanoTime() - worldClientHandler.getLoggedInTime()) / (worldServer.PERIOD * 1000000));
+		moveForwardMessage.setArgument("stepsUntilChange", updatesSinceLogin);
+
+		Message moveBackMessage = new Message("StateChangeRequest");
+		moveBackMessage.setArgument("direction", MoveDirection.BACK.ordinal());
+		moveBackMessage.setArgument("angle", 0d);
+		moveBackMessage.setArgument("stepsUntilChange", 5);
+
+		Message idleMessage = new Message("StateChangeRequest");
+		idleMessage.setArgument("direction", MoveDirection.IDLE.ordinal());
+		idleMessage.setArgument("angle", 0d);
+		idleMessage.setArgument("stepsUntilChange", 5);
+
+		worldClient.sendMessage(moveForwardMessage);
+		worldClient.sendMessage(moveBackMessage);
+		worldClient.sendMessage(idleMessage);
+
+		Thread.sleep(worldServer.PERIOD * 6);
+		Assert.assertEquals(25, player.getVector2D().getXCoordinate(), 5.0d);
+		Thread.sleep(worldServer.PERIOD * 5);
+		Assert.assertEquals(0, player.getVector2D().getXCoordinate(), 5.0d);
+	}
+
+	/**
 	 * Runs a battery of tests for the WorldServer.
 	 *
 	 * @throws Exception If there's an exception.
@@ -80,7 +132,6 @@ public class WorldServerTest
 	public void testWorldServer() throws Exception
 	{
 		// Test visible actors and location.
-		Actor player = worldServer.getClientHandlerByUsername("TestAccount01").getPlayer();
 		Assert.assertEquals(0, player.getVisibleObjects().size());
 		Assert.assertEquals(new Vector2D(0, 0), player.getVector2D());
 		Assert.assertEquals(16, player.getVisibleLocations().size());
