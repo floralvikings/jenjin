@@ -3,6 +3,8 @@ package com.jenjinstudios.world;
 import com.jenjinstudios.math.Vector2D;
 
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Contains all the Zones, Locations and GameObjects.
@@ -11,6 +13,8 @@ import java.util.ArrayList;
  */
 public class World
 {
+	/** The Logger used for this class. */
+	private static final Logger LOGGER = Logger.getLogger(World.class.getName());
 	/** The size of the world's location grid. */
 	public final int SIZE = 10;
 	/** The grid of locations in the game world. */
@@ -72,7 +76,14 @@ public class World
 	 */
 	public Location getLocationForCoordinates(double x, double z)
 	{
-		return locationGrid[(int) x / Location.SIZE][(int) z / Location.SIZE];
+		try
+		{
+			return locationGrid[(int) x / Location.SIZE][(int) z / Location.SIZE];
+		} catch (ArrayIndexOutOfBoundsException ex)
+		{
+			LOGGER.log(Level.SEVERE, "Attempted to access location with invalid coodinates: ({0}, {1})", new Object[]{x, z});
+			throw ex;
+		}
 	}
 
 	/**
