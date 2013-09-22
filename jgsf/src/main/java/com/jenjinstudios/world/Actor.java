@@ -124,17 +124,67 @@ public class Actor extends WorldObject
 	{
 		stepsTaken++;
 		MoveState nextState;
-
 		synchronized (nextMoveStates)
 		{
 			nextState = nextMoveStates.peek();
 		}
-
+		int overStepped = 0;
+		double oldStepAngle = calculateStepAngle();
 		if (nextState != null)
-			changeState();
-
+			overStepped = changeState();
+		double newStepAngle = calculateStepAngle();
+		for (int i = 0; i < overStepped; i++)
+		{
+			stepBack(oldStepAngle);
+			stepForward(newStepAngle);
+		}
 		// Get the angle in which the player will be moving.
-		double stepAngle = calculateStepAngle();
+		stepForward(newStepAngle);
+	}
+
+	/**
+	 * Change to the next state.
+	 *
+	 * @return The number of steps the actor has taken above what should have been.
+	 */
+	private int changeState()
+	{
+		int overstepped = stepsTaken - nextMoveStates.peek().stepsUntilChange;
+
+		if (overstepped >= 0)
+		{
+			stepsInLastMove = currentMoveState.stepsUntilChange;
+			currentMoveState = nextMoveStates.remove();
+			newState = true;
+			stepsTaken = 0;
+		}
+
+		return overstepped;
+	}
+
+	/**
+	 * Take a step according to the current move state.
+	 *
+	 * @param stepAngle The angle in which the actor should step.
+	 */
+	public void stepForward(double stepAngle)
+	{
+		if (currentMoveState.direction == IDLE) return;
+
+		// TODO This will be used a lot; could it be optimized?
+		double twoPi = (2 * Math.PI);
+		stepAngle = stepAngle < 0 ? twoPi + stepAngle : stepAngle % twoPi;
+		setVector2D(getVector2D().getVectorInDirection(STEP_LENGTH, stepAngle));
+	}
+
+	/**
+	 * Take a step back in according to the given forward angle.
+	 *
+	 * @param stepAngle The angle in which to move backward.
+	 */
+	private void stepBack(double stepAngle)
+	{
+		stepAngle -= Math.PI;
 
 		if (currentMoveState.direction == IDLE) return;
 
@@ -182,19 +232,6 @@ public class Actor extends WorldObject
 				break;
 		}
 		return stepAngle;
-	}
-
-	/** Change to the next state. */
-	private void changeState()
-	{
-		// TODO The correction of position will need to take place here.
-		if (stepsTaken >= nextMoveStates.peek().stepsUntilChange)
-		{
-			stepsInLastMove = currentMoveState.stepsUntilChange;
-			currentMoveState = nextMoveStates.remove();
-			newState = true;
-			stepsTaken = 0;
-		}
 	}
 
 	/**
