@@ -9,6 +9,10 @@ import com.jenjinstudios.math.Vector2D;
  */
 public class WorldObject
 {
+	/** The default name of this actor. */
+	public static final String DEFAULT_NAME = "Object";
+	/** The name of this actor. */
+	private final String name;
 	/** The vector2D in the world at which the object is located. */
 	private Vector2D vector2D;
 	/** The direction in which this object is facing. */
@@ -19,10 +23,6 @@ public class WorldObject
 	private World world;
 	/** The location in which this object is residing. */
 	private Location location;
-	/** The name of this actor. */
-	private final String name;
-	/** The default name of this actor. */
-	public static final String DEFAULT_NAME = "Object";
 
 	/** Construct a new WorldObject. */
 	public WorldObject()
@@ -75,8 +75,9 @@ public class WorldObject
 	 * Set this object's current position.
 	 *
 	 * @param vector2D The new position.
+	 * @throws InvalidLocationException If the supplied coordinates point to an invalid location.
 	 */
-	public void setVector2D(Vector2D vector2D)
+	public void setVector2D(Vector2D vector2D) throws InvalidLocationException
 	{
 		this.vector2D = new Vector2D(vector2D);
 		Location oldLocation = location;
@@ -99,8 +100,9 @@ public class WorldObject
 	 *
 	 * @param x The new x coordinate.
 	 * @param z The new z coordinate.
+	 * @throws InvalidLocationException If the supplied coordinates indicate an invalid location.
 	 */
-	public void setVector2D(double x, double z)
+	public void setVector2D(double x, double z) throws InvalidLocationException
 	{
 		setVector2D(new Vector2D(x, z));
 	}
@@ -157,7 +159,13 @@ public class WorldObject
 		if (this.world != null)
 			throw new IllegalArgumentException("The world has already been set for this object.");
 		this.world = world;
-		location = world.getLocationForCoordinates(this.vector2D);
+		try
+		{
+			location = world.getLocationForCoordinates(this.vector2D);
+		} catch (InvalidLocationException ignored)
+		{
+			// The vector has already been set; why worry?
+		}
 		location.addObject(this);
 	}
 

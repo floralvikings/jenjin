@@ -73,8 +73,9 @@ public class World
 	 * @param x The x coordinate.
 	 * @param z The z coordinate
 	 * @return The location that contains the specified coordinates.
+	 * @throws InvalidLocationException If the coordinates supplied point to an invalid location.
 	 */
-	public Location getLocationForCoordinates(double x, double z)
+	public Location getLocationForCoordinates(double x, double z) throws InvalidLocationException
 	{
 		try
 		{
@@ -82,7 +83,7 @@ public class World
 		} catch (ArrayIndexOutOfBoundsException ex)
 		{
 			LOGGER.log(Level.SEVERE, "Attempted to access location with invalid coodinates: ({0}, {1})", new Object[]{x, z});
-			throw ex;
+			throw new InvalidLocationException(new Vector2D(x, z));
 		}
 	}
 
@@ -91,8 +92,9 @@ public class World
 	 *
 	 * @param vector2D The vector2D
 	 * @return The location that contains the specified vector2D.
+	 * @throws InvalidLocationException If the coordinates specified indicate an invalid locatoin.
 	 */
-	public Location getLocationForCoordinates(Vector2D vector2D)
+	public Location getLocationForCoordinates(Vector2D vector2D) throws InvalidLocationException
 	{
 		return getLocationForCoordinates(vector2D.getXCoordinate(), vector2D.getZCoordinate());
 	}

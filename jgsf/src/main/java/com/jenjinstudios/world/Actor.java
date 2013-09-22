@@ -4,6 +4,8 @@ import com.jenjinstudios.world.state.MoveState;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static com.jenjinstudios.world.state.MoveDirection.IDLE;
 
@@ -28,6 +30,8 @@ public class Actor extends WorldObject
 	public static final int VIEW_RADIUS = 4;
 	/** The length of each step. */
 	public static final float STEP_LENGTH = 5;
+	/** The logger for this class. */
+	private static final Logger LOGGER = Logger.getLogger(Actor.class.getName());
 	/** The next move. */
 	private final LinkedList<MoveState> nextMoveStates;
 	/** The array of visible locations. */
@@ -133,11 +137,11 @@ public class Actor extends WorldObject
 		if (nextState != null)
 			overStepped = changeState();
 		double newStepAngle = calculateStepAngle();
+		// Have to step back before we step forward to avoid any strange out-of-bounds exceptions.
 		for (int i = 0; i < overStepped; i++)
-		{
 			stepBack(oldStepAngle);
+		for (int i = 0; i < overStepped; i++)
 			stepForward(newStepAngle);
-		}
 		// Get the angle in which the player will be moving.
 		stepForward(newStepAngle);
 	}
@@ -174,7 +178,13 @@ public class Actor extends WorldObject
 		// TODO This will be used a lot; could it be optimized?
 		double twoPi = (2 * Math.PI);
 		stepAngle = stepAngle < 0 ? twoPi + stepAngle : stepAngle % twoPi;
-		setVector2D(getVector2D().getVectorInDirection(STEP_LENGTH, stepAngle));
+		try
+		{
+			setVector2D(getVector2D().getVectorInDirection(STEP_LENGTH, stepAngle));
+		} catch (InvalidLocationException ex)
+		{
+			// TODO This is where we need to force-idle, and raise the forced-state flag.
+		}
 	}
 
 	/**
@@ -191,7 +201,13 @@ public class Actor extends WorldObject
 		// TODO This will be used a lot; could it be optimized?
 		double twoPi = (2 * Math.PI);
 		stepAngle = stepAngle < 0 ? twoPi + stepAngle : stepAngle % twoPi;
-		setVector2D(getVector2D().getVectorInDirection(STEP_LENGTH, stepAngle));
+		try
+		{
+			setVector2D(getVector2D().getVectorInDirection(STEP_LENGTH, stepAngle));
+		} catch (InvalidLocationException ex)
+		{
+			LOGGER.log(Level.SEVERE, "Error while correcting client steps.", ex);
+		}
 	}
 
 	/**
