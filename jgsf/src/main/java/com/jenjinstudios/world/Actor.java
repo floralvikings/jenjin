@@ -1,5 +1,6 @@
 package com.jenjinstudios.world;
 
+import com.jenjinstudios.world.state.MoveDirection;
 import com.jenjinstudios.world.state.MoveState;
 
 import java.util.ArrayList;
@@ -20,7 +21,11 @@ import static com.jenjinstudios.world.state.MoveDirection.IDLE;
  * number of states, the Actor's state is updated, and the Actor then takes the number of extra steps in the correct
  * direction.
  * </p>
- * An Actor's state is considered "changed" when the Actor is facing a new direction or moving in a new direction.
+ * An Actor's state is considered "changed" when the Actor is facing a new direction or moving in a new direction. An
+ * actor's state is considered "forced" when the Actor attempts to make an illegal move, and the world forces the actor
+ * to halt.  The actor's forced state will always be facing the angle of the most recently added move state (even if the
+ * state causes an illegal move) and IDLE.  The "steps until change" value is determined from the number of steps that
+ * were taken until the state was forced.
  *
  * @author Caleb Brinkman
  */
@@ -126,44 +131,57 @@ public class Actor extends WorldObject
 	/** Take a step using the current movement state. */
 	private void step()
 	{
-		stepsTaken++;
 		MoveState nextState;
 		synchronized (nextMoveStates)
 		{
 			nextState = nextMoveStates.peek();
 		}
-		int overStepped = 0;
-		double oldStepAngle = calculateStepAngle();
+
 		if (nextState != null)
-			overStepped = changeState();
-		double newStepAngle = calculateStepAngle();
-		// Have to step back before we step forward to avoid any strange out-of-bounds exceptions.
-		for (int i = 0; i < overStepped; i++)
-			stepBack(oldStepAngle);
-		for (int i = 0; i < overStepped; i++)
-			stepForward(newStepAngle);
+			changeState();
+
+
 		// Get the angle in which the player will be moving.
-		stepForward(newStepAngle);
+		stepForward(calculateStepAngle());
+
+		stepsTaken++;
 	}
 
 	/**
-	 * Change to the next state.
+	 * Change to the next state, and correct for any over steps.
 	 *
 	 * @return The number of steps the actor has taken above what should have been.
 	 */
 	private int changeState()
 	{
-		int overstepped = stepsTaken - nextMoveStates.peek().stepsUntilChange;
+		double oldStepAngle = calculateStepAngle();
+		int overStepped = stepsTaken - nextMoveStates.peek().stepsUntilChange;
 
-		if (overstepped >= 0)
+		if (overStepped >= 0)
 		{
+			MoveDirection oldDirection = currentMoveState.direction;
 			stepsInLastMove = currentMoveState.stepsUntilChange;
 			currentMoveState = nextMoveStates.remove();
 			newState = true;
 			stepsTaken = 0;
+			setDirection(currentMoveState.moveAngle);
+
+			double newStepAngle = calculateStepAngle();
+
+			// Have to step back before we step forward to avoid any strange out-of-bounds exceptions.
+			if (oldDirection != IDLE)
+				for (int i = 0; i < overStepped; i++)
+				{
+					stepBack(oldStepAngle);
+				}
+			for (int i = 0; i < overStepped; i++)
+			{
+				stepForward(newStepAngle);
+			}
 		}
 
-		return overstepped;
+
+		return overStepped;
 	}
 
 	/**
@@ -174,7 +192,6 @@ public class Actor extends WorldObject
 	public void stepForward(double stepAngle)
 	{
 		if (currentMoveState.direction == IDLE) return;
-
 		// TODO This will be used a lot; could it be optimized?
 		double twoPi = (2 * Math.PI);
 		stepAngle = stepAngle < 0 ? twoPi + stepAngle : stepAngle % twoPi;
@@ -184,6 +201,18 @@ public class Actor extends WorldObject
 		} catch (InvalidLocationException ex)
 		{
 			// TODO This is where we need to force-idle, and raise the forced-state flag.
+			System.out.println("Forcing Idle");
+			forceIdle();
+		}
+	}
+
+	/** Force the actor into an idle state, clear all pending states, and raise the forced state flag. */
+	private void forceIdle()
+	{
+		currentMoveState = new MoveState(IDLE, stepsTaken, currentMoveState.moveAngle);
+		synchronized (nextMoveStates)
+		{
+			nextMoveStates.clear();
 		}
 	}
 
@@ -206,6 +235,7 @@ public class Actor extends WorldObject
 			setVector2D(getVector2D().getVectorInDirection(STEP_LENGTH, stepAngle));
 		} catch (InvalidLocationException ex)
 		{
+			// Something very strange is happening if corrected steps lead out of bounds...
 			LOGGER.log(Level.SEVERE, "Error while correcting client steps.", ex);
 		}
 	}

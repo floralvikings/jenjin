@@ -79,6 +79,8 @@ public class World
 	{
 		try
 		{
+			if (x < 0 || z < 0)
+				throw new InvalidLocationException(new Vector2D(x, z));
 			return locationGrid[(int) x / Location.SIZE][(int) z / Location.SIZE];
 		} catch (ArrayIndexOutOfBoundsException ex)
 		{
