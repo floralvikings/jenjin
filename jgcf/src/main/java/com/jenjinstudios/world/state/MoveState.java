@@ -9,14 +9,30 @@ package com.jenjinstudios.world.state;
  */
 public class MoveState
 {
+	/** The constant used for an "idle" move state. */
+	public static final double IDLE = Double.NEGATIVE_INFINITY;
+	/** The forward state. */
+	public static final double FRONT = Math.PI * 0;
+	/** The forward-right state. */
+	public static final double FRONT_RIGHT = Math.PI * -0.25;
+	/** The right state. */
+	public static final double RIGHT = Math.PI * -0.5;
+	/** The back-right state. */
+	public static final double BACK_RIGHT = Math.PI * -0.75;
+	/** The backward state. */
+	public static final double BACK = Math.PI;
+	/** The back-left state. */
+	public static final double BACK_LEFT = Math.PI * 0.75;
+	/** The left state. */
+	public static final double LEFT = Math.PI * 0.5;
+	/** The front-left state. */
+	public static final double FRONT_LEFT = Math.PI * 0.25;
 	/** The number of steps in the last move. */
 	public final int stepsUntilChange;
 	/** The direction of movement. */
-	public final MoveDirection direction;
+	public final double direction;
 	/** The angle of movement. */
 	public final double moveAngle;
-	/** Caches the MoveDirection values. */
-	private static final MoveDirection[] values = MoveDirection.values();
 
 	/**
 	 * Construct a new MoveState.
@@ -25,23 +41,10 @@ public class MoveState
 	 * @param stepsUntilChange The steps in the last movement.
 	 * @param moveAngle        The angle of movement.
 	 */
-	public MoveState(int direction, int stepsUntilChange, double moveAngle)
-	{
-		this(values[direction], stepsUntilChange, moveAngle);
-	}
-
-	/**
-	 * Construct a new MoveState.
-	 *
-	 * @param direction        The direction of movement.
-	 * @param stepsUntilChange The steps in the last movement.
-	 * @param moveAngle        The angle of movement.
-	 */
-	public MoveState(MoveDirection direction, int stepsUntilChange, double moveAngle)
+	public MoveState(double direction, int stepsUntilChange, double moveAngle)
 	{
 		this.direction = direction;
 		this.stepsUntilChange = stepsUntilChange;
 		this.moveAngle = moveAngle;
 	}
-
 }

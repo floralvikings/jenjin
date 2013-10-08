@@ -123,7 +123,7 @@ public class WorldClientHandler extends ClientHandler
 			newState.setArgument("id", changedActor.getId());
 			newState.setArgument("direction", changedActor.getCurrentDirection());
 			newState.setArgument("angle", changedActor.getCurrentAngle());
-			newState.setArgument("stepsUntilChange", changedActor.getStepsInLastMove());
+			newState.setArgument("stepsUntilChange", changedActor.getStepsInLastCompletedMove());
 		}
 	}
 

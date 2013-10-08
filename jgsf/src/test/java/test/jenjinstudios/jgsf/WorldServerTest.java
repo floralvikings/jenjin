@@ -9,7 +9,7 @@ import com.jenjinstudios.sql.WorldSQLHandler;
 import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.WorldObject;
-import com.jenjinstudios.world.state.MoveDirection;
+import com.jenjinstudios.world.state.MoveState;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -98,18 +98,18 @@ public class WorldServerTest
 	{
 		// Make sure the actor moves, within reasonably accuracy accounting for time.
 		Message moveForwardMessage = new Message("StateChangeRequest");
-		moveForwardMessage.setArgument("direction", MoveDirection.FRONT.ordinal());
+		moveForwardMessage.setArgument("direction", MoveState.FRONT);
 		moveForwardMessage.setArgument("angle", 0d);
 		int updatesSinceLogin = (int) ((System.nanoTime() - worldClientHandler.getLoggedInTime()) / (worldServer.PERIOD * 1000000));
 		moveForwardMessage.setArgument("stepsUntilChange", updatesSinceLogin);
 
 		Message moveBackMessage = new Message("StateChangeRequest");
-		moveBackMessage.setArgument("direction", MoveDirection.BACK.ordinal());
+		moveBackMessage.setArgument("direction", MoveState.BACK);
 		moveBackMessage.setArgument("angle", 0d);
 		moveBackMessage.setArgument("stepsUntilChange", 5);
 
 		Message idleMessage = new Message("StateChangeRequest");
-		idleMessage.setArgument("direction", MoveDirection.IDLE.ordinal());
+		idleMessage.setArgument("direction", MoveState.IDLE);
 		idleMessage.setArgument("angle", 0d);
 		idleMessage.setArgument("stepsUntilChange", 5);
 

@@ -1,9 +1,9 @@
 package test.jenjinstudios.world.actor;
 
+import com.jenjinstudios.math.Vector2D;
 import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.WorldObject;
-import com.jenjinstudios.world.state.MoveDirection;
 import com.jenjinstudios.world.state.MoveState;
 import org.junit.Assert;
 import org.junit.Before;
@@ -46,11 +46,11 @@ public class ActorTest
 		Assert.assertEquals(1, world.getObjectCount());
 
 		actor.setVector2D(0, 0);
-		actor.addMoveState(new MoveState(MoveDirection.FRONT, 10, 0));
-		actor.addMoveState(new MoveState(MoveDirection.BACK, 10, 0));
-		actor.addMoveState(new MoveState(MoveDirection.IDLE, 10, 0));
-		actor.addMoveState(new MoveState(MoveDirection.FRONT_LEFT, 10, 0));
-		actor.addMoveState(new MoveState(MoveDirection.IDLE, 10, 0));
+		actor.addMoveState(new MoveState(MoveState.FRONT, 10, 0));
+		actor.addMoveState(new MoveState(MoveState.BACK, 10, 0));
+		actor.addMoveState(new MoveState(MoveState.IDLE, 10, 0));
+		actor.addMoveState(new MoveState(MoveState.FRONT_LEFT, 10, 0));
+		actor.addMoveState(new MoveState(MoveState.IDLE, 10, 0));
 
 		updateWorld(10);
 		Assert.assertEquals("State 1 X: ", 0, actor.getVector2D().getXCoordinate(), 0);
@@ -145,11 +145,11 @@ public class ActorTest
 		world.addObject(player);
 
 		// first we move right a single step
-		MoveState stepState = new MoveState(MoveDirection.FRONT, 0, Math.PI);
+		MoveState stepState = new MoveState(MoveState.FRONT, 0, Math.PI);
 		player.addMoveState(stepState);
 
-		updateWorld(4);
-		System.out.println(player.getVector2D());
+		updateWorld(7); // position should correct to 0,0
+		Assert.assertEquals(new Vector2D(0, 0), player.getVector2D());
 	}
 
 	/**

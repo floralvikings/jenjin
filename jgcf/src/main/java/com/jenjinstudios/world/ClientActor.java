@@ -4,6 +4,8 @@ import com.jenjinstudios.world.state.MoveState;
 
 import java.util.LinkedList;
 
+import static com.jenjinstudios.world.state.MoveState.IDLE;
+
 /**
  * The {@code ClientActor} class is used to represent a server-side {@code Actor} object on the client side.  It is an
  * object capable of movement.
@@ -70,8 +72,8 @@ public class ClientActor extends ClientObject
 	{
 		stepsTaken++;
 		MoveState nextState;
-		double stepAngle = getDirection();
-		boolean isIdle = false;
+		double stepAngle;
+		boolean isIdle;
 		synchronized (nextMoveStates)
 		{
 			nextState = nextMoveStates.peek();
@@ -80,35 +82,8 @@ public class ClientActor extends ClientObject
 		if (nextState != null)
 			changeState();
 
-		switch (currentMoveState.direction)
-		{
-			case IDLE:
-				isIdle = true;
-				break;
-			case FRONT:
-				break;
-			case FRONT_RIGHT:
-				stepAngle = (getDirection() - Math.PI * 0.25);
-				break;
-			case RIGHT:
-				stepAngle = (getDirection() - Math.PI * 0.5);
-				break;
-			case BACK_RIGHT:
-				stepAngle = (getDirection() - Math.PI * 0.75);
-				break;
-			case BACK:
-				stepAngle = (getDirection() + Math.PI);
-				break;
-			case BACK_LEFT:
-				stepAngle = (getDirection() + Math.PI * 0.75);
-				break;
-			case LEFT:
-				stepAngle = (getDirection() + Math.PI * 0.5);
-				break;
-			case FRONT_LEFT:
-				stepAngle = (getDirection() + Math.PI * 0.25);
-				break;
-		}
+		isIdle = currentMoveState.direction == IDLE;
+		stepAngle = getDirection() + currentMoveState.direction;
 
 		if (!isIdle)
 		{
