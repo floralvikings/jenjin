@@ -15,7 +15,7 @@ import java.util.logging.Logger;
  *
  * @author Caleb Brinkman
  */
-public class WorldClient extends Client
+public class WorldClient extends AuthClient
 {
 	/** The logger associated with this class. */
 	private static final Logger LOGGER = Logger.getLogger(WorldClient.class.getName());
@@ -27,11 +27,11 @@ public class WorldClient extends Client
 	private ClientActor player;
 
 	/**
-	 * Construct a client connecting to the given address over the given port.  This client <i>must</i> have a username
-	 * and password.
+	 * Construct a client connecting to the given address over the given port.  This client <i>must</i> have a username and
+	 * password.
 	 *
-	 * @param address  The address to which this client will attempt to connect.
-	 * @param port     The port over which this client will attempt to connect.
+	 * @param address The address to which this client will attempt to connect.
+	 * @param port The port over which this client will attempt to connect.
 	 * @param username The username that will be used by this client.
 	 * @param password The password that will be used by this client.
 	 */
@@ -140,13 +140,10 @@ public class WorldClient extends Client
 	private class UpdateLoop implements Runnable
 	{
 		/**
-		 * When an object implementing interface {@code Runnable} is used
-		 * to create a thread, starting the thread causes the object's
-		 * {@code run} method to be called in that separately executing
-		 * thread.
+		 * When an object implementing interface {@code Runnable} is used to create a thread, starting the thread causes the
+		 * object's {@code run} method to be called in that separately executing thread.
 		 * <p/>
-		 * The general contract of the method {@code run} is that it may
-		 * take any action whatsoever.
+		 * The general contract of the method {@code run} is that it may take any action whatsoever.
 		 *
 		 * @see Thread#run()
 		 */

@@ -105,4 +105,15 @@
         <argument type="boolean" name="success" />
         <executable language="java" side="client">com.jenjinstudios.jgcf.message.ExecutableWorldLogoutResponse</executable>
     </message>
+
+    <message name="PingRequest" id="17">
+        <argument type="long" name="requestTimeNanos" />
+        <executable language="java" side="server">com.jenjinstudios.jgsf.message.ExecutablePingRequest</executable>
+    </message>
+
+    <message name="PingResponse" id="18">
+        <argument type="long" name="requestTimeNanos" />
+        <executable language="java" side="client">com.jenjinstudios.jgcf.message.ExecutablePingResponse</executable>
+    </message>
+
 </base_messages>

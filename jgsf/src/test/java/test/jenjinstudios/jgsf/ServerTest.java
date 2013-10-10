@@ -1,6 +1,6 @@
 package test.jenjinstudios.jgsf;
 
-import com.jenjinstudios.jgcf.Client;
+import com.jenjinstudios.jgcf.AuthClient;
 import com.jenjinstudios.jgsf.ClientHandler;
 import com.jenjinstudios.jgsf.Server;
 import com.jenjinstudios.sql.SQLHandler;
@@ -23,9 +23,9 @@ public class ServerTest
 	/** The chat server used for testing. */
 	private static Server<ClientHandler> server;
 	/** This client should login successfully. */
-	private static Client goodClient01;
+	private static AuthClient goodClient01;
 	/** This client will have the same credentials as goodClient01. */
-	private static Client sameClient;
+	private static AuthClient sameClient;
 	/** The time this test suite started. */
 	private static long startTime;
 
@@ -54,7 +54,7 @@ public class ServerTest
 	/**
 	 * Shut the server down when all is said and done.
 	 *
-	 * @throws java.io.IOException  If there is an error shutting down the server.
+	 * @throws java.io.IOException If there is an error shutting down the server.
 	 * @throws InterruptedException If there is interrupt.
 	 */
 	@AfterClass
@@ -69,17 +69,21 @@ public class ServerTest
 
 		while ((System.currentTimeMillis() - startTime) < 1500)
 			Thread.sleep(1);
-		assertEquals(50, server.getAverageUPS(), 0.1);
+		assertEquals(server.UPS, server.getAverageUPS(), 0.1);
 		server.shutdown();
 	}
 
-	/** Test the login and logout functionality. */
+	/**
+	 * Test the login and logout functionality.
+	 *
+	 * @throws Exception If there's an exception.
+	 */
 	@Test
-	public void testLoginLogout()
+	public void testLoginLogout() throws Exception
 	{
 		assertEquals(0, server.getNumClients());
 
-		goodClient01 = new Client("localhost", 51019, "TestAccount01", "testPassword");
+		goodClient01 = new AuthClient("localhost", 51019, "TestAccount01", "testPassword");
 		goodClient01.blockingStart();
 
 		goodClient01.sendLoginRequest();
@@ -93,12 +97,16 @@ public class ServerTest
 		goodClient01.shutdown();
 	}
 
-	/** Test the submission of an incorrect password. */
+	/**
+	 * Test the submission of an incorrect password.
+	 *
+	 * @throws Exception If there's an exception.
+	 */
 	@Test
-	public void testIncorrectPassword()
+	public void testIncorrectPassword() throws Exception
 	{
 		/* This client should fail to login. */
-		Client badClient = new Client("127.0.0.1", 51019, "TestAccount02", "This is an incorrect password.  Teehee.");
+		AuthClient badClient = new AuthClient("127.0.0.1", 51019, "TestAccount02", "This is an incorrect password.  Teehee.");
 		badClient.blockingStart();
 
 		badClient.sendLoginRequest();
@@ -107,11 +115,15 @@ public class ServerTest
 		badClient.shutdown();
 	}
 
-	/** Test the login time. */
+	/**
+	 * Test the login time.
+	 *
+	 * @throws Exception If there's an exception.
+	 */
 	@Test
-	public void testGetLoggedInTime()
+	public void testGetLoggedInTime() throws Exception
 	{
-		goodClient01 = new Client("localhost", 51019, "TestAccount01", "testPassword");
+		goodClient01 = new AuthClient("localhost", 51019, "TestAccount01", "testPassword");
 		goodClient01.blockingStart();
 
 		assertTrue(goodClient01.isRunning());
@@ -124,14 +136,18 @@ public class ServerTest
 		goodClient01.shutdown();
 	}
 
-	/** Test the login functionality for when clients are already logged in. */
+	/**
+	 * Test the login functionality for when clients are already logged in.
+	 *
+	 * @throws Exception If there's an exception.
+	 */
 	@Test
-	public void testAlreadyLoggedIn()
+	public void testAlreadyLoggedIn() throws Exception
 	{
-		goodClient01 = new Client("localhost", 51019, "TestAccount01", "testPassword");
+		goodClient01 = new AuthClient("localhost", 51019, "TestAccount01", "testPassword");
 		goodClient01.blockingStart();
 
-		sameClient = new Client("127.0.0.1", 51019, "TestAccount01", "testPassword");
+		sameClient = new AuthClient("127.0.0.1", 51019, "TestAccount01", "testPassword");
 		sameClient.blockingStart();
 
 		goodClient01.sendLoginRequest();
@@ -155,10 +171,10 @@ public class ServerTest
 	@Test
 	public void testEmergencyLogout() throws InterruptedException
 	{
-		goodClient01 = new Client("localhost", 51019, "TestAccount01", "testPassword");
+		goodClient01 = new AuthClient("localhost", 51019, "TestAccount01", "testPassword");
 		goodClient01.blockingStart();
 
-		sameClient = new Client("127.0.0.1", 51019, "TestAccount01", "testPassword");
+		sameClient = new AuthClient("127.0.0.1", 51019, "TestAccount01", "testPassword");
 		sameClient.blockingStart();
 
 		// This client logs in and shuts down before sending a proper logout request.
