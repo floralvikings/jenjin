@@ -188,7 +188,10 @@ public class Client extends Thread
 			}
 		} else
 		{
-			this.shutdown();
+			Message invalid = new Message("InvalidMessage");
+			invalid.setArgument("messageName", message.name);
+			invalid.setArgument("messageID", message.getID());
+			sendMessage(invalid);
 		}
 	}
 
