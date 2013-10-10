@@ -1,5 +1,10 @@
 <base_messages>
 
+    <message name="InvalidMessage" id="-1">
+        <argument type="String" name="messageName" />
+        <argument type="short" name="messageID" />
+    </message>
+
     <message name="FirstConnectResponse" id="0">
         <argument type="int" name="ups" />
     </message>

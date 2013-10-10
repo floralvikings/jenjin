@@ -251,7 +251,10 @@ public class ClientHandler extends Thread
 			getServer().addSyncedTask(exec);
 		} else
 		{
-			this.shutdown();
+			Message invalid = new Message("InvalidMessage");
+			invalid.setArgument("messageName", message.name);
+			invalid.setArgument("messageID", message.getID());
+			queueMessage(invalid);
 		}
 	}
 
