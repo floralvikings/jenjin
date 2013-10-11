@@ -84,7 +84,7 @@
         <executable language="java" side="client">com.jenjinstudios.jgcf.message.ExecutableForceStateMessage</executable>
         <argument type="double" name="direction" />
         <argument type="double" name="angle" />
-        <argument type="int" name="stepsFromLast" />
+        <argument type="long" name="timeOfForce" />
     </message>
 
     <message name="WorldLoginRequest" id="13">
