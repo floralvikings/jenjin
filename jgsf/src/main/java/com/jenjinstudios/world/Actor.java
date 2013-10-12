@@ -11,21 +11,17 @@ import static com.jenjinstudios.world.state.MoveState.IDLE;
 
 
 /**
- * Implement a WorldObject which is capable of movement.
- * </p>
- * Actors start with a {@code MoveState} with {@code MoveiDirection.IDLE}.  Each update, the Actor checks to see
- * if there are any MoveStates in the queue.  If there are, it checks the first state in line for the number of steps
- * needed before the state changes.  Once the number of steps has been reached, the state switches to that of the first
- * position in the queue, and the Actor's step counter is reset.  If an Actor "oversteps," which is determined if the
- * Actor has taken more than the required number of steps to change state, the Actor is moved back by the "overstepped"
- * number of states, the Actor's state is updated, and the Actor then takes the number of extra steps in the correct
- * direction.
- * </p>
- * An Actor's state is considered "changed" when the Actor is facing a new direction or moving in a new direction. An
- * actor's state is considered "forced" when the Actor attempts to make an illegal move, and the world forces the actor
- * to halt.  The actor's forced state will always be facing the angle of the most recently added move state (even if the
- * state causes an illegal move) and IDLE.  The "steps until change" value is determined from the number of steps that
- * were taken until the state was forced.
+ * Implement a WorldObject which is capable of movement. </p> Actors start with a {@code MoveState} with {@code
+ * MoveState.IDLE}.  Each update, the Actor checks to see if there are any MoveStates in the queue.  If there are, it
+ * checks the first state in line for the number of steps needed before the state changes.  Once the number of steps has
+ * been reached, the state switches to that of the first position in the queue, and the Actor's step counter is reset.
+ * If an Actor "oversteps," which is determined if the Actor has taken more than the required number of steps to change
+ * state, the Actor is moved back by the "overstepped" number of states, the Actor's state is updated, and the Actor
+ * then takes the number of extra steps in the correct direction. </p> An Actor's state is considered "changed" when the
+ * Actor is facing a new direction or moving in a new direction. An actor's state is considered "forced" when the Actor
+ * attempts to make an illegal move, and the world forces the actor to halt.  The actor's forced state will always be
+ * facing the angle of the most recently added move state (even if the state causes an illegal move) and IDLE. The
+ * "steps until change" value is determined from the number of steps that were taken until the state was forced.
  *
  * @author Caleb Brinkman
  */
@@ -83,10 +79,28 @@ public class Actor extends SightedObject
 	{
 		// Reset the new state flag.
 		newState = false;
-		// Store the current location (before step)
+
+		// Store the current state (before step)
 		Location oldLocation = getLocation();
-		// Take a step.
-		step();
+
+		// Test for a state change, and change state if necessary
+		int overStepped = getOverSteps();
+		// TODO This is where the cap for maximum number of over steps needs to be implemented.
+		// If the number of "over steps" is too high, discard all future move states and raise the forced-state flag
+		if (overStepped >= 0)
+		{
+			// Store the old position / state
+			boolean wasIdle = currentMoveState.direction == IDLE;
+			double oldStepAngle = calculateStepAngle();
+			// Change the state
+			doStateChange();
+			double newStepAngle = calculateStepAngle();
+			// Correct for any "over" steps.
+			correctSteps(overStepped, oldStepAngle, newStepAngle, wasIdle);
+		}
+		stepForward(calculateStepAngle());
+		stepsTaken++;
+
 		// If we're in a new locations after stepping, update the visible array.
 		if (oldLocation != getLocation() || getVisibleLocations().isEmpty())
 			resetVisibleLocations();
@@ -94,41 +108,33 @@ public class Actor extends SightedObject
 		resetVisibleObjects();
 	}
 
-	/** Take a step using the current movement state. */
-	private void step()
+	/**
+	 * Get the number of steps past the number needed for the state change, which will be negative if a state change is not
+	 * needed.
+	 *
+	 * @return The number of steps past the number needed for the state change, which will be negative if a state change is
+	 *         not needed.
+	 */
+	private int getOverSteps()
 	{
-		if (nextState != null)
-			doStateChange();
-
-		// Get the angle in which the player will be moving.
-		stepForward(calculateStepAngle());
-
-		stepsTaken++;
+		if (nextState == null)
+			return -1;
+		else return stepsTaken - nextState.stepsUntilChange;
 	}
 
 	/** Change to the next state, and correct for any over steps. */
 	private void doStateChange()
 	{
-		double oldStepAngle = calculateStepAngle();
-		int overStepped = stepsTaken - nextState.stepsUntilChange;
+		stepsInLastCompletedMove = nextState.stepsUntilChange;
+		currentMoveState = nextState;
 
-		if (overStepped >= 0)
-		{
-			boolean wasIdle = currentMoveState.direction == IDLE;
-			stepsInLastCompletedMove = nextState.stepsUntilChange;
-			currentMoveState = nextState;
+		if (!nextMoveStates.isEmpty())
+			nextState = nextMoveStates.remove();
 
-			if (!nextMoveStates.isEmpty())
-				nextState = nextMoveStates.remove();
+		newState = true;
+		stepsTaken = 0;
+		setDirection(currentMoveState.moveAngle);
 
-			newState = true;
-			stepsTaken = 0;
-			setDirection(currentMoveState.moveAngle);
-
-			double newStepAngle = calculateStepAngle();
-
-			correctSteps(overStepped, oldStepAngle, newStepAngle, wasIdle);
-		}
 	}
 
 	/**
