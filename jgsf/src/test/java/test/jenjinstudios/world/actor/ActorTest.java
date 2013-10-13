@@ -145,7 +145,7 @@ public class ActorTest
 		world.addObject(player);
 
 		// first we move right a single step
-		MoveState stepState = new MoveState(MoveState.FRONT, 0, Math.PI);
+		MoveState stepState = new MoveState(MoveState.BACK, 0, 0);
 		player.addMoveState(stepState);
 
 		updateWorld(7); // position should correct to 0,0

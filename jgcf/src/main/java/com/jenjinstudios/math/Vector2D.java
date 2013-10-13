@@ -1,5 +1,7 @@
 package com.jenjinstudios.math;
 
+import com.jenjinstudios.world.state.MoveState;
+
 /**
  * Stores a set of x and z coordinates.
  *
@@ -88,10 +90,12 @@ public class Vector2D
 	 *
 	 * @param distance The distance.
 	 * @param angle    The angle in radians.
+	 *
 	 * @return The new Vector2D;
 	 */
 	public Vector2D getVectorInDirection(double distance, double angle)
 	{
+		if (angle == MoveState.IDLE) return new Vector2D(this);
 		double cos = Math.cos(angle);
 		double sin = Math.sin(angle);
 		double newX = Round.round(xCoordinate + (distance * cos), 4);

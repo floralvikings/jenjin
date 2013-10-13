@@ -1,6 +1,5 @@
 package com.jenjinstudios.world;
 
-import com.jenjinstudios.math.Vector2D;
 import com.jenjinstudios.world.state.MoveState;
 
 import java.util.LinkedList;
@@ -29,6 +28,8 @@ public class Actor extends SightedObject
 {
 	/** The length of each step. */
 	public static final float STEP_LENGTH = 5;
+	/** The maximum number of steps this actor is allowed to correct. */
+	public static final int MAX_CORRECT = 10;
 	/** The logger for this class. */
 	private static final Logger LOGGER = Logger.getLogger(Actor.class.getName());
 	/** The next move. */
@@ -43,6 +44,8 @@ public class Actor extends SightedObject
 	private boolean newState;
 	/** Keeps track of the next state in the queue. */
 	private MoveState nextState;
+	/** Flags whether the state of this actor was forced during this update. */
+	private boolean forcedState;
 
 	/** Construct a new Actor. */
 	public Actor()
@@ -80,11 +83,7 @@ public class Actor extends SightedObject
 
 		// Store the current state (before step)
 		Location oldLocation = getLocation();
-
-		doStateChange();
-		stepForward(currentMoveState.stepAngle);
-		stepsTaken++;
-
+		step();
 		// If we're in a new locations after stepping, update the visible array.
 		if (oldLocation != getLocation() || getVisibleLocations().isEmpty())
 			resetVisibleLocations();
@@ -92,27 +91,28 @@ public class Actor extends SightedObject
 		resetVisibleObjects();
 	}
 
-	/**
-	 * Get the number of steps past the number needed for the state change, which will be negative if a state change is not
-	 * needed.
-	 *
-	 * @return The number of steps past the number needed for the state change, which will be negative if a state change is
-	 *         not needed.
-	 */
-	private int getOverSteps()
+	/** Take a step, changing state and correcting steps if necessary. */
+	public void step()
 	{
-		if (nextState == null)
-			return -1;
-		else return stepsTaken - nextState.stepsUntilChange;
+		doStateChange();
+		stepForward();
+		stepsTaken++;
 	}
 
 	/** Change to the next state, and correct for any over steps. */
 	private void doStateChange()
 	{
+		if (nextState == null) return;
 		// Test for a state change, and change state if necessary
-		int overStepped = getOverSteps();
+		int overStepped = stepsTaken - nextState.stepsUntilChange;
 		// TODO This is where the cap for maximum number of over steps needs to be implemented.
 		// If the number of "over steps" is too high, discard all future move states and raise the forced-state flag
+		if (overStepped >= MAX_CORRECT)
+		{
+			nextState = null;
+			nextMoveStates.clear();
+			setForcedState(currentMoveState);
+		}
 		if (overStepped >= 0)
 		{
 			// Store the old state.
@@ -139,50 +139,25 @@ public class Actor extends SightedObject
 	 */
 	private void correctSteps(int overstepped, MoveState oldState)
 	{
-
-		double newStepAngle = currentMoveState.stepAngle;
 		if (oldState.direction != MoveState.IDLE)
 			for (int i = 0; i < overstepped; i++)
 				stepBack(oldState.stepAngle);
 		for (int i = 0; i < overstepped; i++)
-			stepForward(newStepAngle);
+			stepForward();
 	}
 
-	/**
-	 * Take a step according to the current move state.
-	 *
-	 * @param stepAngle The angle in which the actor should step.
-	 */
-	public void stepForward(double stepAngle)
+	/** Take a step according to the current move state. */
+	public void stepForward()
 	{
 		if (currentMoveState.direction == IDLE) return;
-		Vector2D oldPos = getVector2D();
 		try
 		{
-			setVector2D(getVector2D().getVectorInDirection(STEP_LENGTH, stepAngle));
+			setVector2D(getVector2D().getVectorInDirection(STEP_LENGTH, currentMoveState.stepAngle));
 		} catch (InvalidLocationException ex)
 		{
 			// TODO This is where we need to force-idle, and raise the forced-state flag.
-			forceIdle(oldPos);
+			setForcedState(new MoveState(IDLE, stepsTaken, currentMoveState.moveAngle));
 		}
-	}
-
-	/**
-	 * Force the actor into an idle state, clear all pending states, and raise the forced state flag.
-	 *
-	 * @param oldPosition The position before the invalid location.
-	 */
-	private void forceIdle(Vector2D oldPosition)
-	{
-		currentMoveState = new MoveState(IDLE, stepsTaken, currentMoveState.moveAngle);
-		try
-		{
-			setVector2D(oldPosition);
-		} catch (InvalidLocationException e)
-		{
-			LOGGER.log(Level.SEVERE, "Couldn't reset vector after illegal set.");
-		}
-		nextMoveStates.clear();
 	}
 
 	/**
@@ -193,9 +168,7 @@ public class Actor extends SightedObject
 	private void stepBack(double stepAngle)
 	{
 		stepAngle -= Math.PI;
-
 		if (currentMoveState.direction == IDLE) return;
-
 		try
 		{
 			setVector2D(getVector2D().getVectorInDirection(STEP_LENGTH, stepAngle));
@@ -245,4 +218,26 @@ public class Actor extends SightedObject
 	 */
 	public MoveState getCurrentMoveState()
 	{ return currentMoveState; }
+
+	/**
+	 * Force the state of this actor to the given state and raise the forcedState flag.
+	 *
+	 * @param forced The state to which to force this actor.
+	 */
+	public void setForcedState(MoveState forced)
+	{
+		stepBack(currentMoveState.stepAngle);
+		this.currentMoveState = forced;
+		forcedState = true;
+	}
+
+	/**
+	 * Get whether this actor was forced into a state during the most recent update.
+	 *
+	 * @return Whether this actor was forced into a state during the most recent update.
+	 */
+	public boolean isForcedState()
+	{
+		return forcedState;
+	}
 }
