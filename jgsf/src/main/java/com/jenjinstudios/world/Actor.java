@@ -129,15 +129,18 @@ public class Actor extends SightedObject
 		// Store the old state.
 		MoveState oldState = currentMoveState;
 		stepsInLastCompletedMove = nextState.stepsUntilChange;
+		resetState();
+		correctOverSteps(overStepped, oldState);
+	}
+
+	/** Reset the move state, direction, and newState flag when changing the move state. */
+	private void resetState()
+	{
 		currentMoveState = nextState;
-
 		nextState = nextMoveStates.poll();
-
 		newState = true;
 		stepsTaken = 0;
 		setDirection(currentMoveState.moveAngle);
-
-		correctOverSteps(overStepped, oldState);
 	}
 
 	/** Stop the actor from correcting more steps than the allowed maximum. */
