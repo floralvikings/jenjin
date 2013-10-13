@@ -79,12 +79,10 @@ public class Actor extends SightedObject
 	public void update()
 	{
 		resetFlags();
-
-		// Store the current state (before step)
-		Location oldLocation = getLocation();
+		Location locationBeforeStep = getLocation();
 		step();
 		// If we're in a new locations after stepping, update the visible array.
-		if (oldLocation != getLocation() || getVisibleLocations().isEmpty())
+		if (locationBeforeStep != getLocation() || getVisibleLocations().isEmpty())
 			resetVisibleLocations();
 		// Reset the array of visible actors.
 		resetVisibleObjects();
