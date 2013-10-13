@@ -31,8 +31,6 @@ public class Actor extends SightedObject
 	public static final float STEP_LENGTH = 5;
 	/** The logger for this class. */
 	private static final Logger LOGGER = Logger.getLogger(Actor.class.getName());
-	/** The constant for 2*PI. */
-	public static double TWO_PI = (2 * Math.PI);
 	/** The next move. */
 	private final LinkedList<MoveState> nextMoveStates;
 	/** The current move. */
@@ -83,22 +81,8 @@ public class Actor extends SightedObject
 		// Store the current state (before step)
 		Location oldLocation = getLocation();
 
-		// Test for a state change, and change state if necessary
-		int overStepped = getOverSteps();
-		// TODO This is where the cap for maximum number of over steps needs to be implemented.
-		// If the number of "over steps" is too high, discard all future move states and raise the forced-state flag
-		if (overStepped >= 0)
-		{
-			// Store the old position / state
-			boolean wasIdle = currentMoveState.direction == IDLE;
-			double oldStepAngle = calculateStepAngle();
-			// Change the state
-			doStateChange();
-			double newStepAngle = calculateStepAngle();
-			// Correct for any "over" steps.
-			correctSteps(overStepped, oldStepAngle, newStepAngle, wasIdle);
-		}
-		stepForward(calculateStepAngle());
+		doStateChange();
+		stepForward(currentMoveState.stepAngle);
 		stepsTaken++;
 
 		// If we're in a new locations after stepping, update the visible array.
@@ -125,31 +109,41 @@ public class Actor extends SightedObject
 	/** Change to the next state, and correct for any over steps. */
 	private void doStateChange()
 	{
-		stepsInLastCompletedMove = nextState.stepsUntilChange;
-		currentMoveState = nextState;
+		// Test for a state change, and change state if necessary
+		int overStepped = getOverSteps();
+		// TODO This is where the cap for maximum number of over steps needs to be implemented.
+		// If the number of "over steps" is too high, discard all future move states and raise the forced-state flag
+		if (overStepped >= 0)
+		{
+			// Store the old state.
+			MoveState oldState = currentMoveState;
+			stepsInLastCompletedMove = nextState.stepsUntilChange;
+			currentMoveState = nextState;
 
-		if (!nextMoveStates.isEmpty())
-			nextState = nextMoveStates.remove();
+			if (!nextMoveStates.isEmpty())
+				nextState = nextMoveStates.remove();
 
-		newState = true;
-		stepsTaken = 0;
-		setDirection(currentMoveState.moveAngle);
-
+			newState = true;
+			stepsTaken = 0;
+			setDirection(currentMoveState.moveAngle);
+			// Correct for any "over" steps.
+			correctSteps(overStepped, oldState);
+		}
 	}
 
 	/**
 	 * Correct the given number of steps at the specified angles.
 	 *
-	 * @param overstepped  The number of steps over.
-	 * @param oldStepAngle The angle of previous movement.
-	 * @param newStepAngle The angle of current movement.
-	 * @param wasIdle      Whether the previous state was IDLE.
+	 * @param overstepped The number of steps over.
+	 * @param oldState    The
 	 */
-	private void correctSteps(int overstepped, double oldStepAngle, double newStepAngle, boolean wasIdle)
+	private void correctSteps(int overstepped, MoveState oldState)
 	{
-		if (!wasIdle)
+
+		double newStepAngle = currentMoveState.stepAngle;
+		if (oldState.direction != MoveState.IDLE)
 			for (int i = 0; i < overstepped; i++)
-				stepBack(oldStepAngle);
+				stepBack(oldState.stepAngle);
 		for (int i = 0; i < overstepped; i++)
 			stepForward(newStepAngle);
 	}
@@ -213,31 +207,12 @@ public class Actor extends SightedObject
 	}
 
 	/**
-	 * Calculate the angle of the direction in which the actor should step.
-	 *
-	 * @return The angle of the direction in which the actor should step.
-	 */
-	private double calculateStepAngle()
-	{
-		double sAngle = getDirection() + currentMoveState.direction;
-		return (sAngle < 0) ? (sAngle + TWO_PI) : (sAngle % TWO_PI);
-	}
-
-	/**
 	 * Get whether this actor has initialized a new state during this update.
 	 *
 	 * @return Whether the actor has changed moved states since the beginning of this update.
 	 */
 	public boolean isNewState()
 	{return newState;}
-
-	/**
-	 * Get the current direction in which the object is moving.
-	 *
-	 * @return The current direction in which the object is moving.
-	 */
-	public double getCurrentDirection()
-	{return currentMoveState.direction;}
 
 	/**
 	 * Get the direction in which the object is currently facing.

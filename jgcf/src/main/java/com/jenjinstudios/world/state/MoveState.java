@@ -1,14 +1,16 @@
 package com.jenjinstudios.world.state;
 
 /**
- * The {@code MovementState} class is used to establish what an {@code Actor}'s movement state is.  The
- * {@code stepsUntilChange} field indicates the number of steps (updates) the Actor should take before it changes to
- * the {@code MovementDirection} specified.
+ * The {@code MovementState} class is used to establish what an {@code Actor}'s movement state is.  The {@code
+ * stepsUntilChange} field indicates the number of steps (updates) the Actor should take before it changes to the {@code
+ * MovementDirection} specified.
  *
  * @author Caleb Brinkman
  */
 public class MoveState
 {
+	/** The constant for 2*PI. */
+	public static double TWO_PI = (2 * Math.PI);
 	/** The constant used for an "idle" move state. */
 	public static final double IDLE = Double.NEGATIVE_INFINITY;
 	/** The forward state. */
@@ -33,6 +35,8 @@ public class MoveState
 	public final double direction;
 	/** The angle of movement. */
 	public final double moveAngle;
+	/** The actual angle of movement given the direction and move angle. */
+	public final double stepAngle;
 
 	/**
 	 * Construct a new MoveState.
@@ -46,5 +50,8 @@ public class MoveState
 		this.direction = direction;
 		this.stepsUntilChange = stepsUntilChange;
 		this.moveAngle = moveAngle;
+
+		double sAngle = moveAngle + direction;
+		stepAngle = (sAngle < 0) ? (sAngle + TWO_PI) : (sAngle % TWO_PI);
 	}
 }
