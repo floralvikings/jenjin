@@ -112,8 +112,7 @@ public class Actor extends SightedObject
 			nextState = null;
 			nextMoveStates.clear();
 			setForcedState(currentMoveState);
-		}
-		if (overStepped >= 0)
+		} else if (overStepped >= 0)
 		{
 			// Store the old state.
 			MoveState oldState = currentMoveState;
