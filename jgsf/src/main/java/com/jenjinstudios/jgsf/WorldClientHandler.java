@@ -36,23 +36,6 @@ public class WorldClientHandler extends ClientHandler
 		server = s;
 	}
 
-	@Override
-	public WorldServer getServer()
-	{
-		return server;
-	}
-
-	/**
-	 * Set the player ID, id it is not already set.
-	 *
-	 * @param id The new ID.
-	 */
-	public void setPlayerID(long id)
-	{
-		if (playerID != -1)
-			playerID = id;
-	}
-
 	/**
 	 * Get the actor of this client handler.
 	 *
@@ -75,57 +58,157 @@ public class WorldClientHandler extends ClientHandler
 		setPlayerID(actor.getId());
 	}
 
+	/**
+	 * Set the player ID, id it is not already set.
+	 *
+	 * @param id The new ID.
+	 */
+	public void setPlayerID(long id)
+	{
+		if (playerID == -1)
+			playerID = id;
+	}
+
 	@Override
 	public void update()
 	{
 		if (actor == null)
 			return;
 
+		queueNewlyVisibleMessages();
+		queueNewlyInvisibleMessages();
+		queueStateChangeMessages();
+	}
+
+	/** Generate and queue messages for newly visible objects. */
+	private void queueNewlyVisibleMessages()
+	{
 		for (WorldObject object : actor.getNewlyVisibleObjects())
 		{
 			Message newlyVisibleMessage;
-			if (object instanceof Actor)
-			{
-				newlyVisibleMessage = new Message("ActorVisibleMessage");
-				Actor newActor = (Actor) object;
-				newlyVisibleMessage.setArgument("name", newActor.getName());
-				newlyVisibleMessage.setArgument("id", newActor.getId());
-				newlyVisibleMessage.setArgument("xCoordinate", newActor.getVector2D().getXCoordinate());
-				newlyVisibleMessage.setArgument("zCoordinate", newActor.getVector2D().getZCoordinate());
-				newlyVisibleMessage.setArgument("direction", newActor.getDirection());
-				newlyVisibleMessage.setArgument("angle", newActor.getCurrentAngle());
-				newlyVisibleMessage.setArgument("stepsTaken", newActor.getStepsTaken());
-				newlyVisibleMessage.setArgument("stepsUntilChange", newActor.getCurrentMoveState().stepsUntilChange);
-
-			} else
-			{
-				newlyVisibleMessage = new Message("ObjectVisibleMessage");
-				newlyVisibleMessage.setArgument("name", object.getName());
-				newlyVisibleMessage.setArgument("id", object.getId());
-				newlyVisibleMessage.setArgument("xCoordinate", object.getVector2D().getXCoordinate());
-				newlyVisibleMessage.setArgument("zCoordinate", object.getVector2D().getZCoordinate());
-			}
+			newlyVisibleMessage = generateNewlyVisibleMessage(object);
 			queueMessage(newlyVisibleMessage);
 		}
+	}
 
+	/**
+	 * Generate an appropriate message for a newly visible object.
+	 *
+	 * @param object The object.
+	 *
+	 * @return The message.
+	 */
+	private Message generateNewlyVisibleMessage(WorldObject object)
+	{
+		Message newlyVisibleMessage;
+		if (object instanceof Actor)
+		{
+			newlyVisibleMessage = generateActorVisibleMessage((Actor) object);
+		} else
+		{
+			newlyVisibleMessage = generateObjectVisibleMessage(object);
+		}
+		return newlyVisibleMessage;
+	}
+
+	/**
+	 * Generate an ActorVisibleMessage using the given actor.
+	 *
+	 * @param newlyVisible The Actor used to generate the message.
+	 *
+	 * @return A {@code Message} for the newly visible actor.
+	 */
+	private Message generateActorVisibleMessage(Actor newlyVisible)
+	{
+		Message newlyVisibleMessage;
+		newlyVisibleMessage = new Message("ActorVisibleMessage");
+		newlyVisibleMessage.setArgument("name", newlyVisible.getName());
+		newlyVisibleMessage.setArgument("id", newlyVisible.getId());
+		newlyVisibleMessage.setArgument("xCoordinate", newlyVisible.getVector2D().getXCoordinate());
+		newlyVisibleMessage.setArgument("zCoordinate", newlyVisible.getVector2D().getZCoordinate());
+		newlyVisibleMessage.setArgument("direction", newlyVisible.getDirection());
+		newlyVisibleMessage.setArgument("angle", newlyVisible.getCurrentAngle());
+		newlyVisibleMessage.setArgument("stepsTaken", newlyVisible.getStepsTaken());
+		newlyVisibleMessage.setArgument("stepsUntilChange", newlyVisible.getCurrentMoveState().stepsUntilChange);
+		return newlyVisibleMessage;
+	}
+
+	/**
+	 * Generate an ObjectVisibleMessage using the given actor.
+	 *
+	 * @param object The Actor used to generate the message.
+	 *
+	 * @return A {@code Message} for the newly visible object.
+	 */
+	private Message generateObjectVisibleMessage(WorldObject object)
+	{
+		Message newlyVisibleMessage;
+		newlyVisibleMessage = new Message("ObjectVisibleMessage");
+		newlyVisibleMessage.setArgument("name", object.getName());
+		newlyVisibleMessage.setArgument("id", object.getId());
+		newlyVisibleMessage.setArgument("xCoordinate", object.getVector2D().getXCoordinate());
+		newlyVisibleMessage.setArgument("zCoordinate", object.getVector2D().getZCoordinate());
+		return newlyVisibleMessage;
+	}
+
+	/** Generate and queue messages for newly invisible objects. */
+	private void queueNewlyInvisibleMessages()
+	{
 		for (WorldObject object : actor.getNewlyInvisibleObjects())
 		{
-			Message newlyInvisibleMessage = new Message("ObjectInvisibleMessage");
-			newlyInvisibleMessage.setArgument("id", object.getId());
+			Message newlyInvisibleMessage = generateNewlyInvisibleMessage(object);
 			queueMessage(newlyInvisibleMessage);
 		}
+	}
 
+	/**
+	 * Generate a NewlyIvisibleObjectMessage for the given object.
+	 *
+	 * @param object The {@code WorldObject} that is newly invisible.
+	 *
+	 * @return A {@code Message} for the newly invisible object.
+	 */
+	private Message generateNewlyInvisibleMessage(WorldObject object)
+	{
+		Message newlyInvisibleMessage = new Message("ObjectInvisibleMessage");
+		newlyInvisibleMessage.setArgument("id", object.getId());
+		return newlyInvisibleMessage;
+	}
+
+	/** Generate and queue messages for actors with changed states. */
+	private void queueStateChangeMessages()
+	{
 		for (WorldObject object : actor.getVisibleObjects())
 		{
 			Actor changedActor;
 			if (!(object instanceof Actor) || (changedActor = (Actor) object).isNewState())
 				continue;
-			Message newState = new Message("StateChangeMessage");
-			newState.setArgument("id", changedActor.getId());
-			newState.setArgument("direction", changedActor.getDirection());
-			newState.setArgument("angle", changedActor.getCurrentAngle());
-			newState.setArgument("stepsUntilChange", changedActor.getStepsUntilChange());
+			Message newState = generateChangeStateMessage(changedActor);
+			queueMessage(newState);
 		}
+	}
+
+	/**
+	 * Generate a state change message for the given actor.
+	 *
+	 * @param changedActor The actor with a new state.
+	 *
+	 * @return The state change message.
+	 */
+	private Message generateChangeStateMessage(Actor changedActor)
+	{
+		Message newState = new Message("StateChangeMessage");
+		newState.setArgument("id", changedActor.getId());
+		newState.setArgument("direction", changedActor.getDirection());
+		newState.setArgument("angle", changedActor.getCurrentAngle());
+		newState.setArgument("stepsUntilChange", changedActor.getStepsUntilChange());
+		return newState;
+	}
+
+	@Override
+	public WorldServer getServer()
+	{
+		return server;
 	}
 
 	/**
