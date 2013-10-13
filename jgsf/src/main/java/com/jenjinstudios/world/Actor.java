@@ -78,8 +78,7 @@ public class Actor extends SightedObject
 	@Override
 	public void update()
 	{
-		// Reset the new state flag.
-		newState = false;
+		resetFlags();
 
 		// Store the current state (before step)
 		Location oldLocation = getLocation();
@@ -91,43 +90,63 @@ public class Actor extends SightedObject
 		resetVisibleObjects();
 	}
 
+	/** Reset the flags used by this actor. */
+	private void resetFlags()
+	{
+		newState = false;
+		forcedState = false;
+	}
+
 	/** Take a step, changing state and correcting steps if necessary. */
 	public void step()
 	{
-		doStateChange();
+		tryStateChange();
 		stepForward();
 		stepsTaken++;
 	}
 
 	/** Change to the next state, and correct for any over steps. */
-	private void doStateChange()
+	private void tryStateChange()
 	{
 		if (nextState == null) return;
-		// Test for a state change, and change state if necessary
 		int overStepped = stepsTaken - nextState.stepsUntilChange;
-		// TODO This is where the cap for maximum number of over steps needs to be implemented.
-		// If the number of "over steps" is too high, discard all future move states and raise the forced-state flag
 		if (overStepped >= MAX_CORRECT)
 		{
-			nextState = null;
-			nextMoveStates.clear();
-			setForcedState(currentMoveState);
+			stopMaxCorrect();
 		} else if (overStepped >= 0)
 		{
-			// Store the old state.
-			MoveState oldState = currentMoveState;
-			stepsInLastCompletedMove = nextState.stepsUntilChange;
-			currentMoveState = nextState;
-
-			if (!nextMoveStates.isEmpty())
-				nextState = nextMoveStates.remove();
-
-			newState = true;
-			stepsTaken = 0;
-			setDirection(currentMoveState.moveAngle);
-			// Correct for any "over" steps.
-			correctSteps(overStepped, oldState);
+			doStateChange(overStepped);
 		}
+	}
+
+	/**
+	 * Perform a state change.
+	 *
+	 * @param overStepped The number of steps beyond what the actor should have taken.
+	 */
+	private void doStateChange(int overStepped)
+	{
+		// Store the old state.
+		MoveState oldState = currentMoveState;
+		stepsInLastCompletedMove = nextState.stepsUntilChange;
+		currentMoveState = nextState;
+
+		if (!nextMoveStates.isEmpty())
+			nextState = nextMoveStates.remove();
+
+		newState = true;
+		stepsTaken = 0;
+		setDirection(currentMoveState.moveAngle);
+		// Correct for any "over" steps.
+		correctSteps(overStepped, oldState);
+	}
+
+	/** Stop the actor from correcting more steps than the allowed maximum. */
+	private void stopMaxCorrect()
+	{
+		nextState = null;
+		nextMoveStates.clear();
+		setForcedState(currentMoveState);
 	}
 
 	/**
@@ -219,6 +238,14 @@ public class Actor extends SightedObject
 	{ return currentMoveState; }
 
 	/**
+	 * Get whether this actor was forced into a state during the most recent update.
+	 *
+	 * @return Whether this actor was forced into a state during the most recent update.
+	 */
+	public boolean isForcedState()
+	{ return forcedState; }
+
+	/**
 	 * Force the state of this actor to the given state and raise the forcedState flag.
 	 *
 	 * @param forced The state to which to force this actor.
@@ -228,15 +255,5 @@ public class Actor extends SightedObject
 		stepBack(currentMoveState.stepAngle);
 		this.currentMoveState = forced;
 		forcedState = true;
-	}
-
-	/**
-	 * Get whether this actor was forced into a state during the most recent update.
-	 *
-	 * @return Whether this actor was forced into a state during the most recent update.
-	 */
-	public boolean isForcedState()
-	{
-		return forcedState;
 	}
 }
