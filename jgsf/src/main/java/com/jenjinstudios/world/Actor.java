@@ -38,8 +38,8 @@ public class Actor extends SightedObject
 	private MoveState currentMoveState;
 	/** The number of steps taken since the last move. */
 	private int stepsTaken = 0;
-	/** The number of steps in the last completed move. */
-	private int stepsInLastCompletedMove;
+	/** The number of steps until the actor changed to the current state. */
+	private int stepsUntilChange;
 	/** Flags whether this actor has changed to a new state during this update. */
 	private boolean newState;
 	/** Keeps track of the next state in the queue. */
@@ -128,7 +128,7 @@ public class Actor extends SightedObject
 	{
 		// Store the old state.
 		MoveState oldState = currentMoveState;
-		stepsInLastCompletedMove = nextState.stepsUntilChange;
+		stepsUntilChange = nextState.stepsUntilChange;
 		resetState();
 		correctOverSteps(overStepped, oldState);
 	}
@@ -232,10 +232,10 @@ public class Actor extends SightedObject
 	/**
 	 * Get the steps taken to complete the previous move.
 	 *
-	 * @return The steps taken to complete the previous move.
+	 * @return The number of steps until the actor changed to the current state.
 	 */
-	public int getStepsInLastCompletedMove()
-	{return stepsInLastCompletedMove;}
+	public int getStepsUntilChange()
+	{return stepsUntilChange;}
 
 	/**
 	 * Get the actor's current move state.
