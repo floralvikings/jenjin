@@ -131,14 +131,13 @@ public class Actor extends SightedObject
 		stepsInLastCompletedMove = nextState.stepsUntilChange;
 		currentMoveState = nextState;
 
-		if (!nextMoveStates.isEmpty())
-			nextState = nextMoveStates.remove();
+		nextState = nextMoveStates.poll();
 
 		newState = true;
 		stepsTaken = 0;
 		setDirection(currentMoveState.moveAngle);
-		// Correct for any "over" steps.
-		correctSteps(overStepped, oldState);
+
+		correctOverSteps(overStepped, oldState);
 	}
 
 	/** Stop the actor from correcting more steps than the allowed maximum. */
@@ -155,13 +154,19 @@ public class Actor extends SightedObject
 	 * @param overstepped The number of steps over.
 	 * @param oldState    The
 	 */
-	private void correctSteps(int overstepped, MoveState oldState)
+	private void correctOverSteps(int overstepped, MoveState oldState)
 	{
 		if (oldState.direction != MoveState.IDLE)
+		{
 			for (int i = 0; i < overstepped; i++)
+			{
 				stepBack(oldState.stepAngle);
+			}
+		}
 		for (int i = 0; i < overstepped; i++)
+		{
 			stepForward();
+		}
 	}
 
 	/** Take a step according to the current move state. */
