@@ -216,7 +216,7 @@ public class Actor extends SightedObject
 	 *
 	 * @return The direction in which the object is currently facing.
 	 */
-	public double getCurrentAngle()
+	public double getMoveAngle()
 	{return currentMoveState.moveAngle;}
 
 	/**
@@ -261,5 +261,15 @@ public class Actor extends SightedObject
 		stepBack(currentMoveState.stepAngle);
 		this.currentMoveState = forced;
 		forcedState = true;
+	}
+
+	/**
+	 * Get the relative angle of movement of this actor.
+	 *
+	 * @return The relative angle of movement of this actor.
+	 */
+	public double getMoveDirection()
+	{
+		return currentMoveState.direction;
 	}
 }
