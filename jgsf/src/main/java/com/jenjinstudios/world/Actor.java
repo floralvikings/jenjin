@@ -179,7 +179,6 @@ public class Actor extends SightedObject
 			setVector2D(getVector2D().getVectorInDirection(STEP_LENGTH, currentMoveState.stepAngle));
 		} catch (InvalidLocationException ex)
 		{
-			// TODO This is where we need to force-idle, and raise the forced-state flag.
 			setForcedState(new MoveState(IDLE, stepsTaken, currentMoveState.moveAngle));
 		}
 	}
