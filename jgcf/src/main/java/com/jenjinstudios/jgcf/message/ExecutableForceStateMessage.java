@@ -1,6 +1,6 @@
 package com.jenjinstudios.jgcf.message;
 
-import com.jenjinstudios.jgcf.Client;
+import com.jenjinstudios.jgcf.WorldClient;
 import com.jenjinstudios.message.Message;
 
 /**
@@ -8,7 +8,7 @@ import com.jenjinstudios.message.Message;
  *
  * @author Caleb Brinkman
  */
-public class ExecutableForceStateMessage extends ClientExecutableMessage
+public class ExecutableForceStateMessage extends WorldClientExecutableMessage
 {
 	/**
 	 * Construct an ExecutableMessage with the given Message.
@@ -16,7 +16,7 @@ public class ExecutableForceStateMessage extends ClientExecutableMessage
 	 * @param client  The client invoking this message.
 	 * @param message The Message.
 	 */
-	public ExecutableForceStateMessage(Client client, Message message)
+	public ExecutableForceStateMessage(WorldClient client, Message message)
 	{
 		super(client, message);
 	}
