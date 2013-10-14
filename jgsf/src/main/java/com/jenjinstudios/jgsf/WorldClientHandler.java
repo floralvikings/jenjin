@@ -80,99 +80,10 @@ public class WorldClientHandler extends ClientHandler
 		queueStateChangeMessages();
 	}
 
-	/** Generate and queue messages for newly visible objects. */
-	private void queueNewlyVisibleMessages()
+	@Override
+	public WorldServer getServer()
 	{
-		for (WorldObject object : actor.getNewlyVisibleObjects())
-		{
-			Message newlyVisibleMessage;
-			newlyVisibleMessage = generateNewlyVisibleMessage(object);
-			queueMessage(newlyVisibleMessage);
-		}
-	}
-
-	/**
-	 * Generate an appropriate message for a newly visible object.
-	 *
-	 * @param object The object.
-	 *
-	 * @return The message.
-	 */
-	private Message generateNewlyVisibleMessage(WorldObject object)
-	{
-		Message newlyVisibleMessage;
-		if (object instanceof Actor)
-		{
-			newlyVisibleMessage = generateActorVisibleMessage((Actor) object);
-		} else
-		{
-			newlyVisibleMessage = generateObjectVisibleMessage(object);
-		}
-		return newlyVisibleMessage;
-	}
-
-	/**
-	 * Generate an ActorVisibleMessage using the given actor.
-	 *
-	 * @param newlyVisible The Actor used to generate the message.
-	 *
-	 * @return A {@code Message} for the newly visible actor.
-	 */
-	private Message generateActorVisibleMessage(Actor newlyVisible)
-	{
-		Message newlyVisibleMessage;
-		newlyVisibleMessage = new Message("ActorVisibleMessage");
-		newlyVisibleMessage.setArgument("name", newlyVisible.getName());
-		newlyVisibleMessage.setArgument("id", newlyVisible.getId());
-		newlyVisibleMessage.setArgument("xCoordinate", newlyVisible.getVector2D().getXCoordinate());
-		newlyVisibleMessage.setArgument("zCoordinate", newlyVisible.getVector2D().getZCoordinate());
-		newlyVisibleMessage.setArgument("direction", newlyVisible.getDirection());
-		newlyVisibleMessage.setArgument("angle", newlyVisible.getCurrentAngle());
-		newlyVisibleMessage.setArgument("stepsTaken", newlyVisible.getStepsTaken());
-		newlyVisibleMessage.setArgument("stepsUntilChange", newlyVisible.getCurrentMoveState().stepsUntilChange);
-		return newlyVisibleMessage;
-	}
-
-	/**
-	 * Generate an ObjectVisibleMessage using the given actor.
-	 *
-	 * @param object The Actor used to generate the message.
-	 *
-	 * @return A {@code Message} for the newly visible object.
-	 */
-	private Message generateObjectVisibleMessage(WorldObject object)
-	{
-		Message newlyVisibleMessage;
-		newlyVisibleMessage = new Message("ObjectVisibleMessage");
-		newlyVisibleMessage.setArgument("name", object.getName());
-		newlyVisibleMessage.setArgument("id", object.getId());
-		newlyVisibleMessage.setArgument("xCoordinate", object.getVector2D().getXCoordinate());
-		newlyVisibleMessage.setArgument("zCoordinate", object.getVector2D().getZCoordinate());
-		return newlyVisibleMessage;
-	}
-
-	/** Generate and queue messages for newly invisible objects. */
-	private void queueNewlyInvisibleMessages()
-	{
-		for (WorldObject object : actor.getNewlyInvisibleObjects())
-		{
-			Message newlyInvisibleMessage = generateNewlyInvisibleMessage(object);
-			queueMessage(newlyInvisibleMessage);
-		}
-	}
-
-	/**
-	 * Generate a NewlyIvisibleObjectMessage for the given object.
-	 *
-	 * @param object The {@code WorldObject} that is newly invisible.
-	 *
-	 * @return A {@code Message} for the newly invisible object.
-	 */
-	private Message generateNewlyInvisibleMessage(WorldObject object)
-	{
-		Message newlyInvisibleMessage = new Message("ObjectInvisibleMessage");
-		newlyInvisibleMessage.setArgument("id", object.getId());
-		return newlyInvisibleMessage;
+		return server;
 	}
 
 	/** Generate and queue messages for actors with changed states. */
@@ -205,10 +116,99 @@ public class WorldClientHandler extends ClientHandler
 		return newState;
 	}
 
-	@Override
-	public WorldServer getServer()
+	/** Generate and queue messages for newly invisible objects. */
+	private void queueNewlyInvisibleMessages()
 	{
-		return server;
+		for (WorldObject object : actor.getNewlyInvisibleObjects())
+		{
+			Message newlyInvisibleMessage = generateNewlyInvisibleMessage(object);
+			queueMessage(newlyInvisibleMessage);
+		}
+	}
+
+	/**
+	 * Generate a NewlyIvisibleObjectMessage for the given object.
+	 *
+	 * @param object The {@code WorldObject} that is newly invisible.
+	 *
+	 * @return A {@code Message} for the newly invisible object.
+	 */
+	private Message generateNewlyInvisibleMessage(WorldObject object)
+	{
+		Message newlyInvisibleMessage = new Message("ObjectInvisibleMessage");
+		newlyInvisibleMessage.setArgument("id", object.getId());
+		return newlyInvisibleMessage;
+	}
+
+	/** Generate and queue messages for newly visible objects. */
+	private void queueNewlyVisibleMessages()
+	{
+		for (WorldObject object : actor.getNewlyVisibleObjects())
+		{
+			Message newlyVisibleMessage;
+			newlyVisibleMessage = generateNewlyVisibleMessage(object);
+			queueMessage(newlyVisibleMessage);
+		}
+	}
+
+	/**
+	 * Generate an appropriate message for a newly visible object.
+	 *
+	 * @param object The object.
+	 *
+	 * @return The message.
+	 */
+	private Message generateNewlyVisibleMessage(WorldObject object)
+	{
+		Message newlyVisibleMessage;
+		if (object instanceof Actor)
+		{
+			newlyVisibleMessage = generateActorVisibleMessage((Actor) object);
+		} else
+		{
+			newlyVisibleMessage = generateObjectVisibleMessage(object);
+		}
+		return newlyVisibleMessage;
+	}
+
+	/**
+	 * Generate an ObjectVisibleMessage using the given actor.
+	 *
+	 * @param object The Actor used to generate the message.
+	 *
+	 * @return A {@code Message} for the newly visible object.
+	 */
+	private Message generateObjectVisibleMessage(WorldObject object)
+	{
+		Message newlyVisibleMessage;
+		newlyVisibleMessage = new Message("ObjectVisibleMessage");
+		newlyVisibleMessage.setArgument("name", object.getName());
+		newlyVisibleMessage.setArgument("id", object.getId());
+		newlyVisibleMessage.setArgument("xCoordinate", object.getVector2D().getXCoordinate());
+		newlyVisibleMessage.setArgument("zCoordinate", object.getVector2D().getZCoordinate());
+		return newlyVisibleMessage;
+	}
+
+	/**
+	 * Generate an ActorVisibleMessage using the given actor.
+	 *
+	 * @param newlyVisible The Actor used to generate the message.
+	 *
+	 * @return A {@code Message} for the newly visible actor.
+	 */
+	private Message generateActorVisibleMessage(Actor newlyVisible)
+	{
+		Message newlyVisibleMessage;
+		newlyVisibleMessage = new Message("ActorVisibleMessage");
+		newlyVisibleMessage.setArgument("name", newlyVisible.getName());
+		newlyVisibleMessage.setArgument("id", newlyVisible.getId());
+		newlyVisibleMessage.setArgument("xCoordinate", newlyVisible.getVector2D().getXCoordinate());
+		newlyVisibleMessage.setArgument("zCoordinate", newlyVisible.getVector2D().getZCoordinate());
+		newlyVisibleMessage.setArgument("direction", newlyVisible.getDirection());
+		newlyVisibleMessage.setArgument("angle", newlyVisible.getCurrentAngle());
+		newlyVisibleMessage.setArgument("stepsTaken", newlyVisible.getStepsTaken());
+		newlyVisibleMessage.setArgument("stepsUntilChange", newlyVisible.getCurrentMoveState().stepsUntilChange);
+		return newlyVisibleMessage;
 	}
 
 	/**
