@@ -181,4 +181,16 @@ public class WorldClient extends AuthClient
 			}
 		}
 	}
+
+	/**
+	 * Get the ClientObject with the given ID.
+	 *
+	 * @param id The ID of the object to retrieve.
+	 *
+	 * @return The object with the given ID.
+	 */
+	public ClientObject getObject(int id)
+	{
+		return visibleObjects.get(id);
+	}
 }
