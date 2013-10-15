@@ -1,8 +1,8 @@
 package com.jenjinstudios.jgcf;
 
 import com.jenjinstudios.message.Message;
-import com.jenjinstudios.world.ClientActor;
 import com.jenjinstudios.world.ClientObject;
+import com.jenjinstudios.world.ClientPlayer;
 
 import java.util.Set;
 import java.util.TreeMap;
@@ -24,7 +24,7 @@ public class WorldClient extends AuthClient
 	/** The password used to login to the world. */
 	private final String password;
 	/** The actor representing the player controlled by this client. */
-	private ClientActor player;
+	private ClientPlayer player;
 
 	/**
 	 * Construct a client connecting to the given address over the given port.  This client <i>must</i> have a username and
@@ -142,7 +142,7 @@ public class WorldClient extends AuthClient
 	 *
 	 * @return The player (ClientActor) associated with this client.
 	 */
-	public ClientActor getPlayer()
+	public ClientPlayer getPlayer()
 	{
 		return player;
 	}
@@ -152,7 +152,7 @@ public class WorldClient extends AuthClient
 	 *
 	 * @param player The player to be controlled by this client.
 	 */
-	public void setPlayer(ClientActor player)
+	public void setPlayer(ClientPlayer player)
 	{
 		if (this.player != null)
 			throw new IllegalStateException("Player already set!");

@@ -3,6 +3,7 @@ package com.jenjinstudios.jgcf.message;
 import com.jenjinstudios.jgcf.WorldClient;
 import com.jenjinstudios.math.Vector2D;
 import com.jenjinstudios.message.Message;
+import com.jenjinstudios.world.ClientPlayer;
 
 /**
  * Process a ForceStateMessage.
@@ -30,6 +31,7 @@ public class ExecutableForceStateMessage extends WorldClientExecutableMessage
 	@Override
 	public void runSynced()
 	{
+		ClientPlayer player = getClient().getPlayer();
 		// Set player angle
 		// Set player direction
 		// Set steps taken
