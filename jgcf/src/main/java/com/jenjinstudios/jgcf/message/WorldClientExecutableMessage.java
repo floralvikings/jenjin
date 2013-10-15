@@ -8,7 +8,7 @@ import com.jenjinstudios.message.Message;
  *
  * @author Caleb Brinkman
  */
-public abstract class WorldClientExecutableMessage extends ClientExecutableMessage
+public abstract class WorldClientExecutableMessage extends AuthClientExecutableMessage
 {
 	/** The WorldClient invoking this message. */
 	private final WorldClient client;
@@ -16,7 +16,7 @@ public abstract class WorldClientExecutableMessage extends ClientExecutableMessa
 	/**
 	 * Construct an ExecutableMessage with the given Message.
 	 *
-	 * @param client  The client invoking this message.
+	 * @param client The client invoking this message.
 	 * @param message The Message.
 	 */
 	protected WorldClientExecutableMessage(WorldClient client, Message message)

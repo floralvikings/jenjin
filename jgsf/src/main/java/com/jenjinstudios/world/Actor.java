@@ -2,56 +2,54 @@ package com.jenjinstudios.world;
 
 import com.jenjinstudios.world.state.MoveState;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import static com.jenjinstudios.world.state.MoveDirection.IDLE;
+import static com.jenjinstudios.world.state.MoveState.IDLE;
+
 
 /**
- * Implement a WorldObject which is capable of movement.
- * </p>
- * Actors start with a {@code MoveState} with {@code MoveiDirection.IDLE}.  Each update, the Actor checks to see
- * if there are any MoveStates in the queue.  If there are, it checks the first state in line for the number of steps
- * needed before the state changes.  Once the number of steps has been reached, the state switches to that of the first
- * position in the queue, and the Actor's step counter is reset.  If an Actor "oversteps," which is determined if the
- * Actor has taken more than the required number of steps to change state, the Actor is moved back by the "overstepped"
- * number of states, the Actor's state is updated, and the Actor then takes the number of extra steps in the correct
- * direction.
- * </p>
- * An Actor's state is considered "changed" when the Actor is facing a new direction or moving in a new direction.
+ * Implement a WorldObject which is capable of movement. </p> Actors start with a {@code MoveState} with {@code
+ * MoveState.IDLE}.  Each update, the Actor checks to see if there are any MoveStates in the queue.  If there are, it
+ * checks the first state in line for the number of steps needed before the state changes.  Once the number of steps has
+ * been reached, the state switches to that of the first position in the queue, and the Actor's step counter is reset.
+ * If an Actor "oversteps," which is determined if the Actor has taken more than the required number of steps to change
+ * state, the Actor is moved back by the "overstepped" number of states, the Actor's state is updated, and the Actor
+ * then takes the number of extra steps in the correct direction. </p> An Actor's state is considered "changed" when the
+ * Actor is facing a new direction or moving in a new direction. An actor's state is considered "forced" when the Actor
+ * attempts to make an illegal move, and the world forces the actor to halt.  The actor's forced state will always be
+ * facing the angle of the most recently added move state (even if the state causes an illegal move) and IDLE. The
+ * "steps until change" value is determined from the number of steps that were taken until the state was forced.
  *
  * @author Caleb Brinkman
  */
-public class Actor extends WorldObject
+public class Actor extends SightedObject
 {
-	/** The radius of the square of visible locations. */
-	public static final int VIEW_RADIUS = 4;
 	/** The length of each step. */
 	public static final float STEP_LENGTH = 5;
+	/** The maximum number of steps this actor is allowed to correct. */
+	public static final int MAX_CORRECT = 10;
+	/** The logger for this class. */
+	private static final Logger LOGGER = Logger.getLogger(Actor.class.getName());
 	/** The next move. */
 	private final LinkedList<MoveState> nextMoveStates;
-	/** The array of visible locations. */
-	private final ArrayList<Location> visibleLocations;
-	/** The container for visible objects. */
-	private final ArrayList<WorldObject> visibleObjects;
-	/** The list of newly visible objects. */
-	private final ArrayList<WorldObject> newlyVisibleObjects;
-	/** The list of newly invisible objects. */
-	private final ArrayList<WorldObject> newlyInvisibleObjects;
 	/** The current move. */
 	private MoveState currentMoveState;
 	/** The number of steps taken since the last move. */
 	private int stepsTaken = 0;
-	/** The number of steps in the last completed move. */
-	private int stepsInLastMove;
+	/** The number of steps until the actor changed to the current state. */
+	private int stepsUntilChange;
 	/** Flags whether this actor has changed to a new state during this update. */
 	private boolean newState;
+	/** Keeps track of the next state in the queue. */
+	private MoveState nextState;
+	/** Flags whether the state of this actor was forced during this update. */
+	private boolean forcedState;
 
 	/** Construct a new Actor. */
 	public Actor()
-	{
-		this(DEFAULT_NAME);
-	}
+	{ this(DEFAULT_NAME); }
 
 	/**
 	 * Construct an Actor with the given name.
@@ -63,10 +61,6 @@ public class Actor extends WorldObject
 		super(name);
 		currentMoveState = new MoveState(IDLE, 0, 0);
 		nextMoveStates = new LinkedList<>();
-		visibleObjects = new ArrayList<>();
-		visibleLocations = new ArrayList<>();
-		newlyVisibleObjects = new ArrayList<>();
-		newlyInvisibleObjects = new ArrayList<>();
 	}
 
 	/**
@@ -76,155 +70,136 @@ public class Actor extends WorldObject
 	 */
 	public void addMoveState(MoveState newState)
 	{
-		synchronized (nextMoveStates)
-		{
-			nextMoveStates.add(newState);
-		}
+		if (nextState == null)
+			nextState = newState;
+		else nextMoveStates.add(newState);
 	}
 
 	@Override
 	public void update()
 	{
-		newState = false;
-		// Store the current location (before step)
-		Location oldLocation = getLocation();
-		// Take a step.
+		resetFlags();
+		Location locationBeforeStep = getLocation();
 		step();
 		// If we're in a new locations after stepping, update the visible array.
-		if (oldLocation != getLocation() || visibleLocations.isEmpty())
+		if (locationBeforeStep != getLocation() || getVisibleLocations().isEmpty())
 			resetVisibleLocations();
 		// Reset the array of visible actors.
 		resetVisibleObjects();
 	}
 
-	/** Resets the array of currently visible location. */
-	private void resetVisibleLocations()
+	/** Reset the flags used by this actor. */
+	private void resetFlags()
 	{
-		visibleLocations.clear();
-		visibleLocations.addAll(getWorld().getLocationArea(getLocation(), VIEW_RADIUS));
+		newState = false;
+		forcedState = false;
 	}
 
-	/** Reset the current list of visible objects. */
-	private void resetVisibleObjects()
+	/** Take a step, changing state and correcting steps if necessary. */
+	public void step()
 	{
-		ArrayList<WorldObject> currentlyVisible = new ArrayList<>();
-		for (Location loc : visibleLocations)
-			for (WorldObject object : loc.getObjects())
-				if (object != this)
-					currentlyVisible.add(object);
-		newlyVisibleObjects.clear();
-		newlyVisibleObjects.addAll(currentlyVisible);
-		newlyVisibleObjects.removeAll(visibleObjects);
-		visibleObjects.clear();
-		visibleObjects.addAll(currentlyVisible);
-	}
-
-	/** Take a step using the current movement state. */
-	private void step()
-	{
+		tryStateChange();
+		stepForward();
 		stepsTaken++;
-		MoveState nextState;
+	}
 
-		synchronized (nextMoveStates)
+	/** Change to the next state, and correct for any over steps. */
+	private void tryStateChange()
+	{
+		if (nextState == null) return;
+		int overStepped = stepsTaken - nextState.stepsUntilChange;
+		if (overStepped >= MAX_CORRECT)
 		{
-			nextState = nextMoveStates.peek();
+			stopMaxCorrect();
+		} else if (overStepped >= 0)
+		{
+			doStateChange(overStepped);
 		}
+	}
 
-		if (nextState != null)
-			changeState();
+	/**
+	 * Perform a state change.
+	 *
+	 * @param overStepped The number of steps beyond what the actor should have taken.
+	 */
+	private void doStateChange(int overStepped)
+	{
+		// Store the old state.
+		MoveState oldState = currentMoveState;
+		stepsUntilChange = nextState.stepsUntilChange;
+		resetState();
+		correctOverSteps(overStepped, oldState);
+	}
 
-		// Get the angle in which the player will be moving.
-		double stepAngle = calculateStepAngle();
+	/** Reset the move state, direction, and newState flag when changing the move state. */
+	private void resetState()
+	{
+		currentMoveState = nextState;
+		nextState = nextMoveStates.poll();
+		newState = true;
+		stepsTaken = 0;
+		setDirection(currentMoveState.moveAngle);
+	}
 
+	/** Stop the actor from correcting more steps than the allowed maximum. */
+	private void stopMaxCorrect()
+	{
+		nextState = null;
+		nextMoveStates.clear();
+		setForcedState(currentMoveState);
+	}
+
+	/**
+	 * Correct the given number of steps at the specified angles.
+	 *
+	 * @param overstepped The number of steps over.
+	 * @param oldState    The
+	 */
+	private void correctOverSteps(int overstepped, MoveState oldState)
+	{
+		if (oldState.direction != MoveState.IDLE)
+		{
+			for (int i = 0; i < overstepped; i++)
+			{
+				stepBack(oldState.stepAngle);
+			}
+		}
+		for (int i = 0; i < overstepped; i++)
+		{
+			stepForward();
+		}
+	}
+
+	/** Take a step according to the current move state. */
+	public void stepForward()
+	{
 		if (currentMoveState.direction == IDLE) return;
-
-		// TODO This will be used a lot; could it be optimized?
-		double twoPi = (2 * Math.PI);
-		stepAngle = stepAngle < 0 ? twoPi + stepAngle : stepAngle % twoPi;
-		setVector2D(getVector2D().getVectorInDirection(STEP_LENGTH, stepAngle));
-	}
-
-	/**
-	 * Calculate the angle of the direction in which the actor should step.
-	 *
-	 * @return The angle of the direction in which the actor should step.
-	 */
-	private double calculateStepAngle()
-	{
-		double stepAngle = getDirection();
-
-		switch (currentMoveState.direction)
+		try
 		{
-			case IDLE:
-				break;
-			case FRONT:
-				break;
-			case FRONT_RIGHT:
-				stepAngle = (getDirection() - Math.PI * 0.25);
-				break;
-			case RIGHT:
-				stepAngle = (getDirection() - Math.PI * 0.5);
-				break;
-			case BACK_RIGHT:
-				stepAngle = (getDirection() - Math.PI * 0.75);
-				break;
-			case BACK:
-				stepAngle = (getDirection() + Math.PI);
-				break;
-			case BACK_LEFT:
-				stepAngle = (getDirection() + Math.PI * 0.75);
-				break;
-			case LEFT:
-				stepAngle = (getDirection() + Math.PI * 0.5);
-				break;
-			case FRONT_LEFT:
-				stepAngle = (getDirection() + Math.PI * 0.25);
-				break;
-		}
-		return stepAngle;
-	}
-
-	/** Change to the next state. */
-	private void changeState()
-	{
-		// TODO The correction of position will need to take place here.
-		if (stepsTaken >= currentMoveState.stepsUntilChange)
+			setVector2D(getVector2D().getVectorInDirection(STEP_LENGTH, currentMoveState.stepAngle));
+		} catch (InvalidLocationException ex)
 		{
-			stepsInLastMove = currentMoveState.stepsUntilChange;
-			currentMoveState = nextMoveStates.remove();
-			newState = true;
-			stepsTaken = 0;
+			setForcedState(new MoveState(IDLE, stepsTaken, currentMoveState.moveAngle));
 		}
 	}
 
 	/**
-	 * The container for visible objects.
+	 * Take a step back in according to the given forward angle.
 	 *
-	 * @return An ArrayList containing all objects visible to this actor.
+	 * @param stepAngle The angle in which to move backward.
 	 */
-	public ArrayList<WorldObject> getVisibleObjects()
+	private void stepBack(double stepAngle)
 	{
-		return visibleObjects;
-	}
-
-	/**
-	 * Get newly visible objects.
-	 *
-	 * @return A list of all objects newly visible.
-	 */
-	public ArrayList<WorldObject> getNewlyVisibleObjects()
-	{
-		return newlyVisibleObjects;
-	}
-
-	/**
-	 * Get newly invisible objects.
-	 *
-	 * @return A list of all objects newly invisible.
-	 */
-	public ArrayList<WorldObject> getNewlyInvisibleObjects()
-	{
-		return newlyInvisibleObjects;
+		stepAngle -= Math.PI;
+		if (currentMoveState.direction == IDLE) return;
+		try
+		{
+			setVector2D(getVector2D().getVectorInDirection(STEP_LENGTH, stepAngle));
+		} catch (InvalidLocationException ex)
+		{
+			// Something very strange is happening if corrected steps lead out of bounds...
+			LOGGER.log(Level.SEVERE, "Error while correcting client steps.", ex);
+		}
 	}
 
 	/**
@@ -233,29 +208,15 @@ public class Actor extends WorldObject
 	 * @return Whether the actor has changed moved states since the beginning of this update.
 	 */
 	public boolean isNewState()
-	{
-		return newState;
-	}
-
-	/**
-	 * Get the current direction in which the object is moving.
-	 *
-	 * @return The current direction in which the object is moving.
-	 */
-	public int getCurrentDirection()
-	{
-		return currentMoveState.direction.ordinal();
-	}
+	{return newState;}
 
 	/**
 	 * Get the direction in which the object is currently facing.
 	 *
 	 * @return The direction in which the object is currently facing.
 	 */
-	public double getCurrentAngle()
-	{
-		return currentMoveState.moveAngle;
-	}
+	public double getMoveAngle()
+	{return currentMoveState.moveAngle;}
 
 	/**
 	 * Get the number of steps taken since the last state change.
@@ -263,19 +224,15 @@ public class Actor extends WorldObject
 	 * @return The number of steps taken since the last state change.
 	 */
 	public int getStepsTaken()
-	{
-		return stepsTaken;
-	}
+	{return stepsTaken;}
 
 	/**
 	 * Get the steps taken to complete the previous move.
 	 *
-	 * @return The steps taken to complete the previous move.
+	 * @return The number of steps until the actor changed to the current state.
 	 */
-	public int getStepsInLastMove()
-	{
-		return stepsInLastMove;
-	}
+	public int getStepsUntilChange()
+	{return stepsUntilChange;}
 
 	/**
 	 * Get the actor's current move state.
@@ -283,17 +240,35 @@ public class Actor extends WorldObject
 	 * @return The actor's current move state.
 	 */
 	public MoveState getCurrentMoveState()
+	{ return currentMoveState; }
+
+	/**
+	 * Get whether this actor was forced into a state during the most recent update.
+	 *
+	 * @return Whether this actor was forced into a state during the most recent update.
+	 */
+	public boolean isForcedState()
+	{ return forcedState; }
+
+	/**
+	 * Force the state of this actor to the given state and raise the forcedState flag.
+	 *
+	 * @param forced The state to which to force this actor.
+	 */
+	public void setForcedState(MoveState forced)
 	{
-		return currentMoveState;
+		stepBack(currentMoveState.stepAngle);
+		this.currentMoveState = forced;
+		forcedState = true;
 	}
 
 	/**
-	 * Get the currently visible locations.
+	 * Get the relative angle of movement of this actor.
 	 *
-	 * @return The array list of currently visible locations.
+	 * @return The relative angle of movement of this actor.
 	 */
-	public ArrayList<Location> getVisibleLocations()
+	public double getMoveDirection()
 	{
-		return visibleLocations;
+		return currentMoveState.direction;
 	}
 }

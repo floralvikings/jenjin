@@ -3,6 +3,8 @@ package com.jenjinstudios.world;
 import com.jenjinstudios.math.Vector2D;
 
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Contains all the Zones, Locations and GameObjects.
@@ -11,6 +13,8 @@ import java.util.ArrayList;
  */
 public class World
 {
+	/** The Logger used for this class. */
+	private static final Logger LOGGER = Logger.getLogger(World.class.getName());
 	/** The size of the world's location grid. */
 	public final int SIZE = 10;
 	/** The grid of locations in the game world. */
@@ -69,10 +73,20 @@ public class World
 	 * @param x The x coordinate.
 	 * @param z The z coordinate
 	 * @return The location that contains the specified coordinates.
+	 * @throws InvalidLocationException If the coordinates supplied point to an invalid location.
 	 */
-	public Location getLocationForCoordinates(double x, double z)
+	public Location getLocationForCoordinates(double x, double z) throws InvalidLocationException
 	{
-		return locationGrid[(int) x / Location.SIZE][(int) z / Location.SIZE];
+		try
+		{
+			if (x < 0 || z < 0)
+				throw new InvalidLocationException(new Vector2D(x, z));
+			return locationGrid[(int) x / Location.SIZE][(int) z / Location.SIZE];
+		} catch (ArrayIndexOutOfBoundsException ex)
+		{
+			LOGGER.log(Level.SEVERE, "Attempted to access location with invalid coodinates: ({0}, {1})", new Object[]{x, z});
+			throw new InvalidLocationException(new Vector2D(x, z));
+		}
 	}
 
 	/**
@@ -80,8 +94,9 @@ public class World
 	 *
 	 * @param vector2D The vector2D
 	 * @return The location that contains the specified vector2D.
+	 * @throws InvalidLocationException If the coordinates specified indicate an invalid locatoin.
 	 */
-	public Location getLocationForCoordinates(Vector2D vector2D)
+	public Location getLocationForCoordinates(Vector2D vector2D) throws InvalidLocationException
 	{
 		return getLocationForCoordinates(vector2D.getXCoordinate(), vector2D.getZCoordinate());
 	}

@@ -9,6 +9,7 @@ import com.jenjinstudios.message.Message;
 import java.io.IOException;
 import java.net.Socket;
 import java.security.*;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Timer;
 import java.util.logging.Level;
@@ -43,35 +44,24 @@ public class Client extends Thread
 	private Timer sendMessagesTimer;
 	/** Flags whether the client threads should be running. */
 	private volatile boolean running;
-	/** Whether the user is logged in. */
-	private boolean loggedIn;
 	/** The input stream used to read messages from the server. */
 	private MessageInputStream inputStream;
 	/** The output stream used to write messages to the server. */
 	private MessageOutputStream outputStream;
-	/** The time at which this client was successfully logged in. */
-	private long loggedInTime;
-	/** flags whether the login response has been received. */
-	private volatile boolean receivedLoginResponse;
-	/** flags whether the logout response has been received. */
-	private volatile boolean receivedLogoutResponse;
-	/** The username this client will use when logging in. */
-	private String username;
-	/** The password this client will use when logging in. */
-	private String password;
 	/** The public key sent to the server. */
 	private PublicKey publicKey;
 	/** The private key sent to the server. */
 	private PrivateKey privateKey;
 	/** The AES key of this client. */
 	private byte[] aesKey;
-
+	/** The list of collected ping times. */
+	private final ArrayList<Long> pingTimes;
 
 	/**
 	 * Construct a new client and attempt to connect to the server over the specified port.
 	 *
 	 * @param address The address of the server to which to connect
-	 * @param port    The port over which to connect to the server.
+	 * @param port The port over which to connect to the server.
 	 */
 	protected Client(String address, int port)
 	{
@@ -81,6 +71,7 @@ public class Client extends Thread
 		outgoingMessages = new LinkedList<>();
 		repeatedSyncedTasks = new LinkedList<>();
 		syncedTasks = new LinkedList<>();
+		pingTimes = new ArrayList<>();
 
 		try
 		{
@@ -93,45 +84,24 @@ public class Client extends Thread
 		{
 			LOGGER.log(Level.SEVERE, "Unable to create RSA key pair!", e);
 		}
-
 	}
 
 	/**
-	 * Construct a client connecting to the given address over the given port.
-	 *
-	 * @param address  The address to which this client will attempt to connect.
-	 * @param port     The port over which this client will attempt to connect.
-	 * @param username The username that will be used by this client.
-	 * @param password The password that will be used by this client.
-	 */
-	public Client(String address, int port, String username, String password)
-	{
-		this(address, port);
-		this.username = username;
-		this.password = password;
-	}
-
-	/**
-	 * Attempt to connect to the server at {@code ADDRESS} over {@code PORT}  This method must be
-	 * called <i>before</i> the client thread is started.
+	 * Attempt to connect to the server at {@code ADDRESS} over {@code PORT}  This method must be called <i>before</i> the
+	 * client thread is started.
 	 */
 	private void connect()
 	{
+		// TODO All the Key swapping and ping timing should be handled here.
 		if (isConnected())
 			return;
 		try
 		{
 			socket = new Socket(ADDRESS, PORT);
-
 			outputStream = new MessageOutputStream(socket.getOutputStream());
 			inputStream = new MessageInputStream(socket.getInputStream());
-
-			Message firstConnectResponse = inputStream.readMessage();
-			/* The ups of this client. */
-			int ups = (int) firstConnectResponse.getArgument("ups");
-			period = 1000 / ups;
+			doPostConnectInit();
 			connected = true;
-
 		} catch (IOException ex)
 		{
 			LOGGER.log(Level.SEVERE, "Unable to connect to server.", ex);
@@ -139,11 +109,32 @@ public class Client extends Thread
 	}
 
 	/**
+	 * Take care of all the necessary initialization messages between client and server.  These include things like RSA key
+	 * exchanges and latency checks.
+	 *
+	 * @throws IOException If there's an IOException when attempting to communicate with the server.
+	 */
+	private void doPostConnectInit() throws IOException
+	{
+		// First, get and process the required FirstConnectResponse message from the server.
+		Message firstConnectResponse = inputStream.readMessage();
+		int ups = (int) firstConnectResponse.getArgument("ups");
+		period = 1000 / ups;
+
+		// Next, queue up the PublicKeyMessage used to exchange the encrypted AES key used for encryption.
+		Message publicKeyMessage = new Message("PublicKeyMessage");
+		publicKeyMessage.setArgument("key", publicKey.getEncoded());
+		sendMessage(publicKeyMessage);
+
+		// Finally, send a ping request to establish latency.
+		sendPing();
+	}
+
+	/**
 	 * Add a task to the repeated queue of this client.  Should be called to extend client functionality.
 	 *
 	 * @param r The task to be performed.
 	 */
-	@SuppressWarnings("unused")
 	protected void addRepeatedTask(Runnable r)
 	{
 		synchronized (repeatedSyncedTasks)
@@ -161,8 +152,7 @@ public class Client extends Thread
 	{
 		synchronized (outgoingMessages)
 		{
-			while (!outgoingMessages.isEmpty())
-				outputStream.writeMessage(outgoingMessages.pop());
+			while (!outgoingMessages.isEmpty()) outputStream.writeMessage(outgoingMessages.pop());
 		}
 	}
 
@@ -180,8 +170,8 @@ public class Client extends Thread
 	}
 
 	/**
-	 * Process the specified message.  This method should be overridden by any implementing classes, but it does
-	 * contain functionality necessary to communicate with a DownloadServer or a ChatServer.
+	 * Process the specified message.  This method should be overridden by any implementing classes, but it does contain
+	 * functionality necessary to communicate with a DownloadServer or a ChatServer.
 	 *
 	 * @param message The message to be processed.
 	 */
@@ -198,7 +188,10 @@ public class Client extends Thread
 			}
 		} else
 		{
-			this.shutdown();
+			Message invalid = new Message("InvalidMessage");
+			invalid.setArgument("messageName", message.name);
+			invalid.setArgument("messageID", message.getID());
+			sendMessage(invalid);
 		}
 	}
 
@@ -228,82 +221,29 @@ public class Client extends Thread
 		}
 	}
 
-	/** Queue a message to log into the server with the given username and password, and wait for the response. */
-	public void sendLoginRequest()
-	{
-		if (username == null || password == null)
-		{
-			LOGGER.log(Level.WARNING, "Attempted to login without username or password");
-			return;
-		}
-
-		// Create the login request.
-		Message loginRequest = new Message("LoginRequest");
-		loginRequest.setArgument("username", username);
-		loginRequest.setArgument("password", password);
-
-		// Send the request, continue when the response is received.
-		setReceivedLoginResponse(false);
-		sendMessage(loginRequest);
-		while (!hasReceivedLoginResponse())
-			try
-			{
-				Thread.sleep(1);
-			} catch (InterruptedException e)
-			{
-				LOGGER.log(Level.WARNING, "Interrupted while waiting for login response.", e);
-			}
-	}
-
-	/** Queue a message to log the user out of the server. */
-	public void sendLogoutRequest()
-	{
-		// Create the message.
-		Message logoutRequest = new Message("LogoutRequest");
-
-		// Send the request, continue when response is received.
-		setReceivedLogoutResponse(false);
-		sendMessage(logoutRequest);
-		while (!hasReceivedLogoutResponse())
-			try
-			{
-				Thread.sleep(1);
-			} catch (InterruptedException e)
-			{
-				LOGGER.log(Level.WARNING, "Interrupted while waiting for login response.", e);
-			}
-	}
-
-	/** Start the client, blocking until the client has successfully initialized. */
-	public void blockingStart()
+	/**
+	 * Start the client, blocking until the client has successfully initialized.
+	 *
+	 * @throws InterruptedException If an InterruptedException is thrown while waiting for the client to finish
+	 * initializing.
+	 */
+	public void blockingStart() throws InterruptedException
 	{
 		start();
-		try
-		{
-			while (!running)
-				Thread.sleep(1);
-			while (aesKey == null)
-				Thread.sleep(1);
-		} catch (InterruptedException e)
-		{
-			LOGGER.log(Level.WARNING, "Issue with client blockingStart", e);
-		}
 
+		while (!running) Thread.sleep(1);
+		while (aesKey == null) Thread.sleep(1);
 	}
 
+	@Override
 	public final void run()
 	{
-		if (!isConnected())
-			connect();
+		if (!isConnected()) connect();
+		// The ClientLoop is used to send messages in the outgoing queue and do syncrhonized executables.
 		running = true;
 		sendMessagesTimer = new Timer("Client Update Loop", false);
 		sendMessagesTimer.scheduleAtFixedRate(new ClientLoop(this), 0, period);
-
-		Message publicKeyMessage = new Message("PublicKeyMessage");
-		publicKeyMessage.setArgument("key", publicKey.getEncoded());
-
-		sendMessage(publicKeyMessage);
-
+		// This loop processes incoming messages.
 		try
 		{
 			Message currentMessage;
@@ -324,9 +264,7 @@ public class Client extends Thread
 	 * @return true if this client thread is still running.
 	 */
 	public boolean isRunning()
-	{
-		return running;
-	}
+	{ return running; }
 
 	/**
 	 * Flags whether this client is connected.
@@ -334,49 +272,7 @@ public class Client extends Thread
 	 * @return true if this client is currently connected to a server.
 	 */
 	public boolean isConnected()
-	{
-		return connected;
-	}
-
-	/**
-	 * Get whether this client is logged in.
-	 *
-	 * @return true if this client has received a successful LoginResponse
-	 */
-	public boolean isLoggedIn()
-	{
-		return loggedIn;
-	}
-
-	/**
-	 * Set whether this client is logged in.
-	 *
-	 * @param l Whether this client is logged in.
-	 */
-	public void setLoggedIn(boolean l)
-	{
-		loggedIn = l;
-	}
-
-	/**
-	 * Get the time at which this client was successfully logged in.
-	 *
-	 * @return The time of the start of the server cycle during which this client was logged in.
-	 */
-	public long getLoggedInTime()
-	{
-		return loggedInTime;
-	}
-
-	/**
-	 * Set the logged in time for this client.
-	 *
-	 * @param loggedInTime The logged in time for this client.
-	 */
-	public void setLoggedInTime(long loggedInTime)
-	{
-		this.loggedInTime = loggedInTime;
-	}
+	{ return connected; }
 
 	/**
 	 * Get the list of repeating tasks.
@@ -405,54 +301,39 @@ public class Client extends Thread
 
 	}
 
-	/**
-	 * Set whether this client has received a login response.
-	 *
-	 * @param receivedLoginResponse Whether this client has received a login response.
-	 */
-	public void setReceivedLoginResponse(boolean receivedLoginResponse)
+	/** Send a ping request. */
+	public void sendPing()
 	{
-		this.receivedLoginResponse = receivedLoginResponse;
+		Message pingRequest = new Message("PingRequest");
+		pingRequest.setArgument("requestTimeNanos", System.nanoTime());
+		sendMessage(pingRequest);
 	}
 
 	/**
-	 * Get whether this client has received a login response.
+	 * Add a ping time to the list.
 	 *
-	 * @return Whether the client has received a login response.
+	 * @param pingTime The time of the ping, in nanoseconds.
 	 */
-	public boolean hasReceivedLoginResponse()
+	public void addPingTime(long pingTime)
 	{
-		return receivedLoginResponse;
+		pingTimes.add(pingTime);
 	}
 
 	/**
-	 * Get the username of this client.
+	 * Get the average ping time, in nanoseconds.
 	 *
-	 * @return The username of this client.
+	 * @return The average ping time between client and server, in nanoseconds.
 	 */
-	public String getUsername()
+	public long getAveragePingTime()
 	{
-		return username;
-	}
-
-	/**
-	 * Set whether this client has received a logout response.
-	 *
-	 * @param receivedLogoutResponse Whether this client has received a logout response.
-	 */
-	public void setReceivedLogoutResponse(boolean receivedLogoutResponse)
-	{
-		this.receivedLogoutResponse = receivedLogoutResponse;
-	}
-
-	/**
-	 * Get whether this client has received a logout response.
-	 *
-	 * @return Whether this client has received a logout response.
-	 */
-	public boolean hasReceivedLogoutResponse()
-	{
-		return receivedLogoutResponse;
+		long total = 0;
+		int num;
+		synchronized (pingTimes)
+		{
+			num = pingTimes.size();
+			for (long l : pingTimes) total += l;
+		}
+		return total / num;
 	}
 
 	/**
@@ -475,5 +356,15 @@ public class Client extends Thread
 		aesKey = key;
 		inputStream.setAESKey(key);
 		outputStream.setAesKey(key);
+	}
+
+	/**
+	 * Get the update period of this client.
+	 *
+	 * @return The update period of this client.
+	 */
+	public int getPeriod()
+	{
+		return period;
 	}
 }

@@ -41,6 +41,7 @@ public abstract class ServerExecutableMessage extends ExecutableMessage
 	 *
 	 * @param handler The client handler to use the ExecutableMessage.
 	 * @param message The message.
+	 *
 	 * @return The class of the ExecutableMessage that handles the given Message.
 	 */
 	@SuppressWarnings("unchecked")
@@ -49,7 +50,7 @@ public abstract class ServerExecutableMessage extends ExecutableMessage
 		ExecutableMessage r = null;
 		MessageType messageType = MessageRegistry.getMessageType(message.getID());
 		// Get the executable message classes registered.
-		Class<? extends ExecutableMessage> execClass = messageType.executableMessageClass;
+		Class<? extends ExecutableMessage> execClass = messageType.serverExecutableMessageClass;
 		try
 		{
 			// Get and parse the Constructors for the ExecutableMessage class retrieved.

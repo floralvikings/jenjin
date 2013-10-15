@@ -1,6 +1,6 @@
 package com.jenjinstudios.jgcf.message;
 
-import com.jenjinstudios.jgcf.Client;
+import com.jenjinstudios.jgcf.AuthClient;
 import com.jenjinstudios.message.Message;
 
 /**
@@ -9,15 +9,15 @@ import com.jenjinstudios.message.Message;
  * @author Caleb Brinkman
  */
 @SuppressWarnings("unused")
-public class ExecutableLogoutResponse extends ClientExecutableMessage
+public class ExecutableLogoutResponse extends AuthClientExecutableMessage
 {
 	/**
 	 * Construct an ExecutableMessage with the given Message.
 	 *
-	 * @param client  The client invoking this class.
+	 * @param client The client invoking this class.
 	 * @param message The Message.
 	 */
-	public ExecutableLogoutResponse(Client client, Message message)
+	public ExecutableLogoutResponse(AuthClient client, Message message)
 	{
 		super(client, message);
 	}

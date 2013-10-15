@@ -1,5 +1,10 @@
 <base_messages>
 
+    <message name="InvalidMessage" id="-1">
+        <argument type="String" name="messageName" />
+        <argument type="short" name="messageID" />
+    </message>
+
     <message name="FirstConnectResponse" id="0">
         <argument type="int" name="ups" />
     </message>
@@ -37,9 +42,9 @@
 
     <message name="StateChangeRequest" id="7">
         <executable language="java" side="server">com.jenjinstudios.jgsf.message.ExecutableStateChangeRequest</executable>
-        <argument type="int" name="direction" />
+        <argument type="double" name="direction" />
         <argument type="double" name="angle" />
-        <argument type="int" name="stepsFromLast" />
+        <argument type="int" name="stepsUntilChange" />
     </message>
 
     <message name="ObjectVisibleMessage" id="8">
@@ -56,7 +61,7 @@
         <argument type="int" name="id" />
         <argument type="double" name="xCoordinate" />
         <argument type="double" name="zCoordinate" />
-        <argument type="int" name="direction" />
+        <argument type="double" name="direction" />
         <argument type="double" name="angle" />
         <argument type="int" name="stepsTaken" />
         <argument type="int" name="stepsUntilChange" />
@@ -70,16 +75,18 @@
     <message name="StateChangeMessage" id="11">
         <executable language="java" side="client">com.jenjinstudios.jgcf.message.ExecutableStateChangeMessage</executable>
         <argument type="int" name="id" />
-        <argument type="int" name="direction" />
+        <argument type="double" name="direction" />
         <argument type="double" name="angle" />
         <argument type="int" name="stepsUntilChange" />
     </message>
 
     <message name="ForceStateMessage" id="12">
         <executable language="java" side="client">com.jenjinstudios.jgcf.message.ExecutableForceStateMessage</executable>
-        <argument type="int" name="direction" />
+        <argument type="double" name="direction" />
         <argument type="double" name="angle" />
-        <argument type="int" name="stepsFromLast" />
+        <argument type="double" name="xCoordinate" />
+        <argument type="double" name="zCoordinate" />
+        <argument type="long" name="timeOfForce" />
     </message>
 
     <message name="WorldLoginRequest" id="13">
@@ -105,4 +112,15 @@
         <argument type="boolean" name="success" />
         <executable language="java" side="client">com.jenjinstudios.jgcf.message.ExecutableWorldLogoutResponse</executable>
     </message>
+
+    <message name="PingRequest" id="17">
+        <argument type="long" name="requestTimeNanos" />
+        <executable language="java" side="server">com.jenjinstudios.jgsf.message.ExecutablePingRequest</executable>
+    </message>
+
+    <message name="PingResponse" id="18">
+        <argument type="long" name="requestTimeNanos" />
+        <executable language="java" side="client">com.jenjinstudios.jgcf.message.ExecutablePingResponse</executable>
+    </message>
+
 </base_messages>

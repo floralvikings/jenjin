@@ -30,7 +30,7 @@ public class WorldSQLHandlerTest
 		assertTrue(worldSQLHandler.isConnected());
 
 		Actor player = worldSQLHandler.logInPlayer("TestAccount01", "testPassword");
-		Vector2D origin = new Vector2D(0, 0);
+		Vector2D origin = player.getVector2D();
 		Vector2D secondVector = new Vector2D(50, 50);
 
 		assertEquals(origin, player.getVector2D());

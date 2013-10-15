@@ -1,9 +1,11 @@
 package com.jenjinstudios.jgcf;
 
 import com.jenjinstudios.message.Message;
-import com.jenjinstudios.world.ClientActor;
 import com.jenjinstudios.world.ClientObject;
+import com.jenjinstudios.world.ClientPlayer;
+import com.jenjinstudios.world.state.MoveState;
 
+import java.util.LinkedList;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.logging.Level;
@@ -15,7 +17,7 @@ import java.util.logging.Logger;
  *
  * @author Caleb Brinkman
  */
-public class WorldClient extends Client
+public class WorldClient extends AuthClient
 {
 	/** The logger associated with this class. */
 	private static final Logger LOGGER = Logger.getLogger(WorldClient.class.getName());
@@ -24,11 +26,11 @@ public class WorldClient extends Client
 	/** The password used to login to the world. */
 	private final String password;
 	/** The actor representing the player controlled by this client. */
-	private ClientActor player;
+	private ClientPlayer player;
 
 	/**
-	 * Construct a client connecting to the given address over the given port.  This client <i>must</i> have a username
-	 * and password.
+	 * Construct a client connecting to the given address over the given port.  This client <i>must</i> have a username and
+	 * password.
 	 *
 	 * @param address  The address to which this client will attempt to connect.
 	 * @param port     The port over which this client will attempt to connect.
@@ -42,19 +44,31 @@ public class WorldClient extends Client
 		this.password = password;
 		// Create the update loop and add it to the task list.
 		/* The loop used to update non-player objects. */
-		UpdateLoop updateLoop = new UpdateLoop();
-		addRepeatedTask(updateLoop);
+		addRepeatedTask(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				Set<Integer> keys = visibleObjects.keySet();
+				for (int i : keys)
+				{
+					ClientObject currentObject = visibleObjects.get(i);
+					currentObject.update();
+				}
+				if (player != null)
+				{
+					LinkedList<MoveState> newStates = player.getSavedStates();
+					while (!newStates.isEmpty())
+						sendStateChangeRequest(newStates.remove());
+				}
+			}
+		});
 	}
 
 	/** Log the player into the world, and set the returned player as the actor for this client. */
-	public void loginToWorld()
+	public void blockingLoginToWorld()
 	{
-		Message loginRequest = new Message("WorldLoginRequest");
-		loginRequest.setArgument("username", getUsername());
-		loginRequest.setArgument("password", password);
-
-		setReceivedLoginResponse(false);
-		sendMessage(loginRequest);
+		sendLoginRequest();
 		while (!hasReceivedLoginResponse())
 			try
 			{
@@ -65,15 +79,33 @@ public class WorldClient extends Client
 			}
 	}
 
-	/** Log the player out of the world.  Blocks until logout is confirmed. */
-	public void logoutOfWorld()
+	/** Send a LoginRequest to the server. */
+	private void sendLoginRequest()
 	{
-		// Create the message.
-		Message logoutRequest = new Message("WorldLogoutRequest");
+		Message loginRequest = generateLoginRequest();
 
-		// Send the request, continue when response is received.
-		setReceivedLogoutResponse(false);
-		sendMessage(logoutRequest);
+		setReceivedLoginResponse(false);
+		sendMessage(loginRequest);
+	}
+
+	/**
+	 * Generate a LoginRequest message.
+	 *
+	 * @return The LoginRequest message.
+	 */
+	private Message generateLoginRequest()
+	{
+		Message loginRequest = new Message("WorldLoginRequest");
+		loginRequest.setArgument("username", getUsername());
+		loginRequest.setArgument("password", password);
+		return loginRequest;
+	}
+
+	/** Log the player out of the world.  Blocks until logout is confirmed. */
+	public void blockingLogoutOfWorld()
+	{
+		sendLogoutRequest();
+
 		while (!hasReceivedLogoutResponse())
 			try
 			{
@@ -82,6 +114,16 @@ public class WorldClient extends Client
 			{
 				LOGGER.log(Level.WARNING, "Interrupted while waiting for login response.", e);
 			}
+	}
+
+	/** Send a LogoutRequest to the server. */
+	private void sendLogoutRequest()
+	{
+		Message logoutRequest = new Message("WorldLogoutRequest");
+
+		// Send the request, continue when response is received.
+		setReceivedLogoutResponse(false);
+		sendMessage(logoutRequest);
 	}
 
 	/**
@@ -105,18 +147,6 @@ public class WorldClient extends Client
 	}
 
 	/**
-	 * Set the player being controlled by this client.
-	 *
-	 * @param player The player to be controlled by this client.
-	 */
-	public void setPlayer(ClientActor player)
-	{
-		if (this.player != null)
-			throw new IllegalStateException("Player already set!");
-		this.player = player;
-	}
-
-	/**
 	 * Get the map of visible objects.
 	 *
 	 * @return The map of visible objects.
@@ -126,29 +156,64 @@ public class WorldClient extends Client
 		return visibleObjects;
 	}
 
-	/** The UpdateLoop class is used to update all wold objects. */
-	private class UpdateLoop implements Runnable
+	/**
+	 * Get the player associated with this client.
+	 *
+	 * @return The player (ClientActor) associated with this client.
+	 */
+	public ClientPlayer getPlayer()
 	{
-		/**
-		 * When an object implementing interface {@code Runnable} is used
-		 * to create a thread, starting the thread causes the object's
-		 * {@code run} method to be called in that separately executing
-		 * thread.
-		 * <p/>
-		 * The general contract of the method {@code run} is that it may
-		 * take any action whatsoever.
-		 *
-		 * @see Thread#run()
-		 */
-		@Override
-		public void run()
-		{
-			Set<Integer> keys = visibleObjects.keySet();
-			for (int i : keys)
-			{
-				ClientObject currentObject = visibleObjects.get(i);
-				currentObject.update();
-			}
-		}
+		return player;
+	}
+
+	/**
+	 * Set the player being controlled by this client.
+	 *
+	 * @param player The player to be controlled by this client.
+	 */
+	public void setPlayer(ClientPlayer player)
+	{
+		if (this.player != null)
+			throw new IllegalStateException("Player already set!");
+		this.player = player;
+	}
+
+	/**
+	 * Send a state change request to the server.
+	 *
+	 * @param moveState The move state used to generate the request.
+	 */
+	private void sendStateChangeRequest(MoveState moveState)
+	{
+		Message stateChangeRequest = generateStateChangeRequest(moveState);
+		sendMessage(stateChangeRequest);
+	}
+
+	/**
+	 * Generate a state change request for the given move state.
+	 *
+	 * @param moveState The state used to generate a state change request.
+	 *
+	 * @return The generated message.
+	 */
+	private Message generateStateChangeRequest(MoveState moveState)
+	{
+		Message stateChangeRequest = new Message("StateChangeRequest");
+		stateChangeRequest.setArgument("direction", moveState.direction);
+		stateChangeRequest.setArgument("angle", moveState.moveAngle);
+		stateChangeRequest.setArgument("stepsUntilChange", moveState.stepsUntilChange);
+		return stateChangeRequest;
+	}
+
+	/**
+	 * Get the ClientObject with the given ID.
+	 *
+	 * @param id The ID of the object to retrieve.
+	 *
+	 * @return The object with the given ID.
+	 */
+	public ClientObject getObject(int id)
+	{
+		return visibleObjects.get(id);
 	}
 }
