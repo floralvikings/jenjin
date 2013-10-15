@@ -55,9 +55,12 @@ public class WorldClient extends AuthClient
 					ClientObject currentObject = visibleObjects.get(i);
 					currentObject.update();
 				}
-				LinkedList<MoveState> newStates = player.getSavedStates();
-				while (!newStates.isEmpty())
-					sendStateChangeRequest(newStates.remove());
+				if (player != null)
+				{
+					LinkedList<MoveState> newStates = player.getSavedStates();
+					while (!newStates.isEmpty())
+						sendStateChangeRequest(newStates.remove());
+				}
 			}
 		});
 	}
