@@ -3,7 +3,9 @@ package com.jenjinstudios.jgcf;
 import com.jenjinstudios.message.Message;
 import com.jenjinstudios.world.ClientObject;
 import com.jenjinstudios.world.ClientPlayer;
+import com.jenjinstudios.world.state.MoveState;
 
+import java.util.LinkedList;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.logging.Level;
@@ -42,8 +44,22 @@ public class WorldClient extends AuthClient
 		this.password = password;
 		// Create the update loop and add it to the task list.
 		/* The loop used to update non-player objects. */
-		UpdateLoop updateLoop = new UpdateLoop();
-		addRepeatedTask(updateLoop);
+		addRepeatedTask(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				Set<Integer> keys = visibleObjects.keySet();
+				for (int i : keys)
+				{
+					ClientObject currentObject = visibleObjects.get(i);
+					currentObject.update();
+				}
+				LinkedList<MoveState> newStates = player.getSavedStates();
+				while (!newStates.isEmpty())
+					sendStateChangeRequest(newStates.remove());
+			}
+		});
 	}
 
 	/** Log the player into the world, and set the returned player as the actor for this client. */
@@ -159,27 +175,31 @@ public class WorldClient extends AuthClient
 		this.player = player;
 	}
 
-	/** The UpdateLoop class is used to update all wold objects. */
-	private class UpdateLoop implements Runnable
+	/**
+	 * Send a state change request to the server.
+	 *
+	 * @param moveState The move state used to generate the request.
+	 */
+	private void sendStateChangeRequest(MoveState moveState)
 	{
-		/**
-		 * When an object implementing interface {@code Runnable} is used to create a thread, starting the thread causes the
-		 * object's {@code run} method to be called in that separately executing thread.
-		 * <p/>
-		 * The general contract of the method {@code run} is that it may take any action whatsoever.
-		 *
-		 * @see Thread#run()
-		 */
-		@Override
-		public void run()
-		{
-			Set<Integer> keys = visibleObjects.keySet();
-			for (int i : keys)
-			{
-				ClientObject currentObject = visibleObjects.get(i);
-				currentObject.update();
-			}
-		}
+		Message stateChangeRequest = generateStateChangeRequest(moveState);
+		sendMessage(stateChangeRequest);
+	}
+
+	/**
+	 * Generate a state change request for the given move state.
+	 *
+	 * @param moveState The state used to generate a state change request.
+	 *
+	 * @return The generated message.
+	 */
+	private Message generateStateChangeRequest(MoveState moveState)
+	{
+		Message stateChangeRequest = new Message("StateChangeRequest");
+		stateChangeRequest.setArgument("direction", moveState.direction);
+		stateChangeRequest.setArgument("angle", moveState.moveAngle);
+		stateChangeRequest.setArgument("stepsUntilChange", moveState.stepsUntilChange);
+		return stateChangeRequest;
 	}
 
 	/**
