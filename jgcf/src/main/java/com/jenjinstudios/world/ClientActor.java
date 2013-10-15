@@ -10,8 +10,8 @@ import static com.jenjinstudios.world.state.MoveState.IDLE;
  * The {@code ClientActor} class is used to represent a server-side {@code Actor} object on the client side.  It is an
  * object capable of movement.
  * <p/>
- * Actors start with a {@code MoveState} with {@code MoveiDirection.IDLE}.  Each update, the Actor checks to see
- * if there are any MoveStates in the queue.  If there are, it checks the first state in line for the number of steps
+ * Actors start with a {@code MoveState} with {@code MoveiDirection.IDLE}.  Each update, the Actor checks to see if
+ * there are any MoveStates in the queue.  If there are, it checks the first state in line for the number of steps
  * needed before the state changes.  Once the number of steps has been reached, the state switches to that of the first
  * position in the queue, and the Actor's step counter is reset.  If an Actor "oversteps," which is determined if the
  * Actor has taken more than the required number of steps to change state, the Actor is moved back by the "overstepped"
@@ -72,7 +72,6 @@ public class ClientActor extends ClientObject
 	{
 		stepsTaken++;
 		MoveState nextState;
-		double stepAngle;
 		boolean isIdle;
 		synchronized (nextMoveStates)
 		{
@@ -83,13 +82,10 @@ public class ClientActor extends ClientObject
 			changeState();
 
 		isIdle = currentMoveState.direction == IDLE;
-		stepAngle = getDirection() + currentMoveState.direction;
 
 		if (!isIdle)
 		{
-			double twoPi = (2 * Math.PI);
-			stepAngle = stepAngle < 0 ? twoPi + stepAngle : stepAngle % twoPi;
-			setVector2D(getVector2D().getVectorInDirection(STEP_LENGTH, stepAngle));
+			setVector2D(getVector2D().getVectorInDirection(STEP_LENGTH, currentMoveState.stepAngle));
 		}
 
 
