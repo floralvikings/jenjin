@@ -12,9 +12,13 @@ import com.jenjinstudios.world.ClientPlayer;
  */
 public class ExecutableForceStateMessage extends WorldClientExecutableMessage
 {
+	/** The position to which to force the player. */
 	private Vector2D vector2D;
+	/** The relative angle to which to force the player. */
 	private double relativeAngle;
+	/** The absolute angle to which to force the player. */
 	private double absoluteAngle;
+	/** The time of the start of the server update during which the state was forced. */
 	private long timeOfForce;
 
 	/**
@@ -32,10 +36,8 @@ public class ExecutableForceStateMessage extends WorldClientExecutableMessage
 	public void runSynced()
 	{
 		ClientPlayer player = getClient().getPlayer();
-		// Set player angle
-		// Set player direction
-		// Set steps taken
-		// Correct player position for steps taken based on movestate.
+		int stepsTaken = (int) ((System.nanoTime() - timeOfForce) / (getClient().getPeriod() * 1000000));
+		player.forcePosition(vector2D, relativeAngle, absoluteAngle, stepsTaken);
 	}
 
 	@Override

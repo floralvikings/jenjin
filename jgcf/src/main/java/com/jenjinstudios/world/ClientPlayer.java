@@ -1,5 +1,6 @@
 package com.jenjinstudios.world;
 
+import com.jenjinstudios.math.Vector2D;
 import com.jenjinstudios.world.state.MoveState;
 
 import java.util.LinkedList;
@@ -41,6 +42,12 @@ public class ClientPlayer extends ClientActor
 	public void update()
 	{
 		step();
+	}
+
+	@Override
+	public void setStepsTaken(int stepsTaken)
+	{
+		this.stepsTaken = stepsTaken;
 	}
 
 	/** Move one step forward. */
@@ -129,5 +136,26 @@ public class ClientPlayer extends ClientActor
 		this.relativeAngle = relativeAngle;
 		isIdle = (relativeAngle == MoveState.IDLE);
 		calculateTrueAngle();
+	}
+
+	/**
+	 * Force the actor to the given position and angles, then take the number of necessary steps to match {@code
+	 * stepsToTake}.
+	 *
+	 * @param position      The position to which to force the player.
+	 * @param relativeAngle The relative angle to which to force the player.
+	 * @param absoluteAngle The absolute angle to which to force the player.
+	 * @param stepsToTake   The number of steps that must be taken after forcing position.
+	 */
+	public void forcePosition(Vector2D position, double relativeAngle, double absoluteAngle, double stepsToTake)
+	{
+		synchronized (savedStates) { savedStates.clear(); }
+		setVector2D(position);
+		this.relativeAngle = relativeAngle;
+		this.absoluteAngle = absoluteAngle;
+		setStepsTaken(0);
+
+		while (this.stepsTaken < stepsToTake)
+			step();
 	}
 }
