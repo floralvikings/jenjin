@@ -54,7 +54,7 @@ public class WorldServerTest
 
 		// Test logging in
 		int preLogin = world.getObjectCount();
-		worldClient.loginToWorld();
+		worldClient.blockingLoginToWorld();
 		int postLogin = world.getObjectCount();
 		Assert.assertEquals(preLogin + 1, postLogin);
 
@@ -79,7 +79,7 @@ public class WorldServerTest
 
 		// Test logging out.
 		int preLogout = world.getObjectCount();
-		worldClient.logoutOfWorld();
+		worldClient.blockingLogoutOfWorld();
 		int postLogout = world.getObjectCount();
 		Assert.assertEquals(preLogout - 1, postLogout);
 

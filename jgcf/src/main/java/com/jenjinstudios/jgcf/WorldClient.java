@@ -30,8 +30,8 @@ public class WorldClient extends AuthClient
 	 * Construct a client connecting to the given address over the given port.  This client <i>must</i> have a username and
 	 * password.
 	 *
-	 * @param address The address to which this client will attempt to connect.
-	 * @param port The port over which this client will attempt to connect.
+	 * @param address  The address to which this client will attempt to connect.
+	 * @param port     The port over which this client will attempt to connect.
 	 * @param username The username that will be used by this client.
 	 * @param password The password that will be used by this client.
 	 */
@@ -47,14 +47,9 @@ public class WorldClient extends AuthClient
 	}
 
 	/** Log the player into the world, and set the returned player as the actor for this client. */
-	public void loginToWorld()
+	public void blockingLoginToWorld()
 	{
-		Message loginRequest = new Message("WorldLoginRequest");
-		loginRequest.setArgument("username", getUsername());
-		loginRequest.setArgument("password", password);
-
-		setReceivedLoginResponse(false);
-		sendMessage(loginRequest);
+		sendLoginRequest();
 		while (!hasReceivedLoginResponse())
 			try
 			{
@@ -65,15 +60,33 @@ public class WorldClient extends AuthClient
 			}
 	}
 
-	/** Log the player out of the world.  Blocks until logout is confirmed. */
-	public void logoutOfWorld()
+	/** Send a LoginRequest to the server. */
+	private void sendLoginRequest()
 	{
-		// Create the message.
-		Message logoutRequest = new Message("WorldLogoutRequest");
+		Message loginRequest = generateLoginRequest();
 
-		// Send the request, continue when response is received.
-		setReceivedLogoutResponse(false);
-		sendMessage(logoutRequest);
+		setReceivedLoginResponse(false);
+		sendMessage(loginRequest);
+	}
+
+	/**
+	 * Generate a LoginRequest message.
+	 *
+	 * @return The LoginRequest message.
+	 */
+	private Message generateLoginRequest()
+	{
+		Message loginRequest = new Message("WorldLoginRequest");
+		loginRequest.setArgument("username", getUsername());
+		loginRequest.setArgument("password", password);
+		return loginRequest;
+	}
+
+	/** Log the player out of the world.  Blocks until logout is confirmed. */
+	public void blockingLogoutOfWorld()
+	{
+		sendLogoutRequest();
+
 		while (!hasReceivedLogoutResponse())
 			try
 			{
@@ -82,6 +95,16 @@ public class WorldClient extends AuthClient
 			{
 				LOGGER.log(Level.WARNING, "Interrupted while waiting for login response.", e);
 			}
+	}
+
+	/** Send a LogoutRequest to the server. */
+	private void sendLogoutRequest()
+	{
+		Message logoutRequest = new Message("WorldLogoutRequest");
+
+		// Send the request, continue when response is received.
+		setReceivedLogoutResponse(false);
+		sendMessage(logoutRequest);
 	}
 
 	/**
