@@ -2,7 +2,6 @@ package com.jenjinstudios.jgcf.message;
 
 import com.jenjinstudios.jgcf.WorldClient;
 import com.jenjinstudios.message.Message;
-import com.jenjinstudios.world.ClientActor;
 import com.jenjinstudios.world.ClientObject;
 
 /**
@@ -41,7 +40,7 @@ public class ExecutableObjectVisibleMessage extends WorldClientExecutableMessage
 		double xCoord = (double) message.getArgument("xCoordinate");
 		double zCoord = (double) message.getArgument("zCoordinate");
 
-		newlyVisible = new ClientActor(id, name);
+		newlyVisible = new ClientObject(id, name);
 		newlyVisible.setVector2D(xCoord, zCoord);
 	}
 }

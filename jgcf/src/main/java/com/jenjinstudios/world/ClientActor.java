@@ -32,8 +32,6 @@ public class ClientActor extends ClientObject
 	private MoveState currentMoveState;
 	/** The number of steps taken since the last move. */
 	private int stepsTaken = 0;
-	/** The name of this actor. */
-	private final String name;
 
 	/**
 	 * Construct an Actor with the given name.
@@ -43,8 +41,7 @@ public class ClientActor extends ClientObject
 	 */
 	public ClientActor(int id, String name)
 	{
-		super(id);
-		this.name = name;
+		super(id, name);
 		nextMoveStates = new LinkedList<>();
 	}
 
@@ -99,16 +96,6 @@ public class ClientActor extends ClientObject
 			currentMoveState = nextMoveStates.remove();
 			stepsTaken = 0;
 		}
-	}
-
-	/**
-	 * Get the name of this actor.
-	 *
-	 * @return The name of this actor.
-	 */
-	public String getName()
-	{
-		return name;
 	}
 
 	/**

@@ -15,16 +15,19 @@ public class ClientObject
 	private double direction;
 	/** The ID number of this object. */
 	private int id = Integer.MIN_VALUE;
+	/** The name of this object. */
+	private String name;
 
 	/**
 	 * Construct a new WorldObject.
 	 *
 	 * @param id The ID of the object.
 	 */
-	public ClientObject(int id)
+	public ClientObject(int id, String name)
 	{
 		vector2D = new Vector2D(0, 0);
 		setId(id);
+		this.name = name;
 	}
 
 	/**
@@ -105,5 +108,25 @@ public class ClientObject
 	public void update()
 	{
 
+	}
+
+	/**
+	 * Get the name of this object.
+	 *
+	 * @return The name of this object.
+	 */
+	public String getName()
+	{
+		return name;
+	}
+
+	/**
+	 * Set the name of this object.
+	 *
+	 * @param name The new name for this object.
+	 */
+	public void setName(String name)
+	{
+		this.name = name;
 	}
 }

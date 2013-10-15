@@ -2,7 +2,7 @@ package com.jenjinstudios.jgcf.message;
 
 import com.jenjinstudios.jgcf.WorldClient;
 import com.jenjinstudios.message.Message;
-import com.jenjinstudios.world.ClientActor;
+import com.jenjinstudios.world.ClientPlayer;
 
 /**
  * Handles login responses from the server.
@@ -12,7 +12,7 @@ import com.jenjinstudios.world.ClientActor;
 public class ExecutableWorldLoginResponse extends WorldClientExecutableMessage
 {
 	/** The player created as indicated by the world login response. */
-	private ClientActor player;
+	private ClientPlayer player;
 
 	/**
 	 * Construct an ExecutableMessage with the given Message.
@@ -46,7 +46,7 @@ public class ExecutableWorldLoginResponse extends WorldClientExecutableMessage
 		int id = (int) getMessage().getArgument("id");
 		double xCoord = (double) getMessage().getArgument("xCoord");
 		double zCoord = (double) getMessage().getArgument("zCoord");
-		player = new ClientActor(id, getClient().getUsername());
+		player = new ClientPlayer(id, getClient().getUsername());
 		player.setVector2D(xCoord, zCoord);
 	}
 }
