@@ -42,11 +42,12 @@ public class ClientHandler extends Thread
 
 
 	/**
-	 * Construct a new Client Handler using the given socket.  When constructing a new ClientHandler, it is necessary
-	 * to send the client a FirstConnectResponse message with the server's UPS
+	 * Construct a new Client Handler using the given socket.  When constructing a new ClientHandler, it is necessary to
+	 * send the client a FirstConnectResponse message with the server's UPS
 	 *
-	 * @param s  The server for which this handler works.
+	 * @param s The server for which this handler works.
 	 * @param sk The socket used to communicate with the client.
+	 *
 	 * @throws IOException If the socket is unable to connect.
 	 */
 	public ClientHandler(Server<? extends ClientHandler> s, Socket sk) throws IOException
@@ -250,7 +251,10 @@ public class ClientHandler extends Thread
 			getServer().addSyncedTask(exec);
 		} else
 		{
-			this.shutdown();
+			Message invalid = new Message("InvalidMessage");
+			invalid.setArgument("messageName", message.name);
+			invalid.setArgument("messageID", message.getID());
+			queueMessage(invalid);
 		}
 	}
 
@@ -306,4 +310,17 @@ public class ClientHandler extends Thread
 		outputStream.setAesKey(key);
 	}
 
+	/**
+	 * Immediately force send a message. This method should only be used if a message is <i>extremely</i> time dependent,
+	 * otherwise messages should be queued using the {@code queueMessage} method, because this method may cause
+	 * synchronization issues.
+	 *
+	 * @param message The message to send.
+	 *
+	 * @throws IOException If there is an IOException.
+	 */
+	public void forceMessage(Message message) throws IOException
+	{
+		outputStream.writeMessage(message);
+	}
 }

@@ -4,12 +4,14 @@ import com.jenjinstudios.world.state.MoveState;
 
 import java.util.LinkedList;
 
+import static com.jenjinstudios.world.state.MoveState.IDLE;
+
 /**
  * The {@code ClientActor} class is used to represent a server-side {@code Actor} object on the client side.  It is an
  * object capable of movement.
  * <p/>
- * Actors start with a {@code MoveState} with {@code MoveiDirection.IDLE}.  Each update, the Actor checks to see
- * if there are any MoveStates in the queue.  If there are, it checks the first state in line for the number of steps
+ * Actors start with a {@code MoveState} with {@code MoveiDirection.IDLE}.  Each update, the Actor checks to see if
+ * there are any MoveStates in the queue.  If there are, it checks the first state in line for the number of steps
  * needed before the state changes.  Once the number of steps has been reached, the state switches to that of the first
  * position in the queue, and the Actor's step counter is reset.  If an Actor "oversteps," which is determined if the
  * Actor has taken more than the required number of steps to change state, the Actor is moved back by the "overstepped"
@@ -30,8 +32,6 @@ public class ClientActor extends ClientObject
 	private MoveState currentMoveState;
 	/** The number of steps taken since the last move. */
 	private int stepsTaken = 0;
-	/** The name of this actor. */
-	private final String name;
 
 	/**
 	 * Construct an Actor with the given name.
@@ -41,8 +41,7 @@ public class ClientActor extends ClientObject
 	 */
 	public ClientActor(int id, String name)
 	{
-		super(id);
-		this.name = name;
+		super(id, name);
 		nextMoveStates = new LinkedList<>();
 	}
 
@@ -70,8 +69,7 @@ public class ClientActor extends ClientObject
 	{
 		stepsTaken++;
 		MoveState nextState;
-		double stepAngle = getDirection();
-		boolean isIdle = false;
+		boolean isIdle;
 		synchronized (nextMoveStates)
 		{
 			nextState = nextMoveStates.peek();
@@ -80,41 +78,11 @@ public class ClientActor extends ClientObject
 		if (nextState != null)
 			changeState();
 
-		switch (currentMoveState.direction)
-		{
-			case IDLE:
-				isIdle = true;
-				break;
-			case FRONT:
-				break;
-			case FRONT_RIGHT:
-				stepAngle = (getDirection() - Math.PI * 0.25);
-				break;
-			case RIGHT:
-				stepAngle = (getDirection() - Math.PI * 0.5);
-				break;
-			case BACK_RIGHT:
-				stepAngle = (getDirection() - Math.PI * 0.75);
-				break;
-			case BACK:
-				stepAngle = (getDirection() + Math.PI);
-				break;
-			case BACK_LEFT:
-				stepAngle = (getDirection() + Math.PI * 0.75);
-				break;
-			case LEFT:
-				stepAngle = (getDirection() + Math.PI * 0.5);
-				break;
-			case FRONT_LEFT:
-				stepAngle = (getDirection() + Math.PI * 0.25);
-				break;
-		}
+		isIdle = currentMoveState.direction == IDLE;
 
 		if (!isIdle)
 		{
-			double twoPi = (2 * Math.PI);
-			stepAngle = stepAngle < 0 ? twoPi + stepAngle : stepAngle % twoPi;
-			setVector2D(getVector2D().getVectorInDirection(STEP_LENGTH, stepAngle));
+			setVector2D(getVector2D().getVectorInDirection(STEP_LENGTH, currentMoveState.stepAngle));
 		}
 
 
@@ -128,16 +96,6 @@ public class ClientActor extends ClientObject
 			currentMoveState = nextMoveStates.remove();
 			stepsTaken = 0;
 		}
-	}
-
-	/**
-	 * Get the name of this actor.
-	 *
-	 * @return The name of this actor.
-	 */
-	public String getName()
-	{
-		return name;
 	}
 
 	/**

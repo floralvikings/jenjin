@@ -40,7 +40,7 @@ public class ExecutableActorVisibleMessage extends WorldClientExecutableMessage
 		int id = (int) message.getArgument("id");
 		double xCoord = (double) message.getArgument("xCoordinate");
 		double zCoord = (double) message.getArgument("zCoordinate");
-		int direction = (int) message.getArgument("direction");
+		double direction = (double) message.getArgument("direction");
 		double angle = (double) message.getArgument("angle");
 		int stepsFromLast = (int) message.getArgument("stepsTaken");
 		int stepsUntilChange = (int) message.getArgument("stepsUntilChange");

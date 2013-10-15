@@ -18,7 +18,7 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage
 	 * @param handler The handler using this ExecutableMessage.
 	 * @param message The message.
 	 */
-	protected ExecutableStateChangeRequest(WorldClientHandler handler, Message message)
+	public ExecutableStateChangeRequest(WorldClientHandler handler, Message message)
 	{
 		super(handler, message);
 	}
@@ -28,9 +28,9 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage
 	{
 		Actor player = getClientHandler().getActor();
 		MoveState newState;
-		int direction = (int) getMessage().getArgument("direction");
+		double direction = (double) getMessage().getArgument("direction");
 		double angle = (double) getMessage().getArgument("angle");
-		int stepsFromLast = (int) getMessage().getArgument("stepsFromLast");
+		int stepsFromLast = (int) getMessage().getArgument("stepsUntilChange");
 		newState = new MoveState(direction, stepsFromLast, angle);
 		player.addMoveState(newState);
 	}
