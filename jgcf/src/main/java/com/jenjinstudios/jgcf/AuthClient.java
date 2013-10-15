@@ -31,8 +31,8 @@ public class AuthClient extends Client
 	/**
 	 * Construct a client connecting to the given address over the given port.
 	 *
-	 * @param address The address to which this client will attempt to connect.
-	 * @param port The port over which this client will attempt to connect.
+	 * @param address  The address to which this client will attempt to connect.
+	 * @param port     The port over which this client will attempt to connect.
 	 * @param username The username that will be used by this client.
 	 * @param password The password that will be used by this client.
 	 */
@@ -44,59 +44,43 @@ public class AuthClient extends Client
 	}
 
 	/** Queue a message to log into the server with the given username and password, and wait for the response. */
-	public void sendLoginRequest()
+	public void sendBlockingLoginRequest()
+	{
+		sendLoginRequest();
+		while (!hasReceivedLoginResponse())
+		{
+			try
+			{
+				Thread.sleep(1);
+			} catch (InterruptedException e)
+			{
+				LOGGER.log(Level.WARNING, "Interrupted while waiting for login response.", e);
+			}
+		}
+	}
+
+	/**
+	 * Get whether this client has received a login response.
+	 *
+	 * @return Whether the client has received a login response.
+	 */
+	public boolean hasReceivedLoginResponse()
+	{
+		return receivedLoginResponse;
+	}
+
+	/** Send a login request to the server. */
+	private void sendLoginRequest()
 	{
 		if (username == null || password == null)
 		{
-			LOGGER.log(Level.WARNING, "Attempted to login without username or password");
-			return;
+			throw new IllegalStateException("Attempted to login without username or password");
 		}
-
-		// Create the login request.
-		Message loginRequest = new Message("LoginRequest");
-		loginRequest.setArgument("username", username);
-		loginRequest.setArgument("password", password);
+		Message loginRequest = generateLoginRequest();
 
 		// Send the request, continue when the response is received.
 		setReceivedLoginResponse(false);
 		sendMessage(loginRequest);
-		while (!hasReceivedLoginResponse())
-			try
-			{
-				Thread.sleep(1);
-			} catch (InterruptedException e)
-			{
-				LOGGER.log(Level.WARNING, "Interrupted while waiting for login response.", e);
-			}
-	}
-
-	/** Queue a message to log the user out of the server. */
-	public void sendLogoutRequest()
-	{
-		// Create the message.
-		Message logoutRequest = new Message("LogoutRequest");
-
-		// Send the request, continue when response is received.
-		setReceivedLogoutResponse(false);
-		sendMessage(logoutRequest);
-		while (!hasReceivedLogoutResponse())
-			try
-			{
-				Thread.sleep(1);
-			} catch (InterruptedException e)
-			{
-				LOGGER.log(Level.WARNING, "Interrupted while waiting for login response.", e);
-			}
-	}
-
-	/**
-	 * Get the username of this client.
-	 *
-	 * @return The username of this client.
-	 */
-	public String getUsername()
-	{
-		return username;
 	}
 
 	/**
@@ -110,13 +94,51 @@ public class AuthClient extends Client
 	}
 
 	/**
-	 * Get whether this client has received a login response.
+	 * Generate a LoginRequest message.
 	 *
-	 * @return Whether the client has received a login response.
+	 * @return The LoginRequest message.
 	 */
-	public boolean hasReceivedLoginResponse()
+	private Message generateLoginRequest()
+	{// Create the login request.
+		Message loginRequest = new Message("LoginRequest");
+		loginRequest.setArgument("username", username);
+		loginRequest.setArgument("password", password);
+		return loginRequest;
+	}
+
+	/** Queue a message to log the user out of the server. */
+	public void sendBlockingLogoutRequest()
 	{
-		return receivedLoginResponse;
+		sendLogoutRequest();
+
+		while (!hasReceivedLogoutResponse())
+			try
+			{
+				Thread.sleep(1);
+			} catch (InterruptedException e)
+			{
+				LOGGER.log(Level.WARNING, "Interrupted while waiting for login response.", e);
+			}
+	}
+
+	/**
+	 * Get whether this client has received a logout response.
+	 *
+	 * @return Whether this client has received a logout response.
+	 */
+	public boolean hasReceivedLogoutResponse()
+	{
+		return receivedLogoutResponse;
+	}
+
+	/** Send a logout request to the server. */
+	private void sendLogoutRequest()
+	{
+		Message logoutRequest = new Message("LogoutRequest");
+
+		// Send the request, continue when response is received.
+		setReceivedLogoutResponse(false);
+		sendMessage(logoutRequest);
 	}
 
 	/**
@@ -130,13 +152,13 @@ public class AuthClient extends Client
 	}
 
 	/**
-	 * Get whether this client has received a logout response.
+	 * Get the username of this client.
 	 *
-	 * @return Whether this client has received a logout response.
+	 * @return The username of this client.
 	 */
-	public boolean hasReceivedLogoutResponse()
+	public String getUsername()
 	{
-		return receivedLogoutResponse;
+		return username;
 	}
 
 	/**
