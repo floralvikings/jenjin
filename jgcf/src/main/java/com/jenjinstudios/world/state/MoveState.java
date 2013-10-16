@@ -54,4 +54,10 @@ public class MoveState
 		double sAngle = moveAngle + direction;
 		stepAngle = (sAngle < 0) ? (sAngle + TWO_PI) : (sAngle % TWO_PI);
 	}
+
+	@Override
+	public String toString()
+	{
+		return "[" + direction + "\u00B0, " + " " + moveAngle + "\u00B0] : " + stepsUntilChange;
+	}
 }
