@@ -137,7 +137,6 @@ public class Actor extends SightedObject
 		currentMoveState = nextState;
 		nextState = nextMoveStates.poll();
 		newState = true;
-		stepsTaken = 0;
 		setDirection(currentMoveState.moveAngle);
 	}
 
@@ -157,8 +156,10 @@ public class Actor extends SightedObject
 	 */
 	private void correctOverSteps(int overstepped, MoveState oldState)
 	{
+		System.out.println(overstepped + " " + oldState + " " + stepsTaken + " | " + currentMoveState + " " + getVector2D());
 		if (oldState.direction != MoveState.IDLE)
 		{
+			System.out.println("Stepping Back " + overstepped);
 			for (int i = 0; i < overstepped; i++)
 			{
 				stepBack(oldState.stepAngle);
@@ -168,6 +169,7 @@ public class Actor extends SightedObject
 		{
 			stepForward();
 		}
+		stepsTaken = overstepped;
 	}
 
 	/** Take a step according to the current move state. */
@@ -191,7 +193,6 @@ public class Actor extends SightedObject
 	private void stepBack(double stepAngle)
 	{
 		stepAngle -= Math.PI;
-		if (currentMoveState.direction == IDLE) return;
 		try
 		{
 			setVector2D(getVector2D().getVectorInDirection(STEP_LENGTH, stepAngle));
