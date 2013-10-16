@@ -66,7 +66,8 @@ public class WorldClient extends AuthClient
 	}
 
 	/** Log the player into the world, and set the returned player as the actor for this client. */
-	public void blockingLoginToWorld()
+	@Override
+	public void sendBlockingLoginRequest()
 	{
 		sendLoginRequest();
 		while (!hasReceivedLoginResponse())
@@ -102,7 +103,8 @@ public class WorldClient extends AuthClient
 	}
 
 	/** Log the player out of the world.  Blocks until logout is confirmed. */
-	public void blockingLogoutOfWorld()
+	@Override
+	public void sendBlockingLogoutRequest()
 	{
 		sendLogoutRequest();
 
