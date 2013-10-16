@@ -156,10 +156,8 @@ public class Actor extends SightedObject
 	 */
 	private void correctOverSteps(int overstepped, MoveState oldState)
 	{
-		System.out.println(overstepped + " " + oldState + " " + stepsTaken + " | " + currentMoveState + " " + getVector2D());
 		if (oldState.direction != MoveState.IDLE)
 		{
-			System.out.println("Stepping Back " + overstepped);
 			for (int i = 0; i < overstepped; i++)
 			{
 				stepBack(oldState.stepAngle);
