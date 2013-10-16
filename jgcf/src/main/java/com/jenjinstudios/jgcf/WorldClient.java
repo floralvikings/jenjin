@@ -57,6 +57,7 @@ public class WorldClient extends AuthClient
 				}
 				if (player != null)
 				{
+					player.update();
 					LinkedList<MoveState> newStates = player.getSavedStates();
 					while (!newStates.isEmpty())
 						sendStateChangeRequest(newStates.remove());
