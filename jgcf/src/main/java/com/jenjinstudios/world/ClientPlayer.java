@@ -77,9 +77,9 @@ public class ClientPlayer extends ClientActor
 	 */
 	public void setAbsoluteAngle(double absoluteAngle)
 	{
-		saveState();
 		this.absoluteAngle = absoluteAngle;
 		calculateTrueAngle();
+		saveState();
 	}
 
 	/** Add this players previous state to the queue. */
@@ -132,10 +132,10 @@ public class ClientPlayer extends ClientActor
 	 */
 	public void setRelativeAngle(double relativeAngle)
 	{
-		saveState();
 		this.relativeAngle = relativeAngle;
 		isIdle = (relativeAngle == MoveState.IDLE);
 		calculateTrueAngle();
+		saveState();
 	}
 
 	/**
