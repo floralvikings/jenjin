@@ -16,7 +16,7 @@ public class World
 	/** The Logger used for this class. */
 	private static final Logger LOGGER = Logger.getLogger(World.class.getName());
 	/** The size of the world's location grid. */
-	public final int SIZE = 10;
+	public final int SIZE = 50;
 	/** The grid of locations in the game world. */
 	private final Location[][] locationGrid;
 	/** The GameObjects contained in the world. */
@@ -53,8 +53,7 @@ public class World
 	}
 
 	/**
-	 * Remove an object from the world.  Specifically, sets the index of the given object in the world's array to
-	 * null.
+	 * Remove an object from the world.  Specifically, sets the index of the given object in the world's array to null.
 	 *
 	 * @param object The object to remove.
 	 */
@@ -72,7 +71,9 @@ public class World
 	 *
 	 * @param x The x coordinate.
 	 * @param z The z coordinate
+	 *
 	 * @return The location that contains the specified coordinates.
+	 *
 	 * @throws InvalidLocationException If the coordinates supplied point to an invalid location.
 	 */
 	public Location getLocationForCoordinates(double x, double z) throws InvalidLocationException
@@ -93,7 +94,9 @@ public class World
 	 * Get the location from the zone grid that contains the specified vector2D.
 	 *
 	 * @param vector2D The vector2D
+	 *
 	 * @return The location that contains the specified vector2D.
+	 *
 	 * @throws InvalidLocationException If the coordinates specified indicate an invalid locatoin.
 	 */
 	public Location getLocationForCoordinates(Vector2D vector2D) throws InvalidLocationException
@@ -117,6 +120,7 @@ public class World
 	 *
 	 * @param center The center of the area to return.
 	 * @param radius The radius of the area.
+	 *
 	 * @return An ArrayList containing all valid locations in the specified area.
 	 */
 	public ArrayList<Location> getLocationArea(Location center, int radius)
