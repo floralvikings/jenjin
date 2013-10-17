@@ -17,8 +17,8 @@ import java.util.logging.Level;
  */
 public class ClientHandler extends Communicator
 {
-	/** The list of messages to be broadcast after the world update. */
-	private final LinkedList<Message> broadcastMessages;
+	/** The list of messages to be sendAllMessages after the world update. */
+	private final LinkedList<Message> outgoingMessages;
 	/** The server. */
 	private final Server<? extends ClientHandler> server;
 	/** Flags whether the socket is connected. */
@@ -47,13 +47,26 @@ public class ClientHandler extends Communicator
 		setName("ClientHandler: " + sk.getInetAddress());
 		server = s;
 		super.setSocket(sk);
-		broadcastMessages = new LinkedList<>();
+		outgoingMessages = new LinkedList<>();
 
 		linkOpen = true;
 
 		Message firstConnectResponse = new Message("FirstConnectResponse");
 		firstConnectResponse.setArgument("ups", server.UPS);
 		queueMessage(firstConnectResponse);
+	}
+
+	/**
+	 * Add a message to the sendAllMessages queue, to be sent at the next sendAllMessages.
+	 *
+	 * @param o The object (message) to be sent to the client.
+	 */
+	public void queueMessage(Message o)
+	{
+		synchronized (outgoingMessages)
+		{
+			outgoingMessages.add(o);
+		}
 	}
 
 	/**
@@ -67,26 +80,26 @@ public class ClientHandler extends Communicator
 		super.setName("Client Handler " + handlerId);
 	}
 
-	/** Update anything that needs to be taken care of before broadcast. */
+	/** Update anything that needs to be taken care of before sendAllMessages. */
 	@SuppressWarnings("EmptyMethod")
 	public void update()
 	{
 	}
 
-	/** Reset anything that needs to be taken care of after broadcast. */
+	/** Reset anything that needs to be taken care of after sendAllMessages. */
 	@SuppressWarnings("EmptyMethod")
 	public void refresh()
 	{
 	}
 
 	/** Send all messages in the message queue to the client. */
-	public void broadcast()
+	public void sendAllMessages()
 	{
-		synchronized (broadcastMessages)
+		synchronized (outgoingMessages)
 		{
-			while (!broadcastMessages.isEmpty())
+			while (!outgoingMessages.isEmpty())
 			{
-				queueMessage(broadcastMessages.remove());
+				writeMessage(outgoingMessages.remove());
 			}
 		}
 	}
@@ -96,7 +109,7 @@ public class ClientHandler extends Communicator
 	 *
 	 * @param o The message to send to the client.
 	 */
-	public void queueMessage(Message o)
+	public void writeMessage(Message o)
 	{
 		try
 		{

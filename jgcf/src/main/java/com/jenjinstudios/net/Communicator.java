@@ -154,7 +154,7 @@ public abstract class Communicator extends Thread
 	{
 		synchronized (outgoingMessages)
 		{
-			while (!outgoingMessages.isEmpty()) getOutputStream().writeMessage(outgoingMessages.pop());
+			while (!outgoingMessages.isEmpty()) getOutputStream().writeMessage(outgoingMessages.remove());
 		}
 	}
 

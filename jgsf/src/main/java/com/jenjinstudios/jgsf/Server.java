@@ -89,6 +89,7 @@ public class Server<T extends ClientHandler> extends Thread
 	 * Set the SQLHandler for this server.
 	 *
 	 * @param handler The SQLHandler to be used by this server
+	 *
 	 * @throws SQLException If the SQLHandler has already been set for this server.
 	 */
 	public void setSQLHandler(SQLHandler handler) throws SQLException
@@ -207,12 +208,12 @@ public class Server<T extends ClientHandler> extends Thread
 			for (ClientHandler current : clientHandlers)
 			{
 				if (current != null)
-					current.broadcast();
+					current.sendAllMessages();
 			}
 		}
 	}
 
-	/** Update all clients before they broadcast. */
+	/** Update all clients before they sendAllMessages. */
 	public void update()
 	{
 		synchronized (clientHandlers)
@@ -225,7 +226,7 @@ public class Server<T extends ClientHandler> extends Thread
 		}
 	}
 
-	/** Refresh all clients after they broadcast. */
+	/** Refresh all clients after they sendAllMessages. */
 	public void refresh()
 	{
 		synchronized (clientHandlers)
@@ -326,6 +327,7 @@ public class Server<T extends ClientHandler> extends Thread
 	 * Get the ClientHandler with the given username.
 	 *
 	 * @param username The username of the client to look up.
+	 *
 	 * @return The client with the username specified; null if there is no client with this username.
 	 */
 	public T getClientHandlerByUsername(String username)
