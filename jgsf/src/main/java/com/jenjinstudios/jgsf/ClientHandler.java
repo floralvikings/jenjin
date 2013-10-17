@@ -243,17 +243,6 @@ public class ClientHandler extends Communicator
 	}
 
 	/**
-	 * Set the AES key used to encrypt and decrypt messages.
-	 *
-	 * @param key The AES key bytes used to encrypt and decrypt messages.
-	 */
-	public void setAesKey(byte[] key)
-	{
-		getInputStream().setAESKey(key);
-		getOutputStream().setAesKey(key);
-	}
-
-	/**
 	 * Immediately force send a message. This method should only be used if a message is <i>extremely</i> time dependent,
 	 * otherwise messages should be queued using the {@code queueMessage} method, because this method may cause
 	 * synchronization issues.

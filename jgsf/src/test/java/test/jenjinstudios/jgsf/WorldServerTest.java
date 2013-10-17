@@ -15,7 +15,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 /**
  * Test the world server.
@@ -158,17 +157,6 @@ public class WorldServerTest
 		double randomX = Math.random() * maxCoords;
 		double randomZ = Math.random() * maxCoords;
 		return new Vector2D(randomX, randomZ);
-	}
-
-	/** Test the basic initial assertions before anything else can begin. */
-	@Test
-	public void testInitialAssertions()
-	{
-		assertTrue(worldSQLHandler.isConnected());
-		assertTrue(worldClient.isLoggedIn());
-		assertTrue(worldClientHandler != null);
-		assertEquals("World Object Count", 1, world.getObjectCount());
-		assertEquals("Client and Server Coordinates", serverPlayer.getVector2D(), clientPlayer.getVector2D());
 	}
 
 	/**
