@@ -8,6 +8,7 @@ import com.jenjinstudios.message.MessageType;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -40,6 +41,7 @@ public abstract class ServerExecutableMessage extends ExecutableMessage
 	 *
 	 * @param handler The client handler to use the ExecutableMessage.
 	 * @param message The message.
+	 *
 	 * @return The class of the ExecutableMessage that handles the given Message.
 	 */
 	@SuppressWarnings("unchecked")
@@ -48,7 +50,7 @@ public abstract class ServerExecutableMessage extends ExecutableMessage
 		ExecutableMessage r = null;
 		MessageType messageType = MessageRegistry.getMessageType(message.getID());
 		// Get the executable message classes registered.
-		Class<? extends ExecutableMessage> execClass = messageType.executableMessageClass;
+		Class<? extends ExecutableMessage> execClass = messageType.serverExecutableMessageClass;
 		try
 		{
 			// Get and parse the Constructors for the ExecutableMessage class retrieved.
@@ -66,8 +68,9 @@ public abstract class ServerExecutableMessage extends ExecutableMessage
 				r = execConstructor.newInstance(handler, message);
 			} else
 			{
-				LOGGER.log(Level.SEVERE, "No constructor containing ClientHandler as first argument type found for {0}",
+				LOGGER.log(Level.SEVERE, "No public constructor containing ClientHandler as first argument type found for {0}",
 						execClass.getName());
+				LOGGER.log(Level.INFO, "Constructors: {0}", Arrays.toString(execConstructors));
 			}
 		} catch (InvocationTargetException | InstantiationException | IllegalAccessException e)
 		{
