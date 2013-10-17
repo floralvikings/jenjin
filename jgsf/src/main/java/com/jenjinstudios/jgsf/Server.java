@@ -40,6 +40,8 @@ public class Server<T extends ClientHandler> extends Thread
 	private final LinkedList<Runnable> repeatedTasks;
 	/** Synced tasks scheduled by client handlers. */
 	private final LinkedList<Runnable> syncedTasks;
+	/** The class for ClientHandlers. */
+	private final Class<? extends T> handlerClass;
 	/** The SQLHandler used by this Server. */
 	private SQLHandler sqlHandler;
 	/** The timer that controls the server loop. */
@@ -54,8 +56,6 @@ public class Server<T extends ClientHandler> extends Thread
 	private boolean connectedToDB;
 	/** The maximum number of clients allowed to connect. */
 	private int maxClients = 100;
-	/** The class for ClientHandlers. */
-	private final Class<? extends T> handlerClass;
 
 	/**
 	 * Construct a new Server without a SQLHandler.
@@ -85,6 +85,19 @@ public class Server<T extends ClientHandler> extends Thread
 		addListener();
 	}
 
+	/** Start a new Client Listener on the specified port. */
+	@SuppressWarnings("unchecked")
+	void addListener()
+	{
+		try
+		{
+			clientListeners.add((ClientListener<T>) new ClientListener<>(this, PORT, handlerClass));
+		} catch (IOException e)
+		{
+			LOGGER.log(Level.SEVERE, "Error adding client listener", e);
+		}
+	}
+
 	/**
 	 * Set the SQLHandler for this server.
 	 *
@@ -107,19 +120,6 @@ public class Server<T extends ClientHandler> extends Thread
 	public long getCycleStartTime()
 	{
 		return serverLoop != null ? serverLoop.getCycleStart() : -1;
-	}
-
-	/** Start a new Client Listener on the specified port. */
-	@SuppressWarnings("unchecked")
-	void addListener()
-	{
-		try
-		{
-			clientListeners.add((ClientListener<T>) new ClientListener<>(this, PORT, handlerClass));
-		} catch (IOException e)
-		{
-			LOGGER.log(Level.SEVERE, "Error adding client listener", e);
-		}
 	}
 
 	/**
@@ -200,8 +200,12 @@ public class Server<T extends ClientHandler> extends Thread
 		}
 	}
 
-	/** Broadcast all outgoing messages to clients. */
-	public void broadcast()
+	/**
+	 * Broadcast all outgoing messages to clients.
+	 *
+	 * @throws java.io.IOException If there's an IO exception.
+	 */
+	public void broadcast() throws IOException
 	{
 		synchronized (clientHandlers)
 		{
@@ -379,7 +383,6 @@ public class Server<T extends ClientHandler> extends Thread
 	{
 		return connectedToDB;
 	}
-
 
 	/**
 	 * Tasks to be repeated in the main loop.
