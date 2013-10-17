@@ -10,7 +10,7 @@ import java.util.LinkedList;
  *
  * @author Caleb Brinkman
  */
-public class ClientPlayer extends ClientActor
+public class ClientPlayer extends ClientObject
 {
 	/** The queue of states saved by this player. */
 	private final LinkedList<MoveState> savedStates;
@@ -36,28 +36,7 @@ public class ClientPlayer extends ClientActor
 		super(id, name);
 		savedStates = new LinkedList<>();
 		setVector2D(0, 0);
-	}
-
-	@Override
-	public void update()
-	{
-		step();
-	}
-
-	@Override
-	public void setStepsTaken(int stepsTaken)
-	{
-		this.stepsTaken = stepsTaken;
-	}
-
-	/** Move one step forward. */
-	private void step()
-	{
-		stepsTaken++;
-		if (!isIdle)
-		{
-			setVector2D(getVector2D().getVectorInDirection(STEP_LENGTH, trueAngle));
-		}
+		setRelativeAngle(MoveState.IDLE);
 	}
 
 	/**
@@ -68,6 +47,12 @@ public class ClientPlayer extends ClientActor
 	public double getAbsoluteAngle()
 	{
 		return absoluteAngle;
+	}
+
+	@Override
+	public void update()
+	{
+		step();
 	}
 
 	/**
@@ -82,6 +67,23 @@ public class ClientPlayer extends ClientActor
 		saveState();
 	}
 
+	/** Move one step forward. */
+	private void step()
+	{
+		stepsTaken++;
+		if (!isIdle)
+		{
+			setVector2D(getVector2D().getVectorInDirection(ClientActor.STEP_LENGTH, trueAngle));
+		}
+	}
+
+	/** Calculate and set the player's "true" movement angle. */
+	private void calculateTrueAngle()
+	{
+		double sAngle = relativeAngle + absoluteAngle;
+		trueAngle = (sAngle < 0) ? (sAngle + MoveState.TWO_PI) : (sAngle % MoveState.TWO_PI);
+	}
+
 	/** Add this players previous state to the queue. */
 	private void saveState()
 	{
@@ -91,13 +93,6 @@ public class ClientPlayer extends ClientActor
 			savedStates.add(toBeSaved);
 		}
 		stepsTaken = 0;
-	}
-
-	/** Calculate and set the player's "true" movement angle. */
-	private void calculateTrueAngle()
-	{
-		double sAngle = relativeAngle + absoluteAngle;
-		trueAngle = (sAngle < 0) ? (sAngle + MoveState.TWO_PI) : (sAngle % MoveState.TWO_PI);
 	}
 
 	/**
@@ -153,9 +148,53 @@ public class ClientPlayer extends ClientActor
 		setVector2D(position);
 		this.relativeAngle = relativeAngle;
 		this.absoluteAngle = absoluteAngle;
+		isIdle = relativeAngle == MoveState.IDLE;
 		setStepsTaken(0);
 
 		while (this.stepsTaken < stepsToTake)
 			step();
 	}
+
+	/**
+	 * Get the number of steps taken in the current movement state.
+	 *
+	 * @return The number of steps taken in the current movement state.
+	 */
+	public int getStepsTaken()
+	{
+		return stepsTaken;
+	}
+
+	/**
+	 * Set the number of steps taken.
+	 *
+	 * @param stepsTaken The number of steps taken.
+	 */
+	public void setStepsTaken(int stepsTaken)
+	{
+		this.stepsTaken = stepsTaken;
+	}
+
+
+	/**
+	 * Set this object's current position.
+	 *
+	 * @param vector2D The new position.
+	 */
+	public void setVector2D(Vector2D vector2D)
+	{
+		super.setVector2D(vector2D);
+	}
+
+	/**
+	 * Set this object' current position.
+	 *
+	 * @param x The new x coordinate.
+	 * @param z The new z coordinate.
+	 */
+	public void setVector2D(double x, double z)
+	{
+		this.setVector2D(new Vector2D(x, z));
+	}
+
 }

@@ -21,7 +21,8 @@ public class ClientObject
 	/**
 	 * Construct a new WorldObject.
 	 *
-	 * @param id The ID of the object.
+	 * @param id   The ID of the object.
+	 * @param name The name of this object.
 	 */
 	public ClientObject(int id, String name)
 	{
@@ -78,8 +79,7 @@ public class ClientObject
 	 */
 	public void setVector2D(double x, double z)
 	{
-		vector2D.setXCoordinate(x);
-		vector2D.setZCoordinate(z);
+		setVector2D(new Vector2D(x, z));
 	}
 
 	/**

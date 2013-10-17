@@ -26,8 +26,10 @@ public class ClientActor extends ClientObject
 {
 	/** The length of each step. */
 	public static final float STEP_LENGTH = 5;
-	/** The next move. */
+	/** The next moves. */
 	private final LinkedList<MoveState> nextMoveStates;
+	/** The next move. */
+	private MoveState nextState;
 	/** The current move. */
 	private MoveState currentMoveState;
 	/** The number of steps taken since the last move. */
@@ -43,6 +45,7 @@ public class ClientActor extends ClientObject
 	{
 		super(id, name);
 		nextMoveStates = new LinkedList<>();
+		currentMoveState = new MoveState(MoveState.IDLE, 0, 0);
 	}
 
 	/**
@@ -54,7 +57,9 @@ public class ClientActor extends ClientObject
 	{
 		synchronized (nextMoveStates)
 		{
-			nextMoveStates.add(newState);
+			if (nextState == null)
+				nextState = newState;
+			else nextMoveStates.add(newState);
 		}
 	}
 
@@ -64,38 +69,85 @@ public class ClientActor extends ClientObject
 		step();
 	}
 
-	/** Take a step using the current movement state. */
+	/** Take a step, changing state and correcting steps if necessary. */
 	private void step()
 	{
+		tryStateChange();
+		stepForward();
 		stepsTaken++;
-		MoveState nextState;
-		boolean isIdle;
-		synchronized (nextMoveStates)
+	}
+
+	/** Change to the next state, and correct for any over steps. */
+	private void tryStateChange()
+	{
+		if (nextState == null) return;
+		int overStepped = stepsTaken - nextState.stepsUntilChange;
+		if (overStepped >= 0)
 		{
-			nextState = nextMoveStates.peek();
+			doStateChange(overStepped);
 		}
+	}
 
-		if (nextState != null)
-			changeState();
+	/**
+	 * Perform a state change.
+	 *
+	 * @param overStepped The number of steps beyond what the actor should have taken.
+	 */
+	private void doStateChange(int overStepped)
+	{
+		// Store the old state.
+		MoveState oldState = currentMoveState;
+		resetState();
+		correctOverSteps(overStepped, oldState);
+	}
 
-		isIdle = currentMoveState.direction == IDLE;
-
-		if (!isIdle)
+	/**
+	 * Correct the given number of steps at the specified angles.
+	 *
+	 * @param overstepped The number of steps over.
+	 * @param oldState    The
+	 */
+	private void correctOverSteps(int overstepped, MoveState oldState)
+	{
+		if (oldState.direction != MoveState.IDLE)
 		{
-			setVector2D(getVector2D().getVectorInDirection(STEP_LENGTH, currentMoveState.stepAngle));
+			for (int i = 0; i < overstepped; i++)
+			{
+				stepBack(oldState.stepAngle);
+			}
 		}
+		for (int i = 0; i < overstepped; i++)
+		{
+			stepForward();
+		}
+		stepsTaken = overstepped;
+	}
 
+	/**
+	 * Take a step back in according to the given forward angle.
+	 *
+	 * @param stepAngle The angle in which to move backward.
+	 */
+	private void stepBack(double stepAngle)
+	{
+		stepAngle -= Math.PI;
+		setVector2D(getVector2D().getVectorInDirection(STEP_LENGTH, stepAngle));
+	}
+
+	/** Take a step according to the current move state. */
+	public void stepForward()
+	{
+		if (currentMoveState.direction == IDLE) return;
+		setVector2D(getVector2D().getVectorInDirection(STEP_LENGTH, currentMoveState.stepAngle));
 
 	}
 
-	/** Change to the next state. */
-	private void changeState()
+	/** Reset the move state, direction, and newState flag when changing the move state. */
+	private void resetState()
 	{
-		if (stepsTaken >= currentMoveState.stepsUntilChange)
-		{
-			currentMoveState = nextMoveStates.remove();
-			stepsTaken = 0;
-		}
+		currentMoveState = nextState;
+		nextState = nextMoveStates.poll();
+		setDirection(currentMoveState.moveAngle);
 	}
 
 	/**
@@ -115,8 +167,6 @@ public class ClientActor extends ClientObject
 	 */
 	public void setCurrentMoveState(MoveState currentMoveState)
 	{
-		if (this.currentMoveState != null)
-			throw new IllegalStateException("Cannot set current move state: state already set!");
 		this.currentMoveState = currentMoveState;
 	}
 }

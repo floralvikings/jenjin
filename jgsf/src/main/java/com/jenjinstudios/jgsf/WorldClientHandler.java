@@ -127,7 +127,7 @@ public class WorldClientHandler extends ClientHandler
 		newlyVisibleMessage.setArgument("id", newlyVisible.getId());
 		newlyVisibleMessage.setArgument("xCoordinate", newlyVisible.getVector2D().getXCoordinate());
 		newlyVisibleMessage.setArgument("zCoordinate", newlyVisible.getVector2D().getZCoordinate());
-		newlyVisibleMessage.setArgument("direction", newlyVisible.getDirection());
+		newlyVisibleMessage.setArgument("direction", newlyVisible.getCurrentMoveState().direction);
 		newlyVisibleMessage.setArgument("angle", newlyVisible.getMoveAngle());
 		newlyVisibleMessage.setArgument("stepsTaken", newlyVisible.getStepsTaken());
 		newlyVisibleMessage.setArgument("stepsUntilChange", newlyVisible.getCurrentMoveState().stepsUntilChange);
@@ -182,10 +182,11 @@ public class WorldClientHandler extends ClientHandler
 		for (WorldObject object : actor.getVisibleObjects())
 		{
 			Actor changedActor;
-			if (!(object instanceof Actor) || (changedActor = (Actor) object).isNewState())
-				continue;
-			Message newState = generateChangeStateMessage(changedActor);
-			queueMessage(newState);
+			if (object instanceof Actor && (changedActor = (Actor) object).isNewState())
+			{
+				Message newState = generateChangeStateMessage(changedActor);
+				queueMessage(newState);
+			}
 		}
 	}
 
@@ -200,9 +201,9 @@ public class WorldClientHandler extends ClientHandler
 	{
 		Message newState = new Message("StateChangeMessage");
 		newState.setArgument("id", changedActor.getId());
-		newState.setArgument("direction", changedActor.getDirection());
-		newState.setArgument("angle", changedActor.getMoveAngle());
-		newState.setArgument("stepsUntilChange", changedActor.getStepsUntilChange());
+		newState.setArgument("direction", changedActor.getCurrentMoveState().direction);
+		newState.setArgument("angle", changedActor.getCurrentMoveState().moveAngle);
+		newState.setArgument("stepsUntilChange", changedActor.getCurrentMoveState().stepsUntilChange);
 		return newState;
 	}
 

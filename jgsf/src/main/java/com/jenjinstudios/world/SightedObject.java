@@ -3,9 +3,9 @@ package com.jenjinstudios.world;
 import java.util.ArrayList;
 
 /**
- * The {@code SightedObject} class is a {@code WorldObject} which maintains a range of
- * locations which are visible to it.  It also maintains a list of visible {@code WorldObject}s  which are visible to
- * it.  This class is intended to be used by a non-static WorldObject implementation.
+ * The {@code SightedObject} class is a {@code WorldObject} which maintains a range of locations which are visible to
+ * it.  It also maintains a list of visible {@code WorldObject}s  which are visible to it.  This class is intended to be
+ * used by a non-static WorldObject implementation.
  *
  * @author Caleb Brinkman
  */
@@ -54,12 +54,24 @@ public class SightedObject extends WorldObject
 	{
 		ArrayList<WorldObject> currentlyVisible = new ArrayList<>();
 		for (Location loc : visibleLocations)
+		{
 			for (WorldObject object : loc.getObjects())
+			{
 				if (object != this)
+				{
 					currentlyVisible.add(object);
+				}
+			}
+		}
+
+		newlyInvisibleObjects.clear();
+		newlyInvisibleObjects.addAll(visibleObjects);
+		newlyInvisibleObjects.removeAll(currentlyVisible);
+
 		newlyVisibleObjects.clear();
 		newlyVisibleObjects.addAll(currentlyVisible);
 		newlyVisibleObjects.removeAll(visibleObjects);
+
 		visibleObjects.clear();
 		visibleObjects.addAll(currentlyVisible);
 	}

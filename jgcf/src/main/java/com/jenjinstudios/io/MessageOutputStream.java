@@ -66,7 +66,7 @@ public class MessageOutputStream
 	/**
 	 * Write an argument to the data stream, properly cast.
 	 *
-	 * @param arg The argument to be written.
+	 * @param arg            The argument to be written.
 	 * @param encryptStrings Whether to encryptPublic strings in this message.
 	 *
 	 * @throws IOException If there is an IO error.
@@ -90,7 +90,7 @@ public class MessageOutputStream
 	 * Write a string to the output stream, specifying whether the string should be encrypted with this stream's public
 	 * key.
 	 *
-	 * @param s The string to write.
+	 * @param s       The string to write.
 	 * @param encrypt Whether the string should be encrypted.
 	 *
 	 * @throws IOException If there is an IO error.
@@ -112,7 +112,7 @@ public class MessageOutputStream
 					String encryptedString = DatatypeConverter.printHexBinary(aesEncryptCipher.doFinal(sBytes));
 					outputStream.writeBoolean(true);
 					outputStream.writeUTF(encryptedString);
-				} catch (IllegalBlockSizeException | BadPaddingException e)
+				} catch (IllegalBlockSizeException | BadPaddingException | IllegalStateException e)
 				{
 					LOGGER.log(Level.WARNING, "Error encrypting string, will use unencrypted.", e);
 					outputStream.writeBoolean(false);
@@ -130,7 +130,7 @@ public class MessageOutputStream
 	/**
 	 * Write an array of strings to the output stream, preceded by the array length.
 	 *
-	 * @param strings The array of string strings.
+	 * @param strings        The array of string strings.
 	 * @param encryptStrings Whether the strings being written should be encrypted.
 	 *
 	 * @throws IOException If there is an IO error.

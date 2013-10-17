@@ -9,22 +9,12 @@ import com.jenjinstudios.world.state.MoveState;
  */
 public class Vector2D
 {
+	/** The vector representing (0,0). */
+	public static final Vector2D ORIGIN = new Vector2D(0, 0);
 	/** The x coordinate. */
 	private double xCoordinate;
 	/** The z coordinate. */
 	private double zCoordinate;
-
-	/**
-	 * Construct a new set of coordinates.
-	 *
-	 * @param x The x coordinate.
-	 * @param y The z coordinate.
-	 */
-	public Vector2D(double x, double y)
-	{
-		xCoordinate = x;
-		zCoordinate = y;
-	}
 
 	/**
 	 * Construct a new set of vector2D copying another set.
@@ -34,6 +24,26 @@ public class Vector2D
 	public Vector2D(Vector2D vector2D)
 	{
 		this(vector2D.getXCoordinate(), vector2D.getZCoordinate());
+	}
+
+	/**
+	 * Get the z coordinate.
+	 *
+	 * @return The z coordinate.
+	 */
+	public double getZCoordinate()
+	{
+		return zCoordinate;
+	}
+
+	/**
+	 * Set the z coordinate.
+	 *
+	 * @param zCoordinate The new Z coordinate.
+	 */
+	public void setZCoordinate(double zCoordinate)
+	{
+		this.zCoordinate = zCoordinate;
 	}
 
 	/**
@@ -57,23 +67,15 @@ public class Vector2D
 	}
 
 	/**
-	 * Get the z coordinate.
+	 * Construct a new set of coordinates.
 	 *
-	 * @return The z coordinate.
+	 * @param x The x coordinate.
+	 * @param y The z coordinate.
 	 */
-	public double getZCoordinate()
+	public Vector2D(double x, double y)
 	{
-		return zCoordinate;
-	}
-
-	/**
-	 * Set the z coordinate.
-	 *
-	 * @param zCoordinate The new Z coordinate.
-	 */
-	public void setZCoordinate(double zCoordinate)
-	{
-		this.zCoordinate = zCoordinate;
+		xCoordinate = x;
+		zCoordinate = y;
 	}
 
 	@Override
@@ -83,6 +85,12 @@ public class Vector2D
 			return false;
 		Vector2D vector2D = (Vector2D) obj;
 		return vector2D.xCoordinate == xCoordinate && vector2D.zCoordinate == zCoordinate;
+	}
+
+	@Override
+	public String toString()
+	{
+		return "(" + xCoordinate + ", " + zCoordinate + ")";
 	}
 
 	/**
@@ -103,9 +111,31 @@ public class Vector2D
 		return new Vector2D(newX, newZ);
 	}
 
-	@Override
-	public String toString()
+	/**
+	 * Get the angle to the given vector.
+	 *
+	 * @param vector2D The vector toward which the return will point.
+	 *
+	 * @return The angle to the supplied vector.
+	 */
+	public double getAngleToVector(Vector2D vector2D)
 	{
-		return "(" + xCoordinate + ", " + zCoordinate + ")";
+		double xDist = vector2D.getXCoordinate() - xCoordinate;
+		double zDist = vector2D.getZCoordinate() - zCoordinate;
+		return Math.atan2(zDist, xDist);
+	}
+
+	/**
+	 * Get the distance to the given vector.
+	 *
+	 * @param vector2D The vector.
+	 *
+	 * @return The distance.
+	 */
+	public double getDistanceToVector(Vector2D vector2D)
+	{
+		double xSquare = Math.pow(vector2D.getXCoordinate() - xCoordinate, 2);
+		double zSquare = Math.pow(vector2D.getZCoordinate() - zCoordinate, 2);
+		return Math.sqrt(xSquare + zSquare);
 	}
 }
