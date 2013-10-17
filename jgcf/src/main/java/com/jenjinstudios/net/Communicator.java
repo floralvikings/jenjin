@@ -154,7 +154,26 @@ public abstract class Communicator extends Thread
 	{
 		synchronized (outgoingMessages)
 		{
-			while (!outgoingMessages.isEmpty()) getOutputStream().writeMessage(outgoingMessages.remove());
+			while (!outgoingMessages.isEmpty())
+			{
+				writeMessage(outgoingMessages.remove());
+			}
+		}
+	}
+
+	/**
+	 * Send the specified message to the client.
+	 *
+	 * @param o The message to send to the client.
+	 */
+	public void writeMessage(Message o)
+	{
+		try
+		{
+			getOutputStream().writeMessage(o);
+		} catch (Exception ex)
+		{
+			shutdown();
 		}
 	}
 

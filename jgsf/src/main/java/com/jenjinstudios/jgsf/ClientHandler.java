@@ -103,22 +103,6 @@ public class ClientHandler extends Communicator
 		}
 	}
 
-	/**
-	 * Send the specified message to the client.
-	 *
-	 * @param o The message to send to the client.
-	 */
-	public void writeMessage(Message o)
-	{
-		try
-		{
-			getOutputStream().writeMessage(o);
-		} catch (Exception ex)
-		{
-			shutdown();
-		}
-	}
-
 	/** Shut down the client handler. */
 	public void shutdown()
 	{
