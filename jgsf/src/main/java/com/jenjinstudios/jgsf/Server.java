@@ -221,7 +221,10 @@ public class Server<T extends ClientHandler> extends Thread
 			for (ClientHandler current : clientHandlers)
 			{
 				if (current != null)
+				{
 					current.update();
+					syncedTasks.addAll(current.getSyncedTasks());
+				}
 			}
 		}
 	}

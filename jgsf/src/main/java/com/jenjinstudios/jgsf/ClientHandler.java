@@ -8,7 +8,6 @@ import com.jenjinstudios.net.Communicator;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.LinkedList;
-import java.util.logging.Level;
 
 /**
  * The {@code ClientHandler} class is used to communicate with an individual client.
@@ -22,7 +21,7 @@ public class ClientHandler extends Communicator
 	/** The server. */
 	private final Server<? extends ClientHandler> server;
 	/** Flags whether the socket is connected. */
-	private boolean linkOpen;
+	private boolean connected;
 	/** The id of the client handler. */
 	private int handlerId = -1;
 	/** Flags whether the user is logged in. */
@@ -49,7 +48,7 @@ public class ClientHandler extends Communicator
 		super.setSocket(sk);
 		outgoingMessages = new LinkedList<>();
 
-		linkOpen = true;
+		connected = true;
 
 		Message firstConnectResponse = new Message("FirstConnectResponse");
 		firstConnectResponse.setArgument("ups", server.UPS);
@@ -157,11 +156,11 @@ public class ClientHandler extends Communicator
 	/** Close the link with the client, if possible. */
 	protected void closeLink()
 	{
-		if (linkOpen)
+		if (connected)
 		{
 			super.closeLink();
 		}
-		linkOpen = false;
+		connected = false;
 	}
 
 	/**
@@ -187,55 +186,6 @@ public class ClientHandler extends Communicator
 		Message logoutResponse = new Message("LogoutResponse");
 		logoutResponse.setArgument("success", success);
 		queueMessage(logoutResponse);
-	}
-
-	/** Enter a loop that receives and processes messages until the link is closed. */
-	@Override
-	public void run()
-	{
-		Server.LOGGER.log(Level.FINE, "Client Handler Started. Link open:{0}", linkOpen);
-		Message message;
-		while (linkOpen)
-		{
-			try
-			{
-				message = getInputStream().readMessage();
-				if (message == null)
-				{
-					Server.LOGGER.log(Level.FINE, "Received null message, shutting down ClientHandler");
-					shutdown();
-					break;
-				}
-				Server.LOGGER.log(Level.FINE, "Message received: {0}", message);
-				processMessage(message);
-			} catch (Exception ex)
-			{
-				Server.LOGGER.log(Level.SEVERE, "Exception with client handler.", ex);
-				shutdown();
-			}
-		}
-	}
-
-	/**
-	 * Process the given message.
-	 *
-	 * @param message The message to be processed.
-	 */
-	protected void processMessage(Message message)
-	{
-		ExecutableMessage exec;
-		exec = ServerExecutableMessage.getServerExecutableMessageFor(this, message);
-		if (exec != null)
-		{
-			exec.runASync();
-			getServer().addSyncedTask(exec);
-		} else
-		{
-			Message invalid = new Message("InvalidMessage");
-			invalid.setArgument("messageName", message.name);
-			invalid.setArgument("messageID", message.getID());
-			queueMessage(invalid);
-		}
 	}
 
 	/**
