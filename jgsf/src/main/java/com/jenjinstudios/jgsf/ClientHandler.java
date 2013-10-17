@@ -57,19 +57,6 @@ public class ClientHandler extends Communicator
 	}
 
 	/**
-	 * Add a message to the broadcast queue, to be sent at the next broadcast.
-	 *
-	 * @param o The object (message) to be sent to the client.
-	 */
-	public void queueMessage(Message o)
-	{
-		synchronized (broadcastMessages)
-		{
-			broadcastMessages.add(o);
-		}
-	}
-
-	/**
 	 * Set the id for this handler.
 	 *
 	 * @param id The new id number for the handler.
@@ -99,7 +86,7 @@ public class ClientHandler extends Communicator
 		{
 			while (!broadcastMessages.isEmpty())
 			{
-				sendMessage(broadcastMessages.remove());
+				queueMessage(broadcastMessages.remove());
 			}
 		}
 	}
@@ -109,7 +96,7 @@ public class ClientHandler extends Communicator
 	 *
 	 * @param o The message to send to the client.
 	 */
-	public void sendMessage(Message o)
+	public void queueMessage(Message o)
 	{
 		try
 		{

@@ -84,7 +84,7 @@ public abstract class Communicator extends Thread
 	{
 		Message pingRequest = new Message("PingRequest");
 		pingRequest.setArgument("requestTimeNanos", System.nanoTime());
-		sendMessage(pingRequest);
+		queueMessage(pingRequest);
 	}
 
 	/**
@@ -92,7 +92,7 @@ public abstract class Communicator extends Thread
 	 *
 	 * @param message The message to add to the outgoing queue.
 	 */
-	public void sendMessage(Message message)
+	public void queueMessage(Message message)
 	{
 		synchronized (outgoingMessages)
 		{
@@ -265,7 +265,7 @@ public abstract class Communicator extends Thread
 			Message invalid = new Message("InvalidMessage");
 			invalid.setArgument("messageName", message.name);
 			invalid.setArgument("messageID", message.getID());
-			sendMessage(invalid);
+			queueMessage(invalid);
 		}
 	}
 

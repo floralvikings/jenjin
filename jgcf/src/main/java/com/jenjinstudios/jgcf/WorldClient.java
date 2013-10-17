@@ -87,7 +87,7 @@ public class WorldClient extends AuthClient
 		Message loginRequest = generateLoginRequest();
 
 		setReceivedLoginResponse(false);
-		sendMessage(loginRequest);
+		queueMessage(loginRequest);
 	}
 
 	/**
@@ -126,7 +126,7 @@ public class WorldClient extends AuthClient
 
 		// Send the request, continue when response is received.
 		setReceivedLogoutResponse(false);
-		sendMessage(logoutRequest);
+		queueMessage(logoutRequest);
 	}
 
 	/**
@@ -189,7 +189,7 @@ public class WorldClient extends AuthClient
 	private void sendStateChangeRequest(MoveState moveState)
 	{
 		Message stateChangeRequest = generateStateChangeRequest(moveState);
-		sendMessage(stateChangeRequest);
+		queueMessage(stateChangeRequest);
 	}
 
 	/**

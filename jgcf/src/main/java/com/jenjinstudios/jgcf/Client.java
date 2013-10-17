@@ -135,7 +135,7 @@ public class Client extends Communicator
 		// Next, queue up the PublicKeyMessage used to exchange the encrypted AES key used for encryption.
 		Message publicKeyMessage = new Message("PublicKeyMessage");
 		publicKeyMessage.setArgument("key", publicKey.getEncoded());
-		sendMessage(publicKeyMessage);
+		queueMessage(publicKeyMessage);
 
 		// Finally, send a ping request to establish latency.
 		sendPing();
