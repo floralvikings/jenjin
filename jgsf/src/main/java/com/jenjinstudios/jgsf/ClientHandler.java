@@ -1,26 +1,22 @@
 package com.jenjinstudios.jgsf;
 
-import com.jenjinstudios.io.MessageInputStream;
-import com.jenjinstudios.io.MessageOutputStream;
 import com.jenjinstudios.jgsf.message.ServerExecutableMessage;
 import com.jenjinstudios.message.ExecutableMessage;
 import com.jenjinstudios.message.Message;
+import com.jenjinstudios.net.Communicator;
 
 import java.io.IOException;
 import java.net.Socket;
 import java.util.LinkedList;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * The {@code ClientHandler} class is used to communicate with an individual client.
  *
  * @author Caleb Brinkman
  */
-public class ClientHandler extends Thread
+public class ClientHandler extends Communicator
 {
-	/** The Socket the handler uses to communicate. */
-	private final Socket sock;
 	/** The list of messages to be broadcast after the world update. */
 	private final LinkedList<Message> broadcastMessages;
 	/** The server. */
@@ -33,10 +29,6 @@ public class ClientHandler extends Thread
 	private boolean loggedIn;
 	/** The username of this client. */
 	private String username;
-	/** The input stream used for reading from the client. */
-	private MessageInputStream inputStream;
-	/** The output stream used for writing to the client. */
-	private MessageOutputStream outputStream;
 	/** The time at which this client was successfully logged in. */
 	private long loggedInTime;
 
@@ -45,20 +37,17 @@ public class ClientHandler extends Thread
 	 * Construct a new Client Handler using the given socket.  When constructing a new ClientHandler, it is necessary to
 	 * send the client a FirstConnectResponse message with the server's UPS
 	 *
-	 * @param s The server for which this handler works.
+	 * @param s  The server for which this handler works.
 	 * @param sk The socket used to communicate with the client.
 	 *
 	 * @throws IOException If the socket is unable to connect.
 	 */
 	public ClientHandler(Server<? extends ClientHandler> s, Socket sk) throws IOException
 	{
-		super("ClientHandler: " + sk.getInetAddress());
+		setName("ClientHandler: " + sk.getInetAddress());
 		server = s;
-		sock = sk;
+		super.setSocket(sk);
 		broadcastMessages = new LinkedList<>();
-
-		outputStream = new MessageOutputStream(sock.getOutputStream());
-		inputStream = new MessageInputStream(sock.getInputStream());
 
 		linkOpen = true;
 
@@ -120,11 +109,11 @@ public class ClientHandler extends Thread
 	 *
 	 * @param o The message to send to the client.
 	 */
-	private void sendMessage(Message o)
+	public void sendMessage(Message o)
 	{
 		try
 		{
-			outputStream.writeMessage(o);
+			getOutputStream().writeMessage(o);
 		} catch (Exception ex)
 		{
 			shutdown();
@@ -166,20 +155,11 @@ public class ClientHandler extends Thread
 	}
 
 	/** Close the link with the client, if possible. */
-	final void closeLink()
+	protected void closeLink()
 	{
 		if (linkOpen)
 		{
-			try
-			{
-				inputStream.close();
-				outputStream.close();
-				sock.close();
-			} catch (IOException ex)
-			{
-				Logger.getLogger(ClientHandler.class.getName()).log(Level.WARNING, "Error closing"
-						+ "link with client.", ex);
-			}
+			super.closeLink();
 		}
 		linkOpen = false;
 	}
@@ -219,7 +199,7 @@ public class ClientHandler extends Thread
 		{
 			try
 			{
-				message = inputStream.readMessage();
+				message = getInputStream().readMessage();
 				if (message == null)
 				{
 					Server.LOGGER.log(Level.FINE, "Received null message, shutting down ClientHandler");
@@ -241,7 +221,7 @@ public class ClientHandler extends Thread
 	 *
 	 * @param message The message to be processed.
 	 */
-	private void processMessage(Message message)
+	protected void processMessage(Message message)
 	{
 		ExecutableMessage exec;
 		exec = ServerExecutableMessage.getServerExecutableMessageFor(this, message);
@@ -256,6 +236,19 @@ public class ClientHandler extends Thread
 			invalid.setArgument("messageID", message.getID());
 			queueMessage(invalid);
 		}
+	}
+
+	/**
+	 * Get an executable message for a given message.
+	 *
+	 * @param message The message to be used.
+	 *
+	 * @return The ExecutableMessage.
+	 */
+	@Override
+	protected ExecutableMessage getExecutableMessage(Message message)
+	{
+		return ServerExecutableMessage.getServerExecutableMessageFor(this, message);
 	}
 
 	/**
@@ -306,8 +299,8 @@ public class ClientHandler extends Thread
 	 */
 	public void setAesKey(byte[] key)
 	{
-		inputStream.setAESKey(key);
-		outputStream.setAesKey(key);
+		getInputStream().setAESKey(key);
+		getOutputStream().setAesKey(key);
 	}
 
 	/**
@@ -321,6 +314,6 @@ public class ClientHandler extends Thread
 	 */
 	public void forceMessage(Message message) throws IOException
 	{
-		outputStream.writeMessage(message);
+		getOutputStream().writeMessage(message);
 	}
 }
