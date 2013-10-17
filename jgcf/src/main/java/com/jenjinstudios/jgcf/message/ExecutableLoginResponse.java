@@ -1,6 +1,6 @@
 package com.jenjinstudios.jgcf.message;
 
-import com.jenjinstudios.jgcf.Client;
+import com.jenjinstudios.jgcf.AuthClient;
 import com.jenjinstudios.message.Message;
 
 /**
@@ -9,15 +9,15 @@ import com.jenjinstudios.message.Message;
  * @author Caleb Brinkman
  */
 @SuppressWarnings("unused")
-public class ExecutableLoginResponse extends ClientExecutableMessage
+public class ExecutableLoginResponse extends AuthClientExecutableMessage
 {
 	/**
 	 * Construct an ExecutableMessage with the given Message.
 	 *
-	 * @param client  The client invoking this message.
+	 * @param client The client invoking this message.
 	 * @param message The Message.
 	 */
-	public ExecutableLoginResponse(Client client, Message message)
+	public ExecutableLoginResponse(AuthClient client, Message message)
 	{
 		super(client, message);
 	}
@@ -25,7 +25,7 @@ public class ExecutableLoginResponse extends ClientExecutableMessage
 	@Override
 	public void runSynced()
 	{
-		Client client = getClient();
+		AuthClient client = getClient();
 		client.setReceivedLoginResponse(true);
 		client.setLoggedIn((boolean) getMessage().getArgument("success"));
 		if (!client.isLoggedIn())

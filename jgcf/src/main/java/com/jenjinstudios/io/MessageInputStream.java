@@ -39,9 +39,8 @@ public class MessageInputStream
 	 * Construct a new {@code MessageInputStream} from the given InputStream.
 	 *
 	 * @param inputStream The InputStream from which messages will be read.
-	 * @throws java.io.IOException If there is an IO error.
 	 */
-	public MessageInputStream(InputStream inputStream) throws IOException
+	public MessageInputStream(InputStream inputStream)
 	{
 		this.inputStream = new DataInputStream(inputStream);
 	}

@@ -25,23 +25,28 @@ public class MessageType
 	public final ArgumentType[] argumentTypes;
 	/** The argument types for this message, sorted by name. */
 	private final TreeMap<String, ArgumentType> argumentTypeTreeMap;
-	/** The class of the executable message associated with this type. */
-	public final Class<? extends ExecutableMessage> executableMessageClass;
+	/** The class of the client executable message associated with this type. */
+	public final Class<? extends ExecutableMessage> clientExecutableMessageClass;
+	/** The class of the server executable message associated with this type. */
+	public final Class<? extends ExecutableMessage> serverExecutableMessageClass;
 
 	/**
 	 * Construct a new MessageType with the given information.
 	 *
-	 * @param id                     The ID of the message type.
-	 * @param name                   The name of the message type.
-	 * @param argumentTypes          The argumentTypes of the message type.
-	 * @param executableMessageClass The class of the ExecutableMessage
+	 * @param id The ID of the message type.
+	 * @param name The name of the message type.
+	 * @param argumentTypes The argumentTypes of the message type.
+	 * @param clientExec The class of the ExecutableMessage to be invoked by clients.
+	 * @param serverExec The class of the ExecutableMessage to be invoked by servers.
 	 */
-	public MessageType(short id, String name, ArgumentType[] argumentTypes, Class<? extends ExecutableMessage> executableMessageClass)
+	public MessageType(short id, String name, ArgumentType[] argumentTypes,
+					   Class<? extends ExecutableMessage> clientExec, Class<? extends ExecutableMessage> serverExec)
 	{
 		this.id = id;
 		this.name = name;
 		this.argumentTypes = argumentTypes;
-		this.executableMessageClass = executableMessageClass;
+		this.clientExecutableMessageClass = clientExec;
+		this.serverExecutableMessageClass = serverExec;
 		argumentTypeTreeMap = new TreeMap<>();
 
 		for (ArgumentType argumentType : this.argumentTypes)
@@ -52,6 +57,7 @@ public class MessageType
 	 * Get the argument type with the given name.
 	 *
 	 * @param name The name of the argument.
+	 *
 	 * @return The ArgumentType with the given name.
 	 */
 	public ArgumentType getArgumentType(String name)
@@ -60,10 +66,10 @@ public class MessageType
 	}
 
 	/**
-	 * Get a message type by parsing the XML element specified.  Returns null if the element could not be properly
-	 * parsed.
+	 * Get a message type by parsing the XML element specified.  Returns null if the element could not be properly parsed.
 	 *
 	 * @param messageElement The XML Element.
+	 *
 	 * @return A MessageType retrieved from the XML element.
 	 */
 	public static MessageType parseMessageElement(Element messageElement)
@@ -71,7 +77,8 @@ public class MessageType
 		short id;
 		String name;
 		ArgumentType[] argumentTypes;
-		Class<? extends ExecutableMessage> executableMessageClass;
+		Class<? extends ExecutableMessage> clientExec;
+		Class<? extends ExecutableMessage> serverExec;
 
 		/*
 		Should look like this:
@@ -84,12 +91,13 @@ public class MessageType
 		id = Short.parseShort(messageElement.getAttribute("id"));
 		name = messageElement.getAttribute("name");
 		argumentTypes = parseArgumentNodes(messageElement);
-		executableMessageClass = getExecutableMessageClass(messageElement);
+		clientExec = getClientExecutableMessageClass(messageElement);
+		serverExec = getServerExecutableMessageClass(messageElement);
 
 		MessageType messageType = null;
 
 		if (argumentTypes != null)
-			messageType = new MessageType(id, name, argumentTypes, executableMessageClass);
+			messageType = new MessageType(id, name, argumentTypes, clientExec, serverExec);
 
 		return messageType;
 	}
@@ -99,9 +107,11 @@ public class MessageType
 	 * executable tags with the language="java" attribute exist, the last one found is used.
 	 *
 	 * @param messageElement The message XML element.
+	 *
 	 * @return The class derived from the XML element.
 	 */
-	private static Class<? extends ExecutableMessage> getExecutableMessageClass(Element messageElement)
+	@SuppressWarnings("unchecked")
+	private static Class<? extends ExecutableMessage> getClientExecutableMessageClass(Element messageElement)
 	{
 		NodeList executableNodes = messageElement.getElementsByTagName("executable");
 		String executableMessageClassName = null;
@@ -112,8 +122,47 @@ public class MessageType
 			Node currentExecutableNode = executableNodes.item(i);
 			Element currentExecutableElement = (Element) currentExecutableNode;
 			String languageAttribute = currentExecutableElement.getAttribute("language");
+			String sideAttribute = currentExecutableElement.getAttribute("side");
 			// If it's in java, set the executable message class name.
-			if (languageAttribute.equalsIgnoreCase("java"))
+			if (languageAttribute.equalsIgnoreCase("java") && sideAttribute.equalsIgnoreCase("client"))
+				executableMessageClassName = currentExecutableElement.getTextContent();
+		}
+		if (executableMessageClassName != null)
+		{
+			try
+			{
+				executableMessageClass = (Class<? extends ExecutableMessage>) Class.forName(executableMessageClassName);
+			} catch (ClassNotFoundException | ClassCastException e)
+			{
+				LOGGER.log(Level.WARNING, "Incorrect Executable Message specified: ", e);
+			}
+		}
+		return executableMessageClass;
+	}
+
+	/**
+	 * Parse the supplied XML element looking for an executable tag with the attribute language="java".  If multiple
+	 * executable tags with the language="java" attribute exist, the last one found is used.
+	 *
+	 * @param messageElement The message XML element.
+	 *
+	 * @return The class derived from the XML element.
+	 */
+	@SuppressWarnings("unchecked")
+	private static Class<? extends ExecutableMessage> getServerExecutableMessageClass(Element messageElement)
+	{
+		NodeList executableNodes = messageElement.getElementsByTagName("executable");
+		String executableMessageClassName = null;
+		Class<? extends ExecutableMessage> executableMessageClass = null;
+		// Parse executable tags for those containing language="java"
+		for (int i = 0; i < executableNodes.getLength(); i++)
+		{
+			Node currentExecutableNode = executableNodes.item(i);
+			Element currentExecutableElement = (Element) currentExecutableNode;
+			String languageAttribute = currentExecutableElement.getAttribute("language");
+			String sideAttribute = currentExecutableElement.getAttribute("side");
+			// If it's in java, set the executable message class name.
+			if (languageAttribute.equalsIgnoreCase("java") && sideAttribute.equalsIgnoreCase("server"))
 				executableMessageClassName = currentExecutableElement.getTextContent();
 		}
 		if (executableMessageClassName != null)
@@ -133,6 +182,7 @@ public class MessageType
 	 * Parse the given XML element for argument elements.
 	 *
 	 * @param messageElement The XML element.
+	 *
 	 * @return An array of discovered ArgumentTypes.
 	 */
 	private static ArgumentType[] parseArgumentNodes(Element messageElement)
@@ -162,6 +212,7 @@ public class MessageType
 	 * Derive a class from an argument element type attribute.
 	 *
 	 * @param className The name of the class as read from the XML file.
+	 *
 	 * @return The class type if a correct string is parsed.  Null otherwise.
 	 */
 	private static Class parseClassName(String className)

@@ -26,20 +26,25 @@ public abstract class ClientExecutableMessage extends ExecutableMessage
 	/**
 	 * Construct an ExecutableMessage with the given Message.
 	 *
-	 * @param client  The client invoking this message.
+	 * @param client The client invoking this message.
 	 * @param message The Message.
 	 */
 	protected ClientExecutableMessage(Client client, Message message)
 	{
 		super(message);
+
+		if (!getClass().isAssignableFrom(MessageRegistry.getMessageType(message.getID()).clientExecutableMessageClass))
+			throw new IllegalArgumentException("Message supplied to " + getClass().getName() + "is invalid.");
+
 		this.client = client;
 	}
 
 	/**
 	 * Get the class of the ExecutableMessage that handles the given Message.
 	 *
-	 * @param client  The client invoking the message.
+	 * @param client The client invoking the message.
 	 * @param message The message.
+	 *
 	 * @return The class of the ExecutableMessage that handles the given Message.
 	 */
 	@SuppressWarnings("unchecked")
@@ -48,7 +53,7 @@ public abstract class ClientExecutableMessage extends ExecutableMessage
 		ExecutableMessage r = null;
 
 		MessageType messageType = MessageRegistry.getMessageType(message.getID());
-		Class<? extends ExecutableMessage> execClass = messageType.executableMessageClass;
+		Class<? extends ExecutableMessage> execClass = messageType.clientExecutableMessageClass;
 
 		try
 		{
@@ -72,6 +77,9 @@ public abstract class ClientExecutableMessage extends ExecutableMessage
 		} catch (InvocationTargetException | InstantiationException | IllegalAccessException e)
 		{
 			LOGGER.log(Level.SEVERE, "Constructor not correct for: " + execClass.getName(), e);
+		} catch (NullPointerException e)
+		{
+			LOGGER.log(Level.SEVERE, "No client-side executable message found for: " + message, e);
 		}
 
 		return r;

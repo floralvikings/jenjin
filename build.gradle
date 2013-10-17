@@ -28,6 +28,10 @@ subprojects {
     test {
         workingDir = project.rootDir
     }
+
+    tasks.withType(Compile) {
+        options.compilerArgs << "-Xlint:unchecked"
+    }
 }
 
 task wrapper(type: Wrapper) {
@@ -44,6 +48,7 @@ clean.doFirst {
     deleteRecursively(new File("FileOne.txt"))
     deleteRecursively(new File("DirectoryOne/"));
 }
+
 
 
 void deleteRecursively(File file) {
