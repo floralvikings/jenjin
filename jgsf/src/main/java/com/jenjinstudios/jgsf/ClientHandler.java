@@ -7,7 +7,6 @@ import com.jenjinstudios.net.Communicator;
 
 import java.io.IOException;
 import java.net.Socket;
-import java.util.LinkedList;
 
 /**
  * The {@code ClientHandler} class is used to communicate with an individual client.
@@ -16,8 +15,6 @@ import java.util.LinkedList;
  */
 public class ClientHandler extends Communicator
 {
-	/** The list of messages to be sendAllMessages after the world update. */
-	private final LinkedList<Message> outgoingMessages;
 	/** The server. */
 	private final Server<? extends ClientHandler> server;
 	/** Flags whether the socket is connected. */
@@ -46,26 +43,12 @@ public class ClientHandler extends Communicator
 		setName("ClientHandler: " + sk.getInetAddress());
 		server = s;
 		super.setSocket(sk);
-		outgoingMessages = new LinkedList<>();
 
 		connected = true;
 
 		Message firstConnectResponse = new Message("FirstConnectResponse");
 		firstConnectResponse.setArgument("ups", server.UPS);
 		queueMessage(firstConnectResponse);
-	}
-
-	/**
-	 * Add a message to the sendAllMessages queue, to be sent at the next sendAllMessages.
-	 *
-	 * @param o The object (message) to be sent to the client.
-	 */
-	public void queueMessage(Message o)
-	{
-		synchronized (outgoingMessages)
-		{
-			outgoingMessages.add(o);
-		}
 	}
 
 	/**
@@ -89,18 +72,6 @@ public class ClientHandler extends Communicator
 	@SuppressWarnings("EmptyMethod")
 	public void refresh()
 	{
-	}
-
-	/** Send all messages in the message queue to the client. */
-	public void sendAllMessages()
-	{
-		synchronized (outgoingMessages)
-		{
-			while (!outgoingMessages.isEmpty())
-			{
-				writeMessage(outgoingMessages.remove());
-			}
-		}
 	}
 
 	/** Shut down the client handler. */
