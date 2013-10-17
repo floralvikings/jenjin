@@ -1,82 +1,50 @@
 package com.jenjinstudios.jgsf;
 
-import com.jenjinstudios.io.MessageInputStream;
-import com.jenjinstudios.io.MessageOutputStream;
 import com.jenjinstudios.jgsf.message.ServerExecutableMessage;
 import com.jenjinstudios.message.ExecutableMessage;
 import com.jenjinstudios.message.Message;
+import com.jenjinstudios.net.Communicator;
 
 import java.io.IOException;
 import java.net.Socket;
-import java.util.LinkedList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * The {@code ClientHandler} class is used to communicate with an individual client.
  *
  * @author Caleb Brinkman
  */
-public class ClientHandler extends Thread
+public class ClientHandler extends Communicator
 {
-	/** The Socket the handler uses to communicate. */
-	private final Socket sock;
-	/** The list of messages to be broadcast after the world update. */
-	private final LinkedList<Message> broadcastMessages;
 	/** The server. */
 	private final Server<? extends ClientHandler> server;
-	/** Flags whether the socket is connected. */
-	private boolean linkOpen;
 	/** The id of the client handler. */
 	private int handlerId = -1;
 	/** Flags whether the user is logged in. */
 	private boolean loggedIn;
 	/** The username of this client. */
 	private String username;
-	/** The input stream used for reading from the client. */
-	private MessageInputStream inputStream;
-	/** The output stream used for writing to the client. */
-	private MessageOutputStream outputStream;
 	/** The time at which this client was successfully logged in. */
 	private long loggedInTime;
 
 
 	/**
-	 * Construct a new Client Handler using the given socket.  When constructing a new ClientHandler, it is necessary
-	 * to send the client a FirstConnectResponse message with the server's UPS
+	 * Construct a new Client Handler using the given socket.  When constructing a new ClientHandler, it is necessary to
+	 * send the client a FirstConnectResponse message with the server's UPS
 	 *
 	 * @param s  The server for which this handler works.
 	 * @param sk The socket used to communicate with the client.
+	 *
 	 * @throws IOException If the socket is unable to connect.
 	 */
 	public ClientHandler(Server<? extends ClientHandler> s, Socket sk) throws IOException
 	{
-		super("ClientHandler: " + sk.getInetAddress());
+		setName("ClientHandler: " + sk.getInetAddress());
 		server = s;
-		sock = sk;
-		broadcastMessages = new LinkedList<>();
-
-		outputStream = new MessageOutputStream(sock.getOutputStream());
-		inputStream = new MessageInputStream(sock.getInputStream());
-
-		linkOpen = true;
+		super.setSocket(sk);
 
 		Message firstConnectResponse = new Message("FirstConnectResponse");
 		firstConnectResponse.setArgument("ups", server.UPS);
 		queueMessage(firstConnectResponse);
-	}
-
-	/**
-	 * Add a message to the broadcast queue, to be sent at the next broadcast.
-	 *
-	 * @param o The object (message) to be sent to the client.
-	 */
-	public void queueMessage(Message o)
-	{
-		synchronized (broadcastMessages)
-		{
-			broadcastMessages.add(o);
-		}
 	}
 
 	/**
@@ -90,44 +58,16 @@ public class ClientHandler extends Thread
 		super.setName("Client Handler " + handlerId);
 	}
 
-	/** Update anything that needs to be taken care of before broadcast. */
+	/** Update anything that needs to be taken care of before sendAllMessages. */
 	@SuppressWarnings("EmptyMethod")
 	public void update()
 	{
 	}
 
-	/** Reset anything that needs to be taken care of after broadcast. */
+	/** Reset anything that needs to be taken care of after sendAllMessages. */
 	@SuppressWarnings("EmptyMethod")
 	public void refresh()
 	{
-	}
-
-	/** Send all messages in the message queue to the client. */
-	public void broadcast()
-	{
-		synchronized (broadcastMessages)
-		{
-			while (!broadcastMessages.isEmpty())
-			{
-				sendMessage(broadcastMessages.remove());
-			}
-		}
-	}
-
-	/**
-	 * Send the specified message to the client.
-	 *
-	 * @param o The message to send to the client.
-	 */
-	private void sendMessage(Message o)
-	{
-		try
-		{
-			outputStream.writeMessage(o);
-		} catch (Exception ex)
-		{
-			shutdown();
-		}
 	}
 
 	/** Shut down the client handler. */
@@ -164,38 +104,16 @@ public class ClientHandler extends Thread
 		return server;
 	}
 
-	/** Close the link with the client, if possible. */
-	final void closeLink()
-	{
-		if (linkOpen)
-		{
-			try
-			{
-				inputStream.close();
-				outputStream.close();
-				sock.close();
-			} catch (IOException ex)
-			{
-				Logger.getLogger(ClientHandler.class.getName()).log(Level.WARNING, "Error closing"
-						+ "link with client.", ex);
-			}
-		}
-		linkOpen = false;
-	}
-
 	/**
 	 * Queue a message indicating the success or failure of a login attempt.
 	 *
 	 * @param success Whether the attempt was successful.
 	 */
-	public void sendLoginStatus(boolean success)
+	public void setLoginStatus(boolean success)
 	{
 		loggedIn = success;
 		loggedInTime = server.getCycleStartTime();
-		Message loginResponse = new Message("LoginResponse");
-		loginResponse.setArgument("success", success);
-		loginResponse.setArgument("loginTime", loggedInTime);
-		queueMessage(loginResponse);
+
 	}
 
 	/**
@@ -211,50 +129,17 @@ public class ClientHandler extends Thread
 		queueMessage(logoutResponse);
 	}
 
-	/** Enter a loop that receives and processes messages until the link is closed. */
-	@Override
-	public void run()
-	{
-		Server.LOGGER.log(Level.FINE, "Client Handler Started. Link open:{0}", linkOpen);
-		Message message;
-		while (linkOpen)
-		{
-			try
-			{
-				message = inputStream.readMessage();
-				if (message == null)
-				{
-					Server.LOGGER.log(Level.FINE, "Received null message, shutting down ClientHandler");
-					shutdown();
-					break;
-				}
-				Server.LOGGER.log(Level.FINE, "Message received: {0}", message);
-				processMessage(message);
-			} catch (Exception ex)
-			{
-				Server.LOGGER.log(Level.SEVERE, "Exception with client handler.", ex);
-				shutdown();
-			}
-		}
-	}
-
 	/**
-	 * Process the given message.
+	 * Get an executable message for a given message.
 	 *
-	 * @param message The message to be processed.
+	 * @param message The message to be used.
+	 *
+	 * @return The ExecutableMessage.
 	 */
-	private void processMessage(Message message)
+	@Override
+	protected ExecutableMessage getExecutableMessage(Message message)
 	{
-		ExecutableMessage exec;
-		exec = ServerExecutableMessage.getServerExecutableMessageFor(this, message);
-		if (exec != null)
-		{
-			exec.runASync();
-			getServer().addSyncedTask(exec);
-		} else
-		{
-			this.shutdown();
-		}
+		return ServerExecutableMessage.getServerExecutableMessageFor(this, message);
 	}
 
 	/**
@@ -299,14 +184,16 @@ public class ClientHandler extends Thread
 	}
 
 	/**
-	 * Set the AES key used to encrypt and decrypt messages.
+	 * Immediately force send a message. This method should only be used if a message is <i>extremely</i> time dependent,
+	 * otherwise messages should be queued using the {@code queueMessage} method, because this method may cause
+	 * synchronization issues.
 	 *
-	 * @param key The AES key bytes used to encrypt and decrypt messages.
+	 * @param message The message to send.
+	 *
+	 * @throws IOException If there is an IOException.
 	 */
-	public void setAesKey(byte[] key)
+	public void forceMessage(Message message) throws IOException
 	{
-		inputStream.setAESKey(key);
-		outputStream.setAesKey(key);
+		getOutputStream().writeMessage(message);
 	}
-
 }

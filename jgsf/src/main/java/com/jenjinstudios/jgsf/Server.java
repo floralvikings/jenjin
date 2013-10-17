@@ -40,6 +40,8 @@ public class Server<T extends ClientHandler> extends Thread
 	private final LinkedList<Runnable> repeatedTasks;
 	/** Synced tasks scheduled by client handlers. */
 	private final LinkedList<Runnable> syncedTasks;
+	/** The class for ClientHandlers. */
+	private final Class<? extends T> handlerClass;
 	/** The SQLHandler used by this Server. */
 	private SQLHandler sqlHandler;
 	/** The timer that controls the server loop. */
@@ -54,8 +56,6 @@ public class Server<T extends ClientHandler> extends Thread
 	private boolean connectedToDB;
 	/** The maximum number of clients allowed to connect. */
 	private int maxClients = 100;
-	/** The class for ClientHandlers. */
-	private final Class<? extends T> handlerClass;
 
 	/**
 	 * Construct a new Server without a SQLHandler.
@@ -85,10 +85,24 @@ public class Server<T extends ClientHandler> extends Thread
 		addListener();
 	}
 
+	/** Start a new Client Listener on the specified port. */
+	@SuppressWarnings("unchecked")
+	void addListener()
+	{
+		try
+		{
+			clientListeners.add((ClientListener<T>) new ClientListener<>(this, PORT, handlerClass));
+		} catch (IOException e)
+		{
+			LOGGER.log(Level.SEVERE, "Error adding client listener", e);
+		}
+	}
+
 	/**
 	 * Set the SQLHandler for this server.
 	 *
 	 * @param handler The SQLHandler to be used by this server
+	 *
 	 * @throws SQLException If the SQLHandler has already been set for this server.
 	 */
 	public void setSQLHandler(SQLHandler handler) throws SQLException
@@ -106,19 +120,6 @@ public class Server<T extends ClientHandler> extends Thread
 	public long getCycleStartTime()
 	{
 		return serverLoop != null ? serverLoop.getCycleStart() : -1;
-	}
-
-	/** Start a new Client Listener on the specified port. */
-	@SuppressWarnings("unchecked")
-	void addListener()
-	{
-		try
-		{
-			clientListeners.add((ClientListener<T>) new ClientListener<>(this, PORT, handlerClass));
-		} catch (IOException e)
-		{
-			LOGGER.log(Level.SEVERE, "Error adding client listener", e);
-		}
 	}
 
 	/**
@@ -199,20 +200,24 @@ public class Server<T extends ClientHandler> extends Thread
 		}
 	}
 
-	/** Broadcast all outgoing messages to clients. */
-	public void broadcast()
+	/**
+	 * Broadcast all outgoing messages to clients.
+	 *
+	 * @throws java.io.IOException If there's an IO exception.
+	 */
+	public void broadcast() throws IOException
 	{
 		synchronized (clientHandlers)
 		{
 			for (ClientHandler current : clientHandlers)
 			{
 				if (current != null)
-					current.broadcast();
+					current.sendAllMessages();
 			}
 		}
 	}
 
-	/** Update all clients before they broadcast. */
+	/** Update all clients before they sendAllMessages. */
 	public void update()
 	{
 		synchronized (clientHandlers)
@@ -220,12 +225,15 @@ public class Server<T extends ClientHandler> extends Thread
 			for (ClientHandler current : clientHandlers)
 			{
 				if (current != null)
+				{
 					current.update();
+					syncedTasks.addAll(current.getSyncedTasks());
+				}
 			}
 		}
 	}
 
-	/** Refresh all clients after they broadcast. */
+	/** Refresh all clients after they sendAllMessages. */
 	public void refresh()
 	{
 		synchronized (clientHandlers)
@@ -326,9 +334,10 @@ public class Server<T extends ClientHandler> extends Thread
 	 * Get the ClientHandler with the given username.
 	 *
 	 * @param username The username of the client to look up.
+	 *
 	 * @return The client with the username specified; null if there is no client with this username.
 	 */
-	public ClientHandler getClientHandlerByUsername(String username)
+	public T getClientHandlerByUsername(String username)
 	{
 		return clientsByUsername.get(username);
 	}
@@ -374,7 +383,6 @@ public class Server<T extends ClientHandler> extends Thread
 	{
 		return connectedToDB;
 	}
-
 
 	/**
 	 * Tasks to be repeated in the main loop.

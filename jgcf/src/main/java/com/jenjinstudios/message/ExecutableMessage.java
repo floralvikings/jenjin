@@ -18,9 +18,6 @@ public abstract class ExecutableMessage implements Runnable
 	 */
 	protected ExecutableMessage(Message message)
 	{
-		if (!getClass().isAssignableFrom(MessageRegistry.getMessageType(message.getID()).executableMessageClass))
-			throw new IllegalArgumentException("Message supplied to " + getClass().getName() + "is invalid.");
-
 		this.message = message;
 	}
 

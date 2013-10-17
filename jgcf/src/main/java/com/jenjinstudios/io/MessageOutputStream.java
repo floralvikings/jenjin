@@ -33,16 +33,14 @@ public class MessageOutputStream
 	private Cipher aesEncryptCipher;
 
 	/**
-	 * Creates a new message output stream to write data to the specified
-	 * underlying output stream. The counter {@code written} is
-	 * set to zero.
+	 * Creates a new message output stream to write data to the specified underlying output stream. The counter {@code
+	 * written} is set to zero.
 	 *
-	 * @param out the underlying output stream, to be saved for later
-	 *            use.
-	 * @throws java.io.IOException If there is an error sending the public key.
+	 * @param out the underlying output stream, to be saved for later use.
+	 *
 	 * @see java.io.FilterOutputStream#out
 	 */
-	public MessageOutputStream(OutputStream out) throws IOException
+	public MessageOutputStream(OutputStream out)
 	{
 		outputStream = new DataOutputStream(out);
 	}
@@ -51,6 +49,7 @@ public class MessageOutputStream
 	 * Write the given {@code Message} to the output stream.
 	 *
 	 * @param message The Message to be written to the stream.
+	 *
 	 * @throws IOException If there is an IO error.
 	 */
 	public void writeMessage(Message message) throws IOException
@@ -69,12 +68,14 @@ public class MessageOutputStream
 	 *
 	 * @param arg            The argument to be written.
 	 * @param encryptStrings Whether to encryptPublic strings in this message.
+	 *
 	 * @throws IOException If there is an IO error.
 	 */
 	private void writeArgument(Object arg, boolean encryptStrings) throws IOException
 	{
 		if (arg instanceof String) writeString((String) arg, encryptStrings);
 		else if (arg instanceof Integer) outputStream.writeInt((int) arg);
+		else if (arg instanceof Short) outputStream.writeShort((short) arg);
 		else if (arg instanceof Long) outputStream.writeLong((long) arg);
 		else if (arg instanceof Float) outputStream.writeFloat((float) arg);
 		else if (arg instanceof Double) outputStream.writeDouble((double) arg);
@@ -82,14 +83,16 @@ public class MessageOutputStream
 		else if (arg instanceof Byte) outputStream.writeByte((byte) arg);
 		else if (arg instanceof byte[]) writeByteArray((byte[]) arg);
 		else if (arg instanceof String[]) writeStringArray((String[]) arg, encryptStrings);
-		else throw new IOException("Invalid argument type passed to MessageOutputStream: " + arg);
+		else throw new IOException("Invalid argument type passed to MessageOutputStream: " + arg.getClass().getName());
 	}
 
 	/**
-	 * Write a string to the output stream, specifying whether the string should be encrypted with this stream's public key.
+	 * Write a string to the output stream, specifying whether the string should be encrypted with this stream's public
+	 * key.
 	 *
 	 * @param s       The string to write.
 	 * @param encrypt Whether the string should be encrypted.
+	 *
 	 * @throws IOException If there is an IO error.
 	 */
 	public void writeString(String s, boolean encrypt) throws IOException
@@ -109,7 +112,7 @@ public class MessageOutputStream
 					String encryptedString = DatatypeConverter.printHexBinary(aesEncryptCipher.doFinal(sBytes));
 					outputStream.writeBoolean(true);
 					outputStream.writeUTF(encryptedString);
-				} catch (IllegalBlockSizeException | BadPaddingException e)
+				} catch (IllegalBlockSizeException | BadPaddingException | IllegalStateException e)
 				{
 					LOGGER.log(Level.WARNING, "Error encrypting string, will use unencrypted.", e);
 					outputStream.writeBoolean(false);
@@ -129,6 +132,7 @@ public class MessageOutputStream
 	 *
 	 * @param strings        The array of string strings.
 	 * @param encryptStrings Whether the strings being written should be encrypted.
+	 *
 	 * @throws IOException If there is an IO error.
 	 */
 	private void writeStringArray(String[] strings, boolean encryptStrings) throws IOException
@@ -142,6 +146,7 @@ public class MessageOutputStream
 	 * Write an array of bytes to the output stream, preceded by the array length.
 	 *
 	 * @param bytes The array of byte bytes.
+	 *
 	 * @throws IOException If there is an IO error.
 	 */
 	private void writeByteArray(byte[] bytes) throws IOException

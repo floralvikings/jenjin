@@ -1,5 +1,6 @@
 package com.jenjinstudios.jgsf;
 
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.TimerTask;
 import java.util.logging.Level;
@@ -90,7 +91,13 @@ class ServerLoop extends TimerTask
 		runSynchronizedTasks();
 		runRepeatedTasks();
 		server.update();
-		server.broadcast();
+		try
+		{
+			server.broadcast();
+		} catch (IOException e)
+		{
+			LOGGER.log(Level.SEVERE, "Error broadcasting. ", e);
+		}
 		server.refresh();
 	}
 

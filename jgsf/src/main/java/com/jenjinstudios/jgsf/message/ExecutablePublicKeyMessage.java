@@ -53,7 +53,7 @@ public class ExecutablePublicKeyMessage extends ServerExecutableMessage
 			byte[] aesKeyBytes = keyGenerator.generateKey().getEncoded();
 
 			// Set the output stream and input stream aes key for the client handler.
-			getClientHandler().setAesKey(aesKeyBytes);
+			getClientHandler().setAESKey(aesKeyBytes);
 
 			// Get the public key from the message.
 			byte[] publicKeyBytes = (byte[]) getMessage().getArgument("key");
