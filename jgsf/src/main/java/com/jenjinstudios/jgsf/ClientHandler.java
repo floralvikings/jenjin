@@ -17,8 +17,6 @@ public class ClientHandler extends Communicator
 {
 	/** The server. */
 	private final Server<? extends ClientHandler> server;
-	/** Flags whether the socket is connected. */
-	private boolean connected;
 	/** The id of the client handler. */
 	private int handlerId = -1;
 	/** Flags whether the user is logged in. */
@@ -43,8 +41,6 @@ public class ClientHandler extends Communicator
 		setName("ClientHandler: " + sk.getInetAddress());
 		server = s;
 		super.setSocket(sk);
-
-		connected = true;
 
 		Message firstConnectResponse = new Message("FirstConnectResponse");
 		firstConnectResponse.setArgument("ups", server.UPS);
@@ -106,16 +102,6 @@ public class ClientHandler extends Communicator
 	public Server<? extends ClientHandler> getServer()
 	{
 		return server;
-	}
-
-	/** Close the link with the client, if possible. */
-	protected void closeLink()
-	{
-		if (connected)
-		{
-			super.closeLink();
-		}
-		connected = false;
 	}
 
 	/**
