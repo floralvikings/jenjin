@@ -107,13 +107,14 @@ public class Actor extends SightedObject
 	private void tryStateChange()
 	{
 		if (nextState == null) return;
-		int overStepped = stepsTaken - nextState.stepsUntilChange;
-		if (overStepped >= MAX_CORRECT)
+		int overstepped = stepsTaken - nextState.stepsUntilChange;
+		System.out.println("Correcting: " + overstepped);
+		if (overstepped >= MAX_CORRECT)
 		{
 			stopMaxCorrect();
-		} else if (overStepped >= 0)
+		} else if (overstepped >= 0)
 		{
-			doStateChange(overStepped);
+			doStateChange(overstepped);
 		}
 	}
 
@@ -256,6 +257,7 @@ public class Actor extends SightedObject
 	 */
 	public void setForcedState(MoveState forced)
 	{
+		System.out.println("Forcing State: " + forced);
 		stepBack(currentMoveState.stepAngle);
 		this.currentMoveState = forced;
 		forcedState = true;

@@ -232,6 +232,7 @@ public class WorldClientHandler extends ClientHandler
 		forcedStateMessage.setArgument("angle", actor.getMoveAngle());
 		forcedStateMessage.setArgument("xCoordinate", actor.getVector2D().getXCoordinate());
 		forcedStateMessage.setArgument("zCoordinate", actor.getVector2D().getZCoordinate());
+		forcedStateMessage.setArgument("stepsAtForce", actor.getStepsTaken());
 		forcedStateMessage.setArgument("timeOfForce", server.getCycleStartTime());
 		return forcedStateMessage;
 	}
