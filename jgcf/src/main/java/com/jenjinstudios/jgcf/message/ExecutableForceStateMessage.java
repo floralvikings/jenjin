@@ -53,7 +53,6 @@ public class ExecutableForceStateMessage extends WorldClientExecutableMessage
 
 		intSteps += stepsAtForce;
 
-		System.out.println("Forced: " + vector2D + ", " + relativeAngle + ", " + absoluteAngle + ", " + intSteps);
 		player.forcePosition(vector2D, relativeAngle, absoluteAngle, intSteps);
 	}
 
