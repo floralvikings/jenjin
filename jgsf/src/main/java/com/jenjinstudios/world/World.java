@@ -16,7 +16,7 @@ public class World
 	/** The Logger used for this class. */
 	private static final Logger LOGGER = Logger.getLogger(World.class.getName());
 	/** The size of the world's location grid. */
-	public final int SIZE = 10;
+	public final int SIZE = 50;
 	/** The grid of locations in the game world. */
 	private final Location[][] locationGrid;
 	/** The GameObjects contained in the world. */
