@@ -1,5 +1,6 @@
 package com.jenjinstudios.world;
 
+import com.jenjinstudios.jgsf.WorldServer;
 import com.jenjinstudios.world.state.MoveState;
 
 import java.util.LinkedList;
@@ -27,7 +28,7 @@ import static com.jenjinstudios.world.state.MoveState.IDLE;
 public class Actor extends SightedObject
 {
 	/** The length of each step. */
-	public static final float STEP_LENGTH = 5;
+	public static final double STEP_LENGTH = Location.SIZE / WorldServer.DEFAULT_UPS;
 	/** The maximum number of steps this actor is allowed to correct. */
 	public static final int MAX_CORRECT = 10;
 	/** The logger for this class. */
