@@ -34,15 +34,18 @@ public class World
 	 * Add an object to the world.
 	 *
 	 * @param object The object to add.
+	 *
+	 * @throws InvalidLocationException If an object is attempted to be added with an invalid location.
 	 */
-	public void addObject(WorldObject object)
+	public void addObject(WorldObject object) throws InvalidLocationException
 	{
 		if (object == null)
 			throw new IllegalArgumentException("addObject(WorldObject obj) argument 0 not allowed to be null!");
 		object.setWorld(this);
-		object.setId(worldObjects.size());
+		object.setVector2D(object.getVector2D());
 		synchronized (worldObjects)
 		{
+			object.setId(worldObjects.size());
 			worldObjects.add(object);
 		}
 		objectCount++;

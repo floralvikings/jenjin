@@ -1,7 +1,7 @@
 package com.jenjinstudios.world;
 
 import java.util.ArrayList;
-import java.util.TreeMap;
+import java.util.HashSet;
 
 /**
  * Represents a location in the world's location grid.
@@ -17,7 +17,7 @@ public class Location
 	/** The z coordinate of the location in it's zone's grid. */
 	public final int Z_COORDINATE;
 	/** The objects residing in this location. */
-	private final TreeMap<Integer, WorldObject> objects;
+	private final HashSet<WorldObject> objects;
 	/** The property of this location. */
 	private Property property;
 
@@ -32,7 +32,7 @@ public class Location
 		X_COORDINATE = x;
 		Z_COORDINATE = z;
 		property = Property.OPEN;
-		objects = new TreeMap<>();
+		objects = new HashSet<>();
 	}
 
 	/**
@@ -62,7 +62,7 @@ public class Location
 	 */
 	public ArrayList<WorldObject> getObjects()
 	{
-		return new ArrayList<>(objects.values());
+		return new ArrayList<>(objects);
 	}
 
 	/**
@@ -72,7 +72,7 @@ public class Location
 	 */
 	public void addObject(WorldObject object)
 	{
-		objects.put(object.getId(), object);
+		objects.add(object);
 	}
 
 	/**
@@ -82,7 +82,7 @@ public class Location
 	 */
 	public void removeObject(WorldObject object)
 	{
-		objects.remove(object.getId());
+		objects.remove(object);
 	}
 
 	@Override
