@@ -148,8 +148,8 @@ public class ActorTest
 		MoveState stepState = new MoveState(MoveState.BACK, 0, 0);
 		player.addMoveState(stepState);
 
-		updateWorld(7); // position should correct to 0,0
-		Assert.assertEquals(new Vector2D(0, 0), player.getVector2D());
+		updateWorld(7); // position should correct to -5,0
+		Assert.assertEquals(new Vector2D(-5, 0), player.getVector2D());
 	}
 
 	/**
