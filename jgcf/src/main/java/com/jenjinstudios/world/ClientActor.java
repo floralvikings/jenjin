@@ -25,7 +25,7 @@ import static com.jenjinstudios.world.state.MoveState.IDLE;
 public class ClientActor extends ClientObject
 {
 	/** The length of each step. */
-	public static final float STEP_LENGTH = 5;
+	public static double STEP_LENGTH = 5;
 	/** The next moves. */
 	private final LinkedList<MoveState> nextMoveStates;
 	/** The next move. */

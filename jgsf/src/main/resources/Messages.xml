@@ -124,4 +124,9 @@
         <executable language="java" side="client">com.jenjinstudios.jgcf.message.ExecutablePingResponse</executable>
     </message>
 
+    <message name="ActorStepMessage" id="19">
+        <argument type="double" name="stepLength" />
+        <executable language="java" side="client">com.jenjinstudios.jgcf.message.ExecutableActorStepLengthMessage</executable>
+    </message>
+
 </base_messages>

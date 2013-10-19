@@ -34,6 +34,7 @@ public class WorldClientHandler extends ClientHandler
 	{
 		super(s, sk);
 		server = s;
+		queueMessage(generateActorStepLengthMessage());
 	}
 
 	/**
@@ -235,6 +236,18 @@ public class WorldClientHandler extends ClientHandler
 		forcedStateMessage.setArgument("stepsAtForce", actor.getStepsTaken());
 		forcedStateMessage.setArgument("timeOfForce", server.getCycleStartTime());
 		return forcedStateMessage;
+	}
+
+	/**
+	 * Generate a step length message.
+	 *
+	 * @return The message.
+	 */
+	private Message generateActorStepLengthMessage()
+	{
+		Message stepLengthMessage = new Message("ActorStepLengthMessage");
+		stepLengthMessage.setArgument("stepLength", Actor.STEP_LENGTH);
+		return stepLengthMessage;
 	}
 
 	/**
