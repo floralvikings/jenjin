@@ -4,6 +4,7 @@ import com.jenjinstudios.jgsf.WorldClientHandler;
 import com.jenjinstudios.message.Message;
 import com.jenjinstudios.sql.WorldSQLHandler;
 import com.jenjinstudios.world.Actor;
+import com.jenjinstudios.world.InvalidLocationException;
 
 /**
  * Handles requests to login to the world.
@@ -16,6 +17,8 @@ public class ExecutableWorldLoginRequest extends WorldExecutableMessage
 	private final WorldSQLHandler sqlHandler;
 	/** The player added to the world. */
 	private Actor player;
+	/** The LoginResponse to send to the client. */
+	private Message loginResponse;
 
 	/**
 	 * Construct a new ExecutableMessage.  Must be implemented by subclasses.
@@ -33,7 +36,21 @@ public class ExecutableWorldLoginRequest extends WorldExecutableMessage
 	public void runSynced()
 	{
 		if (player != null)
-			getClientHandler().getServer().getWorld().addObject(player);
+		{
+			try
+			{
+				getClientHandler().getServer().getWorld().addObject(player);
+			} catch (InvalidLocationException ex)
+			{
+				loginResponse.setArgument("success", false);
+				loginResponse.setArgument("id", -1);
+				loginResponse.setArgument("loginTime", getClientHandler().getLoggedInTime());
+				loginResponse.setArgument("xCoord", 0d);
+				loginResponse.setArgument("zCoord", 0d);
+			}
+		}
+		getClientHandler().queueMessage(loginResponse);
+
 	}
 
 	@Override
@@ -49,7 +66,7 @@ public class ExecutableWorldLoginRequest extends WorldExecutableMessage
 		boolean success = player != null;
 		getClientHandler().setLoginStatus(success);
 
-		Message loginResponse = new Message("WorldLoginResponse");
+		loginResponse = new Message("WorldLoginResponse");
 		loginResponse.setArgument("success", success);
 
 		if (success)
@@ -67,6 +84,6 @@ public class ExecutableWorldLoginRequest extends WorldExecutableMessage
 			loginResponse.setArgument("zCoord", 0d);
 		}
 
-		getClientHandler().queueMessage(loginResponse);
+
 	}
 }

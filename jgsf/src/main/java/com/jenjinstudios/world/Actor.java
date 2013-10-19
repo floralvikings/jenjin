@@ -107,13 +107,13 @@ public class Actor extends SightedObject
 	private void tryStateChange()
 	{
 		if (nextState == null) return;
-		int overStepped = stepsTaken - nextState.stepsUntilChange;
-		if (overStepped >= MAX_CORRECT)
+		int overstepped = stepsTaken - nextState.stepsUntilChange;
+		if (overstepped >= MAX_CORRECT)
 		{
 			stopMaxCorrect();
-		} else if (overStepped >= 0)
+		} else if (overstepped >= 0)
 		{
-			doStateChange(overStepped);
+			doStateChange(overstepped);
 		}
 	}
 

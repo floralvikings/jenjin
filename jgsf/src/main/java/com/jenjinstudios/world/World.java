@@ -3,8 +3,6 @@ package com.jenjinstudios.world;
 import com.jenjinstudios.math.Vector2D;
 
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Contains all the Zones, Locations and GameObjects.
@@ -13,10 +11,8 @@ import java.util.logging.Logger;
  */
 public class World
 {
-	/** The Logger used for this class. */
-	private static final Logger LOGGER = Logger.getLogger(World.class.getName());
 	/** The size of the world's location grid. */
-	public final int SIZE = 10;
+	public final int SIZE = 50;
 	/** The grid of locations in the game world. */
 	private final Location[][] locationGrid;
 	/** The GameObjects contained in the world. */
@@ -38,15 +34,18 @@ public class World
 	 * Add an object to the world.
 	 *
 	 * @param object The object to add.
+	 *
+	 * @throws InvalidLocationException If an object is attempted to be added with an invalid location.
 	 */
-	public void addObject(WorldObject object)
+	public void addObject(WorldObject object) throws InvalidLocationException
 	{
 		if (object == null)
 			throw new IllegalArgumentException("addObject(WorldObject obj) argument 0 not allowed to be null!");
 		object.setWorld(this);
-		object.setId(worldObjects.size());
+		object.setVector2D(object.getVector2D());
 		synchronized (worldObjects)
 		{
+			object.setId(worldObjects.size());
 			worldObjects.add(object);
 		}
 		objectCount++;
@@ -81,12 +80,9 @@ public class World
 	{
 		try
 		{
-			if (x < 0 || z < 0)
-				throw new InvalidLocationException(new Vector2D(x, z));
 			return locationGrid[(int) x / Location.SIZE][(int) z / Location.SIZE];
 		} catch (ArrayIndexOutOfBoundsException ex)
 		{
-			LOGGER.log(Level.SEVERE, "Attempted to access location with invalid coodinates: ({0}, {1})", new Object[]{x, z});
 			throw new InvalidLocationException(new Vector2D(x, z));
 		}
 	}

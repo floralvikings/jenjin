@@ -75,6 +75,7 @@ public class WorldObject
 	 * Set this object's current position.
 	 *
 	 * @param vector2D The new position.
+	 *
 	 * @throws InvalidLocationException If the supplied coordinates point to an invalid location.
 	 */
 	public void setVector2D(Vector2D vector2D) throws InvalidLocationException
@@ -100,6 +101,7 @@ public class WorldObject
 	 *
 	 * @param x The new x coordinate.
 	 * @param z The new z coordinate.
+	 *
 	 * @throws InvalidLocationException If the supplied coordinates indicate an invalid location.
 	 */
 	public void setVector2D(double x, double z) throws InvalidLocationException
@@ -183,5 +185,10 @@ public class WorldObject
 	public void update()
 	{
 
+	}
+
+	public String toString()
+	{
+		return name + ": " + id + " @ " + vector2D;
 	}
 }

@@ -86,6 +86,7 @@
         <argument type="double" name="angle" />
         <argument type="double" name="xCoordinate" />
         <argument type="double" name="zCoordinate" />
+        <argument type="int" name="stepsAtForce" />
         <argument type="long" name="timeOfForce" />
     </message>
 
