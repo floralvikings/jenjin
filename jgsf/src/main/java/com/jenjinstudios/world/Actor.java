@@ -28,7 +28,7 @@ import static com.jenjinstudios.world.state.MoveState.IDLE;
 public class Actor extends SightedObject
 {
 	/** The length of each step. */
-	public static final double STEP_LENGTH = Location.SIZE / WorldServer.DEFAULT_UPS;
+	public static final double STEP_LENGTH = (double) Location.SIZE / (double) WorldServer.DEFAULT_UPS;
 	/** The maximum number of steps this actor is allowed to correct. */
 	public static final int MAX_CORRECT = 10;
 	/** The logger for this class. */
