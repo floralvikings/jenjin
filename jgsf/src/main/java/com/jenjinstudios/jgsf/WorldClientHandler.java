@@ -245,7 +245,7 @@ public class WorldClientHandler extends ClientHandler
 	 */
 	private Message generateActorStepLengthMessage()
 	{
-		Message stepLengthMessage = new Message("ActorStepLengthMessage");
+		Message stepLengthMessage = new Message("ActorStepMessage");
 		stepLengthMessage.setArgument("stepLength", Actor.STEP_LENGTH);
 		return stepLengthMessage;
 	}
