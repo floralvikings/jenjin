@@ -135,6 +135,7 @@ public class Actor extends SightedObject
 	/** Reset the move state, direction, and newState flag when changing the move state. */
 	private void resetState()
 	{
+		stepsTaken = 0;
 		currentMoveState = nextState;
 		nextState = nextMoveStates.poll();
 		newState = true;
@@ -144,8 +145,6 @@ public class Actor extends SightedObject
 	/** Stop the actor from correcting more steps than the allowed maximum. */
 	private void stopMaxCorrect()
 	{
-		nextState = null;
-		nextMoveStates.clear();
 		setForcedState(currentMoveState);
 	}
 
@@ -257,9 +256,34 @@ public class Actor extends SightedObject
 	 */
 	public void setForcedState(MoveState forced)
 	{
-		stepBack(currentMoveState.stepAngle);
-		this.currentMoveState = forced;
+		nextMoveStates.clear();
+		nextState = forced;
+		stepBackToValid(currentMoveState.stepAngle);
 		forcedState = true;
+		resetState();
+	}
+
+	/**
+	 * Step the actor back to a valid location.
+	 *
+	 * @param stepAngle The angle the actor is moving.
+	 */
+	private void stepBackToValid(double stepAngle)
+	{
+		stepAngle -= Math.PI;
+		boolean isValid = false;
+		int stepsToTake = 1;
+		while (!isValid)
+		{
+			try
+			{
+				setVector2D(getVector2D().getVectorInDirection(STEP_LENGTH * stepsToTake, stepAngle));
+				isValid = true;
+			} catch (InvalidLocationException ex)
+			{
+				stepsToTake++;
+			}
+		}
 	}
 
 	/**

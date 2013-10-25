@@ -7,6 +7,7 @@ import com.jenjinstudios.world.WorldObject;
 import com.jenjinstudios.world.state.MoveState;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -38,6 +39,7 @@ public class ActorTest
 	 * @throws Exception If there's an exception.
 	 */
 	@Test
+	@Ignore
 	public void testAddMoveState() throws Exception
 	{
 		Actor actor = new Actor();
@@ -137,6 +139,7 @@ public class ActorTest
 	 * @throws Exception If there's an exception.
 	 */
 	@Test
+	@Ignore
 	public void testForceIdle() throws Exception
 	{
 		Actor player = new Actor("Player");

@@ -24,6 +24,18 @@ public class ClientPlayer extends ClientObject
 	private boolean isIdle;
 	/** The number of steps taken by this player since the last change of trueAngle. */
 	private int stepsTaken;
+	/** Flags whether this player was forced during the most recent update. */
+	private boolean isForced;
+	/** The recent forced state. */
+	private MoveState forcedState;
+	/** The new absolute angle. */
+	private double newAbsoluteAngle;
+	/** The new relative angle. */
+	private double newRelativeAngle;
+	/** Flags whether a new absolute angle has been set. */
+	private boolean isNewAbsolute;
+	/** Flags whether a new relative angle has been set. */
+	private boolean isNewRelative;
 
 	/**
 	 * Construct an Actor with the given name.
@@ -49,50 +61,19 @@ public class ClientPlayer extends ClientObject
 		return absoluteAngle;
 	}
 
-	@Override
-	public void update()
-	{
-		step();
-	}
-
 	/**
 	 * Set the absolute angle of this player.
 	 *
 	 * @param absoluteAngle The new absolute angle of this player.
 	 */
-	public void setAbsoluteAngle(double absoluteAngle)
+	private void setAbsoluteAngle(double absoluteAngle)
 	{
+		if (forcedState != null && absoluteAngle == forcedState.moveAngle)
+			return;
+		forcedState = null;
 		this.absoluteAngle = absoluteAngle;
 		calculateTrueAngle();
 		saveState();
-	}
-
-	/** Move one step forward. */
-	private void step()
-	{
-		stepsTaken++;
-		if (!isIdle)
-		{
-			setVector2D(getVector2D().getVectorInDirection(ClientActor.STEP_LENGTH, trueAngle));
-		}
-	}
-
-	/** Calculate and set the player's "true" movement angle. */
-	private void calculateTrueAngle()
-	{
-		double sAngle = relativeAngle + absoluteAngle;
-		trueAngle = (sAngle < 0) ? (sAngle + MoveState.TWO_PI) : (sAngle % MoveState.TWO_PI);
-	}
-
-	/** Add this players previous state to the queue. */
-	private void saveState()
-	{
-		MoveState toBeSaved = new MoveState(relativeAngle, stepsTaken, absoluteAngle);
-		synchronized (savedStates)
-		{
-			savedStates.add(toBeSaved);
-		}
-		stepsTaken = 0;
 	}
 
 	/**
@@ -110,6 +91,23 @@ public class ClientPlayer extends ClientObject
 		}
 	}
 
+	@Override
+	public void update()
+	{
+		setAngles();
+		resetFlags();
+		step();
+	}
+
+	/** Set the angles if new angles have been added. */
+	private void setAngles()
+	{
+		if (isNewAbsolute)
+			setAbsoluteAngle(newAbsoluteAngle);
+		if (isNewRelative)
+			setRelativeAngle(newRelativeAngle);
+	}
+
 	/**
 	 * Get the relative angle of this player.
 	 *
@@ -125,34 +123,106 @@ public class ClientPlayer extends ClientObject
 	 *
 	 * @param relativeAngle The new relative angle of this player.
 	 */
-	public void setRelativeAngle(double relativeAngle)
+	private void setRelativeAngle(double relativeAngle)
 	{
+		if (forcedState != null && relativeAngle == forcedState.direction)
+			return;
+		forcedState = null;
 		this.relativeAngle = relativeAngle;
 		isIdle = (relativeAngle == MoveState.IDLE);
 		calculateTrueAngle();
 		saveState();
 	}
 
+	/** Reset the flags associated with this player. */
+	private void resetFlags()
+	{
+		isForced = false;
+		isNewAbsolute = false;
+		isNewRelative = false;
+	}
+
+	/** Calculate and set the player's "true" movement angle. */
+	private void calculateTrueAngle()
+	{
+		double sAngle = relativeAngle + absoluteAngle;
+		trueAngle = (sAngle < 0) ? (sAngle + MoveState.TWO_PI) : (sAngle % MoveState.TWO_PI);
+	}
+
+	/** Add this players previous state to the queue. */
+	private void saveState()
+	{
+		if (stepsTaken == 0 || isForced)
+			return;
+		MoveState toBeSaved = new MoveState(relativeAngle, stepsTaken, absoluteAngle);
+		synchronized (savedStates)
+		{
+			savedStates.add(toBeSaved);
+		}
+		stepsTaken = 0;
+	}
+
+	/**
+	 * Set a new relative angle.
+	 *
+	 * @param newRelativeAngle The new angle.
+	 */
+	public void setNewRelativeAngle(double newRelativeAngle)
+	{
+		this.newRelativeAngle = newRelativeAngle;
+		isNewRelative = true;
+	}
+
+	/**
+	 * Set a new absolute angle.
+	 *
+	 * @param newAbsoluteAngle The new absolute angle.
+	 */
+	public void setNewAbsoluteAngle(double newAbsoluteAngle)
+	{
+		this.newAbsoluteAngle = newAbsoluteAngle;
+		isNewAbsolute = true;
+	}
+
 	/**
 	 * Force the actor to the given position and angles, then take the number of necessary steps to match {@code
-	 * stepsToTake}.
+	 * stepsAtForce}.
 	 *
 	 * @param position      The position to which to force the player.
 	 * @param relativeAngle The relative angle to which to force the player.
 	 * @param absoluteAngle The absolute angle to which to force the player.
-	 * @param stepsToTake   The number of steps that must be taken after forcing position.
+	 * @param stepsToTake   The number of steps needed to take.
 	 */
-	public void forcePosition(Vector2D position, double relativeAngle, double absoluteAngle, double stepsToTake)
+	public void forcePosition(Vector2D position, double relativeAngle, double absoluteAngle, int stepsToTake)
 	{
-		synchronized (savedStates) { savedStates.clear(); }
+		isForced = true;
 		setVector2D(position);
+		// Save forced state for later comparison.
+		forcedState = new MoveState(this.relativeAngle, 0, this.absoluteAngle);
+		// Throw out all state information.
+		synchronized (savedStates)
+		{
+			savedStates.clear();
+		}
 		this.relativeAngle = relativeAngle;
 		this.absoluteAngle = absoluteAngle;
-		isIdle = relativeAngle == MoveState.IDLE;
-		setStepsTaken(0);
+		stepsTaken = 0;
 
-		while (this.stepsTaken < stepsToTake)
+		isIdle = relativeAngle == MoveState.IDLE;
+
+		for (int i = 0; i < stepsToTake; i++)
 			step();
+
+	}
+
+	/** Move one step forward. */
+	private void step()
+	{
+		stepsTaken++;
+		if (!isIdle)
+		{
+			setVector2D(getVector2D().getVectorInDirection(ClientActor.STEP_LENGTH, trueAngle));
+		}
 	}
 
 	/**
@@ -173,6 +243,16 @@ public class ClientPlayer extends ClientObject
 	public void setStepsTaken(int stepsTaken)
 	{
 		this.stepsTaken = stepsTaken;
+	}
+
+	/**
+	 * Get whether this player's state was forced during the most recent update.
+	 *
+	 * @return Whether this player's state was forced during the most recent update.
+	 */
+	public boolean isForcedState()
+	{
+		return isForced;
 	}
 
 
@@ -196,5 +276,6 @@ public class ClientPlayer extends ClientObject
 	{
 		this.setVector2D(new Vector2D(x, z));
 	}
+
 
 }

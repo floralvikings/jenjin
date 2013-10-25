@@ -20,8 +20,6 @@ public class ExecutableForceStateMessage extends WorldClientExecutableMessage
 	private double absoluteAngle;
 	/** The time of the start of the server update during which the state was forced. */
 	private long timeOfForce;
-	/** The number of steps the player had taken when they were forced. */
-	private int stepsAtForce;
 
 	/**
 	 * Construct an ExecutableMessage with the given Message.
@@ -40,20 +38,18 @@ public class ExecutableForceStateMessage extends WorldClientExecutableMessage
 		ClientPlayer player = getClient().getPlayer();
 		double timeSinceForce = System.nanoTime() - timeOfForce;
 		double periodInNanos = getClient().getPeriod() * 1000000;
-		double stepsTaken = timeSinceForce / periodInNanos;
+		double exactStepsTaken = timeSinceForce / periodInNanos;
 
-		int intSteps = (int) stepsTaken;
+		int stepsSinceForce = (int) exactStepsTaken;
 		/* The amount of "leftover" steps taken. */
-		double leftovers = stepsTaken - intSteps;
+		double leftovers = exactStepsTaken - stepsSinceForce;
 
 		if (leftovers > 0.5)
 		{
-			intSteps++;
+			stepsSinceForce++;
 		}
 
-		intSteps += stepsAtForce;
-
-		player.forcePosition(vector2D, relativeAngle, absoluteAngle, intSteps);
+		player.forcePosition(vector2D, relativeAngle, absoluteAngle, stepsSinceForce);
 	}
 
 	@Override
@@ -65,6 +61,5 @@ public class ExecutableForceStateMessage extends WorldClientExecutableMessage
 		relativeAngle = (double) getMessage().getArgument("direction");
 		absoluteAngle = (double) getMessage().getArgument("angle");
 		timeOfForce = (long) getMessage().getArgument("timeOfForce");
-		stepsAtForce = (int) getMessage().getArgument("stepsAtForce");
 	}
 }
