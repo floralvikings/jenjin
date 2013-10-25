@@ -67,27 +67,6 @@ public class World
 	}
 
 	/**
-	 * Get the location that contains the specified coordinates.
-	 *
-	 * @param x The x coordinate.
-	 * @param z The z coordinate
-	 *
-	 * @return The location that contains the specified coordinates.
-	 *
-	 * @throws InvalidLocationException If the coordinates supplied point to an invalid location.
-	 */
-	public Location getLocationForCoordinates(double x, double z) throws InvalidLocationException
-	{
-		try
-		{
-			return locationGrid[(int) x / Location.SIZE][(int) z / Location.SIZE];
-		} catch (ArrayIndexOutOfBoundsException ex)
-		{
-			throw new InvalidLocationException(new Vector2D(x, z));
-		}
-	}
-
-	/**
 	 * Get the location from the zone grid that contains the specified vector2D.
 	 *
 	 * @param vector2D The vector2D
@@ -99,6 +78,23 @@ public class World
 	public Location getLocationForCoordinates(Vector2D vector2D) throws InvalidLocationException
 	{
 		return getLocationForCoordinates(vector2D.getXCoordinate(), vector2D.getZCoordinate());
+	}
+
+	/**
+	 * Get the location that contains the specified coordinates.
+	 *
+	 * @param x The x coordinate.
+	 * @param z The z coordinate
+	 *
+	 * @return The location that contains the specified coordinates.
+	 *
+	 * @throws InvalidLocationException If the coordinates supplied point to an invalid location.
+	 */
+	public Location getLocationForCoordinates(double x, double z) throws InvalidLocationException
+	{
+		if (x < 0 || z < 0 || x / Location.SIZE >= SIZE || z / Location.SIZE >= SIZE)
+			throw new InvalidLocationException(new Vector2D(x, z));
+		return locationGrid[(int) x / Location.SIZE][(int) z / Location.SIZE];
 	}
 
 	/** Update all objects in the world. */

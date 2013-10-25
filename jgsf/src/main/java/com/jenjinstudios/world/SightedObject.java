@@ -12,7 +12,7 @@ import java.util.ArrayList;
 public class SightedObject extends WorldObject
 {
 	/** The radius of the square of visible locations. */
-	public static final int VIEW_RADIUS = 4;
+	public static final int VIEW_RADIUS = 2;
 	/** The array of visible locations. */
 	private final ArrayList<Location> visibleLocations;
 	/** The container for visible objects. */

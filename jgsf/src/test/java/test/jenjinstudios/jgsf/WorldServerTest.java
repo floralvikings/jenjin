@@ -7,12 +7,10 @@ import com.jenjinstudios.math.Vector2D;
 import com.jenjinstudios.sql.WorldSQLHandler;
 import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.ClientPlayer;
-import com.jenjinstudios.world.Location;
 import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.state.MoveState;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -57,6 +55,21 @@ public class WorldServerTest
 	}
 
 	/**
+	 * Initialize the world and world server.
+	 *
+	 * @throws Exception If there's an exception.
+	 */
+	private void initWorldServer() throws Exception
+	{
+		worldSQLHandler = new WorldSQLHandler("localhost", "jenjin_test", "jenjin_user", "jenjin_password");
+		world = new World();
+		worldServer = new WorldServer(world);
+		worldServer.setSQLHandler(worldSQLHandler);
+		// FIXME Blocking on login request if SQL handler not set. Bad.
+		worldServer.blockingStart();
+	}
+
+	/**
 	 * Initialize and log the client in.
 	 *
 	 * @throws Exception If there's an exception.
@@ -70,21 +83,6 @@ public class WorldServerTest
 		worldClientHandler = worldServer.getClientHandlerByUsername(worldClient.getUsername());
 		clientPlayer = worldClient.getPlayer();
 		serverPlayer = worldClientHandler.getPlayer();
-	}
-
-	/**
-	 * Initialize the world and world server.
-	 *
-	 * @throws Exception If there's an exception.
-	 */
-	private void initWorldServer() throws Exception
-	{
-		worldSQLHandler = new WorldSQLHandler("localhost", "jenjin_test", "jenjin_user", "jenjin_password");
-		world = new World();
-		worldServer = new WorldServer(world);
-		worldServer.setSQLHandler(worldSQLHandler);
-		// FIXME Blocking on login request if SQL handler not set. Bad.
-		worldServer.blockingStart();
 	}
 
 	/**
@@ -103,21 +101,18 @@ public class WorldServerTest
 	}
 
 	/**
-	 * Run the battery of world tests.
+	 * Move the client player to the given vector.
 	 *
-	 * @throws Exception If there's an exception.
+	 * @param newVector The vector to which to move.
+	 *
+	 * @throws InterruptedException If there's an exception.
 	 */
-	@Test
-	@Ignore
-	public void testMovement() throws Exception
+	private void movePlayerTowardVector(Vector2D newVector) throws InterruptedException
 	{
-		Vector2D randomVector = getRandomVector();
-
-		movePlayerTowardVector(randomVector);
-		assertEquals("Client and Server Coordinates", serverPlayer.getVector2D(), clientPlayer.getVector2D());
-
-		movePlayerToOrigin();
-		assertEquals("Client and Server Coordinates", serverPlayer.getVector2D(), clientPlayer.getVector2D());
+		clientPlayer.setNewRelativeAngle(clientPlayer.getVector2D().getAngleToVector(newVector));
+		while (clientPlayer.getVector2D().getDistanceToVector(newVector) > Actor.STEP_LENGTH) { Thread.sleep(10); }
+		clientPlayer.setNewRelativeAngle(MoveState.IDLE);
+		Thread.sleep(100);
 	}
 
 	/**
@@ -134,45 +129,17 @@ public class WorldServerTest
 	}
 
 	/**
-	 * Move the client player to the given vector.
-	 *
-	 * @param newVector The vector to which to move.
-	 *
-	 * @throws InterruptedException If there's an exception.
-	 */
-	private void movePlayerTowardVector(Vector2D newVector) throws InterruptedException
-	{
-		clientPlayer.setNewRelativeAngle(clientPlayer.getVector2D().getAngleToVector(newVector));
-		while (clientPlayer.getVector2D().getDistanceToVector(newVector) > 10.0) { Thread.sleep(10); }
-		clientPlayer.setNewRelativeAngle(MoveState.IDLE);
-		Thread.sleep(100);
-	}
-
-	/**
-	 * Get a random vector in the world's range.
-	 *
-	 * @return A random Vector2D.
-	 */
-	private Vector2D getRandomVector()
-	{
-		double maxCoords = world.SIZE * Location.SIZE;
-		double randomX = Math.random() * maxCoords;
-		double randomZ = Math.random() * maxCoords;
-		return new Vector2D(randomX, randomZ);
-	}
-
-	/**
 	 * Test the actor visiblity after player and actor movement.
 	 *
 	 * @throws Exception If there's an exception.
 	 */
 	@Test
-	@Ignore
 	public void testActorVisibilty() throws Exception
 	{
+		Vector2D actorOrigin = new Vector2D(21, 21);
 		serverActor = new Actor("TestActor");
-		serverActor.setVector2D(75, 75);
-		int stepsNeeded = (int) (serverActor.getVector2D().getDistanceToVector(new Vector2D(20, 20)) / Actor.STEP_LENGTH) - 1;
+		serverActor.setVector2D(actorOrigin);
+		int stepsNeeded = (int) (serverActor.getVector2D().getDistanceToVector(new Vector2D(10, 10)) / Actor.STEP_LENGTH) - 1;
 		serverActor.addMoveState(new MoveState(MoveState.BACK_RIGHT, 0, 0));
 		serverActor.addMoveState(new MoveState(MoveState.IDLE, stepsNeeded, 0));
 		serverActor.addMoveState(new MoveState(MoveState.FRONT_LEFT, stepsNeeded, 0));
@@ -184,10 +151,10 @@ public class WorldServerTest
 		assertEquals(1, worldClient.getVisibleObjects().size());
 		Thread.sleep(100);
 		assertEquals(serverActor.getVector2D(), worldClient.getVisibleObjects().get(serverActor.getId()).getVector2D());
-		while (!serverActor.getVector2D().equals(new Vector2D(75, 75))) { Thread.sleep(1); }
+		while (!serverActor.getVector2D().equals(actorOrigin)) { Thread.sleep(10); }
 		assertEquals(0, worldClient.getVisibleObjects().size());
 
-		movePlayerTowardVector(new Vector2D(60, 60));
+		movePlayerTowardVector(new Vector2D(11, 11));
 		assertEquals(1, worldClient.getVisibleObjects().size());
 		Thread.sleep(100);
 		assertEquals(serverActor.getVector2D(), worldClient.getVisibleObjects().get(serverActor.getId()).getVector2D());
@@ -202,7 +169,6 @@ public class WorldServerTest
 	 * @throws Exception If there's an exception.
 	 */
 	@Test
-	@Ignore
 	public void testForcedState() throws Exception
 	{
 		clientPlayer.setNewRelativeAngle(MoveState.FRONT);

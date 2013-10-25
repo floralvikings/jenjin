@@ -7,7 +7,6 @@ import com.jenjinstudios.world.WorldObject;
 import com.jenjinstudios.world.state.MoveState;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -39,7 +38,7 @@ public class ActorTest
 	 * @throws Exception If there's an exception.
 	 */
 	@Test
-	@Ignore
+	//@Ignore
 	public void testAddMoveState() throws Exception
 	{
 		Actor actor = new Actor();
@@ -58,7 +57,7 @@ public class ActorTest
 		Assert.assertEquals("State 1 X: ", 0, actor.getVector2D().getXCoordinate(), 0);
 		Assert.assertEquals("State 1 Z: ", 0, actor.getVector2D().getZCoordinate(), 0);
 		updateWorld(10);
-		Assert.assertEquals("State 2 X: ", 50, actor.getVector2D().getXCoordinate(), 0);
+		Assert.assertEquals("State 2 X: ", 2.0, actor.getVector2D().getXCoordinate(), 0);
 		Assert.assertEquals("State 2 Z: ", 0, actor.getVector2D().getZCoordinate(), 0);
 		updateWorld(10);
 		Assert.assertEquals("State 3 X: ", 0, actor.getVector2D().getXCoordinate(), 0);
@@ -67,11 +66,11 @@ public class ActorTest
 		Assert.assertEquals("State 4 X: ", 0, actor.getVector2D().getXCoordinate(), 0);
 		Assert.assertEquals("State 4 Z: ", 0, actor.getVector2D().getZCoordinate(), 0);
 		updateWorld(10);
-		Assert.assertEquals("State 5 X: ", 35.355, actor.getVector2D().getXCoordinate(), 0);
-		Assert.assertEquals("State 5 Z: ", 35.355, actor.getVector2D().getZCoordinate(), 0);
+		Assert.assertEquals("State 5 X: ", 1.414, actor.getVector2D().getXCoordinate(), 0);
+		Assert.assertEquals("State 5 Z: ", 1.414, actor.getVector2D().getZCoordinate(), 0);
 		updateWorld(10);
-		Assert.assertEquals("State 6 X: ", 35.355, actor.getVector2D().getXCoordinate(), 0);
-		Assert.assertEquals("State 6 Z: ", 35.355, actor.getVector2D().getZCoordinate(), 0);
+		Assert.assertEquals("State 6 X: ", 1.414, actor.getVector2D().getXCoordinate(), 0);
+		Assert.assertEquals("State 6 Z: ", 1.414, actor.getVector2D().getZCoordinate(), 0);
 
 		world.removeObject(actor);
 		Assert.assertEquals(0, world.getObjectCount());
@@ -139,11 +138,10 @@ public class ActorTest
 	 * @throws Exception If there's an exception.
 	 */
 	@Test
-	@Ignore
 	public void testForceIdle() throws Exception
 	{
 		Actor player = new Actor("Player");
-		player.setVector2D(20, 0);
+		player.setVector2D(1.0, 0);
 
 		world.addObject(player);
 
@@ -151,8 +149,8 @@ public class ActorTest
 		MoveState stepState = new MoveState(MoveState.BACK, 0, 0);
 		player.addMoveState(stepState);
 
-		updateWorld(7); // position should correct to -5,0
-		Assert.assertEquals(new Vector2D(-5, 0), player.getVector2D());
+		updateWorld(7);
+		Assert.assertEquals(new Vector2D(0, 0), player.getVector2D());
 	}
 
 	/**
