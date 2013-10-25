@@ -189,6 +189,6 @@ public class WorldObject
 
 	public String toString()
 	{
-		return name + ": " + id + " @ " + vector2D;
+		return name + ": " + id + " @ " + vector2D + " in " + location;
 	}
 }

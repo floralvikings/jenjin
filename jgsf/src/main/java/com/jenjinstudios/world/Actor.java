@@ -1,5 +1,6 @@
 package com.jenjinstudios.world;
 
+import com.jenjinstudios.jgsf.WorldServer;
 import com.jenjinstudios.world.state.MoveState;
 
 import java.util.LinkedList;
@@ -27,7 +28,7 @@ import static com.jenjinstudios.world.state.MoveState.IDLE;
 public class Actor extends SightedObject
 {
 	/** The length of each step. */
-	public static final float STEP_LENGTH = 5;
+	public static final double STEP_LENGTH = (double) Location.SIZE / (double) WorldServer.DEFAULT_UPS;
 	/** The maximum number of steps this actor is allowed to correct. */
 	public static final int MAX_CORRECT = 10;
 	/** The logger for this class. */
@@ -134,6 +135,7 @@ public class Actor extends SightedObject
 	/** Reset the move state, direction, and newState flag when changing the move state. */
 	private void resetState()
 	{
+		stepsTaken = 0;
 		currentMoveState = nextState;
 		nextState = nextMoveStates.poll();
 		newState = true;
@@ -143,8 +145,6 @@ public class Actor extends SightedObject
 	/** Stop the actor from correcting more steps than the allowed maximum. */
 	private void stopMaxCorrect()
 	{
-		nextState = null;
-		nextMoveStates.clear();
 		setForcedState(currentMoveState);
 	}
 
@@ -256,9 +256,34 @@ public class Actor extends SightedObject
 	 */
 	public void setForcedState(MoveState forced)
 	{
-		stepBack(currentMoveState.stepAngle);
-		this.currentMoveState = forced;
+		nextMoveStates.clear();
+		nextState = forced;
+		stepBackToValid(currentMoveState.stepAngle);
 		forcedState = true;
+		resetState();
+	}
+
+	/**
+	 * Step the actor back to a valid location.
+	 *
+	 * @param stepAngle The angle the actor is moving.
+	 */
+	private void stepBackToValid(double stepAngle)
+	{
+		stepAngle -= Math.PI;
+		boolean isValid = false;
+		int stepsToTake = 1;
+		while (!isValid)
+		{
+			try
+			{
+				setVector2D(getVector2D().getVectorInDirection(STEP_LENGTH * stepsToTake, stepAngle));
+				isValid = true;
+			} catch (InvalidLocationException ex)
+			{
+				stepsToTake++;
+			}
+		}
 	}
 
 	/**

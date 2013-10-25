@@ -129,4 +129,10 @@ public class ClientObject
 	{
 		this.name = name;
 	}
+
+	@Override
+	public String toString()
+	{
+		return name + ": " + id + " @ " + vector2D;
+	}
 }

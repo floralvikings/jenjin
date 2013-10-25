@@ -86,7 +86,6 @@
         <argument type="double" name="angle" />
         <argument type="double" name="xCoordinate" />
         <argument type="double" name="zCoordinate" />
-        <argument type="int" name="stepsAtForce" />
         <argument type="long" name="timeOfForce" />
     </message>
 
@@ -122,6 +121,11 @@
     <message name="PingResponse" id="18">
         <argument type="long" name="requestTimeNanos" />
         <executable language="java" side="client">com.jenjinstudios.jgcf.message.ExecutablePingResponse</executable>
+    </message>
+
+    <message name="ActorStepMessage" id="19">
+        <argument type="double" name="stepLength" />
+        <executable language="java" side="client">com.jenjinstudios.jgcf.message.ExecutableActorStepLengthMessage</executable>
     </message>
 
 </base_messages>
