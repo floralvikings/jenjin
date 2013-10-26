@@ -2,7 +2,9 @@ package com.jenjinstudios.sql;
 
 import com.jenjinstudios.util.Hash;
 
-import java.sql.*;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -16,29 +18,13 @@ import static java.sql.ResultSet.TYPE_SCROLL_SENSITIVE;
  * @author Caleb Brinkman
  */
 @SuppressWarnings("SameParameterValue")
-public class SQLHandler
+public class SQLHandler extends SQLConnector
 {
 
 	/** The name of the column in the user table specifying whether the user is currently logged in. */
 	public static final String LOGGED_IN_COLUMN = "loggedin";
 	/** The Logger used for this class. */
 	private static final Logger LOGGER = Logger.getLogger(SQLHandler.class.getName());
-	/** The String used in connection protocol. */
-	private static final String connectionStringProtocol = "jdbc:mysql:thin://";
-	/** The username used to access the database. */
-	private final String dbUsername;
-	/** The password used to access the database. */
-	private final String dbPassword;
-	/** The name of the database used by this server. */
-	protected final String dbName;
-	/** The url used to connect with the SQL database. */
-	private final String dbUrl;
-	/** The string used to get all information about the user. */
-	private final String USER_QUERY;
-	/** Flags whether this SQLHandler is connected to the database. */
-	private boolean connected;
-	/** The connection used to communicate with the SQL database. */
-	protected Connection dbConnection;
 
 	/**
 	 * Create a new SQLHandler with the given database information, and connect to the database.
@@ -52,21 +38,7 @@ public class SQLHandler
 	 */
 	public SQLHandler(String dbAddress, String dbName, String dbUsername, String dbPassword) throws SQLException
 	{
-		/* The address of the database to which to connect. */
-		this.dbUsername = dbUsername;
-		this.dbPassword = dbPassword;
-		this.dbName = dbName;
-		dbUrl = connectionStringProtocol + dbAddress + "/" + dbName;
-		try
-		{
-			Class.forName("org.drizzle.jdbc.DrizzleDriver").newInstance();
-		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e)
-		{
-			LOGGER.log(Level.SEVERE, "Unable to register Drizzle driver!");
-		}
-		USER_QUERY = "SELECT * FROM " + dbName + ".users WHERE username = ?";
-
-		connectToDatabase();
+		super(dbAddress, dbName, dbUsername, dbPassword);
 	}
 
 	/**
@@ -85,7 +57,7 @@ public class SQLHandler
 	public synchronized boolean logInUser(String username, String password)
 	{
 		boolean success = false;
-		if (!connected)
+		if (!isConnected())
 			return success;
 		try
 		{
@@ -125,7 +97,7 @@ public class SQLHandler
 	public synchronized boolean logOutUser(String username)
 	{
 		boolean success = false;
-		if (!connected)
+		if (!isConnected())
 			return success;
 		try
 		{
@@ -147,28 +119,6 @@ public class SQLHandler
 		return success;
 	}
 
-
-	/**
-	 * Attempt to connect to the database.
-	 *
-	 * @throws SQLException If there is an error connecting to the SQL database.
-	 */
-	private void connectToDatabase() throws SQLException
-	{
-		dbConnection = DriverManager.getConnection(dbUrl, dbUsername, dbPassword);
-		connected = true;
-	}
-
-	/**
-	 * Get whether this SQLHandler is connected to the database.
-	 *
-	 * @return true if the SQLHandler has successfully connected to the database.
-	 */
-	public boolean isConnected()
-	{
-		return connected;
-	}
-
 	/**
 	 * Query the database for user info.
 	 *
@@ -180,7 +130,7 @@ public class SQLHandler
 	 */
 	protected ResultSet makeUserQuery(String username) throws SQLException
 	{
-		PreparedStatement statement = dbConnection.prepareStatement(USER_QUERY, TYPE_SCROLL_SENSITIVE, CONCUR_UPDATABLE);
+		PreparedStatement statement = getDbConnection().prepareStatement(getUserQuery(), TYPE_SCROLL_SENSITIVE, CONCUR_UPDATABLE);
 		statement.setString(1, username);
 		return statement.executeQuery();
 	}
@@ -199,7 +149,7 @@ public class SQLHandler
 		String updateLoggedInQuery = "UPDATE " + dbName + ".users SET " + LOGGED_IN_COLUMN + "=" + newValue + " WHERE " +
 				"username = ?";
 		PreparedStatement updateLoggedin;
-		updateLoggedin = dbConnection.prepareStatement(updateLoggedInQuery);
+		updateLoggedin = getDbConnection().prepareStatement(updateLoggedInQuery);
 		updateLoggedin.setString(1, username);
 		updateLoggedin.executeUpdate();
 		updateLoggedin.close();

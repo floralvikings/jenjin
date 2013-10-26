@@ -32,6 +32,7 @@ public class WorldSQLHandler extends SQLHandler
 	 * @param dbName     The name of the database.
 	 * @param dbUsername The username used to access the database.
 	 * @param dbPassword The password used to access the database
+	 *
 	 * @throws java.sql.SQLException If there is an issue connecting to the database.
 	 */
 	public WorldSQLHandler(String dbAddress, String dbName, String dbUsername, String dbPassword) throws SQLException
@@ -44,6 +45,7 @@ public class WorldSQLHandler extends SQLHandler
 	 *
 	 * @param username The player's username.
 	 * @param password The player's password.
+	 *
 	 * @return An actor pre-filled with the players information.
 	 */
 	public synchronized Actor logInPlayer(String username, String password)
@@ -85,6 +87,7 @@ public class WorldSQLHandler extends SQLHandler
 	 * Log a player out of the world, storing their coordinates in the database.
 	 *
 	 * @param actor The actor to be logged out of the world.
+	 *
 	 * @return Whether the actor was successfully logged out.
 	 */
 	public boolean logOutPlayer(Actor actor)
@@ -119,6 +122,7 @@ public class WorldSQLHandler extends SQLHandler
 	 * Update the coordinates of the given actor in the database.
 	 *
 	 * @param player The player to update.
+	 *
 	 * @throws SQLException If there's a SQL exception.
 	 */
 	public void updatePlayer(Actor player) throws SQLException
@@ -130,7 +134,7 @@ public class WorldSQLHandler extends SQLHandler
 		String updateLoggedInQuery = "UPDATE " + dbName + ".users SET " + X_COORD + "=" + xCoord + ", " + Z_COORD +
 				"=" + zCoord + " WHERE " + "username = ?";
 		PreparedStatement updatePlayerStatement;
-		updatePlayerStatement = super.dbConnection.prepareStatement(updateLoggedInQuery);
+		updatePlayerStatement = getDbConnection().prepareStatement(updateLoggedInQuery);
 		updatePlayerStatement.setString(1, username);
 		updatePlayerStatement.executeUpdate();
 		updatePlayerStatement.close();
