@@ -19,6 +19,8 @@ public class Server<T extends ClientHandler> extends Thread
 {
 	/** The logger used by this class. */
 	static final Logger LOGGER = Logger.getLogger(Server.class.getName());
+	/** The maximum number of allowed clients per server. */
+	public static final int MAX_CLIENTS = 1000;
 	/** The updates per second. */
 	public final int UPS;
 	/** The period of the update in milliseconds. */
@@ -56,7 +58,7 @@ public class Server<T extends ClientHandler> extends Thread
 		clientsByUsername = new TreeMap<>();
 		clientListeners = new LinkedList<>();
 		clientHandlers = new ArrayList<>();
-		for (int i = 0; i < 1000; i++)
+		for (int i = 0; i < MAX_CLIENTS; i++)
 			clientHandlers.add(null);
 		numClients = 0;
 		MessageRegistry.registerXmlMessages();
