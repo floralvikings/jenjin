@@ -1,10 +1,8 @@
 package com.jenjinstudios.jgsf;
 
 import com.jenjinstudios.message.MessageRegistry;
-import com.jenjinstudios.sql.SQLHandler;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Timer;
@@ -13,15 +11,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * The base Server class for implementation of the JGSA.  It contains extensible execution functionality designed to be
- * used by Executable Messages from ClientHandlers.
+ * The base SqlEnabledServer class for implementation of the JGSA.  It contains extensible execution functionality
+ * designed to be used by Executable Messages from ClientHandlers.
  *
  * @author Caleb Brinkman
  */
-@SuppressWarnings("SameParameterValue")
 public class Server<T extends ClientHandler> extends Thread
 {
-
 	/** The logger used by this class. */
 	static final Logger LOGGER = Logger.getLogger(Server.class.getName());
 	/** The updates per second. */
@@ -40,34 +36,30 @@ public class Server<T extends ClientHandler> extends Thread
 	private final LinkedList<Runnable> repeatedTasks;
 	/** Synced tasks scheduled by client handlers. */
 	private final LinkedList<Runnable> syncedTasks;
+	/** The maximum number of clients allowed to connect. */
+	private int maxClients = 100;
+	/** The current number of connected clients. */
+	private int numClients;
 	/** The class for ClientHandlers. */
 	private final Class<? extends T> handlerClass;
-	/** The SQLHandler used by this Server. */
-	private SQLHandler sqlHandler;
 	/** The timer that controls the server loop. */
 	private Timer loopTimer;
 	/** The server loop. */
 	private ServerLoop serverLoop;
 	/** Indicates whether this server is initialized. */
 	private volatile boolean initialized;
-	/** The current number of connected clients. */
-	private int numClients;
-	/** flags whether the server has connected to the database. */
-	private boolean connectedToDB;
-	/** The maximum number of clients allowed to connect. */
-	private int maxClients = 100;
 
 	/**
-	 * Construct a new Server without a SQLHandler.
+	 * Construct a new SqlEnabledServer without a SQLHandler.
 	 *
 	 * @param ups          The cycles per second at which this server will run.
 	 * @param port         The port number on which this server will listen.
-	 * @param handlerClass The class of ClientHandler used by this Server.
+	 * @param handlerClass The class of ClientHandler used by this SqlEnabledServer.
 	 */
 	public Server(int ups, int port, Class<? extends T> handlerClass)
 	{
 		super("Server");
-		LOGGER.log(Level.FINE, "Initializing Server.");
+		LOGGER.log(Level.FINE, "Initializing SqlEnabledServer.");
 		UPS = ups;
 		PORT = port;
 		PERIOD = 1000 / ups;
@@ -79,7 +71,6 @@ public class Server<T extends ClientHandler> extends Thread
 			clientHandlers.add(null);
 		repeatedTasks = new LinkedList<>();
 		syncedTasks = new LinkedList<>();
-		sqlHandler = null;
 		numClients = 0;
 		MessageRegistry.registerXmlMessages();
 		addListener();
@@ -96,30 +87,6 @@ public class Server<T extends ClientHandler> extends Thread
 		{
 			LOGGER.log(Level.SEVERE, "Error adding client listener", e);
 		}
-	}
-
-	/**
-	 * Set the SQLHandler for this server.
-	 *
-	 * @param handler The SQLHandler to be used by this server
-	 *
-	 * @throws SQLException If the SQLHandler has already been set for this server.
-	 */
-	public void setSQLHandler(SQLHandler handler) throws SQLException
-	{
-		if (sqlHandler != null) throw new SQLException("SQL Handler already set.");
-		sqlHandler = handler;
-		connectedToDB = true;
-	}
-
-	/**
-	 * Get the start time, in nanoseconds, of the current update cycle.
-	 *
-	 * @return The cycle start time.
-	 */
-	public long getCycleStartTime()
-	{
-		return serverLoop != null ? serverLoop.getCycleStart() : -1;
 	}
 
 	/**
@@ -161,6 +128,16 @@ public class Server<T extends ClientHandler> extends Thread
 			}
 		}
 		return clientsAdded;
+	}
+
+	/**
+	 * Get the start time, in nanoseconds, of the current update cycle.
+	 *
+	 * @return The cycle start time.
+	 */
+	public long getCycleStartTime()
+	{
+		return serverLoop != null ? serverLoop.getCycleStart() : -1;
 	}
 
 	/**
@@ -252,7 +229,7 @@ public class Server<T extends ClientHandler> extends Thread
 	{
 		if (clientListeners.isEmpty())
 		{
-			Logger.getLogger(Server.class.getName()).log(Level.INFO, "Executing server without "
+			Logger.getLogger(SqlEnabledServer.class.getName()).log(Level.INFO, "Executing server without "
 					+ "any active client listeners.");
 		}
 
@@ -264,7 +241,7 @@ public class Server<T extends ClientHandler> extends Thread
 		serverLoop = new ServerLoop(this);
 
 		/* The name of the timer that is looping the server thread. */
-		String timerName = "Server Update Loop";
+		String timerName = "SqlEnabledServer Update Loop";
 		loopTimer = new Timer(timerName, false);
 		loopTimer.scheduleAtFixedRate(serverLoop, 0, PERIOD);
 
@@ -308,16 +285,6 @@ public class Server<T extends ClientHandler> extends Thread
 		}
 		if (loopTimer != null)
 			loopTimer.cancel();
-	}
-
-	/**
-	 * The SQLHandler used by this Server.
-	 *
-	 * @return The SQLHandler used by this Server.
-	 */
-	public SQLHandler getSqlHandler()
-	{
-		return sqlHandler;
 	}
 
 	/**
@@ -372,16 +339,6 @@ public class Server<T extends ClientHandler> extends Thread
 	public double getAverageUPS()
 	{
 		return serverLoop.getAverageUPS();
-	}
-
-	/**
-	 * flags whether the server has connected to the database.
-	 *
-	 * @return true if the server is connected to the databse.
-	 */
-	public boolean isConnectedToDB()
-	{
-		return connectedToDB;
 	}
 
 	/**

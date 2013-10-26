@@ -10,7 +10,8 @@ import static java.sql.ResultSet.CONCUR_UPDATABLE;
 import static java.sql.ResultSet.TYPE_SCROLL_SENSITIVE;
 
 /**
- * The SQLHandler class is responsible for connecting to and querying the SQL database associated with a given Server.
+ * The SQLHandler class is responsible for connecting to and querying the SQL database associated with a given
+ * SqlEnabledServer.
  *
  * @author Caleb Brinkman
  */
@@ -46,6 +47,7 @@ public class SQLHandler
 	 * @param dbName     The name of the database.
 	 * @param dbUsername The username used to access the database.
 	 * @param dbPassword The password used to access the database
+	 *
 	 * @throws SQLException If there is an issue connecting to the database.
 	 */
 	public SQLHandler(String dbAddress, String dbName, String dbUsername, String dbPassword) throws SQLException
@@ -68,16 +70,17 @@ public class SQLHandler
 	}
 
 	/**
-	 * Attempt to log the given user with the given password into the database.  This method does not perform any sort
-	 * of hashing or encryption on the password.  If the user is already logged in this method will return false.
+	 * Attempt to log the given user with the given password into the database.  This method does not perform any sort of
+	 * hashing or encryption on the password.  If the user is already logged in this method will return false.
 	 * <p/>
-	 * This method should be overwritten by implementations, or called from super if they still wish to use the
-	 * "loggedIn" column.
+	 * This method should be overwritten by implementations, or called from super if they still wish to use the "loggedIn"
+	 * column.
 	 *
 	 * @param username The username of the user to be logged in.
 	 * @param password The password of the user to be logged in.
-	 * @return true if the user was logged in successfully, false if the user was already logged in or the update
-	 *         to the database failed.
+	 *
+	 * @return true if the user was logged in successfully, false if the user was already logged in or the update to the
+	 *         database failed.
 	 */
 	public synchronized boolean logInUser(String username, String password)
 	{
@@ -111,13 +114,13 @@ public class SQLHandler
 	}
 
 	/**
-	 * Attempt to log out the given user with the given password into the database.  This method does not perform any
-	 * sort
+	 * Attempt to log out the given user with the given password into the database.  This method does not perform any sort
 	 * of hashing or encryption on the password.  If the user is already logged in this method will return false.
 	 *
 	 * @param username The username of the user to be logged out.
-	 * @return true if the user was logged out successfully, false if the user was already logged out or the update
-	 *         to the database failed.
+	 *
+	 * @return true if the user was logged out successfully, false if the user was already logged out or the update to the
+	 *         database failed.
 	 */
 	public synchronized boolean logOutUser(String username)
 	{
@@ -170,7 +173,9 @@ public class SQLHandler
 	 * Query the database for user info.
 	 *
 	 * @param username The username of the user we're looking for.
+	 *
 	 * @return The ResultSet returned by the query.
+	 *
 	 * @throws SQLException If there is a SQL error.
 	 */
 	protected ResultSet makeUserQuery(String username) throws SQLException
@@ -185,6 +190,7 @@ public class SQLHandler
 	 *
 	 * @param username The user being queried.
 	 * @param status   The new status of the loggedin column.
+	 *
 	 * @throws SQLException If there is a SQL error.
 	 */
 	protected void updateLoggedinColumn(String username, boolean status) throws SQLException

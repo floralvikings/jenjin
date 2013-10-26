@@ -22,7 +22,7 @@ import static org.junit.Assert.assertEquals;
  */
 public class WorldServerTest
 {
-	// Server fields
+	// SqlEnabledServer fields
 	/** The world server used to test. */
 	private WorldServer worldServer;
 	/** The world SQL handler used to test. */
@@ -63,8 +63,7 @@ public class WorldServerTest
 	{
 		worldSQLHandler = new WorldSQLHandler("localhost", "jenjin_test", "jenjin_user", "jenjin_password");
 		world = new World();
-		worldServer = new WorldServer(world);
-		worldServer.setSQLHandler(worldSQLHandler);
+		worldServer = new WorldServer(world, worldSQLHandler);
 		// FIXME Blocking on login request if SQL handler not set. Bad.
 		worldServer.blockingStart();
 	}

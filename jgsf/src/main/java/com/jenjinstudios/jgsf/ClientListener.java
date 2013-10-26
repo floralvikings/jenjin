@@ -11,7 +11,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Listens for incoming client connections on behalf of a Server.
+ * Listens for incoming client connections on behalf of a SqlEnabledServer.
  *
  * @author Caleb Brinkman
  */
@@ -38,6 +38,7 @@ class ClientListener<T extends ClientHandler> implements Runnable
 	 * @param s            The server for which this listener will listen.
 	 * @param p            The port on which to listen.
 	 * @param handlerClass The class of the ClientHandler to be used by this server.
+	 *
 	 * @throws IOException If there is an error listening on the port.
 	 */
 	public ClientListener(Server s, int p, Class<T> handlerClass) throws IOException
@@ -71,7 +72,7 @@ class ClientListener<T extends ClientHandler> implements Runnable
 		{
 			if (newClientHandlers.isEmpty())
 				return temp;
-			Server.LOGGER.log(Level.FINE, newClientHandlers.peek().toString());
+			SqlEnabledServer.LOGGER.log(Level.FINE, newClientHandlers.peek().toString());
 			temp = new LinkedList<>(newClientHandlers);
 			newClientHandlers.removeAll(temp);
 		}
@@ -143,7 +144,7 @@ class ClientListener<T extends ClientHandler> implements Runnable
 				// Socket is closed, no worries.  Just means we stopped listening =P
 			} catch (IOException e)
 			{
-				Server.LOGGER.log(Level.WARNING, "Error", e);
+				SqlEnabledServer.LOGGER.log(Level.WARNING, "Error", e);
 			}
 		}
 	}
