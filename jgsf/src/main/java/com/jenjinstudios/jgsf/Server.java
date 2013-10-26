@@ -5,7 +5,6 @@ import com.jenjinstudios.message.MessageRegistry;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.Timer;
 import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -32,20 +31,10 @@ public class Server<T extends ClientHandler> extends Thread
 	private final ArrayList<T> clientHandlers;
 	/** The map of clients stored by username. */
 	private final TreeMap<String, T> clientsByUsername;
-	/** Tasks to be repeated in the main loop. */
-	private final LinkedList<Runnable> repeatedTasks;
-	/** Synced tasks scheduled by client handlers. */
-	private final LinkedList<Runnable> syncedTasks;
-	/** The maximum number of clients allowed to connect. */
-	private int maxClients = 100;
-	/** The current number of connected clients. */
-	private int numClients;
 	/** The class for ClientHandlers. */
 	private final Class<? extends T> handlerClass;
-	/** The timer that controls the server loop. */
-	private Timer loopTimer;
-	/** The server loop. */
-	private ServerLoop serverLoop;
+	/** The current number of connected clients. */
+	private int numClients;
 	/** Indicates whether this server is initialized. */
 	private volatile boolean initialized;
 
@@ -67,10 +56,8 @@ public class Server<T extends ClientHandler> extends Thread
 		clientsByUsername = new TreeMap<>();
 		clientListeners = new LinkedList<>();
 		clientHandlers = new ArrayList<>();
-		for (int i = 0; i < maxClients; i++)
+		for (int i = 0; i < 1000; i++)
 			clientHandlers.add(null);
-		repeatedTasks = new LinkedList<>();
-		syncedTasks = new LinkedList<>();
 		numClients = 0;
 		MessageRegistry.registerXmlMessages();
 		addListener();
@@ -131,16 +118,6 @@ public class Server<T extends ClientHandler> extends Thread
 	}
 
 	/**
-	 * Get the start time, in nanoseconds, of the current update cycle.
-	 *
-	 * @return The cycle start time.
-	 */
-	public long getCycleStartTime()
-	{
-		return serverLoop != null ? serverLoop.getCycleStart() : -1;
-	}
-
-	/**
 	 * Get the list of client handlers.
 	 *
 	 * @return The list of client handlers.
@@ -148,33 +125,6 @@ public class Server<T extends ClientHandler> extends Thread
 	public ArrayList<T> getClientHandlers()
 	{
 		return clientHandlers;
-	}
-
-	/**
-	 * Add a task to be repeated every update.
-	 *
-	 * @param r The {@code Runnable} containing the task to be repeated.
-	 */
-	@SuppressWarnings("unused")
-	public void addRepeatedTask(Runnable r)
-	{
-		synchronized (repeatedTasks)
-		{
-			repeatedTasks.add(r);
-		}
-	}
-
-	/**
-	 * Add an ExecutableMessage to the synced tasks list.
-	 *
-	 * @param r The {@code ExecutableMessage} to add.
-	 */
-	public void addSyncedTask(Runnable r)
-	{
-		synchronized (syncedTasks)
-		{
-			syncedTasks.add(r);
-		}
 	}
 
 	/**
@@ -204,7 +154,6 @@ public class Server<T extends ClientHandler> extends Thread
 				if (current != null)
 				{
 					current.update();
-					syncedTasks.addAll(current.getSyncedTasks());
 				}
 			}
 		}
@@ -225,25 +174,17 @@ public class Server<T extends ClientHandler> extends Thread
 
 	/** Run the server. */
 	@Override
-	public final void run()
+	public void run()
 	{
 		if (clientListeners.isEmpty())
 		{
 			Logger.getLogger(SqlEnabledServer.class.getName()).log(Level.INFO, "Executing server without "
 					+ "any active client listeners.");
 		}
-
 		for (ClientListener<T> listener : clientListeners)
 		{
 			listener.listen();
 		}
-
-		serverLoop = new ServerLoop(this);
-
-		/* The name of the timer that is looping the server thread. */
-		String timerName = "SqlEnabledServer Update Loop";
-		loopTimer = new Timer(timerName, false);
-		loopTimer.scheduleAtFixedRate(serverLoop, 0, PERIOD);
 
 		initialized = true;
 	}
@@ -283,8 +224,7 @@ public class Server<T extends ClientHandler> extends Thread
 				l.stopListening();
 			}
 		}
-		if (loopTimer != null)
-			loopTimer.cancel();
+
 	}
 
 	/**
@@ -329,64 +269,5 @@ public class Server<T extends ClientHandler> extends Thread
 	public int getNumClients()
 	{
 		return numClients;
-	}
-
-	/**
-	 * The actual average UPS of this server.
-	 *
-	 * @return The average UPS of this server
-	 */
-	public double getAverageUPS()
-	{
-		return serverLoop.getAverageUPS();
-	}
-
-	/**
-	 * Tasks to be repeated in the main loop.
-	 *
-	 * @return The list of repeated tasks to be executed by this server.
-	 */
-	LinkedList<Runnable> getRepeatedTasks()
-	{
-		return repeatedTasks;
-	}
-
-	/**
-	 * Synced tasks scheduled by client handlers.
-	 *
-	 * @return The list of syncrhonized tasks scheduled by ClientHandlers.
-	 */
-	LinkedList<Runnable> getSyncedTasks()
-	{
-		return syncedTasks;
-	}
-
-	/**
-	 * Get the maximum number of clients allowed to connect to this server.
-	 *
-	 * @return The maximum number of clients allowed to connect to this server.
-	 */
-	public int getMaxClients()
-	{
-		return maxClients;
-	}
-
-	/**
-	 * Set the maximum number of clients allowed to connect to this server.
-	 *
-	 * @param maxClients The new maximum number of clients alowed to connect to this server.
-	 */
-	public void setMaxClients(int maxClients)
-	{
-		int diff = maxClients - this.maxClients;
-		if (diff < 0 && !clientHandlers.isEmpty())
-			throw new IndexOutOfBoundsException("Cannot make client array smaller.");
-		synchronized (clientHandlers)
-		{
-			for (int i = 0; i < Math.abs(diff); i++)
-				if (diff >= 0) clientHandlers.add(null);
-				else clientHandlers.remove(0);
-		}
-		this.maxClients = maxClients;
 	}
 }

@@ -11,7 +11,7 @@ import java.util.logging.Logger;
  * @author Caleb Brinkman
  */
 @SuppressWarnings("SameParameterValue")
-public class SqlEnabledServer<T extends ClientHandler> extends Server<T>
+public class SqlEnabledServer<T extends ClientHandler> extends TaskedServer<T>
 {
 
 	/** The logger used by this class. */
@@ -22,7 +22,7 @@ public class SqlEnabledServer<T extends ClientHandler> extends Server<T>
 	private boolean connectedToDB;
 
 	/**
-	 * Construct a new SqlEnabledServer without a SQLHandler.
+	 * Construct a new SqlEnabledServer.
 	 *
 	 * @param ups          The cycles per second at which this server will run.
 	 * @param port         The port number on which this server will listen.
