@@ -148,7 +148,7 @@ public class ClientActor extends ClientObject
 	{
 		currentMoveState = nextState;
 		nextState = nextMoveStates.poll();
-		setDirection(currentMoveState.moveAngle);
+		setDirection(currentMoveState.absoluteAngle);
 	}
 
 	/**

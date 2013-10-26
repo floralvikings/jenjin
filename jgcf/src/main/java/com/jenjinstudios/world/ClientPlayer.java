@@ -68,7 +68,7 @@ public class ClientPlayer extends ClientObject
 	 */
 	private void setAbsoluteAngle(double absoluteAngle)
 	{
-		if (forcedState != null && absoluteAngle == forcedState.moveAngle)
+		if (forcedState != null && absoluteAngle == forcedState.absoluteAngle)
 			return;
 		forcedState = null;
 		this.absoluteAngle = absoluteAngle;
