@@ -2,7 +2,7 @@ package com.jenjinstudios.jgcf;
 
 import com.jenjinstudios.jgcf.message.ClientExecutableMessage;
 import com.jenjinstudios.message.Message;
-import com.jenjinstudios.net.Communicator;
+import com.jenjinstudios.net.TaskedCommunicator;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -17,7 +17,7 @@ import java.util.logging.Logger;
  *
  * @author Caleb Brinkman
  */
-public class Client extends Communicator
+public class Client extends TaskedCommunicator
 {
 	/** The logger associated with this class. */
 	private static final Logger LOGGER = Logger.getLogger(Client.class.getName());
