@@ -1,7 +1,6 @@
 package com.jenjinstudios.jgsf;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.Timer;
 
@@ -27,10 +26,8 @@ public class TaskedServer<T extends ClientHandler> extends Server<T>
 	 * @param ups          The cycles per second at which this server will run.
 	 * @param port         The port number on which this server will listen.
 	 * @param handlerClass The class of ClientHandler used by this SqlEnabledServer.
-	 *
-	 * @throws java.sql.SQLException If there's a SQL exception.
 	 */
-	public TaskedServer(int ups, int port, Class<? extends T> handlerClass) throws SQLException
+	public TaskedServer(int ups, int port, Class<? extends T> handlerClass)
 	{
 		super(ups, port, handlerClass);
 		repeatedTasks = new LinkedList<>();

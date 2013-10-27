@@ -2,7 +2,6 @@ package com.jenjinstudios.jgsf;
 
 import com.jenjinstudios.sql.SQLHandler;
 
-import java.sql.SQLException;
 import java.util.logging.Logger;
 
 /**
@@ -26,10 +25,8 @@ public class SqlEnabledServer<T extends ClientHandler> extends TaskedServer<T>
 	 * @param port         The port number on which this server will listen.
 	 * @param handlerClass The class of ClientHandler used by this SqlEnabledServer.
 	 * @param sqlHandler   The SQLHandler to be used by this object.
-	 *
-	 * @throws java.sql.SQLException If there's a SQL exception.
 	 */
-	public SqlEnabledServer(int ups, int port, Class<? extends T> handlerClass, SQLHandler sqlHandler) throws SQLException
+	public SqlEnabledServer(int ups, int port, Class<? extends T> handlerClass, SQLHandler sqlHandler)
 	{
 		super(ups, port, handlerClass);
 		this.sqlHandler = sqlHandler;
