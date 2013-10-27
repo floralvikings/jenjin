@@ -77,17 +77,7 @@ public class TaskedServer<T extends ClientHandler> extends Server<T>
 	@Override
 	public void update()
 	{
-		synchronized (getClientHandlers())
-		{
-			for (ClientHandler current : getClientHandlers())
-			{
-				if (current != null)
-				{
-					current.update();
-					syncedTasks.addAll(current.getSyncedTasks());
-				}
-			}
-		}
+		super.update();
 	}
 
 	@Override

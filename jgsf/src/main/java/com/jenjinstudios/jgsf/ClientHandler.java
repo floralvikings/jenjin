@@ -59,9 +59,12 @@ public class ClientHandler extends TaskedCommunicator
 	}
 
 	/** Update anything that needs to be taken care of before sendAllMessages. */
-	@SuppressWarnings("EmptyMethod")
 	public void update()
 	{
+		for (Runnable r : getSyncedTasks())
+		{
+			server.addSyncedTask(r);
+		}
 	}
 
 	/** Reset anything that needs to be taken care of after sendAllMessages. */
