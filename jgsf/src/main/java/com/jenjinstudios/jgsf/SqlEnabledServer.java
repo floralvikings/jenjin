@@ -34,20 +34,7 @@ public class SqlEnabledServer<T extends ClientHandler> extends TaskedServer<T>
 	public SqlEnabledServer(int ups, int port, Class<? extends T> handlerClass, SQLHandler sqlHandler) throws SQLException
 	{
 		super(ups, port, handlerClass);
-		setSQLHandler(sqlHandler);
-	}
-
-	/**
-	 * Set the SQLHandler for this server.
-	 *
-	 * @param handler The SQLHandler to be used by this server
-	 *
-	 * @throws SQLException If the SQLHandler has already been set for this server.
-	 */
-	protected void setSQLHandler(SQLHandler handler) throws SQLException
-	{
-		if (sqlHandler != null) throw new SQLException("SQL Handler already set.");
-		sqlHandler = handler;
+		this.sqlHandler = sqlHandler;
 		connectedToDB = true;
 	}
 
