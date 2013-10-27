@@ -73,13 +73,6 @@ public class TaskedServer<T extends ClientHandler> extends Server<T>
 		}
 	}
 
-	/** Update all clients before they sendAllMessages. */
-	@Override
-	public void update()
-	{
-		super.update();
-	}
-
 	@Override
 	public void run()
 	{
