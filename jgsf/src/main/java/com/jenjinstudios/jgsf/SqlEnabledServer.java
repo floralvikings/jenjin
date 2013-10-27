@@ -18,8 +18,6 @@ public class SqlEnabledServer<T extends ClientHandler> extends TaskedServer<T>
 	static final Logger LOGGER = Logger.getLogger(SqlEnabledServer.class.getName());
 	/** The SQLHandler used by this SqlEnabledServer. */
 	private SQLHandler sqlHandler;
-	/** flags whether the server has connected to the database. */
-	private boolean connectedToDB;
 
 	/**
 	 * Construct a new SqlEnabledServer.
@@ -35,7 +33,6 @@ public class SqlEnabledServer<T extends ClientHandler> extends TaskedServer<T>
 	{
 		super(ups, port, handlerClass);
 		this.sqlHandler = sqlHandler;
-		connectedToDB = true;
 	}
 
 	/**
@@ -48,13 +45,4 @@ public class SqlEnabledServer<T extends ClientHandler> extends TaskedServer<T>
 		return sqlHandler;
 	}
 
-	/**
-	 * flags whether the server has connected to the database.
-	 *
-	 * @return true if the server is connected to the databse.
-	 */
-	public boolean isConnectedToDB()
-	{
-		return connectedToDB;
-	}
 }

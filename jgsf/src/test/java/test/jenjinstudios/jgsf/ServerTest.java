@@ -47,7 +47,6 @@ public class ServerTest
 		startTime = System.currentTimeMillis();
 
 		assertTrue(server.isInitialized());
-		assertTrue(server.isConnectedToDB());
 	}
 
 	/**
