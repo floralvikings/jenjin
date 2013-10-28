@@ -20,11 +20,11 @@ public class LocationTest
 	public void testProperty() throws Exception
 	{
 		Location loc = new Location(0, 1);
-		Assert.assertTrue(loc.getProperty() == Location.Property.OPEN);
-		loc.setProperty(Location.Property.CLOSED);
-		Assert.assertTrue(loc.getProperty() == Location.Property.CLOSED);
-		loc.setProperty(Location.Property.OPEN);
-		Assert.assertTrue(loc.getProperty() == Location.Property.OPEN);
+		Assert.assertTrue(loc.getProperty() == Location.LocationProperty.OPEN);
+		loc.setProperty(Location.LocationProperty.CLOSED);
+		Assert.assertTrue(loc.getProperty() == Location.LocationProperty.CLOSED);
+		loc.setProperty(Location.LocationProperty.OPEN);
+		Assert.assertTrue(loc.getProperty() == Location.LocationProperty.OPEN);
 	}
 
 	/** Test the coordinate values. */

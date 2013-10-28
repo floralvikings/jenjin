@@ -66,37 +66,6 @@ public class World
 		objectCount--;
 	}
 
-	/**
-	 * Get the location from the zone grid that contains the specified vector2D.
-	 *
-	 * @param vector2D The vector2D
-	 *
-	 * @return The location that contains the specified vector2D.
-	 *
-	 * @throws InvalidLocationException If the coordinates specified indicate an invalid locatoin.
-	 */
-	public Location getLocationForCoordinates(Vector2D vector2D) throws InvalidLocationException
-	{
-		return getLocationForCoordinates(vector2D.getXCoordinate(), vector2D.getZCoordinate());
-	}
-
-	/**
-	 * Get the location that contains the specified coordinates.
-	 *
-	 * @param x The x coordinate.
-	 * @param z The z coordinate
-	 *
-	 * @return The location that contains the specified coordinates.
-	 *
-	 * @throws InvalidLocationException If the coordinates supplied point to an invalid location.
-	 */
-	public Location getLocationForCoordinates(double x, double z) throws InvalidLocationException
-	{
-		if (x < 0 || z < 0 || x / Location.SIZE >= SIZE || z / Location.SIZE >= SIZE)
-			throw new InvalidLocationException(new Vector2D(x, z));
-		return locationGrid[(int) x / Location.SIZE][(int) z / Location.SIZE];
-	}
-
 	/** Update all objects in the world. */
 	public void update()
 	{
@@ -151,4 +120,52 @@ public class World
 	{
 		return objectCount;
 	}
+
+	/**
+	 * Indicate whether the specified vector is in a valid location or not.
+	 *
+	 * @param vector2D The vector to test.
+	 *
+	 * @return Whether the vector lands in a vlid location.
+	 */
+	public boolean isValidLocation(Vector2D vector2D)
+	{
+		int maxCoord = SIZE * Location.SIZE;
+
+		boolean tooSmall = (vector2D.getXCoordinate() < 0) || (vector2D.getZCoordinate() < 0);
+		boolean tooBig = (vector2D.getXCoordinate() >= maxCoord) || (vector2D.getZCoordinate() >= maxCoord);
+
+		return !(tooBig || tooSmall);
+	}
+
+	/**
+	 * Determine whether the location at the specified vector is valid and open.
+	 *
+	 * @param vector2D The vector.
+	 *
+	 * @return Whether the location containing the vector exists and is open.
+	 */
+	public boolean isOpenLocation(Vector2D vector2D)
+	{
+		Location loc = getLocationForCoordinates(vector2D);
+		return (loc != null) && (loc.getProperty() != Location.LocationProperty.CLOSED);
+
+	}
+
+	/**
+	 * Get the location from the zone grid that contains the specified vector2D.
+	 *
+	 * @param vector2D The vector2D
+	 *
+	 * @return The location that contains the specified vector2D.
+	 */
+	public Location getLocationForCoordinates(Vector2D vector2D)
+	{
+		if (!isValidLocation(vector2D))
+			return null;
+		double x = vector2D.getXCoordinate();
+		double z = vector2D.getZCoordinate();
+		return locationGrid[(int) x / Location.SIZE][(int) z / Location.SIZE];
+	}
+
 }
