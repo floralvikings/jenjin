@@ -19,6 +19,8 @@ import java.util.logging.Logger;
 public class Server<T extends ClientHandler> extends Thread
 {
 
+	/** The default number of max clients. */
+	public static final int DEFAULT_MAX_CLIENTS = 100;
 	/** The logger used by this class. */
 	static final Logger LOGGER = Logger.getLogger(Server.class.getName());
 	/** The updates per second. */
@@ -39,8 +41,33 @@ public class Server<T extends ClientHandler> extends Thread
 	private volatile boolean initialized;
 	/** The current number of connected clients. */
 	private int numClients;
-	/** The maximum number of clients allowed to connect. */
-	private int maxClients = 100;
+
+	/**
+	 * Construct a new Server without a SQLHandler.
+	 *
+	 * @param ups          The cycles per second at which this server will run.
+	 * @param port         The port number on which this server will listen.
+	 * @param handlerClass The class of ClientHandler used by this Server.
+	 * @param maxClients   The maximum number of clients.
+	 */
+	public Server(int ups, int port, Class<? extends T> handlerClass, int maxClients)
+	{
+		super("Server");
+		LOGGER.log(Level.FINE, "Initializing Server.");
+		UPS = ups;
+		PORT = port;
+		PERIOD = 1000 / ups;
+		/* The maximum number of clients allowed to connect. */
+		this.handlerClass = handlerClass;
+		clientsByUsername = new TreeMap<>();
+		clientListeners = new LinkedList<>();
+		clientHandlers = new ArrayList<>();
+		for (int i = 0; i < maxClients; i++)
+			clientHandlers.add(null);
+		numClients = 0;
+		MessageRegistry.registerXmlMessages();
+		addListener();
+	}
 
 	/**
 	 * Construct a new Server without a SQLHandler.
@@ -51,20 +78,7 @@ public class Server<T extends ClientHandler> extends Thread
 	 */
 	public Server(int ups, int port, Class<? extends T> handlerClass)
 	{
-		super("Server");
-		LOGGER.log(Level.FINE, "Initializing Server.");
-		UPS = ups;
-		PORT = port;
-		PERIOD = 1000 / ups;
-		this.handlerClass = handlerClass;
-		clientsByUsername = new TreeMap<>();
-		clientListeners = new LinkedList<>();
-		clientHandlers = new ArrayList<>();
-		for (int i = 0; i < maxClients; i++)
-			clientHandlers.add(null);
-		numClients = 0;
-		MessageRegistry.registerXmlMessages();
-		addListener();
+		this(ups, port, handlerClass, DEFAULT_MAX_CLIENTS);
 	}
 
 	/** Start a new Client Listener on the specified port. */
@@ -273,34 +287,5 @@ public class Server<T extends ClientHandler> extends Thread
 	public int getNumClients()
 	{
 		return numClients;
-	}
-
-	/**
-	 * Get the maximum number of clients allowed to connect to this server.
-	 *
-	 * @return The maximum number of clients allowed to connect to this server.
-	 */
-	public int getMaxClients()
-	{
-		return maxClients;
-	}
-
-	/**
-	 * Set the maximum number of clients allowed to connect to this server.
-	 *
-	 * @param maxClients The new maximum number of clients alowed to connect to this server.
-	 */
-	public void setMaxClients(int maxClients)
-	{
-		int diff = maxClients - this.maxClients;
-		if (diff < 0 && !clientHandlers.isEmpty())
-			throw new IndexOutOfBoundsException("Cannot make client array smaller.");
-		synchronized (clientHandlers)
-		{
-			for (int i = 0; i < Math.abs(diff); i++)
-				if (diff >= 0) clientHandlers.add(null);
-				else clientHandlers.remove(0);
-		}
-		this.maxClients = maxClients;
 	}
 }
