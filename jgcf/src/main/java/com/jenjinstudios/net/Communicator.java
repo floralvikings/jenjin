@@ -9,8 +9,6 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * The communicator class is the superclass for any classes that communicate over socket.
@@ -19,10 +17,6 @@ import java.util.logging.Logger;
  */
 public abstract class Communicator extends Thread
 {
-	/** The logger associated with this class. */
-	private static final Logger LOGGER = Logger.getLogger(Communicator.class.getName());
-	/** The "one-shot" tasks to be executed in the current client loop. */
-	private final LinkedList<Runnable> syncedTasks;
 	/** The list of collected ping times. */
 	private final ArrayList<Long> pingTimes;
 	/** The collection of messages to send at the next broadcast. */
@@ -43,7 +37,6 @@ public abstract class Communicator extends Thread
 	/** Cosntruct a new Commuicator. */
 	protected Communicator()
 	{
-		syncedTasks = new LinkedList<>();
 		outgoingMessages = new LinkedList<>();
 		pingTimes = new ArrayList<>();
 	}
@@ -242,19 +235,6 @@ public abstract class Communicator extends Thread
 	public void run()
 	{
 		running = true;
-		// This loop processes incoming messages.
-		try
-		{
-			Message currentMessage;
-			while ((currentMessage = getInputStream().readMessage()) != null)
-				processMessage(currentMessage);
-		} catch (IOException ex)
-		{
-			LOGGER.log(Level.SEVERE, "Error retrieving message from server.", ex);
-		} finally
-		{
-			shutdown();
-		}
 	}
 
 	/** Shutdown this communicator. */
@@ -264,29 +244,11 @@ public abstract class Communicator extends Thread
 	}
 
 	/**
-	 * Process the specified message.  This method should be overridden by any implementing classes, but it does contain
-	 * functionality necessary to communicate with a DownloadServer or a ChatServer.
+	 * Process the specified message.  This method should be overridden by any implementing classes.
 	 *
 	 * @param message The message to be processed.
 	 */
-	protected void processMessage(Message message)
-	{
-		ExecutableMessage exec = getExecutableMessage(message);
-		if (exec != null)
-		{
-			exec.runASync();
-			synchronized (syncedTasks)
-			{
-				syncedTasks.add(exec);
-			}
-		} else
-		{
-			Message invalid = new Message("InvalidMessage");
-			invalid.setArgument("messageName", message.name);
-			invalid.setArgument("messageID", message.getID());
-			queueMessage(invalid);
-		}
-	}
+	protected abstract void processMessage(Message message);
 
 	/**
 	 * Get an executable message for a given message.
@@ -297,21 +259,6 @@ public abstract class Communicator extends Thread
 	 */
 	protected abstract ExecutableMessage getExecutableMessage(Message message);
 
-	/**
-	 * The "one-shot" tasks to be executed in the current client loop.
-	 *
-	 * @return The list of Synced Tasks
-	 */
-	public LinkedList<Runnable> getSyncedTasks()
-	{
-		LinkedList<Runnable> temp = new LinkedList<>();
-		synchronized (syncedTasks)
-		{
-			temp.addAll(syncedTasks);
-			syncedTasks.removeAll(temp);
-		}
-		return temp;
-	}
 
 	/**
 	 * Flags whether the client threads should be running.

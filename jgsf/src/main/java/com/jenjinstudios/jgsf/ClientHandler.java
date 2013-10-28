@@ -3,7 +3,7 @@ package com.jenjinstudios.jgsf;
 import com.jenjinstudios.jgsf.message.ServerExecutableMessage;
 import com.jenjinstudios.message.ExecutableMessage;
 import com.jenjinstudios.message.Message;
-import com.jenjinstudios.net.Communicator;
+import com.jenjinstudios.net.TaskedCommunicator;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -13,7 +13,7 @@ import java.net.Socket;
  *
  * @author Caleb Brinkman
  */
-public class ClientHandler extends Communicator
+public class ClientHandler extends TaskedCommunicator
 {
 	/** The server. */
 	private final Server<? extends ClientHandler> server;
@@ -85,13 +85,16 @@ public class ClientHandler extends Communicator
 	}
 
 	/**
-	 * Flags whether the user is logged in.
+	 * Get an executable message for a given message.
 	 *
-	 * @return true if the user is logged in.
+	 * @param message The message to be used.
+	 *
+	 * @return The ExecutableMessage.
 	 */
-	public boolean isLoggedIn()
+	@Override
+	protected ExecutableMessage getExecutableMessage(Message message)
 	{
-		return loggedIn;
+		return ServerExecutableMessage.getServerExecutableMessageFor(this, message);
 	}
 
 	/**
@@ -102,6 +105,16 @@ public class ClientHandler extends Communicator
 	public Server<? extends ClientHandler> getServer()
 	{
 		return server;
+	}
+
+	/**
+	 * Flags whether the user is logged in.
+	 *
+	 * @return true if the user is logged in.
+	 */
+	public boolean isLoggedIn()
+	{
+		return loggedIn;
 	}
 
 	/**
@@ -127,19 +140,6 @@ public class ClientHandler extends Communicator
 		Message logoutResponse = new Message("LogoutResponse");
 		logoutResponse.setArgument("success", success);
 		queueMessage(logoutResponse);
-	}
-
-	/**
-	 * Get an executable message for a given message.
-	 *
-	 * @param message The message to be used.
-	 *
-	 * @return The ExecutableMessage.
-	 */
-	@Override
-	protected ExecutableMessage getExecutableMessage(Message message)
-	{
-		return ServerExecutableMessage.getServerExecutableMessageFor(this, message);
 	}
 
 	/**
