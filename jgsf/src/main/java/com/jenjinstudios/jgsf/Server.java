@@ -1,10 +1,8 @@
 package com.jenjinstudios.jgsf;
 
 import com.jenjinstudios.message.MessageRegistry;
-import com.jenjinstudios.sql.SQLHandler;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Timer;
@@ -42,8 +40,6 @@ public class Server<T extends ClientHandler> extends Thread
 	private final LinkedList<Runnable> syncedTasks;
 	/** The class for ClientHandlers. */
 	private final Class<? extends T> handlerClass;
-	/** The SQLHandler used by this Server. */
-	private SQLHandler sqlHandler;
 	/** The timer that controls the server loop. */
 	private Timer loopTimer;
 	/** The server loop. */
@@ -52,8 +48,6 @@ public class Server<T extends ClientHandler> extends Thread
 	private volatile boolean initialized;
 	/** The current number of connected clients. */
 	private int numClients;
-	/** flags whether the server has connected to the database. */
-	private boolean connectedToDB;
 	/** The maximum number of clients allowed to connect. */
 	private int maxClients = 100;
 
@@ -79,7 +73,6 @@ public class Server<T extends ClientHandler> extends Thread
 			clientHandlers.add(null);
 		repeatedTasks = new LinkedList<>();
 		syncedTasks = new LinkedList<>();
-		sqlHandler = null;
 		numClients = 0;
 		MessageRegistry.registerXmlMessages();
 		addListener();
@@ -96,20 +89,6 @@ public class Server<T extends ClientHandler> extends Thread
 		{
 			LOGGER.log(Level.SEVERE, "Error adding client listener", e);
 		}
-	}
-
-	/**
-	 * Set the SQLHandler for this server.
-	 *
-	 * @param handler The SQLHandler to be used by this server
-	 *
-	 * @throws SQLException If the SQLHandler has already been set for this server.
-	 */
-	public void setSQLHandler(SQLHandler handler) throws SQLException
-	{
-		if (sqlHandler != null) throw new SQLException("SQL Handler already set.");
-		sqlHandler = handler;
-		connectedToDB = true;
 	}
 
 	/**
@@ -311,16 +290,6 @@ public class Server<T extends ClientHandler> extends Thread
 	}
 
 	/**
-	 * The SQLHandler used by this Server.
-	 *
-	 * @return The SQLHandler used by this Server.
-	 */
-	public SQLHandler getSqlHandler()
-	{
-		return sqlHandler;
-	}
-
-	/**
 	 * Return whether this server is initialized.
 	 *
 	 * @return true if the server has been initialized.
@@ -372,16 +341,6 @@ public class Server<T extends ClientHandler> extends Thread
 	public double getAverageUPS()
 	{
 		return serverLoop.getAverageUPS();
-	}
-
-	/**
-	 * flags whether the server has connected to the database.
-	 *
-	 * @return true if the server is connected to the databse.
-	 */
-	public boolean isConnectedToDB()
-	{
-		return connectedToDB;
 	}
 
 	/**

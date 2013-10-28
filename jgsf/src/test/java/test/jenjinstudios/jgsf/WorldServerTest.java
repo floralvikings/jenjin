@@ -62,9 +62,8 @@ public class WorldServerTest
 	private void initWorldServer() throws Exception
 	{
 		worldSQLHandler = new WorldSQLHandler("localhost", "jenjin_test", "jenjin_user", "jenjin_password");
-		world = new World();
-		worldServer = new WorldServer(world);
-		worldServer.setSQLHandler(worldSQLHandler);
+		worldServer = new WorldServer(worldSQLHandler);
+		world = worldServer.getWorld();
 		// FIXME Blocking on login request if SQL handler not set. Bad.
 		worldServer.blockingStart();
 	}

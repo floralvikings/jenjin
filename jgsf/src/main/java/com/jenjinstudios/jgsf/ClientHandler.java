@@ -16,7 +16,7 @@ import java.net.Socket;
 public class ClientHandler extends TaskedCommunicator
 {
 	/** The server. */
-	private final Server<? extends ClientHandler> server;
+	private final SqlEnabledServer<? extends ClientHandler> server;
 	/** The id of the client handler. */
 	private int handlerId = -1;
 	/** Flags whether the user is logged in. */
@@ -36,7 +36,7 @@ public class ClientHandler extends TaskedCommunicator
 	 *
 	 * @throws IOException If the socket is unable to connect.
 	 */
-	public ClientHandler(Server<? extends ClientHandler> s, Socket sk) throws IOException
+	public ClientHandler(SqlEnabledServer<? extends ClientHandler> s, Socket sk) throws IOException
 	{
 		setName("ClientHandler: " + sk.getInetAddress());
 		server = s;
@@ -102,7 +102,7 @@ public class ClientHandler extends TaskedCommunicator
 	 *
 	 * @return The server for which this client handler works.
 	 */
-	public Server<? extends ClientHandler> getServer()
+	public SqlEnabledServer<? extends ClientHandler> getServer()
 	{
 		return server;
 	}
