@@ -7,7 +7,7 @@ import com.jenjinstudios.sql.SQLHandler;
  *
  * @author Caleb Brinkman
  */
-public class SqlEnabledServer<T extends ClientHandler> extends Server<T>
+public class SqlEnabledServer<T extends ClientHandler> extends TaskedServer<T>
 {
 	/** The SQLHandler used by this Server. */
 	private SQLHandler sqlHandler;

@@ -73,6 +73,8 @@ public class WorldClientHandler extends ClientHandler
 	@Override
 	public void update()
 	{
+		super.update();
+
 		if (actor == null)
 			return;
 

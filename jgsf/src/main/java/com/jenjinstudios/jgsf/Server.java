@@ -5,7 +5,6 @@ import com.jenjinstudios.message.MessageRegistry;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.Timer;
 import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -34,16 +33,8 @@ public class Server<T extends ClientHandler> extends Thread
 	private final ArrayList<T> clientHandlers;
 	/** The map of clients stored by username. */
 	private final TreeMap<String, T> clientsByUsername;
-	/** Tasks to be repeated in the main loop. */
-	private final LinkedList<Runnable> repeatedTasks;
-	/** Synced tasks scheduled by client handlers. */
-	private final LinkedList<Runnable> syncedTasks;
 	/** The class for ClientHandlers. */
 	private final Class<? extends T> handlerClass;
-	/** The timer that controls the server loop. */
-	private Timer loopTimer;
-	/** The server loop. */
-	private ServerLoop serverLoop;
 	/** Indicates whether this server is initialized. */
 	private volatile boolean initialized;
 	/** The current number of connected clients. */
@@ -71,8 +62,6 @@ public class Server<T extends ClientHandler> extends Thread
 		clientHandlers = new ArrayList<>();
 		for (int i = 0; i < maxClients; i++)
 			clientHandlers.add(null);
-		repeatedTasks = new LinkedList<>();
-		syncedTasks = new LinkedList<>();
 		numClients = 0;
 		MessageRegistry.registerXmlMessages();
 		addListener();
@@ -89,16 +78,6 @@ public class Server<T extends ClientHandler> extends Thread
 		{
 			LOGGER.log(Level.SEVERE, "Error adding client listener", e);
 		}
-	}
-
-	/**
-	 * Get the start time, in nanoseconds, of the current update cycle.
-	 *
-	 * @return The cycle start time.
-	 */
-	public long getCycleStartTime()
-	{
-		return serverLoop != null ? serverLoop.getCycleStart() : -1;
 	}
 
 	/**
@@ -153,33 +132,6 @@ public class Server<T extends ClientHandler> extends Thread
 	}
 
 	/**
-	 * Add a task to be repeated every update.
-	 *
-	 * @param r The {@code Runnable} containing the task to be repeated.
-	 */
-	@SuppressWarnings("unused")
-	public void addRepeatedTask(Runnable r)
-	{
-		synchronized (repeatedTasks)
-		{
-			repeatedTasks.add(r);
-		}
-	}
-
-	/**
-	 * Add an ExecutableMessage to the synced tasks list.
-	 *
-	 * @param r The {@code ExecutableMessage} to add.
-	 */
-	public void addSyncedTask(Runnable r)
-	{
-		synchronized (syncedTasks)
-		{
-			syncedTasks.add(r);
-		}
-	}
-
-	/**
 	 * Broadcast all outgoing messages to clients.
 	 *
 	 * @throws java.io.IOException If there's an IO exception.
@@ -206,7 +158,6 @@ public class Server<T extends ClientHandler> extends Thread
 				if (current != null)
 				{
 					current.update();
-					syncedTasks.addAll(current.getSyncedTasks());
 				}
 			}
 		}
@@ -227,7 +178,7 @@ public class Server<T extends ClientHandler> extends Thread
 
 	/** Run the server. */
 	@Override
-	public final void run()
+	public void run()
 	{
 		if (clientListeners.isEmpty())
 		{
@@ -239,13 +190,6 @@ public class Server<T extends ClientHandler> extends Thread
 		{
 			listener.listen();
 		}
-
-		serverLoop = new ServerLoop(this);
-
-		/* The name of the timer that is looping the server thread. */
-		String timerName = "Server Update Loop";
-		loopTimer = new Timer(timerName, false);
-		loopTimer.scheduleAtFixedRate(serverLoop, 0, PERIOD);
 
 		initialized = true;
 	}
@@ -285,8 +229,6 @@ public class Server<T extends ClientHandler> extends Thread
 				l.stopListening();
 			}
 		}
-		if (loopTimer != null)
-			loopTimer.cancel();
 	}
 
 	/**
@@ -331,36 +273,6 @@ public class Server<T extends ClientHandler> extends Thread
 	public int getNumClients()
 	{
 		return numClients;
-	}
-
-	/**
-	 * The actual average UPS of this server.
-	 *
-	 * @return The average UPS of this server
-	 */
-	public double getAverageUPS()
-	{
-		return serverLoop.getAverageUPS();
-	}
-
-	/**
-	 * Tasks to be repeated in the main loop.
-	 *
-	 * @return The list of repeated tasks to be executed by this server.
-	 */
-	LinkedList<Runnable> getRepeatedTasks()
-	{
-		return repeatedTasks;
-	}
-
-	/**
-	 * Synced tasks scheduled by client handlers.
-	 *
-	 * @return The list of syncrhonized tasks scheduled by ClientHandlers.
-	 */
-	LinkedList<Runnable> getSyncedTasks()
-	{
-		return syncedTasks;
 	}
 
 	/**
