@@ -30,7 +30,7 @@ public class Vector2DTest
 		Assert.assertEquals(3, vector2D02.getZCoordinate(), 0);
 	}
 
-	/** Test the direction math methods. */
+	/** Test the relativeAngle math methods. */
 	@Test
 	public void testDirectionMath()
 	{

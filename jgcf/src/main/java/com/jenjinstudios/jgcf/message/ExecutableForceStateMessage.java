@@ -58,8 +58,8 @@ public class ExecutableForceStateMessage extends WorldClientExecutableMessage
 		double x = (double) getMessage().getArgument("xCoordinate");
 		double z = (double) getMessage().getArgument("zCoordinate");
 		vector2D = new Vector2D(x, z);
-		relativeAngle = (double) getMessage().getArgument("direction");
-		absoluteAngle = (double) getMessage().getArgument("angle");
+		relativeAngle = (double) getMessage().getArgument("relativeAngle");
+		absoluteAngle = (double) getMessage().getArgument("absoluteAngle");
 		timeOfForce = (long) getMessage().getArgument("timeOfForce");
 	}
 }

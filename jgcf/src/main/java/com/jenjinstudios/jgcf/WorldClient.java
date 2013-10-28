@@ -202,8 +202,8 @@ public class WorldClient extends AuthClient
 	private Message generateStateChangeRequest(MoveState moveState)
 	{
 		Message stateChangeRequest = new Message("StateChangeRequest");
-		stateChangeRequest.setArgument("direction", moveState.direction);
-		stateChangeRequest.setArgument("angle", moveState.moveAngle);
+		stateChangeRequest.setArgument("relativeAngle", moveState.relativeAngle);
+		stateChangeRequest.setArgument("absoluteAngle", moveState.absoluteAngle);
 		stateChangeRequest.setArgument("stepsUntilChange", moveState.stepsUntilChange);
 		return stateChangeRequest;
 	}

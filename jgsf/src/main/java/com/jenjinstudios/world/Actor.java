@@ -17,11 +17,12 @@ import static com.jenjinstudios.world.state.MoveState.IDLE;
  * been reached, the state switches to that of the first position in the queue, and the Actor's step counter is reset.
  * If an Actor "oversteps," which is determined if the Actor has taken more than the required number of steps to change
  * state, the Actor is moved back by the "overstepped" number of states, the Actor's state is updated, and the Actor
- * then takes the number of extra steps in the correct direction. </p> An Actor's state is considered "changed" when the
- * Actor is facing a new direction or moving in a new direction. An actor's state is considered "forced" when the Actor
- * attempts to make an illegal move, and the world forces the actor to halt.  The actor's forced state will always be
- * facing the angle of the most recently added move state (even if the state causes an illegal move) and IDLE. The
- * "steps until change" value is determined from the number of steps that were taken until the state was forced.
+ * then takes the number of extra steps in the correct relativeAngle. </p> An Actor's state is considered "changed" when
+ * the Actor is facing a new relativeAngle or moving in a new relativeAngle. An actor's state is considered "forced"
+ * when the Actor attempts to make an illegal move, and the world forces the actor to halt.  The actor's forced state
+ * will always be facing the angle of the most recently added move state (even if the state causes an illegal move) and
+ * IDLE. The "steps until change" value is determined from the number of steps that were taken until the state was
+ * forced.
  *
  * @author Caleb Brinkman
  */
@@ -132,14 +133,14 @@ public class Actor extends SightedObject
 		correctOverSteps(overStepped, oldState);
 	}
 
-	/** Reset the move state, direction, and newState flag when changing the move state. */
+	/** Reset the move state, relativeAngle, and newState flag when changing the move state. */
 	private void resetState()
 	{
 		stepsTaken = 0;
 		currentMoveState = nextState;
 		nextState = nextMoveStates.poll();
 		newState = true;
-		setDirection(currentMoveState.moveAngle);
+		setDirection(currentMoveState.absoluteAngle);
 	}
 
 	/** Stop the actor from correcting more steps than the allowed maximum. */
@@ -156,7 +157,7 @@ public class Actor extends SightedObject
 	 */
 	private void correctOverSteps(int overstepped, MoveState oldState)
 	{
-		if (oldState.direction != MoveState.IDLE)
+		if (oldState.relativeAngle != MoveState.IDLE)
 		{
 			for (int i = 0; i < overstepped; i++)
 			{
@@ -173,13 +174,13 @@ public class Actor extends SightedObject
 	/** Take a step according to the current move state. */
 	public void stepForward()
 	{
-		if (currentMoveState.direction == IDLE) return;
+		if (currentMoveState.relativeAngle == IDLE) return;
 		try
 		{
 			setVector2D(getVector2D().getVectorInDirection(STEP_LENGTH, currentMoveState.stepAngle));
 		} catch (InvalidLocationException ex)
 		{
-			setForcedState(new MoveState(IDLE, stepsTaken, currentMoveState.moveAngle));
+			setForcedState(new MoveState(IDLE, stepsTaken, currentMoveState.absoluteAngle));
 		}
 	}
 
@@ -210,12 +211,12 @@ public class Actor extends SightedObject
 	{return newState;}
 
 	/**
-	 * Get the direction in which the object is currently facing.
+	 * Get the relativeAngle in which the object is currently facing.
 	 *
-	 * @return The direction in which the object is currently facing.
+	 * @return The relativeAngle in which the object is currently facing.
 	 */
 	public double getMoveAngle()
-	{return currentMoveState.moveAngle;}
+	{return currentMoveState.absoluteAngle;}
 
 	/**
 	 * Get the number of steps taken since the last state change.
@@ -293,6 +294,6 @@ public class Actor extends SightedObject
 	 */
 	public double getMoveDirection()
 	{
-		return currentMoveState.direction;
+		return currentMoveState.relativeAngle;
 	}
 }

@@ -2,7 +2,7 @@ package test.jenjinstudios.jgsf;
 
 import com.jenjinstudios.jgcf.AuthClient;
 import com.jenjinstudios.jgsf.ClientHandler;
-import com.jenjinstudios.jgsf.Server;
+import com.jenjinstudios.jgsf.SqlEnabledServer;
 import com.jenjinstudios.sql.SQLHandler;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -21,7 +21,7 @@ import static org.junit.Assert.*;
 public class ServerTest
 {
 	/** The chat server used for testing. */
-	private static Server<ClientHandler> server;
+	private static SqlEnabledServer<ClientHandler> server;
 	/** This client should login successfully. */
 	private static AuthClient goodClient01;
 	/** This client will have the same credentials as goodClient01. */
@@ -41,14 +41,12 @@ public class ServerTest
 		SQLHandler sqlHandler = new SQLHandler("localhost", "jenjin_test", "jenjin_user",
 				"jenjin_password");
 		assertTrue(sqlHandler.isConnected());
-		server = new Server<>(50, 51019, ClientHandler.class);
-		server.setSQLHandler(sqlHandler);
+		server = new SqlEnabledServer<>(50, 51019, ClientHandler.class, sqlHandler);
 		server.blockingStart();
 
 		startTime = System.currentTimeMillis();
 
 		assertTrue(server.isInitialized());
-		assertTrue(server.isConnectedToDB());
 	}
 
 	/**

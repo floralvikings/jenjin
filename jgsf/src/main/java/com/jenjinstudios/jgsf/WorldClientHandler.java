@@ -73,6 +73,8 @@ public class WorldClientHandler extends ClientHandler
 	@Override
 	public void update()
 	{
+		super.update();
+
 		if (actor == null)
 			return;
 
@@ -128,8 +130,8 @@ public class WorldClientHandler extends ClientHandler
 		newlyVisibleMessage.setArgument("id", newlyVisible.getId());
 		newlyVisibleMessage.setArgument("xCoordinate", newlyVisible.getVector2D().getXCoordinate());
 		newlyVisibleMessage.setArgument("zCoordinate", newlyVisible.getVector2D().getZCoordinate());
-		newlyVisibleMessage.setArgument("direction", newlyVisible.getCurrentMoveState().direction);
-		newlyVisibleMessage.setArgument("angle", newlyVisible.getMoveAngle());
+		newlyVisibleMessage.setArgument("relativeAngle", newlyVisible.getCurrentMoveState().relativeAngle);
+		newlyVisibleMessage.setArgument("absoluteAngle", newlyVisible.getMoveAngle());
 		newlyVisibleMessage.setArgument("stepsTaken", newlyVisible.getStepsTaken());
 		newlyVisibleMessage.setArgument("stepsUntilChange", newlyVisible.getCurrentMoveState().stepsUntilChange);
 		return newlyVisibleMessage;
@@ -202,8 +204,8 @@ public class WorldClientHandler extends ClientHandler
 	{
 		Message newState = new Message("StateChangeMessage");
 		newState.setArgument("id", changedActor.getId());
-		newState.setArgument("direction", changedActor.getCurrentMoveState().direction);
-		newState.setArgument("angle", changedActor.getCurrentMoveState().moveAngle);
+		newState.setArgument("relativeAngle", changedActor.getCurrentMoveState().relativeAngle);
+		newState.setArgument("absoluteAngle", changedActor.getCurrentMoveState().absoluteAngle);
 		newState.setArgument("stepsUntilChange", changedActor.getCurrentMoveState().stepsUntilChange);
 		return newState;
 	}
@@ -229,8 +231,8 @@ public class WorldClientHandler extends ClientHandler
 	private Message generateForcedStateMessage()
 	{
 		Message forcedStateMessage = new Message("ForceStateMessage");
-		forcedStateMessage.setArgument("direction", actor.getMoveDirection());
-		forcedStateMessage.setArgument("angle", actor.getMoveAngle());
+		forcedStateMessage.setArgument("relativeAngle", actor.getMoveDirection());
+		forcedStateMessage.setArgument("absoluteAngle", actor.getMoveAngle());
 		forcedStateMessage.setArgument("xCoordinate", actor.getVector2D().getXCoordinate());
 		forcedStateMessage.setArgument("zCoordinate", actor.getVector2D().getZCoordinate());
 		forcedStateMessage.setArgument("timeOfForce", server.getCycleStartTime());

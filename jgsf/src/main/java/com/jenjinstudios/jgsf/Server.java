@@ -1,29 +1,26 @@
 package com.jenjinstudios.jgsf;
 
 import com.jenjinstudios.message.MessageRegistry;
-import com.jenjinstudios.sql.SQLHandler;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.Timer;
 import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * The base Server class for implementation of the JGSA.  It contains extensible execution functionality designed to be
- * used by Executable Messages from ClientHandlers.
+ * The base SqlEnabledServer class for implementation of the JGSA.  It contains extensible execution functionality
+ * designed to be used by Executable Messages from ClientHandlers.
  *
  * @author Caleb Brinkman
  */
-@SuppressWarnings("SameParameterValue")
 public class Server<T extends ClientHandler> extends Thread
 {
-
 	/** The logger used by this class. */
 	static final Logger LOGGER = Logger.getLogger(Server.class.getName());
+	/** The maximum number of allowed clients per server. */
+	public static final int MAX_CLIENTS = 1000;
 	/** The updates per second. */
 	public final int UPS;
 	/** The period of the update in milliseconds. */
@@ -36,38 +33,24 @@ public class Server<T extends ClientHandler> extends Thread
 	private final ArrayList<T> clientHandlers;
 	/** The map of clients stored by username. */
 	private final TreeMap<String, T> clientsByUsername;
-	/** Tasks to be repeated in the main loop. */
-	private final LinkedList<Runnable> repeatedTasks;
-	/** Synced tasks scheduled by client handlers. */
-	private final LinkedList<Runnable> syncedTasks;
 	/** The class for ClientHandlers. */
 	private final Class<? extends T> handlerClass;
-	/** The SQLHandler used by this Server. */
-	private SQLHandler sqlHandler;
-	/** The timer that controls the server loop. */
-	private Timer loopTimer;
-	/** The server loop. */
-	private ServerLoop serverLoop;
-	/** Indicates whether this server is initialized. */
-	private volatile boolean initialized;
 	/** The current number of connected clients. */
 	private int numClients;
-	/** flags whether the server has connected to the database. */
-	private boolean connectedToDB;
-	/** The maximum number of clients allowed to connect. */
-	private int maxClients = 100;
+	/** Indicates whether this server is initialized. */
+	private volatile boolean initialized;
 
 	/**
-	 * Construct a new Server without a SQLHandler.
+	 * Construct a new SqlEnabledServer without a SQLHandler.
 	 *
 	 * @param ups          The cycles per second at which this server will run.
 	 * @param port         The port number on which this server will listen.
-	 * @param handlerClass The class of ClientHandler used by this Server.
+	 * @param handlerClass The class of ClientHandler used by this SqlEnabledServer.
 	 */
 	public Server(int ups, int port, Class<? extends T> handlerClass)
 	{
 		super("Server");
-		LOGGER.log(Level.FINE, "Initializing Server.");
+		LOGGER.log(Level.FINE, "Initializing SqlEnabledServer.");
 		UPS = ups;
 		PORT = port;
 		PERIOD = 1000 / ups;
@@ -75,11 +58,8 @@ public class Server<T extends ClientHandler> extends Thread
 		clientsByUsername = new TreeMap<>();
 		clientListeners = new LinkedList<>();
 		clientHandlers = new ArrayList<>();
-		for (int i = 0; i < maxClients; i++)
+		for (int i = 0; i < MAX_CLIENTS; i++)
 			clientHandlers.add(null);
-		repeatedTasks = new LinkedList<>();
-		syncedTasks = new LinkedList<>();
-		sqlHandler = null;
 		numClients = 0;
 		MessageRegistry.registerXmlMessages();
 		addListener();
@@ -96,30 +76,6 @@ public class Server<T extends ClientHandler> extends Thread
 		{
 			LOGGER.log(Level.SEVERE, "Error adding client listener", e);
 		}
-	}
-
-	/**
-	 * Set the SQLHandler for this server.
-	 *
-	 * @param handler The SQLHandler to be used by this server
-	 *
-	 * @throws SQLException If the SQLHandler has already been set for this server.
-	 */
-	public void setSQLHandler(SQLHandler handler) throws SQLException
-	{
-		if (sqlHandler != null) throw new SQLException("SQL Handler already set.");
-		sqlHandler = handler;
-		connectedToDB = true;
-	}
-
-	/**
-	 * Get the start time, in nanoseconds, of the current update cycle.
-	 *
-	 * @return The cycle start time.
-	 */
-	public long getCycleStartTime()
-	{
-		return serverLoop != null ? serverLoop.getCycleStart() : -1;
 	}
 
 	/**
@@ -174,33 +130,6 @@ public class Server<T extends ClientHandler> extends Thread
 	}
 
 	/**
-	 * Add a task to be repeated every update.
-	 *
-	 * @param r The {@code Runnable} containing the task to be repeated.
-	 */
-	@SuppressWarnings("unused")
-	public void addRepeatedTask(Runnable r)
-	{
-		synchronized (repeatedTasks)
-		{
-			repeatedTasks.add(r);
-		}
-	}
-
-	/**
-	 * Add an ExecutableMessage to the synced tasks list.
-	 *
-	 * @param r The {@code ExecutableMessage} to add.
-	 */
-	public void addSyncedTask(Runnable r)
-	{
-		synchronized (syncedTasks)
-		{
-			syncedTasks.add(r);
-		}
-	}
-
-	/**
 	 * Broadcast all outgoing messages to clients.
 	 *
 	 * @throws java.io.IOException If there's an IO exception.
@@ -227,7 +156,6 @@ public class Server<T extends ClientHandler> extends Thread
 				if (current != null)
 				{
 					current.update();
-					syncedTasks.addAll(current.getSyncedTasks());
 				}
 			}
 		}
@@ -248,25 +176,17 @@ public class Server<T extends ClientHandler> extends Thread
 
 	/** Run the server. */
 	@Override
-	public final void run()
+	public void run()
 	{
 		if (clientListeners.isEmpty())
 		{
-			Logger.getLogger(Server.class.getName()).log(Level.INFO, "Executing server without "
+			Logger.getLogger(SqlEnabledServer.class.getName()).log(Level.INFO, "Executing server without "
 					+ "any active client listeners.");
 		}
-
 		for (ClientListener<T> listener : clientListeners)
 		{
 			listener.listen();
 		}
-
-		serverLoop = new ServerLoop(this);
-
-		/* The name of the timer that is looping the server thread. */
-		String timerName = "Server Update Loop";
-		loopTimer = new Timer(timerName, false);
-		loopTimer.scheduleAtFixedRate(serverLoop, 0, PERIOD);
 
 		initialized = true;
 	}
@@ -306,18 +226,7 @@ public class Server<T extends ClientHandler> extends Thread
 				l.stopListening();
 			}
 		}
-		if (loopTimer != null)
-			loopTimer.cancel();
-	}
 
-	/**
-	 * The SQLHandler used by this Server.
-	 *
-	 * @return The SQLHandler used by this Server.
-	 */
-	public SQLHandler getSqlHandler()
-	{
-		return sqlHandler;
 	}
 
 	/**
@@ -362,74 +271,5 @@ public class Server<T extends ClientHandler> extends Thread
 	public int getNumClients()
 	{
 		return numClients;
-	}
-
-	/**
-	 * The actual average UPS of this server.
-	 *
-	 * @return The average UPS of this server
-	 */
-	public double getAverageUPS()
-	{
-		return serverLoop.getAverageUPS();
-	}
-
-	/**
-	 * flags whether the server has connected to the database.
-	 *
-	 * @return true if the server is connected to the databse.
-	 */
-	public boolean isConnectedToDB()
-	{
-		return connectedToDB;
-	}
-
-	/**
-	 * Tasks to be repeated in the main loop.
-	 *
-	 * @return The list of repeated tasks to be executed by this server.
-	 */
-	LinkedList<Runnable> getRepeatedTasks()
-	{
-		return repeatedTasks;
-	}
-
-	/**
-	 * Synced tasks scheduled by client handlers.
-	 *
-	 * @return The list of syncrhonized tasks scheduled by ClientHandlers.
-	 */
-	LinkedList<Runnable> getSyncedTasks()
-	{
-		return syncedTasks;
-	}
-
-	/**
-	 * Get the maximum number of clients allowed to connect to this server.
-	 *
-	 * @return The maximum number of clients allowed to connect to this server.
-	 */
-	public int getMaxClients()
-	{
-		return maxClients;
-	}
-
-	/**
-	 * Set the maximum number of clients allowed to connect to this server.
-	 *
-	 * @param maxClients The new maximum number of clients alowed to connect to this server.
-	 */
-	public void setMaxClients(int maxClients)
-	{
-		int diff = maxClients - this.maxClients;
-		if (diff < 0 && !clientHandlers.isEmpty())
-			throw new IndexOutOfBoundsException("Cannot make client array smaller.");
-		synchronized (clientHandlers)
-		{
-			for (int i = 0; i < Math.abs(diff); i++)
-				if (diff >= 0) clientHandlers.add(null);
-				else clientHandlers.remove(0);
-		}
-		this.maxClients = maxClients;
 	}
 }

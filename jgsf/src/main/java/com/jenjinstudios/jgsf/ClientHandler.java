@@ -3,7 +3,7 @@ package com.jenjinstudios.jgsf;
 import com.jenjinstudios.jgsf.message.ServerExecutableMessage;
 import com.jenjinstudios.message.ExecutableMessage;
 import com.jenjinstudios.message.Message;
-import com.jenjinstudios.net.Communicator;
+import com.jenjinstudios.net.TaskedCommunicator;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -13,10 +13,10 @@ import java.net.Socket;
  *
  * @author Caleb Brinkman
  */
-public class ClientHandler extends Communicator
+public class ClientHandler extends TaskedCommunicator
 {
 	/** The server. */
-	private final Server<? extends ClientHandler> server;
+	private final SqlEnabledServer<? extends ClientHandler> server;
 	/** The id of the client handler. */
 	private int handlerId = -1;
 	/** Flags whether the user is logged in. */
@@ -36,7 +36,7 @@ public class ClientHandler extends Communicator
 	 *
 	 * @throws IOException If the socket is unable to connect.
 	 */
-	public ClientHandler(Server<? extends ClientHandler> s, Socket sk) throws IOException
+	public ClientHandler(SqlEnabledServer<? extends ClientHandler> s, Socket sk) throws IOException
 	{
 		setName("ClientHandler: " + sk.getInetAddress());
 		server = s;
@@ -59,9 +59,12 @@ public class ClientHandler extends Communicator
 	}
 
 	/** Update anything that needs to be taken care of before sendAllMessages. */
-	@SuppressWarnings("EmptyMethod")
 	public void update()
 	{
+		for (Runnable r : getSyncedTasks())
+		{
+			server.addSyncedTask(r);
+		}
 	}
 
 	/** Reset anything that needs to be taken care of after sendAllMessages. */
@@ -99,7 +102,7 @@ public class ClientHandler extends Communicator
 	 *
 	 * @return The server for which this client handler works.
 	 */
-	public Server<? extends ClientHandler> getServer()
+	public SqlEnabledServer<? extends ClientHandler> getServer()
 	{
 		return server;
 	}

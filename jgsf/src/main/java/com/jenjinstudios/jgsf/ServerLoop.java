@@ -18,7 +18,7 @@ class ServerLoop extends TimerTask
 	/** The time in nanoseconds of the last 50 update cycles. */
 	private final long[] lastCycles;
 	/** The server for which this loop runs. */
-	private final Server server;
+	private final TaskedServer server;
 	/** The list of synchronized tasks to be executed by the loop. */
 	private final LinkedList<Runnable> syncedTasks;
 	/** The list of repeated tasks to be executed by the loop. */
@@ -36,7 +36,7 @@ class ServerLoop extends TimerTask
 	 * @param server The server for which this server loop works.
 	 */
 	@SuppressWarnings("unchecked")
-	public ServerLoop(Server server)
+	public ServerLoop(TaskedServer server)
 	{
 		this.server = server;
 		syncedTasks = this.server.getSyncedTasks();
