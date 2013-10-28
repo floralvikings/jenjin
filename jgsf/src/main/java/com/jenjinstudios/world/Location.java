@@ -19,7 +19,7 @@ public class Location
 	/** The objects residing in this location. */
 	private final HashSet<WorldObject> objects;
 	/** The property of this location. */
-	private Property property;
+	private LocationProperty property;
 
 	/**
 	 * Construct a new location at the given position in a zone grid.
@@ -31,7 +31,7 @@ public class Location
 	{
 		X_COORDINATE = x;
 		Z_COORDINATE = z;
-		property = Property.OPEN;
+		property = LocationProperty.OPEN;
 		objects = new HashSet<>();
 	}
 
@@ -40,7 +40,7 @@ public class Location
 	 *
 	 * @return The property of this location.
 	 */
-	public Property getProperty()
+	public LocationProperty getProperty()
 	{
 		return property;
 	}
@@ -50,7 +50,7 @@ public class Location
 	 *
 	 * @param property The new property.
 	 */
-	public void setProperty(Property property)
+	public void setProperty(LocationProperty property)
 	{
 		this.property = property;
 	}
@@ -92,7 +92,7 @@ public class Location
 	}
 
 	/** Specifies a property of a location. */
-	public enum Property
+	public enum LocationProperty
 	{
 		/** Specifies that the location is open, and can be entered by objects. */
 		OPEN,
