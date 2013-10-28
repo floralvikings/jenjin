@@ -1,11 +1,10 @@
 package com.jenjinstudios.world;
 
 import com.jenjinstudios.jgsf.WorldServer;
+import com.jenjinstudios.math.Vector2D;
 import com.jenjinstudios.world.state.MoveState;
 
 import java.util.LinkedList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import static com.jenjinstudios.world.state.MoveState.IDLE;
 
@@ -32,8 +31,6 @@ public class Actor extends SightedObject
 	public static final double STEP_LENGTH = (double) Location.SIZE / (double) WorldServer.DEFAULT_UPS;
 	/** The maximum number of steps this actor is allowed to correct. */
 	public static final int MAX_CORRECT = 10;
-	/** The logger for this class. */
-	private static final Logger LOGGER = Logger.getLogger(Actor.class.getName());
 	/** The next move. */
 	private final LinkedList<MoveState> nextMoveStates;
 	/** The current move. */
@@ -175,10 +172,11 @@ public class Actor extends SightedObject
 	public void stepForward()
 	{
 		if (currentMoveState.relativeAngle == IDLE) return;
-		try
+		Vector2D validVector = getVector2D().getVectorInDirection(STEP_LENGTH, currentMoveState.stepAngle);
+		if (getWorld().isOpenLocation(validVector))
 		{
-			setVector2D(getVector2D().getVectorInDirection(STEP_LENGTH, currentMoveState.stepAngle));
-		} catch (InvalidLocationException ex)
+			setVector2D(validVector);
+		} else
 		{
 			setForcedState(new MoveState(IDLE, stepsTaken, currentMoveState.absoluteAngle));
 		}
@@ -192,14 +190,7 @@ public class Actor extends SightedObject
 	private void stepBack(double stepAngle)
 	{
 		stepAngle -= Math.PI;
-		try
-		{
-			setVector2D(getVector2D().getVectorInDirection(STEP_LENGTH, stepAngle));
-		} catch (InvalidLocationException ex)
-		{
-			// Something very strange is happening if corrected steps lead out of bounds...
-			LOGGER.log(Level.SEVERE, "Error while correcting client steps.", ex);
-		}
+		setVector2D(getVector2D().getVectorInDirection(STEP_LENGTH, stepAngle));
 	}
 
 	/**
@@ -273,18 +264,15 @@ public class Actor extends SightedObject
 	{
 		stepAngle -= Math.PI;
 		boolean isValid = false;
-		int stepsToTake = 1;
-		while (!isValid)
+		int stepsToTake = 0;
+		Vector2D validVector = getVector2D().getVectorInDirection(STEP_LENGTH * MAX_CORRECT, stepAngle);
+		while (!isValid && stepsToTake < MAX_CORRECT)
 		{
-			try
-			{
-				setVector2D(getVector2D().getVectorInDirection(STEP_LENGTH * stepsToTake, stepAngle));
-				isValid = true;
-			} catch (InvalidLocationException ex)
-			{
-				stepsToTake++;
-			}
+			validVector = getVector2D().getVectorInDirection(STEP_LENGTH * stepsToTake, stepAngle);
+			isValid = getWorld().isOpenLocation(validVector);
+			stepsToTake++;
 		}
+		setVector2D(validVector);
 	}
 
 	/**
