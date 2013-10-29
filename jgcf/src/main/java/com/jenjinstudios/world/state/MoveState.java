@@ -31,33 +31,33 @@ public class MoveState
 	public static final double FRONT_LEFT = Math.PI * 0.25;
 	/** The number of steps in the last move. */
 	public final int stepsUntilChange;
-	/** The direction of movement. */
-	public final double direction;
+	/** The relativeAngle of movement. */
+	public final double relativeAngle;
 	/** The angle of movement. */
 	public final double moveAngle;
-	/** The actual angle of movement given the direction and move angle. */
+	/** The actual angle of movement given the relativeAngle and move angle. */
 	public final double stepAngle;
 
 	/**
 	 * Construct a new MoveState.
 	 *
-	 * @param direction        The direction of movement.
+	 * @param relativeAngle    The relativeAngle of movement.
 	 * @param stepsUntilChange The steps in the last movement.
 	 * @param moveAngle        The angle of movement.
 	 */
-	public MoveState(double direction, int stepsUntilChange, double moveAngle)
+	public MoveState(double relativeAngle, int stepsUntilChange, double moveAngle)
 	{
-		this.direction = direction;
+		this.relativeAngle = relativeAngle;
 		this.stepsUntilChange = stepsUntilChange;
 		this.moveAngle = moveAngle;
 
-		double sAngle = moveAngle + direction;
+		double sAngle = moveAngle + relativeAngle;
 		stepAngle = (sAngle < 0) ? (sAngle + TWO_PI) : (sAngle % TWO_PI);
 	}
 
 	@Override
 	public String toString()
 	{
-		return "[" + direction + "\u00B0, " + " " + moveAngle + "\u00B0] : " + stepsUntilChange;
+		return "[" + relativeAngle + "\u00B0, " + " " + moveAngle + "\u00B0] : " + stepsUntilChange;
 	}
 }

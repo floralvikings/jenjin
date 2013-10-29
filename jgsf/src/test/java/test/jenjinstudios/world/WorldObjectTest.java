@@ -16,7 +16,7 @@ public class WorldObjectTest
 {
 	/** The WorldObject used for testing. */
 	private WorldObject worldObject;
-	/** The direction used for testing. */
+	/** The relativeAngle used for testing. */
 	private float direction;
 	/** The x coordinate used for testing. */
 	private float xCoordinate;
@@ -50,7 +50,7 @@ public class WorldObjectTest
 	}
 
 	/**
-	 * Test the direction methods.
+	 * Test the relativeAngle methods.
 	 *
 	 * @throws Exception If there's an exception.
 	 */

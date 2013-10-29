@@ -44,7 +44,7 @@ public class ExecutableStateChangeMessage extends WorldClientExecutableMessage
 	public void runASync()
 	{
 		actorID = (int) getMessage().getArgument("id");
-		double relativeAngle = (double) getMessage().getArgument("direction");
+		double relativeAngle = (double) getMessage().getArgument("relativeAngle");
 		double absoluteAngle = (double) getMessage().getArgument("angle");
 		int stepsUntilChange = (int) getMessage().getArgument("stepsUntilChange");
 		newState = new MoveState(relativeAngle, stepsUntilChange, absoluteAngle);

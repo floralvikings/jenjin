@@ -16,9 +16,10 @@ import static com.jenjinstudios.world.state.MoveState.IDLE;
  * position in the queue, and the Actor's step counter is reset.  If an Actor "oversteps," which is determined if the
  * Actor has taken more than the required number of steps to change state, the Actor is moved back by the "overstepped"
  * number of states, the Actor's state is updated, and the Actor then takes the number of extra steps in the correct
- * direction.
+ * relativeAngle.
  * <p/>
- * An Actor's state is considered "changed" when the Actor is facing a new direction or moving in a new direction.
+ * An Actor's state is considered "changed" when the Actor is facing a new relativeAngle or moving in a new
+ * relativeAngle.
  *
  * @author Caleb Brinkman
  */
@@ -109,7 +110,7 @@ public class ClientActor extends ClientObject
 	 */
 	private void correctOverSteps(int overstepped, MoveState oldState)
 	{
-		if (oldState.direction != MoveState.IDLE)
+		if (oldState.relativeAngle != MoveState.IDLE)
 		{
 			for (int i = 0; i < overstepped; i++)
 			{
@@ -137,12 +138,12 @@ public class ClientActor extends ClientObject
 	/** Take a step according to the current move state. */
 	public void stepForward()
 	{
-		if (currentMoveState.direction == IDLE) return;
+		if (currentMoveState.relativeAngle == IDLE) return;
 		setVector2D(getVector2D().getVectorInDirection(STEP_LENGTH, currentMoveState.stepAngle));
 
 	}
 
-	/** Reset the move state, direction, and newState flag when changing the move state. */
+	/** Reset the move state, relativeAngle, and newState flag when changing the move state. */
 	private void resetState()
 	{
 		currentMoveState = nextState;

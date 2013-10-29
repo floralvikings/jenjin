@@ -130,7 +130,7 @@ public class WorldClientHandler extends ClientHandler
 		newlyVisibleMessage.setArgument("id", newlyVisible.getId());
 		newlyVisibleMessage.setArgument("xCoordinate", newlyVisible.getVector2D().getXCoordinate());
 		newlyVisibleMessage.setArgument("zCoordinate", newlyVisible.getVector2D().getZCoordinate());
-		newlyVisibleMessage.setArgument("direction", newlyVisible.getCurrentMoveState().direction);
+		newlyVisibleMessage.setArgument("relativeAngle", newlyVisible.getCurrentMoveState().relativeAngle);
 		newlyVisibleMessage.setArgument("angle", newlyVisible.getMoveAngle());
 		newlyVisibleMessage.setArgument("stepsTaken", newlyVisible.getStepsTaken());
 		newlyVisibleMessage.setArgument("stepsUntilChange", newlyVisible.getCurrentMoveState().stepsUntilChange);
@@ -204,7 +204,7 @@ public class WorldClientHandler extends ClientHandler
 	{
 		Message newState = new Message("StateChangeMessage");
 		newState.setArgument("id", changedActor.getId());
-		newState.setArgument("direction", changedActor.getCurrentMoveState().direction);
+		newState.setArgument("relativeAngle", changedActor.getCurrentMoveState().relativeAngle);
 		newState.setArgument("angle", changedActor.getCurrentMoveState().moveAngle);
 		newState.setArgument("stepsUntilChange", changedActor.getCurrentMoveState().stepsUntilChange);
 		return newState;
@@ -231,7 +231,7 @@ public class WorldClientHandler extends ClientHandler
 	private Message generateForcedStateMessage()
 	{
 		Message forcedStateMessage = new Message("ForceStateMessage");
-		forcedStateMessage.setArgument("direction", actor.getMoveDirection());
+		forcedStateMessage.setArgument("relativeAngle", actor.getMoveDirection());
 		forcedStateMessage.setArgument("angle", actor.getMoveAngle());
 		forcedStateMessage.setArgument("xCoordinate", actor.getVector2D().getXCoordinate());
 		forcedStateMessage.setArgument("zCoordinate", actor.getVector2D().getZCoordinate());

@@ -11,7 +11,7 @@ public class ClientObject
 {
 	/** The vector2D in the world at which the object is located. */
 	private Vector2D vector2D;
-	/** The direction in which this object is facing. */
+	/** The relativeAngle in which this object is facing. */
 	private double direction;
 	/** The ID number of this object. */
 	private int id = Integer.MIN_VALUE;
@@ -32,9 +32,9 @@ public class ClientObject
 	}
 
 	/**
-	 * Get the direction in which this object is facing, in radians.
+	 * Get the relativeAngle in which this object is facing, in radians.
 	 *
-	 * @return The direction in which this object is facing.
+	 * @return The relativeAngle in which this object is facing.
 	 */
 	public double getDirection()
 	{
@@ -42,9 +42,9 @@ public class ClientObject
 	}
 
 	/**
-	 * Set the direction in which this object is facing.
+	 * Set the relativeAngle in which this object is facing.
 	 *
-	 * @param direction The new direction for this object to face.
+	 * @param direction The new relativeAngle for this object to face.
 	 */
 	public void setDirection(double direction)
 	{

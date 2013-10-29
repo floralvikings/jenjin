@@ -15,11 +15,12 @@ import static com.jenjinstudios.world.state.MoveState.IDLE;
  * been reached, the state switches to that of the first position in the queue, and the Actor's step counter is reset.
  * If an Actor "oversteps," which is determined if the Actor has taken more than the required number of steps to change
  * state, the Actor is moved back by the "overstepped" number of states, the Actor's state is updated, and the Actor
- * then takes the number of extra steps in the correct direction. </p> An Actor's state is considered "changed" when the
- * Actor is facing a new direction or moving in a new direction. An actor's state is considered "forced" when the Actor
- * attempts to make an illegal move, and the world forces the actor to halt.  The actor's forced state will always be
- * facing the angle of the most recently added move state (even if the state causes an illegal move) and IDLE. The
- * "steps until change" value is determined from the number of steps that were taken until the state was forced.
+ * then takes the number of extra steps in the correct relativeAngle. </p> An Actor's state is considered "changed" when
+ * the Actor is facing a new relativeAngle or moving in a new relativeAngle. An actor's state is considered "forced"
+ * when the Actor attempts to make an illegal move, and the world forces the actor to halt.  The actor's forced state
+ * will always be facing the angle of the most recently added move state (even if the state causes an illegal move) and
+ * IDLE. The "steps until change" value is determined from the number of steps that were taken until the state was
+ * forced.
  *
  * @author Caleb Brinkman
  */
@@ -147,7 +148,7 @@ public class Actor extends SightedObject
 	 */
 	private void correctOverSteps(int overstepped, MoveState oldState) throws InvalidLocationException
 	{
-		if (oldState.direction != MoveState.IDLE)
+		if (oldState.relativeAngle != MoveState.IDLE)
 		{
 			for (int i = 0; i < overstepped; i++)
 			{
@@ -168,7 +169,7 @@ public class Actor extends SightedObject
 	 */
 	public void stepForward() throws InvalidLocationException
 	{
-		if (currentMoveState.direction == IDLE) return;
+		if (currentMoveState.relativeAngle == IDLE) return;
 		setVector2D(getVector2D().getVectorInDirection(STEP_LENGTH, currentMoveState.stepAngle));
 	}
 
@@ -194,9 +195,9 @@ public class Actor extends SightedObject
 	{return newState;}
 
 	/**
-	 * Get the direction in which the object is currently facing.
+	 * Get the relativeAngle in which the object is currently facing.
 	 *
-	 * @return The direction in which the object is currently facing.
+	 * @return The relativeAngle in which the object is currently facing.
 	 */
 	public double getMoveAngle()
 	{return currentMoveState.moveAngle;}
@@ -239,7 +240,7 @@ public class Actor extends SightedObject
 		resetState();
 	}
 
-	/** Reset the move state, direction, and newState flag when changing the move state. */
+	/** Reset the move state, relativeAngle, and newState flag when changing the move state. */
 	private void resetState()
 	{
 		stepsTaken = 0;
@@ -279,6 +280,6 @@ public class Actor extends SightedObject
 	 */
 	public double getMoveDirection()
 	{
-		return currentMoveState.direction;
+		return currentMoveState.relativeAngle;
 	}
 }
