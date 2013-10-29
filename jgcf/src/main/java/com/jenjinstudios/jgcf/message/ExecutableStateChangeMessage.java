@@ -45,7 +45,7 @@ public class ExecutableStateChangeMessage extends WorldClientExecutableMessage
 	{
 		actorID = (int) getMessage().getArgument("id");
 		double relativeAngle = (double) getMessage().getArgument("relativeAngle");
-		double absoluteAngle = (double) getMessage().getArgument("angle");
+		double absoluteAngle = (double) getMessage().getArgument("absoluteAngle");
 		int stepsUntilChange = (int) getMessage().getArgument("stepsUntilChange");
 		newState = new MoveState(relativeAngle, stepsUntilChange, absoluteAngle);
 	}

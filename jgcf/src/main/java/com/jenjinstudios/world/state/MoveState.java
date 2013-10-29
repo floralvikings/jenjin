@@ -34,7 +34,7 @@ public class MoveState
 	/** The relativeAngle of movement. */
 	public final double relativeAngle;
 	/** The angle of movement. */
-	public final double moveAngle;
+	public final double absoluteAngle;
 	/** The actual angle of movement given the relativeAngle and move angle. */
 	public final double stepAngle;
 
@@ -43,21 +43,21 @@ public class MoveState
 	 *
 	 * @param relativeAngle    The relativeAngle of movement.
 	 * @param stepsUntilChange The steps in the last movement.
-	 * @param moveAngle        The angle of movement.
+	 * @param absoluteAngle    The angle of movement.
 	 */
-	public MoveState(double relativeAngle, int stepsUntilChange, double moveAngle)
+	public MoveState(double relativeAngle, int stepsUntilChange, double absoluteAngle)
 	{
 		this.relativeAngle = relativeAngle;
 		this.stepsUntilChange = stepsUntilChange;
-		this.moveAngle = moveAngle;
+		this.absoluteAngle = absoluteAngle;
 
-		double sAngle = moveAngle + relativeAngle;
+		double sAngle = absoluteAngle + relativeAngle;
 		stepAngle = (sAngle < 0) ? (sAngle + TWO_PI) : (sAngle % TWO_PI);
 	}
 
 	@Override
 	public String toString()
 	{
-		return "[" + relativeAngle + "\u00B0, " + " " + moveAngle + "\u00B0] : " + stepsUntilChange;
+		return "[" + relativeAngle + "\u00B0, " + " " + absoluteAngle + "\u00B0] : " + stepsUntilChange;
 	}
 }

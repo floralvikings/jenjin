@@ -107,7 +107,7 @@ public class Actor extends SightedObject
 			stepForward();
 		} catch (InvalidLocationException ex)
 		{
-			setForcedState(new MoveState(IDLE, stepsTaken, currentMoveState.moveAngle));
+			setForcedState(new MoveState(IDLE, stepsTaken, currentMoveState.absoluteAngle));
 		}
 		stepsTaken++;
 	}
@@ -200,7 +200,7 @@ public class Actor extends SightedObject
 	 * @return The relativeAngle in which the object is currently facing.
 	 */
 	public double getMoveAngle()
-	{return currentMoveState.moveAngle;}
+	{return currentMoveState.absoluteAngle;}
 
 	/**
 	 * Get the number of steps taken since the last state change.
@@ -247,7 +247,7 @@ public class Actor extends SightedObject
 		currentMoveState = nextState;
 		nextState = nextMoveStates.poll();
 		newState = true;
-		setDirection(currentMoveState.moveAngle);
+		setDirection(currentMoveState.absoluteAngle);
 	}
 
 	/**

@@ -29,7 +29,7 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage
 		Actor player = getClientHandler().getActor();
 		MoveState newState;
 		double direction = (double) getMessage().getArgument("relativeAngle");
-		double angle = (double) getMessage().getArgument("angle");
+		double angle = (double) getMessage().getArgument("absoluteAngle");
 		int stepsFromLast = (int) getMessage().getArgument("stepsUntilChange");
 		newState = new MoveState(direction, stepsFromLast, angle);
 		player.addMoveState(newState);
