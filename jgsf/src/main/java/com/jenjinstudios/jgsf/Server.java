@@ -175,8 +175,7 @@ public class Server<T extends ClientHandler> extends Thread
 		{
 			for (ClientHandler current : clientHandlers)
 			{
-				if (current != null)
-					current.refresh();
+				if (current != null) { current.refresh(); }
 			}
 		}
 	}
@@ -185,17 +184,7 @@ public class Server<T extends ClientHandler> extends Thread
 	@Override
 	public void run()
 	{
-		if (clientListeners.isEmpty())
-		{
-			Logger.getLogger(Server.class.getName()).log(Level.INFO, "Executing server without "
-					+ "any active client listeners.");
-		}
-
-		for (ClientListener<T> listener : clientListeners)
-		{
-			listener.listen();
-		}
-
+		for (ClientListener<T> listener : clientListeners) { listener.listen(); }
 		initialized = true;
 	}
 
@@ -203,6 +192,7 @@ public class Server<T extends ClientHandler> extends Thread
 	public final void blockingStart()
 	{
 		start();
+		// TODO Add timeout here.
 		while (!initialized) try
 		{
 			Thread.sleep(1);
@@ -223,16 +213,12 @@ public class Server<T extends ClientHandler> extends Thread
 		{
 			for (ClientHandler h : clientHandlers)
 			{
-				if (h != null)
-					h.shutdown();
+				if (h != null) { h.shutdown(); }
 			}
 		}
 		synchronized (clientListeners)
 		{
-			for (ClientListener<T> l : clientListeners)
-			{
-				l.stopListening();
-			}
+			for (ClientListener<T> l : clientListeners) { l.stopListening(); }
 		}
 	}
 
