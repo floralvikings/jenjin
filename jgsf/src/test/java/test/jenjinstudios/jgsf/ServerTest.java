@@ -9,7 +9,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.sql.SQLException;
 
 import static org.junit.Assert.*;
 
@@ -32,10 +31,10 @@ public class ServerTest
 	/**
 	 * Set up and run a server for this test.
 	 *
-	 * @throws java.sql.SQLException If there is an error connecting to the MySql database.
+	 * @throws Exception If there is an error connecting to the MySql database.
 	 */
 	@BeforeClass
-	public static void construct() throws SQLException
+	public static void construct() throws Exception
 	{
 		/* The SQLHandler used for testing. */
 		SQLHandler sqlHandler = new SQLHandler("localhost", "jenjin_test", "jenjin_user",

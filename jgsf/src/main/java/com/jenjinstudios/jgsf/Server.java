@@ -48,16 +48,31 @@ public class Server<T extends ClientHandler> extends Thread
 	 * @param ups          The cycles per second at which this server will run.
 	 * @param port         The port number on which this server will listen.
 	 * @param handlerClass The class of ClientHandler used by this Server.
-	 * @param maxClients   The maximum number of clients.
+	 *
+	 * @throws java.io.IOException If there is an IO Error initializing the server.
 	 */
-	public Server(int ups, int port, Class<? extends T> handlerClass, int maxClients)
+	public Server(int ups, int port, Class<? extends T> handlerClass) throws IOException
+	{
+		this(ups, port, handlerClass, DEFAULT_MAX_CLIENTS);
+	}
+
+	/**
+	 * Construct a new Server without a SQLHandler.
+	 *
+	 * @param ups          The cycles per second at which this server will run.
+	 * @param port         The port number on which this server will listen.
+	 * @param handlerClass The class of ClientHandler used by this Server.
+	 * @param maxClients   The maximum number of clients.
+	 *
+	 * @throws java.io.IOException If there is an IO Error initializing the server.
+	 */
+	public Server(int ups, int port, Class<? extends T> handlerClass, int maxClients) throws IOException
 	{
 		super("Server");
 		LOGGER.log(Level.FINE, "Initializing Server.");
 		UPS = ups;
 		PORT = port;
 		PERIOD = 1000 / ups;
-		/* The maximum number of clients allowed to connect. */
 		this.handlerClass = handlerClass;
 		clientsByUsername = new TreeMap<>();
 		clientListeners = new LinkedList<>();
@@ -70,28 +85,14 @@ public class Server<T extends ClientHandler> extends Thread
 	}
 
 	/**
-	 * Construct a new Server without a SQLHandler.
+	 * Start a new Client Listener on the specified port.
 	 *
-	 * @param ups          The cycles per second at which this server will run.
-	 * @param port         The port number on which this server will listen.
-	 * @param handlerClass The class of ClientHandler used by this Server.
+	 * @throws java.io.IOException If there is an IO error adding the listener.
 	 */
-	public Server(int ups, int port, Class<? extends T> handlerClass)
-	{
-		this(ups, port, handlerClass, DEFAULT_MAX_CLIENTS);
-	}
-
-	/** Start a new Client Listener on the specified port. */
 	@SuppressWarnings("unchecked")
-	void addListener()
+	private void addListener() throws IOException
 	{
-		try
-		{
-			clientListeners.add((ClientListener<T>) new ClientListener<>(this, PORT, handlerClass));
-		} catch (IOException e)
-		{
-			LOGGER.log(Level.SEVERE, "Error adding client listener", e);
-		}
+		clientListeners.add((ClientListener<T>) new ClientListener<>(this, PORT, handlerClass));
 	}
 
 	/**
@@ -133,16 +134,6 @@ public class Server<T extends ClientHandler> extends Thread
 			}
 		}
 		return clientsAdded;
-	}
-
-	/**
-	 * Get the list of client handlers.
-	 *
-	 * @return The list of client handlers.
-	 */
-	public ArrayList<T> getClientHandlers()
-	{
-		return clientHandlers;
 	}
 
 	/**
