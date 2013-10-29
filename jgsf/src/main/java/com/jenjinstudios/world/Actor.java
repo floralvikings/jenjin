@@ -4,8 +4,6 @@ import com.jenjinstudios.jgsf.WorldServer;
 import com.jenjinstudios.world.state.MoveState;
 
 import java.util.LinkedList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import static com.jenjinstudios.world.state.MoveState.IDLE;
 
@@ -31,16 +29,12 @@ public class Actor extends SightedObject
 	public static final double STEP_LENGTH = (double) Location.SIZE / (double) WorldServer.DEFAULT_UPS;
 	/** The maximum number of steps this actor is allowed to correct. */
 	public static final int MAX_CORRECT = 10;
-	/** The logger for this class. */
-	private static final Logger LOGGER = Logger.getLogger(Actor.class.getName());
 	/** The next move. */
 	private final LinkedList<MoveState> nextMoveStates;
 	/** The current move. */
 	private MoveState currentMoveState;
 	/** The number of steps taken since the last move. */
 	private int stepsTaken = 0;
-	/** The number of steps until the actor changed to the current state. */
-	private int stepsUntilChange;
 	/** Flags whether this actor has changed to a new state during this update. */
 	private boolean newState;
 	/** Keeps track of the next state in the queue. */
@@ -90,7 +84,7 @@ public class Actor extends SightedObject
 	}
 
 	/** Reset the flags used by this actor. */
-	private void resetFlags()
+	public void resetFlags()
 	{
 		newState = false;
 		forcedState = false;
@@ -99,53 +93,48 @@ public class Actor extends SightedObject
 	/** Take a step, changing state and correcting steps if necessary. */
 	public void step()
 	{
-		tryStateChange();
-		stepForward();
+		int overstepped = getOverstepped();
+		try
+		{
+			if (overstepped >= MAX_CORRECT)
+			{
+				setForcedState(currentMoveState);
+			} else if (overstepped >= 0)
+			{
+				doStateChange(overstepped);
+			}
+			stepForward();
+		} catch (InvalidLocationException ex)
+		{
+			setForcedState(new MoveState(IDLE, stepsTaken, currentMoveState.moveAngle));
+		}
 		stepsTaken++;
 	}
 
-	/** Change to the next state, and correct for any over steps. */
-	private void tryStateChange()
+	/**
+	 * Determine if a state change is necessary.
+	 *
+	 * @return The number of steps needed to "correct" to set the actor to the correct state.  A negative number means no
+	 *         state change is necessary.
+	 */
+	private int getOverstepped()
 	{
-		if (nextState == null) return;
-		int overstepped = stepsTaken - nextState.stepsUntilChange;
-		if (overstepped >= MAX_CORRECT)
-		{
-			stopMaxCorrect();
-		} else if (overstepped >= 0)
-		{
-			doStateChange(overstepped);
-		}
+		return (nextState != null) ? stepsTaken - nextState.stepsUntilChange : -1;
 	}
 
 	/**
 	 * Perform a state change.
 	 *
 	 * @param overStepped The number of steps beyond what the actor should have taken.
+	 *
+	 * @throws InvalidLocationException If correcting the actor's steps causes the actor to move into an invalid location.
 	 */
-	private void doStateChange(int overStepped)
+	private void doStateChange(int overStepped) throws InvalidLocationException
 	{
 		// Store the old state.
 		MoveState oldState = currentMoveState;
-		stepsUntilChange = nextState.stepsUntilChange;
 		resetState();
 		correctOverSteps(overStepped, oldState);
-	}
-
-	/** Reset the move state, direction, and newState flag when changing the move state. */
-	private void resetState()
-	{
-		stepsTaken = 0;
-		currentMoveState = nextState;
-		nextState = nextMoveStates.poll();
-		newState = true;
-		setDirection(currentMoveState.moveAngle);
-	}
-
-	/** Stop the actor from correcting more steps than the allowed maximum. */
-	private void stopMaxCorrect()
-	{
-		setForcedState(currentMoveState);
 	}
 
 	/**
@@ -153,8 +142,10 @@ public class Actor extends SightedObject
 	 *
 	 * @param overstepped The number of steps over.
 	 * @param oldState    The
+	 *
+	 * @throws InvalidLocationException If the step correction tries to place the actor in an invalid location.
 	 */
-	private void correctOverSteps(int overstepped, MoveState oldState)
+	private void correctOverSteps(int overstepped, MoveState oldState) throws InvalidLocationException
 	{
 		if (oldState.direction != MoveState.IDLE)
 		{
@@ -170,35 +161,28 @@ public class Actor extends SightedObject
 		stepsTaken = overstepped;
 	}
 
-	/** Take a step according to the current move state. */
-	public void stepForward()
+	/**
+	 * Take a step according to the current move state.
+	 *
+	 * @throws InvalidLocationException If the step forward would place the actor in an invalid location.
+	 */
+	public void stepForward() throws InvalidLocationException
 	{
 		if (currentMoveState.direction == IDLE) return;
-		try
-		{
-			setVector2D(getVector2D().getVectorInDirection(STEP_LENGTH, currentMoveState.stepAngle));
-		} catch (InvalidLocationException ex)
-		{
-			setForcedState(new MoveState(IDLE, stepsTaken, currentMoveState.moveAngle));
-		}
+		setVector2D(getVector2D().getVectorInDirection(STEP_LENGTH, currentMoveState.stepAngle));
 	}
 
 	/**
 	 * Take a step back in according to the given forward angle.
 	 *
 	 * @param stepAngle The angle in which to move backward.
+	 *
+	 * @throws InvalidLocationException If stepping back causes the actor to be placed in an invalid location.
 	 */
-	private void stepBack(double stepAngle)
+	private void stepBack(double stepAngle) throws InvalidLocationException
 	{
 		stepAngle -= Math.PI;
-		try
-		{
-			setVector2D(getVector2D().getVectorInDirection(STEP_LENGTH, stepAngle));
-		} catch (InvalidLocationException ex)
-		{
-			// Something very strange is happening if corrected steps lead out of bounds...
-			LOGGER.log(Level.SEVERE, "Error while correcting client steps.", ex);
-		}
+		setVector2D(getVector2D().getVectorInDirection(STEP_LENGTH, stepAngle));
 	}
 
 	/**
@@ -226,14 +210,6 @@ public class Actor extends SightedObject
 	{return stepsTaken;}
 
 	/**
-	 * Get the steps taken to complete the previous move.
-	 *
-	 * @return The number of steps until the actor changed to the current state.
-	 */
-	public int getStepsUntilChange()
-	{return stepsUntilChange;}
-
-	/**
 	 * Get the actor's current move state.
 	 *
 	 * @return The actor's current move state.
@@ -256,11 +232,21 @@ public class Actor extends SightedObject
 	 */
 	public void setForcedState(MoveState forced)
 	{
+		forcedState = true;
 		nextMoveStates.clear();
 		nextState = forced;
 		stepBackToValid(currentMoveState.stepAngle);
-		forcedState = true;
 		resetState();
+	}
+
+	/** Reset the move state, direction, and newState flag when changing the move state. */
+	private void resetState()
+	{
+		stepsTaken = 0;
+		currentMoveState = nextState;
+		nextState = nextMoveStates.poll();
+		newState = true;
+		setDirection(currentMoveState.moveAngle);
 	}
 
 	/**
