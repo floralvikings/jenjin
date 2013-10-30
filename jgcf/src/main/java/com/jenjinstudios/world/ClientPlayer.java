@@ -85,13 +85,6 @@ public class ClientPlayer extends ClientObject
 	 */
 	public double getRelativeAngle() { return relativeAngle; }
 
-	@Override
-	public void update() {
-		setAngles();
-		resetFlags();
-		step();
-	}
-
 	/**
 	 * Set the relative angle of the player.
 	 * @param relativeAngle The new relative angle of this player.
@@ -105,10 +98,17 @@ public class ClientPlayer extends ClientObject
 		saveState();
 	}
 
-	/** Set the angles if new angles have been added. */
-	private void setAngles() {
-		if (isNewAbsolute) { setAbsoluteAngle(newAbsoluteAngle); }
-		if (isNewRelative) { setRelativeAngle(newRelativeAngle); }
+	@Override
+	public void update() {
+		setAngles();
+		resetFlags();
+		step();
+	}
+
+	/** Calculate and set the player's "true" movement angle. */
+	private void calculateTrueAngle() {
+		double sAngle = relativeAngle + absoluteAngle;
+		trueAngle = (sAngle < 0) ? (sAngle + MoveState.TWO_PI) : (sAngle % MoveState.TWO_PI);
 	}
 
 	/** Add this players previous state to the queue. */
@@ -119,10 +119,10 @@ public class ClientPlayer extends ClientObject
 		stepsTaken = 0;
 	}
 
-	/** Calculate and set the player's "true" movement angle. */
-	private void calculateTrueAngle() {
-		double sAngle = relativeAngle + absoluteAngle;
-		trueAngle = (sAngle < 0) ? (sAngle + MoveState.TWO_PI) : (sAngle % MoveState.TWO_PI);
+	/** Set the angles if new angles have been added. */
+	private void setAngles() {
+		if (isNewAbsolute) { setAbsoluteAngle(newAbsoluteAngle); }
+		if (isNewRelative) { setRelativeAngle(newRelativeAngle); }
 	}
 
 	/**
@@ -132,13 +132,6 @@ public class ClientPlayer extends ClientObject
 	public void setNewRelativeAngle(double newRelativeAngle) {
 		this.newRelativeAngle = newRelativeAngle;
 		isNewRelative = true;
-	}
-
-	/** Reset the flags associated with this player. */
-	private void resetFlags() {
-		isForced = false;
-		isNewAbsolute = false;
-		isNewRelative = false;
 	}
 
 	/**
@@ -163,16 +156,30 @@ public class ClientPlayer extends ClientObject
 		setVector2D(position);
 		// Save forced state for later comparison.
 		forcedState = new MoveState(this.relativeAngle, 0, this.absoluteAngle);
-		// Throw out all state information.
+		resetState(relativeAngle, absoluteAngle);
+
+		for (int i = 0; i < stepsToTake; i++)
+			step();
+	}
+
+	/**
+	 * Reset the player's state.
+	 * @param relativeAngle The relative angle.
+	 * @param absoluteAngle The absolte angle.
+	 */
+	private void resetState(double relativeAngle, double absoluteAngle) {
 		synchronized (savedStates) { savedStates.clear(); }
 		this.relativeAngle = relativeAngle;
 		this.absoluteAngle = absoluteAngle;
 		stepsTaken = 0;
-
 		isIdle = relativeAngle == MoveState.IDLE;
+	}
 
-		for (int i = 0; i < stepsToTake; i++)
-			step();
+	/** Reset the flags associated with this player. */
+	private void resetFlags() {
+		isForced = false;
+		isNewAbsolute = false;
+		isNewRelative = false;
 	}
 
 	/**
@@ -186,6 +193,7 @@ public class ClientPlayer extends ClientObject
 	 * @return Whether this player's state was forced during the most recent update.
 	 */
 	public boolean isForcedState() { return isForced; }
+
 
 	/** Move one step forward. */
 	private void step() {
