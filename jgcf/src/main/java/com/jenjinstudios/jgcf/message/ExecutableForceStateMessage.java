@@ -7,7 +7,6 @@ import com.jenjinstudios.world.ClientPlayer;
 
 /**
  * Process a ForceStateMessage.
- *
  * @author Caleb Brinkman
  */
 public class ExecutableForceStateMessage extends WorldClientExecutableMessage
@@ -23,18 +22,15 @@ public class ExecutableForceStateMessage extends WorldClientExecutableMessage
 
 	/**
 	 * Construct an ExecutableMessage with the given Message.
-	 *
-	 * @param client  The client invoking this message.
+	 * @param client The client invoking this message.
 	 * @param message The Message.
 	 */
-	public ExecutableForceStateMessage(WorldClient client, Message message)
-	{
+	public ExecutableForceStateMessage(WorldClient client, Message message) {
 		super(client, message);
 	}
 
 	@Override
-	public void runSynced()
-	{
+	public void runSynced() {
 		ClientPlayer player = getClient().getPlayer();
 		double timeSinceForce = System.nanoTime() - timeOfForce;
 		double periodInNanos = getClient().getPeriod() * 1000000;
@@ -53,8 +49,7 @@ public class ExecutableForceStateMessage extends WorldClientExecutableMessage
 	}
 
 	@Override
-	public void runASync()
-	{
+	public void runASync() {
 		double x = (double) getMessage().getArgument("xCoordinate");
 		double z = (double) getMessage().getArgument("zCoordinate");
 		vector2D = new Vector2D(x, z);

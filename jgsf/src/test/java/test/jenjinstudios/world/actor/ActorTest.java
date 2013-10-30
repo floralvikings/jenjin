@@ -10,7 +10,6 @@ import org.junit.Test;
 
 /**
  * Test the Actor class.
- *
  * @author Caleb Brinkman
  */
 public class ActorTest
@@ -20,18 +19,15 @@ public class ActorTest
 
 	/**
 	 * Set up the test.
-	 *
 	 * @throws Exception If there's an exception.
 	 */
 	@Before
-	public void setUp() throws Exception
-	{
+	public void setUp() throws Exception {
 		world = new World();
 	}
 
 	/**
 	 * Test adding a move state.
-	 *
 	 * @throws Exception If there's an exception.
 	 */
 	@Test
@@ -75,12 +71,10 @@ public class ActorTest
 
 	/**
 	 * Test the force-idle functionality.
-	 *
 	 * @throws Exception If there's an exception.
 	 */
 	@Test
-	public void testForceIdle() throws Exception
-	{
+	public void testForceIdle() throws Exception {
 		Actor player = new Actor("Player");
 		player.setVector2D(1.0, 0);
 
@@ -96,11 +90,9 @@ public class ActorTest
 
 	/**
 	 * Update the world the given number of times.
-	 *
 	 * @param num The number of times to update the world.
 	 */
-	private void updateWorld(int num)
-	{
+	private void updateWorld(int num) {
 		for (int i = 0; i < num; i++)
 			world.update();
 	}

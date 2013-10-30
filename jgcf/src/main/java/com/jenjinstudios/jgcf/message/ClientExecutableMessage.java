@@ -13,7 +13,6 @@ import java.util.logging.Logger;
 
 /**
  * Superclass of ExecutableMessages used by the client.
- *
  * @author Caleb Brinkman
  */
 public abstract class ClientExecutableMessage extends ExecutableMessage
@@ -25,12 +24,10 @@ public abstract class ClientExecutableMessage extends ExecutableMessage
 
 	/**
 	 * Construct an ExecutableMessage with the given Message.
-	 *
 	 * @param client The client invoking this message.
 	 * @param message The Message.
 	 */
-	protected ClientExecutableMessage(Client client, Message message)
-	{
+	protected ClientExecutableMessage(Client client, Message message) {
 		super(message);
 
 		if (!getClass().isAssignableFrom(MessageRegistry.getMessageType(message.getID()).clientExecutableMessageClass))
@@ -41,15 +38,12 @@ public abstract class ClientExecutableMessage extends ExecutableMessage
 
 	/**
 	 * Get the class of the ExecutableMessage that handles the given Message.
-	 *
 	 * @param client The client invoking the message.
 	 * @param message The message.
-	 *
 	 * @return The class of the ExecutableMessage that handles the given Message.
 	 */
 	@SuppressWarnings("unchecked")
-	public static ExecutableMessage getClientExecutableMessageFor(Client client, Message message)
-	{
+	public static ExecutableMessage getClientExecutableMessageFor(Client client, Message message) {
 		ExecutableMessage r = null;
 
 		MessageType messageType = MessageRegistry.getMessageType(message.getID());
@@ -87,11 +81,9 @@ public abstract class ClientExecutableMessage extends ExecutableMessage
 
 	/**
 	 * Get the client invoking this ExecutableMessage.
-	 *
 	 * @return The client invoking this ExecutableMessage.
 	 */
-	public Client getClient()
-	{
+	public Client getClient() {
 		return client;
 	}
 }

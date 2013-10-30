@@ -17,7 +17,6 @@ import java.util.logging.Logger;
 
 /**
  * Handles processing an AESKeyMessage from the server.
- *
  * @author Caleb Brinkman
  */
 public class ExecutableAESKeyMessage extends ClientExecutableMessage
@@ -27,23 +26,19 @@ public class ExecutableAESKeyMessage extends ClientExecutableMessage
 
 	/**
 	 * Construct an ExecutableMessage with the given Message.
-	 *
-	 * @param client  The client invoking this message.
+	 * @param client The client invoking this message.
 	 * @param message The Message.
 	 */
-	public ExecutableAESKeyMessage(Client client, Message message)
-	{
+	public ExecutableAESKeyMessage(Client client, Message message) {
 		super(client, message);
 	}
 
 	@Override
-	public void runSynced()
-	{
+	public void runSynced() {
 	}
 
 	@Override
-	public void runASync()
-	{
+	public void runASync() {
 		byte[] encryptedAESKey = (byte[]) getMessage().getArgument("key");
 		if (Arrays.equals(encryptedAESKey, MessageInputStream.NO_KEY))
 			return;

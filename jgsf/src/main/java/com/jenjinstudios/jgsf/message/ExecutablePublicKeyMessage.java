@@ -16,7 +16,6 @@ import java.util.logging.Logger;
 
 /**
  * This class handles processing a PublicKeyMessage from the client.
- *
  * @author Caleb Brinkman
  */
 public class ExecutablePublicKeyMessage extends ServerExecutableMessage
@@ -26,23 +25,19 @@ public class ExecutablePublicKeyMessage extends ServerExecutableMessage
 
 	/**
 	 * Construct a new ExecutableMessage.  Must be implemented by subclasses.
-	 *
 	 * @param handler The handler using this ExecutableMessage.
 	 * @param message The message.
 	 */
-	public ExecutablePublicKeyMessage(ClientHandler handler, Message message)
-	{
+	public ExecutablePublicKeyMessage(ClientHandler handler, Message message) {
 		super(handler, message);
 	}
 
 	@Override
-	public void runSynced()
-	{
+	public void runSynced() {
 	}
 
 	@Override
-	public void runASync()
-	{
+	public void runASync() {
 		Message aesMessage = new Message("AESKeyMessage");
 		byte[] encryptedAESKey = MessageInputStream.NO_KEY;
 		try

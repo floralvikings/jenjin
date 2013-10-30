@@ -12,7 +12,6 @@ import java.util.logging.Logger;
 
 /**
  * Listens for incoming client connections on behalf of a Server.
- *
  * @author Caleb Brinkman
  */
 class ClientListener<T extends ClientHandler> implements Runnable
@@ -34,14 +33,12 @@ class ClientListener<T extends ClientHandler> implements Runnable
 
 	/**
 	 * Construct a new ClientListener for the given server on the given port.
-	 *
-	 * @param s            The server for which this listener will listen.
-	 * @param p            The port on which to listen.
+	 * @param s The server for which this listener will listen.
+	 * @param p The port on which to listen.
 	 * @param handlerClass The class of the ClientHandler to be used by this server.
 	 * @throws IOException If there is an error listening on the port.
 	 */
-	public ClientListener(Server s, int p, Class<T> handlerClass) throws IOException
-	{
+	public ClientListener(Server s, int p, Class<T> handlerClass) throws IOException {
 		server = s;
 		PORT = p;
 		/* The class of client handlers created by this listener. */
@@ -61,11 +58,9 @@ class ClientListener<T extends ClientHandler> implements Runnable
 
 	/**
 	 * Get the new clients accrued since the last check.
-	 *
 	 * @return A {@code LinkedList} containing the new clients.
 	 */
-	public LinkedList<T> getNewClients()
-	{
+	public LinkedList<T> getNewClients() {
 		LinkedList<T> temp = new LinkedList<>();
 		synchronized (newClientHandlers)
 		{
@@ -80,18 +75,15 @@ class ClientListener<T extends ClientHandler> implements Runnable
 
 	/**
 	 * Stop listening and close the socket.
-	 *
 	 * @throws IOException If there is an error closing the socket.
 	 */
-	public void stopListening() throws IOException
-	{
+	public void stopListening() throws IOException {
 		listening = false;
 		serverSock.close();
 	}
 
 	/** Listen for clients in a new thread. If already listening this method does nothing. */
-	public void listen()
-	{
+	public void listen() {
 		if (listening)
 			return;
 		listening = true;
@@ -100,11 +92,9 @@ class ClientListener<T extends ClientHandler> implements Runnable
 
 	/**
 	 * Add a new client to the list of new clients.
-	 *
 	 * @param h The handler for the new client.
 	 */
-	void addNewClient(T h)
-	{
+	void addNewClient(T h) {
 		synchronized (newClientHandlers)
 		{
 			newClientHandlers.add(h);
@@ -113,11 +103,9 @@ class ClientListener<T extends ClientHandler> implements Runnable
 
 	/**
 	 * Add a new Client using the specified socket as a connection.
-	 *
 	 * @param sock The connection to the new client.
 	 */
-	void addNewClient(Socket sock)
-	{
+	void addNewClient(Socket sock) {
 		try
 		{
 			T newHandler = handlerConstructor.newInstance(server, sock);
@@ -130,8 +118,7 @@ class ClientListener<T extends ClientHandler> implements Runnable
 	}
 
 	@Override
-	public void run()
-	{
+	public void run() {
 		while (listening)
 		{
 			try

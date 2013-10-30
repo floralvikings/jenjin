@@ -4,7 +4,6 @@ package com.jenjinstudios.world.state;
  * The {@code MovementState} class is used to establish what an {@code Actor}'s movement state is.  The {@code
  * stepsUntilChange} field indicates the number of steps (updates) the Actor should take before it changes to the {@code
  * MovementDirection} specified.
- *
  * @author Caleb Brinkman
  */
 public class MoveState
@@ -40,13 +39,11 @@ public class MoveState
 
 	/**
 	 * Construct a new MoveState.
-	 *
-	 * @param relativeAngle    The relativeAngle of movement.
+	 * @param relativeAngle The relativeAngle of movement.
 	 * @param stepsUntilChange The steps in the last movement.
-	 * @param absoluteAngle    The angle of movement.
+	 * @param absoluteAngle The angle of movement.
 	 */
-	public MoveState(double relativeAngle, int stepsUntilChange, double absoluteAngle)
-	{
+	public MoveState(double relativeAngle, int stepsUntilChange, double absoluteAngle) {
 		this.relativeAngle = relativeAngle;
 		this.stepsUntilChange = stepsUntilChange;
 		this.absoluteAngle = absoluteAngle;
@@ -56,8 +53,7 @@ public class MoveState
 	}
 
 	@Override
-	public String toString()
-	{
+	public String toString() {
 		return "[" + relativeAngle + "\u00B0, " + " " + absoluteAngle + "\u00B0] : " + stepsUntilChange;
 	}
 }

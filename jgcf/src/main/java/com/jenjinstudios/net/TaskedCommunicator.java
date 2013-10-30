@@ -10,7 +10,6 @@ import java.util.logging.Logger;
 
 /**
  * A communicator that executes runnable tasks.
- *
  * @author Caleb Brinkman
  */
 public abstract class TaskedCommunicator extends Communicator
@@ -21,19 +20,16 @@ public abstract class TaskedCommunicator extends Communicator
 	private final LinkedList<Runnable> syncedTasks;
 
 	/** Construct a new TaskedCommunicator. */
-	public TaskedCommunicator()
-	{
+	public TaskedCommunicator() {
 		syncedTasks = new LinkedList<>();
 	}
 
 	/**
 	 * Process the specified message.  This method should be overridden by any implementing classes, but it does contain
 	 * functionality necessary to communicate with a DownloadServer or a ChatServer.
-	 *
 	 * @param message The message to be processed.
 	 */
-	protected void processMessage(Message message)
-	{
+	protected void processMessage(Message message) {
 		ExecutableMessage exec = getExecutableMessage(message);
 		if (exec != null)
 		{
@@ -53,11 +49,9 @@ public abstract class TaskedCommunicator extends Communicator
 
 	/**
 	 * The "one-shot" tasks to be executed in the current client loop.
-	 *
 	 * @return The list of Synced Tasks
 	 */
-	public LinkedList<Runnable> getSyncedTasks()
-	{
+	public LinkedList<Runnable> getSyncedTasks() {
 		LinkedList<Runnable> temp = new LinkedList<>();
 		synchronized (syncedTasks)
 		{
@@ -68,8 +62,7 @@ public abstract class TaskedCommunicator extends Communicator
 	}
 
 	@Override
-	public void run()
-	{
+	public void run() {
 		super.run();
 		try
 		{

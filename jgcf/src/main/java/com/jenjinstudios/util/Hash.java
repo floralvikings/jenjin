@@ -6,19 +6,16 @@ import java.security.NoSuchAlgorithmException;
 
 /**
  * The {@code Hash} class contains methods for getting encrypted strings.
- *
  * @author Caleb Brinkman
  */
 public class Hash
 {
 	/**
 	 * Return a SHA1 hash of the given string.
-	 *
 	 * @param input The string to hash.
 	 * @return a SHA1 hash of the given string.
 	 */
-	private static String getHashedString(String input)
-	{
+	private static String getHashedString(String input) {
 		try
 		{
 			//Convert the pass to an md5 hash string
@@ -48,8 +45,7 @@ public class Hash
 	 * @param salt The salt to be applied before hashing.
 	 * @return The hashed and salted string.
 	 */
-	public static String getHashedString(String input, String salt)
-	{
+	public static String getHashedString(String input, String salt) {
 		return getHashedString(salt + input);
 	}
 }

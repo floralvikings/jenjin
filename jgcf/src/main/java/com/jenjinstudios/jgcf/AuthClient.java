@@ -8,7 +8,6 @@ import java.util.logging.Logger;
 /**
  * The {@code AuthClient} class is a {@code Client} with the ability to store user information and attempt to log into a
  * {@code Server} using a username and password.
- *
  * @author Caleb Brinkman
  */
 public class AuthClient extends Client
@@ -30,22 +29,19 @@ public class AuthClient extends Client
 
 	/**
 	 * Construct a client connecting to the given address over the given port.
-	 *
-	 * @param address  The address to which this client will attempt to connect.
-	 * @param port     The port over which this client will attempt to connect.
+	 * @param address The address to which this client will attempt to connect.
+	 * @param port The port over which this client will attempt to connect.
 	 * @param username The username that will be used by this client.
 	 * @param password The password that will be used by this client.
 	 */
-	public AuthClient(String address, int port, String username, String password)
-	{
+	public AuthClient(String address, int port, String username, String password) {
 		super(address, port);
 		this.username = username;
 		this.password = password;
 	}
 
 	/** Queue a message to log into the server with the given username and password, and wait for the response. */
-	public void sendBlockingLoginRequest()
-	{
+	public void sendBlockingLoginRequest() {
 		sendLoginRequest();
 		while (!hasReceivedLoginResponse())
 		{
@@ -61,17 +57,14 @@ public class AuthClient extends Client
 
 	/**
 	 * Get whether this client has received a login response.
-	 *
 	 * @return Whether the client has received a login response.
 	 */
-	public boolean hasReceivedLoginResponse()
-	{
+	public boolean hasReceivedLoginResponse() {
 		return receivedLoginResponse;
 	}
 
 	/** Send a login request to the server. */
-	private void sendLoginRequest()
-	{
+	private void sendLoginRequest() {
 		if (username == null || password == null)
 		{
 			throw new IllegalStateException("Attempted to login without username or password");
@@ -85,21 +78,17 @@ public class AuthClient extends Client
 
 	/**
 	 * Set whether this client has received a login response.
-	 *
 	 * @param receivedLoginResponse Whether this client has received a login response.
 	 */
-	public void setReceivedLoginResponse(boolean receivedLoginResponse)
-	{
+	public void setReceivedLoginResponse(boolean receivedLoginResponse) {
 		this.receivedLoginResponse = receivedLoginResponse;
 	}
 
 	/**
 	 * Generate a LoginRequest message.
-	 *
 	 * @return The LoginRequest message.
 	 */
-	private Message generateLoginRequest()
-	{// Create the login request.
+	private Message generateLoginRequest() {// Create the login request.
 		Message loginRequest = new Message("LoginRequest");
 		loginRequest.setArgument("username", username);
 		loginRequest.setArgument("password", password);
@@ -107,8 +96,7 @@ public class AuthClient extends Client
 	}
 
 	/** Queue a message to log the user out of the server. */
-	public void sendBlockingLogoutRequest()
-	{
+	public void sendBlockingLogoutRequest() {
 		sendLogoutRequest();
 
 		while (!hasReceivedLogoutResponse())
@@ -123,17 +111,14 @@ public class AuthClient extends Client
 
 	/**
 	 * Get whether this client has received a logout response.
-	 *
 	 * @return Whether this client has received a logout response.
 	 */
-	public boolean hasReceivedLogoutResponse()
-	{
+	public boolean hasReceivedLogoutResponse() {
 		return receivedLogoutResponse;
 	}
 
 	/** Send a logout request to the server. */
-	private void sendLogoutRequest()
-	{
+	private void sendLogoutRequest() {
 		Message logoutRequest = new Message("LogoutRequest");
 
 		// Send the request, continue when response is received.
@@ -143,61 +128,49 @@ public class AuthClient extends Client
 
 	/**
 	 * Set whether this client has received a logout response.
-	 *
 	 * @param receivedLogoutResponse Whether this client has received a logout response.
 	 */
-	public void setReceivedLogoutResponse(boolean receivedLogoutResponse)
-	{
+	public void setReceivedLogoutResponse(boolean receivedLogoutResponse) {
 		this.receivedLogoutResponse = receivedLogoutResponse;
 	}
 
 	/**
 	 * Get the username of this client.
-	 *
 	 * @return The username of this client.
 	 */
-	public String getUsername()
-	{
+	public String getUsername() {
 		return username;
 	}
 
 	/**
 	 * Get whether this client is logged in.
-	 *
 	 * @return true if this client has received a successful LoginResponse
 	 */
-	public boolean isLoggedIn()
-	{
+	public boolean isLoggedIn() {
 		return loggedIn;
 	}
 
 	/**
 	 * Set whether this client is logged in.
-	 *
 	 * @param l Whether this client is logged in.
 	 */
-	public void setLoggedIn(boolean l)
-	{
+	public void setLoggedIn(boolean l) {
 		loggedIn = l;
 	}
 
 	/**
 	 * Get the time at which this client was successfully logged in.
-	 *
 	 * @return The time of the start of the server cycle during which this client was logged in.
 	 */
-	public long getLoggedInTime()
-	{
+	public long getLoggedInTime() {
 		return loggedInTime;
 	}
 
 	/**
 	 * Set the logged in time for this client.
-	 *
 	 * @param loggedInTime The logged in time for this client.
 	 */
-	public void setLoggedInTime(long loggedInTime)
-	{
+	public void setLoggedInTime(long loggedInTime) {
 		this.loggedInTime = loggedInTime;
 	}
 }

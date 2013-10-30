@@ -14,7 +14,6 @@ import java.util.logging.Logger;
 
 /**
  * The ServerExecutableMessage class is invoked to respond to messages server-side.
- *
  * @author Caleb Brinkman
  */
 public abstract class ServerExecutableMessage extends ExecutableMessage
@@ -26,27 +25,22 @@ public abstract class ServerExecutableMessage extends ExecutableMessage
 
 	/**
 	 * Construct a new ExecutableMessage.  Must be implemented by subclasses.
-	 *
 	 * @param handler The handler using this ExecutableMessage.
 	 * @param message The message.
 	 */
-	protected ServerExecutableMessage(ClientHandler handler, Message message)
-	{
+	protected ServerExecutableMessage(ClientHandler handler, Message message) {
 		super(message);
 		clientHandler = handler;
 	}
 
 	/**
 	 * Get the class of the ExecutableMessage that handles the given Message.
-	 *
 	 * @param handler The client handler to use the ExecutableMessage.
 	 * @param message The message.
-	 *
 	 * @return The class of the ExecutableMessage that handles the given Message.
 	 */
 	@SuppressWarnings("unchecked")
-	public static ExecutableMessage getServerExecutableMessageFor(ClientHandler handler, Message message)
-	{
+	public static ExecutableMessage getServerExecutableMessageFor(ClientHandler handler, Message message) {
 		ExecutableMessage r = null;
 		MessageType messageType = MessageRegistry.getMessageType(message.getID());
 		// Get the executable message classes registered.
@@ -82,11 +76,9 @@ public abstract class ServerExecutableMessage extends ExecutableMessage
 
 	/**
 	 * Get the ClientHandler invoking this message.
-	 *
 	 * @return The ClientHandler invoking this message.
 	 */
-	public ClientHandler getClientHandler()
-	{
+	public ClientHandler getClientHandler() {
 		return clientHandler;
 	}
 }

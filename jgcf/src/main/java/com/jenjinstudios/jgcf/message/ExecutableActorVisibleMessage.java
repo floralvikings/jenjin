@@ -7,7 +7,6 @@ import com.jenjinstudios.world.state.MoveState;
 
 /**
  * Process an ActorVisibleMessage.
- *
  * @author Caleb Brinkman
  */
 public class ExecutableActorVisibleMessage extends WorldClientExecutableMessage
@@ -17,24 +16,20 @@ public class ExecutableActorVisibleMessage extends WorldClientExecutableMessage
 
 	/**
 	 * Construct an ExecutableMessage with the given Message.
-	 *
-	 * @param client  The client invoking this message.
+	 * @param client The client invoking this message.
 	 * @param message The Message.
 	 */
-	public ExecutableActorVisibleMessage(WorldClient client, Message message)
-	{
+	public ExecutableActorVisibleMessage(WorldClient client, Message message) {
 		super(client, message);
 	}
 
 	@Override
-	public void runSynced()
-	{
+	public void runSynced() {
 		getClient().addNewVisible(newlyVisible);
 	}
 
 	@Override
-	public void runASync()
-	{
+	public void runASync() {
 		Message message = getMessage();
 		String name = (String) message.getArgument("name");
 		int id = (int) message.getArgument("id");

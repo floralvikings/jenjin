@@ -14,7 +14,6 @@ import java.util.logging.Logger;
 
 /**
  * The base class for any client.  This class uses a similar system to the JGSA.
- *
  * @author Caleb Brinkman
  */
 public class Client extends TaskedCommunicator
@@ -38,12 +37,10 @@ public class Client extends TaskedCommunicator
 
 	/**
 	 * Construct a new client and attempt to connect to the server over the specified port.
-	 *
 	 * @param address The address of the server to which to connect
-	 * @param port    The port over which to connect to the server.
+	 * @param port The port over which to connect to the server.
 	 */
-	protected Client(String address, int port)
-	{
+	protected Client(String address, int port) {
 		ADDRESS = address;
 		PORT = port;
 		repeatedSyncedTasks = new LinkedList<>();
@@ -63,11 +60,9 @@ public class Client extends TaskedCommunicator
 
 	/**
 	 * Add a task to the repeated queue of this client.  Should be called to extend client functionality.
-	 *
 	 * @param r The task to be performed.
 	 */
-	protected void addRepeatedTask(Runnable r)
-	{
+	protected void addRepeatedTask(Runnable r) {
 		synchronized (repeatedSyncedTasks)
 		{
 			repeatedSyncedTasks.add(r);
@@ -76,12 +71,10 @@ public class Client extends TaskedCommunicator
 
 	/**
 	 * Start the client, blocking until the client has successfully initialized.
-	 *
 	 * @throws InterruptedException If an InterruptedException is thrown while waiting for the client to finish
-	 *                              initializing.
+	 * initializing.
 	 */
-	public void blockingStart() throws InterruptedException
-	{
+	public void blockingStart() throws InterruptedException {
 		start();
 
 		while (!isRunning()) Thread.sleep(1);
@@ -89,8 +82,7 @@ public class Client extends TaskedCommunicator
 	}
 
 	@Override
-	public final void run()
-	{
+	public final void run() {
 		if (!isConnected()) connect();
 		// The ClientLoop is used to send messages in the outgoing queue and do syncrhonized executables.
 
@@ -104,8 +96,7 @@ public class Client extends TaskedCommunicator
 	 * Attempt to connect to the server at {@code ADDRESS} over {@code PORT}  This method must be called <i>before</i> the
 	 * client thread is started.
 	 */
-	private void connect()
-	{
+	private void connect() {
 		if (isConnected())
 			return;
 		try
@@ -122,11 +113,9 @@ public class Client extends TaskedCommunicator
 	/**
 	 * Take care of all the necessary initialization messages between client and server.  These include things like RSA key
 	 * exchanges and latency checks.
-	 *
 	 * @throws IOException If there's an IOException when attempting to communicate with the server.
 	 */
-	private void doPostConnectInit() throws IOException
-	{
+	private void doPostConnectInit() throws IOException {
 		// First, get and process the required FirstConnectResponse message from the server.
 		Message firstConnectResponse = getInputStream().readMessage();
 		int ups = (int) firstConnectResponse.getArgument("ups");
@@ -142,8 +131,7 @@ public class Client extends TaskedCommunicator
 	}
 
 	/** Tell the client threads to stop running. */
-	public void shutdown()
-	{
+	public void shutdown() {
 		super.shutdown();
 		sendMessagesTimer.cancel();
 		closeLink();
@@ -151,44 +139,35 @@ public class Client extends TaskedCommunicator
 
 	/**
 	 * Get an executable message for a given message.
-	 *
 	 * @param message The message to be used.
-	 *
 	 * @return The ExecutableMessage.
 	 */
 	@Override
-	protected ClientExecutableMessage getExecutableMessage(Message message)
-	{
+	protected ClientExecutableMessage getExecutableMessage(Message message) {
 		return (ClientExecutableMessage) ClientExecutableMessage.getClientExecutableMessageFor(this, message);
 	}
 
 	/**
 	 * Get the list of repeating tasks.
-	 *
 	 * @return The list of repeating tasks.
 	 */
-	public LinkedList<Runnable> getRepeatedSyncedTasks()
-	{
+	public LinkedList<Runnable> getRepeatedSyncedTasks() {
 		return repeatedSyncedTasks;
 	}
 
 	/**
 	 * Get the private key.
-	 *
 	 * @return The private key.
 	 */
-	public PrivateKey getPrivateKey()
-	{
+	public PrivateKey getPrivateKey() {
 		return privateKey;
 	}
 
 	/**
 	 * Get the update period of this client.
-	 *
 	 * @return The update period of this client.
 	 */
-	public int getPeriod()
-	{
+	public int getPeriod() {
 		return period;
 	}
 }

@@ -8,7 +8,6 @@ import com.jenjinstudios.world.InvalidLocationException;
 
 /**
  * Handles requests to login to the world.
- *
  * @author Caleb Brinkman
  */
 public class ExecutableWorldLoginRequest extends WorldExecutableMessage
@@ -22,19 +21,16 @@ public class ExecutableWorldLoginRequest extends WorldExecutableMessage
 
 	/**
 	 * Construct a new ExecutableMessage.  Must be implemented by subclasses.
-	 *
 	 * @param handler The handler using this ExecutableMessage.
 	 * @param message The message.
 	 */
-	public ExecutableWorldLoginRequest(WorldClientHandler handler, Message message)
-	{
+	public ExecutableWorldLoginRequest(WorldClientHandler handler, Message message) {
 		super(handler, message);
 		sqlHandler = handler.getServer().getSqlHandler();
 	}
 
 	@Override
-	public void runSynced()
-	{
+	public void runSynced() {
 		if (player != null)
 		{
 			try
@@ -54,8 +50,7 @@ public class ExecutableWorldLoginRequest extends WorldExecutableMessage
 	}
 
 	@Override
-	public void runASync()
-	{
+	public void runASync() {
 		if (sqlHandler == null || getClientHandler().isLoggedIn())
 			return;
 		String username = (String) getMessage().getArgument("username");

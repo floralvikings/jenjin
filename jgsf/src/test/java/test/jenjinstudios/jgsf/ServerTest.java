@@ -14,7 +14,6 @@ import static org.junit.Assert.*;
 
 /**
  * The client class for the Chat program tutorial.
- *
  * @author Caleb Brinkman
  */
 public class ServerTest
@@ -30,12 +29,10 @@ public class ServerTest
 
 	/**
 	 * Set up and run a server for this test.
-	 *
 	 * @throws Exception If there is an error connecting to the MySql database.
 	 */
 	@BeforeClass
-	public static void construct() throws Exception
-	{
+	public static void construct() throws Exception {
 		/* The SQLHandler used for testing. */
 		SQLHandler sqlHandler = new SQLHandler("localhost", "jenjin_test", "jenjin_user",
 				"jenjin_password");
@@ -50,13 +47,11 @@ public class ServerTest
 
 	/**
 	 * Shut the server down when all is said and done.
-	 *
-	 * @throws java.io.IOException  If there is an error shutting down the server.
+	 * @throws java.io.IOException If there is an error shutting down the server.
 	 * @throws InterruptedException If there is interrupt.
 	 */
 	@AfterClass
-	public static void destroy() throws IOException, InterruptedException
-	{
+	public static void destroy() throws IOException, InterruptedException {
 		if (goodClient01 != null)
 		{
 			if (goodClient01.isLoggedIn())
@@ -72,12 +67,10 @@ public class ServerTest
 
 	/**
 	 * Test the login and logout functionality.
-	 *
 	 * @throws Exception If there's an exception.
 	 */
 	@Test
-	public void testLoginLogout() throws Exception
-	{
+	public void testLoginLogout() throws Exception {
 		assertEquals(0, server.getNumClients());
 
 		goodClient01 = new AuthClient("localhost", 51019, "TestAccount01", "testPassword");
@@ -96,12 +89,10 @@ public class ServerTest
 
 	/**
 	 * Test the submission of an incorrect password.
-	 *
 	 * @throws Exception If there's an exception.
 	 */
 	@Test
-	public void testIncorrectPassword() throws Exception
-	{
+	public void testIncorrectPassword() throws Exception {
 		/* This client should fail to login. */
 		AuthClient badClient = new AuthClient("127.0.0.1", 51019, "TestAccount02", "This is an incorrect password.  Teehee.");
 		badClient.blockingStart();
@@ -114,12 +105,10 @@ public class ServerTest
 
 	/**
 	 * Test the login time.
-	 *
 	 * @throws Exception If there's an exception.
 	 */
 	@Test
-	public void testGetLoggedInTime() throws Exception
-	{
+	public void testGetLoggedInTime() throws Exception {
 		goodClient01 = new AuthClient("localhost", 51019, "TestAccount01", "testPassword");
 		goodClient01.blockingStart();
 
@@ -135,12 +124,10 @@ public class ServerTest
 
 	/**
 	 * Test the login functionality for when clients are already logged in.
-	 *
 	 * @throws Exception If there's an exception.
 	 */
 	@Test
-	public void testAlreadyLoggedIn() throws Exception
-	{
+	public void testAlreadyLoggedIn() throws Exception {
 		goodClient01 = new AuthClient("localhost", 51019, "TestAccount01", "testPassword");
 		goodClient01.blockingStart();
 
@@ -162,12 +149,10 @@ public class ServerTest
 
 	/**
 	 * Test the emergency logout functionality.
-	 *
 	 * @throws InterruptedException If the sleep is interrupted.
 	 */
 	@Test
-	public void testEmergencyLogout() throws InterruptedException
-	{
+	public void testEmergencyLogout() throws InterruptedException {
 		goodClient01 = new AuthClient("localhost", 51019, "TestAccount01", "testPassword");
 		goodClient01.blockingStart();
 

@@ -6,7 +6,6 @@ import java.util.ArrayList;
  * The {@code SightedObject} class is a {@code WorldObject} which maintains a range of locations which are visible to
  * it.  It also maintains a list of visible {@code WorldObject}s  which are visible to it.  This class is intended to be
  * used by a non-static WorldObject implementation.
- *
  * @author Caleb Brinkman
  */
 public class SightedObject extends WorldObject
@@ -23,18 +22,15 @@ public class SightedObject extends WorldObject
 	private final ArrayList<WorldObject> newlyInvisibleObjects;
 
 	/** Construct a new SightedObject. */
-	public SightedObject()
-	{
+	public SightedObject() {
 		this(DEFAULT_NAME);
 	}
 
 	/**
 	 * Construct a new SightedObject.
-	 *
 	 * @param name The name of this object.
 	 */
-	public SightedObject(String name)
-	{
+	public SightedObject(String name) {
 		super(name);
 		visibleObjects = new ArrayList<>();
 		visibleLocations = new ArrayList<>();
@@ -43,15 +39,13 @@ public class SightedObject extends WorldObject
 	}
 
 	/** Resets the array of currently visible location. */
-	protected void resetVisibleLocations()
-	{
+	protected void resetVisibleLocations() {
 		visibleLocations.clear();
 		visibleLocations.addAll(getWorld().getLocationArea(getLocation(), VIEW_RADIUS));
 	}
 
 	/** Reset the current list of visible objects. */
-	protected void resetVisibleObjects()
-	{
+	protected void resetVisibleObjects() {
 		ArrayList<WorldObject> currentlyVisible = new ArrayList<>();
 		for (Location loc : visibleLocations)
 		{
@@ -78,33 +72,25 @@ public class SightedObject extends WorldObject
 
 	/**
 	 * The container for visible objects.
-	 *
 	 * @return An ArrayList containing all objects visible to this actor.
 	 */
-	public ArrayList<WorldObject> getVisibleObjects()
-	{return visibleObjects;}
+	public ArrayList<WorldObject> getVisibleObjects() {return visibleObjects;}
 
 	/**
 	 * Get newly visible objects.
-	 *
 	 * @return A list of all objects newly visible.
 	 */
-	public ArrayList<WorldObject> getNewlyVisibleObjects()
-	{return newlyVisibleObjects;}
+	public ArrayList<WorldObject> getNewlyVisibleObjects() {return newlyVisibleObjects;}
 
 	/**
 	 * Get newly invisible objects.
-	 *
 	 * @return A list of all objects newly invisible.
 	 */
-	public ArrayList<WorldObject> getNewlyInvisibleObjects()
-	{return newlyInvisibleObjects;}
+	public ArrayList<WorldObject> getNewlyInvisibleObjects() {return newlyInvisibleObjects;}
 
 	/**
 	 * Get the currently visible locations.
-	 *
 	 * @return The array list of currently visible locations.
 	 */
-	public ArrayList<Location> getVisibleLocations()
-	{ return visibleLocations; }
+	public ArrayList<Location> getVisibleLocations() { return visibleLocations; }
 }

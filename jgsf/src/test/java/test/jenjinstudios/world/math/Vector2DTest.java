@@ -6,15 +6,13 @@ import org.junit.Test;
 
 /**
  * Test the coordinates class.
- *
  * @author Caleb Brinkman
  */
 public class Vector2DTest
 {
 	/** Test the coordinates methods. */
 	@Test
-	public void testVector2D()
-	{
+	public void testVector2D() {
 		Vector2D vector2D01 = new Vector2D(5, 7);
 		Assert.assertEquals(7, vector2D01.getZCoordinate(), 0);
 		Assert.assertEquals(5, vector2D01.getXCoordinate(), 0);
@@ -32,8 +30,7 @@ public class Vector2DTest
 
 	/** Test the relativeAngle math methods. */
 	@Test
-	public void testDirectionMath()
-	{
+	public void testDirectionMath() {
 		Vector2D original = new Vector2D(5, 5);
 
 		double right = 0;

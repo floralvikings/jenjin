@@ -18,7 +18,6 @@ import java.util.logging.Logger;
 
 /**
  * Handles the sending and reception of messages registered in the MessageRegistry class.
- *
  * @author Caleb Brinkman
  */
 public class MessageOutputStream
@@ -35,25 +34,19 @@ public class MessageOutputStream
 	/**
 	 * Creates a new message output stream to write data to the specified underlying output stream. The counter {@code
 	 * written} is set to zero.
-	 *
 	 * @param out the underlying output stream, to be saved for later use.
-	 *
 	 * @see java.io.FilterOutputStream#out
 	 */
-	public MessageOutputStream(OutputStream out)
-	{
+	public MessageOutputStream(OutputStream out) {
 		outputStream = new DataOutputStream(out);
 	}
 
 	/**
 	 * Write the given {@code Message} to the output stream.
-	 *
 	 * @param message The Message to be written to the stream.
-	 *
 	 * @throws IOException If there is an IO error.
 	 */
-	public void writeMessage(Message message) throws IOException
-	{
+	public void writeMessage(Message message) throws IOException {
 		Object[] args = message.getArgs();
 		MessageType messageType = MessageRegistry.getMessageType(message.getID());
 		ArgumentType[] argumentTypes = messageType.argumentTypes;
@@ -65,14 +58,11 @@ public class MessageOutputStream
 
 	/**
 	 * Write an argument to the data stream, properly cast.
-	 *
-	 * @param arg            The argument to be written.
+	 * @param arg The argument to be written.
 	 * @param encryptStrings Whether to encryptPublic strings in this message.
-	 *
 	 * @throws IOException If there is an IO error.
 	 */
-	private void writeArgument(Object arg, boolean encryptStrings) throws IOException
-	{
+	private void writeArgument(Object arg, boolean encryptStrings) throws IOException {
 		if (arg instanceof String) writeString((String) arg, encryptStrings);
 		else if (arg instanceof Integer) outputStream.writeInt((int) arg);
 		else if (arg instanceof Short) outputStream.writeShort((short) arg);
@@ -89,14 +79,11 @@ public class MessageOutputStream
 	/**
 	 * Write a string to the output stream, specifying whether the string should be encrypted with this stream's public
 	 * key.
-	 *
-	 * @param s       The string to write.
+	 * @param s The string to write.
 	 * @param encrypt Whether the string should be encrypted.
-	 *
 	 * @throws IOException If there is an IO error.
 	 */
-	public void writeString(String s, boolean encrypt) throws IOException
-	{
+	public void writeString(String s, boolean encrypt) throws IOException {
 		if (encrypt)
 		{
 			if (aesKey == null)
@@ -129,14 +116,11 @@ public class MessageOutputStream
 
 	/**
 	 * Write an array of strings to the output stream, preceded by the array length.
-	 *
-	 * @param strings        The array of string strings.
+	 * @param strings The array of string strings.
 	 * @param encryptStrings Whether the strings being written should be encrypted.
-	 *
 	 * @throws IOException If there is an IO error.
 	 */
-	private void writeStringArray(String[] strings, boolean encryptStrings) throws IOException
-	{
+	private void writeStringArray(String[] strings, boolean encryptStrings) throws IOException {
 		int stringsLength = strings.length;
 		outputStream.writeInt(stringsLength);
 		for (String string : strings) writeString(string, encryptStrings);
@@ -144,13 +128,10 @@ public class MessageOutputStream
 
 	/**
 	 * Write an array of bytes to the output stream, preceded by the array length.
-	 *
 	 * @param bytes The array of byte bytes.
-	 *
 	 * @throws IOException If there is an IO error.
 	 */
-	private void writeByteArray(byte[] bytes) throws IOException
-	{
+	private void writeByteArray(byte[] bytes) throws IOException {
 		int bytesLength = bytes.length;
 		outputStream.writeInt(bytesLength);
 		outputStream.write(bytes);
@@ -158,21 +139,17 @@ public class MessageOutputStream
 
 	/**
 	 * Close the output stream.
-	 *
 	 * @throws IOException If there is an IO error.
 	 */
-	public void close() throws IOException
-	{
+	public void close() throws IOException {
 		outputStream.close();
 	}
 
 	/**
 	 * Set the AES key for this output stream to encrypt messages.
-	 *
 	 * @param key The AES key used by this output stream to encrypt messages.
 	 */
-	public void setAesKey(byte[] key)
-	{
+	public void setAesKey(byte[] key) {
 		if (key == null)
 			return;
 		try
