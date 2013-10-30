@@ -5,7 +5,6 @@ import java.util.HashSet;
 
 /**
  * Represents a location in the world's location grid.
- *
  * @author Caleb Brinkman
  */
 public class Location
@@ -23,12 +22,10 @@ public class Location
 
 	/**
 	 * Construct a new location at the given position in a zone grid.
-	 *
 	 * @param x The x coordinate of the zone grid.
 	 * @param z The z coordinate of the zone grid.
 	 */
-	public Location(int x, int z)
-	{
+	public Location(int x, int z) {
 		X_COORDINATE = x;
 		Z_COORDINATE = z;
 		property = Property.OPEN;
@@ -37,57 +34,46 @@ public class Location
 
 	/**
 	 * Get the property of this location.
-	 *
 	 * @return The property of this location.
 	 */
-	public Property getProperty()
-	{
+	public Property getProperty() {
 		return property;
 	}
 
 	/**
 	 * Set the property of this location.
-	 *
 	 * @param property The new property.
 	 */
-	public void setProperty(Property property)
-	{
+	public void setProperty(Property property) {
 		this.property = property;
 	}
 
 	/**
 	 * Get the objects residing in this location, as an array.
-	 *
 	 * @return An array containing all objects residing in this location.
 	 */
-	public ArrayList<WorldObject> getObjects()
-	{
+	public ArrayList<WorldObject> getObjects() {
 		return new ArrayList<>(objects);
 	}
 
 	/**
 	 * Add the object to this location's object map.
-	 *
 	 * @param object The object to add.
 	 */
-	public void addObject(WorldObject object)
-	{
+	public void addObject(WorldObject object) {
 		objects.add(object);
 	}
 
 	/**
 	 * Remove an object from this location's object map.
-	 *
 	 * @param object The object to remove.
 	 */
-	public void removeObject(WorldObject object)
-	{
+	public void removeObject(WorldObject object) {
 		objects.remove(object);
 	}
 
 	@Override
-	public String toString()
-	{
+	public String toString() {
 		return "(" + X_COORDINATE + ", " + Z_COORDINATE + ")";
 	}
 

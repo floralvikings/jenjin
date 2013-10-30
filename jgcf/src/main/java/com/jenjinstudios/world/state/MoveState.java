@@ -4,7 +4,6 @@ package com.jenjinstudios.world.state;
  * The {@code MovementState} class is used to establish what an {@code Actor}'s movement state is.  The {@code
  * stepsUntilChange} field indicates the number of steps (updates) the Actor should take before it changes to the {@code
  * MovementDirection} specified.
- *
  * @author Caleb Brinkman
  */
 public class MoveState
@@ -31,33 +30,30 @@ public class MoveState
 	public static final double FRONT_LEFT = Math.PI * 0.25;
 	/** The number of steps in the last move. */
 	public final int stepsUntilChange;
-	/** The direction of movement. */
-	public final double direction;
+	/** The relativeAngle of movement. */
+	public final double relativeAngle;
 	/** The angle of movement. */
-	public final double moveAngle;
-	/** The actual angle of movement given the direction and move angle. */
+	public final double absoluteAngle;
+	/** The actual angle of movement given the relativeAngle and move angle. */
 	public final double stepAngle;
 
 	/**
 	 * Construct a new MoveState.
-	 *
-	 * @param direction        The direction of movement.
+	 * @param relativeAngle The relativeAngle of movement.
 	 * @param stepsUntilChange The steps in the last movement.
-	 * @param moveAngle        The angle of movement.
+	 * @param absoluteAngle The angle of movement.
 	 */
-	public MoveState(double direction, int stepsUntilChange, double moveAngle)
-	{
-		this.direction = direction;
+	public MoveState(double relativeAngle, int stepsUntilChange, double absoluteAngle) {
+		this.relativeAngle = relativeAngle;
 		this.stepsUntilChange = stepsUntilChange;
-		this.moveAngle = moveAngle;
+		this.absoluteAngle = absoluteAngle;
 
-		double sAngle = moveAngle + direction;
+		double sAngle = absoluteAngle + relativeAngle;
 		stepAngle = (sAngle < 0) ? (sAngle + TWO_PI) : (sAngle % TWO_PI);
 	}
 
 	@Override
-	public String toString()
-	{
-		return "[" + direction + "\u00B0, " + " " + moveAngle + "\u00B0] : " + stepsUntilChange;
+	public String toString() {
+		return "[" + relativeAngle + "\u00B0, " + " " + absoluteAngle + "\u00B0] : " + stepsUntilChange;
 	}
 }

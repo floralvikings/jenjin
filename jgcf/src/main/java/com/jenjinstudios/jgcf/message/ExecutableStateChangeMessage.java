@@ -8,7 +8,6 @@ import com.jenjinstudios.world.state.MoveState;
 
 /**
  * Process a StateChangeMessage.
- *
  * @author Caleb Brinkman
  */
 public class ExecutableStateChangeMessage extends WorldClientExecutableMessage
@@ -20,18 +19,15 @@ public class ExecutableStateChangeMessage extends WorldClientExecutableMessage
 
 	/**
 	 * Construct an ExecutableMessage with the given Message.
-	 *
-	 * @param client  The client invoking this message.
+	 * @param client The client invoking this message.
 	 * @param message The Message.
 	 */
-	public ExecutableStateChangeMessage(WorldClient client, Message message)
-	{
+	public ExecutableStateChangeMessage(WorldClient client, Message message) {
 		super(client, message);
 	}
 
 	@Override
-	public void runSynced()
-	{
+	public void runSynced() {
 		ClientObject obj = getClient().getObject(actorID);
 		if (obj != null && obj instanceof ClientActor)
 		{
@@ -41,11 +37,10 @@ public class ExecutableStateChangeMessage extends WorldClientExecutableMessage
 	}
 
 	@Override
-	public void runASync()
-	{
+	public void runASync() {
 		actorID = (int) getMessage().getArgument("id");
-		double relativeAngle = (double) getMessage().getArgument("direction");
-		double absoluteAngle = (double) getMessage().getArgument("angle");
+		double relativeAngle = (double) getMessage().getArgument("relativeAngle");
+		double absoluteAngle = (double) getMessage().getArgument("absoluteAngle");
 		int stepsUntilChange = (int) getMessage().getArgument("stepsUntilChange");
 		newState = new MoveState(relativeAngle, stepsUntilChange, absoluteAngle);
 	}

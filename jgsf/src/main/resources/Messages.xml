@@ -42,8 +42,8 @@
 
     <message name="StateChangeRequest" id="7">
         <executable language="java" side="server">com.jenjinstudios.jgsf.message.ExecutableStateChangeRequest</executable>
-        <argument type="double" name="direction" />
-        <argument type="double" name="angle" />
+        <argument type="double" name="relativeAngle" />
+        <argument type="double" name="absoluteAngle" />
         <argument type="int" name="stepsUntilChange" />
     </message>
 
@@ -61,8 +61,8 @@
         <argument type="int" name="id" />
         <argument type="double" name="xCoordinate" />
         <argument type="double" name="zCoordinate" />
-        <argument type="double" name="direction" />
-        <argument type="double" name="angle" />
+        <argument type="double" name="relativeAngle" />
+        <argument type="double" name="absoluteAngle" />
         <argument type="int" name="stepsTaken" />
         <argument type="int" name="stepsUntilChange" />
     </message>
@@ -75,15 +75,15 @@
     <message name="StateChangeMessage" id="11">
         <executable language="java" side="client">com.jenjinstudios.jgcf.message.ExecutableStateChangeMessage</executable>
         <argument type="int" name="id" />
-        <argument type="double" name="direction" />
-        <argument type="double" name="angle" />
+        <argument type="double" name="relativeAngle" />
+        <argument type="double" name="absoluteAngle" />
         <argument type="int" name="stepsUntilChange" />
     </message>
 
     <message name="ForceStateMessage" id="12">
         <executable language="java" side="client">com.jenjinstudios.jgcf.message.ExecutableForceStateMessage</executable>
-        <argument type="double" name="direction" />
-        <argument type="double" name="angle" />
+        <argument type="double" name="relativeAngle" />
+        <argument type="double" name="absoluteAngle" />
         <argument type="double" name="xCoordinate" />
         <argument type="double" name="zCoordinate" />
         <argument type="long" name="timeOfForce" />

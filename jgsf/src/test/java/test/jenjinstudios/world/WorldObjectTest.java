@@ -9,14 +9,13 @@ import org.junit.Test;
 
 /**
  * Test WorldObject class.
- *
  * @author Caleb Brinkman
  */
 public class WorldObjectTest
 {
 	/** The WorldObject used for testing. */
 	private WorldObject worldObject;
-	/** The direction used for testing. */
+	/** The relativeAngle used for testing. */
 	private float direction;
 	/** The x coordinate used for testing. */
 	private float xCoordinate;
@@ -31,12 +30,10 @@ public class WorldObjectTest
 
 	/**
 	 * Set up before each test.
-	 *
 	 * @throws Exception If there is an exception.
 	 */
 	@Before
-	public void setUp() throws Exception
-	{
+	public void setUp() throws Exception {
 		worldObject = new WorldObject();
 		direction = 2.15f;
 		xCoordinate = 5.20f;
@@ -50,25 +47,21 @@ public class WorldObjectTest
 	}
 
 	/**
-	 * Test the direction methods.
-	 *
+	 * Test the relativeAngle methods.
 	 * @throws Exception If there's an exception.
 	 */
 	@Test
-	public void testSetDirection() throws Exception
-	{
+	public void testSetDirection() throws Exception {
 		worldObject.setDirection(direction);
 		Assert.assertEquals(direction, worldObject.getDirection(), 0);
 	}
 
 	/**
 	 * Test the coordinate methods.
-	 *
 	 * @throws Exception If there is an exception.
 	 */
 	@Test
-	public void testSetCoordinates() throws Exception
-	{
+	public void testSetCoordinates() throws Exception {
 		worldObject.setVector2D(vector2D);
 		Assert.assertTrue(vector2D.equals(worldObject.getVector2D()));
 
@@ -78,24 +71,20 @@ public class WorldObjectTest
 
 	/**
 	 * Test the getLocation method.
-	 *
 	 * @throws Exception If there is an exception.
 	 */
 	@Test
-	public void testGetLocation() throws Exception
-	{
+	public void testGetLocation() throws Exception {
 		worldObject.setVector2D(vector2D);
 		Assert.assertTrue(worldObject.getLocation() == world.getLocationForCoordinates(vector2D));
 	}
 
 	/**
 	 * Test the ID methods.
-	 *
 	 * @throws Exception If there is an exception.
 	 */
 	@Test
-	public void testSetId() throws Exception
-	{
+	public void testSetId() throws Exception {
 		WorldObject worldObject1 = new WorldObject();
 		worldObject1.setId(id);
 		Assert.assertEquals(id, worldObject1.getId());
@@ -103,12 +92,10 @@ public class WorldObjectTest
 
 	/**
 	 * Test the world methods.
-	 *
 	 * @throws Exception If there is an exception.
 	 */
 	@Test
-	public void testSetWorld() throws Exception
-	{
+	public void testSetWorld() throws Exception {
 		Assert.assertTrue(world == worldObject.getWorld());
 	}
 }

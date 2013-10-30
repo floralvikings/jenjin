@@ -13,7 +13,6 @@ import java.util.logging.Logger;
 
 /**
  * Handles SQL stuff for a WorldServer.
- *
  * @author Caleb Brinkman
  */
 public class WorldSQLHandler extends SQLHandler
@@ -27,27 +26,23 @@ public class WorldSQLHandler extends SQLHandler
 
 	/**
 	 * Create a new SQLHandler with the given database information, and connect to the database.
-	 *
-	 * @param dbAddress  The URL of the database, in the format www.example.place
-	 * @param dbName     The name of the database.
+	 * @param dbAddress The URL of the database, in the format www.example.place
+	 * @param dbName The name of the database.
 	 * @param dbUsername The username used to access the database.
 	 * @param dbPassword The password used to access the database
 	 * @throws java.sql.SQLException If there is an issue connecting to the database.
 	 */
-	public WorldSQLHandler(String dbAddress, String dbName, String dbUsername, String dbPassword) throws SQLException
-	{
+	public WorldSQLHandler(String dbAddress, String dbName, String dbUsername, String dbPassword) throws SQLException {
 		super(dbAddress, dbName, dbUsername, dbPassword);
 	}
 
 	/**
 	 * Log the player into the world.
-	 *
 	 * @param username The player's username.
 	 * @param password The player's password.
 	 * @return An actor pre-filled with the players information.
 	 */
-	public synchronized Actor logInPlayer(String username, String password)
-	{
+	public synchronized Actor logInPlayer(String username, String password) {
 		Actor player = null;
 		if (!isConnected())
 			return player;
@@ -83,12 +78,10 @@ public class WorldSQLHandler extends SQLHandler
 
 	/**
 	 * Log a player out of the world, storing their coordinates in the database.
-	 *
 	 * @param actor The actor to be logged out of the world.
 	 * @return Whether the actor was successfully logged out.
 	 */
-	public boolean logOutPlayer(Actor actor)
-	{
+	public boolean logOutPlayer(Actor actor) {
 		boolean success = false;
 		if (!isConnected())
 			return success;
@@ -117,12 +110,10 @@ public class WorldSQLHandler extends SQLHandler
 
 	/**
 	 * Update the coordinates of the given actor in the database.
-	 *
 	 * @param player The player to update.
 	 * @throws SQLException If there's a SQL exception.
 	 */
-	public void updatePlayer(Actor player) throws SQLException
-	{
+	public void updatePlayer(Actor player) throws SQLException {
 		String username = player.getName();
 		double xCoord = player.getVector2D().getXCoordinate();
 		double zCoord = player.getVector2D().getZCoordinate();

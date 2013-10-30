@@ -5,7 +5,6 @@ import com.jenjinstudios.message.Message;
 
 /**
  * Handles messages from clients of the game world.
- *
  * @author Caleb Brinkman
  */
 public abstract class WorldExecutableMessage extends ServerExecutableMessage
@@ -15,19 +14,16 @@ public abstract class WorldExecutableMessage extends ServerExecutableMessage
 
 	/**
 	 * Construct a new ExecutableMessage.  Must be implemented by subclasses.
-	 *
 	 * @param handler The handler using this ExecutableMessage.
 	 * @param message The message.
 	 */
-	protected WorldExecutableMessage(WorldClientHandler handler, Message message)
-	{
+	protected WorldExecutableMessage(WorldClientHandler handler, Message message) {
 		super(handler, message);
 		this.handler = handler;
 	}
 
 	@Override
-	public WorldClientHandler getClientHandler()
-	{
+	public WorldClientHandler getClientHandler() {
 		return handler;
 	}
 }

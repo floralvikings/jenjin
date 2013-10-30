@@ -6,7 +6,6 @@ import com.jenjinstudios.sql.SQLHandler;
 
 /**
  * Executes the necessary actions to deal with a login response.
- *
  * @author Caleb Brinkman
  */
 @SuppressWarnings("unused")
@@ -17,24 +16,20 @@ public class ExecutableLoginRequest extends ServerExecutableMessage
 
 	/**
 	 * Construct a new ExecutableLoginRequest.
-	 *
 	 * @param clientHandler The handler which created this executable message.
-	 * @param loginRequest  The request sent by the client.
+	 * @param loginRequest The request sent by the client.
 	 */
-	public ExecutableLoginRequest(ClientHandler clientHandler, Message loginRequest)
-	{
+	public ExecutableLoginRequest(ClientHandler clientHandler, Message loginRequest) {
 		super(clientHandler, loginRequest);
 		sqlHandler = clientHandler.getServer().getSqlHandler();
 	}
 
 	@Override
-	public void runSynced()
-	{
+	public void runSynced() {
 	}
 
 	@Override
-	public void runASync()
-	{
+	public void runASync() {
 		if (sqlHandler == null || getClientHandler().isLoggedIn())
 			return;
 		String username = (String) getMessage().getArgument("username");

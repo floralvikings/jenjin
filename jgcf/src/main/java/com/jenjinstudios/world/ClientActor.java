@@ -16,10 +16,10 @@ import static com.jenjinstudios.world.state.MoveState.IDLE;
  * position in the queue, and the Actor's step counter is reset.  If an Actor "oversteps," which is determined if the
  * Actor has taken more than the required number of steps to change state, the Actor is moved back by the "overstepped"
  * number of states, the Actor's state is updated, and the Actor then takes the number of extra steps in the correct
- * direction.
+ * relativeAngle.
  * <p/>
- * An Actor's state is considered "changed" when the Actor is facing a new direction or moving in a new direction.
- *
+ * An Actor's state is considered "changed" when the Actor is facing a new relativeAngle or moving in a new
+ * relativeAngle.
  * @author Caleb Brinkman
  */
 public class ClientActor extends ClientObject
@@ -37,12 +37,10 @@ public class ClientActor extends ClientObject
 
 	/**
 	 * Construct an Actor with the given name.
-	 *
-	 * @param id   The Actor's ID.
+	 * @param id The Actor's ID.
 	 * @param name The name.
 	 */
-	public ClientActor(int id, String name)
-	{
+	public ClientActor(int id, String name) {
 		super(id, name);
 		nextMoveStates = new LinkedList<>();
 		currentMoveState = new MoveState(MoveState.IDLE, 0, 0);
@@ -50,11 +48,9 @@ public class ClientActor extends ClientObject
 
 	/**
 	 * Add a new MoveState to the actor's queue.
-	 *
 	 * @param newState The MoveState to add.
 	 */
-	public void addMoveState(MoveState newState)
-	{
+	public void addMoveState(MoveState newState) {
 		synchronized (nextMoveStates)
 		{
 			if (nextState == null)
@@ -64,22 +60,19 @@ public class ClientActor extends ClientObject
 	}
 
 	@Override
-	public void update()
-	{
+	public void update() {
 		step();
 	}
 
 	/** Take a step, changing state and correcting steps if necessary. */
-	private void step()
-	{
+	private void step() {
 		tryStateChange();
 		stepForward();
 		stepsTaken++;
 	}
 
 	/** Change to the next state, and correct for any over steps. */
-	private void tryStateChange()
-	{
+	private void tryStateChange() {
 		if (nextState == null) return;
 		int overStepped = stepsTaken - nextState.stepsUntilChange;
 		if (overStepped >= 0)
@@ -90,11 +83,9 @@ public class ClientActor extends ClientObject
 
 	/**
 	 * Perform a state change.
-	 *
 	 * @param overStepped The number of steps beyond what the actor should have taken.
 	 */
-	private void doStateChange(int overStepped)
-	{
+	private void doStateChange(int overStepped) {
 		// Store the old state.
 		MoveState oldState = currentMoveState;
 		resetState();
@@ -103,13 +94,11 @@ public class ClientActor extends ClientObject
 
 	/**
 	 * Correct the given number of steps at the specified angles.
-	 *
 	 * @param overstepped The number of steps over.
-	 * @param oldState    The
+	 * @param oldState The
 	 */
-	private void correctOverSteps(int overstepped, MoveState oldState)
-	{
-		if (oldState.direction != MoveState.IDLE)
+	private void correctOverSteps(int overstepped, MoveState oldState) {
+		if (oldState.relativeAngle != MoveState.IDLE)
 		{
 			for (int i = 0; i < overstepped; i++)
 			{
@@ -125,48 +114,40 @@ public class ClientActor extends ClientObject
 
 	/**
 	 * Take a step back in according to the given forward angle.
-	 *
 	 * @param stepAngle The angle in which to move backward.
 	 */
-	private void stepBack(double stepAngle)
-	{
+	private void stepBack(double stepAngle) {
 		stepAngle -= Math.PI;
 		setVector2D(getVector2D().getVectorInDirection(STEP_LENGTH, stepAngle));
 	}
 
 	/** Take a step according to the current move state. */
-	public void stepForward()
-	{
-		if (currentMoveState.direction == IDLE) return;
+	public void stepForward() {
+		if (currentMoveState.relativeAngle == IDLE) return;
 		setVector2D(getVector2D().getVectorInDirection(STEP_LENGTH, currentMoveState.stepAngle));
 
 	}
 
-	/** Reset the move state, direction, and newState flag when changing the move state. */
-	private void resetState()
-	{
+	/** Reset the move state, relativeAngle, and newState flag when changing the move state. */
+	private void resetState() {
 		currentMoveState = nextState;
 		nextState = nextMoveStates.poll();
-		setDirection(currentMoveState.moveAngle);
+		setDirection(currentMoveState.absoluteAngle);
 	}
 
 	/**
 	 * Set the number of steps taken since the last move.
-	 *
 	 * @param stepsTaken The number of steps taken since the last move.
 	 */
-	public void setStepsTaken(int stepsTaken)
-	{
+	public void setStepsTaken(int stepsTaken) {
 		this.stepsTaken = stepsTaken;
 	}
 
 	/**
 	 * Sets the current move state.  Should only be called when the actor is created.
-	 *
 	 * @param currentMoveState The current move state.
 	 */
-	public void setCurrentMoveState(MoveState currentMoveState)
-	{
+	public void setCurrentMoveState(MoveState currentMoveState) {
 		this.currentMoveState = currentMoveState;
 	}
 }

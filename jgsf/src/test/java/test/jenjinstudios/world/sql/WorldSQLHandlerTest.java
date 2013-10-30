@@ -11,19 +11,16 @@ import static org.junit.Assert.assertTrue;
 
 /**
  * Test the WorldSQLHandler.
- *
  * @author Caleb Brinkman
  */
 public class WorldSQLHandlerTest
 {
 	/**
 	 * Test logging the player into and out of the world, including updating coordinates.
-	 *
 	 * @throws Exception If there's an exception.
 	 */
 	@Test
-	public void testLoginLogout() throws Exception
-	{
+	public void testLoginLogout() throws Exception {
 		WorldSQLHandler worldSQLHandler = new WorldSQLHandler("localhost", "jenjin_test", "jenjin_user",
 				"jenjin_password");
 

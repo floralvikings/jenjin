@@ -14,10 +14,10 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 /**
  * Test the world server.
- *
  * @author Caleb Brinkman
  */
 public class WorldServerTest
@@ -44,38 +44,31 @@ public class WorldServerTest
 
 	/**
 	 * Set up the client and server.
-	 *
 	 * @throws Exception If there's an exception.
 	 */
 	@Before
-	public void setUp() throws Exception
-	{
+	public void setUp() throws Exception {
 		initWorldServer();
 		initWorldClient();
 	}
 
 	/**
 	 * Initialize the world and world server.
-	 *
 	 * @throws Exception If there's an exception.
 	 */
-	private void initWorldServer() throws Exception
-	{
+	private void initWorldServer() throws Exception {
 		worldSQLHandler = new WorldSQLHandler("localhost", "jenjin_test", "jenjin_user", "jenjin_password");
-		world = new World();
-		worldServer = new WorldServer(world);
-		worldServer.setSQLHandler(worldSQLHandler);
+		worldServer = new WorldServer(worldSQLHandler);
+		world = worldServer.getWorld();
 		// FIXME Blocking on login request if SQL handler not set. Bad.
 		worldServer.blockingStart();
 	}
 
 	/**
 	 * Initialize and log the client in.
-	 *
 	 * @throws Exception If there's an exception.
 	 */
-	private void initWorldClient() throws Exception
-	{
+	private void initWorldClient() throws Exception {
 		worldClient = new WorldClient("localhost", WorldServer.DEFAULT_PORT, "TestAccount01", "testPassword");
 		worldClient.blockingStart();
 		worldClient.sendBlockingLoginRequest();
@@ -87,12 +80,10 @@ public class WorldServerTest
 
 	/**
 	 * Tear down the client and server.
-	 *
 	 * @throws Exception If there's an exception.
 	 */
 	@After
-	public void tearDown() throws Exception
-	{
+	public void tearDown() throws Exception {
 		serverPlayer.setVector2D(0, 0);
 		worldClient.sendBlockingLogoutRequest();
 		worldClient.shutdown();
@@ -102,13 +93,10 @@ public class WorldServerTest
 
 	/**
 	 * Move the client player to the given vector.
-	 *
 	 * @param newVector The vector to which to move.
-	 *
 	 * @throws InterruptedException If there's an exception.
 	 */
-	private void movePlayerTowardVector(Vector2D newVector) throws InterruptedException
-	{
+	private void movePlayerTowardVector(Vector2D newVector) throws InterruptedException {
 		clientPlayer.setNewRelativeAngle(clientPlayer.getVector2D().getAngleToVector(newVector));
 		while (clientPlayer.getVector2D().getDistanceToVector(newVector) > Actor.STEP_LENGTH) { Thread.sleep(10); }
 		clientPlayer.setNewRelativeAngle(MoveState.IDLE);
@@ -117,11 +105,9 @@ public class WorldServerTest
 
 	/**
 	 * Move the player to the origin.
-	 *
 	 * @throws InterruptedException If there's an exception.
 	 */
-	private void movePlayerToOrigin() throws InterruptedException
-	{
+	private void movePlayerToOrigin() throws InterruptedException {
 		clientPlayer.setNewRelativeAngle(clientPlayer.getVector2D().getAngleToVector(Vector2D.ORIGIN));
 		while (!clientPlayer.getVector2D().equals(Vector2D.ORIGIN)) { Thread.sleep(10); }
 		clientPlayer.setNewRelativeAngle(MoveState.IDLE);
@@ -130,12 +116,10 @@ public class WorldServerTest
 
 	/**
 	 * Test the actor visiblity after player and actor movement.
-	 *
 	 * @throws Exception If there's an exception.
 	 */
 	@Test
-	public void testActorVisibilty() throws Exception
-	{
+	public void testActorVisibilty() throws Exception {
 		Vector2D actorOrigin = new Vector2D(21, 21);
 		serverActor = new Actor("TestActor");
 		serverActor.setVector2D(actorOrigin);
@@ -165,17 +149,16 @@ public class WorldServerTest
 
 	/**
 	 * Test the state-forcing funcionalty.
-	 *
 	 * @throws Exception If there's an exception.
 	 */
 	@Test
-	public void testForcedState() throws Exception
-	{
+	public void testForcedState() throws Exception {
 		clientPlayer.setNewRelativeAngle(MoveState.FRONT);
 		while (clientPlayer.getStepsTaken() < 5) { Thread.sleep(10); }
-		clientPlayer.setNewRelativeAngle(MoveState.BACK_LEFT);
-		while (clientPlayer.getStepsTaken() < 10) { Thread.sleep(10); }
+		clientPlayer.setNewAbsoluteAngle(Math.PI);
+		while (!clientPlayer.isForcedState()) { Thread.sleep(10); }
 		Thread.sleep(200);
+		assertFalse(clientPlayer.isForcedState());
 		assertEquals(serverPlayer.getVector2D(), clientPlayer.getVector2D());
 	}
 }

@@ -7,32 +7,27 @@ import java.io.IOException;
 
 /**
  * Used to request a ping message.
- *
  * @author Caleb Brinkman
  */
 public class ExecutablePingRequest extends ServerExecutableMessage
 {
 	/**
 	 * Construct a new ExecutableMessage.  Must be implemented by subclasses.
-	 *
 	 * @param handler The handler using this ExecutableMessage.
 	 * @param message The message.
 	 */
-	public ExecutablePingRequest(ClientHandler handler, Message message)
-	{
+	public ExecutablePingRequest(ClientHandler handler, Message message) {
 		super(handler, message);
 	}
 
 	/** Run the synced portion of this message. */
 	@Override
-	public void runSynced()
-	{
+	public void runSynced() {
 	}
 
 	/** Run asynchronous portion of this message. */
 	@Override
-	public void runASync()
-	{
+	public void runASync() {
 		Message pingResponse = new Message("PingResponse");
 		pingResponse.setArgument("requestTimeNanos", getMessage().getArgument("requestTimeNanos"));
 		try

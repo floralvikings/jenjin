@@ -5,7 +5,6 @@ import com.jenjinstudios.message.Message;
 
 /**
  * Handles processing an ActorInvisibleMessage.
- *
  * @author Caleb Brinkman
  */
 public class ExecutableObjectInvisibleMessage extends WorldClientExecutableMessage
@@ -15,24 +14,20 @@ public class ExecutableObjectInvisibleMessage extends WorldClientExecutableMessa
 
 	/**
 	 * Construct an ExecutableMessage with the given Message.
-	 *
-	 * @param client  The client invoking this message.
+	 * @param client The client invoking this message.
 	 * @param message The Message.
 	 */
-	public ExecutableObjectInvisibleMessage(WorldClient client, Message message)
-	{
+	public ExecutableObjectInvisibleMessage(WorldClient client, Message message) {
 		super(client, message);
 	}
 
 	@Override
-	public void runSynced()
-	{
+	public void runSynced() {
 		getClient().removeVisible(id);
 	}
 
 	@Override
-	public void runASync()
-	{
+	public void runASync() {
 		id = (int) getMessage().getArgument("id");
 	}
 }

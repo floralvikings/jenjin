@@ -6,7 +6,6 @@ import java.util.ArrayList;
 
 /**
  * Contains all the Zones, Locations and GameObjects.
- *
  * @author Caleb Brinkman
  */
 public class World
@@ -21,8 +20,7 @@ public class World
 	private int objectCount;
 
 	/** Construct a new World. */
-	public World()
-	{
+	public World() {
 		locationGrid = new Location[SIZE][SIZE];
 		worldObjects = new ArrayList<>();
 		for (int x = 0; x < SIZE; x++)
@@ -32,13 +30,10 @@ public class World
 
 	/**
 	 * Add an object to the world.
-	 *
 	 * @param object The object to add.
-	 *
 	 * @throws InvalidLocationException If an object is attempted to be added with an invalid location.
 	 */
-	public void addObject(WorldObject object) throws InvalidLocationException
-	{
+	public void addObject(WorldObject object) throws InvalidLocationException {
 		if (object == null)
 			throw new IllegalArgumentException("addObject(WorldObject obj) argument 0 not allowed to be null!");
 		object.setWorld(this);
@@ -53,11 +48,9 @@ public class World
 
 	/**
 	 * Remove an object from the world.  Specifically, sets the index of the given object in the world's array to null.
-	 *
 	 * @param object The object to remove.
 	 */
-	public void removeObject(WorldObject object)
-	{
+	public void removeObject(WorldObject object) {
 		synchronized (worldObjects)
 		{
 			worldObjects.set(object.getId(), null);
@@ -68,38 +61,29 @@ public class World
 
 	/**
 	 * Get the location from the zone grid that contains the specified vector2D.
-	 *
 	 * @param vector2D The vector2D
-	 *
 	 * @return The location that contains the specified vector2D.
-	 *
 	 * @throws InvalidLocationException If the coordinates specified indicate an invalid locatoin.
 	 */
-	public Location getLocationForCoordinates(Vector2D vector2D) throws InvalidLocationException
-	{
+	public Location getLocationForCoordinates(Vector2D vector2D) throws InvalidLocationException {
 		return getLocationForCoordinates(vector2D.getXCoordinate(), vector2D.getZCoordinate());
 	}
 
 	/**
 	 * Get the location that contains the specified coordinates.
-	 *
 	 * @param x The x coordinate.
 	 * @param z The z coordinate
-	 *
 	 * @return The location that contains the specified coordinates.
-	 *
 	 * @throws InvalidLocationException If the coordinates supplied point to an invalid location.
 	 */
-	public Location getLocationForCoordinates(double x, double z) throws InvalidLocationException
-	{
+	public Location getLocationForCoordinates(double x, double z) throws InvalidLocationException {
 		if (x < 0 || z < 0 || x / Location.SIZE >= SIZE || z / Location.SIZE >= SIZE)
 			throw new InvalidLocationException(new Vector2D(x, z));
 		return locationGrid[(int) x / Location.SIZE][(int) z / Location.SIZE];
 	}
 
 	/** Update all objects in the world. */
-	public void update()
-	{
+	public void update() {
 		synchronized (worldObjects)
 		{
 			for (WorldObject o : worldObjects)
@@ -110,14 +94,11 @@ public class World
 
 	/**
 	 * Get an area of location objects.
-	 *
 	 * @param center The center of the area to return.
 	 * @param radius The radius of the area.
-	 *
 	 * @return An ArrayList containing all valid locations in the specified area.
 	 */
-	public ArrayList<Location> getLocationArea(Location center, int radius)
-	{
+	public ArrayList<Location> getLocationArea(Location center, int radius) {
 		// Make the array list with an initial size of area
 		ArrayList<Location> areaGrid = new ArrayList<>();
 		// Get the top-right corner of the grid.
@@ -144,11 +125,9 @@ public class World
 
 	/**
 	 * Get the number of objects currently in the world.
-	 *
 	 * @return The number of objects currently in the world.
 	 */
-	public int getObjectCount()
-	{
+	public int getObjectCount() {
 		return objectCount;
 	}
 }
