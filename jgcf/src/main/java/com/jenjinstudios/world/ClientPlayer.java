@@ -153,21 +153,20 @@ public class ClientPlayer extends ClientObject
 	 */
 	public void forcePosition(Vector2D position, double relativeAngle, double absoluteAngle, int stepsToTake) {
 		isForced = true;
-		setVector2D(position);
-		// Save forced state for later comparison.
 		forcedState = new MoveState(this.relativeAngle, 0, this.absoluteAngle);
-		resetState(relativeAngle, absoluteAngle);
-
+		resetState(position, relativeAngle, absoluteAngle);
 		for (int i = 0; i < stepsToTake; i++)
 			step();
 	}
 
 	/**
 	 * Reset the player's state.
+	 * @param position The new position.
 	 * @param relativeAngle The relative angle.
 	 * @param absoluteAngle The absolte angle.
 	 */
-	private void resetState(double relativeAngle, double absoluteAngle) {
+	private void resetState(Vector2D position, double relativeAngle, double absoluteAngle) {
+		setVector2D(position);
 		synchronized (savedStates) { savedStates.clear(); }
 		this.relativeAngle = relativeAngle;
 		this.absoluteAngle = absoluteAngle;
