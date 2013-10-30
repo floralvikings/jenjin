@@ -75,6 +75,7 @@ public class Client extends TaskedCommunicator
 	 * initializing.
 	 */
 	public void blockingStart() throws InterruptedException {
+		// TODO Add Timeout Here
 		start();
 
 		while (!isRunning()) Thread.sleep(1);

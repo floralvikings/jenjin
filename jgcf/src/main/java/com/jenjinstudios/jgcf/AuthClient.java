@@ -42,6 +42,7 @@ public class AuthClient extends Client
 
 	/** Queue a message to log into the server with the given username and password, and wait for the response. */
 	public void sendBlockingLoginRequest() {
+		// TODO Add Timeout Here
 		sendLoginRequest();
 		while (!hasReceivedLoginResponse())
 		{
@@ -97,6 +98,7 @@ public class AuthClient extends Client
 
 	/** Queue a message to log the user out of the server. */
 	public void sendBlockingLogoutRequest() {
+		// TODO Add Timeout Here
 		sendLogoutRequest();
 
 		while (!hasReceivedLogoutResponse())
