@@ -55,6 +55,7 @@ public class Server<T extends ClientHandler> extends Thread
 	 * @param maxClients The maximum number of clients.
 	 * @throws java.io.IOException If there is an IO Error initializing the server.
 	 */
+	@SuppressWarnings("unchecked")
 	public Server(int ups, int port, Class<? extends T> handlerClass, int maxClients) throws IOException {
 		super("Server");
 		LOGGER.log(Level.FINE, "Initializing Server.");
