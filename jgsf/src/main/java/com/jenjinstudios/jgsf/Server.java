@@ -17,7 +17,6 @@ import java.util.logging.Logger;
 @SuppressWarnings("SameParameterValue")
 public class Server<T extends ClientHandler> extends Thread
 {
-
 	/** The default number of max clients. */
 	public static final int DEFAULT_MAX_CLIENTS = 100;
 	/** The logger used by this class. */
