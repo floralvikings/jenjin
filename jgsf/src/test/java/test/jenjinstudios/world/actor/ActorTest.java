@@ -39,7 +39,7 @@ public class ActorTest
 		world.addObject(actor);
 		Assert.assertEquals(1, world.getObjectCount());
 
-		actor.setVector2D(0, 0);
+		actor.setVector2D(new Vector2D(0, 0));
 		actor.addMoveState(new MoveState(MoveState.FRONT, 10, 0));
 		actor.addMoveState(new MoveState(MoveState.BACK, 10, 0));
 		actor.addMoveState(new MoveState(MoveState.IDLE, 10, 0));
@@ -76,7 +76,7 @@ public class ActorTest
 	@Test
 	public void testForceIdle() throws Exception {
 		Actor player = new Actor("Player");
-		player.setVector2D(1.0, 0);
+		player.setVector2D(new Vector2D(1.0, 0));
 
 		world.addObject(player);
 

@@ -84,7 +84,7 @@ public class WorldServerTest
 	 */
 	@After
 	public void tearDown() throws Exception {
-		serverPlayer.setVector2D(0, 0);
+		serverPlayer.setVector2D(new Vector2D(0, 0));
 		worldClient.sendBlockingLogoutRequest();
 		worldClient.shutdown();
 

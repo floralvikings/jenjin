@@ -64,9 +64,8 @@ public class WorldObject
 	/**
 	 * Set this object's current position.
 	 * @param vector2D The new position.
-	 * @throws InvalidLocationException If the supplied coordinates point to an invalid location.
 	 */
-	public void setVector2D(Vector2D vector2D) throws InvalidLocationException {
+	public void setVector2D(Vector2D vector2D) {
 		this.vector2D = new Vector2D(vector2D);
 		Location oldLocation = location;
 		// TODO This call is somewhat intensive, and will probably need some optimization.
@@ -75,22 +74,12 @@ public class WorldObject
 		if (world != null)
 		{
 			location = world.getLocationForCoordinates(this.vector2D);
-			if (oldLocation != location)
+			if (oldLocation != location && location != null)
 			{
 				oldLocation.removeObject(this);
 				location.addObject(this);
 			}
 		}
-	}
-
-	/**
-	 * Set this object' current position.
-	 * @param x The new x coordinate.
-	 * @param z The new z coordinate.
-	 * @throws InvalidLocationException If the supplied coordinates indicate an invalid location.
-	 */
-	public void setVector2D(double x, double z) throws InvalidLocationException {
-		setVector2D(new Vector2D(x, z));
 	}
 
 	/**
@@ -135,14 +124,10 @@ public class WorldObject
 		if (this.world != null)
 			throw new IllegalArgumentException("The world has already been set for this object.");
 		this.world = world;
-		try
-		{
-			location = world.getLocationForCoordinates(this.vector2D);
-		} catch (InvalidLocationException ignored)
-		{
-			// The vector has already been set; why worry?
-		}
-		location.addObject(this);
+		location = world.getLocationForCoordinates(this.vector2D);
+
+		if (location != null)
+			location.addObject(this);
 	}
 
 	/**

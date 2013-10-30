@@ -65,7 +65,7 @@ public class WorldObjectTest
 		worldObject.setVector2D(vector2D);
 		Assert.assertTrue(vector2D.equals(worldObject.getVector2D()));
 
-		worldObject.setVector2D(xCoordinate, zCoordinate);
+		worldObject.setVector2D(new Vector2D(xCoordinate, zCoordinate));
 		Assert.assertTrue(vector2D.equals(worldObject.getVector2D()));
 	}
 
