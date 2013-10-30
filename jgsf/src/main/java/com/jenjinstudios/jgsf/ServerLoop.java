@@ -1,6 +1,5 @@
 package com.jenjinstudios.jgsf;
 
-import java.io.IOException;
 import java.util.LinkedList;
 import java.util.TimerTask;
 import java.util.logging.Level;
@@ -8,7 +7,6 @@ import java.util.logging.Logger;
 
 /**
  * Implements the update loop in the form of a TimerTask.
- *
  * @author Caleb Brinkman
  */
 class ServerLoop extends TimerTask
@@ -32,12 +30,10 @@ class ServerLoop extends TimerTask
 
 	/**
 	 * Construct a new {@code ServerLoop} for the specified server.
-	 *
 	 * @param server The server for which this server loop works.
 	 */
 	@SuppressWarnings("unchecked")
-	public ServerLoop(TaskedServer server)
-	{
+	public ServerLoop(TaskedServer server) {
 		this.server = server;
 		syncedTasks = this.server.getSyncedTasks();
 		repeatedTasks = this.server.getRepeatedTasks();
@@ -45,79 +41,54 @@ class ServerLoop extends TimerTask
 		cycleNum = 0;
 	}
 
-	/** Called at the beginning of a new server update cycle. */
-	private void newCycle()
-	{
-		long oldCycleStart = cycleStart;
-		cycleStart = System.nanoTime();
-		cycleNum++;
-		lastCycles[(int) cycleNum % lastCycles.length] = cycleStart - oldCycleStart;
-		long total = 0;
-		for (long l : lastCycles)
-			total += l;
-		double averageLength = (total / lastCycles.length);
-		averageUPS = 1000000000 / averageLength;
-	}
-
-	/** Run the synchronized tasks in the server queue. */
-	private void runSynchronizedTasks()
-	{
-		synchronized (syncedTasks)
-		{
-			while (!syncedTasks.isEmpty())
-			{
-				syncedTasks.remove().run();
-			}
-		}
-	}
-
-	/** Run the repeated tasks in the server queue. */
-	private void runRepeatedTasks()
-	{
-		synchronized (repeatedTasks)
-		{
-			for (Runnable r : repeatedTasks)
-			{
-				r.run();
-			}
-		}
-	}
-
-	public void run()
-	{
+	public void run() {
 		newCycle();
 		boolean clientsAdded = server.getNewClients();
 		if (clientsAdded) LOGGER.log(Level.FINE, "New Clients Added");
 		runSynchronizedTasks();
 		runRepeatedTasks();
 		server.update();
-		try
-		{
-			server.broadcast();
-		} catch (IOException e)
-		{
-			LOGGER.log(Level.SEVERE, "Error broadcasting. ", e);
-		}
+		server.broadcast();
 		server.refresh();
+	}
+
+	/** Run the repeated tasks in the server queue. */
+	private void runRepeatedTasks() {
+		synchronized (repeatedTasks)
+		{
+			for (Runnable r : repeatedTasks) { r.run(); }
+		}
+	}
+
+	/** Run the synchronized tasks in the server queue. */
+	private void runSynchronizedTasks() {
+		synchronized (syncedTasks)
+		{
+			while (!syncedTasks.isEmpty()) { syncedTasks.remove().run(); }
+		}
+	}
+
+	/** Called at the beginning of a new server update cycle. */
+	private void newCycle() {
+		long oldCycleStart = cycleStart;
+		cycleStart = System.nanoTime();
+		cycleNum++;
+		lastCycles[(int) cycleNum % lastCycles.length] = cycleStart - oldCycleStart;
+		long total = 0;
+		for (long l : lastCycles) { total += l; }
+		double averageLength = (total / lastCycles.length);
+		averageUPS = 1000000000 / averageLength;
 	}
 
 	/**
 	 * The actual average UPS of this server.  Blocks until at least 50 server cycles have been completed.
-	 *
 	 * @return The average UPS for the past 50 updates.
 	 */
-	double getAverageUPS()
-	{
-		return averageUPS;
-	}
+	double getAverageUPS() { return averageUPS; }
 
 	/**
 	 * The start time, in nanoseconds, of the current cycle.
-	 *
 	 * @return The start time of the current cycle.
 	 */
-	long getCycleStart()
-	{
-		return cycleStart;
-	}
+	long getCycleStart() { return cycleStart; }
 }

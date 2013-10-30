@@ -117,11 +117,8 @@ public abstract class Communicator extends Thread
 	 */
 	protected void setConnected(boolean connected) { this.connected = connected; }
 
-	/**
-	 * Send all messages in the outgoing queue.  This method should only be called from the client update thread.
-	 * @throws IOException If there is an error writing to the output stream.
-	 */
-	public void sendAllMessages() throws IOException {
+	/** Send all messages in the outgoing queue.  This method should only be called from the client update thread. */
+	public void sendAllMessages() {
 		synchronized (outgoingMessages)
 		{
 			while (!outgoingMessages.isEmpty()) { writeMessage(outgoingMessages.remove()); }

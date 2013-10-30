@@ -105,17 +105,13 @@ public class Server<T extends ClientHandler> extends Thread
 		return clientsAdded;
 	}
 
-	/**
-	 * Broadcast all outgoing messages to clients.
-	 * @throws java.io.IOException If there's an IO exception.
-	 */
-	public void broadcast() throws IOException {
+	/** Broadcast all outgoing messages to clients. */
+	public void broadcast() {
 		synchronized (clientHandlers)
 		{
 			for (ClientHandler current : clientHandlers)
 			{
-				if (current != null)
-					current.sendAllMessages();
+				if (current != null) { current.sendAllMessages(); }
 			}
 		}
 	}
