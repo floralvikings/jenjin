@@ -12,7 +12,6 @@ import java.util.logging.Logger;
 /**
  * The base Server class for implementation of the JGSA.  It contains extensible execution functionality designed to be
  * used by Executable Messages from ClientHandlers.
- *
  * @author Caleb Brinkman
  */
 @SuppressWarnings("SameParameterValue")
@@ -27,16 +26,12 @@ public class Server<T extends ClientHandler> extends Thread
 	public final int UPS;
 	/** The period of the update in milliseconds. */
 	public final int PERIOD;
-	/** The port on which this server will run. */
-	private final int PORT;
 	/** The list of {@code ClientListener}s working for this server. */
-	private final LinkedList<ClientListener<T>> clientListeners;
+	private final ClientListener<T> clientListener;
 	/** The list of {@code ClientHandler}s working for this server. */
 	private final ArrayList<T> clientHandlers;
 	/** The map of clients stored by username. */
 	private final TreeMap<String, T> clientsByUsername;
-	/** The class for ClientHandlers. */
-	private final Class<? extends T> handlerClass;
 	/** Indicates whether this server is initialized. */
 	private volatile boolean initialized;
 	/** The current number of connected clients. */
@@ -44,64 +39,42 @@ public class Server<T extends ClientHandler> extends Thread
 
 	/**
 	 * Construct a new Server without a SQLHandler.
-	 *
-	 * @param ups          The cycles per second at which this server will run.
-	 * @param port         The port number on which this server will listen.
+	 * @param ups The cycles per second at which this server will run.
+	 * @param port The port number on which this server will listen.
 	 * @param handlerClass The class of ClientHandler used by this Server.
-	 *
 	 * @throws java.io.IOException If there is an IO Error initializing the server.
 	 */
-	public Server(int ups, int port, Class<? extends T> handlerClass) throws IOException
-	{
+	public Server(int ups, int port, Class<? extends T> handlerClass) throws IOException {
 		this(ups, port, handlerClass, DEFAULT_MAX_CLIENTS);
 	}
 
 	/**
 	 * Construct a new Server without a SQLHandler.
-	 *
-	 * @param ups          The cycles per second at which this server will run.
-	 * @param port         The port number on which this server will listen.
+	 * @param ups The cycles per second at which this server will run.
+	 * @param port The port number on which this server will listen.
 	 * @param handlerClass The class of ClientHandler used by this Server.
-	 * @param maxClients   The maximum number of clients.
-	 *
+	 * @param maxClients The maximum number of clients.
 	 * @throws java.io.IOException If there is an IO Error initializing the server.
 	 */
-	public Server(int ups, int port, Class<? extends T> handlerClass, int maxClients) throws IOException
-	{
+	public Server(int ups, int port, Class<? extends T> handlerClass, int maxClients) throws IOException {
 		super("Server");
 		LOGGER.log(Level.FINE, "Initializing Server.");
 		UPS = ups;
-		PORT = port;
 		PERIOD = 1000 / ups;
-		this.handlerClass = handlerClass;
 		clientsByUsername = new TreeMap<>();
-		clientListeners = new LinkedList<>();
+		clientListener = (ClientListener<T>) new ClientListener<>(this, port, handlerClass);
 		clientHandlers = new ArrayList<>();
 		for (int i = 0; i < maxClients; i++)
 			clientHandlers.add(null);
 		numClients = 0;
 		MessageRegistry.registerXmlMessages();
-		addListener();
-	}
-
-	/**
-	 * Start a new Client Listener on the specified port.
-	 *
-	 * @throws java.io.IOException If there is an IO error adding the listener.
-	 */
-	@SuppressWarnings("unchecked")
-	private void addListener() throws IOException
-	{
-		clientListeners.add((ClientListener<T>) new ClientListener<>(this, PORT, handlerClass));
 	}
 
 	/**
 	 * Schedule a client to be removed during the next update.
-	 *
 	 * @param handler The client handler to be removed.
 	 */
-	void removeClient(ClientHandler handler)
-	{
+	void removeClient(ClientHandler handler) {
 		synchronized (clientHandlers)
 		{
 			String username = handler.getUsername();
@@ -114,35 +87,29 @@ public class Server<T extends ClientHandler> extends Thread
 
 	/**
 	 * Add new clients that have connected to the client listeners.
-	 *
 	 * @return true if new clients were added.
 	 */
-	public boolean getNewClients()
-	{
-		boolean clientsAdded = false;
-		for (ClientListener<T> l : clientListeners)
+	public boolean getNewClients() {
+		boolean clientsAdded;
+		LinkedList<T> nc = clientListener.getNewClients();
+		clientsAdded = !nc.isEmpty();
+		for (T h : nc)
 		{
-			LinkedList<T> nc = l.getNewClients();
-			clientsAdded = !nc.isEmpty();
-			for (T h : nc)
-			{
-				int nullIndex = clientHandlers.indexOf(null);
-				clientHandlers.set(nullIndex, h);
-				h.setID(nullIndex);
-				h.start();
-				numClients++;
-			}
+			int nullIndex = clientHandlers.indexOf(null);
+			clientHandlers.set(nullIndex, h);
+			h.setID(nullIndex);
+			h.start();
+			numClients++;
 		}
+
 		return clientsAdded;
 	}
 
 	/**
 	 * Broadcast all outgoing messages to clients.
-	 *
 	 * @throws java.io.IOException If there's an IO exception.
 	 */
-	public void broadcast() throws IOException
-	{
+	public void broadcast() throws IOException {
 		synchronized (clientHandlers)
 		{
 			for (ClientHandler current : clientHandlers)
@@ -154,23 +121,18 @@ public class Server<T extends ClientHandler> extends Thread
 	}
 
 	/** Update all clients before they sendAllMessages. */
-	public void update()
-	{
+	public void update() {
 		synchronized (clientHandlers)
 		{
 			for (ClientHandler current : clientHandlers)
 			{
-				if (current != null)
-				{
-					current.update();
-				}
+				if (current != null) { current.update(); }
 			}
 		}
 	}
 
 	/** Refresh all clients after they sendAllMessages. */
-	public void refresh()
-	{
+	public void refresh() {
 		synchronized (clientHandlers)
 		{
 			for (ClientHandler current : clientHandlers)
@@ -182,15 +144,13 @@ public class Server<T extends ClientHandler> extends Thread
 
 	/** Run the server. */
 	@Override
-	public void run()
-	{
-		for (ClientListener<T> listener : clientListeners) { listener.listen(); }
+	public void run() {
+		clientListener.listen();
 		initialized = true;
 	}
 
 	/** Start the server, and do not return until it is fully initialized. */
-	public final void blockingStart()
-	{
+	public final void blockingStart() {
 		start();
 		// TODO Add timeout here.
 		while (!initialized) try
@@ -204,11 +164,9 @@ public class Server<T extends ClientHandler> extends Thread
 
 	/**
 	 * Shutdown the server, forcing all client links to close.
-	 *
 	 * @throws IOException if there is an error shutting down a client.
 	 */
-	public void shutdown() throws IOException
-	{
+	public void shutdown() throws IOException {
 		synchronized (clientHandlers)
 		{
 			for (ClientHandler h : clientHandlers)
@@ -216,53 +174,35 @@ public class Server<T extends ClientHandler> extends Thread
 				if (h != null) { h.shutdown(); }
 			}
 		}
-		synchronized (clientListeners)
-		{
-			for (ClientListener<T> l : clientListeners) { l.stopListening(); }
-		}
+		clientListener.stopListening();
 	}
 
 	/**
 	 * Return whether this server is initialized.
-	 *
 	 * @return true if the server has been initialized.
 	 */
-	public boolean isInitialized()
-	{
-		return initialized;
-	}
+	public boolean isInitialized() { return initialized; }
 
 	/**
 	 * Get the ClientHandler with the given username.
-	 *
 	 * @param username The username of the client to look up.
-	 *
 	 * @return The client with the username specified; null if there is no client with this username.
 	 */
-	public T getClientHandlerByUsername(String username)
-	{
-		return clientsByUsername.get(username);
-	}
+	public T getClientHandlerByUsername(String username) { return clientsByUsername.get(username); }
 
 	/**
 	 * Called by ClientHandler when the client sets a username.
-	 *
 	 * @param username The username assigned to the ClientHandler.
-	 * @param handler  The ClientHandler that has had a username set.
+	 * @param handler The ClientHandler that has had a username set.
 	 */
 	@SuppressWarnings("unchecked")
-	void clientUsernameSet(String username, ClientHandler handler)
-	{
-		clientsByUsername.put(username, (T) handler);
-	}
+	void clientUsernameSet(String username, ClientHandler handler) { clientsByUsername.put(username, (T) handler); }
 
 	/**
 	 * Get the current number of connected clients.
-	 *
 	 * @return The current number of connected clients.
 	 */
-	public int getNumClients()
-	{
+	public int getNumClients() {
 		return numClients;
 	}
 }
