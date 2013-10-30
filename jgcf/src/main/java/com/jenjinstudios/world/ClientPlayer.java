@@ -98,13 +98,6 @@ public class ClientPlayer extends ClientObject
 		saveState();
 	}
 
-	@Override
-	public void update() {
-		setAngles();
-		resetFlags();
-		step();
-	}
-
 	/** Calculate and set the player's "true" movement angle. */
 	private void calculateTrueAngle() {
 		double sAngle = relativeAngle + absoluteAngle;
@@ -119,10 +112,11 @@ public class ClientPlayer extends ClientObject
 		stepsTaken = 0;
 	}
 
-	/** Set the angles if new angles have been added. */
-	private void setAngles() {
-		if (isNewAbsolute) { setAbsoluteAngle(newAbsoluteAngle); }
-		if (isNewRelative) { setRelativeAngle(newRelativeAngle); }
+	@Override
+	public void update() {
+		setAngles();
+		resetFlags();
+		step();
 	}
 
 	/**
@@ -174,11 +168,10 @@ public class ClientPlayer extends ClientObject
 		isIdle = relativeAngle == MoveState.IDLE;
 	}
 
-	/** Reset the flags associated with this player. */
-	private void resetFlags() {
-		isForced = false;
-		isNewAbsolute = false;
-		isNewRelative = false;
+	/** Set the angles if new angles have been added. */
+	private void setAngles() {
+		if (isNewAbsolute) { setAbsoluteAngle(newAbsoluteAngle); }
+		if (isNewRelative) { setRelativeAngle(newRelativeAngle); }
 	}
 
 	/**
@@ -192,6 +185,14 @@ public class ClientPlayer extends ClientObject
 	 * @return Whether this player's state was forced during the most recent update.
 	 */
 	public boolean isForcedState() { return isForced; }
+
+
+	/** Reset the flags associated with this player. */
+	private void resetFlags() {
+		isForced = false;
+		isNewAbsolute = false;
+		isNewRelative = false;
+	}
 
 
 	/** Move one step forward. */
