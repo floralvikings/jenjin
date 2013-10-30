@@ -77,8 +77,7 @@ public class Server<T extends ClientHandler> extends Thread
 		synchronized (clientHandlers)
 		{
 			String username = handler.getUsername();
-			if (username != null)
-				clientsByUsername.remove(username);
+			if (username != null) { clientsByUsername.remove(username); }
 			clientHandlers.set(handler.getHandlerId(), null);
 			numClients--;
 		}
