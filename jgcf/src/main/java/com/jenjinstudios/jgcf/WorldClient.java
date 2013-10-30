@@ -14,7 +14,6 @@ import java.util.logging.Logger;
 /**
  * The WorldClient class is used to connect to a WorldServer and stores information about the environment immediately
  * surrounding the player.
- *
  * @author Caleb Brinkman
  */
 public class WorldClient extends AuthClient
@@ -31,14 +30,12 @@ public class WorldClient extends AuthClient
 	/**
 	 * Construct a client connecting to the given address over the given port.  This client <i>must</i> have a username and
 	 * password.
-	 *
-	 * @param address  The address to which this client will attempt to connect.
-	 * @param port     The port over which this client will attempt to connect.
+	 * @param address The address to which this client will attempt to connect.
+	 * @param port The port over which this client will attempt to connect.
 	 * @param username The username that will be used by this client.
 	 * @param password The password that will be used by this client.
 	 */
-	public WorldClient(String address, int port, String username, String password)
-	{
+	public WorldClient(String address, int port, String username, String password) {
 		super(address, port, username, password);
 		visibleObjects = new TreeMap<>();
 		this.password = password;
@@ -47,8 +44,7 @@ public class WorldClient extends AuthClient
 		addRepeatedTask(new Runnable()
 		{
 			@Override
-			public void run()
-			{
+			public void run() {
 				Set<Integer> keys = visibleObjects.keySet();
 				for (int i : keys)
 				{
@@ -66,10 +62,31 @@ public class WorldClient extends AuthClient
 		});
 	}
 
+	/**
+	 * Send a state change request to the server.
+	 * @param moveState The move state used to generate the request.
+	 */
+	private void sendStateChangeRequest(MoveState moveState) {
+		Message stateChangeRequest = generateStateChangeRequest(moveState);
+		queueMessage(stateChangeRequest);
+	}
+
+	/**
+	 * Generate a state change request for the given move state.
+	 * @param moveState The state used to generate a state change request.
+	 * @return The generated message.
+	 */
+	private Message generateStateChangeRequest(MoveState moveState) {
+		Message stateChangeRequest = new Message("StateChangeRequest");
+		stateChangeRequest.setArgument("relativeAngle", moveState.relativeAngle);
+		stateChangeRequest.setArgument("absoluteAngle", moveState.absoluteAngle);
+		stateChangeRequest.setArgument("stepsUntilChange", moveState.stepsUntilChange);
+		return stateChangeRequest;
+	}
+
 	/** Log the player into the world, and set the returned player as the actor for this client. */
 	@Override
-	public void sendBlockingLoginRequest()
-	{
+	public void sendBlockingLoginRequest() {
 		sendLoginRequest();
 		while (!hasReceivedLoginResponse())
 			try
@@ -81,32 +98,9 @@ public class WorldClient extends AuthClient
 			}
 	}
 
-	/** Send a LoginRequest to the server. */
-	private void sendLoginRequest()
-	{
-		Message loginRequest = generateLoginRequest();
-
-		setReceivedLoginResponse(false);
-		queueMessage(loginRequest);
-	}
-
-	/**
-	 * Generate a LoginRequest message.
-	 *
-	 * @return The LoginRequest message.
-	 */
-	private Message generateLoginRequest()
-	{
-		Message loginRequest = new Message("WorldLoginRequest");
-		loginRequest.setArgument("username", getUsername());
-		loginRequest.setArgument("password", password);
-		return loginRequest;
-	}
-
 	/** Log the player out of the world.  Blocks until logout is confirmed. */
 	@Override
-	public void sendBlockingLogoutRequest()
-	{
+	public void sendBlockingLogoutRequest() {
 		sendLogoutRequest();
 
 		while (!hasReceivedLogoutResponse())
@@ -120,8 +114,7 @@ public class WorldClient extends AuthClient
 	}
 
 	/** Send a LogoutRequest to the server. */
-	private void sendLogoutRequest()
-	{
+	private void sendLogoutRequest() {
 		Message logoutRequest = new Message("WorldLogoutRequest");
 
 		// Send the request, continue when response is received.
@@ -129,94 +122,73 @@ public class WorldClient extends AuthClient
 		queueMessage(logoutRequest);
 	}
 
+	/** Send a LoginRequest to the server. */
+	private void sendLoginRequest() {
+		Message loginRequest = generateLoginRequest();
+
+		setReceivedLoginResponse(false);
+		queueMessage(loginRequest);
+	}
+
+	/**
+	 * Generate a LoginRequest message.
+	 * @return The LoginRequest message.
+	 */
+	private Message generateLoginRequest() {
+		Message loginRequest = new Message("WorldLoginRequest");
+		loginRequest.setArgument("username", getUsername());
+		loginRequest.setArgument("password", password);
+		return loginRequest;
+	}
+
 	/**
 	 * Add an object to the list of visible objects.  This method should be called synchronously.
-	 *
 	 * @param object The object to add to the visible objects list.
 	 */
-	public void addNewVisible(ClientObject object)
-	{
+	public void addNewVisible(ClientObject object) {
 		visibleObjects.put(object.getId(), object);
 	}
 
 	/**
 	 * Remove an object from the player's view.
-	 *
 	 * @param id the id of the object to remove.
 	 */
-	public void removeVisible(int id)
-	{
+	public void removeVisible(int id) {
 		visibleObjects.remove(id);
 	}
 
 	/**
 	 * Get the map of visible objects.
-	 *
 	 * @return The map of visible objects.
 	 */
-	public TreeMap<Integer, ClientObject> getVisibleObjects()
-	{
+	public TreeMap<Integer, ClientObject> getVisibleObjects() {
 		return visibleObjects;
 	}
 
 	/**
 	 * Get the player associated with this client.
-	 *
 	 * @return The player (ClientActor) associated with this client.
 	 */
-	public ClientPlayer getPlayer()
-	{
+	public ClientPlayer getPlayer() {
 		return player;
 	}
 
 	/**
 	 * Set the player being controlled by this client.
-	 *
 	 * @param player The player to be controlled by this client.
 	 */
-	public void setPlayer(ClientPlayer player)
-	{
+	public void setPlayer(ClientPlayer player) {
 		if (this.player != null)
 			throw new IllegalStateException("Player already set!");
 		this.player = player;
 	}
 
 	/**
-	 * Send a state change request to the server.
-	 *
-	 * @param moveState The move state used to generate the request.
-	 */
-	private void sendStateChangeRequest(MoveState moveState)
-	{
-		Message stateChangeRequest = generateStateChangeRequest(moveState);
-		queueMessage(stateChangeRequest);
-	}
-
-	/**
-	 * Generate a state change request for the given move state.
-	 *
-	 * @param moveState The state used to generate a state change request.
-	 *
-	 * @return The generated message.
-	 */
-	private Message generateStateChangeRequest(MoveState moveState)
-	{
-		Message stateChangeRequest = new Message("StateChangeRequest");
-		stateChangeRequest.setArgument("relativeAngle", moveState.relativeAngle);
-		stateChangeRequest.setArgument("absoluteAngle", moveState.absoluteAngle);
-		stateChangeRequest.setArgument("stepsUntilChange", moveState.stepsUntilChange);
-		return stateChangeRequest;
-	}
-
-	/**
 	 * Get the ClientObject with the given ID.
-	 *
 	 * @param id The ID of the object to retrieve.
-	 *
 	 * @return The object with the given ID.
 	 */
-	public ClientObject getObject(int id)
-	{
+	public ClientObject getObject(int id) {
 		return visibleObjects.get(id);
 	}
 }
