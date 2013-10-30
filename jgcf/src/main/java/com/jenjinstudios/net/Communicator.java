@@ -12,7 +12,6 @@ import java.util.LinkedList;
 
 /**
  * The communicator class is the superclass for any classes that communicate over socket.
- *
  * @author Caleb Brinkman
  */
 public abstract class Communicator extends Thread
@@ -35,15 +34,13 @@ public abstract class Communicator extends Thread
 	private byte[] aesKey;
 
 	/** Cosntruct a new Commuicator. */
-	protected Communicator()
-	{
+	protected Communicator() {
 		outgoingMessages = new LinkedList<>();
 		pingTimes = new ArrayList<>();
 	}
 
 	/** Close the link with the server. */
-	protected void closeLink()
-	{
+	protected void closeLink() {
 		try
 		{
 			inputStream.close();
@@ -60,21 +57,17 @@ public abstract class Communicator extends Thread
 
 	/**
 	 * Set the socket used by this communicator.  Should only be called from subclass.
-	 *
 	 * @param socket The socket to be used by this communicator.
-	 *
 	 * @throws IOException If there is an exception creating message streams.
 	 */
-	public void setSocket(Socket socket) throws IOException
-	{
+	public void setSocket(Socket socket) throws IOException {
 		this.socket = socket;
 		setOutputStream(new MessageOutputStream(socket.getOutputStream()));
 		setInputStream(new MessageInputStream(socket.getInputStream()));
 	}
 
 	/** Send a ping request. */
-	public void sendPing()
-	{
+	public void sendPing() {
 		Message pingRequest = new Message("PingRequest");
 		pingRequest.setArgument("requestTimeNanos", System.nanoTime());
 		queueMessage(pingRequest);
@@ -82,11 +75,9 @@ public abstract class Communicator extends Thread
 
 	/**
 	 * Queue a message in the outgoing messages. This method is thread safe.
-	 *
 	 * @param message The message to add to the outgoing queue.
 	 */
-	public void queueMessage(Message message)
-	{
+	public void queueMessage(Message message) {
 		synchronized (outgoingMessages)
 		{
 			outgoingMessages.add(message);
@@ -95,21 +86,15 @@ public abstract class Communicator extends Thread
 
 	/**
 	 * Add a ping time to the list.
-	 *
 	 * @param pingTime The time of the ping, in nanoseconds.
 	 */
-	public void addPingTime(long pingTime)
-	{
-		pingTimes.add(pingTime);
-	}
+	public void addPingTime(long pingTime) { pingTimes.add(pingTime); }
 
 	/**
 	 * Get the average ping time, in nanoseconds.
-	 *
 	 * @return The average ping time between client and server, in nanoseconds.
 	 */
-	public long getAveragePingTime()
-	{
+	public long getAveragePingTime() {
 		long total = 0;
 		int num;
 		synchronized (pingTimes)
@@ -122,45 +107,32 @@ public abstract class Communicator extends Thread
 
 	/**
 	 * Flags whether this communicator is connected.
-	 *
 	 * @return true if this communicator is currently connected to a server.
 	 */
-	public boolean isConnected()
-	{ return connected; }
+	public boolean isConnected() { return connected; }
 
 	/**
 	 * Set whether this communicator is connected.  Should only be called from subclass.
-	 *
 	 * @param connected Whether this communicator is connected.
 	 */
-	protected void setConnected(boolean connected)
-	{
-		this.connected = connected;
-	}
+	protected void setConnected(boolean connected) { this.connected = connected; }
 
 	/**
 	 * Send all messages in the outgoing queue.  This method should only be called from the client update thread.
-	 *
 	 * @throws IOException If there is an error writing to the output stream.
 	 */
-	public void sendAllMessages() throws IOException
-	{
+	public void sendAllMessages() throws IOException {
 		synchronized (outgoingMessages)
 		{
-			while (!outgoingMessages.isEmpty())
-			{
-				writeMessage(outgoingMessages.remove());
-			}
+			while (!outgoingMessages.isEmpty()) { writeMessage(outgoingMessages.remove()); }
 		}
 	}
 
 	/**
 	 * Send the specified message to the client.
-	 *
 	 * @param o The message to send to the client.
 	 */
-	public void writeMessage(Message o)
-	{
+	public void writeMessage(Message o) {
 		try
 		{
 			getOutputStream().writeMessage(o);
@@ -172,41 +144,30 @@ public abstract class Communicator extends Thread
 
 	/**
 	 * Get the output stream used by this communicator.
-	 *
 	 * @return The output stream used by this communicator.
 	 */
-	public MessageOutputStream getOutputStream()
-	{
-		return outputStream;
-	}
+	public MessageOutputStream getOutputStream() { return outputStream; }
 
 	/**
 	 * Set the output stream.
-	 *
 	 * @param outputStream The output stream.
 	 */
-	private void setOutputStream(MessageOutputStream outputStream)
-	{
-		this.outputStream = outputStream;
-	}
+	private void setOutputStream(MessageOutputStream outputStream) { this.outputStream = outputStream; }
+
+	/** Shutdown this communicator. */
+	public void shutdown() { running = false; }
 
 	/**
 	 * Get the AES key used by this client.
-	 *
 	 * @return The byte form of the AES key used by this client.
 	 */
-	public byte[] getAesKey()
-	{
-		return aesKey;
-	}
+	public byte[] getAesKey() { return aesKey; }
 
 	/**
 	 * Set the AES key used by this client.
-	 *
 	 * @param key The key used by this client.
 	 */
-	public void setAESKey(byte[] key)
-	{
+	public void setAESKey(byte[] key) {
 		aesKey = key;
 		getInputStream().setAESKey(key);
 		getOutputStream().setAesKey(key);
@@ -214,57 +175,34 @@ public abstract class Communicator extends Thread
 
 	/**
 	 * Get the input stream used.
-	 *
 	 * @return The input stream.
 	 */
-	public MessageInputStream getInputStream()
-	{
-		return inputStream;
-	}
+	public MessageInputStream getInputStream() { return inputStream; }
 
 	/**
 	 * Set the input stream used.
-	 *
 	 * @param inputStream The input stream.
 	 */
-	private void setInputStream(MessageInputStream inputStream)
-	{
-		this.inputStream = inputStream;
-	}
+	private void setInputStream(MessageInputStream inputStream) { this.inputStream = inputStream; }
 
-	public void run()
-	{
-		running = true;
-	}
-
-	/** Shutdown this communicator. */
-	public void shutdown()
-	{
-		running = false;
-	}
+	public void run() { running = true; }
 
 	/**
 	 * Process the specified message.  This method should be overridden by any implementing classes.
-	 *
 	 * @param message The message to be processed.
 	 */
 	protected abstract void processMessage(Message message);
 
 	/**
 	 * Get an executable message for a given message.
-	 *
 	 * @param message The message to be used.
-	 *
 	 * @return The ExecutableMessage.
 	 */
 	protected abstract ExecutableMessage getExecutableMessage(Message message);
 
-
 	/**
 	 * Flags whether the client threads should be running.
-	 *
 	 * @return true if this client thread is still running.
 	 */
-	public boolean isRunning()
-	{ return running; }
+	public boolean isRunning() { return running; }
 }
