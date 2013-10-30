@@ -63,23 +63,24 @@ public class World
 	 * Get the location from the zone grid that contains the specified vector2D.
 	 * @param vector2D The vector2D
 	 * @return The location that contains the specified vector2D.
-	 * @throws InvalidLocationException If the coordinates specified indicate an invalid locatoin.
 	 */
-	public Location getLocationForCoordinates(Vector2D vector2D) throws InvalidLocationException {
-		return getLocationForCoordinates(vector2D.getXCoordinate(), vector2D.getZCoordinate());
+	public Location getLocationForCoordinates(Vector2D vector2D) {
+		double x = vector2D.getXCoordinate();
+		double z = vector2D.getZCoordinate();
+		if (!isValidLocation(new Vector2D(x, z)))
+			return null;
+		return locationGrid[(int) x / Location.SIZE][(int) z / Location.SIZE];
 	}
 
 	/**
-	 * Get the location that contains the specified coordinates.
-	 * @param x The x coordinate.
-	 * @param z The z coordinate
-	 * @return The location that contains the specified coordinates.
-	 * @throws InvalidLocationException If the coordinates supplied point to an invalid location.
+	 * Determine whether the given vector lies within a valid location.
+	 * @param vector2D The vector.
+	 * @return Whether the vector lies within a valid location.
 	 */
-	public Location getLocationForCoordinates(double x, double z) throws InvalidLocationException {
-		if (x < 0 || z < 0 || x / Location.SIZE >= SIZE || z / Location.SIZE >= SIZE)
-			throw new InvalidLocationException(new Vector2D(x, z));
-		return locationGrid[(int) x / Location.SIZE][(int) z / Location.SIZE];
+	public boolean isValidLocation(Vector2D vector2D) {
+		double x = vector2D.getXCoordinate();
+		double z = vector2D.getZCoordinate();
+		return !(x < 0 || z < 0 || x / Location.SIZE >= SIZE || z / Location.SIZE >= SIZE);
 	}
 
 	/** Update all objects in the world. */

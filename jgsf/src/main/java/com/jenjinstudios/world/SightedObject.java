@@ -38,10 +38,19 @@ public class SightedObject extends WorldObject
 		newlyInvisibleObjects = new ArrayList<>();
 	}
 
+	@Override
+	public void setWorld(World world) {
+		super.setWorld(world);
+		resetVisibleLocations();
+	}
+
 	/** Resets the array of currently visible location. */
 	protected void resetVisibleLocations() {
 		visibleLocations.clear();
-		visibleLocations.addAll(getWorld().getLocationArea(getLocation(), VIEW_RADIUS));
+		if (getLocation() != null)
+		{
+			visibleLocations.addAll(getWorld().getLocationArea(getLocation(), VIEW_RADIUS));
+		}
 	}
 
 	/** Reset the current list of visible objects. */

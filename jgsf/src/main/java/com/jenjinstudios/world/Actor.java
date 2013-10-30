@@ -1,6 +1,7 @@
 package com.jenjinstudios.world;
 
 import com.jenjinstudios.jgsf.WorldServer;
+import com.jenjinstudios.math.Vector2D;
 import com.jenjinstudios.world.state.MoveState;
 
 import java.util.LinkedList;
@@ -76,69 +77,25 @@ public class Actor extends SightedObject
 		resetVisibleObjects();
 	}
 
+	/** Reset the flags used by this actor. */
+	public void resetFlags() {
+		newState = false;
+		forcedState = false;
+	}
+
 	/** Take a step, changing state and correcting steps if necessary. */
 	public void step() {
 		int overstepped = getOverstepped();
-		try
+
+		if (overstepped >= MAX_CORRECT)
 		{
-			if (overstepped >= MAX_CORRECT)
-			{
-				setForcedState(currentMoveState);
-			} else if (overstepped >= 0)
-			{
-				doStateChange(overstepped);
-			}
-			stepForward();
-		} catch (InvalidLocationException ex)
+			setForcedState(currentMoveState);
+		} else if (!doStateChange(overstepped) || !stepForward())
 		{
 			setForcedState(new MoveState(IDLE, stepsTaken, currentMoveState.absoluteAngle));
 		}
+
 		stepsTaken++;
-	}
-
-	/**
-	 * Perform a state change.
-	 * @param overStepped The number of steps beyond what the actor should have taken.
-	 * @throws InvalidLocationException If correcting the actor's steps causes the actor to move into an invalid location.
-	 */
-	private void doStateChange(int overStepped) throws InvalidLocationException {
-		MoveState oldState = currentMoveState;
-		resetState();
-		correctOverSteps(overStepped, oldState);
-	}
-
-	/**
-	 * Correct the given number of steps at the specified angles.
-	 * @param overstepped The number of steps over.
-	 * @param oldState The
-	 * @throws InvalidLocationException If the step correction tries to place the actor in an invalid location.
-	 */
-	private void correctOverSteps(int overstepped, MoveState oldState) throws InvalidLocationException {
-		if (oldState.relativeAngle != MoveState.IDLE)
-		{
-			for (int i = 0; i < overstepped; i++) { stepBack(oldState.stepAngle); }
-		}
-		for (int i = 0; i < overstepped; i++) { stepForward(); }
-		stepsTaken = overstepped;
-	}
-
-	/**
-	 * Take a step back in according to the given forward angle.
-	 * @param stepAngle The angle in which to move backward.
-	 * @throws InvalidLocationException If stepping back causes the actor to be placed in an invalid location.
-	 */
-	private void stepBack(double stepAngle) throws InvalidLocationException {
-		stepAngle -= Math.PI;
-		setVector2D(getVector2D().getVectorInDirection(STEP_LENGTH, stepAngle));
-	}
-
-	/**
-	 * Take a step according to the current move state.
-	 * @throws InvalidLocationException If the step forward would place the actor in an invalid location.
-	 */
-	public void stepForward() throws InvalidLocationException {
-		if (currentMoveState.relativeAngle == IDLE) return;
-		setVector2D(getVector2D().getVectorInDirection(STEP_LENGTH, currentMoveState.stepAngle));
 	}
 
 	/**
@@ -148,10 +105,67 @@ public class Actor extends SightedObject
 	 */
 	private int getOverstepped() { return (nextState != null) ? stepsTaken - nextState.stepsUntilChange : -1; }
 
-	/** Reset the flags used by this actor. */
-	public void resetFlags() {
-		newState = false;
-		forcedState = false;
+	/**
+	 * Perform a state change.
+	 * @param overStepped The number of steps beyond what the actor should have taken.
+	 * @return Whether the state change is successful.
+	 */
+	private boolean doStateChange(int overStepped) {
+		if (overStepped < 0) { return true; }
+		MoveState oldState = currentMoveState;
+		resetState();
+		return correctOverSteps(overStepped, oldState);
+	}
+
+	/**
+	 * Correct the given number of steps at the specified angles.
+	 * @param overstepped The number of steps over.
+	 * @param oldState The old state.
+	 * @return Whether correcting the state was successful.
+	 */
+	private boolean correctOverSteps(int overstepped, MoveState oldState) {
+		if (oldState.relativeAngle != MoveState.IDLE)
+		{
+			for (int i = 0; i < overstepped; i++) { if (!stepBack(oldState.stepAngle)) return false; }
+		}
+		for (int i = 0; i < overstepped; i++) { if (!stepForward()) return false; }
+		stepsTaken = overstepped;
+		return true;
+	}
+
+	/**
+	 * Take a step according to the current move state.
+	 * @return Whether the step forward was successful.
+	 */
+	public boolean stepForward() {
+		if (currentMoveState.relativeAngle == IDLE) return true;
+		Vector2D newVector = getVector2D().getVectorInDirection(STEP_LENGTH, currentMoveState.stepAngle);
+		if (getWorld().isValidLocation(newVector))
+		{
+			setVector2D(newVector);
+			return true;
+		} else
+		{
+			return false;
+		}
+	}
+
+	/**
+	 * Take a step back in according to the given forward angle.
+	 * @param stepAngle The angle in which to move backward.
+	 * @return Whether the step back was successful.
+	 */
+	private boolean stepBack(double stepAngle) {
+		stepAngle -= Math.PI;
+		Vector2D newVector = getVector2D().getVectorInDirection(STEP_LENGTH, stepAngle);
+		if (getWorld().isValidLocation(newVector))
+		{
+			setVector2D(newVector);
+			return true;
+		} else
+		{
+			return false;
+		}
 	}
 
 	/**
@@ -196,27 +210,6 @@ public class Actor extends SightedObject
 		resetState();
 	}
 
-	/**
-	 * Step the actor back to a valid location.
-	 * @param stepAngle The angle the actor is moving.
-	 */
-	private void stepBackToValid(double stepAngle) {
-		stepAngle -= Math.PI;
-		boolean isValid = false;
-		int stepsToTake = 1;
-		while (!isValid)
-		{
-			try
-			{
-				setVector2D(getVector2D().getVectorInDirection(STEP_LENGTH * stepsToTake, stepAngle));
-				isValid = true;
-			} catch (InvalidLocationException ex)
-			{
-				stepsToTake++;
-			}
-		}
-	}
-
 	/** Reset the move state, relativeAngle, and newState flag when changing the move state. */
 	private void resetState() {
 		stepsTaken = 0;
@@ -224,6 +217,29 @@ public class Actor extends SightedObject
 		nextState = nextMoveStates.poll();
 		newState = true;
 		setDirection(currentMoveState.absoluteAngle);
+	}
+
+	/**
+	 * Step the actor back to a valid location.
+	 * @param stepAngle The angle the actor is moving.
+	 */
+	private void stepBackToValid(double stepAngle) {
+		stepAngle -= Math.PI;
+		boolean isValid = false;
+		int stepsToTake = 0;
+		Vector2D current = getVector2D().getVectorInDirection(STEP_LENGTH * MAX_CORRECT, stepAngle);
+		while (!isValid && stepsToTake < MAX_CORRECT)
+		{
+			current = getVector2D().getVectorInDirection(STEP_LENGTH * stepsToTake, stepAngle);
+			if (getWorld().isValidLocation(current))
+			{
+				isValid = true;
+			} else
+			{
+				stepsToTake++;
+			}
+		}
+		setVector2D(current);
 	}
 
 	/**

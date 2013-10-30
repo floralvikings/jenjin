@@ -3,7 +3,6 @@ package com.jenjinstudios.sql;
 import com.jenjinstudios.math.Vector2D;
 import com.jenjinstudios.util.Hash;
 import com.jenjinstudios.world.Actor;
-import com.jenjinstudios.world.InvalidLocationException;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -68,7 +67,7 @@ public class WorldSQLHandler extends SQLHandler
 			updateLoggedinColumn(username, true);
 			player = new Actor(username);
 			player.setVector2D(coordinates);
-		} catch (SQLException | IndexOutOfBoundsException | InvalidLocationException e)
+		} catch (SQLException | IndexOutOfBoundsException e)
 		{
 			LOGGER.log(Level.FINE, "Failed to log in user: " + username, e);
 			player = null;
