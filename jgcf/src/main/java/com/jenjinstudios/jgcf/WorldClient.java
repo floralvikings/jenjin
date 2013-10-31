@@ -20,14 +20,14 @@ public class WorldClient extends AuthClient
 {
 	/** The logger associated with this class. */
 	private static final Logger LOGGER = Logger.getLogger(WorldClient.class.getName());
+	/** The number of milliseconds before a blocking method should time out. */
+	public static long TIMEOUT_MILLIS = 30000;
 	/** Actors other than the player. */
 	private final TreeMap<Integer, ClientObject> visibleObjects;
 	/** The password used to login to the world. */
 	private final String password;
 	/** The actor representing the player controlled by this client. */
 	private ClientPlayer player;
-	/** The number of milliseconds before a blocking method should time out. */
-	public static long TIMEOUT_MILLIS = 30000;
 
 	/**
 	 * Construct a client connecting to the given address over the given port.  This client <i>must</i> have a username and
@@ -86,9 +86,8 @@ public class WorldClient extends AuthClient
 		return stateChangeRequest;
 	}
 
-	/** Log the player into the world, and set the returned player as the actor for this client. */
 	@Override
-	public void sendBlockingLoginRequest() {
+	public boolean sendBlockingLoginRequest() {
 		sendLoginRequest();
 		long startTime = System.currentTimeMillis();
 		long timepast = System.currentTimeMillis() - startTime;
@@ -103,34 +102,7 @@ public class WorldClient extends AuthClient
 			}
 			timepast = System.currentTimeMillis() - startTime;
 		}
-	}
-
-	/** Log the player out of the world.  Blocks until logout is confirmed, or the 30 second timeout is reached. */
-	@Override
-	public void sendBlockingLogoutRequest() {
-		sendLogoutRequest();
-		long startTime = System.currentTimeMillis();
-		long timepast = System.currentTimeMillis() - startTime;
-		while (!hasReceivedLogoutResponse() && (timepast < TIMEOUT_MILLIS))
-		{
-			try
-			{
-				Thread.sleep(10);
-			} catch (InterruptedException e)
-			{
-				LOGGER.log(Level.WARNING, "Interrupted while waiting for login response.", e);
-			}
-			timepast = System.currentTimeMillis() - startTime;
-		}
-	}
-
-	/** Send a LogoutRequest to the server. */
-	private void sendLogoutRequest() {
-		Message logoutRequest = new Message("WorldLogoutRequest");
-
-		// Send the request, continue when response is received.
-		setReceivedLogoutResponse(false);
-		queueMessage(logoutRequest);
+		return isLoggedIn();
 	}
 
 	/** Send a LoginRequest to the server. */
@@ -150,6 +122,34 @@ public class WorldClient extends AuthClient
 		loginRequest.setArgument("username", getUsername());
 		loginRequest.setArgument("password", password);
 		return loginRequest;
+	}
+
+	@Override
+	public boolean sendBlockingLogoutRequest() {
+		sendLogoutRequest();
+		long startTime = System.currentTimeMillis();
+		long timepast = System.currentTimeMillis() - startTime;
+		while (!hasReceivedLogoutResponse() && (timepast < TIMEOUT_MILLIS))
+		{
+			try
+			{
+				Thread.sleep(10);
+			} catch (InterruptedException e)
+			{
+				LOGGER.log(Level.WARNING, "Interrupted while waiting for login response.", e);
+			}
+			timepast = System.currentTimeMillis() - startTime;
+		}
+		return isLoggedIn();
+	}
+
+	/** Send a LogoutRequest to the server. */
+	private void sendLogoutRequest() {
+		Message logoutRequest = new Message("WorldLogoutRequest");
+
+		// Send the request, continue when response is received.
+		setReceivedLogoutResponse(false);
+		queueMessage(logoutRequest);
 	}
 
 	/**
