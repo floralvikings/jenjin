@@ -26,6 +26,8 @@ public class WorldClient extends AuthClient
 	private final String password;
 	/** The actor representing the player controlled by this client. */
 	private ClientPlayer player;
+	/** The number of milliseconds before a blocking method should time out. */
+	public static long TIMEOUT_MILLIS = 30000;
 
 	/**
 	 * Construct a client connecting to the given address over the given port.  This client <i>must</i> have a username and
@@ -90,7 +92,7 @@ public class WorldClient extends AuthClient
 		sendLoginRequest();
 		long startTime = System.currentTimeMillis();
 		long timepast = System.currentTimeMillis() - startTime;
-		while (!hasReceivedLoginResponse() && timepast < 30000)
+		while (!hasReceivedLoginResponse() && (timepast < TIMEOUT_MILLIS))
 		{
 			try
 			{
@@ -109,7 +111,7 @@ public class WorldClient extends AuthClient
 		sendLogoutRequest();
 		long startTime = System.currentTimeMillis();
 		long timepast = System.currentTimeMillis() - startTime;
-		while (!hasReceivedLogoutResponse() && timepast < 30000)
+		while (!hasReceivedLogoutResponse() && (timepast < TIMEOUT_MILLIS))
 		{
 			try
 			{
