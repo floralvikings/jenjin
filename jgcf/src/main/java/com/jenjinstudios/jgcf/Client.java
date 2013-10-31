@@ -34,6 +34,8 @@ public class Client extends TaskedCommunicator
 	private PublicKey publicKey;
 	/** The private key sent to the server. */
 	private PrivateKey privateKey;
+	/** The number of milliseconds before a blocking method should time out. */
+	public static long TIMEOUT_MILLIS = 30000;
 
 	/**
 	 * Construct a new client and attempt to connect to the server over the specified port.
@@ -71,14 +73,22 @@ public class Client extends TaskedCommunicator
 
 	/**
 	 * Start the client, blocking until the client has successfully initialized.
+	 * @return The success of the client start.
 	 * @throws InterruptedException If an InterruptedException is thrown while waiting for the client to finish
 	 * initializing.
 	 */
-	public void blockingStart() throws InterruptedException {
+	public boolean blockingStart() throws InterruptedException {
+		long startTime = System.currentTimeMillis();
+		long timePast = System.currentTimeMillis() - startTime;
 		start();
 
-		while (!isRunning()) Thread.sleep(1);
-		while (getAesKey() == null) Thread.sleep(1);
+		while ((!isRunning() || (getAesKey() == null)) && (timePast < TIMEOUT_MILLIS))
+		{
+			Thread.sleep(10);
+			timePast = System.currentTimeMillis() - startTime;
+		}
+
+		return isRunning() && (getAesKey() != null);
 	}
 
 	@Override

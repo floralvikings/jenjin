@@ -21,6 +21,8 @@ public class Server<T extends ClientHandler> extends Thread
 	public static final int DEFAULT_MAX_CLIENTS = 100;
 	/** The logger used by this class. */
 	static final Logger LOGGER = Logger.getLogger(Server.class.getName());
+	/** The number of milliseconds before a blocking method should time out. */
+	public static long TIMEOUT_MILLIS = 30000;
 	/** The updates per second. */
 	public final int UPS;
 	/** The period of the update in milliseconds. */
@@ -144,17 +146,26 @@ public class Server<T extends ClientHandler> extends Thread
 		initialized = true;
 	}
 
-	/** Start the server, and do not return until it is fully initialized. */
-	public final void blockingStart() {
+	/**
+	 * Start the server, and do not return until it is fully initialized.
+	 * @return If the blocking start was successful.
+	 */
+	public final boolean blockingStart() {
+		long startTime = System.currentTimeMillis();
+		long timepast = System.currentTimeMillis() - startTime;
 		start();
-		// TODO Add timeout here.
-		while (!initialized) try
+		while (!initialized && (timepast < TIMEOUT_MILLIS))
 		{
-			Thread.sleep(1);
-		} catch (InterruptedException e)
-		{
-			LOGGER.log(Level.WARNING, "Issue with server blockingStart", e);
+			try
+			{
+				Thread.sleep(10);
+				timepast = System.currentTimeMillis() - startTime;
+			} catch (InterruptedException e)
+			{
+				LOGGER.log(Level.WARNING, "Issue with server blockingStart", e);
+			}
 		}
+		return initialized;
 	}
 
 	/**
