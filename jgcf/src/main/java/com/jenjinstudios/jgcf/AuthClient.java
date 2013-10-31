@@ -26,6 +26,8 @@ public class AuthClient extends Client
 	private volatile boolean receivedLoginResponse;
 	/** flags whether the logout response has been received. */
 	private volatile boolean receivedLogoutResponse;
+	/** The number of milliseconds before a blocking method should time out. */
+	public static long TIMEOUT_MILLIS = 30000;
 
 	/**
 	 * Construct a client connecting to the given address over the given port.
@@ -42,17 +44,19 @@ public class AuthClient extends Client
 
 	/** Queue a message to log into the server with the given username and password, and wait for the response. */
 	public void sendBlockingLoginRequest() {
-		// TODO Add Timeout Here
 		sendLoginRequest();
-		while (!hasReceivedLoginResponse())
+		long startTime = System.currentTimeMillis();
+		long timepast = System.currentTimeMillis() - startTime;
+		while (!hasReceivedLoginResponse() && (timepast < TIMEOUT_MILLIS))
 		{
 			try
 			{
-				Thread.sleep(1);
+				Thread.sleep(10);
 			} catch (InterruptedException e)
 			{
 				LOGGER.log(Level.WARNING, "Interrupted while waiting for login response.", e);
 			}
+			timepast = System.currentTimeMillis() - startTime;
 		}
 	}
 
@@ -98,17 +102,20 @@ public class AuthClient extends Client
 
 	/** Queue a message to log the user out of the server. */
 	public void sendBlockingLogoutRequest() {
-		// TODO Add Timeout Here
 		sendLogoutRequest();
-
-		while (!hasReceivedLogoutResponse())
+		long startTime = System.currentTimeMillis();
+		long timepast = System.currentTimeMillis() - startTime;
+		while (!hasReceivedLogoutResponse() && (timepast < TIMEOUT_MILLIS))
+		{
 			try
 			{
-				Thread.sleep(1);
+				Thread.sleep(10);
 			} catch (InterruptedException e)
 			{
 				LOGGER.log(Level.WARNING, "Interrupted while waiting for login response.", e);
 			}
+			timepast = System.currentTimeMillis() - startTime;
+		}
 	}
 
 	/**
