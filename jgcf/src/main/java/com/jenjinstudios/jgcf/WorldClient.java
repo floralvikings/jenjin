@@ -87,9 +87,11 @@ public class WorldClient extends AuthClient
 	/** Log the player into the world, and set the returned player as the actor for this client. */
 	@Override
 	public void sendBlockingLoginRequest() {
-		// TODO Add Timeout Here
 		sendLoginRequest();
-		while (!hasReceivedLoginResponse())
+		long startTime = System.currentTimeMillis();
+		long timepast = System.currentTimeMillis() - startTime;
+		while (!hasReceivedLoginResponse() && timepast < 30000)
+		{
 			try
 			{
 				Thread.sleep(1);
@@ -97,22 +99,27 @@ public class WorldClient extends AuthClient
 			{
 				LOGGER.log(Level.WARNING, "Interrupted while waiting for login response.", e);
 			}
+			timepast = System.currentTimeMillis() - startTime;
+		}
 	}
 
-	/** Log the player out of the world.  Blocks until logout is confirmed. */
+	/** Log the player out of the world.  Blocks until logout is confirmed, or the 30 second timeout is reached. */
 	@Override
 	public void sendBlockingLogoutRequest() {
-		// TODO Add Timeout Here
 		sendLogoutRequest();
-
-		while (!hasReceivedLogoutResponse())
+		long startTime = System.currentTimeMillis();
+		long timepast = System.currentTimeMillis() - startTime;
+		while (!hasReceivedLogoutResponse() && timepast < 30000)
+		{
 			try
 			{
-				Thread.sleep(1);
+				Thread.sleep(10);
 			} catch (InterruptedException e)
 			{
 				LOGGER.log(Level.WARNING, "Interrupted while waiting for login response.", e);
 			}
+			timepast = System.currentTimeMillis() - startTime;
+		}
 	}
 
 	/** Send a LogoutRequest to the server. */
