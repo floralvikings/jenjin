@@ -90,9 +90,16 @@ public class Actor extends SightedObject
 		if (overstepped >= MAX_CORRECT)
 		{
 			setForcedState(currentMoveState);
-		} else if (!doStateChange(overstepped) || !stepForward())
+		} else
 		{
-			setForcedState(new MoveState(IDLE, stepsTaken, currentMoveState.absoluteAngle));
+			if (!doStateChange(overstepped))
+			{
+				setForcedState(new MoveState(IDLE, stepsTaken, currentMoveState.absoluteAngle));
+			}
+			if (!stepForward())
+			{
+				setForcedState(new MoveState(IDLE, stepsTaken, currentMoveState.absoluteAngle));
+			}
 		}
 
 		stepsTaken++;
@@ -200,6 +207,10 @@ public class Actor extends SightedObject
 
 	/** Reset the move state, relativeAngle, and newState flag when changing the move state. */
 	private void resetState() {
+		if (nextState == null)
+		{
+			return;
+		}
 		stepsTaken = 0;
 		currentMoveState = nextState;
 		nextState = nextMoveStates.poll();
