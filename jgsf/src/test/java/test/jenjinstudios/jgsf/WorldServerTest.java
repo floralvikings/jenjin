@@ -127,7 +127,7 @@ public class WorldServerTest
 		double backwardAngle = Math.PI + targetAngle;
 		serverActor = new Actor("TestActor");
 		serverActor.setVector2D(actorOrigin);
-		int stepsNeeded = (int) (serverActor.getVector2D().getDistanceToVector(targetVector) / Actor.STEP_LENGTH) - 1;
+		int stepsNeeded = (int) (serverActor.getVector2D().getDistanceToVector(targetVector) / Actor.STEP_LENGTH);
 
 		serverActor.addMoveState(new MoveState(targetAngle, 0, 0));
 		serverActor.addMoveState(new MoveState(IDLE, stepsNeeded, 0));
