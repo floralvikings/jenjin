@@ -124,13 +124,19 @@ public class Actor extends SightedObject
 	 * @return Whether correcting the state was successful.
 	 */
 	private boolean correctOverSteps(int overstepped, MoveState oldState) {
+		Vector2D backVector = getVector2D();
 		if (oldState.relativeAngle != MoveState.IDLE)
 		{
-			for (int i = 0; i < overstepped; i++) { if (!stepBack(oldState.stepAngle)) return false; }
+			backVector = backVector.getVectorInDirection(STEP_LENGTH * overstepped, oldState.stepAngle);
 		}
-		for (int i = 0; i < overstepped; i++) { if (!stepForward()) return false; }
-		stepsTaken = overstepped;
-		return true;
+		Vector2D newVector = backVector.getVectorInDirection(STEP_LENGTH * overstepped, currentMoveState.stepAngle);
+		boolean success = getWorld().isValidLocation(newVector);
+		if (success)
+		{
+			stepsTaken = overstepped;
+			setVector2D(newVector);
+		}
+		return success;
 	}
 
 	/**
@@ -140,24 +146,6 @@ public class Actor extends SightedObject
 	public boolean stepForward() {
 		if (currentMoveState.relativeAngle == IDLE) return true;
 		Vector2D newVector = getVector2D().getVectorInDirection(STEP_LENGTH, currentMoveState.stepAngle);
-		if (getWorld().isValidLocation(newVector))
-		{
-			setVector2D(newVector);
-			return true;
-		} else
-		{
-			return false;
-		}
-	}
-
-	/**
-	 * Take a step back in according to the given forward angle.
-	 * @param stepAngle The angle in which to move backward.
-	 * @return Whether the step back was successful.
-	 */
-	private boolean stepBack(double stepAngle) {
-		stepAngle -= Math.PI;
-		Vector2D newVector = getVector2D().getVectorInDirection(STEP_LENGTH, stepAngle);
 		if (getWorld().isValidLocation(newVector))
 		{
 			setVector2D(newVector);
