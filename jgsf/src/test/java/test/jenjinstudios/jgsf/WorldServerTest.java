@@ -13,6 +13,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import static com.jenjinstudios.world.state.MoveState.IDLE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
@@ -99,7 +100,7 @@ public class WorldServerTest
 	private void movePlayerTowardVector(Vector2D newVector) throws InterruptedException {
 		clientPlayer.setNewRelativeAngle(clientPlayer.getVector2D().getAngleToVector(newVector));
 		while (clientPlayer.getVector2D().getDistanceToVector(newVector) > Actor.STEP_LENGTH) { Thread.sleep(10); }
-		clientPlayer.setNewRelativeAngle(MoveState.IDLE);
+		clientPlayer.setNewRelativeAngle(IDLE);
 		Thread.sleep(100);
 	}
 
@@ -110,7 +111,7 @@ public class WorldServerTest
 	private void movePlayerToOrigin() throws InterruptedException {
 		clientPlayer.setNewRelativeAngle(clientPlayer.getVector2D().getAngleToVector(Vector2D.ORIGIN));
 		while (!clientPlayer.getVector2D().equals(Vector2D.ORIGIN)) { Thread.sleep(10); }
-		clientPlayer.setNewRelativeAngle(MoveState.IDLE);
+		clientPlayer.setNewRelativeAngle(IDLE);
 		Thread.sleep(100);
 	}
 
@@ -121,16 +122,23 @@ public class WorldServerTest
 	@Test
 	public void testActorVisibilty() throws Exception {
 		Vector2D actorOrigin = new Vector2D(21, 21);
+		Vector2D targetVector = new Vector2D(10, 10);
+		double targetAngle = actorOrigin.getAngleToVector(targetVector);
+		double backwardAngle = Math.PI + targetAngle;
 		serverActor = new Actor("TestActor");
 		serverActor.setVector2D(actorOrigin);
-		int stepsNeeded = (int) (serverActor.getVector2D().getDistanceToVector(new Vector2D(10, 10)) / Actor.STEP_LENGTH) - 1;
-		serverActor.addMoveState(new MoveState(MoveState.BACK_RIGHT, 0, 0));
-		serverActor.addMoveState(new MoveState(MoveState.IDLE, stepsNeeded, 0));
-		serverActor.addMoveState(new MoveState(MoveState.FRONT_LEFT, stepsNeeded, 0));
-		serverActor.addMoveState(new MoveState(MoveState.IDLE, stepsNeeded, 0));
+		int stepsNeeded = (int) (serverActor.getVector2D().getDistanceToVector(targetVector) / Actor.STEP_LENGTH) - 1;
+
+		serverActor.addMoveState(new MoveState(targetAngle, 0, 0));
+		serverActor.addMoveState(new MoveState(IDLE, stepsNeeded, 0));
+		serverActor.addMoveState(new MoveState(backwardAngle, stepsNeeded, 0));
+		serverActor.addMoveState(new MoveState(IDLE, stepsNeeded, 0));
 		world.addObject(serverActor);
 
-		while (serverActor.getStepsTaken() < stepsNeeded) { Thread.sleep(10); }
+		while (serverActor.getStepsTaken() < stepsNeeded)
+		{
+			Thread.sleep(10);
+		}
 
 		assertEquals(1, worldClient.getVisibleObjects().size());
 		Thread.sleep(100);
