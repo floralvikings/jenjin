@@ -1,5 +1,6 @@
 package com.jenjinstudios.world;
 
+import com.jenjinstudios.math.Vector2D;
 import com.jenjinstudios.world.state.MoveState;
 
 import java.util.LinkedList;
@@ -66,59 +67,9 @@ public class ClientActor extends ClientObject
 
 	/** Take a step, changing state and correcting steps if necessary. */
 	private void step() {
-		tryStateChange();
+		if (getOverstepped() >= 0) { correctOverSteps(getOverstepped()); }
 		stepForward();
 		stepsTaken++;
-	}
-
-	/** Change to the next state, and correct for any over steps. */
-	private void tryStateChange() {
-		if (nextState == null) return;
-		int overStepped = stepsTaken - nextState.stepsUntilChange;
-		if (overStepped >= 0)
-		{
-			doStateChange(overStepped);
-		}
-	}
-
-	/**
-	 * Perform a state change.
-	 * @param overStepped The number of steps beyond what the actor should have taken.
-	 */
-	private void doStateChange(int overStepped) {
-		// Store the old state.
-		MoveState oldState = currentMoveState;
-		resetState();
-		correctOverSteps(overStepped, oldState);
-	}
-
-	/**
-	 * Correct the given number of steps at the specified angles.
-	 * @param overstepped The number of steps over.
-	 * @param oldState The
-	 */
-	private void correctOverSteps(int overstepped, MoveState oldState) {
-		if (oldState.relativeAngle != MoveState.IDLE)
-		{
-			for (int i = 0; i < overstepped; i++)
-			{
-				stepBack(oldState.stepAngle);
-			}
-		}
-		for (int i = 0; i < overstepped; i++)
-		{
-			stepForward();
-		}
-		stepsTaken = overstepped;
-	}
-
-	/**
-	 * Take a step back in according to the given forward angle.
-	 * @param stepAngle The angle in which to move backward.
-	 */
-	private void stepBack(double stepAngle) {
-		stepAngle -= Math.PI;
-		setVector2D(getVector2D().getVectorInDirection(STEP_LENGTH, stepAngle));
 	}
 
 	/** Take a step according to the current move state. */
@@ -128,8 +79,29 @@ public class ClientActor extends ClientObject
 
 	}
 
+	/**
+	 * Correct the given number of steps at the specified angles.
+	 * @param overstepped The number of steps over.
+	 */
+	private void correctOverSteps(int overstepped) {
+		double stepAmount = STEP_LENGTH * overstepped;
+		Vector2D backVector = getVector2D().getVectorInDirection(stepAmount, currentMoveState.stepAngle - Math.PI);
+		Vector2D newVector = backVector.getVectorInDirection(stepAmount, nextState.stepAngle);
+		setVector2D(newVector);
+		stepsTaken = overstepped;
+		resetState();
+	}
+
+	/**
+	 * Determine if a state change is necessary.
+	 * @return The number of steps needed to "correct" to set the actor to the correct state.  A negative number means no
+	 *         state change is necessary.
+	 */
+	private int getOverstepped() { return (nextState != null) ? stepsTaken - nextState.stepsUntilChange : -1; }
+
 	/** Reset the move state, relativeAngle, and newState flag when changing the move state. */
 	private void resetState() {
+		stepsTaken = 0;
 		currentMoveState = nextState;
 		nextState = nextMoveStates.poll();
 		setDirection(currentMoveState.absoluteAngle);

@@ -104,7 +104,10 @@ public class Actor extends SightedObject
 			setVector2D(newVector);
 			return true;
 		} else
-		{ return false; }
+		{
+			System.out.println("Failed Step Forward: " + stepsTaken);
+			return false;
+		}
 	}
 
 	/**
@@ -114,7 +117,7 @@ public class Actor extends SightedObject
 	 */
 	private boolean correctOverSteps(int overstepped) {
 		double stepAmount = STEP_LENGTH * overstepped;
-		Vector2D backVector = getVector2D().getVectorInDirection(stepAmount, currentMoveState.stepAngle);
+		Vector2D backVector = getVector2D().getVectorInDirection(stepAmount, currentMoveState.stepAngle - Math.PI);
 		Vector2D newVector = backVector.getVectorInDirection(stepAmount, nextState.stepAngle);
 		boolean success = getWorld().isValidLocation(newVector);
 		if (success)
@@ -128,10 +131,7 @@ public class Actor extends SightedObject
 
 	/** Reset the move state, relativeAngle, and newState flag when changing the move state. */
 	private void resetState() {
-		if (nextState == null)
-		{
-			return;
-		}
+		if (nextState == null) { return; }
 		stepsTaken = 0;
 		currentMoveState = nextState;
 		nextState = nextMoveStates.poll();
@@ -207,7 +207,7 @@ public class Actor extends SightedObject
 		{
 			current = getVector2D().getVectorInDirection(STEP_LENGTH * stepsToTake, stepAngle);
 			isValid = getWorld().isValidLocation(current);
-			if(!isValid) { stepsToTake++; }
+			if (!isValid) { stepsToTake++; }
 		}
 		setVector2D(current);
 	}

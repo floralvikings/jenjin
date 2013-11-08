@@ -6,6 +6,7 @@ import com.jenjinstudios.jgsf.WorldServer;
 import com.jenjinstudios.math.Vector2D;
 import com.jenjinstudios.sql.WorldSQLHandler;
 import com.jenjinstudios.world.Actor;
+import com.jenjinstudios.world.ClientObject;
 import com.jenjinstudios.world.ClientPlayer;
 import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.state.MoveState;
@@ -137,19 +138,23 @@ public class WorldServerTest
 
 		while (serverActor.getStepsTaken() < stepsNeeded)
 		{
+			// System.out.println(serverActor.getVector2D());
 			Thread.sleep(10);
 		}
 
+		ClientObject clientActor = worldClient.getVisibleObjects().get(serverActor.getId());
 		assertEquals(1, worldClient.getVisibleObjects().size());
 		Thread.sleep(100);
-		assertEquals(serverActor.getVector2D(), worldClient.getVisibleObjects().get(serverActor.getId()).getVector2D());
+		assertEquals(serverActor.getVector2D(), clientActor.getVector2D());
 		while (!serverActor.getVector2D().equals(actorOrigin)) { Thread.sleep(10); }
 		assertEquals(0, worldClient.getVisibleObjects().size());
+
 
 		movePlayerTowardVector(new Vector2D(11, 11));
 		assertEquals(1, worldClient.getVisibleObjects().size());
 		Thread.sleep(100);
-		assertEquals(serverActor.getVector2D(), worldClient.getVisibleObjects().get(serverActor.getId()).getVector2D());
+		clientActor = worldClient.getVisibleObjects().get(serverActor.getId());
+		assertEquals(serverActor.getVector2D(), clientActor.getVector2D());
 
 		movePlayerToOrigin();
 		assertEquals(0, worldClient.getVisibleObjects().size());
