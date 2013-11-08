@@ -48,7 +48,7 @@ public class MoveState
 		this.stepsUntilChange = stepsUntilChange;
 		this.absoluteAngle = absoluteAngle;
 
-		double sAngle = absoluteAngle + relativeAngle;
+		double sAngle = relativeAngle != IDLE ? absoluteAngle + relativeAngle : IDLE;
 		stepAngle = (sAngle < 0) ? (sAngle + TWO_PI) : (sAngle % TWO_PI);
 	}
 
