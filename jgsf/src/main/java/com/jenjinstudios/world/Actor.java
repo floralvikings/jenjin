@@ -84,10 +84,14 @@ public class Actor extends SightedObject
 		if (overstepped < MAX_CORRECT)
 		{
 			boolean stepCorrectionSuccess = (overstepped < 0) || (correctOverSteps(overstepped));
-			if (!stepCorrectionSuccess || !stepForward()) { setForcedState(idleState); }
+			if (!stepCorrectionSuccess || !stepForward())
+			{
+				setForcedState(idleState);
+			}
 		} else
 		{
 			setForcedState(currentMoveState);
+			stepForward();
 		}
 		stepsTaken++;
 	}
@@ -105,7 +109,6 @@ public class Actor extends SightedObject
 			return true;
 		} else
 		{
-			System.out.println("Failed Step Forward: " + stepsTaken);
 			return false;
 		}
 	}

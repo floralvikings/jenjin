@@ -76,7 +76,6 @@ public class ClientActor extends ClientObject
 	public void stepForward() {
 		if (currentMoveState.relativeAngle == IDLE) return;
 		setVector2D(getVector2D().getVectorInDirection(STEP_LENGTH, currentMoveState.stepAngle));
-
 	}
 
 	/**
@@ -84,10 +83,13 @@ public class ClientActor extends ClientObject
 	 * @param overstepped The number of steps over.
 	 */
 	private void correctOverSteps(int overstepped) {
-		double stepAmount = STEP_LENGTH * overstepped;
-		Vector2D backVector = getVector2D().getVectorInDirection(stepAmount, currentMoveState.stepAngle - Math.PI);
-		Vector2D newVector = backVector.getVectorInDirection(stepAmount, nextState.stepAngle);
-		setVector2D(newVector);
+		if (overstepped > 0)
+		{
+			double stepAmount = STEP_LENGTH * overstepped;
+			Vector2D backVector = getVector2D().getVectorInDirection(stepAmount, currentMoveState.stepAngle - Math.PI);
+			Vector2D newVector = backVector.getVectorInDirection(stepAmount, nextState.stepAngle);
+			setVector2D(newVector);
+		}
 		stepsTaken = overstepped;
 		resetState();
 	}
@@ -97,7 +99,9 @@ public class ClientActor extends ClientObject
 	 * @return The number of steps needed to "correct" to set the actor to the correct state.  A negative number means no
 	 *         state change is necessary.
 	 */
-	private int getOverstepped() { return (nextState != null) ? stepsTaken - nextState.stepsUntilChange : -1; }
+	private int getOverstepped() {
+		return nextState != null ? stepsTaken - nextState.stepsUntilChange : -1;
+	}
 
 	/** Reset the move state, relativeAngle, and newState flag when changing the move state. */
 	private void resetState() {
