@@ -90,8 +90,8 @@ public class ClientActor extends ClientObject
 			Vector2D newVector = backVector.getVectorInDirection(stepAmount, nextState.stepAngle);
 			setVector2D(newVector);
 		}
-		stepsTaken = overstepped;
 		resetState();
+		stepsTaken = overstepped;
 	}
 
 	/**

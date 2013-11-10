@@ -123,12 +123,12 @@ public class Actor extends SightedObject
 		Vector2D backVector = getVector2D().getVectorInDirection(stepAmount, currentMoveState.stepAngle - Math.PI);
 		Vector2D newVector = backVector.getVectorInDirection(stepAmount, nextState.stepAngle);
 		boolean success = getWorld().isValidLocation(newVector);
+		resetState();
 		if (success)
 		{
 			stepsTaken = overstepped;
 			setVector2D(newVector);
 		}
-		resetState();
 		return success;
 	}
 

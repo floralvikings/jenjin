@@ -88,8 +88,8 @@ public class Vector2D
 		if (angle == MoveState.IDLE) return new Vector2D(this);
 		double cos = Math.cos(angle);
 		double sin = Math.sin(angle);
-		double newX = Round.round(xCoordinate + (distance * cos), 4);
-		double newZ = Round.round(zCoordinate + (distance * sin), 4);
+		double newX = Round.round(xCoordinate + (distance * cos), 2);
+		double newZ = Round.round(zCoordinate + (distance * sin), 2);
 		return new Vector2D(newX, newZ);
 	}
 
