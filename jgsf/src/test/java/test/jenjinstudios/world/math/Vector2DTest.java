@@ -1,6 +1,5 @@
 package test.jenjinstudios.world.math;
 
-import com.jenjinstudios.math.Round;
 import com.jenjinstudios.math.Vector2D;
 import org.junit.Assert;
 import org.junit.Test;
@@ -55,8 +54,8 @@ public class Vector2DTest
 		Assert.assertEquals(6, stepped.getZCoordinate(), 0.001);
 
 		double forwardRight = Math.PI * .25;
-		double expectedX = Round.round(5 + Math.sqrt(2) / 2, 2);
-		double expectedZ = Round.round(5 + Math.sqrt(2) / 2, 2);
+		double expectedX = 5 + Math.sqrt(2) / 2;
+		double expectedZ = 5 + Math.sqrt(2) / 2;
 		stepped = original.getVectorInDirection(1, forwardRight);
 		Assert.assertEquals(expectedX, stepped.getXCoordinate(), 0.001);
 		Assert.assertEquals(expectedZ, stepped.getZCoordinate(), 0.001);
