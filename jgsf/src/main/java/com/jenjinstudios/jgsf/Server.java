@@ -1,7 +1,5 @@
 package com.jenjinstudios.jgsf;
 
-import com.jenjinstudios.message.MessageRegistry;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -69,7 +67,6 @@ public class Server<T extends ClientHandler> extends Thread
 		for (int i = 0; i < maxClients; i++)
 			clientHandlers.add(null);
 		numClients = 0;
-		MessageRegistry.registerXmlMessages();
 	}
 
 	/**

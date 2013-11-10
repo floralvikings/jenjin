@@ -32,17 +32,20 @@ public class MessageRegistry
 {
 	/** The logger for this class. */
 	private static final Logger LOGGER = Logger.getLogger(MessageRegistry.class.getName());
-	/** Flags whether messages have been registered. */
-	private static boolean messagesRegistered;
 	/** The file name of message registry classed. */
 	private static final String messageFileName = "Messages.xml";
 	/** A map that stores messages types sorted by ID. */
 	private static final TreeMap<Short, MessageType> messageTypesByID = new TreeMap<>();
 	/** A map that stores message types sorted by name. */
 	private static final TreeMap<String, MessageType> messageTypesByName = new TreeMap<>();
+	/** Flags whether messages have been registered. */
+	private static boolean messagesRegistered;
 
-	/** Register all messages found in registry files.  Also checks the JAR file. */
-	public static void registerXmlMessages() {
+	/**
+	 * Register all messages found in registry files.  Also checks the JAR file.
+	 * @param isServer Whether the program registering messages is a server or client-side program.
+	 */
+	public static void registerXmlMessages(boolean isServer) {
 		try
 		{
 
@@ -58,13 +61,13 @@ public class MessageRegistry
 				{
 					String entryName = ze.getName();
 					if (entryName.equals("Messages.xml"))
-						parseXmlStream(MessageRegistry.class.getClassLoader().getResourceAsStream(entryName));
+						parseXmlStream(MessageRegistry.class.getClassLoader().getResourceAsStream(entryName), isServer);
 				}
 			}
 
 			// Search the directories
 			ArrayList<File> messageFiles = findMessageFiles();
-			for (File f : messageFiles) parseXmlFile(f);
+			for (File f : messageFiles) parseXmlFile(f, isServer);
 			messagesRegistered = true;
 
 		} catch (IOException | SAXException | ParserConfigurationException e)
@@ -74,25 +77,24 @@ public class MessageRegistry
 	}
 
 	/**
-	 * Parse the given XML file and register message therein.
-	 * @param xmlFile The XML file to be parsed.
-	 * @throws java.io.IOException If this exception occurs.
-	 * @throws javax.xml.parsers.ParserConfigurationException If this exception occurs.
-	 * @throws org.xml.sax.SAXException If this exception occurs.
+	 * Look for files that match the message registry format.
+	 * @return An ArrayList of message registry files.
 	 */
-	private static void parseXmlFile(File xmlFile) throws IOException, SAXException, ParserConfigurationException {
-		InputStream xmlStream = new FileInputStream(xmlFile);
-		parseXmlStream(xmlStream);
+	private static ArrayList<File> findMessageFiles() {
+		String rootDir = Paths.get("").toAbsolutePath().toString() + File.separator;
+		File rootFile = new File(rootDir);
+		return FileUtil.findFilesWithName(rootFile, messageFileName);
 	}
 
 	/**
 	 * Parse a stream for XML messages.
 	 * @param stream The stream to parse.
+	 * @param isServer Whether the program registering message is server or client side.
 	 * @throws java.io.IOException If this exception occurs.
 	 * @throws javax.xml.parsers.ParserConfigurationException If this exception occurs.
 	 * @throws org.xml.sax.SAXException If this exception occurs.
 	 */
-	private static void parseXmlStream(InputStream stream) throws IOException, SAXException, ParserConfigurationException {
+	private static void parseXmlStream(InputStream stream, boolean isServer) throws IOException, SAXException, ParserConfigurationException {
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder builder = factory.newDocumentBuilder();
 		Document doc = builder.parse(stream);
@@ -104,7 +106,7 @@ public class MessageRegistry
 		for (int i = 0; i < messageElements.getLength(); i++)
 		{
 			Element currentMessageElement = (Element) messageElements.item(i);
-			MessageType messageType = MessageTypeFactory.parseMessageElement(currentMessageElement);
+			MessageType messageType = MessageTypeFactory.parseMessageElement(currentMessageElement, isServer);
 			if (messageType != null)
 			{
 				// Add the message type to the two trees.
@@ -115,13 +117,28 @@ public class MessageRegistry
 	}
 
 	/**
+	 * Parse the given XML file and register message therein.
+	 * @param xmlFile The XML file to be parsed.
+	 * @param isServer Whether the program registering message is server or client side.
+	 * @throws java.io.IOException If this exception occurs.
+	 * @throws javax.xml.parsers.ParserConfigurationException If this exception occurs.
+	 * @throws org.xml.sax.SAXException If this exception occurs.
+	 */
+	private static void parseXmlFile(File xmlFile, boolean isServer) throws IOException, SAXException, ParserConfigurationException {
+		InputStream xmlStream = new FileInputStream(xmlFile);
+		parseXmlStream(xmlStream, isServer);
+	}
+
+	/**
 	 * Get the message type with the given name.
 	 * @param name The name of the message type.
 	 * @return The MessageType with the given name.
 	 */
 	public static MessageType getMessageType(String name) {
 		if (!messagesRegistered)
-			registerXmlMessages();
+		{
+			LOGGER.log(Level.SEVERE, "Messages not registered!  Please remeber to call MessageRegistry.registerXmlMessages()");
+		}
 
 		return messageTypesByName.get(name);
 	}
@@ -133,7 +150,9 @@ public class MessageRegistry
 	 */
 	public static MessageType getMessageType(short id) {
 		if (!messagesRegistered)
-			registerXmlMessages();
+		{
+			LOGGER.log(Level.SEVERE, "Messages not registered!  Please remeber to call MessageRegistry.registerXmlMessages()");
+		}
 
 		return messageTypesByID.get(id);
 	}
@@ -144,8 +163,10 @@ public class MessageRegistry
 	 * @return A LinkedList of class names.
 	 */
 	public static LinkedList<Class> getArgumentClasses(short id) {
-		if (!hasMessagesRegistered())
-			registerXmlMessages();
+		if (!messagesRegistered)
+		{
+			LOGGER.log(Level.SEVERE, "Messages not registered!  Please remeber to call MessageRegistry.registerXmlMessages()");
+		}
 
 		LinkedList<Class> temp = new LinkedList<>();
 
@@ -158,21 +179,4 @@ public class MessageRegistry
 		return temp;
 	}
 
-	/**
-	 * Get whether messages have been registered.
-	 * @return Whether messages have been registered.
-	 */
-	public static boolean hasMessagesRegistered() {
-		return messagesRegistered;
-	}
-
-	/**
-	 * Look for files that match the message registry format.
-	 * @return An ArrayList of message registry files.
-	 */
-	private static ArrayList<File> findMessageFiles() {
-		String rootDir = Paths.get("").toAbsolutePath().toString() + File.separator;
-		File rootFile = new File(rootDir);
-		return FileUtil.findFilesWithName(rootFile, messageFileName);
-	}
 }

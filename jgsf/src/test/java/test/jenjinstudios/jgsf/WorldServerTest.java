@@ -4,6 +4,7 @@ import com.jenjinstudios.jgcf.WorldClient;
 import com.jenjinstudios.jgsf.WorldClientHandler;
 import com.jenjinstudios.jgsf.WorldServer;
 import com.jenjinstudios.math.Vector2D;
+import com.jenjinstudios.message.MessageRegistry;
 import com.jenjinstudios.sql.WorldSQLHandler;
 import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.ClientObject;
@@ -12,6 +13,7 @@ import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.state.MoveState;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import static com.jenjinstudios.world.state.MoveState.IDLE;
@@ -43,6 +45,12 @@ public class WorldServerTest
 	private WorldClient worldClient;
 	/** The client-side player used for testing. */
 	private ClientPlayer clientPlayer;
+
+	/** Construct the test. */
+	@BeforeClass
+	public static void construct() {
+		MessageRegistry.registerXmlMessages(true);
+	}
 
 	/**
 	 * Set up the client and server.
