@@ -19,19 +19,23 @@ public class MessageTypeFactory
 	/**
 	 * Get a message type by parsing the XML element specified.  Returns null if the element could not be properly parsed.
 	 * @param messageElement The XML Element.
+	 * @param server Whether the program registering message is server or client side.
 	 * @return A MessageType retrieved from the XML element.
 	 */
-	public static MessageType parseMessageElement(Element messageElement) {
+	public static MessageType parseMessageElement(Element messageElement, boolean server) {
 		short id;
 		String name;
 		ArgumentType[] argumentTypes;
 		Class<? extends ExecutableMessage> clientExec;
-		Class<? extends ExecutableMessage> serverExec;
+		Class<? extends ExecutableMessage> serverExec = null;
 		id = Short.parseShort(messageElement.getAttribute("id"));
 		name = messageElement.getAttribute("name");
 		argumentTypes = parseArgumentNodes(messageElement);
 		clientExec = getClientExecutableMessageClass(messageElement);
-		serverExec = getServerExecutableMessageClass(messageElement);
+		if (server)
+		{
+			serverExec = getServerExecutableMessageClass(messageElement);
+		}
 
 		MessageType messageType = null;
 
@@ -105,6 +109,7 @@ public class MessageTypeFactory
 				executableMessageClass = (Class<? extends ExecutableMessage>) Class.forName(executableMessageClassName);
 			} catch (ClassNotFoundException | ClassCastException e)
 			{
+				LOGGER.log(Level.WARNING, "Incorrect Executable Message specified: ", e);
 				executableMessageClass = null;
 			}
 		}

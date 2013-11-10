@@ -3,6 +3,7 @@ package test.jenjinstudios.jgsf;
 import com.jenjinstudios.jgcf.AuthClient;
 import com.jenjinstudios.jgsf.ClientHandler;
 import com.jenjinstudios.jgsf.SqlEnabledServer;
+import com.jenjinstudios.message.MessageRegistry;
 import com.jenjinstudios.sql.SQLHandler;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -33,6 +34,7 @@ public class ServerTest
 	 */
 	@BeforeClass
 	public static void construct() throws Exception {
+		MessageRegistry.registerXmlMessages(true);
 		/* The SQLHandler used for testing. */
 		SQLHandler sqlHandler = new SQLHandler("localhost", "jenjin_test", "jenjin_user",
 				"jenjin_password");
