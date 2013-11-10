@@ -77,60 +77,23 @@ public class Actor extends SightedObject
 		resetVisibleObjects();
 	}
 
-	/** Reset the flags used by this actor. */
-	public void resetFlags() {
-		newState = false;
-		forcedState = false;
-	}
-
 	/** Take a step, changing state and correcting steps if necessary. */
 	public void step() {
 		int overstepped = getOverstepped();
-
-		if (overstepped >= MAX_CORRECT)
+		MoveState idleState = new MoveState(IDLE, stepsTaken, currentMoveState.absoluteAngle);
+		if (overstepped < MAX_CORRECT)
+		{
+			boolean stepCorrectionSuccess = (overstepped < 0) || (correctOverSteps(overstepped));
+			if (!stepCorrectionSuccess || !stepForward())
+			{
+				setForcedState(idleState);
+			}
+		} else
 		{
 			setForcedState(currentMoveState);
-		} else if (!doStateChange(overstepped) || !stepForward())
-		{
-			setForcedState(new MoveState(IDLE, stepsTaken, currentMoveState.absoluteAngle));
+			stepForward();
 		}
-
 		stepsTaken++;
-	}
-
-	/**
-	 * Determine if a state change is necessary.
-	 * @return The number of steps needed to "correct" to set the actor to the correct state.  A negative number means no
-	 *         state change is necessary.
-	 */
-	private int getOverstepped() { return (nextState != null) ? stepsTaken - nextState.stepsUntilChange : -1; }
-
-	/**
-	 * Perform a state change.
-	 * @param overStepped The number of steps beyond what the actor should have taken.
-	 * @return Whether the state change is successful.
-	 */
-	private boolean doStateChange(int overStepped) {
-		if (overStepped < 0) { return true; }
-		MoveState oldState = currentMoveState;
-		resetState();
-		return correctOverSteps(overStepped, oldState);
-	}
-
-	/**
-	 * Correct the given number of steps at the specified angles.
-	 * @param overstepped The number of steps over.
-	 * @param oldState The old state.
-	 * @return Whether correcting the state was successful.
-	 */
-	private boolean correctOverSteps(int overstepped, MoveState oldState) {
-		if (oldState.relativeAngle != MoveState.IDLE)
-		{
-			for (int i = 0; i < overstepped; i++) { if (!stepBack(oldState.stepAngle)) return false; }
-		}
-		for (int i = 0; i < overstepped; i++) { if (!stepForward()) return false; }
-		stepsTaken = overstepped;
-		return true;
 	}
 
 	/**
@@ -138,7 +101,7 @@ public class Actor extends SightedObject
 	 * @return Whether the step forward was successful.
 	 */
 	public boolean stepForward() {
-		if (currentMoveState.relativeAngle == IDLE) return true;
+		if (currentMoveState.relativeAngle == IDLE) { return true; }
 		Vector2D newVector = getVector2D().getVectorInDirection(STEP_LENGTH, currentMoveState.stepAngle);
 		if (getWorld().isValidLocation(newVector))
 		{
@@ -151,21 +114,45 @@ public class Actor extends SightedObject
 	}
 
 	/**
-	 * Take a step back in according to the given forward angle.
-	 * @param stepAngle The angle in which to move backward.
-	 * @return Whether the step back was successful.
+	 * Correct the given number of steps at the specified angles.
+	 * @param overstepped The number of steps over.
+	 * @return Whether correcting the state was successful.
 	 */
-	private boolean stepBack(double stepAngle) {
-		stepAngle -= Math.PI;
-		Vector2D newVector = getVector2D().getVectorInDirection(STEP_LENGTH, stepAngle);
-		if (getWorld().isValidLocation(newVector))
+	private boolean correctOverSteps(int overstepped) {
+		double stepAmount = STEP_LENGTH * overstepped;
+		Vector2D backVector = getVector2D().getVectorInDirection(stepAmount, currentMoveState.stepAngle - Math.PI);
+		Vector2D newVector = backVector.getVectorInDirection(stepAmount, nextState.stepAngle);
+		boolean success = getWorld().isValidLocation(newVector);
+		resetState();
+		if (success)
 		{
+			stepsTaken = overstepped;
 			setVector2D(newVector);
-			return true;
-		} else
-		{
-			return false;
 		}
+		return success;
+	}
+
+	/** Reset the move state, relativeAngle, and newState flag when changing the move state. */
+	private void resetState() {
+		if (nextState == null) { return; }
+		stepsTaken = 0;
+		currentMoveState = nextState;
+		nextState = nextMoveStates.poll();
+		newState = true;
+		setDirection(currentMoveState.absoluteAngle);
+	}
+
+	/**
+	 * Determine if a state change is necessary.
+	 * @return The number of steps needed to "correct" to set the actor to the correct state.  A negative number means no
+	 *         state change is necessary.
+	 */
+	private int getOverstepped() { return (nextState != null) ? stepsTaken - nextState.stepsUntilChange : -1; }
+
+	/** Reset the flags used by this actor. */
+	public void resetFlags() {
+		newState = false;
+		forcedState = false;
 	}
 
 	/**
@@ -210,15 +197,6 @@ public class Actor extends SightedObject
 		resetState();
 	}
 
-	/** Reset the move state, relativeAngle, and newState flag when changing the move state. */
-	private void resetState() {
-		stepsTaken = 0;
-		currentMoveState = nextState;
-		nextState = nextMoveStates.poll();
-		newState = true;
-		setDirection(currentMoveState.absoluteAngle);
-	}
-
 	/**
 	 * Step the actor back to a valid location.
 	 * @param stepAngle The angle the actor is moving.
@@ -231,13 +209,8 @@ public class Actor extends SightedObject
 		while (!isValid && stepsToTake < MAX_CORRECT)
 		{
 			current = getVector2D().getVectorInDirection(STEP_LENGTH * stepsToTake, stepAngle);
-			if (getWorld().isValidLocation(current))
-			{
-				isValid = true;
-			} else
-			{
-				stepsToTake++;
-			}
+			isValid = getWorld().isValidLocation(current);
+			if (!isValid) { stepsToTake++; }
 		}
 		setVector2D(current);
 	}
