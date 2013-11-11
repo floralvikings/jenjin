@@ -1,4 +1,4 @@
-package test.jenjinstudios.jgsf;
+package test.jenjinstudios.net;
 
 import com.jenjinstudios.io.MessageRegistry;
 import com.jenjinstudios.jgsf.ClientHandler;
