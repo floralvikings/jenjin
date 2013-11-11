@@ -1,9 +1,9 @@
 package test.jenjinstudios.net;
 
 import com.jenjinstudios.io.MessageRegistry;
-import com.jenjinstudios.jgsf.ClientHandler;
-import com.jenjinstudios.jgsf.SqlEnabledServer;
 import com.jenjinstudios.net.AuthClient;
+import com.jenjinstudios.net.ClientHandler;
+import com.jenjinstudios.net.SqlEnabledServer;
 import com.jenjinstudios.sql.SQLHandler;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;

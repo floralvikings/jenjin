@@ -1,4 +1,4 @@
-package com.jenjinstudios.jgsf;
+package com.jenjinstudios.net;
 
 import java.io.IOException;
 import java.util.ArrayList;

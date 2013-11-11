@@ -1,6 +1,6 @@
 package com.jenjinstudios.message;
 
-import com.jenjinstudios.jgsf.ClientHandler;
+import com.jenjinstudios.net.ClientHandler;
 import com.jenjinstudios.sql.SQLHandler;
 
 /**

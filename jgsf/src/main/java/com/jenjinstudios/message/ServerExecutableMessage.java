@@ -2,7 +2,7 @@ package com.jenjinstudios.message;
 
 import com.jenjinstudios.io.MessageRegistry;
 import com.jenjinstudios.io.MessageType;
-import com.jenjinstudios.jgsf.ClientHandler;
+import com.jenjinstudios.net.ClientHandler;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;

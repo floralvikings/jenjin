@@ -1,4 +1,4 @@
-package com.jenjinstudios.jgsf;
+package com.jenjinstudios.net;
 
 import java.util.LinkedList;
 import java.util.TimerTask;
