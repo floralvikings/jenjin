@@ -1,4 +1,4 @@
-package com.jenjinstudios.message;
+package com.jenjinstudios.io;
 
 /**
  * This class is used to define arguments for MessageTypes.

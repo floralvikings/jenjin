@@ -1,9 +1,6 @@
 package com.jenjinstudios.io;
 
-import com.jenjinstudios.message.ArgumentType;
 import com.jenjinstudios.message.Message;
-import com.jenjinstudios.message.MessageRegistry;
-import com.jenjinstudios.message.MessageType;
 
 import javax.crypto.*;
 import javax.crypto.spec.SecretKeySpec;

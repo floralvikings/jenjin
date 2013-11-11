@@ -1,4 +1,4 @@
-package com.jenjinstudios.message;
+package com.jenjinstudios.io;
 
 import com.jenjinstudios.util.FileUtil;
 import org.w3c.dom.Document;

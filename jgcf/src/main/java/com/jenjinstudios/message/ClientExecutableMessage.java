@@ -1,5 +1,7 @@
 package com.jenjinstudios.message;
 
+import com.jenjinstudios.io.MessageRegistry;
+import com.jenjinstudios.io.MessageType;
 import com.jenjinstudios.net.Client;
 
 import java.lang.reflect.Constructor;
