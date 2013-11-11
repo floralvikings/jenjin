@@ -1,5 +1,9 @@
 package com.jenjinstudios.message;
 
+import com.jenjinstudios.io.ArgumentType;
+import com.jenjinstudios.io.MessageRegistry;
+import com.jenjinstudios.io.MessageType;
+
 import java.util.TreeMap;
 
 /**
