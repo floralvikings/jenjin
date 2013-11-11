@@ -41,7 +41,7 @@
     </message>
 
     <message name="StateChangeRequest" id="7">
-        <executable language="java" side="server">com.jenjinstudios.jgsf.message.ExecutableStateChangeRequest</executable>
+        <executable language="java" side="server">com.jenjinstudios.world.message.ExecutableStateChangeRequest</executable>
         <argument type="double" name="relativeAngle" />
         <argument type="double" name="absoluteAngle" />
         <argument type="int" name="stepsUntilChange" />
@@ -90,13 +90,13 @@
     </message>
 
     <message name="WorldLoginRequest" id="13">
-        <executable language="java" side="server">com.jenjinstudios.jgsf.message.ExecutableWorldLoginRequest</executable>
+        <executable language="java" side="server">com.jenjinstudios.world.message.ExecutableWorldLoginRequest</executable>
         <argument type="String" name="username" encrypt="true" />
         <argument type="String" name="password" encrypt="true" />
     </message>
 
     <message name="WorldLogoutRequest" id="14">
-        <executable language="java" side="server">com.jenjinstudios.jgsf.message.ExecutableWorldLogoutRequest</executable>
+        <executable language="java" side="server">com.jenjinstudios.world.message.ExecutableWorldLogoutRequest</executable>
     </message>
 
     <message name="WorldLoginResponse" id="15">

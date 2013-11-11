@@ -1,4 +1,4 @@
-package com.jenjinstudios.jgsf.message;
+package com.jenjinstudios.world.message;
 
 import com.jenjinstudios.jgsf.WorldClientHandler;
 import com.jenjinstudios.message.Message;
