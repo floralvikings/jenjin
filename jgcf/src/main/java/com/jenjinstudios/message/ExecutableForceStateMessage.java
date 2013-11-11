@@ -1,8 +1,8 @@
 package com.jenjinstudios.message;
 
 import com.jenjinstudios.math.Vector2D;
-import com.jenjinstudios.net.WorldClient;
 import com.jenjinstudios.world.ClientPlayer;
+import com.jenjinstudios.world.WorldClient;
 
 /**
  * Process a ForceStateMessage.

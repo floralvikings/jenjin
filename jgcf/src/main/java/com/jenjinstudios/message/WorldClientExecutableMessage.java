@@ -1,6 +1,6 @@
 package com.jenjinstudios.message;
 
-import com.jenjinstudios.net.WorldClient;
+import com.jenjinstudios.world.WorldClient;
 
 /**
  * This class is the superclass for all ExecutableMessages that are invoked by the WorldClient.

@@ -1,6 +1,6 @@
 package com.jenjinstudios.message;
 
-import com.jenjinstudios.net.WorldClient;
+import com.jenjinstudios.world.WorldClient;
 
 /**
  * Handles logout responses.

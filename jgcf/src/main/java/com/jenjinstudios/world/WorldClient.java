@@ -1,8 +1,7 @@
-package com.jenjinstudios.net;
+package com.jenjinstudios.world;
 
 import com.jenjinstudios.message.Message;
-import com.jenjinstudios.world.ClientObject;
-import com.jenjinstudios.world.ClientPlayer;
+import com.jenjinstudios.net.AuthClient;
 import com.jenjinstudios.world.state.MoveState;
 
 import java.util.LinkedList;
