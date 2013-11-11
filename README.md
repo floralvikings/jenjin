@@ -1,7 +1,7 @@
 Jenjin
 =====
 
-The Jenjin is a powerful, flexible server architecture designed for use in MMORPGs.
+The Jenjin is a flexible server architecture designed for use in MMORPGs.
 Programmed in Java, and built with Gradle, it is runnable on virtually any Operating
 system.
 
@@ -15,11 +15,7 @@ Game Server Framework and Jenjin Game Client Framework, respectively.
 The Jenjin is built using Gradle, and can be built with a simple command on
 any operating system that supports Java; simply run
 
-`gradlew build`
-
-in the root project directory.  Windows users may need to run
-
-`gradlew.bat build`
+`./gradlew build`
 
 In order for the tests to run properly, you must be running a MySQL server on localhost on port 3306,
 with a database named "jenjin_test", a user with permission to SELECT and UPDATE named "jenjin_user" with
