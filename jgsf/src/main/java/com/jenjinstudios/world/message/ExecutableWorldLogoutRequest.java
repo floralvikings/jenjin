@@ -1,9 +1,9 @@
 package com.jenjinstudios.world.message;
 
-import com.jenjinstudios.jgsf.WorldClientHandler;
 import com.jenjinstudios.message.Message;
 import com.jenjinstudios.sql.WorldSQLHandler;
 import com.jenjinstudios.world.Actor;
+import com.jenjinstudios.world.WorldClientHandler;
 
 /**
  * Handles requests to log out of the world.

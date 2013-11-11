@@ -1,8 +1,6 @@
-package com.jenjinstudios.jgsf;
+package com.jenjinstudios.world;
 
 import com.jenjinstudios.message.Message;
-import com.jenjinstudios.world.Actor;
-import com.jenjinstudios.world.WorldObject;
 
 /**
  * Used to generate Message objects that are relevent to the World and WorldClientHandler classes.

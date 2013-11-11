@@ -1,8 +1,6 @@
 package test.jenjinstudios.world;
 
 import com.jenjinstudios.io.MessageRegistry;
-import com.jenjinstudios.jgsf.WorldClientHandler;
-import com.jenjinstudios.jgsf.WorldServer;
 import com.jenjinstudios.math.Vector2D;
 import com.jenjinstudios.sql.WorldSQLHandler;
 import com.jenjinstudios.world.*;

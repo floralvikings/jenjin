@@ -1,8 +1,7 @@
-package com.jenjinstudios.jgsf;
+package com.jenjinstudios.world;
 
+import com.jenjinstudios.jgsf.ClientHandler;
 import com.jenjinstudios.message.Message;
-import com.jenjinstudios.world.Actor;
-import com.jenjinstudios.world.WorldObject;
 
 import java.io.IOException;
 import java.net.Socket;

@@ -1,8 +1,8 @@
 package com.jenjinstudios.world.message;
 
-import com.jenjinstudios.jgsf.WorldClientHandler;
 import com.jenjinstudios.message.Message;
 import com.jenjinstudios.world.Actor;
+import com.jenjinstudios.world.WorldClientHandler;
 import com.jenjinstudios.world.state.MoveState;
 
 /**

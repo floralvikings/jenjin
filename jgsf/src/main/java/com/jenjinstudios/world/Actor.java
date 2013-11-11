@@ -1,6 +1,5 @@
 package com.jenjinstudios.world;
 
-import com.jenjinstudios.jgsf.WorldServer;
 import com.jenjinstudios.math.Vector2D;
 import com.jenjinstudios.world.state.MoveState;
 
