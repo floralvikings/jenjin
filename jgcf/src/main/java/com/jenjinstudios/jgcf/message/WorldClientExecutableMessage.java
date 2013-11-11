@@ -1,7 +1,7 @@
 package com.jenjinstudios.jgcf.message;
 
-import com.jenjinstudios.jgcf.WorldClient;
 import com.jenjinstudios.message.Message;
+import com.jenjinstudios.net.WorldClient;
 
 /**
  * This class is the superclass for all ExecutableMessages that are invoked by the WorldClient.

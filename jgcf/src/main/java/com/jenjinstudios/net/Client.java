@@ -1,8 +1,7 @@
-package com.jenjinstudios.jgcf;
+package com.jenjinstudios.net;
 
 import com.jenjinstudios.jgcf.message.ClientExecutableMessage;
 import com.jenjinstudios.message.Message;
-import com.jenjinstudios.net.TaskedCommunicator;
 
 import java.io.IOException;
 import java.net.Socket;

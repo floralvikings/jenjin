@@ -1,10 +1,10 @@
 package test.jenjinstudios.jgsf;
 
-import com.jenjinstudios.jgcf.WorldClient;
 import com.jenjinstudios.jgsf.WorldClientHandler;
 import com.jenjinstudios.jgsf.WorldServer;
 import com.jenjinstudios.math.Vector2D;
 import com.jenjinstudios.message.MessageRegistry;
+import com.jenjinstudios.net.WorldClient;
 import com.jenjinstudios.sql.WorldSQLHandler;
 import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.ClientObject;

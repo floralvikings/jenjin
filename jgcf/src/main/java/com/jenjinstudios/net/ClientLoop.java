@@ -1,4 +1,4 @@
-package com.jenjinstudios.jgcf;
+package com.jenjinstudios.net;
 
 import java.util.TimerTask;
 

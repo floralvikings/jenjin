@@ -1,7 +1,7 @@
 package com.jenjinstudios.jgcf.message;
 
-import com.jenjinstudios.jgcf.Client;
 import com.jenjinstudios.message.Message;
+import com.jenjinstudios.net.Client;
 
 /**
  * Used to process a ping response message.

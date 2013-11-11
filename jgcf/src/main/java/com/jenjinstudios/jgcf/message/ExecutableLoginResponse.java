@@ -1,7 +1,7 @@
 package com.jenjinstudios.jgcf.message;
 
-import com.jenjinstudios.jgcf.AuthClient;
 import com.jenjinstudios.message.Message;
+import com.jenjinstudios.net.AuthClient;
 
 /**
  * This class is used to respond to a LoginResponse.

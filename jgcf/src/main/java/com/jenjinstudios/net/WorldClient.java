@@ -1,4 +1,4 @@
-package com.jenjinstudios.jgcf;
+package com.jenjinstudios.net;
 
 import com.jenjinstudios.message.Message;
 import com.jenjinstudios.world.ClientObject;
@@ -95,7 +95,7 @@ public class WorldClient extends AuthClient
 		{
 			try
 			{
-				Thread.sleep(1);
+				sleep(1);
 			} catch (InterruptedException e)
 			{
 				LOGGER.log(Level.WARNING, "Interrupted while waiting for login response.", e);
@@ -133,7 +133,7 @@ public class WorldClient extends AuthClient
 		{
 			try
 			{
-				Thread.sleep(10);
+				sleep(10);
 			} catch (InterruptedException e)
 			{
 				LOGGER.log(Level.WARNING, "Interrupted while waiting for login response.", e);

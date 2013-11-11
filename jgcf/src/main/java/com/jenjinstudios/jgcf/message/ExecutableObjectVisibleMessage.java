@@ -1,7 +1,7 @@
 package com.jenjinstudios.jgcf.message;
 
-import com.jenjinstudios.jgcf.WorldClient;
 import com.jenjinstudios.message.Message;
+import com.jenjinstudios.net.WorldClient;
 import com.jenjinstudios.world.ClientObject;
 
 /**

@@ -1,7 +1,7 @@
 package com.jenjinstudios.jgcf.message;
 
-import com.jenjinstudios.jgcf.AuthClient;
 import com.jenjinstudios.message.Message;
+import com.jenjinstudios.net.AuthClient;
 
 /**
  * This class should be extended by ExecutableMessages intended to be run by an {@code AuthClient}.
