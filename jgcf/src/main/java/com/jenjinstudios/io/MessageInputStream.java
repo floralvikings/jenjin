@@ -1,7 +1,6 @@
 package com.jenjinstudios.io;
 
 import com.jenjinstudios.message.Message;
-import com.jenjinstudios.message.MessageRegistry;
 
 import javax.crypto.*;
 import javax.crypto.spec.SecretKeySpec;
@@ -19,11 +18,12 @@ import java.util.logging.Logger;
 
 /**
  * Reads messages registered with the MessageRegistry class from stream.
- *
  * @author Caleb Brinkman
  */
 public class MessageInputStream
 {
+	/** The default value used when no AES key can be used. */
+	public static final byte[] NO_KEY = new byte[1];
 	/** The Logger for this class. */
 	private static final Logger LOGGER = Logger.getLogger(MessageInputStream.class.getName());
 	/** The output stream used by this message stream. */
@@ -32,27 +32,21 @@ public class MessageInputStream
 	private SecretKey aesKey;
 	/** The cipher used to decrypt messages. */
 	private Cipher aesDecryptCipher;
-	/** The default value used when no AES key can be used. */
-	public static final byte[] NO_KEY = new byte[1];
 
 	/**
 	 * Construct a new {@code MessageInputStream} from the given InputStream.
-	 *
 	 * @param inputStream The InputStream from which messages will be read.
 	 */
-	public MessageInputStream(InputStream inputStream)
-	{
+	public MessageInputStream(InputStream inputStream) {
 		this.inputStream = new DataInputStream(inputStream);
 	}
 
 	/**
 	 * Read a Message or subclass from the DataStream.
-	 *
 	 * @return The Message constructed form the data stream.
 	 * @throws IOException If there is an IO error.
 	 */
-	public Message readMessage() throws IOException
-	{
+	public Message readMessage() throws IOException {
 		try
 		{
 			short id = inputStream.readShort();
@@ -70,13 +64,11 @@ public class MessageInputStream
 
 	/**
 	 * Read from the DataInputStream an array of Objects to be passed as argumentTypes to a message.
-	 *
 	 * @param classes The class names of the argumentTypes to be read.
 	 * @return An Object[] containing the message argumentTypes.
 	 * @throws IOException If there is an IO error
 	 */
-	private Object[] readMessageArgs(LinkedList<Class> classes) throws IOException
-	{
+	private Object[] readMessageArgs(LinkedList<Class> classes) throws IOException {
 		Object[] args = new Object[classes.size()];
 
 		for (int i = 0; i < args.length; i++)
@@ -129,14 +121,40 @@ public class MessageInputStream
 	}
 
 	/**
+	 * Read an array of strings from the DataInputStream.
+	 * @return The read array of strings.
+	 * @throws IOException If there is an error reading an array of strings.
+	 */
+	private String[] readStringArray() throws IOException {
+		String[] strings;
+		int size = inputStream.readInt();
+		strings = new String[size];
+		for (int i = 0; i < strings.length; i++)
+			strings[i] = readString(inputStream);
+		return strings;
+	}
+
+	/**
+	 * Read an array of bytes from the DataInputStream.
+	 * @return The read array of bytes.
+	 * @throws IOException If there is an error reading an array of bytes.
+	 */
+	private byte[] readByteArray() throws IOException {
+		byte[] bytes;
+		int size = inputStream.readInt();
+		bytes = new byte[size];
+		int read = inputStream.read(bytes, 0, size);
+		if (read != size) throw new IOException("Incorrect number of bytes read for byte array.");
+		return bytes;
+	}
+
+	/**
 	 * Read a string from the input stream, determining if it is encrypted and decrypting it if necessary.
-	 *
 	 * @param inputStream The input stream used to read.
 	 * @return The read, decrypted string.
 	 * @throws IOException If there is an IO error.
 	 */
-	private String readString(DataInputStream inputStream) throws IOException
-	{
+	private String readString(DataInputStream inputStream) throws IOException {
 		boolean encrypted = inputStream.readBoolean();
 		String received = inputStream.readUTF();
 		if (encrypted)
@@ -161,54 +179,16 @@ public class MessageInputStream
 	}
 
 	/**
-	 * Read an array of bytes from the DataInputStream.
-	 *
-	 * @return The read array of bytes.
-	 * @throws IOException If there is an error reading an array of bytes.
-	 */
-	private byte[] readByteArray() throws IOException
-	{
-		byte[] bytes;
-		int size = inputStream.readInt();
-		bytes = new byte[size];
-		int read = inputStream.read(bytes, 0, size);
-		if (read != size) throw new IOException("Incorrect number of bytes read for byte array.");
-		return bytes;
-	}
-
-	/**
-	 * Read an array of strings from the DataInputStream.
-	 *
-	 * @return The read array of strings.
-	 * @throws IOException If there is an error reading an array of strings.
-	 */
-	private String[] readStringArray() throws IOException
-	{
-		String[] strings;
-		int size = inputStream.readInt();
-		strings = new String[size];
-		for (int i = 0; i < strings.length; i++)
-			strings[i] = readString(inputStream);
-		return strings;
-	}
-
-	/**
 	 * Close the input stream.
-	 *
 	 * @throws java.io.IOException If there is an IO error.
 	 */
-	public void close() throws IOException
-	{
-		inputStream.close();
-	}
+	public void close() throws IOException { inputStream.close(); }
 
 	/**
 	 * Set the AES key used to decrypt messages.
-	 *
 	 * @param key The AES key used to decrypt messages.
 	 */
-	public void setAESKey(byte[] key)
-	{
+	public void setAESKey(byte[] key) {
 		try
 		{
 			aesKey = new SecretKeySpec(key, "AES");
