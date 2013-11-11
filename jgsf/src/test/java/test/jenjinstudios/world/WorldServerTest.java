@@ -2,8 +2,8 @@ package test.jenjinstudios.world;
 
 import com.jenjinstudios.io.MessageRegistry;
 import com.jenjinstudios.math.Vector2D;
-import com.jenjinstudios.sql.WorldSQLHandler;
 import com.jenjinstudios.world.*;
+import com.jenjinstudios.world.sql.WorldSQLHandler;
 import com.jenjinstudios.world.state.MoveState;
 import org.junit.After;
 import org.junit.Before;

@@ -1,10 +1,10 @@
 package com.jenjinstudios.world.message;
 
 import com.jenjinstudios.message.Message;
-import com.jenjinstudios.sql.WorldSQLHandler;
 import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.InvalidLocationException;
 import com.jenjinstudios.world.WorldClientHandler;
+import com.jenjinstudios.world.sql.WorldSQLHandler;
 
 /**
  * Handles requests to login to the world.

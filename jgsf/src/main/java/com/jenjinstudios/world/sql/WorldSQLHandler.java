@@ -1,6 +1,7 @@
-package com.jenjinstudios.sql;
+package com.jenjinstudios.world.sql;
 
 import com.jenjinstudios.math.Vector2D;
+import com.jenjinstudios.sql.SQLHandler;
 import com.jenjinstudios.util.Hash;
 import com.jenjinstudios.world.Actor;
 

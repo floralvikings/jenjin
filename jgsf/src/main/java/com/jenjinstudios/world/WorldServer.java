@@ -1,7 +1,7 @@
 package com.jenjinstudios.world;
 
 import com.jenjinstudios.net.SqlEnabledServer;
-import com.jenjinstudios.sql.WorldSQLHandler;
+import com.jenjinstudios.world.sql.WorldSQLHandler;
 
 import java.io.IOException;
 
