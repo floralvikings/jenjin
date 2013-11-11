@@ -51,14 +51,16 @@ public class ExecutableWorldLoginRequest extends WorldExecutableMessage
 
 	@Override
 	public void runASync() {
-		if (sqlHandler == null || getClientHandler().isLoggedIn())
-			return;
-		String username = (String) getMessage().getArgument("username");
-		String password = (String) getMessage().getArgument("password");
-		/* The map used to create the player. */
-		player = sqlHandler.logInPlayer(username, password);
+		boolean success;
+		if (sqlHandler != null && !getClientHandler().isLoggedIn())
+		{
+			String username = (String) getMessage().getArgument("username");
+			String password = (String) getMessage().getArgument("password");
+			/* The map used to create the player. */
+			player = sqlHandler.logInPlayer(username, password);
+		}
 
-		boolean success = player != null;
+		success = player != null;
 		getClientHandler().setLoginStatus(success);
 
 		loginResponse = new Message("WorldLoginResponse");

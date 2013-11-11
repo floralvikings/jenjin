@@ -29,11 +29,18 @@ public class ExecutableLoginRequest extends ServerExecutableMessage
 
 	@Override
 	public void runASync() {
+		boolean success = false;
 		if (sqlHandler == null || getClientHandler().isLoggedIn())
+		{
+			Message loginResponse = new Message("LoginResponse");
+			loginResponse.setArgument("success", success);
+			loginResponse.setArgument("loginTime", getClientHandler().getLoggedInTime());
+			getClientHandler().queueMessage(loginResponse);
 			return;
+		}
 		String username = (String) getMessage().getArgument("username");
 		String password = (String) getMessage().getArgument("password");
-		boolean success = sqlHandler.logInUser(username, password);
+		success = sqlHandler.logInUser(username, password);
 
 		getClientHandler().setLoginStatus(success);
 
