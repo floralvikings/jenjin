@@ -2,6 +2,7 @@ package com.jenjinstudios.jgsf.message;
 
 import com.jenjinstudios.jgsf.WorldClientHandler;
 import com.jenjinstudios.message.Message;
+import com.jenjinstudios.message.ServerExecutableMessage;
 
 /**
  * Handles messages from clients of the game world.

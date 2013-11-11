@@ -1,8 +1,8 @@
 package com.jenjinstudios.jgsf;
 
-import com.jenjinstudios.jgsf.message.ServerExecutableMessage;
 import com.jenjinstudios.message.ExecutableMessage;
 import com.jenjinstudios.message.Message;
+import com.jenjinstudios.message.ServerExecutableMessage;
 import com.jenjinstudios.net.TaskedCommunicator;
 
 import java.io.IOException;

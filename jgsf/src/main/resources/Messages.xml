@@ -12,7 +12,7 @@
     <message name="LoginRequest" id="1">
         <argument type="String" name="username" encrypt="true" />
         <argument type="String" name="password" encrypt="true" />
-        <executable language="java" side="server">com.jenjinstudios.jgsf.message.ExecutableLoginRequest</executable>
+        <executable language="java" side="server">com.jenjinstudios.message.ExecutableLoginRequest</executable>
     </message>
 
     <message name="LoginResponse" id="2">
@@ -22,7 +22,7 @@
     </message>
 
     <message name="LogoutRequest" id="3">
-        <executable language="java" side="server">com.jenjinstudios.jgsf.message.ExecutableLogoutRequest</executable>
+        <executable language="java" side="server">com.jenjinstudios.message.ExecutableLogoutRequest</executable>
     </message>
 
     <message name="LogoutResponse" id="4">
@@ -31,7 +31,7 @@
     </message>
 
     <message name="PublicKeyMessage" id="5">
-        <executable language="java" side="server">com.jenjinstudios.jgsf.message.ExecutablePublicKeyMessage</executable>
+        <executable language="java" side="server">com.jenjinstudios.message.ExecutablePublicKeyMessage</executable>
         <argument type="byte[]" name="key" />
     </message>
 
@@ -115,7 +115,7 @@
 
     <message name="PingRequest" id="17">
         <argument type="long" name="requestTimeNanos" />
-        <executable language="java" side="server">com.jenjinstudios.jgsf.message.ExecutablePingRequest</executable>
+        <executable language="java" side="server">com.jenjinstudios.message.ExecutablePingRequest</executable>
     </message>
 
     <message name="PingResponse" id="18">

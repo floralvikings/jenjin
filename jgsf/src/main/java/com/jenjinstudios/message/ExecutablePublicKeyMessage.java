@@ -1,8 +1,7 @@
-package com.jenjinstudios.jgsf.message;
+package com.jenjinstudios.message;
 
 import com.jenjinstudios.io.MessageInputStream;
 import com.jenjinstudios.jgsf.ClientHandler;
-import com.jenjinstudios.message.Message;
 
 import javax.crypto.*;
 import java.security.InvalidKeyException;

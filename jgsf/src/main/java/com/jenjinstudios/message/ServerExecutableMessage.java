@@ -1,10 +1,8 @@
-package com.jenjinstudios.jgsf.message;
+package com.jenjinstudios.message;
 
 import com.jenjinstudios.io.MessageRegistry;
 import com.jenjinstudios.io.MessageType;
 import com.jenjinstudios.jgsf.ClientHandler;
-import com.jenjinstudios.message.ExecutableMessage;
-import com.jenjinstudios.message.Message;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
