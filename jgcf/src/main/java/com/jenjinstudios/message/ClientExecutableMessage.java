@@ -1,9 +1,5 @@
-package com.jenjinstudios.jgcf.message;
+package com.jenjinstudios.message;
 
-import com.jenjinstudios.message.ExecutableMessage;
-import com.jenjinstudios.message.Message;
-import com.jenjinstudios.message.MessageRegistry;
-import com.jenjinstudios.message.MessageType;
 import com.jenjinstudios.net.Client;
 
 import java.lang.reflect.Constructor;

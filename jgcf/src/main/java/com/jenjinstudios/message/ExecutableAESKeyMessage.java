@@ -1,7 +1,6 @@
-package com.jenjinstudios.jgcf.message;
+package com.jenjinstudios.message;
 
 import com.jenjinstudios.io.MessageInputStream;
-import com.jenjinstudios.message.Message;
 import com.jenjinstudios.net.Client;
 
 import javax.crypto.BadPaddingException;

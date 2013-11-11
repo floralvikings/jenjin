@@ -1,6 +1,6 @@
 package com.jenjinstudios.net;
 
-import com.jenjinstudios.jgcf.message.ClientExecutableMessage;
+import com.jenjinstudios.message.ClientExecutableMessage;
 import com.jenjinstudios.message.Message;
 
 import java.io.IOException;

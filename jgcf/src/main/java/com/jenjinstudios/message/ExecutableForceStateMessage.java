@@ -1,7 +1,6 @@
-package com.jenjinstudios.jgcf.message;
+package com.jenjinstudios.message;
 
 import com.jenjinstudios.math.Vector2D;
-import com.jenjinstudios.message.Message;
 import com.jenjinstudios.net.WorldClient;
 import com.jenjinstudios.world.ClientPlayer;
 

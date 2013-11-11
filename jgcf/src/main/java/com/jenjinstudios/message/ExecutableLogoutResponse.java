@@ -1,20 +1,20 @@
-package com.jenjinstudios.jgcf.message;
+package com.jenjinstudios.message;
 
-import com.jenjinstudios.message.Message;
-import com.jenjinstudios.net.WorldClient;
+import com.jenjinstudios.net.AuthClient;
 
 /**
- * Handles logout responses.
+ * This class responds to a LogoutResponse message.
  * @author Caleb Brinkman
  */
-public class ExecutableWorldLogoutResponse extends WorldClientExecutableMessage
+@SuppressWarnings("unused")
+public class ExecutableLogoutResponse extends AuthClientExecutableMessage
 {
 	/**
 	 * Construct an ExecutableMessage with the given Message.
-	 * @param client The client invoking this message.
+	 * @param client The client invoking this class.
 	 * @param message The Message.
 	 */
-	public ExecutableWorldLogoutResponse(WorldClient client, Message message) {
+	public ExecutableLogoutResponse(AuthClient client, Message message) {
 		super(client, message);
 	}
 
@@ -27,4 +27,5 @@ public class ExecutableWorldLogoutResponse extends WorldClientExecutableMessage
 	@Override
 	public void runASync() {
 	}
+
 }

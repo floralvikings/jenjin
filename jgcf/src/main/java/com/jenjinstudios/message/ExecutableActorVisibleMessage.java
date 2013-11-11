@@ -1,6 +1,5 @@
-package com.jenjinstudios.jgcf.message;
+package com.jenjinstudios.message;
 
-import com.jenjinstudios.message.Message;
 import com.jenjinstudios.net.WorldClient;
 import com.jenjinstudios.world.ClientActor;
 import com.jenjinstudios.world.state.MoveState;

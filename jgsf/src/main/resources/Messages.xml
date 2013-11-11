@@ -18,7 +18,7 @@
     <message name="LoginResponse" id="2">
         <argument type="boolean" name="success" />
         <argument type="long" name="loginTime" />
-        <executable language="java" side="client">com.jenjinstudios.jgcf.message.ExecutableLoginResponse</executable>
+        <executable language="java" side="client">com.jenjinstudios.message.ExecutableLoginResponse</executable>
     </message>
 
     <message name="LogoutRequest" id="3">
@@ -27,7 +27,7 @@
 
     <message name="LogoutResponse" id="4">
         <argument type="boolean" name="success" />
-        <executable language="java" side="client">com.jenjinstudios.jgcf.message.ExecutableLogoutResponse</executable>
+        <executable language="java" side="client">com.jenjinstudios.message.ExecutableLogoutResponse</executable>
     </message>
 
     <message name="PublicKeyMessage" id="5">
@@ -36,7 +36,7 @@
     </message>
 
     <message name="AESKeyMessage" id="6">
-        <executable language="java" side="client">com.jenjinstudios.jgcf.message.ExecutableAESKeyMessage</executable>
+        <executable language="java" side="client">com.jenjinstudios.message.ExecutableAESKeyMessage</executable>
         <argument type="byte[]" name="key" />
     </message>
 
@@ -48,7 +48,7 @@
     </message>
 
     <message name="ObjectVisibleMessage" id="8">
-        <executable language="java" side="client">com.jenjinstudios.jgcf.message.ExecutableObjectVisibleMessage</executable>
+        <executable language="java" side="client">com.jenjinstudios.message.ExecutableObjectVisibleMessage</executable>
         <argument type="String" name="name" encrypt="true" />
         <argument type="int" name="id" />
         <argument type="double" name="xCoordinate" />
@@ -56,7 +56,7 @@
     </message>
 
     <message name="ActorVisibleMessage" id="9">
-        <executable language="java" side="client">com.jenjinstudios.jgcf.message.ExecutableActorVisibleMessage</executable>
+        <executable language="java" side="client">com.jenjinstudios.message.ExecutableActorVisibleMessage</executable>
         <argument type="String" name="name" encrypt="true" />
         <argument type="int" name="id" />
         <argument type="double" name="xCoordinate" />
@@ -68,12 +68,12 @@
     </message>
 
     <message name="ObjectInvisibleMessage" id="10">
-        <executable language="java" side="client">com.jenjinstudios.jgcf.message.ExecutableObjectInvisibleMessage</executable>
+        <executable language="java" side="client">com.jenjinstudios.message.ExecutableObjectInvisibleMessage</executable>
         <argument type="int" name="id" />
     </message>
 
     <message name="StateChangeMessage" id="11">
-        <executable language="java" side="client">com.jenjinstudios.jgcf.message.ExecutableStateChangeMessage</executable>
+        <executable language="java" side="client">com.jenjinstudios.message.ExecutableStateChangeMessage</executable>
         <argument type="int" name="id" />
         <argument type="double" name="relativeAngle" />
         <argument type="double" name="absoluteAngle" />
@@ -81,7 +81,7 @@
     </message>
 
     <message name="ForceStateMessage" id="12">
-        <executable language="java" side="client">com.jenjinstudios.jgcf.message.ExecutableForceStateMessage</executable>
+        <executable language="java" side="client">com.jenjinstudios.message.ExecutableForceStateMessage</executable>
         <argument type="double" name="relativeAngle" />
         <argument type="double" name="absoluteAngle" />
         <argument type="double" name="xCoordinate" />
@@ -105,12 +105,12 @@
         <argument type="long" name="loginTime" />
         <argument type="double" name="xCoord" />
         <argument type="double" name="zCoord" />
-        <executable language="java" side="client">com.jenjinstudios.jgcf.message.ExecutableWorldLoginResponse</executable>
+        <executable language="java" side="client">com.jenjinstudios.message.ExecutableWorldLoginResponse</executable>
     </message>
 
     <message name="WorldLogoutResponse" id="16">
         <argument type="boolean" name="success" />
-        <executable language="java" side="client">com.jenjinstudios.jgcf.message.ExecutableWorldLogoutResponse</executable>
+        <executable language="java" side="client">com.jenjinstudios.message.ExecutableWorldLogoutResponse</executable>
     </message>
 
     <message name="PingRequest" id="17">
@@ -120,12 +120,12 @@
 
     <message name="PingResponse" id="18">
         <argument type="long" name="requestTimeNanos" />
-        <executable language="java" side="client">com.jenjinstudios.jgcf.message.ExecutablePingResponse</executable>
+        <executable language="java" side="client">com.jenjinstudios.message.ExecutablePingResponse</executable>
     </message>
 
     <message name="ActorStepMessage" id="19">
         <argument type="double" name="stepLength" />
-        <executable language="java" side="client">com.jenjinstudios.jgcf.message.ExecutableActorStepLengthMessage</executable>
+        <executable language="java" side="client">com.jenjinstudios.message.ExecutableActorStepLengthMessage</executable>
     </message>
 
 </base_messages>
