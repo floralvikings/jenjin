@@ -43,7 +43,7 @@ class ClientListener<T extends ClientHandler> implements Runnable
 		server = s;
 		PORT = p;
 		/* The class of client handlers created by this listener. */
-		try // TODO Make sure error is handled gracefully
+		try
 		{
 			handlerConstructor = handlerClass.getConstructor(s.getClass(), Socket.class);
 
@@ -106,15 +106,15 @@ class ClientListener<T extends ClientHandler> implements Runnable
 	 * Add a new Client using the specified socket as a connection.
 	 * @param sock The connection to the new client.
 	 */
-	void addNewClient(Socket sock) {
-		try // TODO Make sure error is handled gracefully
+	private void addNewClient(Socket sock) {
+		try
 		{
 			T newHandler = handlerConstructor.newInstance(server, sock);
 
 			addNewClient(newHandler);
 		} catch (InstantiationException | IllegalAccessException | InvocationTargetException e)
 		{
-			LOGGER.log(Level.SEVERE, "Unable to instantiate client handler!", e);
+			LOGGER.log(Level.SEVERE, "Unable to instantiate client handler.", e);
 		}
 	}
 
