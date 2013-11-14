@@ -49,7 +49,7 @@ public class MessageRegistry
 	 * @throws org.xml.sax.SAXException If there is an error parsing XML files.
 	 */
 	public static void registerXmlMessages(boolean isServer) throws ParserConfigurationException, SAXException, IOException {
-		try // TODO Make sure error is handled gracefully
+		try
 		{
 
 			// Search the JAR
