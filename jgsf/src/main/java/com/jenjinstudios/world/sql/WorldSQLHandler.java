@@ -86,7 +86,7 @@ public class WorldSQLHandler extends SQLHandler
 		if (!isConnected())
 			return success;
 		String username = actor.getName();
-		try // TODO Make sure error is handled gracefully
+		try
 		{
 			ResultSet results = makeUserQuery(username);
 			results.next();
