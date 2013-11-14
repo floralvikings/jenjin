@@ -155,13 +155,13 @@ public class Server<T extends ClientHandler> extends Thread
 		start();
 		while (!initialized && (timepast < TIMEOUT_MILLIS))
 		{
-			try // TODO make sure error is handled gracefully
+			try
 			{
 				Thread.sleep(10);
 				timepast = System.currentTimeMillis() - startTime;
 			} catch (InterruptedException e)
 			{
-				LOGGER.log(Level.WARNING, "Issue with server blockingStart", e);
+				LOGGER.log(Level.WARNING, "Server blocking start was interrupted.", e);
 			}
 		}
 		return initialized;
