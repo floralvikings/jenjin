@@ -68,9 +68,6 @@ public class ClientHandler extends TaskedCommunicator
 	public void shutdown() {
 		// Try and log out if not already.  This is an "emergency" logout because the connection closed without a
 		// proper logout, so we handle the query directly instead of in an executable message.
-		// This is a big no-no, but this can be caused by an unexpected server or client shutdown, which means that
-		// there may not be time to finish any executable messages created.  I'm not happy about it but there it is.
-		// TODO Make this better.
 		if (isLoggedIn())
 			loggedIn = !server.getSqlHandler().logOutUser(username);
 		closeLink();
