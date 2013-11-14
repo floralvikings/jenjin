@@ -47,7 +47,7 @@ public class MessageInputStream
 	 * @throws IOException If there is an IO error.
 	 */
 	public Message readMessage() throws IOException {
-		try // TODO Make sure error is handled gracefully
+		try
 		{
 			short id = inputStream.readShort();
 			LinkedList<Class> classes = MessageRegistry.getArgumentClasses(id);
