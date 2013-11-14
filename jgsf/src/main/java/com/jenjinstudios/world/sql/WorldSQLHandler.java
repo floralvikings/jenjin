@@ -46,7 +46,7 @@ public class WorldSQLHandler extends SQLHandler
 		Actor player = null;
 		if (!isConnected())
 			return player;
-		try
+		try // TODO Make sure error is handled gracefully
 		{
 			ResultSet results = makeUserQuery(username);
 			results.next();
@@ -86,7 +86,7 @@ public class WorldSQLHandler extends SQLHandler
 		if (!isConnected())
 			return success;
 		String username = actor.getName();
-		try
+		try // TODO Make sure error is handled gracefully
 		{
 			ResultSet results = makeUserQuery(username);
 			results.next();

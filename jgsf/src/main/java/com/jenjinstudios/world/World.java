@@ -111,7 +111,7 @@ public class World
 		for (int x = xStart; x < xEnd; x++)
 			for (int z = zStart; z < zEnd; z++)
 			{
-				try
+				try // TODO Make sure error is handled gracefully, probably need to remove
 				{
 					areaGrid.add(locationGrid[x][z]);
 				} catch (ArrayIndexOutOfBoundsException ignored)

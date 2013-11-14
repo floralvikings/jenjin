@@ -33,7 +33,7 @@ public class ExecutableWorldLoginRequest extends WorldExecutableMessage
 	public void runSynced() {
 		if (player != null)
 		{
-			try
+			try // TODO Make sure error is handled gracefully
 			{
 				getClientHandler().getServer().getWorld().addObject(player);
 			} catch (InvalidLocationException ex)

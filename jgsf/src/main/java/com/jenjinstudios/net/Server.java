@@ -153,7 +153,7 @@ public class Server<T extends ClientHandler> extends Thread
 		start();
 		while (!initialized && (timepast < TIMEOUT_MILLIS))
 		{
-			try
+			try // TODO make sure error is handled gracefully
 			{
 				Thread.sleep(10);
 				timepast = System.currentTimeMillis() - startTime;

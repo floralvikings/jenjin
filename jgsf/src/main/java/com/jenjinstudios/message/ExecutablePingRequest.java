@@ -29,7 +29,7 @@ public class ExecutablePingRequest extends ServerExecutableMessage
 	public void runASync() {
 		Message pingResponse = new Message("PingResponse");
 		pingResponse.setArgument("requestTimeNanos", getMessage().getArgument("requestTimeNanos"));
-		try
+		try // TODO Make sure error is handled gracefully
 		{
 			// Try to force the message through immediately, ignoring queue and sync times.
 			getClientHandler().forceMessage(pingResponse);

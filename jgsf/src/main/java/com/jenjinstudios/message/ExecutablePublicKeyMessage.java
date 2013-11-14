@@ -39,7 +39,7 @@ public class ExecutablePublicKeyMessage extends ServerExecutableMessage
 	public void runASync() {
 		Message aesMessage = new Message("AESKeyMessage");
 		byte[] encryptedAESKey = MessageInputStream.NO_KEY;
-		try
+		try // TODO Make sure error is handled gracefully
 		{
 			// Generate an AES key.
 			KeyGenerator keyGenerator = KeyGenerator.getInstance("AES");

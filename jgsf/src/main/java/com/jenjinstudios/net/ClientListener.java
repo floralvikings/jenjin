@@ -42,7 +42,7 @@ class ClientListener<T extends ClientHandler> implements Runnable
 		server = s;
 		PORT = p;
 		/* The class of client handlers created by this listener. */
-		try
+		try // TODO Make sure error is handled gracefully
 		{
 			handlerConstructor = handlerClass.getConstructor(s.getClass(), Socket.class);
 
@@ -106,7 +106,7 @@ class ClientListener<T extends ClientHandler> implements Runnable
 	 * @param sock The connection to the new client.
 	 */
 	void addNewClient(Socket sock) {
-		try
+		try // TODO Make sure error is handled gracefully
 		{
 			T newHandler = handlerConstructor.newInstance(server, sock);
 
@@ -121,7 +121,7 @@ class ClientListener<T extends ClientHandler> implements Runnable
 	public void run() {
 		while (listening)
 		{
-			try
+			try // TODO Make sure error is handled gracefully
 			{
 				Socket sock = serverSock.accept();
 				addNewClient(sock);

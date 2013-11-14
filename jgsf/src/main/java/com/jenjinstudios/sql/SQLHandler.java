@@ -52,7 +52,7 @@ public class SQLHandler
 		this.dbPassword = dbPassword;
 		this.dbName = dbName;
 		dbUrl = connectionStringProtocol + dbAddress + "/" + dbName;
-		try
+		try // TODO Make sure error is handled gracefully
 		{
 			Class.forName("org.drizzle.jdbc.DrizzleDriver").newInstance();
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e)
@@ -79,7 +79,7 @@ public class SQLHandler
 		boolean success = false;
 		if (!connected)
 			return success;
-		try
+		try // TODO Make sure error is handled gracefully
 		{
 			ResultSet results = makeUserQuery(username);
 			results.next();
@@ -116,7 +116,7 @@ public class SQLHandler
 		boolean success = false;
 		if (!connected)
 			return success;
-		try
+		try // TODO Make sure error is handled gracefully
 		{
 			ResultSet results = makeUserQuery(username);
 			results.next();
