@@ -5,7 +5,6 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.SocketException;
 import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -126,12 +125,9 @@ class ClientListener<T extends ClientHandler> implements Runnable
 			{
 				Socket sock = serverSock.accept();
 				addNewClient(sock);
-			} catch (SocketException ex)
-			{
-				// Socket is closed, no worries.  Just means we stopped listening =P
 			} catch (IOException e)
 			{
-				Server.LOGGER.log(Level.WARNING, "Error", e);
+				Server.LOGGER.log(Level.WARNING, "Error connecting to client: ", e);
 			}
 		}
 	}
