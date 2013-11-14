@@ -65,6 +65,9 @@ public abstract class ServerExecutableMessage extends ExecutableMessage
 		} catch (InvocationTargetException | InstantiationException | IllegalAccessException e)
 		{
 			LOGGER.log(Level.SEVERE, "Constructor not correct for: " + execClass.getName(), e);
+		} catch (NullPointerException e)
+		{
+			LOGGER.log(Level.SEVERE, "No client-side executable message found for: " + message, e);
 		}
 
 		return r;
