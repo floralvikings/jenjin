@@ -79,7 +79,7 @@ public class SQLHandler
 		boolean success = false;
 		if (!connected)
 			return success;
-		try // TODO Make sure error is handled gracefully
+		try
 		{
 			ResultSet results = makeUserQuery(username);
 			results.next();
