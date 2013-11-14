@@ -43,7 +43,7 @@ public abstract class ServerExecutableMessage extends ExecutableMessage
 		MessageType messageType = MessageRegistry.getMessageType(message.getID());
 		// Get the executable message classes registered.
 		Class<? extends ExecutableMessage> execClass = messageType.serverExecutableMessageClass;
-		try // TODO Make sure error is handled gracefully
+		try
 		{
 			// Get and parse the Constructors for the ExecutableMessage class retrieved.
 			Constructor<? extends ExecutableMessage>[] execConstructors;
