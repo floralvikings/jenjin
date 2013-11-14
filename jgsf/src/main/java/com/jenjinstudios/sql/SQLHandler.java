@@ -52,12 +52,12 @@ public class SQLHandler
 		this.dbPassword = dbPassword;
 		this.dbName = dbName;
 		dbUrl = connectionStringProtocol + dbAddress + "/" + dbName;
-		try // TODO Make sure error is handled gracefully
+		try
 		{
 			Class.forName("org.drizzle.jdbc.DrizzleDriver").newInstance();
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e)
 		{
-			LOGGER.log(Level.SEVERE, "Unable to register Drizzle driver!");
+			LOGGER.log(Level.SEVERE, "Unable to register Drizzle driver; is the Drizzle dependency present?");
 		}
 		USER_QUERY = "SELECT * FROM " + dbName + ".users WHERE username = ?";
 
