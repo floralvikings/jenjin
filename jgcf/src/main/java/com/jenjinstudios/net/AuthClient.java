@@ -132,7 +132,7 @@ public class AuthClient extends Client
 		long timepast = System.currentTimeMillis() - startTime;
 		while (!hasReceivedLogoutResponse() && (timepast < TIMEOUT_MILLIS))
 		{
-			try // TODO Make sure error is handled gracefully
+			try
 			{
 				Thread.sleep(10);
 			} catch (InterruptedException e)
