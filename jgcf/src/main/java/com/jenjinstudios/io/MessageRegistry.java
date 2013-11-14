@@ -46,7 +46,7 @@ public class MessageRegistry
 	 * @param isServer Whether the program registering messages is a server or client-side program.
 	 */
 	public static void registerXmlMessages(boolean isServer) {
-		try
+		try // TODO Make sure error is handled gracefully
 		{
 
 			// Search the JAR

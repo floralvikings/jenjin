@@ -70,7 +70,7 @@ public class MessageTypeFactory
 		}
 		if (executableMessageClassName != null)
 		{
-			try
+			try // TODO Make sure error is handled gracefully
 			{
 				executableMessageClass = (Class<? extends ExecutableMessage>) Class.forName(executableMessageClassName);
 			} catch (ClassNotFoundException | ClassCastException e)
@@ -105,7 +105,7 @@ public class MessageTypeFactory
 		}
 		if (executableMessageClassName != null)
 		{
-			try
+			try // TODO Make sure error is handled gracefully
 			{
 				executableMessageClass = (Class<? extends ExecutableMessage>) Class.forName(executableMessageClassName);
 			} catch (ClassNotFoundException | ClassCastException e)

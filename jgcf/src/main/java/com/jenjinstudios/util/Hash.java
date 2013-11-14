@@ -16,7 +16,7 @@ public class Hash
 	 * @return a SHA1 hash of the given string.
 	 */
 	private static String getHashedString(String input) {
-		try
+		try // TODO Make sure error is handled gracefully
 		{
 			//Convert the pass to an md5 hash string
 			byte[] pwbytes = input.getBytes("UTF-8");

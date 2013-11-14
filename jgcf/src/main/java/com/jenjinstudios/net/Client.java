@@ -46,7 +46,7 @@ public class Client extends TaskedCommunicator
 		PORT = port;
 		repeatedSyncedTasks = new LinkedList<>();
 
-		try
+		try // TODO Make sure error is handled gracefully
 		{
 			KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
 			keyPairGenerator.initialize(512);
@@ -108,7 +108,7 @@ public class Client extends TaskedCommunicator
 	private void connect() {
 		if (isConnected())
 			return;
-		try
+		try // TODO Make sure error is handled gracefully
 		{
 			super.setSocket(new Socket(ADDRESS, PORT));
 			doPostConnectInit();

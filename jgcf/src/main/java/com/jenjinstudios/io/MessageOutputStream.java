@@ -90,7 +90,7 @@ public class MessageOutputStream
 				outputStream.writeUTF(s);
 			} else
 			{
-				try
+				try // TODO Make sure error is handled gracefully
 				{
 					byte[] sBytes = s.getBytes("UTF-8");
 					String encryptedString = DatatypeConverter.printHexBinary(aesEncryptCipher.doFinal(sBytes));
@@ -149,7 +149,7 @@ public class MessageOutputStream
 	public void setAesKey(byte[] key) {
 		if (key == null)
 			return;
-		try
+		try // TODO Make sure error is handled gracefully
 		{
 			aesKey = new SecretKeySpec(key, "AES");
 			aesEncryptCipher = Cipher.getInstance("AES");

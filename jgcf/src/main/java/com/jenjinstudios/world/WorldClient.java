@@ -92,7 +92,7 @@ public class WorldClient extends AuthClient
 		long timepast = System.currentTimeMillis() - startTime;
 		while (!hasReceivedLoginResponse() && (timepast < TIMEOUT_MILLIS))
 		{
-			try
+			try // TODO Make sure error is handled gracefully
 			{
 				sleep(1);
 			} catch (InterruptedException e)
@@ -130,7 +130,7 @@ public class WorldClient extends AuthClient
 		long timepast = System.currentTimeMillis() - startTime;
 		while (!hasReceivedLogoutResponse() && (timepast < TIMEOUT_MILLIS))
 		{
-			try
+			try // TODO Make sure error is handled gracefully
 			{
 				sleep(10);
 			} catch (InterruptedException e)

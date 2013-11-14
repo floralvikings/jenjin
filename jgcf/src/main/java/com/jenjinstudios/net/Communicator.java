@@ -41,7 +41,7 @@ public abstract class Communicator extends Thread
 
 	/** Close the link with the server. */
 	protected void closeLink() {
-		try
+		try // TODO Make sure error is handled gracefully
 		{
 			inputStream.close();
 			outputStream.close();
@@ -130,7 +130,7 @@ public abstract class Communicator extends Thread
 	 * @param o The message to send to the client.
 	 */
 	public void writeMessage(Message o) {
-		try
+		try // TODO Make sure error is handled gracefully
 		{
 			getOutputStream().writeMessage(o);
 		} catch (Exception ex)

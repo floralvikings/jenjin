@@ -47,7 +47,7 @@ public class MessageInputStream
 	 * @throws IOException If there is an IO error.
 	 */
 	public Message readMessage() throws IOException {
-		try
+		try // TODO Make sure error is handled gracefully
 		{
 			short id = inputStream.readShort();
 			LinkedList<Class> classes = MessageRegistry.getArgumentClasses(id);
@@ -164,7 +164,7 @@ public class MessageInputStream
 				LOGGER.log(Level.WARNING, "AES key not properly set, unable to decrypt messages.");
 			} else
 			{
-				try
+				try // TODO Make sure error is handled gracefully
 				{
 					byte[] encBytes = DatatypeConverter.parseHexBinary(received);
 					byte[] decBytes = aesDecryptCipher.doFinal(encBytes);
@@ -189,7 +189,7 @@ public class MessageInputStream
 	 * @param key The AES key used to decrypt messages.
 	 */
 	public void setAESKey(byte[] key) {
-		try
+		try // TODO Make sure error is handled gracefully
 		{
 			aesKey = new SecretKeySpec(key, "AES");
 			aesDecryptCipher = Cipher.getInstance("AES");

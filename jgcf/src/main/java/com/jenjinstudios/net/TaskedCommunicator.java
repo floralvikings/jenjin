@@ -64,7 +64,7 @@ public abstract class TaskedCommunicator extends Communicator
 	@Override
 	public void run() {
 		super.run();
-		try
+		try // TODO Make sure error is handled gracefully
 		{
 			Message currentMessage;
 			while ((currentMessage = getInputStream().readMessage()) != null)

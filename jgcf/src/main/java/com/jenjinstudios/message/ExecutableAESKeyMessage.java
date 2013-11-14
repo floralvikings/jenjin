@@ -42,7 +42,7 @@ public class ExecutableAESKeyMessage extends ClientExecutableMessage
 		if (Arrays.equals(encryptedAESKey, MessageInputStream.NO_KEY))
 			return;
 		PrivateKey privateKey = getClient().getPrivateKey();
-		try
+		try // TODO Make sure error is handled gracefully
 		{
 			Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
 			cipher.init(Cipher.DECRYPT_MODE, privateKey);
