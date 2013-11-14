@@ -90,7 +90,7 @@ public class SQLHandler
 			// Hash the user-supplied password with the salt in the database.
 			String hashedPassword = Hash.getHashedString(password, results.getString("salt"));
 			// Determine if the correct password was supplied.
-			boolean passwordCorrect = hashedPassword.equalsIgnoreCase(results.getString("password"));
+			boolean passwordCorrect = hashedPassword != null && hashedPassword.equalsIgnoreCase(results.getString("password"));
 			results.getStatement().close();
 			if (!passwordCorrect)
 				return success;
