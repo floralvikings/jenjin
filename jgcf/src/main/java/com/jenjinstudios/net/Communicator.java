@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * The communicator class is the superclass for any classes that communicate over socket.
@@ -16,6 +18,8 @@ import java.util.LinkedList;
  */
 public abstract class Communicator extends Thread
 {
+	/** The logger used for this class. */
+	private static final Logger LOGGER = Logger.getLogger(Communicator.class.getName());
 	/** The list of collected ping times. */
 	private final ArrayList<Long> pingTimes;
 	/** The collection of messages to send at the next broadcast. */
@@ -130,11 +134,12 @@ public abstract class Communicator extends Thread
 	 * @param o The message to send to the client.
 	 */
 	public void writeMessage(Message o) {
-		try // TODO Make sure error is handled gracefully
+		try
 		{
 			getOutputStream().writeMessage(o);
-		} catch (Exception ex)
+		} catch (IOException e)
 		{
+			LOGGER.log(Level.SEVERE, "Unable to write message to socket, shutting down.", e);
 			shutdown();
 		}
 	}
