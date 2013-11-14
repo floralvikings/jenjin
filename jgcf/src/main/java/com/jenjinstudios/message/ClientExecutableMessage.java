@@ -47,7 +47,7 @@ public abstract class ClientExecutableMessage extends ExecutableMessage
 		MessageType messageType = MessageRegistry.getMessageType(message.getID());
 		Class<? extends ExecutableMessage> execClass = messageType.clientExecutableMessageClass;
 
-		try // TODO Make sure error is handled gracefully
+		try
 		{
 			Constructor<? extends ExecutableMessage>[] execConstructors;
 			Constructor<? extends ExecutableMessage> execConstructor = null;
