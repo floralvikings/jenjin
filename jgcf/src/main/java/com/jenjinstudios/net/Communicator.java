@@ -45,14 +45,14 @@ public abstract class Communicator extends Thread
 
 	/** Close the link with the server. */
 	protected void closeLink() {
-		try // TODO Make sure error is handled gracefully
+		try
 		{
 			inputStream.close();
 			outputStream.close();
 			socket.close();
-		} catch (IOException ex)
+		} catch (IOException ignored)
 		{
-			// Do nothing since we're closing the link anyway?
+			// Link closing, possible _because_ of an IOExeption; will be shutting down.
 		} finally
 		{
 			connected = false;
