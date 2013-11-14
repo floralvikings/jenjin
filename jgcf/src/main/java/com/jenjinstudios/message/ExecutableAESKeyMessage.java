@@ -39,15 +39,15 @@ public class ExecutableAESKeyMessage extends ClientExecutableMessage
 	@Override
 	public void runASync() {
 		byte[] encryptedAESKey = (byte[]) getMessage().getArgument("key");
+		byte[] decryptedAESKey = MessageInputStream.NO_KEY;
 		if (Arrays.equals(encryptedAESKey, MessageInputStream.NO_KEY))
 			return;
 		PrivateKey privateKey = getClient().getPrivateKey();
-		try // TODO Make sure error is handled gracefully
+		try
 		{
 			Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
 			cipher.init(Cipher.DECRYPT_MODE, privateKey);
-			byte[] decryptedAESKey = cipher.doFinal(encryptedAESKey);
-			getClient().setAESKey(decryptedAESKey);
+			decryptedAESKey = cipher.doFinal(encryptedAESKey);
 		} catch (NoSuchAlgorithmException e)
 		{
 			LOGGER.log(Level.SEVERE, "Unable to find RSA algorithm!", e);
@@ -61,6 +61,6 @@ public class ExecutableAESKeyMessage extends ClientExecutableMessage
 		{
 			LOGGER.log(Level.SEVERE, "Illegal block size?!?", e);
 		}
-
+		getClient().setAESKey(decryptedAESKey);
 	}
 }
