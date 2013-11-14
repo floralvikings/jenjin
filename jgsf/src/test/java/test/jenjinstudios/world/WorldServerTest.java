@@ -40,9 +40,12 @@ public class WorldServerTest
 	/** The client-side player used for testing. */
 	private ClientPlayer clientPlayer;
 
-	/** Construct the test. */
+	/**
+	 * Construct the test.
+	 * @throws Exception If there's an Exception.
+	 */
 	@BeforeClass
-	public static void construct() {
+	public static void construct() throws Exception {
 		MessageRegistry.registerXmlMessages(true);
 	}
 
@@ -54,17 +57,6 @@ public class WorldServerTest
 	public void setUp() throws Exception {
 		initWorldServer();
 		initWorldClient();
-	}
-
-	/**
-	 * Initialize the world and world server.
-	 * @throws Exception If there's an exception.
-	 */
-	private void initWorldServer() throws Exception {
-		worldSQLHandler = new WorldSQLHandler("localhost", "jenjin_test", "jenjin_user", "jenjin_password");
-		worldServer = new WorldServer(worldSQLHandler);
-		world = worldServer.getWorld();
-		worldServer.blockingStart();
 	}
 
 	/**
@@ -82,6 +74,17 @@ public class WorldServerTest
 	}
 
 	/**
+	 * Initialize the world and world server.
+	 * @throws Exception If there's an exception.
+	 */
+	private void initWorldServer() throws Exception {
+		worldSQLHandler = new WorldSQLHandler("localhost", "jenjin_test", "jenjin_user", "jenjin_password");
+		worldServer = new WorldServer(worldSQLHandler);
+		world = worldServer.getWorld();
+		worldServer.blockingStart();
+	}
+
+	/**
 	 * Tear down the client and server.
 	 * @throws Exception If there's an exception.
 	 */
@@ -92,32 +95,6 @@ public class WorldServerTest
 		worldClient.shutdown();
 
 		worldServer.shutdown();
-	}
-
-	/**
-	 * Move the client player to the given vector.
-	 * @param newVector The vector to which to move.
-	 * @throws InterruptedException If there's an exception.
-	 */
-	private void movePlayerTowardVector(Vector2D newVector) throws InterruptedException {
-		clientPlayer.setNewRelativeAngle(clientPlayer.getVector2D().getAngleToVector(newVector));
-		while (clientPlayer.getVector2D().getDistanceToVector(newVector) > Actor.STEP_LENGTH) { Thread.sleep(10); }
-		clientPlayer.setNewRelativeAngle(IDLE);
-		Thread.sleep(100);
-	}
-
-	/**
-	 * Move the player to the origin.
-	 * @throws InterruptedException If there's an exception.
-	 */
-	private void movePlayerToOrigin() throws InterruptedException {
-		clientPlayer.setNewRelativeAngle(clientPlayer.getVector2D().getAngleToVector(Vector2D.ORIGIN));
-		while (clientPlayer.getVector2D().getDistanceToVector(Vector2D.ORIGIN) > Actor.STEP_LENGTH)
-		{
-			Thread.sleep(10);
-		}
-		clientPlayer.setNewRelativeAngle(IDLE);
-		Thread.sleep(100);
 	}
 
 	/**
@@ -162,6 +139,32 @@ public class WorldServerTest
 
 		movePlayerToOrigin();
 		assertEquals(0, worldClient.getVisibleObjects().size());
+	}
+
+	/**
+	 * Move the player to the origin.
+	 * @throws InterruptedException If there's an exception.
+	 */
+	private void movePlayerToOrigin() throws InterruptedException {
+		clientPlayer.setNewRelativeAngle(clientPlayer.getVector2D().getAngleToVector(Vector2D.ORIGIN));
+		while (clientPlayer.getVector2D().getDistanceToVector(Vector2D.ORIGIN) > Actor.STEP_LENGTH)
+		{
+			Thread.sleep(10);
+		}
+		clientPlayer.setNewRelativeAngle(IDLE);
+		Thread.sleep(100);
+	}
+
+	/**
+	 * Move the client player to the given vector.
+	 * @param newVector The vector to which to move.
+	 * @throws InterruptedException If there's an exception.
+	 */
+	private void movePlayerTowardVector(Vector2D newVector) throws InterruptedException {
+		clientPlayer.setNewRelativeAngle(clientPlayer.getVector2D().getAngleToVector(newVector));
+		while (clientPlayer.getVector2D().getDistanceToVector(newVector) > Actor.STEP_LENGTH) { Thread.sleep(10); }
+		clientPlayer.setNewRelativeAngle(IDLE);
+		Thread.sleep(100);
 	}
 
 	/**
