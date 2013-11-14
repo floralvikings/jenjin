@@ -4,6 +4,7 @@ import com.jenjinstudios.message.Message;
 import com.jenjinstudios.net.AuthClient;
 import com.jenjinstudios.world.state.MoveState;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.LinkedList;
 import java.util.Set;
 import java.util.TreeMap;
@@ -35,8 +36,9 @@ public class WorldClient extends AuthClient
 	 * @param port The port over which this client will attempt to connect.
 	 * @param username The username that will be used by this client.
 	 * @param password The password that will be used by this client.
+	 * @throws java.security.NoSuchAlgorithmException If there is an error generating encryption keys.
 	 */
-	public WorldClient(String address, int port, String username, String password) {
+	public WorldClient(String address, int port, String username, String password) throws NoSuchAlgorithmException {
 		super(address, port, username, password);
 		visibleObjects = new TreeMap<>();
 		this.password = password;

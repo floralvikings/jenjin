@@ -2,6 +2,7 @@ package com.jenjinstudios.net;
 
 import com.jenjinstudios.message.Message;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -35,8 +36,9 @@ public class AuthClient extends Client
 	 * @param port The port over which this client will attempt to connect.
 	 * @param username The username that will be used by this client.
 	 * @param password The password that will be used by this client.
+	 * @throws java.security.NoSuchAlgorithmException If there is an error generating encryption keys.
 	 */
-	public AuthClient(String address, int port, String username, String password) {
+	public AuthClient(String address, int port, String username, String password) throws NoSuchAlgorithmException {
 		super(address, port);
 		this.username = username;
 		this.password = password;

@@ -154,7 +154,7 @@ public class ServerTest
 	 * @throws InterruptedException If the sleep is interrupted.
 	 */
 	@Test
-	public void testEmergencyLogout() throws InterruptedException {
+	public void testEmergencyLogout() throws Exception {
 		goodClient01 = new AuthClient("localhost", 51019, "TestAccount01", "testPassword");
 		goodClient01.blockingStart();
 

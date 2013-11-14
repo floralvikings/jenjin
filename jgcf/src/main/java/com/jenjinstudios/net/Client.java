@@ -40,13 +40,14 @@ public class Client extends TaskedCommunicator
 	 * Construct a new client and attempt to connect to the server over the specified port.
 	 * @param address The address of the server to which to connect
 	 * @param port The port over which to connect to the server.
+	 * @throws java.security.NoSuchAlgorithmException If there is an error generating encryption keys.
 	 */
-	protected Client(String address, int port) {
+	protected Client(String address, int port) throws NoSuchAlgorithmException {
 		ADDRESS = address;
 		PORT = port;
 		repeatedSyncedTasks = new LinkedList<>();
 
-		try // TODO Make sure error is handled gracefully
+		try
 		{
 			KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
 			keyPairGenerator.initialize(512);
@@ -56,6 +57,7 @@ public class Client extends TaskedCommunicator
 		} catch (NoSuchAlgorithmException e)
 		{
 			LOGGER.log(Level.SEVERE, "Unable to create RSA key pair!", e);
+			throw e;
 		}
 	}
 
