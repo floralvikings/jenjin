@@ -121,7 +121,7 @@ class ClientListener<T extends ClientHandler> implements Runnable
 	public void run() {
 		while (listening)
 		{
-			try // TODO Make sure error is handled gracefully
+			try
 			{
 				Socket sock = serverSock.accept();
 				addNewClient(sock);
