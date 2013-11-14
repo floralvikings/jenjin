@@ -106,9 +106,9 @@ public class Client extends TaskedCommunicator
 	 * client thread is started.
 	 */
 	private void connect() {
-		if (isConnected())
+		if (isConnected()) // No need to connect if we're already connected.
 			return;
-		try // TODO Make sure error is handled gracefully
+		try
 		{
 			super.setSocket(new Socket(ADDRESS, PORT));
 			doPostConnectInit();
