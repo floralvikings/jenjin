@@ -1,6 +1,9 @@
 package com.jenjinstudios.message;
 
 import com.jenjinstudios.net.ClientHandler;
+import com.jenjinstudios.net.Server;
+
+import java.util.logging.Level;
 
 /**
  * Handles an invalid message received from a client.
@@ -25,5 +28,9 @@ public class ServerExecutableInvalidMessage extends ServerExecutableMessage
 	/** Run asynchronous portion of this message. */
 	@Override
 	public void runASync() {
+		String messageName = (String) getMessage().getArgument("messageName");
+		short messageID = (short) getMessage().getArgument("messageID");
+		String reportMessage = "Client reported invalid sent message: " + messageName + " (ID:  " + messageID + ")";
+		Server.LOGGER.log(Level.SEVERE, reportMessage);
 	}
 }
