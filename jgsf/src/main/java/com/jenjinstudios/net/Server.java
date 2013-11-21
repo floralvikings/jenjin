@@ -42,8 +42,9 @@ public class Server<T extends ClientHandler> extends Thread
 	 * @param port The port number on which this server will listen.
 	 * @param handlerClass The class of ClientHandler used by this Server.
 	 * @throws java.io.IOException If there is an IO Error initializing the server.
+	 * @throws NoSuchMethodException If there is no appropriate constructor for the specified ClientHandler constructor.
 	 */
-	public Server(int ups, int port, Class<? extends T> handlerClass) throws IOException {
+	public Server(int ups, int port, Class<? extends T> handlerClass) throws IOException, NoSuchMethodException {
 		this(ups, port, handlerClass, DEFAULT_MAX_CLIENTS);
 	}
 
@@ -54,9 +55,10 @@ public class Server<T extends ClientHandler> extends Thread
 	 * @param handlerClass The class of ClientHandler used by this Server.
 	 * @param maxClients The maximum number of clients.
 	 * @throws java.io.IOException If there is an IO Error initializing the server.
+	 * @throws NoSuchMethodException If there is no appropriate constructor for the specified ClientHandler constructor.
 	 */
 	@SuppressWarnings("unchecked")
-	public Server(int ups, int port, Class<? extends T> handlerClass, int maxClients) throws IOException {
+	public Server(int ups, int port, Class<? extends T> handlerClass, int maxClients) throws IOException, NoSuchMethodException {
 		super("Server");
 		LOGGER.log(Level.FINE, "Initializing Server.");
 		UPS = ups;
@@ -159,7 +161,7 @@ public class Server<T extends ClientHandler> extends Thread
 				timepast = System.currentTimeMillis() - startTime;
 			} catch (InterruptedException e)
 			{
-				LOGGER.log(Level.WARNING, "Issue with server blockingStart", e);
+				LOGGER.log(Level.WARNING, "Server blocking start was interrupted.", e);
 			}
 		}
 		return initialized;

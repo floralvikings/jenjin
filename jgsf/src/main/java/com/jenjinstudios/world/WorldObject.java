@@ -68,9 +68,6 @@ public class WorldObject
 	public void setVector2D(Vector2D vector2D) {
 		this.vector2D = new Vector2D(vector2D);
 		Location oldLocation = location;
-		// TODO This call is somewhat intensive, and will probably need some optimization.
-		// We can probably just store the "edge" of the current location, and check against that.  It depends on
-		// how intensive the calculation of the location within the world turns out to be.
 		if (world != null)
 		{
 			location = world.getLocationForCoordinates(this.vector2D);

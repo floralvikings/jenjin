@@ -98,7 +98,7 @@ public class MessageOutputStream
 					outputStream.writeUTF(encryptedString);
 				} catch (IllegalBlockSizeException | BadPaddingException | IllegalStateException e)
 				{
-					LOGGER.log(Level.WARNING, "Error encrypting string, will use unencrypted.", e);
+					LOGGER.log(Level.SEVERE, "Error encrypting string, will use unencrypted.", e);
 					outputStream.writeBoolean(false);
 					outputStream.writeUTF(s);
 				}

@@ -37,8 +37,9 @@ class ClientListener<T extends ClientHandler> implements Runnable
 	 * @param p The port on which to listen.
 	 * @param handlerClass The class of the ClientHandler to be used by this server.
 	 * @throws IOException If there is an error listening on the port.
+	 * @throws NoSuchMethodException If there is no appropriate constructor for the specified ClientHandler constructor.
 	 */
-	public ClientListener(Server s, int p, Class<T> handlerClass) throws IOException {
+	public ClientListener(Server s, int p, Class<T> handlerClass) throws IOException, NoSuchMethodException {
 		server = s;
 		PORT = p;
 		/* The class of client handlers created by this listener. */
@@ -48,8 +49,8 @@ class ClientListener<T extends ClientHandler> implements Runnable
 
 		} catch (NoSuchMethodException e)
 		{
-			LOGGER.log(Level.SEVERE, "Unable to find ClientHandler constructor: " + handlerClass.getName(), e);
-			System.exit(0);
+			LOGGER.log(Level.SEVERE, "Unable to find appropriate ClientHandler constructor: " + handlerClass.getName(), e);
+			throw e;
 		}
 		listening = false;
 		newClientHandlers = new LinkedList<>();
@@ -105,7 +106,7 @@ class ClientListener<T extends ClientHandler> implements Runnable
 	 * Add a new Client using the specified socket as a connection.
 	 * @param sock The connection to the new client.
 	 */
-	void addNewClient(Socket sock) {
+	private void addNewClient(Socket sock) {
 		try
 		{
 			T newHandler = handlerConstructor.newInstance(server, sock);
@@ -113,7 +114,7 @@ class ClientListener<T extends ClientHandler> implements Runnable
 			addNewClient(newHandler);
 		} catch (InstantiationException | IllegalAccessException | InvocationTargetException e)
 		{
-			LOGGER.log(Level.SEVERE, "Unable to instantiate client handler!", e);
+			LOGGER.log(Level.SEVERE, "Unable to instantiate client handler.", e);
 		}
 	}
 
@@ -125,12 +126,12 @@ class ClientListener<T extends ClientHandler> implements Runnable
 			{
 				Socket sock = serverSock.accept();
 				addNewClient(sock);
-			} catch (SocketException ex)
+			} catch (SocketException ignored)
 			{
-				// Socket is closed, no worries.  Just means we stopped listening =P
+				Server.LOGGER.log(Level.FINE, "Socket closed on connection attempt.: ", ignored);
 			} catch (IOException e)
 			{
-				Server.LOGGER.log(Level.WARNING, "Error", e);
+				Server.LOGGER.log(Level.WARNING, "Error connecting to client: ", e);
 			}
 		}
 	}

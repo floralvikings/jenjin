@@ -57,7 +57,7 @@ public class SQLHandler
 			Class.forName("org.drizzle.jdbc.DrizzleDriver").newInstance();
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e)
 		{
-			LOGGER.log(Level.SEVERE, "Unable to register Drizzle driver!");
+			LOGGER.log(Level.SEVERE, "Unable to register Drizzle driver; is the Drizzle dependency present?");
 		}
 		USER_QUERY = "SELECT * FROM " + dbName + ".users WHERE username = ?";
 
@@ -90,7 +90,7 @@ public class SQLHandler
 			// Hash the user-supplied password with the salt in the database.
 			String hashedPassword = Hash.getHashedString(password, results.getString("salt"));
 			// Determine if the correct password was supplied.
-			boolean passwordCorrect = hashedPassword.equalsIgnoreCase(results.getString("password"));
+			boolean passwordCorrect = hashedPassword != null && hashedPassword.equalsIgnoreCase(results.getString("password"));
 			results.getStatement().close();
 			if (!passwordCorrect)
 				return success;

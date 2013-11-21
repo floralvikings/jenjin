@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * The communicator class is the superclass for any classes that communicate over socket.
@@ -16,6 +18,8 @@ import java.util.LinkedList;
  */
 public abstract class Communicator extends Thread
 {
+	/** The logger used for this class. */
+	private static final Logger LOGGER = Logger.getLogger(Communicator.class.getName());
 	/** The list of collected ping times. */
 	private final ArrayList<Long> pingTimes;
 	/** The collection of messages to send at the next broadcast. */
@@ -46,9 +50,9 @@ public abstract class Communicator extends Thread
 			inputStream.close();
 			outputStream.close();
 			socket.close();
-		} catch (IOException ex)
+		} catch (IOException ignored)
 		{
-			// Do nothing since we're closing the link anyway?
+			// Link closing, possible _because_ of an IOExeption; will be shutting down.
 		} finally
 		{
 			connected = false;
@@ -133,8 +137,9 @@ public abstract class Communicator extends Thread
 		try
 		{
 			getOutputStream().writeMessage(o);
-		} catch (Exception ex)
+		} catch (IOException e)
 		{
+			LOGGER.log(Level.SEVERE, "Unable to write message to socket, shutting down.", e);
 			shutdown();
 		}
 	}

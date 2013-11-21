@@ -22,8 +22,9 @@ public class WorldServer extends SqlEnabledServer<WorldClientHandler>
 	 * Construct a new WorldServer.
 	 * @param sqlHandler The WorldSqlHandler used to communicate with the MySql Database.
 	 * @throws java.io.IOException If there is an IO Error when initializing the server.
+	 * @throws NoSuchMethodException If there is no appropriate constructor for the specified ClientHandler constructor.
 	 */
-	public WorldServer(WorldSQLHandler sqlHandler) throws IOException {
+	public WorldServer(WorldSQLHandler sqlHandler) throws IOException, NoSuchMethodException {
 		this(new World(), sqlHandler);
 	}
 
@@ -32,8 +33,9 @@ public class WorldServer extends SqlEnabledServer<WorldClientHandler>
 	 * @param world The world to be used by this server.
 	 * @param sqlHandler The WorldSqlHandler used to communicate with the MySql Database.
 	 * @throws java.io.IOException If there is an IO Error when initializing the server.
+	 * @throws NoSuchMethodException If there is no appropriate constructor for the specified ClientHandler constructor.
 	 */
-	public WorldServer(World world, WorldSQLHandler sqlHandler) throws IOException {
+	public WorldServer(World world, WorldSQLHandler sqlHandler) throws IOException, NoSuchMethodException {
 		this(world, DEFAULT_PORT, sqlHandler);
 	}
 
@@ -43,8 +45,9 @@ public class WorldServer extends SqlEnabledServer<WorldClientHandler>
 	 * @param port The port number on which this server will listen.
 	 * @param sqlHandler The WorldSqlHandler used to communicate with the MySql Database.
 	 * @throws java.io.IOException If there is an IO Error when initializing the server.
+	 * @throws NoSuchMethodException If there is no appropriate constructor for the specified ClientHandler constructor.
 	 */
-	public WorldServer(World world, int port, WorldSQLHandler sqlHandler) throws IOException {
+	public WorldServer(World world, int port, WorldSQLHandler sqlHandler) throws IOException, NoSuchMethodException {
 		this(world, DEFAULT_UPS, port, sqlHandler);
 	}
 
@@ -55,8 +58,9 @@ public class WorldServer extends SqlEnabledServer<WorldClientHandler>
 	 * @param port The port number on which this server will listen.
 	 * @param sqlHandler The WorldSqlHandler used to communicate with the MySql Database.
 	 * @throws java.io.IOException If there is an IO Error when initializing the server.
+	 * @throws NoSuchMethodException If there is no appropriate constructor for the specified ClientHandler constructor.
 	 */
-	public WorldServer(World world, int ups, int port, WorldSQLHandler sqlHandler) throws IOException {
+	public WorldServer(World world, int ups, int port, WorldSQLHandler sqlHandler) throws IOException, NoSuchMethodException {
 		this(world, ups, port, WorldClientHandler.class, sqlHandler);
 	}
 
@@ -68,8 +72,11 @@ public class WorldServer extends SqlEnabledServer<WorldClientHandler>
 	 * @param wchClass The class of WorldClientHandler to use.
 	 * @param sqlHandler The WorldSqlHandler used to communicate with the MySql Database.
 	 * @throws java.io.IOException If there is an IO Error when initializing the server.
+	 * @throws NoSuchMethodException If there is no appropriate constructor for the specified ClientHandler constructor.
 	 */
-	public WorldServer(World worldToBeUsed, int ups, int port, Class<? extends WorldClientHandler> wchClass, WorldSQLHandler sqlHandler) throws IOException {
+	public WorldServer(World worldToBeUsed, int ups, int port, Class<? extends WorldClientHandler> wchClass,
+					   WorldSQLHandler sqlHandler) throws IOException, NoSuchMethodException
+	{
 		super(ups, port, wchClass, sqlHandler);
 		this.world = worldToBeUsed;
 		addRepeatedTask(new Runnable()

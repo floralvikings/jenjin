@@ -57,7 +57,7 @@ public class WorldSQLHandler extends SQLHandler
 			// Hash the user-supplied password with the salt in the database.
 			String hashedPassword = Hash.getHashedString(password, results.getString("salt"));
 			// Determine if the correct password was supplied.
-			boolean passwordCorrect = hashedPassword.equalsIgnoreCase(results.getString("password"));
+			boolean passwordCorrect = hashedPassword != null && hashedPassword.equalsIgnoreCase(results.getString("password"));
 			Vector2D coordinates = new Vector2D(results.getDouble(X_COORD), results.getDouble(Z_COORD));
 			// Any SQL stuff has to come before this line.
 			results.getStatement().close();

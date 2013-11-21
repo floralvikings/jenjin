@@ -44,8 +44,11 @@ public class MessageRegistry
 	/**
 	 * Register all messages found in registry files.  Also checks the JAR file.
 	 * @param isServer Whether the program registering messages is a server or client-side program.
+	 * @throws java.io.IOException If there is an IO exception when reading XML files.
+	 * @throws javax.xml.parsers.ParserConfigurationException If there is an error parsing XML files.
+	 * @throws org.xml.sax.SAXException If there is an error parsing XML files.
 	 */
-	public static void registerXmlMessages(boolean isServer) {
+	public static void registerXmlMessages(boolean isServer) throws ParserConfigurationException, SAXException, IOException {
 		try
 		{
 
@@ -73,6 +76,7 @@ public class MessageRegistry
 		} catch (IOException | SAXException | ParserConfigurationException e)
 		{
 			LOGGER.log(Level.INFO, "Unable to parse XML files.", e);
+			throw e;
 		}
 	}
 

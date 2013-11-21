@@ -111,13 +111,9 @@ public class World
 		for (int x = xStart; x < xEnd; x++)
 			for (int z = zStart; z < zEnd; z++)
 			{
-				try
-				{
-					areaGrid.add(locationGrid[x][z]);
-				} catch (ArrayIndexOutOfBoundsException ignored)
-				{
-					// Just means we're near the end of the world =)
-				}
+				if (x < 0 || z < 0 || x >= locationGrid.length || z >= locationGrid[x].length)
+					continue;
+				areaGrid.add(locationGrid[x][z]);
 			}
 
 

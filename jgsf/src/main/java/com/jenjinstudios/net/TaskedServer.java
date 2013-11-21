@@ -25,8 +25,9 @@ public class TaskedServer<T extends ClientHandler> extends Server<T>
 	 * @param port The port number on which this server will listen.
 	 * @param handlerClass The class of ClientHandler used by this Server.
 	 * @throws java.io.IOException If there is an IO Error initializing the server.
+	 * @throws NoSuchMethodException If there is no appropriate constructor for the specified ClientHandler constructor.
 	 */
-	public TaskedServer(int ups, int port, Class<? extends T> handlerClass) throws IOException {
+	public TaskedServer(int ups, int port, Class<? extends T> handlerClass) throws IOException, NoSuchMethodException {
 		super(ups, port, handlerClass);
 		repeatedTasks = new LinkedList<>();
 		syncedTasks = new LinkedList<>();

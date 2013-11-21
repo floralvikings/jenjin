@@ -6,7 +6,6 @@ import com.jenjinstudios.net.ClientHandler;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -62,11 +61,13 @@ public abstract class ServerExecutableMessage extends ExecutableMessage
 			{
 				LOGGER.log(Level.SEVERE, "No public constructor containing ClientHandler as first argument type found for {0}",
 						execClass.getName());
-				LOGGER.log(Level.INFO, "Constructors: {0}", Arrays.toString(execConstructors));
 			}
 		} catch (InvocationTargetException | InstantiationException | IllegalAccessException e)
 		{
 			LOGGER.log(Level.SEVERE, "Constructor not correct for: " + execClass.getName(), e);
+		} catch (NullPointerException e)
+		{
+			LOGGER.log(Level.SEVERE, "No client-side executable message found for: " + message, e);
 		}
 
 		return r;
