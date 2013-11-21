@@ -3,6 +3,7 @@ package com.jenjinstudios.world;
 import com.jenjinstudios.math.Vector2D;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Contains all the Zones, Locations and GameObjects.
@@ -104,17 +105,18 @@ public class World
 		ArrayList<Location> areaGrid = new ArrayList<>();
 		// Get the top-right corner of the grid.
 		int xStart = center.X_COORDINATE - radius;
+		xStart = (xStart < 0) ? 0 : xStart;
 		int zStart = center.Z_COORDINATE - radius;
+		zStart = (zStart < 0) ? 0 : zStart;
 		int xEnd = center.X_COORDINATE + radius;
+		xEnd = (xEnd >= locationGrid.length) ? locationGrid.length - 1 : xEnd;
 		int zEnd = center.Z_COORDINATE + radius;
+		zEnd = (zEnd >= locationGrid.length) ? locationGrid.length - 1 : zEnd;
 
 		for (int x = xStart; x < xEnd; x++)
-			for (int z = zStart; z < zEnd; z++)
-			{
-				if (x < 0 || z < 0 || x >= locationGrid.length || z >= locationGrid[x].length)
-					continue;
-				areaGrid.add(locationGrid[x][z]);
-			}
+		{
+			areaGrid.addAll(Arrays.asList(locationGrid[x]).subList(zStart, zEnd));
+		}
 
 
 		return areaGrid;

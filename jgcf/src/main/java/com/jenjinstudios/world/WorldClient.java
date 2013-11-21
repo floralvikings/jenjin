@@ -92,7 +92,7 @@ public class WorldClient extends AuthClient
 		sendLoginRequest();
 		long startTime = System.currentTimeMillis();
 		long timepast = System.currentTimeMillis() - startTime;
-		while (!hasReceivedLoginResponse() && (timepast < TIMEOUT_MILLIS))
+		while (isWaitingForLoginResponse() && (timepast < TIMEOUT_MILLIS))
 		{
 			try
 			{
@@ -110,7 +110,7 @@ public class WorldClient extends AuthClient
 	private void sendLoginRequest() {
 		Message loginRequest = generateLoginRequest();
 
-		setReceivedLoginResponse(false);
+		setWaitingForLoginResponse(true);
 		queueMessage(loginRequest);
 	}
 
@@ -126,30 +126,11 @@ public class WorldClient extends AuthClient
 	}
 
 	@Override
-	public boolean sendBlockingLogoutRequest() {
-		sendLogoutRequest();
-		long startTime = System.currentTimeMillis();
-		long timepast = System.currentTimeMillis() - startTime;
-		while (!hasReceivedLogoutResponse() && (timepast < TIMEOUT_MILLIS))
-		{
-			try
-			{
-				sleep(10);
-			} catch (InterruptedException e)
-			{
-				LOGGER.log(Level.WARNING, "Interrupted while waiting for login response.", e);
-			}
-			timepast = System.currentTimeMillis() - startTime;
-		}
-		return isLoggedIn();
-	}
-
-	/** Send a LogoutRequest to the server. */
-	private void sendLogoutRequest() {
+	protected void sendLogoutRequest() {
 		Message logoutRequest = new Message("WorldLogoutRequest");
 
 		// Send the request, continue when response is received.
-		setReceivedLogoutResponse(false);
+		setWaitingForLogoutResponse(true);
 		queueMessage(logoutRequest);
 	}
 

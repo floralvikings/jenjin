@@ -21,7 +21,7 @@ public class ExecutableLoginResponse extends AuthClientExecutableMessage
 	@Override
 	public void runSynced() {
 		AuthClient client = getClient();
-		client.setReceivedLoginResponse(true);
+		client.setWaitingForLoginResponse(false);
 		client.setLoggedIn((boolean) getMessage().getArgument("success"));
 		if (!client.isLoggedIn())
 			return;

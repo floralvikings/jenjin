@@ -21,7 +21,7 @@ public class ExecutableWorldLogoutResponse extends WorldClientExecutableMessage
 
 	@Override
 	public void runSynced() {
-		getClient().setReceivedLogoutResponse(true);
+		getClient().setWaitingForLogoutResponse(false);
 		getClient().setLoggedIn(!((boolean) getMessage().getArgument("success")));
 	}
 

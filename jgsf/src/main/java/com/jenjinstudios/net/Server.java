@@ -18,7 +18,7 @@ public class Server<T extends ClientHandler> extends Thread
 	/** The default number of max clients. */
 	public static final int DEFAULT_MAX_CLIENTS = 100;
 	/** The logger used by this class. */
-	static final Logger LOGGER = Logger.getLogger(Server.class.getName());
+	public static final Logger LOGGER = Logger.getLogger(Server.class.getName());
 	/** The number of milliseconds before a blocking method should time out. */
 	public static long TIMEOUT_MILLIS = 30000;
 	/** The updates per second. */

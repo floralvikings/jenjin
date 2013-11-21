@@ -26,9 +26,9 @@ public class AuthClient extends Client
 	/** The time at which this client was successfully logged in. */
 	private long loggedInTime;
 	/** flags whether the login response has been received. */
-	private volatile boolean receivedLoginResponse;
+	private volatile boolean waitingForLoginResponse;
 	/** flags whether the logout response has been received. */
-	private volatile boolean receivedLogoutResponse;
+	private volatile boolean waitingForLogoutResponse;
 
 	/**
 	 * Construct a client connecting to the given address over the given port.
@@ -52,7 +52,7 @@ public class AuthClient extends Client
 		sendLoginRequest();
 		long startTime = System.currentTimeMillis();
 		long timepast = System.currentTimeMillis() - startTime;
-		while (!hasReceivedLoginResponse() && (timepast < TIMEOUT_MILLIS))
+		while (isWaitingForLoginResponse() && (timepast < TIMEOUT_MILLIS))
 		{
 			try
 			{
@@ -91,7 +91,7 @@ public class AuthClient extends Client
 		Message loginRequest = generateLoginRequest();
 
 		// Send the request, continue when the response is received.
-		setReceivedLoginResponse(false);
+		setWaitingForLoginResponse(true);
 		queueMessage(loginRequest);
 	}
 
@@ -108,18 +108,18 @@ public class AuthClient extends Client
 
 	/**
 	 * Set whether this client has received a login response.
-	 * @param receivedLoginResponse Whether this client has received a login response.
+	 * @param waitingForLoginResponse Whether this client has received a login response.
 	 */
-	public void setReceivedLoginResponse(boolean receivedLoginResponse) {
-		this.receivedLoginResponse = receivedLoginResponse;
+	public void setWaitingForLoginResponse(boolean waitingForLoginResponse) {
+		this.waitingForLoginResponse = waitingForLoginResponse;
 	}
 
 	/**
 	 * Get whether this client has received a login response.
 	 * @return Whether the client has received a login response.
 	 */
-	public boolean hasReceivedLoginResponse() {
-		return receivedLoginResponse;
+	public boolean isWaitingForLoginResponse() {
+		return waitingForLoginResponse;
 	}
 
 	/**
@@ -130,7 +130,7 @@ public class AuthClient extends Client
 		sendLogoutRequest();
 		long startTime = System.currentTimeMillis();
 		long timepast = System.currentTimeMillis() - startTime;
-		while (!hasReceivedLogoutResponse() && (timepast < TIMEOUT_MILLIS))
+		while (isWaitingForLogoutResponse() && (timepast < TIMEOUT_MILLIS))
 		{
 			try
 			{
@@ -141,32 +141,32 @@ public class AuthClient extends Client
 			}
 			timepast = System.currentTimeMillis() - startTime;
 		}
-		return isLoggedIn();
+		return !isLoggedIn();
 	}
 
 	/** Send a logout request to the server. */
-	private void sendLogoutRequest() {
+	protected void sendLogoutRequest() {
 		Message logoutRequest = new Message("LogoutRequest");
 
 		// Send the request, continue when response is received.
-		setReceivedLogoutResponse(false);
+		setWaitingForLogoutResponse(true);
 		queueMessage(logoutRequest);
 	}
 
 	/**
 	 * Set whether this client has received a logout response.
-	 * @param receivedLogoutResponse Whether this client has received a logout response.
+	 * @param waitingForLogoutResponse Whether this client has received a logout response.
 	 */
-	public void setReceivedLogoutResponse(boolean receivedLogoutResponse) {
-		this.receivedLogoutResponse = receivedLogoutResponse;
+	public void setWaitingForLogoutResponse(boolean waitingForLogoutResponse) {
+		this.waitingForLogoutResponse = waitingForLogoutResponse;
 	}
 
 	/**
 	 * Get whether this client has received a logout response.
 	 * @return Whether this client has received a logout response.
 	 */
-	public boolean hasReceivedLogoutResponse() {
-		return receivedLogoutResponse;
+	public boolean isWaitingForLogoutResponse() {
+		return waitingForLogoutResponse;
 	}
 
 	/**

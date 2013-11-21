@@ -1,8 +1,12 @@
-<base_messages>
+<?xml version="1.0" ?>
+
+<base_messages xmlns="" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation=" ">
 
     <message name="InvalidMessage" id="-1">
         <argument type="String" name="messageName" />
         <argument type="short" name="messageID" />
+        <executable language="java" side="client">com.jenjinstudios.message.ClientExecutableInvalidMessage</executable>
+        <executable language="java" side="server">com.jenjinstudios.message.ServerExecutableInvalidMessage</executable>
     </message>
 
     <message name="FirstConnectResponse" id="0">
