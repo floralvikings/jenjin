@@ -164,7 +164,7 @@ public class MessageInputStream
 				LOGGER.log(Level.WARNING, "AES key not properly set, unable to decrypt messages.");
 			} else
 			{
-				try // TODO Make sure error is handled gracefully
+				try
 				{
 					byte[] encBytes = DatatypeConverter.parseHexBinary(received);
 					byte[] decBytes = aesDecryptCipher.doFinal(encBytes);
