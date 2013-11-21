@@ -149,7 +149,7 @@ public class MessageOutputStream
 	public void setAesKey(byte[] key) {
 		if (key == null)
 			return;
-		try // TODO Make sure error is handled gracefully
+		try
 		{
 			aesKey = new SecretKeySpec(key, "AES");
 			aesEncryptCipher = Cipher.getInstance("AES");
