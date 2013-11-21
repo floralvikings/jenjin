@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 
-<base_messages>
+<base_messages xmlns="" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation=" ">
 
     <message name="InvalidMessage" id="-1">
         <argument type="String" name="messageName" />

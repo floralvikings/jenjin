@@ -23,16 +23,10 @@ public class WorldServerTest
 	// Server fields
 	/** The world server used to test. */
 	private WorldServer worldServer;
-	/** The world SQL handler used to test. */
-	private WorldSQLHandler worldSQLHandler;
-	/** The WorldClientHandler used to test. */
-	private WorldClientHandler worldClientHandler;
 	/** The world used for testing. */
 	private World world;
 	/** The server-side actor representing the player. */
 	private Actor serverPlayer;
-	/** The server-side actor used to test visibilty functionalty. */
-	private Actor serverActor;
 
 	// Client fields
 	/** The world client used to test. */
@@ -68,7 +62,8 @@ public class WorldServerTest
 		worldClient.blockingStart();
 		worldClient.sendBlockingLoginRequest();
 
-		worldClientHandler = worldServer.getClientHandlerByUsername(worldClient.getUsername());
+		/* The WorldClientHandler used to test. */
+		WorldClientHandler worldClientHandler = worldServer.getClientHandlerByUsername(worldClient.getUsername());
 		clientPlayer = worldClient.getPlayer();
 		serverPlayer = worldClientHandler.getPlayer();
 	}
@@ -78,7 +73,8 @@ public class WorldServerTest
 	 * @throws Exception If there's an exception.
 	 */
 	private void initWorldServer() throws Exception {
-		worldSQLHandler = new WorldSQLHandler("localhost", "jenjin_test", "jenjin_user", "jenjin_password");
+		/* The world SQL handler used to test. */
+		WorldSQLHandler worldSQLHandler = new WorldSQLHandler("localhost", "jenjin_test", "jenjin_user", "jenjin_password");
 		worldServer = new WorldServer(worldSQLHandler);
 		world = worldServer.getWorld();
 		worldServer.blockingStart();
@@ -107,7 +103,8 @@ public class WorldServerTest
 		Vector2D targetVector = new Vector2D(10, 10);
 		double targetAngle = actorOrigin.getAngleToVector(targetVector);
 		double backwardAngle = Math.PI + targetAngle;
-		serverActor = new Actor("TestActor");
+		/* The server-side actor used to test visibilty functionalty. */
+		Actor serverActor = new Actor("TestActor");
 		serverActor.setVector2D(actorOrigin);
 		int stepsNeeded = (int) (serverActor.getVector2D().getDistanceToVector(targetVector) / Actor.STEP_LENGTH);
 

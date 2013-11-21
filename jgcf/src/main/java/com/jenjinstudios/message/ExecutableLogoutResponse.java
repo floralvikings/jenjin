@@ -20,7 +20,7 @@ public class ExecutableLogoutResponse extends AuthClientExecutableMessage
 
 	@Override
 	public void runSynced() {
-		getClient().setReceivedLogoutResponse(true);
+		getClient().setWaitingForLogoutResponse(false);
 		getClient().setLoggedIn(!((boolean) getMessage().getArgument("success")));
 	}
 
