@@ -141,7 +141,7 @@ public class AuthClient extends Client
 			}
 			timepast = System.currentTimeMillis() - startTime;
 		}
-		return isLoggedIn();
+		return !isLoggedIn();
 	}
 
 	/** Send a logout request to the server. */

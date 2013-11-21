@@ -40,7 +40,7 @@ public class ServerTest
 				"jenjin_password");
 		assertTrue(sqlHandler.isConnected());
 		server = new SqlEnabledServer<>(50, 51019, ClientHandler.class, sqlHandler);
-		server.blockingStart();
+		assertTrue(server.blockingStart());
 
 		startTime = System.currentTimeMillis();
 
@@ -57,7 +57,7 @@ public class ServerTest
 		if (goodClient01 != null)
 		{
 			if (goodClient01.isLoggedIn())
-				goodClient01.sendBlockingLogoutRequest();
+				assertTrue(goodClient01.sendBlockingLogoutRequest());
 			goodClient01.shutdown();
 		}
 
@@ -78,12 +78,12 @@ public class ServerTest
 		goodClient01 = new AuthClient("localhost", 51019, "TestAccount01", "testPassword");
 		goodClient01.blockingStart();
 
-		goodClient01.sendBlockingLoginRequest();
+		assertTrue(goodClient01.sendBlockingLoginRequest());
 		assertTrue(goodClient01.isLoggedIn());
 
 		assertEquals(1, server.getNumClients());
 
-		goodClient01.sendBlockingLogoutRequest();
+		assertTrue(goodClient01.sendBlockingLogoutRequest());
 		assertFalse(goodClient01.isLoggedIn());
 
 		goodClient01.shutdown();
@@ -99,7 +99,7 @@ public class ServerTest
 		AuthClient badClient = new AuthClient("127.0.0.1", 51019, "TestAccount02", "This is an incorrect password.  Teehee.");
 		badClient.blockingStart();
 
-		badClient.sendBlockingLoginRequest();
+		assertFalse(badClient.sendBlockingLoginRequest());
 		assertFalse(badClient.isLoggedIn());
 
 		badClient.shutdown();
@@ -116,10 +116,10 @@ public class ServerTest
 
 		assertTrue(goodClient01.isRunning());
 
-		goodClient01.sendBlockingLoginRequest();
+		assertTrue(goodClient01.sendBlockingLoginRequest());
 		ClientHandler handler = server.getClientHandlerByUsername("TestAccount01");
 		assertEquals(handler.getLoggedInTime(), goodClient01.getLoggedInTime());
-		goodClient01.sendBlockingLogoutRequest();
+		assertTrue(goodClient01.sendBlockingLogoutRequest());
 
 		goodClient01.shutdown();
 	}
@@ -131,18 +131,18 @@ public class ServerTest
 	@Test
 	public void testAlreadyLoggedIn() throws Exception {
 		goodClient01 = new AuthClient("localhost", 51019, "TestAccount01", "testPassword");
-		goodClient01.blockingStart();
+		assertTrue(goodClient01.blockingStart());
 
 		sameClient = new AuthClient("127.0.0.1", 51019, "TestAccount01", "testPassword");
 		sameClient.blockingStart();
 
-		goodClient01.sendBlockingLoginRequest();
+		assertTrue(goodClient01.sendBlockingLoginRequest());
 		assertTrue(goodClient01.isLoggedIn());
 
-		sameClient.sendBlockingLoginRequest();
+		assertFalse(sameClient.sendBlockingLoginRequest());
 		assertFalse(sameClient.isLoggedIn());
 
-		goodClient01.sendBlockingLogoutRequest();
+		assertTrue(goodClient01.sendBlockingLogoutRequest());
 		assertFalse(sameClient.isLoggedIn());
 
 		goodClient01.shutdown();
@@ -163,17 +163,17 @@ public class ServerTest
 
 		// This client logs in and shuts down before sending a proper logout request.
 		// The server should auto logout the client
-		goodClient01.sendBlockingLoginRequest();
+		assertTrue(goodClient01.sendBlockingLoginRequest());
 		assertTrue(goodClient01.isLoggedIn());
 		goodClient01.shutdown();
 		// Have to sleep.  It's HIGHLY unlikely that a client will try logging in less than the minimum sleep resolution
 		// after a broken connection.
 		Thread.sleep(server.PERIOD);
 		// sameClient logs in, and should be able to successfully since the server auto logged out the failed connection.
-		sameClient.sendBlockingLoginRequest();
+		assertTrue(sameClient.sendBlockingLoginRequest());
 		assertTrue(sameClient.isLoggedIn());
 
-		sameClient.sendBlockingLogoutRequest();
+		assertTrue(sameClient.sendBlockingLogoutRequest());
 		assertFalse(sameClient.isLoggedIn());
 		// It is important to note that if the server dies the entire database will be corrupted.  Recommend using an
 		// hourly auto-backup in case of server failure.
