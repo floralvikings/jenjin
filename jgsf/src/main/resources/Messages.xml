@@ -3,6 +3,8 @@
     <message name="InvalidMessage" id="-1">
         <argument type="String" name="messageName" />
         <argument type="short" name="messageID" />
+        <executable language="java" side="client">com.jenjinstudios.message.ClientExecutableInvalidMessage</executable>
+        <executable language="java" side="server">com.jenjinstudios.message.ServerExecutableInvalidMessage</executable>
     </message>
 
     <message name="FirstConnectResponse" id="0">

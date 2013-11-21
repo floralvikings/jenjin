@@ -18,7 +18,7 @@ import java.util.logging.Logger;
 public class Client extends TaskedCommunicator
 {
 	/** The logger associated with this class. */
-	private static final Logger LOGGER = Logger.getLogger(Client.class.getName());
+	public static final Logger LOGGER = Logger.getLogger(Client.class.getName());
 	/** The port over which the client communicates with the server. */
 	private final int PORT;
 	/** The address of the server to which this client will connect. */
