@@ -189,7 +189,7 @@ public class MessageInputStream
 	 * @param key The AES key used to decrypt messages.
 	 */
 	public void setAESKey(byte[] key) {
-		try // TODO Make sure error is handled gracefully
+		try
 		{
 			aesKey = new SecretKeySpec(key, "AES");
 			aesDecryptCipher = Cipher.getInstance("AES");
