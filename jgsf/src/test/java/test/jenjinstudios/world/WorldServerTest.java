@@ -143,13 +143,7 @@ public class WorldServerTest
 	 * @throws InterruptedException If there's an exception.
 	 */
 	private void movePlayerToOrigin() throws InterruptedException {
-		clientPlayer.setNewRelativeAngle(clientPlayer.getVector2D().getAngleToVector(Vector2D.ORIGIN));
-		while (clientPlayer.getVector2D().getDistanceToVector(Vector2D.ORIGIN) > Actor.STEP_LENGTH)
-		{
-			Thread.sleep(10);
-		}
-		clientPlayer.setNewRelativeAngle(IDLE);
-		Thread.sleep(100);
+		movePlayerTowardVector(Vector2D.ORIGIN);
 	}
 
 	/**
@@ -159,7 +153,10 @@ public class WorldServerTest
 	 */
 	private void movePlayerTowardVector(Vector2D newVector) throws InterruptedException {
 		clientPlayer.setNewRelativeAngle(clientPlayer.getVector2D().getAngleToVector(newVector));
-		while (clientPlayer.getVector2D().getDistanceToVector(newVector) > Actor.STEP_LENGTH) { Thread.sleep(10); }
+		while (clientPlayer.getVector2D().getDistanceToVector(newVector) > Actor.STEP_LENGTH && !clientPlayer.isForcedState())
+		{
+			Thread.sleep(10);
+		}
 		clientPlayer.setNewRelativeAngle(IDLE);
 		Thread.sleep(100);
 	}
