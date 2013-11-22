@@ -134,16 +134,8 @@ public class WorldServerTest
 		clientActor = worldClient.getVisibleObjects().get(serverActor.getId());
 		assertEquals(serverActor.getVector2D(), clientActor.getVector2D());
 
-		movePlayerToOrigin();
-		assertEquals(0, worldClient.getVisibleObjects().size());
-	}
-
-	/**
-	 * Move the player to the origin.
-	 * @throws InterruptedException If there's an exception.
-	 */
-	private void movePlayerToOrigin() throws InterruptedException {
 		movePlayerTowardVector(Vector2D.ORIGIN);
+		assertEquals(0, worldClient.getVisibleObjects().size());
 	}
 
 	/**
