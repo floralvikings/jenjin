@@ -200,18 +200,4 @@ public class ClientPlayer extends ClientObject
 		stepsTaken++;
 		if (!isIdle) { setVector2D(getVector2D().getVectorInDirection(ClientActor.STEP_LENGTH, trueAngle)); }
 	}
-
-
-	/**
-	 * Set this object's current position.
-	 * @param vector2D The new position.
-	 */
-	public void setVector2D(Vector2D vector2D) { super.setVector2D(vector2D); }
-
-	/**
-	 * Set this object' current position.
-	 * @param x The new x coordinate.
-	 * @param z The new z coordinate.
-	 */
-	public void setVector2D(double x, double z) { this.setVector2D(new Vector2D(x, z)); }
 }
