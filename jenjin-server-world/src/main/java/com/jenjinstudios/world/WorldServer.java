@@ -1,6 +1,6 @@
 package com.jenjinstudios.world;
 
-import com.jenjinstudios.net.SqlEnabledServer;
+import com.jenjinstudios.net.AuthServer;
 import com.jenjinstudios.world.sql.WorldSQLHandler;
 
 import java.io.IOException;
@@ -9,7 +9,7 @@ import java.io.IOException;
  * The WorldServer class is responsible for updating a game world.
  * @author Caleb Brinkman
  */
-public class WorldServer extends SqlEnabledServer<WorldClientHandler>
+public class WorldServer extends AuthServer<WorldClientHandler>
 {
 	/** The default updates-per-second for the world server. */
 	public static final int DEFAULT_UPS = 50;

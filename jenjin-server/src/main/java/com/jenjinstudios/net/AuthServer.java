@@ -8,7 +8,7 @@ import java.io.IOException;
  * A Server with access to a SqlHandler and MySql database.
  * @author Caleb Brinkman
  */
-public class SqlEnabledServer<T extends ClientHandler> extends TaskedServer<T>
+public class AuthServer<T extends ClientHandler> extends TaskedServer<T>
 {
 	/** The SQLHandler used by this Server. */
 	private SQLHandler sqlHandler;
@@ -22,7 +22,7 @@ public class SqlEnabledServer<T extends ClientHandler> extends TaskedServer<T>
 	 * @throws java.io.IOException If there is an IO Error when initializing the server.
 	 * @throws NoSuchMethodException If there is no appropriate constructor for the specified ClientHandler constructor.
 	 */
-	public SqlEnabledServer(int ups, int port, Class<? extends T> handlerClass, SQLHandler sqlHandler) throws IOException, NoSuchMethodException {
+	public AuthServer(int ups, int port, Class<? extends T> handlerClass, SQLHandler sqlHandler) throws IOException, NoSuchMethodException {
 		super(ups, port, handlerClass);
 		this.sqlHandler = sqlHandler;
 	}
