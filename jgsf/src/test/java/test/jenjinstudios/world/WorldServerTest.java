@@ -82,6 +82,7 @@ public class WorldServerTest
 		ClientObject clientActor = worldClient.getVisibleObjects().get(serverActor.getId());
 		assertNotNull(clientActor);
 		assertEquals(1, worldClient.getVisibleObjects().size());
+		Thread.sleep(50);
 		assertEquals(serverActor.getVector2D(), clientActor.getVector2D());
 
 		moveServerActorToVector(serverActor, serverActorStartPosition);
