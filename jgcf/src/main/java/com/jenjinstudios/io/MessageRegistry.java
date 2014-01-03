@@ -51,7 +51,6 @@ public class MessageRegistry
 	public static void registerXmlMessages(boolean isServer) throws ParserConfigurationException, SAXException, IOException {
 		try
 		{
-
 			// Search the JAR
 			CodeSource src = MessageRegistry.class.getProtectionDomain().getCodeSource();
 
@@ -63,7 +62,7 @@ public class MessageRegistry
 				while ((ze = zip.getNextEntry()) != null)
 				{
 					String entryName = ze.getName();
-					if (entryName.equals("Messages.xml"))
+					if (entryName.endsWith("Messages.xml"))
 						parseXmlStream(MessageRegistry.class.getClassLoader().getResourceAsStream(entryName), isServer);
 				}
 			}

@@ -25,9 +25,9 @@ public class WorldTest
 		Assert.assertEquals(9, testGrid.size());
 
 		testGrid = testWorld.getLocationArea(testWorld.getLocationForCoordinates(new Vector2D(50, 50)), 3);
-		Assert.assertEquals(36, testGrid.size());
+		Assert.assertEquals(25, testGrid.size());
 
 		testGrid = testWorld.getLocationArea(testWorld.getLocationForCoordinates(new Vector2D(50, 50)), 4);
-		Assert.assertEquals(64, testGrid.size());
+		Assert.assertEquals(49, testGrid.size());
 	}
 }

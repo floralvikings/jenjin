@@ -71,8 +71,8 @@ public class WorldServerTest
 	 */
 	@Test
 	public void testActorVisibilty() throws Exception {
-		Vector2D serverActorStartPosition = new Vector2D(21, 21);
-		Vector2D serverActorTargetPosition = new Vector2D(10, 10);
+		Vector2D serverActorStartPosition = new Vector2D(0, 51);
+		Vector2D serverActorTargetPosition = new Vector2D(0, 49);
 		Actor serverActor = new Actor("TestActor");
 		serverActor.setVector2D(serverActorStartPosition);
 		world.addObject(serverActor);
@@ -82,13 +82,14 @@ public class WorldServerTest
 		ClientObject clientActor = worldClient.getVisibleObjects().get(serverActor.getId());
 		assertNotNull(clientActor);
 		assertEquals(1, worldClient.getVisibleObjects().size());
+		Thread.sleep(50);
 		assertEquals(serverActor.getVector2D(), clientActor.getVector2D());
 
 		moveServerActorToVector(serverActor, serverActorStartPosition);
 		assertEquals(0, worldClient.getVisibleObjects().size());
 
 
-		moveClientPlayerTowardVector(new Vector2D(11, 11));
+		moveClientPlayerTowardVector(new Vector2D(0, 11));
 		assertEquals(1, worldClient.getVisibleObjects().size());
 		clientActor = worldClient.getVisibleObjects().get(serverActor.getId());
 		assertEquals(serverActor.getVector2D(), clientActor.getVector2D());
