@@ -1,5 +1,5 @@
 description = ''
 
 dependencies {
-    compile project(':jgcf')
+    compile project(':jenjin-client')
 }
