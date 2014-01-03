@@ -1,8 +1,9 @@
 rootProject.name = 'Jenjin'
-include ':jenjin-server', ':jenjin-client', ':jenjin-server-world', ':jenjin-client-world', ':jenjin-io'
+include ':jenjin-server', ':jenjin-client', ':jenjin-server-world', ':jenjin-client-world', ':jenjin-io', ':jenjin-world-utils'
 
 project(':jenjin-server').projectDir = "$rootDir/jenjin-server" as File
 project(':jenjin-client').projectDir = "$rootDir/jenjin-client" as File
 project(':jenjin-server-world').projectDir = "$rootDir/jenjin-server-world" as File
 project(':jenjin-client-world').projectDir = "$rootDir/jenjin-client-world" as File
 project(':jenjin-io').projectDir = "$rootDir/jenjin-io" as File
+project(':jenjin-world-utils').projectDir = "$rootDir/jenjin-world-utils" as File
