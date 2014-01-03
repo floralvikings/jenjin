@@ -1,7 +1,7 @@
 package com.jenjinstudios.net;
 
 import com.jenjinstudios.message.ClientExecutableMessage;
-import com.jenjinstudios.message.Message;
+import com.jenjinstudios.io.Message;
 
 import java.io.IOException;
 import java.net.Socket;

@@ -1,7 +1,7 @@
 package com.jenjinstudios.net;
 
-import com.jenjinstudios.message.ExecutableMessage;
-import com.jenjinstudios.message.Message;
+import com.jenjinstudios.io.ExecutableMessage;
+import com.jenjinstudios.io.Message;
 
 import java.io.IOException;
 import java.util.LinkedList;

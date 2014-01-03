@@ -1,7 +1,8 @@
-package com.jenjinstudios.message;
+package com.jenjinstudios.io;
 
 /**
  * The {@code ExecutableMessage} class should be extended to create self-handling messages on the server.
+ *
  * @author Caleb Brinkman
  */
 @SuppressWarnings("unused")
@@ -12,9 +13,11 @@ public abstract class ExecutableMessage implements Runnable
 
 	/**
 	 * Construct an ExecutableMessage with the given Message.
+	 *
 	 * @param message The Message.
 	 */
-	protected ExecutableMessage(Message message) {
+	protected ExecutableMessage(Message message)
+	{
 		this.message = message;
 	}
 
@@ -25,15 +28,18 @@ public abstract class ExecutableMessage implements Runnable
 	public abstract void runASync();
 
 	/** Calls the {@code runSynced} method. */
-	public final void run() {
+	public final void run()
+	{
 		runSynced();
 	}
 
 	/**
 	 * The Message for this ExecutableMessage.
+	 *
 	 * @return The Message used by this ExecutableMessage
 	 */
-	public Message getMessage() {
+	public Message getMessage()
+	{
 		return message;
 	}
 }

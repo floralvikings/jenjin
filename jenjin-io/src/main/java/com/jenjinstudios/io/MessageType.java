@@ -1,7 +1,5 @@
 package com.jenjinstudios.io;
 
-import com.jenjinstudios.message.ExecutableMessage;
-
 import java.util.TreeMap;
 
 /**

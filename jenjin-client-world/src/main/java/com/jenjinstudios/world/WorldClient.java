@@ -1,6 +1,6 @@
 package com.jenjinstudios.world;
 
-import com.jenjinstudios.message.Message;
+import com.jenjinstudios.io.Message;
 import com.jenjinstudios.net.AuthClient;
 import com.jenjinstudios.world.state.MoveState;
 

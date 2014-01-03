@@ -1,6 +1,6 @@
 package com.jenjinstudios.net;
 
-import com.jenjinstudios.message.Message;
+import com.jenjinstudios.io.Message;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.logging.Level;

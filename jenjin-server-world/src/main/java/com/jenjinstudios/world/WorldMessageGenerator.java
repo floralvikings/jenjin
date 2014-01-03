@@ -1,6 +1,6 @@
 package com.jenjinstudios.world;
 
-import com.jenjinstudios.message.Message;
+import com.jenjinstudios.io.Message;
 
 /**
  * Used to generate Message objects that are relevent to the World and WorldClientHandler classes.

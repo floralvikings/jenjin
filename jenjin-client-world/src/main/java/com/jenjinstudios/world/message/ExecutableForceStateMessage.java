@@ -1,7 +1,7 @@
 package com.jenjinstudios.world.message;
 
 import com.jenjinstudios.world.math.Vector2D;
-import com.jenjinstudios.message.Message;
+import com.jenjinstudios.io.Message;
 import com.jenjinstudios.world.ClientPlayer;
 import com.jenjinstudios.world.WorldClient;
 
