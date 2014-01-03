@@ -101,23 +101,16 @@ public class World
 	 * @return An ArrayList containing all valid locations in the specified area.
 	 */
 	public ArrayList<Location> getLocationArea(Location center, int radius) {
-		// Make the array list with an initial size of area
 		ArrayList<Location> areaGrid = new ArrayList<>();
-		// Get the top-right corner of the grid.
-		int xStart = center.X_COORDINATE - radius;
-		xStart = (xStart < 0) ? 0 : xStart;
-		int zStart = center.Z_COORDINATE - radius;
-		zStart = (zStart < 0) ? 0 : zStart;
-		int xEnd = center.X_COORDINATE + radius;
-		xEnd = (xEnd >= locationGrid.length) ? locationGrid.length - 1 : xEnd;
-		int zEnd = center.Z_COORDINATE + radius;
-		zEnd = (zEnd >= locationGrid.length) ? locationGrid.length - 1 : zEnd;
+		int xStart = Math.max(center.X_COORDINATE - (radius - 1), 0);
+		int zStart = Math.max(center.Z_COORDINATE - (radius - 1), 0);
+		int xEnd = Math.min(center.X_COORDINATE + (radius - 1), locationGrid.length - 1);
+		int zEnd = Math.min(center.Z_COORDINATE + (radius - 1), locationGrid.length - 1);
 
-		for (int x = xStart; x < xEnd; x++)
+		for (int x = xStart; x <= xEnd; x++)
 		{
-			areaGrid.addAll(Arrays.asList(locationGrid[x]).subList(zStart, zEnd));
+			areaGrid.addAll(Arrays.asList(locationGrid[x]).subList(zStart, zEnd + 1));
 		}
-
 
 		return areaGrid;
 	}
