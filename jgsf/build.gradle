@@ -3,6 +3,7 @@ description = ''
 
 dependencies {
     compile group: 'org.drizzle.jdbc', name: 'drizzle-jdbc', version: '1.2'
-    compile project(':jgcf')
+    compile project(':jenjin-io')
+    testCompile project(':jgcf')
 }
 
