@@ -1,5 +1,7 @@
 rootProject.name = 'Jenjin'
-include ':jgsf', ':jgcf'
+include ':jgsf', ':jgcf', ':jenjin-server-world', ':jenjin-client-world'
 
 project(':jgsf').projectDir = "$rootDir/jgsf" as File
 project(':jgcf').projectDir = "$rootDir/jgcf" as File
+project(':jenjin-server-world').projectDir = "$rootDir/jenjin-server-world" as File
+project(':jenjin-client-world').projectDir = "$rootDir/jenjin-client-world" as File

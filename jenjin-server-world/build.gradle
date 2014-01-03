@@ -1,0 +1,6 @@
+description = ''
+
+dependencies {
+    compile project(':jgsf')
+    compile project(':jenjin-client-world')
+}
