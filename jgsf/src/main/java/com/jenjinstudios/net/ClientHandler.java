@@ -11,7 +11,7 @@ import java.net.Socket;
  * The {@code ClientHandler} class is used to communicate with an individual client.
  * @author Caleb Brinkman
  */
-public class ClientHandler extends TaskedCommunicator
+public class ClientHandler extends Connection
 {
 	/** The server. */
 	private final SqlEnabledServer<? extends ClientHandler> server;

@@ -15,7 +15,7 @@ import java.util.logging.Logger;
  * The base class for any client.  This class uses a similar system to the JGSA.
  * @author Caleb Brinkman
  */
-public class Client extends TaskedCommunicator
+public class Client extends Connection
 {
 	/** The logger associated with this class. */
 	public static final Logger LOGGER = Logger.getLogger(Client.class.getName());

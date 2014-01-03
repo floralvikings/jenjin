@@ -1,9 +1,9 @@
 package com.jenjinstudios.net;
 
-import com.jenjinstudios.io.MessageInputStream;
-import com.jenjinstudios.io.MessageOutputStream;
 import com.jenjinstudios.io.ExecutableMessage;
 import com.jenjinstudios.io.Message;
+import com.jenjinstudios.io.MessageInputStream;
+import com.jenjinstudios.io.MessageOutputStream;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -16,14 +16,16 @@ import java.util.logging.Logger;
  * The communicator class is the superclass for any classes that communicate over socket.
  * @author Caleb Brinkman
  */
-public abstract class Communicator extends Thread
+public abstract class Connection extends Thread
 {
 	/** The logger used for this class. */
-	private static final Logger LOGGER = Logger.getLogger(Communicator.class.getName());
+	protected static final Logger LOGGER = Logger.getLogger(Connection.class.getName());
 	/** The list of collected ping times. */
 	private final ArrayList<Long> pingTimes;
 	/** The collection of messages to send at the next broadcast. */
 	private final LinkedList<Message> outgoingMessages;
+	/** The "one-shot" tasks to be executed in the current client loop. */
+	private final LinkedList<Runnable> syncedTasks;
 	/** Flags whether the client threads should be running. */
 	private volatile boolean running;
 	/** The input stream used to read messages. */
@@ -38,25 +40,11 @@ public abstract class Communicator extends Thread
 	private byte[] aesKey;
 
 	/** Cosntruct a new Commuicator. */
-	protected Communicator() {
+	protected Connection() {
 		outgoingMessages = new LinkedList<>();
 		pingTimes = new ArrayList<>();
-	}
+		syncedTasks = new LinkedList<>();
 
-	/** Close the link with the server. */
-	protected void closeLink() {
-		try
-		{
-			inputStream.close();
-			outputStream.close();
-			socket.close();
-		} catch (IOException ignored)
-		{
-			// Link closing, possible _because_ of an IOExeption; will be shutting down.
-		} finally
-		{
-			connected = false;
-		}
 	}
 
 	/**
@@ -92,7 +80,9 @@ public abstract class Communicator extends Thread
 	 * Add a ping time to the list.
 	 * @param pingTime The time of the ping, in nanoseconds.
 	 */
-	public void addPingTime(long pingTime) { pingTimes.add(pingTime); }
+	public void addPingTime(long pingTime) {
+		pingTimes.add(pingTime);
+	}
 
 	/**
 	 * Get the average ping time, in nanoseconds.
@@ -113,19 +103,26 @@ public abstract class Communicator extends Thread
 	 * Flags whether this communicator is connected.
 	 * @return true if this communicator is currently connected to a server.
 	 */
-	public boolean isConnected() { return connected; }
+	public boolean isConnected() {
+		return connected;
+	}
 
 	/**
 	 * Set whether this communicator is connected.  Should only be called from subclass.
 	 * @param connected Whether this communicator is connected.
 	 */
-	protected void setConnected(boolean connected) { this.connected = connected; }
+	protected void setConnected(boolean connected) {
+		this.connected = connected;
+	}
 
 	/** Send all messages in the outgoing queue.  This method should only be called from the client update thread. */
 	public void sendAllMessages() {
 		synchronized (outgoingMessages)
 		{
-			while (!outgoingMessages.isEmpty()) { writeMessage(outgoingMessages.remove()); }
+			while (!outgoingMessages.isEmpty())
+			{
+				writeMessage(outgoingMessages.remove());
+			}
 		}
 	}
 
@@ -148,22 +145,30 @@ public abstract class Communicator extends Thread
 	 * Get the output stream used by this communicator.
 	 * @return The output stream used by this communicator.
 	 */
-	public MessageOutputStream getOutputStream() { return outputStream; }
+	public MessageOutputStream getOutputStream() {
+		return outputStream;
+	}
 
 	/**
 	 * Set the output stream.
 	 * @param outputStream The output stream.
 	 */
-	private void setOutputStream(MessageOutputStream outputStream) { this.outputStream = outputStream; }
+	private void setOutputStream(MessageOutputStream outputStream) {
+		this.outputStream = outputStream;
+	}
 
 	/** Shutdown this communicator. */
-	public void shutdown() { running = false; }
+	public void shutdown() {
+		running = false;
+	}
 
 	/**
 	 * Get the AES key used by this client.
 	 * @return The byte form of the AES key used by this client.
 	 */
-	public byte[] getAesKey() { return aesKey; }
+	public byte[] getAesKey() {
+		return aesKey;
+	}
 
 	/**
 	 * Set the AES key used by this client.
@@ -179,21 +184,71 @@ public abstract class Communicator extends Thread
 	 * Get the input stream used.
 	 * @return The input stream.
 	 */
-	public MessageInputStream getInputStream() { return inputStream; }
+	public MessageInputStream getInputStream() {
+		return inputStream;
+	}
 
 	/**
 	 * Set the input stream used.
 	 * @param inputStream The input stream.
 	 */
-	private void setInputStream(MessageInputStream inputStream) { this.inputStream = inputStream; }
+	private void setInputStream(MessageInputStream inputStream) {
+		this.inputStream = inputStream;
+	}
 
-	public void run() { running = true; }
+	public void run() {
+		running = true;
+		try
+		{
+			Message currentMessage;
+			while ((currentMessage = getInputStream().readMessage()) != null)
+				processMessage(currentMessage);
+		} catch (IOException ex)
+		{
+			LOGGER.log(Level.SEVERE, "Error retrieving message from server.", ex);
+		} finally
+		{
+			shutdown();
+		}
+	}
 
 	/**
-	 * Process the specified message.  This method should be overridden by any implementing classes.
-	 * @param message The message to be processed.
+	 * Flags whether the client threads should be running.
+	 * @return true if this client thread is still running.
 	 */
-	protected abstract void processMessage(Message message);
+	public boolean isRunning() {
+		return running;
+	}
+
+	/**
+	 * The "one-shot" tasks to be executed in the current client loop.
+	 * @return The list of Synced Tasks
+	 */
+	public LinkedList<Runnable> getSyncedTasks() {
+		LinkedList<Runnable> temp = new LinkedList<>();
+		synchronized (syncedTasks)
+		{
+			temp.addAll(syncedTasks);
+			syncedTasks.removeAll(temp);
+		}
+		return temp;
+	}
+
+	/** Close the link with the server. */
+	protected void closeLink() {
+		try
+		{
+			inputStream.close();
+			outputStream.close();
+			socket.close();
+		} catch (IOException ignored)
+		{
+			// Link closing, possible _because_ of an IOExeption; will be shutting down.
+		} finally
+		{
+			connected = false;
+		}
+	}
 
 	/**
 	 * Get an executable message for a given message.
@@ -203,8 +258,25 @@ public abstract class Communicator extends Thread
 	protected abstract ExecutableMessage getExecutableMessage(Message message);
 
 	/**
-	 * Flags whether the client threads should be running.
-	 * @return true if this client thread is still running.
+	 * Process the specified message.  This method should be overridden by any implementing classes, but it does contain
+	 * functionality necessary to communicate with a DownloadServer or a ChatServer.
+	 * @param message The message to be processed.
 	 */
-	public boolean isRunning() { return running; }
+	protected void processMessage(Message message) {
+		ExecutableMessage exec = getExecutableMessage(message);
+		if (exec != null)
+		{
+			exec.runASync();
+			synchronized (syncedTasks)
+			{
+				syncedTasks.add(exec);
+			}
+		} else
+		{
+			Message invalid = new Message("InvalidMessage");
+			invalid.setArgument("messageName", message.name);
+			invalid.setArgument("messageID", message.getID());
+			queueMessage(invalid);
+		}
+	}
 }
