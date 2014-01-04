@@ -1,0 +1,7 @@
+description = ''
+
+dependencies {
+    compile project(':jenjin-server')
+    compile project(':jenjin-world-utils')
+    testCompile project(':jenjin-client-world')
+}
