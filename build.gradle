@@ -5,7 +5,7 @@ allprojects {
 
 
     group = 'com.jenjinstudios'
-    version = '0.2.3-alpha'
+    version = '0.3.0-alpha'
 
 }
 
@@ -41,31 +41,5 @@ task wrapper(type: Wrapper) {
 idea {
     project {
         languageLevel = 'JDK_1_7'
-    }
-}
-
-clean.doFirst {
-    deleteRecursively(new File("FileOne.txt"))
-    deleteRecursively(new File("DirectoryOne/"));
-}
-
-
-
-void deleteRecursively(File file) {
-    //list all the directory contents
-    String[] fileList = file.list()
-
-    for (String temp : fileList) {
-        //construct the file structure
-        File fileDelete = new File(file, temp)
-
-        //recursive delete
-        delete(fileDelete)
-    }
-
-    //check the directory again, if empty then delete it
-    if (file.list() == null || file.list().length == 0) {
-        println "Deleting: " + file
-        file.delete();
     }
 }
