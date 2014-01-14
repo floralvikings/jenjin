@@ -67,7 +67,7 @@ public class World
 	 */
 	public Location getLocationForCoordinates(Vector2D vector2D) {
 		double x = vector2D.getXCoordinate();
-		double z = vector2D.getZCoordinate();
+		double z = vector2D.getYCoordinate();
 		if (!isValidLocation(new Vector2D(x, z)))
 			return null;
 		return locationGrid[(int) x / Location.SIZE][(int) z / Location.SIZE];
@@ -80,7 +80,7 @@ public class World
 	 */
 	public boolean isValidLocation(Vector2D vector2D) {
 		double x = vector2D.getXCoordinate();
-		double z = vector2D.getZCoordinate();
+		double z = vector2D.getYCoordinate();
 		return !(x < 0 || z < 0 || x / Location.SIZE >= SIZE || z / Location.SIZE >= SIZE);
 	}
 

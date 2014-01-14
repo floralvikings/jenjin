@@ -48,22 +48,22 @@ public class ActorTest
 
 		updateWorld(10);
 		Assert.assertEquals("State 1 X: ", 0, actor.getVector2D().getXCoordinate(), 0);
-		Assert.assertEquals("State 1 Z: ", 0, actor.getVector2D().getZCoordinate(), 0);
+		Assert.assertEquals("State 1 Z: ", 0, actor.getVector2D().getYCoordinate(), 0);
 		updateWorld(10);
 		Assert.assertEquals("State 2 X: ", 2.0, actor.getVector2D().getXCoordinate(), 0);
-		Assert.assertEquals("State 2 Z: ", 0, actor.getVector2D().getZCoordinate(), 0);
+		Assert.assertEquals("State 2 Z: ", 0, actor.getVector2D().getYCoordinate(), 0);
 		updateWorld(10);
 		Assert.assertEquals("State 3 X: ", 0, actor.getVector2D().getXCoordinate(), 0);
-		Assert.assertEquals("State 3 Z: ", 0, actor.getVector2D().getZCoordinate(), 0);
+		Assert.assertEquals("State 3 Z: ", 0, actor.getVector2D().getYCoordinate(), 0);
 		updateWorld(10);
 		Assert.assertEquals("State 4 X: ", 0, actor.getVector2D().getXCoordinate(), 0);
-		Assert.assertEquals("State 4 Z: ", 0, actor.getVector2D().getZCoordinate(), 0);
+		Assert.assertEquals("State 4 Z: ", 0, actor.getVector2D().getYCoordinate(), 0);
 		updateWorld(10);
 		Assert.assertEquals("State 5 X: ", 1.414, actor.getVector2D().getXCoordinate(), 0.001);
-		Assert.assertEquals("State 5 Z: ", 1.414, actor.getVector2D().getZCoordinate(), 0.001);
+		Assert.assertEquals("State 5 Z: ", 1.414, actor.getVector2D().getYCoordinate(), 0.001);
 		updateWorld(10);
 		Assert.assertEquals("State 6 X: ", 1.414, actor.getVector2D().getXCoordinate(), 0);
-		Assert.assertEquals("State 6 Z: ", 1.414, actor.getVector2D().getZCoordinate(), 0);
+		Assert.assertEquals("State 6 Z: ", 1.414, actor.getVector2D().getYCoordinate(), 0);
 
 		world.removeObject(actor);
 		Assert.assertEquals(0, world.getObjectCount());

@@ -116,7 +116,7 @@ public class WorldSQLHandler extends SQLHandler
 	public void updatePlayer(Actor player) throws SQLException {
 		String username = player.getName();
 		double xCoord = player.getVector2D().getXCoordinate();
-		double zCoord = player.getVector2D().getZCoordinate();
+		double zCoord = player.getVector2D().getYCoordinate();
 
 		String updateLoggedInQuery = "UPDATE " + dbName + ".users SET " + X_COORD + "=" + xCoord + ", " + Z_COORD +
 				"=" + zCoord + " WHERE " + "username = ?";
