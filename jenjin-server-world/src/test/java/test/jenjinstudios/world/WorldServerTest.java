@@ -152,8 +152,8 @@ public class WorldServerTest
 		for (int i = 0; i < 10; i++)
 		{
 			double randomX = Round.round(Math.random() * maxCoord, 4);
-			double randomZ = Round.round(Math.random() * maxCoord, 4);
-			Vector2D random = new Vector2D(randomX, randomZ);
+			double randomY = Round.round(Math.random() * maxCoord, 4);
+			Vector2D random = new Vector2D(randomX, randomY);
 			moveClientPlayerTowardVector(random);
 			Assert.assertEquals("Movement number " + i + " to " + random, clientPlayer.getVector2D(), serverPlayer.getVector2D());
 		}

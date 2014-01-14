@@ -51,8 +51,8 @@ public class ExecutableForceStateMessage extends WorldClientExecutableMessage
 	@Override
 	public void runASync() {
 		double x = (double) getMessage().getArgument("xCoordinate");
-		double z = (double) getMessage().getArgument("zCoordinate");
-		vector2D = new Vector2D(x, z);
+		double y = (double) getMessage().getArgument("yCoordinate");
+		vector2D = new Vector2D(x, y);
 		relativeAngle = (double) getMessage().getArgument("relativeAngle");
 		absoluteAngle = (double) getMessage().getArgument("absoluteAngle");
 		timeOfForce = (long) getMessage().getArgument("timeOfForce");

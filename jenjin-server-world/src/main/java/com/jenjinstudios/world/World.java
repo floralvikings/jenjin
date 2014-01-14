@@ -25,8 +25,8 @@ public class World
 		locationGrid = new Location[SIZE][SIZE];
 		worldObjects = new ArrayList<>();
 		for (int x = 0; x < SIZE; x++)
-			for (int z = 0; z < SIZE; z++)
-				locationGrid[x][z] = new Location(x, z);
+			for (int y = 0; y < SIZE; y++)
+				locationGrid[x][y] = new Location(x, y);
 	}
 
 	/**
@@ -67,10 +67,10 @@ public class World
 	 */
 	public Location getLocationForCoordinates(Vector2D vector2D) {
 		double x = vector2D.getXCoordinate();
-		double z = vector2D.getZCoordinate();
-		if (!isValidLocation(new Vector2D(x, z)))
+		double y = vector2D.getYCoordinate();
+		if (!isValidLocation(new Vector2D(x, y)))
 			return null;
-		return locationGrid[(int) x / Location.SIZE][(int) z / Location.SIZE];
+		return locationGrid[(int) x / Location.SIZE][(int) y / Location.SIZE];
 	}
 
 	/**
@@ -80,8 +80,8 @@ public class World
 	 */
 	public boolean isValidLocation(Vector2D vector2D) {
 		double x = vector2D.getXCoordinate();
-		double z = vector2D.getZCoordinate();
-		return !(x < 0 || z < 0 || x / Location.SIZE >= SIZE || z / Location.SIZE >= SIZE);
+		double y = vector2D.getYCoordinate();
+		return !(x < 0 || y < 0 || x / Location.SIZE >= SIZE || y / Location.SIZE >= SIZE);
 	}
 
 	/** Update all objects in the world. */
@@ -103,13 +103,13 @@ public class World
 	public ArrayList<Location> getLocationArea(Location center, int radius) {
 		ArrayList<Location> areaGrid = new ArrayList<>();
 		int xStart = Math.max(center.X_COORDINATE - (radius - 1), 0);
-		int zStart = Math.max(center.Z_COORDINATE - (radius - 1), 0);
+		int yStart = Math.max(center.Y_COORDINATE - (radius - 1), 0);
 		int xEnd = Math.min(center.X_COORDINATE + (radius - 1), locationGrid.length - 1);
-		int zEnd = Math.min(center.Z_COORDINATE + (radius - 1), locationGrid.length - 1);
+		int yEnd = Math.min(center.Y_COORDINATE + (radius - 1), locationGrid.length - 1);
 
 		for (int x = xStart; x <= xEnd; x++)
 		{
-			areaGrid.addAll(Arrays.asList(locationGrid[x]).subList(zStart, zEnd + 1));
+			areaGrid.addAll(Arrays.asList(locationGrid[x]).subList(yStart, yEnd + 1));
 		}
 
 		return areaGrid;

@@ -13,8 +13,8 @@ public class Location
 	public static final int SIZE = 10;
 	/** The x coordinate of the location in it's zone's grid. */
 	public final int X_COORDINATE;
-	/** The z coordinate of the location in it's zone's grid. */
-	public final int Z_COORDINATE;
+	/** The y coordinate of the location in it's zone's grid. */
+	public final int Y_COORDINATE;
 	/** The objects residing in this location. */
 	private final HashSet<WorldObject> objects;
 	/** The property of this location. */
@@ -27,7 +27,7 @@ public class Location
 	 */
 	public Location(int x, int z) {
 		X_COORDINATE = x;
-		Z_COORDINATE = z;
+		Y_COORDINATE = z;
 		property = Property.OPEN;
 		objects = new HashSet<>();
 	}
@@ -74,7 +74,7 @@ public class Location
 
 	@Override
 	public String toString() {
-		return "(" + X_COORDINATE + ", " + Z_COORDINATE + ")";
+		return "(" + X_COORDINATE + ", " + Y_COORDINATE + ")";
 	}
 
 	/** Specifies a property of a location. */

@@ -3,7 +3,7 @@ package com.jenjinstudios.world.math;
 import com.jenjinstudios.world.state.MoveState;
 
 /**
- * Stores a set of x and z coordinates.
+ * Stores a set of x and y coordinates.
  * @author Caleb Brinkman
  */
 public class Vector2D
@@ -12,31 +12,31 @@ public class Vector2D
 	public static final Vector2D ORIGIN = new Vector2D(0, 0);
 	/** The x coordinate. */
 	private double xCoordinate;
-	/** The z coordinate. */
-	private double zCoordinate;
+	/** The y coordinate. */
+	private double yCoordinate;
 
 	/**
 	 * Construct a new set of vector2D copying another set.
 	 * @param vector2D The vector2D to copy.
 	 */
 	public Vector2D(Vector2D vector2D) {
-		this(vector2D.getXCoordinate(), vector2D.getZCoordinate());
+		this(vector2D.getXCoordinate(), vector2D.getYCoordinate());
 	}
 
 	/**
-	 * Get the z coordinate.
-	 * @return The z coordinate.
+	 * Get the y coordinate.
+	 * @return The y coordinate.
 	 */
-	public double getZCoordinate() {
-		return zCoordinate;
+	public double getYCoordinate() {
+		return yCoordinate;
 	}
 
 	/**
-	 * Set the z coordinate.
-	 * @param zCoordinate The new Z coordinate.
+	 * Set the y coordinate.
+	 * @param yCoordinate The new Y coordinate.
 	 */
-	public void setZCoordinate(double zCoordinate) {
-		this.zCoordinate = zCoordinate;
+	public void setYCoordinate(double yCoordinate) {
+		this.yCoordinate = yCoordinate;
 	}
 
 	/**
@@ -58,11 +58,11 @@ public class Vector2D
 	/**
 	 * Construct a new set of coordinates.
 	 * @param x The x coordinate.
-	 * @param y The z coordinate.
+	 * @param y The y coordinate.
 	 */
 	public Vector2D(double x, double y) {
 		xCoordinate = x;
-		zCoordinate = y;
+		yCoordinate = y;
 	}
 
 	@Override
@@ -70,12 +70,12 @@ public class Vector2D
 		if (!(obj instanceof Vector2D))
 			return false;
 		Vector2D vector2D = (Vector2D) obj;
-		return vector2D.xCoordinate == xCoordinate && vector2D.zCoordinate == zCoordinate;
+		return vector2D.xCoordinate == xCoordinate && vector2D.yCoordinate == yCoordinate;
 	}
 
 	@Override
 	public String toString() {
-		return "(" + xCoordinate + ", " + zCoordinate + ")";
+		return "(" + xCoordinate + ", " + yCoordinate + ")";
 	}
 
 	/**
@@ -89,8 +89,8 @@ public class Vector2D
 		double cos = Math.cos(angle);
 		double sin = Math.sin(angle);
 		double newX = Round.round(xCoordinate + (distance * cos), 4);
-		double newZ = Round.round(zCoordinate + (distance * sin), 4);
-		return new Vector2D(newX, newZ);
+		double newY = Round.round(yCoordinate + (distance * sin), 4);
+		return new Vector2D(newX, newY);
 	}
 
 	/**
@@ -100,8 +100,8 @@ public class Vector2D
 	 */
 	public double getAngleToVector(Vector2D vector2D) {
 		double xDist = vector2D.getXCoordinate() - xCoordinate;
-		double zDist = vector2D.getZCoordinate() - zCoordinate;
-		return Math.atan2(zDist, xDist);
+		double yDist = vector2D.getYCoordinate() - yCoordinate;
+		return Math.atan2(yDist, xDist);
 	}
 
 	/**
@@ -111,7 +111,7 @@ public class Vector2D
 	 */
 	public double getDistanceToVector(Vector2D vector2D) {
 		double xSquare = Math.pow(vector2D.getXCoordinate() - xCoordinate, 2);
-		double zSquare = Math.pow(vector2D.getZCoordinate() - zCoordinate, 2);
-		return Math.sqrt(xSquare + zSquare);
+		double ySquare = Math.pow(vector2D.getYCoordinate() - yCoordinate, 2);
+		return Math.sqrt(xSquare + ySquare);
 	}
 }
