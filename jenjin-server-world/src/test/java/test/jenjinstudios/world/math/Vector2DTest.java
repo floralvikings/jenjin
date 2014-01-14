@@ -55,24 +55,24 @@ public class Vector2DTest
 
 		double forwardRight = Math.PI * .25;
 		double expectedX = 5 + Math.sqrt(2) / 2;
-		double expectedZ = 5 + Math.sqrt(2) / 2;
+		double expectedY = 5 + Math.sqrt(2) / 2;
 		stepped = original.getVectorInDirection(1, forwardRight);
 		Assert.assertEquals(expectedX, stepped.getXCoordinate(), 0.001);
-		Assert.assertEquals(expectedZ, stepped.getYCoordinate(), 0.001);
+		Assert.assertEquals(expectedY, stepped.getYCoordinate(), 0.001);
 
 		double backRight = Math.PI * -.25;
 		expectedX = 5 + Math.sqrt(2) / 2;
-		expectedZ = 5 - Math.sqrt(2) / 2;
+		expectedY = 5 - Math.sqrt(2) / 2;
 		stepped = original.getVectorInDirection(1, backRight);
 		Assert.assertEquals(expectedX, stepped.getXCoordinate(), 0.1);
-		Assert.assertEquals(expectedZ, stepped.getYCoordinate(), 0.1);
+		Assert.assertEquals(expectedY, stepped.getYCoordinate(), 0.1);
 
 		double backLeft = Math.PI * 1.25;
 		expectedX = 5 - Math.sqrt(2) / 2;
-		expectedZ = 5 - Math.sqrt(2) / 2;
+		expectedY = 5 - Math.sqrt(2) / 2;
 		stepped = original.getVectorInDirection(1, backLeft);
 		Assert.assertEquals(expectedX, stepped.getXCoordinate(), 0.1);
-		Assert.assertEquals(expectedZ, stepped.getYCoordinate(), 0.1);
+		Assert.assertEquals(expectedY, stepped.getYCoordinate(), 0.1);
 	}
 
 }

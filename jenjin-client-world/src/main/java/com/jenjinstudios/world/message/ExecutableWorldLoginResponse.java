@@ -39,9 +39,9 @@ public class ExecutableWorldLoginResponse extends WorldClientExecutableMessage
 	@Override
 	public void runASync() {
 		int id = (int) getMessage().getArgument("id");
-		double xCoord = (double) getMessage().getArgument("xCoord");
-		double zCoord = (double) getMessage().getArgument("zCoord");
+		double xCoord = (double) getMessage().getArgument("xCoordinate");
+		double yCoord = (double) getMessage().getArgument("yCoordinate");
 		player = new ClientPlayer(id, getClient().getUsername());
-		player.setVector2D(xCoord, zCoord);
+		player.setVector2D(xCoord, yCoord);
 	}
 }

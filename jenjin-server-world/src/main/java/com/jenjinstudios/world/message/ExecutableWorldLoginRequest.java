@@ -41,8 +41,8 @@ public class ExecutableWorldLoginRequest extends WorldExecutableMessage
 				loginResponse.setArgument("success", false);
 				loginResponse.setArgument("id", -1);
 				loginResponse.setArgument("loginTime", getClientHandler().getLoggedInTime());
-				loginResponse.setArgument("xCoord", 0d);
-				loginResponse.setArgument("zCoord", 0d);
+				loginResponse.setArgument("xCoordinate", 0d);
+				loginResponse.setArgument("yCoordinate", 0d);
 			}
 		}
 		getClientHandler().queueMessage(loginResponse);
@@ -70,15 +70,15 @@ public class ExecutableWorldLoginRequest extends WorldExecutableMessage
 		{
 			getClientHandler().setActor(player);
 			loginResponse.setArgument("loginTime", getClientHandler().getLoggedInTime());
-			loginResponse.setArgument("xCoord", player.getVector2D().getXCoordinate());
-			loginResponse.setArgument("zCoord", player.getVector2D().getYCoordinate());
+			loginResponse.setArgument("xCoordinate", player.getVector2D().getXCoordinate());
+			loginResponse.setArgument("yCoordinate", player.getVector2D().getYCoordinate());
 			loginResponse.setArgument("id", player.getId());
 		} else
 		{
 			loginResponse.setArgument("id", -1);
 			loginResponse.setArgument("loginTime", getClientHandler().getLoggedInTime());
-			loginResponse.setArgument("xCoord", 0d);
-			loginResponse.setArgument("zCoord", 0d);
+			loginResponse.setArgument("xCoordinate", 0d);
+			loginResponse.setArgument("yCoordinate", 0d);
 		}
 
 

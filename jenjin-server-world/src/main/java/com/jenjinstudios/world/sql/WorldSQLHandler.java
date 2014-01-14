@@ -19,8 +19,8 @@ public class WorldSQLHandler extends SQLHandler
 {
 	/** The column name of the X coordinate. */
 	public static final String X_COORD = "xCoord";
-	/** The column name of the Z coordinate. */
-	public static final String Z_COORD = "zCoord";
+	/** The column name of the Y coordinate. */
+	public static final String Y_COORD = "yCoord";
 	/** The Logger used for this class. */
 	private static final Logger LOGGER = Logger.getLogger(WorldSQLHandler.class.getName());
 
@@ -58,7 +58,7 @@ public class WorldSQLHandler extends SQLHandler
 			String hashedPassword = Hash.getHashedString(password, results.getString("salt"));
 			// Determine if the correct password was supplied.
 			boolean passwordCorrect = hashedPassword != null && hashedPassword.equalsIgnoreCase(results.getString("password"));
-			Vector2D coordinates = new Vector2D(results.getDouble(X_COORD), results.getDouble(Z_COORD));
+			Vector2D coordinates = new Vector2D(results.getDouble(X_COORD), results.getDouble(Y_COORD));
 			// Any SQL stuff has to come before this line.
 			results.getStatement().close();
 			// If the password's bad, login fail.
@@ -116,10 +116,10 @@ public class WorldSQLHandler extends SQLHandler
 	public void updatePlayer(Actor player) throws SQLException {
 		String username = player.getName();
 		double xCoord = player.getVector2D().getXCoordinate();
-		double zCoord = player.getVector2D().getYCoordinate();
+		double yCoord = player.getVector2D().getYCoordinate();
 
-		String updateLoggedInQuery = "UPDATE " + dbName + ".users SET " + X_COORD + "=" + xCoord + ", " + Z_COORD +
-				"=" + zCoord + " WHERE " + "username = ?";
+		String updateLoggedInQuery = "UPDATE " + dbName + ".users SET " + X_COORD + "=" + xCoord + ", " + Y_COORD +
+				"=" + yCoord + " WHERE " + "username = ?";
 		PreparedStatement updatePlayerStatement;
 		updatePlayerStatement = super.dbConnection.prepareStatement(updateLoggedInQuery);
 		updatePlayerStatement.setString(1, username);

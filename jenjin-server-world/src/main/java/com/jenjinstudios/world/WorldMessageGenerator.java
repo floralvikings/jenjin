@@ -36,7 +36,7 @@ public class WorldMessageGenerator
 		newlyVisibleMessage.setArgument("name", newlyVisible.getName());
 		newlyVisibleMessage.setArgument("id", newlyVisible.getId());
 		newlyVisibleMessage.setArgument("xCoordinate", newlyVisible.getVector2D().getXCoordinate());
-		newlyVisibleMessage.setArgument("zCoordinate", newlyVisible.getVector2D().getYCoordinate());
+		newlyVisibleMessage.setArgument("yCoordinate", newlyVisible.getVector2D().getYCoordinate());
 		newlyVisibleMessage.setArgument("relativeAngle", newlyVisible.getCurrentMoveState().relativeAngle);
 		newlyVisibleMessage.setArgument("absoluteAngle", newlyVisible.getMoveAngle());
 		newlyVisibleMessage.setArgument("stepsTaken", newlyVisible.getStepsTaken());
@@ -55,7 +55,7 @@ public class WorldMessageGenerator
 		newlyVisibleMessage.setArgument("name", object.getName());
 		newlyVisibleMessage.setArgument("id", object.getId());
 		newlyVisibleMessage.setArgument("xCoordinate", object.getVector2D().getXCoordinate());
-		newlyVisibleMessage.setArgument("zCoordinate", object.getVector2D().getYCoordinate());
+		newlyVisibleMessage.setArgument("yCoordinate", object.getVector2D().getYCoordinate());
 		return newlyVisibleMessage;
 	}
 
@@ -84,7 +84,7 @@ public class WorldMessageGenerator
 		forcedStateMessage.setArgument("relativeAngle", actor.getMoveDirection());
 		forcedStateMessage.setArgument("absoluteAngle", actor.getMoveAngle());
 		forcedStateMessage.setArgument("xCoordinate", actor.getVector2D().getXCoordinate());
-		forcedStateMessage.setArgument("zCoordinate", actor.getVector2D().getYCoordinate());
+		forcedStateMessage.setArgument("yCoordinate", actor.getVector2D().getYCoordinate());
 		forcedStateMessage.setArgument("timeOfForce", server.getCycleStartTime());
 		return forcedStateMessage;
 	}

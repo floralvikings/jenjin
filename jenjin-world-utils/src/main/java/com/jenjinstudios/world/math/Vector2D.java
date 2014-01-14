@@ -3,7 +3,7 @@ package com.jenjinstudios.world.math;
 import com.jenjinstudios.world.state.MoveState;
 
 /**
- * Stores a set of x and z coordinates.
+ * Stores a set of x and y coordinates.
  * @author Caleb Brinkman
  */
 public class Vector2D
@@ -12,7 +12,7 @@ public class Vector2D
 	public static final Vector2D ORIGIN = new Vector2D(0, 0);
 	/** The x coordinate. */
 	private double xCoordinate;
-	/** The z coordinate. */
+	/** The y coordinate. */
 	private double yCoordinate;
 
 	/**
@@ -24,16 +24,16 @@ public class Vector2D
 	}
 
 	/**
-	 * Get the z coordinate.
-	 * @return The z coordinate.
+	 * Get the y coordinate.
+	 * @return The y coordinate.
 	 */
 	public double getYCoordinate() {
 		return yCoordinate;
 	}
 
 	/**
-	 * Set the z coordinate.
-	 * @param yCoordinate The new Z coordinate.
+	 * Set the y coordinate.
+	 * @param yCoordinate The new Y coordinate.
 	 */
 	public void setYCoordinate(double yCoordinate) {
 		this.yCoordinate = yCoordinate;
