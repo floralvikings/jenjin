@@ -12,6 +12,8 @@ public class WorldObject
 	public static final String DEFAULT_NAME = "Object";
 	/** The name of this actor. */
 	private final String name;
+	/** The zoneID in which this actor is located. */
+	private int zoneID;
 	/** The vector2D in the world at which the object is located. */
 	private Vector2D vector2D;
 	/** The relativeAngle in which this object is facing. */
@@ -70,7 +72,7 @@ public class WorldObject
 		Location oldLocation = location;
 		if (world != null)
 		{
-			location = world.getLocationForCoordinates(this.vector2D);
+			location = world.getLocationForCoordinates(this.zoneID, this.vector2D);
 			if (oldLocation != location && location != null)
 			{
 				oldLocation.removeObject(this);
@@ -121,7 +123,7 @@ public class WorldObject
 		if (this.world != null)
 			throw new IllegalArgumentException("The world has already been set for this object.");
 		this.world = world;
-		location = world.getLocationForCoordinates(this.vector2D);
+		location = world.getLocationForCoordinates(this.zoneID, this.vector2D);
 
 		if (location != null)
 			location.addObject(this);
@@ -137,4 +139,20 @@ public class WorldObject
 	public void update() { }
 
 	public String toString() { return name + ": " + id + " @ " + vector2D + " in " + location; }
+
+	/**
+	 * Get the id number of the zone in which this player is located.
+	 * @return The id number of the zone in which this player is located.
+	 */
+	public int getZoneID() {
+		return zoneID;
+	}
+
+	/**
+	 * Set the zone id in which this player is located.
+	 * @param zoneID The id of the new zone.
+	 */
+	public void setZoneID(int zoneID) {
+		this.zoneID = zoneID;
+	}
 }

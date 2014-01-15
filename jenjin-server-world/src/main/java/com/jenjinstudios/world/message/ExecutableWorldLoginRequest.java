@@ -43,6 +43,7 @@ public class ExecutableWorldLoginRequest extends WorldExecutableMessage
 				loginResponse.setArgument("loginTime", getClientHandler().getLoggedInTime());
 				loginResponse.setArgument("xCoordinate", 0d);
 				loginResponse.setArgument("yCoordinate", 0d);
+				loginResponse.setArgument("zoneNumber", -1);
 			}
 		}
 		getClientHandler().queueMessage(loginResponse);
@@ -72,6 +73,7 @@ public class ExecutableWorldLoginRequest extends WorldExecutableMessage
 			loginResponse.setArgument("loginTime", getClientHandler().getLoggedInTime());
 			loginResponse.setArgument("xCoordinate", player.getVector2D().getXCoordinate());
 			loginResponse.setArgument("yCoordinate", player.getVector2D().getYCoordinate());
+			loginResponse.setArgument("zoneNumber", player.getZoneID());
 			loginResponse.setArgument("id", player.getId());
 		} else
 		{
@@ -79,6 +81,7 @@ public class ExecutableWorldLoginRequest extends WorldExecutableMessage
 			loginResponse.setArgument("loginTime", getClientHandler().getLoggedInTime());
 			loginResponse.setArgument("xCoordinate", 0d);
 			loginResponse.setArgument("yCoordinate", 0d);
+			loginResponse.setArgument("zoneNumber", -1);
 		}
 
 

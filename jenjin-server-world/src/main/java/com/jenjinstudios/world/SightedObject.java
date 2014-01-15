@@ -49,7 +49,7 @@ public class SightedObject extends WorldObject
 		visibleLocations.clear();
 		if (getLocation() != null)
 		{
-			visibleLocations.addAll(getWorld().getLocationArea(getLocation(), VIEW_RADIUS));
+			visibleLocations.addAll(getWorld().getLocationArea(getZoneID(), getVector2D(), VIEW_RADIUS));
 		}
 	}
 

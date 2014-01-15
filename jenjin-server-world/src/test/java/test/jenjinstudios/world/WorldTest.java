@@ -21,13 +21,13 @@ public class WorldTest
 	@Test
 	public void testGetLocationArea() throws Exception {
 		World testWorld = new World();
-		ArrayList<Location> testGrid = testWorld.getLocationArea(testWorld.getLocationForCoordinates(new Vector2D(0, 0)), 3);
+		ArrayList<Location> testGrid = testWorld.getLocationArea(0, new Vector2D(0, 0), 3);
 		Assert.assertEquals(9, testGrid.size());
 
-		testGrid = testWorld.getLocationArea(testWorld.getLocationForCoordinates(new Vector2D(50, 50)), 3);
+		testGrid = testWorld.getLocationArea(0, new Vector2D(50, 50), 3);
 		Assert.assertEquals(25, testGrid.size());
 
-		testGrid = testWorld.getLocationArea(testWorld.getLocationForCoordinates(new Vector2D(50, 50)), 4);
+		testGrid = testWorld.getLocationArea(0, new Vector2D(50, 50), 4);
 		Assert.assertEquals(49, testGrid.size());
 	}
 }
