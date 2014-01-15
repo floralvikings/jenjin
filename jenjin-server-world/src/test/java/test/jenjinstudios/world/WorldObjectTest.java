@@ -76,7 +76,7 @@ public class WorldObjectTest
 	@Test
 	public void testGetLocation() throws Exception {
 		worldObject.setVector2D(vector2D);
-		Assert.assertTrue(worldObject.getLocation() == world.getLocationForCoordinates(vector2D));
+		Assert.assertTrue(worldObject.getLocation() == world.getLocationForCoordinates(0, vector2D));
 	}
 
 	/**

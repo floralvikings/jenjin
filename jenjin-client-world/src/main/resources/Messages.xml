@@ -67,6 +67,7 @@
         <argument type="long" name="loginTime" />
         <argument type="double" name="xCoordinate" />
         <argument type="double" name="yCoordinate" />
+        <argument type="int" name="zoneNumber" />
         <executable language="java" side="client">com.jenjinstudios.world.message.ExecutableWorldLoginResponse</executable>
     </message>
 

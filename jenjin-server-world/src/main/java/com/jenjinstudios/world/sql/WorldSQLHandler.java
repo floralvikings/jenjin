@@ -1,9 +1,9 @@
 package com.jenjinstudios.world.sql;
 
-import com.jenjinstudios.world.math.Vector2D;
 import com.jenjinstudios.sql.SQLHandler;
 import com.jenjinstudios.util.Hash;
 import com.jenjinstudios.world.Actor;
+import com.jenjinstudios.world.math.Vector2D;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -21,6 +21,8 @@ public class WorldSQLHandler extends SQLHandler
 	public static final String X_COORD = "xCoord";
 	/** The column name of the Y coordinate. */
 	public static final String Y_COORD = "yCoord";
+	/** The column name of the zone ID. */
+	public static final String ZONE_ID = "zoneID";
 	/** The Logger used for this class. */
 	private static final Logger LOGGER = Logger.getLogger(WorldSQLHandler.class.getName());
 
@@ -59,6 +61,7 @@ public class WorldSQLHandler extends SQLHandler
 			// Determine if the correct password was supplied.
 			boolean passwordCorrect = hashedPassword != null && hashedPassword.equalsIgnoreCase(results.getString("password"));
 			Vector2D coordinates = new Vector2D(results.getDouble(X_COORD), results.getDouble(Y_COORD));
+			int zoneID = results.getInt(ZONE_ID);
 			// Any SQL stuff has to come before this line.
 			results.getStatement().close();
 			// If the password's bad, login fail.
@@ -68,6 +71,8 @@ public class WorldSQLHandler extends SQLHandler
 			updateLoggedinColumn(username, true);
 			player = new Actor(username);
 			player.setVector2D(coordinates);
+			player.setZoneID(zoneID);
+
 		} catch (SQLException | IndexOutOfBoundsException e)
 		{
 			LOGGER.log(Level.FINE, "Failed to log in user: " + username, e);

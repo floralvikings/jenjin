@@ -102,7 +102,7 @@ public class Actor extends SightedObject
 	public boolean stepForward() {
 		if (currentMoveState.relativeAngle == IDLE) { return true; }
 		Vector2D newVector = getVector2D().getVectorInDirection(STEP_LENGTH, currentMoveState.stepAngle);
-		if (getWorld().isValidLocation(newVector))
+		if (getWorld().isValidLocation(getZoneID(), newVector))
 		{
 			setVector2D(newVector);
 			return true;
@@ -121,7 +121,7 @@ public class Actor extends SightedObject
 		double stepAmount = STEP_LENGTH * overstepped;
 		Vector2D backVector = getVector2D().getVectorInDirection(stepAmount, currentMoveState.stepAngle - Math.PI);
 		Vector2D newVector = backVector.getVectorInDirection(stepAmount, nextState.stepAngle);
-		boolean success = getWorld().isValidLocation(newVector);
+		boolean success = getWorld().isValidLocation(getZoneID(), newVector);
 		resetState();
 		if (success)
 		{
@@ -208,7 +208,7 @@ public class Actor extends SightedObject
 		while (!isValid && stepsToTake < MAX_CORRECT)
 		{
 			current = getVector2D().getVectorInDirection(STEP_LENGTH * stepsToTake, stepAngle);
-			isValid = getWorld().isValidLocation(current);
+			isValid = getWorld().isValidLocation(getZoneID(), current);
 			if (!isValid) { stepsToTake++; }
 		}
 		setVector2D(current);
