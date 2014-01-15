@@ -238,6 +238,8 @@ public class WorldServerTest
 		}
 		idleClientPlayer(15);
 		double distance = clientPlayer.getVector2D().getDistanceToVector(serverPlayer.getVector2D());
+		if(distance > .001) { Thread.sleep(100); }
+		distance = clientPlayer.getVector2D().getDistanceToVector(serverPlayer.getVector2D());
 		Assert.assertEquals(distance, 0, .001);
 	}
 }
