@@ -4,6 +4,7 @@ import com.jenjinstudios.world.math.Vector2D;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 
 /**
  * The {@code Zone} class represents a grid of {@code Location} objects within the {@code World}.  Zones cannot be
@@ -29,11 +30,32 @@ public class Zone
 	 */
 	public Zone(int id, int xSize, int ySize)
 	{
+		this(id, xSize, ySize, null);
+	}
+
+	/**
+	 * Construct a new zone with the given ID and size.
+	 * @param id The id number of the zone.
+	 * @param xSize The x length of the zone.
+	 * @param ySize The y length of zone.
+	 * @param specialLocations Any special locations that should be set on zone creation.
+	 */
+	public Zone(int id, int xSize, int ySize, Collection<Location> specialLocations)
+	{
 		this.id = id;
 		this.xSize = xSize;
 		this.ySize = ySize;
 
 		locationGrid = new Location[xSize][ySize];
+
+		if(specialLocations != null)
+		{
+			for(Location l : specialLocations)
+			{
+				locationGrid[l.X_COORDINATE][l.Y_COORDINATE] = l;
+			}
+		}
+
 		initLocations();
 	}
 
