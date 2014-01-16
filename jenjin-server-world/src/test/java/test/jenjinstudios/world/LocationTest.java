@@ -10,20 +10,6 @@ import org.junit.Test;
  */
 public class LocationTest
 {
-	/**
-	 * Test the Get and Set methods for Location.Property
-	 * @throws Exception If there is an exception.
-	 */
-	@Test
-	public void testProperty() throws Exception {
-		Location loc = new Location(0, 1);
-		Assert.assertTrue(loc.getProperty() == Location.Property.OPEN);
-		loc.setProperty(Location.Property.CLOSED);
-		Assert.assertTrue(loc.getProperty() == Location.Property.CLOSED);
-		loc.setProperty(Location.Property.OPEN);
-		Assert.assertTrue(loc.getProperty() == Location.Property.OPEN);
-	}
-
 	/** Test the coordinate values. */
 	@Test
 	public void testCoordinates() {

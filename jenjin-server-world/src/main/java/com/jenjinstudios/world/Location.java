@@ -1,5 +1,7 @@
 package com.jenjinstudios.world;
 
+import com.sun.javafx.collections.UnmodifiableListSet;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 
@@ -18,17 +20,28 @@ public class Location
 	/** The objects residing in this location. */
 	private final HashSet<WorldObject> objects;
 	/** The property of this location. */
-	private Property property;
+	private final Property property;
 
 	/**
 	 * Construct a new location at the given position in a zone grid.
 	 * @param x The x coordinate of the zone grid.
-	 * @param z The z coordinate of the zone grid.
+	 * @param y The y coordinate of the zone grid.
 	 */
-	public Location(int x, int z) {
+	public Location(int x, int y) {
+		this(x, y, Property.OPEN);
+	}
+
+	/**
+	 * Construct a location with the given position and property.
+	 * @param x The x coordinate.
+	 * @param y The y coordinate.
+	 * @param property The property.
+	 */
+	public Location(int x, int y, Property property)
+	{
 		X_COORDINATE = x;
-		Y_COORDINATE = z;
-		property = Property.OPEN;
+		Y_COORDINATE = y;
+		this.property = property;
 		objects = new HashSet<>();
 	}
 
@@ -41,19 +54,11 @@ public class Location
 	}
 
 	/**
-	 * Set the property of this location.
-	 * @param property The new property.
-	 */
-	public void setProperty(Property property) {
-		this.property = property;
-	}
-
-	/**
 	 * Get the objects residing in this location, as an array.
 	 * @return An array containing all objects residing in this location.
 	 */
-	public ArrayList<WorldObject> getObjects() {
-		return new ArrayList<>(objects);
+	public UnmodifiableListSet<WorldObject> getObjects() {
+		return new UnmodifiableListSet<>(new ArrayList<>(objects));
 	}
 
 	/**
