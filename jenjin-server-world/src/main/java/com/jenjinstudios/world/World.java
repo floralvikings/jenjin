@@ -13,7 +13,7 @@ public class World
 	/** The size of the world's location grid. */
 	public final int DEFAULT_SIZE = 50;
 	/** The list of in-world Zones. */
-	private final ArrayList<Zone> zones;
+	private final Zone[] zones;
 	/** The GameObjects contained in the world. */
 	private final ArrayList<WorldObject> worldObjects;
 	/** The number of objects currently in the world. */
@@ -21,8 +21,17 @@ public class World
 
 	/** Construct a new World. */
 	public World() {
-		zones = new ArrayList<>();
-		zones.add(new Zone(zones.size(), DEFAULT_SIZE, DEFAULT_SIZE));
+		zones = new Zone[1];
+		zones[0] = new Zone(0, DEFAULT_SIZE, DEFAULT_SIZE);
+		worldObjects = new ArrayList<>();
+	}
+
+	/**
+	 * Construct a new world with the specified Zone array.
+	 * @param zones The zones used to create the world.
+	 */
+	public World(Zone[] zones) {
+		this.zones = zones;
 		worldObjects = new ArrayList<>();
 	}
 
@@ -66,7 +75,7 @@ public class World
 	public Location getLocationForCoordinates(int zoneID, Vector2D vector2D) {
 		if (!isValidLocation(zoneID, vector2D))
 			return null;
-		return zones.get(zoneID).getLocation(vector2D);
+		return zones[zoneID].getLocation(vector2D);
 	}
 
 	/**
@@ -76,7 +85,7 @@ public class World
 	 * @return Whether the vector lies within a valid location.
 	 */
 	public boolean isValidLocation(int zoneID, Vector2D vector2D) {
-		Zone zone = zones.get(zoneID);
+		Zone zone = zones[zoneID];
 		return !(zone != null && zone.isValidLocation(vector2D));
 	}
 
@@ -98,7 +107,7 @@ public class World
 	 * @return An ArrayList containing all valid locations in the specified area.
 	 */
 	public ArrayList<Location> getLocationArea(int zoneID, Vector2D center, int radius) {
-		Zone z = zones.get(zoneID);
+		Zone z = zones[zoneID];
 		if (z == null) { return null; }
 		return z.getLocationArea(center, radius);
 	}

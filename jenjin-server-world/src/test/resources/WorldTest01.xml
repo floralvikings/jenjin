@@ -1,0 +1,5 @@
+<world>
+    <zone id="0" xSize="50" ySize="50">
+        <location x="0" y="0" open="false" />
+    </zone>
+</world>

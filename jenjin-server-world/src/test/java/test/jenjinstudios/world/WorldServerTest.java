@@ -155,7 +155,8 @@ public class WorldServerTest
 			double randomY = Round.round(Math.random() * maxCoord, 4);
 			Vector2D random = new Vector2D(randomX, randomY);
 			moveClientPlayerTowardVector(random);
-			Assert.assertEquals("Movement number " + i + " to " + random, clientPlayer.getVector2D(), serverPlayer.getVector2D());
+			double distance = clientPlayer.getVector2D().getDistanceToVector(serverPlayer.getVector2D());
+			Assert.assertEquals("Movement number " + i + " to " + random, 0, distance, .001);
 		}
 	}
 

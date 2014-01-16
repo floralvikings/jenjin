@@ -4,13 +4,12 @@ import com.jenjinstudios.world.math.Vector2D;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 
 /**
  * The {@code Zone} class represents a grid of {@code Location} objects within the {@code World}.  Zones cannot be
  * accessed from other Zones.  Suuport for this feature is planned in a future release.
  * @author Caleb Brinkman
- * */
+ */
 public class Zone
 {
 	/** The number assigned to this Zone by the world on initialization. */
@@ -28,8 +27,7 @@ public class Zone
 	 * @param xSize The x length of the zone.
 	 * @param ySize The y length of zone.
 	 */
-	public Zone(int id, int xSize, int ySize)
-	{
+	public Zone(int id, int xSize, int ySize) {
 		this(id, xSize, ySize, null);
 	}
 
@@ -40,23 +38,21 @@ public class Zone
 	 * @param ySize The y length of zone.
 	 * @param specialLocations Any special locations that should be set on zone creation.
 	 */
-	public Zone(int id, int xSize, int ySize, Collection<Location> specialLocations)
-	{
+	public Zone(int id, int xSize, int ySize, Location[] specialLocations) {
 		this.id = id;
 		this.xSize = xSize;
 		this.ySize = ySize;
 
 		locationGrid = new Location[xSize][ySize];
+		initLocations();
 
-		if(specialLocations != null)
+		if (specialLocations != null)
 		{
-			for(Location l : specialLocations)
+			for (Location l : specialLocations)
 			{
 				locationGrid[l.X_COORDINATE][l.Y_COORDINATE] = l;
 			}
 		}
-
-		initLocations();
 	}
 
 	/**
@@ -71,17 +67,7 @@ public class Zone
 	}
 
 	/**
-	 * Initialize the locations in the zone.
-	 */
-	private void initLocations() {
-		for (int x = 0; x < xSize; x++)
-			for (int y = 0; y < ySize; y++)
-				locationGrid[x][y] = new Location(x, y);
-	}
-
-	/**
 	 * Get an area of location objects.
-	 *
 	 * @param centerCoords The center of the area to return.
 	 * @param radius The radius of the area.
 	 * @return An ArrayList containing all valid locations in the specified area.
@@ -117,8 +103,14 @@ public class Zone
 	 * @param y The y coordinate.
 	 * @return The location at the specified coordinates.
 	 */
-	public Location getLocation(double x, double y)
-	{
+	public Location getLocation(double x, double y) {
 		return locationGrid[(int) x / Location.SIZE][(int) y / Location.SIZE];
+	}
+
+	/** Initialize the locations in the zone. */
+	private void initLocations() {
+		for (int x = 0; x < xSize; x++)
+			for (int y = 0; y < ySize; y++)
+				locationGrid[x][y] = new Location(x, y);
 	}
 }
