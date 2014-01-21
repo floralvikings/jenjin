@@ -1,6 +1,7 @@
 package com.jenjinstudios.world.io;
 
 import com.jenjinstudios.world.Location;
+import com.jenjinstudios.world.LocationProperties;
 import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.Zone;
 import org.w3c.dom.*;
@@ -99,17 +100,15 @@ public class WorldFileReader
 		{
 			Node currentLocationNode = locationNodes.item(i);
 			NamedNodeMap attributes = currentLocationNode.getAttributes();
-			Location currentLocation;
-			boolean open = true;
+			boolean open = LocationProperties.DEFAULT_WALKABLE;
 			int x = Integer.parseInt(attributes.getNamedItem("x").getTextContent());
 			int y = Integer.parseInt(attributes.getNamedItem("y").getTextContent());
 			if (attributes.getNamedItem("open") != null)
 			{
 				open = Boolean.parseBoolean(attributes.getNamedItem("open").getTextContent());
 			}
-			Location.Property openProperty = open ? Location.Property.OPEN : Location.Property.CLOSED;
-			currentLocation = new Location(x, y, openProperty);
-			locations[i] = currentLocation;
+			LocationProperties locationProperties = new LocationProperties(open);
+			locations[i] = new Location(x, y, locationProperties);
 		}
 		return locations;
 	}

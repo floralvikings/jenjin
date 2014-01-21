@@ -19,8 +19,8 @@ public class Location
 	public final int Y_COORDINATE;
 	/** The objects residing in this location. */
 	private final HashSet<WorldObject> objects;
-	/** The property of this location. */
-	private final Property property;
+	/** The locationProperties of this location. */
+	private final LocationProperties locationProperties;
 
 	/**
 	 * Construct a new location at the given position in a zone grid.
@@ -28,29 +28,29 @@ public class Location
 	 * @param y The y coordinate of the zone grid.
 	 */
 	public Location(int x, int y) {
-		this(x, y, Property.OPEN);
+		this(x, y, new LocationProperties());
 	}
 
 	/**
-	 * Construct a location with the given position and property.
+	 * Construct a location with the given position and locationProperties.
 	 * @param x The x coordinate.
 	 * @param y The y coordinate.
-	 * @param property The property.
+	 * @param locationProperties1 The locationProperties.
 	 */
-	public Location(int x, int y, Property property)
+	public Location(int x, int y, LocationProperties locationProperties1)
 	{
 		X_COORDINATE = x;
 		Y_COORDINATE = y;
-		this.property = property;
+		this.locationProperties = locationProperties1;
 		objects = new HashSet<>();
 	}
 
 	/**
-	 * Get the property of this location.
-	 * @return The property of this location.
+	 * Get the locationProperties of this location.
+	 * @return The locationProperties of this location.
 	 */
-	public Property getProperty() {
-		return property;
+	public LocationProperties getLocationProperties() {
+		return locationProperties;
 	}
 
 	/**
@@ -82,12 +82,4 @@ public class Location
 		return "(" + X_COORDINATE + ", " + Y_COORDINATE + ")";
 	}
 
-	/** Specifies a property of a location. */
-	public enum Property
-	{
-		/** Specifies that the location is open, and can be entered by objects. */
-		OPEN,
-		/** Specifies that the location is closed, and cannot be entered by objects. */
-		CLOSED
-	}
 }

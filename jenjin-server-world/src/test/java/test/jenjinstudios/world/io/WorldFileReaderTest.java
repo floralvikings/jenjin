@@ -1,6 +1,5 @@
 package test.jenjinstudios.world.io;
 
-import com.jenjinstudios.world.Location;
 import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.io.WorldFileReader;
 import com.jenjinstudios.world.math.Vector2D;
@@ -23,6 +22,6 @@ public class WorldFileReaderTest
 		InputStream resourceAsStream = getClass().getResourceAsStream("/WorldTest01.xml");
 		WorldFileReader testReader = new WorldFileReader(resourceAsStream);
 		World world = testReader.read();
-		Assert.assertEquals(Location.Property.CLOSED, world.getLocationForCoordinates(0, new Vector2D(0, 0)).getProperty());
+		Assert.assertEquals(false, world.getLocationForCoordinates(0, new Vector2D(0, 0)).getLocationProperties().isWalkable);
 	}
 }
