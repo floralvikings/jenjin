@@ -1,8 +1,8 @@
 package com.jenjinstudios.world;
 
-import com.sun.javafx.collections.UnmodifiableListSet;
-
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 
 /**
@@ -57,8 +57,8 @@ public class Location
 	 * Get the objects residing in this location, as an array.
 	 * @return An array containing all objects residing in this location.
 	 */
-	public UnmodifiableListSet<WorldObject> getObjects() {
-		return new UnmodifiableListSet<>(new ArrayList<>(objects));
+	public Collection<WorldObject> getObjects() {
+		return Collections.unmodifiableCollection(new ArrayList<>(objects));
 	}
 
 	/**

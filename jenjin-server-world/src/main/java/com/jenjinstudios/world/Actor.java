@@ -102,7 +102,10 @@ public class Actor extends SightedObject
 	public boolean stepForward() {
 		if (currentMoveState.relativeAngle == IDLE) { return true; }
 		Vector2D newVector = getVector2D().getVectorInDirection(STEP_LENGTH, currentMoveState.stepAngle);
-		if (getWorld().isValidLocation(getZoneID(), newVector))
+		Location newLocation = getWorld().getLocationForCoordinates(getZoneID(), newVector);
+		if(newLocation == null) { return false; }
+		boolean walkable = newLocation.getLocationProperties().isWalkable;
+		if (walkable)
 		{
 			setVector2D(newVector);
 			return true;
