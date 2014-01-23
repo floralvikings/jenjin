@@ -3,11 +3,9 @@ package com.jenjinstudios.world;
 import com.jenjinstudios.io.Message;
 import com.jenjinstudios.net.AuthClient;
 import com.jenjinstudios.world.state.MoveState;
+import com.jenjinstudios.world.util.ClientMessageGenerator;
 
 import java.security.NoSuchAlgorithmException;
-import java.util.LinkedList;
-import java.util.Set;
-import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -22,8 +20,6 @@ public class WorldClient extends AuthClient
 	private static final Logger LOGGER = Logger.getLogger(WorldClient.class.getName());
 	/** The number of milliseconds before a blocking method should time out. */
 	public static long TIMEOUT_MILLIS = 30000;
-	/** Actors other than the player. */
-	private final TreeMap<Integer, ClientObject> visibleObjects;
 	/** The password used to login to the world. */
 	private final String password;
 	/** The actor representing the player controlled by this client. */
@@ -40,51 +36,10 @@ public class WorldClient extends AuthClient
 	 */
 	public WorldClient(String address, int port, String username, String password) throws NoSuchAlgorithmException {
 		super(address, port, username, password);
-		visibleObjects = new TreeMap<>();
+
 		this.password = password;
 		// Create the update loop and add it to the task list.
 		/* The loop used to update non-player objects. */
-		addRepeatedTask(new Runnable()
-		{
-			@Override
-			public void run() {
-				Set<Integer> keys = visibleObjects.keySet();
-				for (int i : keys)
-				{
-					ClientObject currentObject = visibleObjects.get(i);
-					currentObject.update();
-				}
-				if (player != null)
-				{
-					player.update();
-					LinkedList<MoveState> newStates = player.getSavedStates();
-					while (!newStates.isEmpty())
-						sendStateChangeRequest(newStates.remove());
-				}
-			}
-		});
-	}
-
-	/**
-	 * Send a state change request to the server.
-	 * @param moveState The move state used to generate the request.
-	 */
-	private void sendStateChangeRequest(MoveState moveState) {
-		Message stateChangeRequest = generateStateChangeRequest(moveState);
-		queueMessage(stateChangeRequest);
-	}
-
-	/**
-	 * Generate a state change request for the given move state.
-	 * @param moveState The state used to generate a state change request.
-	 * @return The generated message.
-	 */
-	private Message generateStateChangeRequest(MoveState moveState) {
-		Message stateChangeRequest = new Message("StateChangeRequest");
-		stateChangeRequest.setArgument("relativeAngle", moveState.relativeAngle);
-		stateChangeRequest.setArgument("absoluteAngle", moveState.absoluteAngle);
-		stateChangeRequest.setArgument("stepsUntilChange", moveState.stepsUntilChange);
-		return stateChangeRequest;
 	}
 
 	@Override
@@ -104,58 +59,6 @@ public class WorldClient extends AuthClient
 			timepast = System.currentTimeMillis() - startTime;
 		}
 		return isLoggedIn();
-	}
-
-	/** Send a LoginRequest to the server. */
-	private void sendLoginRequest() {
-		Message loginRequest = generateLoginRequest();
-
-		setWaitingForLoginResponse(true);
-		queueMessage(loginRequest);
-	}
-
-	/**
-	 * Generate a LoginRequest message.
-	 * @return The LoginRequest message.
-	 */
-	private Message generateLoginRequest() {
-		Message loginRequest = new Message("WorldLoginRequest");
-		loginRequest.setArgument("username", getUsername());
-		loginRequest.setArgument("password", password);
-		return loginRequest;
-	}
-
-	@Override
-	protected void sendLogoutRequest() {
-		Message logoutRequest = new Message("WorldLogoutRequest");
-
-		// Send the request, continue when response is received.
-		setWaitingForLogoutResponse(true);
-		queueMessage(logoutRequest);
-	}
-
-	/**
-	 * Add an object to the list of visible objects.  This method should be called synchronously.
-	 * @param object The object to add to the visible objects list.
-	 */
-	public void addNewVisible(ClientObject object) {
-		visibleObjects.put(object.getId(), object);
-	}
-
-	/**
-	 * Remove an object from the player's view.
-	 * @param id the id of the object to remove.
-	 */
-	public void removeVisible(int id) {
-		visibleObjects.remove(id);
-	}
-
-	/**
-	 * Get the map of visible objects.
-	 * @return The map of visible objects.
-	 */
-	public TreeMap<Integer, ClientObject> getVisibleObjects() {
-		return visibleObjects;
 	}
 
 	/**
@@ -182,6 +85,32 @@ public class WorldClient extends AuthClient
 	 * @return The object with the given ID.
 	 */
 	public ClientObject getObject(int id) {
-		return visibleObjects.get(id);
+		return player.getVisibleObjects().get(id);
+	}
+
+	/** Send a LoginRequest to the server. */
+	private void sendLoginRequest() {
+		Message loginRequest = ClientMessageGenerator.generateLoginRequest(getUsername(), password);
+
+		setWaitingForLoginResponse(true);
+		queueMessage(loginRequest);
+	}
+
+	/**
+	 * Send a state change request to the server.
+	 * @param moveState The move state used to generate the request.
+	 */
+	protected void sendStateChangeRequest(MoveState moveState) {
+		Message stateChangeRequest = ClientMessageGenerator.generateStateChangeRequest(moveState);
+		queueMessage(stateChangeRequest);
+	}
+
+	@Override
+	protected void sendLogoutRequest() {
+		Message logoutRequest = new Message("WorldLogoutRequest");
+
+		// Send the request, continue when response is received.
+		setWaitingForLogoutResponse(true);
+		queueMessage(logoutRequest);
 	}
 }

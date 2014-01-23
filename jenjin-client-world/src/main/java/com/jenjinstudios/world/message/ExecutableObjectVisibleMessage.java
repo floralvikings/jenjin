@@ -24,7 +24,7 @@ public class ExecutableObjectVisibleMessage extends WorldClientExecutableMessage
 
 	@Override
 	public void runSynced() {
-		getClient().addNewVisible(newlyVisible);
+		getClient().getPlayer().addNewVisible(newlyVisible);
 	}
 
 	@Override

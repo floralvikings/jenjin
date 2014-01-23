@@ -23,7 +23,7 @@ public class ExecutableObjectInvisibleMessage extends WorldClientExecutableMessa
 
 	@Override
 	public void runSynced() {
-		getClient().removeVisible(id);
+		getClient().getPlayer().removeVisible(id);
 	}
 
 	@Override

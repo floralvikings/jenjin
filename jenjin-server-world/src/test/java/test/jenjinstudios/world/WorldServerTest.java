@@ -71,23 +71,23 @@ public class WorldServerTest
 
 		WorldTestUtils.moveServerActorToVector(serverActor, serverActorTargetPosition);
 
-		ClientObject clientActor = worldClient.getVisibleObjects().get(serverActor.getId());
+		ClientObject clientActor = worldClient.getPlayer().getVisibleObjects().get(serverActor.getId());
 		Assert.assertNotNull(clientActor);
-		Assert.assertEquals(1, worldClient.getVisibleObjects().size());
+		Assert.assertEquals(1, worldClient.getPlayer().getVisibleObjects().size());
 		Thread.sleep(50);
 		Assert.assertEquals(serverActor.getVector2D(), clientActor.getVector2D());
 
 		WorldTestUtils.moveServerActorToVector(serverActor, serverActorStartPosition);
-		Assert.assertEquals(0, worldClient.getVisibleObjects().size());
+		Assert.assertEquals(0, worldClient.getPlayer().getVisibleObjects().size());
 
 
 		WorldTestUtils.moveClientPlayerTowardVector(new Vector2D(0, 11), clientPlayer, serverPlayer);
-		Assert.assertEquals(1, worldClient.getVisibleObjects().size());
-		clientActor = worldClient.getVisibleObjects().get(serverActor.getId());
+		Assert.assertEquals(1, worldClient.getPlayer().getVisibleObjects().size());
+		clientActor = worldClient.getPlayer().getVisibleObjects().get(serverActor.getId());
 		Assert.assertEquals(serverActor.getVector2D(), clientActor.getVector2D());
 
 		WorldTestUtils.moveClientPlayerTowardVector(Vector2D.ORIGIN, clientPlayer, serverPlayer);
-		Assert.assertEquals(0, worldClient.getVisibleObjects().size());
+		Assert.assertEquals(0, worldClient.getPlayer().getVisibleObjects().size());
 	}
 
 	/**

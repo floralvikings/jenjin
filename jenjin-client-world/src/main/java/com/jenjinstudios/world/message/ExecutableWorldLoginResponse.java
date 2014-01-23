@@ -3,6 +3,7 @@ package com.jenjinstudios.world.message;
 import com.jenjinstudios.io.Message;
 import com.jenjinstudios.world.ClientPlayer;
 import com.jenjinstudios.world.WorldClient;
+import com.jenjinstudios.world.WorldUpdater;
 
 /**
  * Handles login responses from the server.
@@ -34,6 +35,8 @@ public class ExecutableWorldLoginResponse extends WorldClientExecutableMessage
 		client.setLoggedInTime((long) getMessage().getArgument("loginTime"));
 		client.setName(client.getUsername());
 		client.setPlayer(player);
+
+		client.addRepeatedTask(new WorldUpdater(client));
 	}
 
 	@Override

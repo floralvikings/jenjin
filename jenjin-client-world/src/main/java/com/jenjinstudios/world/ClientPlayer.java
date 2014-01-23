@@ -4,6 +4,7 @@ import com.jenjinstudios.world.math.Vector2D;
 import com.jenjinstudios.world.state.MoveState;
 
 import java.util.LinkedList;
+import java.util.TreeMap;
 
 /**
  * The Client-Side representation of a player.
@@ -13,6 +14,8 @@ public class ClientPlayer extends ClientObject
 {
 	/** The queue of states saved by this player. */
 	private final LinkedList<MoveState> savedStates;
+	/** Actors other than the player. */
+	private final TreeMap<Integer, ClientObject> visibleObjects;
 	/** The player's angle relative to the origin. */
 	private double absoluteAngle;
 	/** The player's angle relative to {@code absoluteAngle}. */
@@ -43,6 +46,7 @@ public class ClientPlayer extends ClientObject
 	 */
 	public ClientPlayer(int id, String name) {
 		super(id, name);
+		visibleObjects = new TreeMap<>();
 		savedStates = new LinkedList<>();
 		setVector2D(0, 0);
 		setRelativeAngle(MoveState.IDLE);
@@ -59,7 +63,10 @@ public class ClientPlayer extends ClientObject
 	 * @param absoluteAngle The new absolute angle of this player.
 	 */
 	private void setAbsoluteAngle(double absoluteAngle) {
-		if (forcedState != null && absoluteAngle == forcedState.absoluteAngle) { return; }
+		if (forcedState != null && absoluteAngle == forcedState.absoluteAngle)
+		{
+			return;
+		}
 		forcedState = null;
 		this.absoluteAngle = absoluteAngle;
 		calculateTrueAngle();
@@ -90,26 +97,15 @@ public class ClientPlayer extends ClientObject
 	 * @param relativeAngle The new relative angle of this player.
 	 */
 	private void setRelativeAngle(double relativeAngle) {
-		if (forcedState != null && relativeAngle == forcedState.relativeAngle) { return; }
+		if (forcedState != null && relativeAngle == forcedState.relativeAngle)
+		{
+			return;
+		}
 		forcedState = null;
 		this.relativeAngle = relativeAngle;
 		isIdle = (relativeAngle == MoveState.IDLE);
 		calculateTrueAngle();
 		saveState();
-	}
-
-	/** Calculate and set the player's "true" movement angle. */
-	private void calculateTrueAngle() {
-		double sAngle = relativeAngle + absoluteAngle;
-		trueAngle = (sAngle < 0) ? (sAngle + MoveState.TWO_PI) : (sAngle % MoveState.TWO_PI);
-	}
-
-	/** Add this players previous state to the queue. */
-	private void saveState() {
-		if (stepsTaken == 0 || isForced) { return; }
-		MoveState toBeSaved = new MoveState(relativeAngle, stepsTaken, absoluteAngle);
-		synchronized (savedStates) { savedStates.add(toBeSaved); }
-		stepsTaken = 0;
 	}
 
 	@Override
@@ -154,27 +150,6 @@ public class ClientPlayer extends ClientObject
 	}
 
 	/**
-	 * Reset the player's state.
-	 * @param position The new position.
-	 * @param relativeAngle The relative angle.
-	 * @param absoluteAngle The absolte angle.
-	 */
-	private void resetState(Vector2D position, double relativeAngle, double absoluteAngle) {
-		setVector2D(position);
-		synchronized (savedStates) { savedStates.clear(); }
-		this.relativeAngle = relativeAngle;
-		this.absoluteAngle = absoluteAngle;
-		stepsTaken = 0;
-		isIdle = relativeAngle == MoveState.IDLE;
-	}
-
-	/** Set the angles if new angles have been added. */
-	private void setAngles() {
-		if (isNewAbsolute) { setAbsoluteAngle(newAbsoluteAngle); }
-		if (isNewRelative) { setRelativeAngle(newRelativeAngle); }
-	}
-
-	/**
 	 * Get the number of steps taken in the current movement state.
 	 * @return The number of steps taken in the current movement state.
 	 */
@@ -186,6 +161,73 @@ public class ClientPlayer extends ClientObject
 	 */
 	public boolean isForcedState() { return isForced; }
 
+	/**
+	 * Add an object to the list of visible objects.  This method should be called synchronously.
+	 * @param object The object to add to the visible objects list.
+	 */
+	public void addNewVisible(ClientObject object) { visibleObjects.put(object.getId(), object); }
+
+	/**
+	 * Remove an object from the player's view.
+	 * @param id the id of the object to remove.
+	 */
+	public void removeVisible(int id) { visibleObjects.remove(id); }
+
+	/**
+	 * Get the map of visible objects.
+	 * @return The map of visible objects.
+	 */
+	public TreeMap<Integer, ClientObject> getVisibleObjects() { return visibleObjects; }
+
+	/** Calculate and set the player's "true" movement angle. */
+	private void calculateTrueAngle() {
+		double sAngle = relativeAngle + absoluteAngle;
+		trueAngle = (sAngle < 0) ? (sAngle + MoveState.TWO_PI) : (sAngle % MoveState.TWO_PI);
+	}
+
+	/** Add this players previous state to the queue. */
+	private void saveState() {
+		if (stepsTaken == 0 || isForced)
+		{
+			return;
+		}
+		MoveState toBeSaved = new MoveState(relativeAngle, stepsTaken, absoluteAngle);
+		synchronized (savedStates)
+		{
+			savedStates.add(toBeSaved);
+		}
+		stepsTaken = 0;
+	}
+
+	/**
+	 * Reset the player's state.
+	 * @param position The new position.
+	 * @param relativeAngle The relative angle.
+	 * @param absoluteAngle The absolte angle.
+	 */
+	private void resetState(Vector2D position, double relativeAngle, double absoluteAngle) {
+		setVector2D(position);
+		synchronized (savedStates)
+		{
+			savedStates.clear();
+		}
+		this.relativeAngle = relativeAngle;
+		this.absoluteAngle = absoluteAngle;
+		stepsTaken = 0;
+		isIdle = relativeAngle == MoveState.IDLE;
+	}
+
+	/** Set the angles if new angles have been added. */
+	private void setAngles() {
+		if (isNewAbsolute)
+		{
+			setAbsoluteAngle(newAbsoluteAngle);
+		}
+		if (isNewRelative)
+		{
+			setRelativeAngle(newRelativeAngle);
+		}
+	}
 
 	/** Reset the flags associated with this player. */
 	private void resetFlags() {
@@ -194,10 +236,12 @@ public class ClientPlayer extends ClientObject
 		isNewRelative = false;
 	}
 
-
 	/** Move one step forward. */
 	private void step() {
 		stepsTaken++;
-		if (!isIdle) { setVector2D(getVector2D().getVectorInDirection(ClientActor.STEP_LENGTH, trueAngle)); }
+		if (!isIdle)
+		{
+			setVector2D(getVector2D().getVectorInDirection(ClientActor.STEP_LENGTH, trueAngle));
+		}
 	}
 }

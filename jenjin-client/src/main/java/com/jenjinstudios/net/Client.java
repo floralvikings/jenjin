@@ -65,7 +65,7 @@ public class Client extends Connection
 	 * Add a task to the repeated queue of this client.  Should be called to extend client functionality.
 	 * @param r The task to be performed.
 	 */
-	protected void addRepeatedTask(Runnable r) {
+	public void addRepeatedTask(Runnable r) {
 		synchronized (repeatedSyncedTasks)
 		{
 			repeatedSyncedTasks.add(r);
