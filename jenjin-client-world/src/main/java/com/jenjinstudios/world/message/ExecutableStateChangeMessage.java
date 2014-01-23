@@ -28,7 +28,7 @@ public class ExecutableStateChangeMessage extends WorldClientExecutableMessage
 
 	@Override
 	public void runSynced() {
-		ClientObject obj = getClient().getObject(actorID);
+		ClientObject obj = getClient().getPlayer().getVisibleObjects().get(actorID);
 		if (obj != null && obj instanceof ClientActor)
 		{
 			ClientActor actor = (ClientActor) obj;

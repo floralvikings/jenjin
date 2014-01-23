@@ -38,8 +38,6 @@ public class WorldClient extends AuthClient
 		super(address, port, username, password);
 
 		this.password = password;
-		// Create the update loop and add it to the task list.
-		/* The loop used to update non-player objects. */
 	}
 
 	@Override
@@ -65,9 +63,7 @@ public class WorldClient extends AuthClient
 	 * Get the player associated with this client.
 	 * @return The player (ClientActor) associated with this client.
 	 */
-	public ClientPlayer getPlayer() {
-		return player;
-	}
+	public ClientPlayer getPlayer() { return player; }
 
 	/**
 	 * Set the player being controlled by this client.
@@ -79,19 +75,9 @@ public class WorldClient extends AuthClient
 		this.player = player;
 	}
 
-	/**
-	 * Get the ClientObject with the given ID.
-	 * @param id The ID of the object to retrieve.
-	 * @return The object with the given ID.
-	 */
-	public ClientObject getObject(int id) {
-		return player.getVisibleObjects().get(id);
-	}
-
 	/** Send a LoginRequest to the server. */
 	private void sendLoginRequest() {
 		Message loginRequest = ClientMessageGenerator.generateLoginRequest(getUsername(), password);
-
 		setWaitingForLoginResponse(true);
 		queueMessage(loginRequest);
 	}
