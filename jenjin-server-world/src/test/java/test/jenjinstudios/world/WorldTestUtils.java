@@ -60,7 +60,7 @@ public class WorldTestUtils
 		idleClientPlayer(1, clientPlayer);
 		double newAngle = clientPlayer.getVector2D().getAngleToVector(newVector);
 		clientPlayer.setNewRelativeAngle(newAngle);
-		while (clientPlayer.getVector2D().getDistanceToVector(newVector) > Actor.STEP_LENGTH)
+		while (clientPlayer.getVector2D().getDistanceToVector(newVector) >= Actor.STEP_LENGTH)
 		{
 			if (clientPlayer.isForcedState()) { break; }
 			Thread.sleep(10);

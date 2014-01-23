@@ -112,6 +112,6 @@ public class Vector2D
 	public double getDistanceToVector(Vector2D vector2D) {
 		double xSquare = Math.pow(vector2D.getXCoordinate() - xCoordinate, 2);
 		double ySquare = Math.pow(vector2D.getYCoordinate() - yCoordinate, 2);
-		return Math.sqrt(xSquare + ySquare);
+		return Round.round(Math.sqrt(xSquare + ySquare), 4);
 	}
 }

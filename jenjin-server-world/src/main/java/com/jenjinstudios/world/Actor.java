@@ -124,7 +124,8 @@ public class Actor extends SightedObject
 		double stepAmount = STEP_LENGTH * overstepped;
 		Vector2D backVector = getVector2D().getVectorInDirection(stepAmount, currentMoveState.stepAngle - Math.PI);
 		Vector2D newVector = backVector.getVectorInDirection(stepAmount, nextState.stepAngle);
-		boolean success = getWorld().isValidLocation(getZoneID(), newVector);
+		Location newLocation = getWorld().getLocationForCoordinates(getZoneID(), newVector);
+		boolean success = newLocation != null && newLocation.getLocationProperties().isWalkable;
 		resetState();
 		if (success)
 		{

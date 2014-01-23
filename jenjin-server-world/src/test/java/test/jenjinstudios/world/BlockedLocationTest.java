@@ -68,9 +68,43 @@ public class BlockedLocationTest
 	@Test
 	public void TestAttemptBlockedLocation() throws Exception
 	{
-		WorldTestUtils.moveClientPlayerTowardVector(new Vector2D(0, Location.SIZE * 3), clientPlayer, serverPlayer);
-		Assert.assertEquals(serverPlayer.getVector2D(), clientPlayer.getVector2D());
-		Assert.assertEquals(new Vector2D(0.0, 9.8), serverPlayer.getVector2D());
+		Vector2D vector1 = new Vector2D(35, 0);
+		Vector2D attemptedVector2 = new Vector2D(35, 35);
+		Vector2D actualVector2 = new Vector2D(35, 29.8);
+		Vector2D vector3 = new Vector2D(35, 25);
+		Vector2D vector4 = new Vector2D(25, 25);
+		Vector2D vector5 = new Vector2D(25, 35);
+		Vector2D attemptedVector6 = new Vector2D(35, 35);
+		Vector2D actualVector6 = new Vector2D(29.8, 35);
+		Vector2D attemptedVector7 = new Vector2D(35, 35);
+		Vector2D actualVector7 = new Vector2D(29.8, 35);
+
+		// Move to (35, 0)
+		WorldTestUtils.moveClientPlayerTowardVector(vector1, clientPlayer, serverPlayer);
+		Assert.assertEquals(vector1, clientPlayer.getVector2D());
+
+		// Attempt to move to (35, 35)
+		// This attempt should be forced to stop one step away from
+		WorldTestUtils.moveClientPlayerTowardVector(attemptedVector2, clientPlayer, serverPlayer);
+		Assert.assertEquals(actualVector2, clientPlayer.getVector2D());
+
+		WorldTestUtils.moveClientPlayerTowardVector(vector3, clientPlayer, serverPlayer);
+		Assert.assertEquals(vector3, clientPlayer.getVector2D());
+
+		WorldTestUtils.moveClientPlayerTowardVector(vector4, clientPlayer, serverPlayer);
+		Assert.assertEquals(vector4, clientPlayer.getVector2D());
+
+		WorldTestUtils.moveClientPlayerTowardVector(vector5, clientPlayer, serverPlayer);
+		Assert.assertEquals(vector5, clientPlayer.getVector2D());
+
+		WorldTestUtils.moveClientPlayerTowardVector(vector5, clientPlayer, serverPlayer);
+		Assert.assertEquals(vector5, clientPlayer.getVector2D());
+
+		WorldTestUtils.moveClientPlayerTowardVector(attemptedVector6, clientPlayer, serverPlayer);
+		Assert.assertEquals(actualVector6, clientPlayer.getVector2D());
+
+		WorldTestUtils.moveClientPlayerTowardVector(attemptedVector7, clientPlayer, serverPlayer);
+		Assert.assertEquals(actualVector7, clientPlayer.getVector2D());
 	}
 
 	/**
@@ -78,11 +112,9 @@ public class BlockedLocationTest
 	 * @throws Exception If there's an Exception.
 	 */
 	private void initWorld() throws Exception {
-		InputStream resourceAsStream = getClass().getResourceAsStream("/WorldTest01.xml");
+		InputStream resourceAsStream = getClass().getResourceAsStream("/WorldFile01.xml");
 		WorldFileReader testReader = new WorldFileReader(resourceAsStream);
 		world = testReader.read();
-		Location testLocation = world.getLocationForCoordinates(0, new Vector2D(0, Location.SIZE));
-		Assert.assertEquals(false, testLocation.getLocationProperties().isWalkable);
 	}
 
 	/**
