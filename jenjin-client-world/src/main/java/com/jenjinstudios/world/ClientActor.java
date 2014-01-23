@@ -23,7 +23,7 @@ import static com.jenjinstudios.world.state.MoveState.IDLE;
  * relativeAngle.
  * @author Caleb Brinkman
  */
-public class ClientActor extends ClientObject
+public class ClientActor extends WorldObject
 {
 	/** The length of each step. */
 	public static double STEP_LENGTH = 5;
@@ -42,7 +42,7 @@ public class ClientActor extends ClientObject
 	 * @param name The name.
 	 */
 	public ClientActor(int id, String name) {
-		super(id, name);
+		super(name, id);
 		nextMoveStates = new LinkedList<>();
 		currentMoveState = new MoveState(MoveState.IDLE, 0, 0);
 	}

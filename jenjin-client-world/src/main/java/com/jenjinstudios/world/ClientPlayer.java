@@ -4,18 +4,15 @@ import com.jenjinstudios.world.math.Vector2D;
 import com.jenjinstudios.world.state.MoveState;
 
 import java.util.LinkedList;
-import java.util.TreeMap;
 
 /**
  * The Client-Side representation of a player.
  * @author Caleb Brinkman
  */
-public class ClientPlayer extends ClientObject
+public class ClientPlayer extends SightedObject
 {
 	/** The queue of states saved by this player. */
 	private final LinkedList<MoveState> savedStates;
-	/** Actors other than the player. */
-	private final TreeMap<Integer, ClientObject> visibleObjects;
 	/** The player's angle relative to the origin. */
 	private double absoluteAngle;
 	/** The player's angle relative to {@code absoluteAngle}. */
@@ -45,8 +42,7 @@ public class ClientPlayer extends ClientObject
 	 * @param name The name.
 	 */
 	public ClientPlayer(int id, String name) {
-		super(id, name);
-		visibleObjects = new TreeMap<>();
+		super(name, id);
 		savedStates = new LinkedList<>();
 		setVector2D(0, 0);
 		setRelativeAngle(MoveState.IDLE);
@@ -112,7 +108,13 @@ public class ClientPlayer extends ClientObject
 	public void update() {
 		setAngles();
 		resetFlags();
+		Location locationBeforeStep = getLocation();
 		step();
+		// If we're in a new locations after stepping, update the visible array.
+		if (locationBeforeStep != getLocation() || getVisibleLocations().isEmpty())
+			resetVisibleLocations();
+		// Reset the array of visible actors.
+		resetVisibleObjects();
 	}
 
 	/**
@@ -160,24 +162,6 @@ public class ClientPlayer extends ClientObject
 	 * @return Whether this player's state was forced during the most recent update.
 	 */
 	public boolean isForcedState() { return isForced; }
-
-	/**
-	 * Add an object to the list of visible objects.  This method should be called synchronously.
-	 * @param object The object to add to the visible objects list.
-	 */
-	public void addNewVisible(ClientObject object) { visibleObjects.put(object.getId(), object); }
-
-	/**
-	 * Remove an object from the player's view.
-	 * @param id the id of the object to remove.
-	 */
-	public void removeVisible(int id) { visibleObjects.remove(id); }
-
-	/**
-	 * Get the map of visible objects.
-	 * @return The map of visible objects.
-	 */
-	public TreeMap<Integer, ClientObject> getVisibleObjects() { return visibleObjects; }
 
 	/** Calculate and set the player's "true" movement angle. */
 	private void calculateTrueAngle() {

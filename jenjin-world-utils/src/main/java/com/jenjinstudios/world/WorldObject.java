@@ -40,28 +40,32 @@ public class WorldObject
 	}
 
 	/**
+	 * Create a World Object with the specified id.
+	 * @param name The name of the object.
+	 * @param id The id of the object.
+	 */
+	public WorldObject(String name, int id) {
+		this(name);
+		setId(id);
+	}
+
+	/**
 	 * Get the relativeAngle in which this object is facing, in radians.
 	 * @return The relativeAngle in which this object is facing.
 	 */
-	public double getDirection() {
-		return direction;
-	}
+	public double getDirection() { return direction; }
 
 	/**
 	 * Set the relativeAngle in which this object is facing.
 	 * @param direction The new relativeAngle for this object to face.
 	 */
-	public void setDirection(double direction) {
-		this.direction = direction;
-	}
+	public void setDirection(double direction) { this.direction = direction; }
 
 	/**
 	 * Get this object's current position.
 	 * @return This object's current position.
 	 */
-	public Vector2D getVector2D() {
-		return new Vector2D(vector2D);
-	}
+	public Vector2D getVector2D() { return new Vector2D(vector2D); }
 
 	/**
 	 * Set this object's current position.
@@ -75,7 +79,10 @@ public class WorldObject
 			location = world.getLocationForCoordinates(this.zoneID, this.vector2D);
 			if (oldLocation != location && location != null)
 			{
-				oldLocation.removeObject(this);
+				if (oldLocation != null)
+				{
+					oldLocation.removeObject(this);
+				}
 				location.addObject(this);
 			}
 		}
@@ -85,35 +92,25 @@ public class WorldObject
 	 * Get this object's ID number.
 	 * @return This object's ID number.
 	 */
-	public int getId() {
-		return id;
-	}
+	public int getId() { return id; }
 
 	/**
 	 * Set this object's ID number if it has not already been set.
 	 * @param id The new ID number.
 	 */
-	public void setId(int id) {
-		if (this.id != Integer.MIN_VALUE)
-			throw new IllegalArgumentException("This object's ID has already been set.");
-		this.id = id;
-	}
+	public void setId(int id) { this.id = id; }
 
 	/**
 	 * Get this object's location.
 	 * @return This object's location.
 	 */
-	public Location getLocation() {
-		return location;
-	}
+	public Location getLocation() { return location; }
 
 	/**
 	 * Get the world in which this object is located.
 	 * @return the world in which this object is located.
 	 */
-	public World getWorld() {
-		return world;
-	}
+	public World getWorld() { return world; }
 
 	/**
 	 * Set the world in which this object is located, if it hasn't already been set.
@@ -144,15 +141,18 @@ public class WorldObject
 	 * Get the id number of the zone in which this player is located.
 	 * @return The id number of the zone in which this player is located.
 	 */
-	public int getZoneID() {
-		return zoneID;
-	}
+	public int getZoneID() { return zoneID; }
 
 	/**
 	 * Set the zone id in which this player is located.
 	 * @param zoneID The id of the new zone.
 	 */
-	public void setZoneID(int zoneID) {
-		this.zoneID = zoneID;
-	}
+	public void setZoneID(int zoneID) { this.zoneID = zoneID; }
+
+	/**
+	 * Set the object's vector based on coordinates.
+	 * @param xCoord The x coordinate.
+	 * @param yCoord The y coordinate.
+	 */
+	public void setVector2D(double xCoord, double yCoord) { this.setVector2D(new Vector2D(xCoord, yCoord)); }
 }

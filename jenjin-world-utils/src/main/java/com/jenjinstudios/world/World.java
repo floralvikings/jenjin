@@ -41,14 +41,35 @@ public class World
 	 * @throws InvalidLocationException If an object is attempted to be added with an invalid location.
 	 */
 	public void addObject(WorldObject object) throws InvalidLocationException {
+		this.addObject(object, worldObjects.size());
+	}
+
+	/**
+	 * Add an object with the specified ID.
+	 * @param object The object to add.
+	 * @param id The id.
+	 * @throws InvalidLocationException If the object is to be added in an invalid location.
+	 */
+	public void addObject(WorldObject object, int id) throws InvalidLocationException {
 		if (object == null)
 			throw new IllegalArgumentException("addObject(WorldObject obj) argument 0 not allowed to be null!");
+
+		worldObjects.ensureCapacity(id + 1);
+
+		while(worldObjects.size() <= id)
+		{
+			worldObjects.add(null);
+		}
+
+		if (worldObjects.get(id) != null)
+			throw new IllegalArgumentException("addObject(WorldObject obj) argument 1 not allowed to be an occupied id!");
+
 		object.setWorld(this);
 		object.setVector2D(object.getVector2D());
 		synchronized (worldObjects)
 		{
-			object.setId(worldObjects.size());
-			worldObjects.add(object);
+			object.setId(id);
+			worldObjects.add(id, object);
 		}
 		objectCount++;
 	}
@@ -65,6 +86,12 @@ public class World
 		}
 		objectCount--;
 	}
+
+	/**
+	 * Remove the object with the specified id.
+	 * @param id The id.
+	 */
+	public void removeObject(int id) { this.removeObject(worldObjects.get(id)); }
 
 	/**
 	 * Get the location from the zone grid that contains the specified vector2D.
@@ -116,7 +143,12 @@ public class World
 	 * Get the number of objects currently in the world.
 	 * @return The number of objects currently in the world.
 	 */
-	public int getObjectCount() {
-		return objectCount;
-	}
+	public int getObjectCount() { return objectCount; }
+
+	/**
+	 * Get an object by its id.
+	 * @param id The id.
+	 * @return The object with the specified id.
+	 */
+	public WorldObject getObject(int id) { return worldObjects.get(id); }
 }

@@ -26,7 +26,7 @@ import static com.jenjinstudios.world.state.MoveState.IDLE;
 public class Actor extends SightedObject
 {
 	/** The length of each step. */
-	public static final double STEP_LENGTH = (double) Location.SIZE / (double) WorldServer.DEFAULT_UPS;
+	public static final double STEP_LENGTH = (double) Location.SIZE / 50d;
 	/** The maximum number of steps this actor is allowed to correct. */
 	public static final int MAX_CORRECT = 10;
 	/** The next move. */
@@ -51,6 +51,18 @@ public class Actor extends SightedObject
 	 */
 	public Actor(String name) {
 		super(name);
+		currentMoveState = new MoveState(IDLE, 0, 0);
+		nextMoveStates = new LinkedList<>();
+	}
+
+	/**
+	 * Construct a new Actor with the given ID and name.
+	 * @param name The name.
+	 * @param id The ID.
+	 */
+	public Actor(String name, int id)
+	{
+		super(name, id);
 		currentMoveState = new MoveState(IDLE, 0, 0);
 		nextMoveStates = new LinkedList<>();
 	}

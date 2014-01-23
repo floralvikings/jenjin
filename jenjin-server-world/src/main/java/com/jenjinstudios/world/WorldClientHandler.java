@@ -104,7 +104,7 @@ public class WorldClientHandler extends ClientHandler
 
 	/** Generate and queue messages for actors with changed states. */
 	private void queueStateChangeMessages() {
-		for (WorldObject object : actor.getVisibleObjects())
+		for (WorldObject object : actor.getVisibleObjects().values())
 		{
 			Actor changedActor;
 			if (object instanceof Actor && (changedActor = (Actor) object).isNewState())

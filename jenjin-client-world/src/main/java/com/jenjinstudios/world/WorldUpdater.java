@@ -3,21 +3,26 @@ package com.jenjinstudios.world;
 import com.jenjinstudios.world.state.MoveState;
 
 import java.util.LinkedList;
-import java.util.Set;
 import java.util.TreeMap;
 
-/** @author Caleb Brinkman */
+/**
+ * Responsible for updating the world.
+ * @author Caleb Brinkman
+ */
 public class WorldUpdater implements Runnable
 {
 	/** The client being updated by this runnable. */
 	private final WorldClient worldClient;
 	/** Actors other than the player. */
-	private final TreeMap<Integer, ClientObject> visibleObjects;
+	private final TreeMap<Integer, WorldObject> visibleObjects;
 	/** The player being controlled by the world client. */
 	private final ClientPlayer player;
 
-	public WorldUpdater(WorldClient wc)
-	{
+	/**
+	 * Construct a new {@code WorldUpdater} for the given client.
+	 * @param wc The world client.
+	 */
+	public WorldUpdater(WorldClient wc) {
 		this.worldClient = wc;
 		this.player = worldClient.getPlayer();
 		this.visibleObjects = player.getVisibleObjects();
@@ -25,10 +30,8 @@ public class WorldUpdater implements Runnable
 
 	@Override
 	public void run() {
-		Set<Integer> keys = visibleObjects.keySet();
-		for (int i : keys)
+		for (WorldObject currentObject : visibleObjects.values())
 		{
-			ClientObject currentObject = visibleObjects.get(i);
 			currentObject.update();
 		}
 		if (player != null)

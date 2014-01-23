@@ -58,11 +58,11 @@ public class WorldServerTest
 	}
 
 	/**
-	 * Test the actor visiblity after player and actor movement.
+	 * Test the actor visibility after player and actor movement.
 	 * @throws Exception If there's an exception.
 	 */
 	@Test
-	public void testActorVisibilty() throws Exception {
+	public void testActorVisibility() throws Exception {
 		Vector2D serverActorStartPosition = new Vector2D(0, 51);
 		Vector2D serverActorTargetPosition = new Vector2D(0, 49);
 		Actor serverActor = new Actor("TestActor");
@@ -71,7 +71,7 @@ public class WorldServerTest
 
 		WorldTestUtils.moveServerActorToVector(serverActor, serverActorTargetPosition);
 
-		ClientObject clientActor = worldClient.getPlayer().getVisibleObjects().get(serverActor.getId());
+		WorldObject clientActor = worldClient.getPlayer().getVisibleObjects().get(serverActor.getId());
 		Assert.assertNotNull(clientActor);
 		Assert.assertEquals(1, worldClient.getPlayer().getVisibleObjects().size());
 		Thread.sleep(50);

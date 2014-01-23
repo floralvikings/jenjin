@@ -59,7 +59,7 @@ public class MessageRegistry
 			for (String fileName : pathElements)
 			{
 				File file = new File(fileName);
-				if (file.isDirectory())
+				if (file.isDirectory() || !file.exists())
 				{
 					continue;
 				}

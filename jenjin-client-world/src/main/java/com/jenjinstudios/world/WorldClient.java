@@ -22,6 +22,9 @@ public class WorldClient extends AuthClient
 	public static long TIMEOUT_MILLIS = 30000;
 	/** The password used to login to the world. */
 	private final String password;
+	/** The world. */
+	// TODO Make this read from server
+	private World world;
 	/** The actor representing the player controlled by this client. */
 	private ClientPlayer player;
 
@@ -73,6 +76,20 @@ public class WorldClient extends AuthClient
 		if (this.player != null)
 			throw new IllegalStateException("Player already set!");
 		this.player = player;
+	}
+
+	/**
+	 * Get the world for this client.
+	 * @return The world being managed by this client.
+	 */
+	public World getWorld() { return world; }
+
+	/**
+	 * Set the world managed by this client.
+	 * @param world The world managed by this client.
+	 */
+	public void setWorld(World world) {
+		this.world = world;
 	}
 
 	/** Send a LoginRequest to the server. */
