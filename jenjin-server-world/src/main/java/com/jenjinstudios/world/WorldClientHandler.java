@@ -2,6 +2,7 @@ package com.jenjinstudios.world;
 
 import com.jenjinstudios.io.Message;
 import com.jenjinstudios.net.ClientHandler;
+import com.jenjinstudios.world.util.WorldServerMessageGenerator;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -29,7 +30,7 @@ public class WorldClientHandler extends ClientHandler
 	public WorldClientHandler(WorldServer s, Socket sk) throws IOException {
 		super(s, sk);
 		server = s;
-		queueMessage(WorldMessageGenerator.generateActorStepLengthMessage());
+		queueMessage(WorldServerMessageGenerator.generateActorStepLengthMessage());
 	}
 
 	/**
@@ -72,12 +73,21 @@ public class WorldClientHandler extends ClientHandler
 		queueStateChangeMessages();
 	}
 
+	@Override
+	public WorldServer getServer() { return server; }
+
+	/**
+	 * Get the player associated with this client handler.
+	 * @return The player associated with this client handler.
+	 */
+	public Actor getPlayer() { return actor; }
+
 	/** Generate and queue messages for newly visible objects. */
 	private void queueNewlyVisibleMessages() {
 		for (WorldObject object : actor.getNewlyVisibleObjects())
 		{
 			Message newlyVisibleMessage;
-			newlyVisibleMessage = WorldMessageGenerator.generateNewlyVisibleMessage(object);
+			newlyVisibleMessage = WorldServerMessageGenerator.generateNewlyVisibleMessage(object);
 			queueMessage(newlyVisibleMessage);
 		}
 	}
@@ -86,20 +96,9 @@ public class WorldClientHandler extends ClientHandler
 	private void queueNewlyInvisibleMessages() {
 		for (WorldObject object : actor.getNewlyInvisibleObjects())
 		{
-			Message newlyInvisibleMessage = generateNewlyInvisibleMessage(object);
+			Message newlyInvisibleMessage = WorldServerMessageGenerator.generateNewlyInvisibleMessage(object);
 			queueMessage(newlyInvisibleMessage);
 		}
-	}
-
-	/**
-	 * Generate a NewlyIvisibleObjectMessage for the given object.
-	 * @param object The {@code WorldObject} that is newly invisible.
-	 * @return A {@code Message} for the newly invisible object.
-	 */
-	private static Message generateNewlyInvisibleMessage(WorldObject object) {
-		Message newlyInvisibleMessage = new Message("ObjectInvisibleMessage");
-		newlyInvisibleMessage.setArgument("id", object.getId());
-		return newlyInvisibleMessage;
 	}
 
 	/** Generate and queue messages for actors with changed states. */
@@ -109,28 +108,15 @@ public class WorldClientHandler extends ClientHandler
 			Actor changedActor;
 			if (object instanceof Actor && (changedActor = (Actor) object).isNewState())
 			{
-				Message newState = WorldMessageGenerator.generateChangeStateMessage(changedActor);
+				Message newState = WorldServerMessageGenerator.generateChangeStateMessage(changedActor);
 				queueMessage(newState);
 			}
 		}
 	}
 
-	@Override
-	public WorldServer getServer() {
-		return server;
-	}
-
 	/** Generate and queue a ForcedStateMessage if necessary. */
 	private void queueForcesStateMessage() {
 		if (actor.isForcedState())
-			queueMessage(WorldMessageGenerator.generateForcedStateMessage(actor, server));
-	}
-
-	/**
-	 * Get the player associated with this client handler.
-	 * @return The player associated with this client handler.
-	 */
-	public Actor getPlayer() {
-		return actor;
+			queueMessage(WorldServerMessageGenerator.generateForcedStateMessage(actor, server));
 	}
 }

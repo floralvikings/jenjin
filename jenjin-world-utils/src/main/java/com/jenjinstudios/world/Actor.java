@@ -116,7 +116,7 @@ public class Actor extends SightedObject
 		Vector2D newVector = getVector2D().getVectorInDirection(STEP_LENGTH, currentMoveState.stepAngle);
 		Location newLocation = getWorld().getLocationForCoordinates(getZoneID(), newVector);
 		if(newLocation == null) { return false; }
-		boolean walkable = newLocation.getLocationProperties().isWalkable;
+		boolean walkable = !"false".equals(newLocation.getLocationProperties().getProperty("walkable"));
 		if (walkable)
 		{
 			setVector2D(newVector);
@@ -137,7 +137,7 @@ public class Actor extends SightedObject
 		Vector2D backVector = getVector2D().getVectorInDirection(stepAmount, currentMoveState.stepAngle - Math.PI);
 		Vector2D newVector = backVector.getVectorInDirection(stepAmount, nextState.stepAngle);
 		Location newLocation = getWorld().getLocationForCoordinates(getZoneID(), newVector);
-		boolean success = newLocation != null && newLocation.getLocationProperties().isWalkable;
+		boolean success = newLocation != null && !"false".equals(newLocation.getLocationProperties().getProperty("walkable"));
 		resetState();
 		if (success)
 		{

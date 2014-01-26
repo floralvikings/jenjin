@@ -1,19 +1,22 @@
-package com.jenjinstudios.world;
+package com.jenjinstudios.world.util;
 
 import com.jenjinstudios.io.Message;
+import com.jenjinstudios.world.Actor;
+import com.jenjinstudios.world.WorldObject;
+import com.jenjinstudios.world.WorldServer;
 
 /**
  * Used to generate Message objects that are relevent to the World and WorldClientHandler classes.
  * @author Caleb Brinkman
  */
-public class WorldMessageGenerator
+public class WorldServerMessageGenerator
 {
 	/**
 	 * Generate an appropriate message for a newly visible object.
 	 * @param object The object.
 	 * @return The message.
 	 */
-	static Message generateNewlyVisibleMessage(WorldObject object) {
+	public static Message generateNewlyVisibleMessage(WorldObject object) {
 		Message newlyVisibleMessage;
 		if (object instanceof Actor)
 		{
@@ -30,7 +33,7 @@ public class WorldMessageGenerator
 	 * @param newlyVisible The Actor used to generate the message.
 	 * @return A {@code Message} for the newly visible actor.
 	 */
-	static Message generateActorVisibleMessage(Actor newlyVisible) {
+	public static Message generateActorVisibleMessage(Actor newlyVisible) {
 		Message newlyVisibleMessage;
 		newlyVisibleMessage = new Message("ActorVisibleMessage");
 		newlyVisibleMessage.setArgument("name", newlyVisible.getName());
@@ -49,7 +52,7 @@ public class WorldMessageGenerator
 	 * @param object The Actor used to generate the message.
 	 * @return A {@code Message} for the newly visible object.
 	 */
-	static Message generateObjectVisibleMessage(WorldObject object) {
+	public static Message generateObjectVisibleMessage(WorldObject object) {
 		Message newlyVisibleMessage;
 		newlyVisibleMessage = new Message("ObjectVisibleMessage");
 		newlyVisibleMessage.setArgument("name", object.getName());
@@ -64,7 +67,7 @@ public class WorldMessageGenerator
 	 * @param changedActor The actor with a new state.
 	 * @return The state change message.
 	 */
-	static Message generateChangeStateMessage(Actor changedActor) {
+	public static Message generateChangeStateMessage(Actor changedActor) {
 		Message newState = new Message("StateChangeMessage");
 		newState.setArgument("id", changedActor.getId());
 		newState.setArgument("relativeAngle", changedActor.getCurrentMoveState().relativeAngle);
@@ -79,7 +82,7 @@ public class WorldMessageGenerator
 	 * @param server The server in which the world is running.
 	 * @return A forced state message for the actor's state at the beginning of this server "tick".
 	 */
-	static Message generateForcedStateMessage(Actor actor, WorldServer server) {
+	public static Message generateForcedStateMessage(Actor actor, WorldServer server) {
 		Message forcedStateMessage = new Message("ForceStateMessage");
 		forcedStateMessage.setArgument("relativeAngle", actor.getMoveDirection());
 		forcedStateMessage.setArgument("absoluteAngle", actor.getMoveAngle());
@@ -93,9 +96,20 @@ public class WorldMessageGenerator
 	 * Generate a step length message.
 	 * @return The message.
 	 */
-	static Message generateActorStepLengthMessage() {
+	public static Message generateActorStepLengthMessage() {
 		Message stepLengthMessage = new Message("ActorStepMessage");
 		stepLengthMessage.setArgument("stepLength", Actor.STEP_LENGTH);
 		return stepLengthMessage;
+	}
+
+	/**
+	 * Generate a NewlyIvisibleObjectMessage for the given object.
+	 * @param object The {@code WorldObject} that is newly invisible.
+	 * @return A {@code Message} for the newly invisible object.
+	 */
+	public static Message generateNewlyInvisibleMessage(WorldObject object) {
+		Message newlyInvisibleMessage = new Message("ObjectInvisibleMessage");
+		newlyInvisibleMessage.setArgument("id", object.getId());
+		return newlyInvisibleMessage;
 	}
 }

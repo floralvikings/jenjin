@@ -3,7 +3,7 @@ package com.jenjinstudios.world;
 import com.jenjinstudios.io.Message;
 import com.jenjinstudios.net.AuthClient;
 import com.jenjinstudios.world.state.MoveState;
-import com.jenjinstudios.world.util.ClientMessageGenerator;
+import com.jenjinstudios.world.util.WorldClientMessageGenerator;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.logging.Level;
@@ -39,7 +39,7 @@ public class WorldClient extends AuthClient
 	 */
 	public WorldClient(String address, int port, String username, String password) throws NoSuchAlgorithmException {
 		super(address, port, username, password);
-
+		world = new World();
 		this.password = password;
 	}
 
@@ -94,7 +94,7 @@ public class WorldClient extends AuthClient
 
 	/** Send a LoginRequest to the server. */
 	private void sendLoginRequest() {
-		Message loginRequest = ClientMessageGenerator.generateLoginRequest(getUsername(), password);
+		Message loginRequest = WorldClientMessageGenerator.generateLoginRequest(getUsername(), password);
 		setWaitingForLoginResponse(true);
 		queueMessage(loginRequest);
 	}
@@ -104,7 +104,7 @@ public class WorldClient extends AuthClient
 	 * @param moveState The move state used to generate the request.
 	 */
 	protected void sendStateChangeRequest(MoveState moveState) {
-		Message stateChangeRequest = ClientMessageGenerator.generateStateChangeRequest(moveState);
+		Message stateChangeRequest = WorldClientMessageGenerator.generateStateChangeRequest(moveState);
 		queueMessage(stateChangeRequest);
 	}
 

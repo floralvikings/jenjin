@@ -26,6 +26,6 @@ public class WorldFileReaderTest
 		World world = testReader.read();
 		Location testLocation = world.getLocationForCoordinates(0, new Vector2D(Location.SIZE * 3, Location.SIZE * 3));
 		LocationProperties testProperties = testLocation.getLocationProperties();
-		Assert.assertEquals(false, testProperties.isWalkable);
+		Assert.assertTrue("false".equals(testProperties.getProperty("walkable")));
 	}
 }

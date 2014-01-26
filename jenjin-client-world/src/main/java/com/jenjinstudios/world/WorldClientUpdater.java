@@ -9,7 +9,7 @@ import java.util.TreeMap;
  * Responsible for updating the world.
  * @author Caleb Brinkman
  */
-public class WorldUpdater implements Runnable
+public class WorldClientUpdater implements Runnable
 {
 	/** The client being updated by this runnable. */
 	private final WorldClient worldClient;
@@ -19,10 +19,10 @@ public class WorldUpdater implements Runnable
 	private final ClientPlayer player;
 
 	/**
-	 * Construct a new {@code WorldUpdater} for the given client.
+	 * Construct a new {@code WorldClientUpdater} for the given client.
 	 * @param wc The world client.
 	 */
-	public WorldUpdater(WorldClient wc) {
+	public WorldClientUpdater(WorldClient wc) {
 		this.worldClient = wc;
 		this.player = worldClient.getPlayer();
 		this.visibleObjects = player.getVisibleObjects();

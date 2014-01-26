@@ -4,7 +4,7 @@ import com.jenjinstudios.io.Message;
 import com.jenjinstudios.world.ClientPlayer;
 import com.jenjinstudios.world.InvalidLocationException;
 import com.jenjinstudios.world.WorldClient;
-import com.jenjinstudios.world.WorldUpdater;
+import com.jenjinstudios.world.WorldClientUpdater;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -49,7 +49,7 @@ public class ExecutableWorldLoginResponse extends WorldClientExecutableMessage
 			LOGGER.log(Level.INFO, "Tried to place newly visible actor in invalid location.");
 		}
 
-		client.addRepeatedTask(new WorldUpdater(client));
+		client.addRepeatedTask(new WorldClientUpdater(client));
 	}
 
 	@Override
