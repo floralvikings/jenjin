@@ -107,6 +107,14 @@ public class Zone
 		return locationGrid[(int) x / Location.SIZE][(int) y / Location.SIZE];
 	}
 
+	/**
+	 * Get the location at the specified location in the array.
+	 * @param x The x value of the location.
+	 * @param y The y value of the location.
+	 * @return The location at the specified spot in the array.
+	 */
+	public Location getLocationOnGrid(int x, int y) { return locationGrid[x][y]; }
+
 	/** Initialize the locations in the zone. */
 	private void initLocations() {
 		for (int x = 0; x < xSize; x++)
