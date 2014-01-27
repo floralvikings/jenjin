@@ -112,9 +112,12 @@ class ClientListener<T extends ClientHandler> implements Runnable
 			T newHandler = handlerConstructor.newInstance(server, sock);
 
 			addNewClient(newHandler);
-		} catch (InstantiationException | IllegalAccessException | InvocationTargetException e)
+		} catch (InstantiationException | IllegalAccessException e)
 		{
-			LOGGER.log(Level.SEVERE, "Unable to instantiate client handler.", e);
+			LOGGER.log(Level.SEVERE, "Unable to instantiate client handler:", e);
+		} catch (InvocationTargetException e)
+		{
+			LOGGER.log(Level.SEVERE, "Unable to instantiate client handler:", e.getCause());
 		}
 	}
 

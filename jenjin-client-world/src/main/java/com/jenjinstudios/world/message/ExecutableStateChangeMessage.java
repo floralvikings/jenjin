@@ -2,8 +2,8 @@ package com.jenjinstudios.world.message;
 
 import com.jenjinstudios.io.Message;
 import com.jenjinstudios.world.ClientActor;
-import com.jenjinstudios.world.ClientObject;
 import com.jenjinstudios.world.WorldClient;
+import com.jenjinstudios.world.WorldObject;
 import com.jenjinstudios.world.state.MoveState;
 
 /**
@@ -28,7 +28,7 @@ public class ExecutableStateChangeMessage extends WorldClientExecutableMessage
 
 	@Override
 	public void runSynced() {
-		ClientObject obj = getClient().getObject(actorID);
+		WorldObject obj = getClient().getWorld().getObject(actorID);
 		if (obj != null && obj instanceof ClientActor)
 		{
 			ClientActor actor = (ClientActor) obj;

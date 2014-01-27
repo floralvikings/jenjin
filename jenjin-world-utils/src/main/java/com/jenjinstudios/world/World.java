@@ -13,7 +13,7 @@ public class World
 	/** The size of the world's location grid. */
 	public final int DEFAULT_SIZE = 50;
 	/** The list of in-world Zones. */
-	private final ArrayList<Zone> zones;
+	private final Zone[] zones;
 	/** The GameObjects contained in the world. */
 	private final ArrayList<WorldObject> worldObjects;
 	/** The number of objects currently in the world. */
@@ -21,8 +21,17 @@ public class World
 
 	/** Construct a new World. */
 	public World() {
-		zones = new ArrayList<>();
-		zones.add(new Zone(zones.size(), DEFAULT_SIZE, DEFAULT_SIZE));
+		zones = new Zone[1];
+		zones[0] = new Zone(0, DEFAULT_SIZE, DEFAULT_SIZE);
+		worldObjects = new ArrayList<>();
+	}
+
+	/**
+	 * Construct a new world with the specified Zone array.
+	 * @param zones The zones used to create the world.
+	 */
+	public World(Zone[] zones) {
+		this.zones = zones;
 		worldObjects = new ArrayList<>();
 	}
 
@@ -32,14 +41,35 @@ public class World
 	 * @throws InvalidLocationException If an object is attempted to be added with an invalid location.
 	 */
 	public void addObject(WorldObject object) throws InvalidLocationException {
+		this.addObject(object, worldObjects.size());
+	}
+
+	/**
+	 * Add an object with the specified ID.
+	 * @param object The object to add.
+	 * @param id The id.
+	 * @throws InvalidLocationException If the object is to be added in an invalid location.
+	 */
+	public void addObject(WorldObject object, int id) throws InvalidLocationException {
 		if (object == null)
 			throw new IllegalArgumentException("addObject(WorldObject obj) argument 0 not allowed to be null!");
+
+		worldObjects.ensureCapacity(id + 1);
+
+		while(worldObjects.size() <= id)
+		{
+			worldObjects.add(null);
+		}
+
+		if (worldObjects.get(id) != null)
+			throw new IllegalArgumentException("addObject(WorldObject obj) argument 1 not allowed to be an occupied id!");
+
 		object.setWorld(this);
 		object.setVector2D(object.getVector2D());
 		synchronized (worldObjects)
 		{
-			object.setId(worldObjects.size());
-			worldObjects.add(object);
+			object.setId(id);
+			worldObjects.add(id, object);
 		}
 		objectCount++;
 	}
@@ -58,6 +88,12 @@ public class World
 	}
 
 	/**
+	 * Remove the object with the specified id.
+	 * @param id The id.
+	 */
+	public void removeObject(int id) { this.removeObject(worldObjects.get(id)); }
+
+	/**
 	 * Get the location from the zone grid that contains the specified vector2D.
 	 * @param zoneID The ID of the zone in which to look for the location.
 	 * @param vector2D The vector2D.
@@ -66,7 +102,7 @@ public class World
 	public Location getLocationForCoordinates(int zoneID, Vector2D vector2D) {
 		if (!isValidLocation(zoneID, vector2D))
 			return null;
-		return zones.get(zoneID).getLocation(vector2D);
+		return zones[zoneID].getLocation(vector2D);
 	}
 
 	/**
@@ -76,7 +112,7 @@ public class World
 	 * @return Whether the vector lies within a valid location.
 	 */
 	public boolean isValidLocation(int zoneID, Vector2D vector2D) {
-		Zone zone = zones.get(zoneID);
+		Zone zone = zones[zoneID];
 		return !(zone != null && zone.isValidLocation(vector2D));
 	}
 
@@ -98,7 +134,7 @@ public class World
 	 * @return An ArrayList containing all valid locations in the specified area.
 	 */
 	public ArrayList<Location> getLocationArea(int zoneID, Vector2D center, int radius) {
-		Zone z = zones.get(zoneID);
+		Zone z = zones[zoneID];
 		if (z == null) { return null; }
 		return z.getLocationArea(center, radius);
 	}
@@ -107,7 +143,20 @@ public class World
 	 * Get the number of objects currently in the world.
 	 * @return The number of objects currently in the world.
 	 */
-	public int getObjectCount() {
-		return objectCount;
+	public int getObjectCount() { return objectCount; }
+
+	/**
+	 * Get an object by its id.
+	 * @param id The id.
+	 * @return The object with the specified id.
+	 */
+	public WorldObject getObject(int id) { return worldObjects.get(id); }
+
+	/**
+	 * Get the zone array.
+	 * @return The array of zone objects contained in this world.
+	 */
+	public Zone[] getZones() {
+		return zones;
 	}
 }

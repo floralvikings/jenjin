@@ -36,6 +36,7 @@ public class ExecutableWorldLoginRequest extends WorldExecutableMessage
 			try
 			{
 				getClientHandler().getServer().getWorld().addObject(player);
+				loginResponse.setArgument("id", player.getId());
 			} catch (InvalidLocationException ex)
 			{
 				loginResponse.setArgument("success", false);
@@ -74,7 +75,6 @@ public class ExecutableWorldLoginRequest extends WorldExecutableMessage
 			loginResponse.setArgument("xCoordinate", player.getVector2D().getXCoordinate());
 			loginResponse.setArgument("yCoordinate", player.getVector2D().getYCoordinate());
 			loginResponse.setArgument("zoneNumber", player.getZoneID());
-			loginResponse.setArgument("id", player.getId());
 		} else
 		{
 			loginResponse.setArgument("id", -1);

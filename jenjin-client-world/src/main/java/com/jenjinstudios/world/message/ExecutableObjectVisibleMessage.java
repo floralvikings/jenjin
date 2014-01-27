@@ -1,8 +1,12 @@
 package com.jenjinstudios.world.message;
 
 import com.jenjinstudios.io.Message;
-import com.jenjinstudios.world.ClientObject;
+import com.jenjinstudios.world.InvalidLocationException;
 import com.jenjinstudios.world.WorldClient;
+import com.jenjinstudios.world.WorldObject;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Process an ActorVisibleMessage.
@@ -10,8 +14,10 @@ import com.jenjinstudios.world.WorldClient;
  */
 public class ExecutableObjectVisibleMessage extends WorldClientExecutableMessage
 {
+	/** The logger for this class. */
+	private static final Logger LOGGER = Logger.getLogger(ExecutableObjectVisibleMessage.class.getName());
 	/** The newly visible actor. */
-	ClientObject newlyVisible;
+	WorldObject newlyVisible;
 
 	/**
 	 * Construct an ExecutableMessage with the given Message.
@@ -24,7 +30,13 @@ public class ExecutableObjectVisibleMessage extends WorldClientExecutableMessage
 
 	@Override
 	public void runSynced() {
-		getClient().addNewVisible(newlyVisible);
+		try
+		{
+			getClient().getWorld().addObject(newlyVisible, newlyVisible.getId());
+		} catch (InvalidLocationException e)
+		{
+			LOGGER.log(Level.INFO, "Tried to place newly visible actor in invalid location.");
+		}
 	}
 
 	@Override
@@ -35,7 +47,8 @@ public class ExecutableObjectVisibleMessage extends WorldClientExecutableMessage
 		double xCoord = (double) message.getArgument("xCoordinate");
 		double yCoord = (double) message.getArgument("yCoordinate");
 
-		newlyVisible = new ClientObject(id, name);
+		newlyVisible = new WorldObject(name);
+		newlyVisible.setId(id);
 		newlyVisible.setVector2D(xCoord, yCoord);
 	}
 }

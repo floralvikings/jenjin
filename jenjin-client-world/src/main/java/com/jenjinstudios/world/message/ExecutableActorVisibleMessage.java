@@ -2,8 +2,12 @@ package com.jenjinstudios.world.message;
 
 import com.jenjinstudios.io.Message;
 import com.jenjinstudios.world.ClientActor;
+import com.jenjinstudios.world.InvalidLocationException;
 import com.jenjinstudios.world.WorldClient;
 import com.jenjinstudios.world.state.MoveState;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Process an ActorVisibleMessage.
@@ -11,6 +15,8 @@ import com.jenjinstudios.world.state.MoveState;
  */
 public class ExecutableActorVisibleMessage extends WorldClientExecutableMessage
 {
+	/** The logger for this class. */
+	private static final Logger LOGGER = Logger.getLogger(ExecutableActorVisibleMessage.class.getName());
 	/** The newly visible actor. */
 	ClientActor newlyVisible;
 
@@ -25,7 +31,13 @@ public class ExecutableActorVisibleMessage extends WorldClientExecutableMessage
 
 	@Override
 	public void runSynced() {
-		getClient().addNewVisible(newlyVisible);
+		try
+		{
+			getClient().getWorld().addObject(newlyVisible, newlyVisible.getId());
+		} catch (InvalidLocationException e)
+		{
+			LOGGER.log(Level.INFO, "Tried to place newly visible actor in invalid location.");
+		}
 	}
 
 	@Override

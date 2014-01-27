@@ -1,12 +1,14 @@
 package test.jenjinstudios.world;
 
 import com.jenjinstudios.io.MessageRegistry;
+import com.jenjinstudios.world.*;
+import com.jenjinstudios.world.io.WorldFileReader;
 import com.jenjinstudios.world.math.Round;
 import com.jenjinstudios.world.math.Vector2D;
-import com.jenjinstudios.world.*;
 import com.jenjinstudios.world.sql.WorldSQLHandler;
-import com.jenjinstudios.world.state.MoveState;
 import org.junit.*;
+
+import java.io.File;
 
 /**
  * Test the world server.
@@ -33,9 +35,7 @@ public class WorldServerTest
 	 * @throws Exception If there's an Exception.
 	 */
 	@BeforeClass
-	public static void construct() throws Exception {
-		MessageRegistry.registerXmlMessages(true);
-	}
+	public static void construct() throws Exception { MessageRegistry.registerXmlMessages(true); }
 
 	/**
 	 * Set up the client and server.
@@ -61,36 +61,36 @@ public class WorldServerTest
 	}
 
 	/**
-	 * Test the actor visiblity after player and actor movement.
+	 * Test the actor visibility after player and actor movement.
 	 * @throws Exception If there's an exception.
 	 */
 	@Test
-	public void testActorVisibilty() throws Exception {
+	public void testActorVisibility() throws Exception {
 		Vector2D serverActorStartPosition = new Vector2D(0, 51);
 		Vector2D serverActorTargetPosition = new Vector2D(0, 49);
 		Actor serverActor = new Actor("TestActor");
 		serverActor.setVector2D(serverActorStartPosition);
 		world.addObject(serverActor);
 
-		moveServerActorToVector(serverActor, serverActorTargetPosition);
+		WorldTestUtils.moveServerActorToVector(serverActor, serverActorTargetPosition);
 
-		ClientObject clientActor = worldClient.getVisibleObjects().get(serverActor.getId());
+		WorldObject clientActor = worldClient.getPlayer().getVisibleObjects().get(serverActor.getId());
 		Assert.assertNotNull(clientActor);
-		Assert.assertEquals(1, worldClient.getVisibleObjects().size());
+		Assert.assertEquals(1, worldClient.getPlayer().getVisibleObjects().size());
 		Thread.sleep(50);
 		Assert.assertEquals(serverActor.getVector2D(), clientActor.getVector2D());
 
-		moveServerActorToVector(serverActor, serverActorStartPosition);
-		Assert.assertEquals(0, worldClient.getVisibleObjects().size());
+		WorldTestUtils.moveServerActorToVector(serverActor, serverActorStartPosition);
+		Assert.assertEquals(0, worldClient.getPlayer().getVisibleObjects().size());
 
 
-		moveClientPlayerTowardVector(new Vector2D(0, 11));
-		Assert.assertEquals(1, worldClient.getVisibleObjects().size());
-		clientActor = worldClient.getVisibleObjects().get(serverActor.getId());
+		WorldTestUtils.moveClientPlayerTowardVector(new Vector2D(0, 11), clientPlayer, serverPlayer);
+		Assert.assertEquals(1, worldClient.getPlayer().getVisibleObjects().size());
+		clientActor = worldClient.getPlayer().getVisibleObjects().get(serverActor.getId());
 		Assert.assertEquals(serverActor.getVector2D(), clientActor.getVector2D());
 
-		moveClientPlayerTowardVector(Vector2D.ORIGIN);
-		Assert.assertEquals(0, worldClient.getVisibleObjects().size());
+		WorldTestUtils.moveClientPlayerTowardVector(Vector2D.ORIGIN, clientPlayer, serverPlayer);
+		Assert.assertEquals(0, worldClient.getPlayer().getVisibleObjects().size());
 	}
 
 	/**
@@ -99,9 +99,9 @@ public class WorldServerTest
 	 */
 	@Test
 	public void testForcedStateFromEdge() throws Exception {
-		idleClientPlayer(1);
-		moveClientPlayerTowardVector(new Vector2D(-1.0, 0));
-		moveClientPlayerTowardVector(new Vector2D(1, 0));
+		WorldTestUtils.idleClientPlayer(1, clientPlayer);
+		WorldTestUtils.moveClientPlayerTowardVector(new Vector2D(-1.0, 0), clientPlayer, serverPlayer);
+		WorldTestUtils.moveClientPlayerTowardVector(new Vector2D(1, 0), clientPlayer, serverPlayer);
 		Assert.assertFalse(clientPlayer.isForcedState());
 		Assert.assertEquals(serverPlayer.getVector2D(), clientPlayer.getVector2D());
 	}
@@ -112,9 +112,9 @@ public class WorldServerTest
 	 */
 	@Test
 	public void testForcedState() throws Exception {
-		moveClientPlayerTowardVector(new Vector2D(0.5, 0.5));
-		moveClientPlayerTowardVector(new Vector2D(-0.5, -0.5));
-		idleClientPlayer(5);
+		WorldTestUtils.moveClientPlayerTowardVector(new Vector2D(0.5, 0.5), clientPlayer, serverPlayer);
+		WorldTestUtils.moveClientPlayerTowardVector(new Vector2D(-0.5, -0.5), clientPlayer, serverPlayer);
+		WorldTestUtils.idleClientPlayer(5, clientPlayer);
 		Assert.assertEquals(clientPlayer.getVector2D(), serverPlayer.getVector2D());
 	}
 
@@ -125,7 +125,7 @@ public class WorldServerTest
 	@Test
 	public void testMovement() throws Exception {
 		Vector2D targetVector = new Vector2D(3.956, 3.7468);
-		moveClientPlayerTowardVector(targetVector);
+		WorldTestUtils.moveClientPlayerTowardVector(targetVector, clientPlayer, serverPlayer);
 	}
 
 	/**
@@ -134,11 +134,11 @@ public class WorldServerTest
 	 */
 	@Test
 	public void testRepeatedForcedState() throws Exception {
-		moveClientPlayerTowardVector(new Vector2D(.5, .5));
-		moveClientPlayerTowardVector(new Vector2D(-1, -1));
-		moveClientPlayerTowardVector(new Vector2D(.5, .5));
-		moveClientPlayerTowardVector(new Vector2D(-1, -1));
-		moveClientPlayerTowardVector(new Vector2D(.5, .5));
+		WorldTestUtils.moveClientPlayerTowardVector(new Vector2D(.5, .5), clientPlayer, serverPlayer);
+		WorldTestUtils.moveClientPlayerTowardVector(new Vector2D(-1, -1), clientPlayer, serverPlayer);
+		WorldTestUtils.moveClientPlayerTowardVector(new Vector2D(.5, .5), clientPlayer, serverPlayer);
+		WorldTestUtils.moveClientPlayerTowardVector(new Vector2D(-1, -1), clientPlayer, serverPlayer);
+		WorldTestUtils.moveClientPlayerTowardVector(new Vector2D(.5, .5), clientPlayer, serverPlayer);
 	}
 
 	/**
@@ -147,15 +147,16 @@ public class WorldServerTest
 	 */
 	@Test
 	public void testRandomMovement() throws Exception {
-		idleClientPlayer(1);
+		WorldTestUtils.idleClientPlayer(1, clientPlayer);
 		int maxCoord = 5;
 		for (int i = 0; i < 10; i++)
 		{
 			double randomX = Round.round(Math.random() * maxCoord, 4);
 			double randomY = Round.round(Math.random() * maxCoord, 4);
 			Vector2D random = new Vector2D(randomX, randomY);
-			moveClientPlayerTowardVector(random);
-			Assert.assertEquals("Movement number " + i + " to " + random, clientPlayer.getVector2D(), serverPlayer.getVector2D());
+			WorldTestUtils.moveClientPlayerTowardVector(random, clientPlayer, serverPlayer);
+			double distance = clientPlayer.getVector2D().getDistanceToVector(serverPlayer.getVector2D());
+			Assert.assertEquals("Movement number " + i + " to " + random, 0, distance, .001);
 		}
 	}
 
@@ -164,8 +165,9 @@ public class WorldServerTest
 	 * @throws Exception If there's an exception.
 	 */
 	private void initWorldClient() throws Exception {
-		worldClient = new WorldClient("localhost", WorldServer.DEFAULT_PORT, "TestAccount01", "testPassword");
+		worldClient = new WorldClient(new File("WorldTestFile.xml"), "localhost", WorldServer.DEFAULT_PORT, "TestAccount01", "testPassword");
 		worldClient.blockingStart();
+		worldClient.sendBlockingWorldFileRequest();
 		worldClient.sendBlockingLoginRequest();
 
 		/* The WorldClientHandler used to test. */
@@ -181,65 +183,10 @@ public class WorldServerTest
 	private void initWorldServer() throws Exception {
 		/* The world SQL handler used to test. */
 		WorldSQLHandler worldSQLHandler = new WorldSQLHandler("localhost", "jenjin_test", "jenjin_user", "jenjin_password");
-		worldServer = new WorldServer(worldSQLHandler);
+		worldServer = new WorldServer(new WorldFileReader(getClass().getResourceAsStream("/WorldFile01.xml")),
+				WorldServer.DEFAULT_UPS, WorldServer.DEFAULT_PORT, WorldClientHandler.class, worldSQLHandler);
 		world = worldServer.getWorld();
 		worldServer.blockingStart();
 	}
 
-	/**
-	 * Make the client player stay idle for the given number of steps.
-	 * @param i The number of steps.
-	 * @throws InterruptedException If there's an issue waiting for the player to be idle for the given number of steps.
-	 */
-	private void idleClientPlayer(int i) throws InterruptedException {
-		clientPlayer.setNewRelativeAngle(MoveState.IDLE);
-		while (clientPlayer.getRelativeAngle() != MoveState.IDLE || clientPlayer.getStepsTaken() < i)
-		{
-			Thread.sleep(1);
-		}
-	}
-
-	/**
-	 * Move the specified actor to within one STEP_LENGTH of the specified vector.
-	 * @param serverActor The actor.
-	 * @param newVector The target vector.
-	 * @throws InterruptedException If there is an error blocking until the target is reached.
-	 */
-	private void moveServerActorToVector(Actor serverActor, Vector2D newVector) throws InterruptedException {
-		int stepsTaken = serverActor.getStepsTaken();
-		double newAngle = serverActor.getVector2D().getAngleToVector(newVector);
-		MoveState newState = new MoveState(newAngle, stepsTaken, 0);
-		serverActor.addMoveState(newState);
-		double distanceToNewVector = serverActor.getVector2D().getDistanceToVector(newVector);
-		while (distanceToNewVector > Actor.STEP_LENGTH && !serverActor.isForcedState())
-		{
-			Thread.sleep(10);
-			distanceToNewVector = serverActor.getVector2D().getDistanceToVector(newVector);
-		}
-		MoveState idleState = new MoveState(MoveState.IDLE, serverActor.getStepsTaken(), 0);
-		serverActor.addMoveState(idleState);
-		Thread.sleep(10);
-	}
-
-	/**
-	 * Move the client player to the given vector, by initiating the move client-side.
-	 * @param newVector The vector to which to move.
-	 * @throws InterruptedException If there's an exception.
-	 */
-	private void moveClientPlayerTowardVector(Vector2D newVector) throws InterruptedException {
-		// Make sure not to send multiple states during the same update.
-		idleClientPlayer(1);
-		double newAngle = clientPlayer.getVector2D().getAngleToVector(newVector);
-		clientPlayer.setNewRelativeAngle(newAngle);
-		while (clientPlayer.getVector2D().getDistanceToVector(newVector) > Actor.STEP_LENGTH)
-		{
-			if (clientPlayer.isForcedState()) { break; }
-			Thread.sleep(10);
-		}
-		idleClientPlayer(15);
-		double distance = clientPlayer.getVector2D().getDistanceToVector(serverPlayer.getVector2D());
-		if(distance > .001) { Thread.sleep(100); }
-		distance = clientPlayer.getVector2D().getDistanceToVector(serverPlayer.getVector2D());
-		Assert.assertEquals(distance, 0, .001);
-	}
 }
