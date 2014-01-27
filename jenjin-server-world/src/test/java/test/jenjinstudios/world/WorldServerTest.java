@@ -2,6 +2,7 @@ package test.jenjinstudios.world;
 
 import com.jenjinstudios.io.MessageRegistry;
 import com.jenjinstudios.world.*;
+import com.jenjinstudios.world.io.WorldFileReader;
 import com.jenjinstudios.world.math.Round;
 import com.jenjinstudios.world.math.Vector2D;
 import com.jenjinstudios.world.sql.WorldSQLHandler;
@@ -179,7 +180,8 @@ public class WorldServerTest
 	private void initWorldServer() throws Exception {
 		/* The world SQL handler used to test. */
 		WorldSQLHandler worldSQLHandler = new WorldSQLHandler("localhost", "jenjin_test", "jenjin_user", "jenjin_password");
-		worldServer = new WorldServer(worldSQLHandler);
+		worldServer = new WorldServer(new WorldFileReader(getClass().getResourceAsStream("/WorldFile01.xml")),
+				WorldServer.DEFAULT_UPS, WorldServer.DEFAULT_PORT, WorldClientHandler.class, worldSQLHandler);
 		world = worldServer.getWorld();
 		worldServer.blockingStart();
 	}

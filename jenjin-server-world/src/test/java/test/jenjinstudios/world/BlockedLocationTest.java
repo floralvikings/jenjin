@@ -7,8 +7,6 @@ import com.jenjinstudios.world.math.Vector2D;
 import com.jenjinstudios.world.sql.WorldSQLHandler;
 import org.junit.*;
 
-import java.io.InputStream;
-
 /**
  * Test the file-loading and blocked location functionality.
  * @author Caleb Brinkman
@@ -17,8 +15,6 @@ public class BlockedLocationTest
 {
 	/** The world server used to test. */
 	private WorldServer worldServer;
-	/** The world used for testing. */
-	private World world;
 	/** The server-side actor representing the player. */
 	private Actor serverPlayer;
 
@@ -41,9 +37,6 @@ public class BlockedLocationTest
 	 */
 	@Before
 	public void setUp() throws Exception {
-
-
-		initWorld();
 		initWorldServer();
 		initWorldClient();
 	}
@@ -66,8 +59,7 @@ public class BlockedLocationTest
 	 * @throws Exception If there's an Exception.
 	 */
 	@Test
-	public void TestAttemptBlockedLocation() throws Exception
-	{
+	public void TestAttemptBlockedLocation() throws Exception {
 		Vector2D vector1 = new Vector2D(35, 0);
 		Vector2D attemptedVector2 = new Vector2D(35, 35);
 		Vector2D actualVector2 = new Vector2D(35, 29.8);
@@ -108,16 +100,6 @@ public class BlockedLocationTest
 	}
 
 	/**
-	 * Initialize the world.
-	 * @throws Exception If there's an Exception.
-	 */
-	private void initWorld() throws Exception {
-		InputStream resourceAsStream = getClass().getResourceAsStream("/WorldFile01.xml");
-		WorldFileReader testReader = new WorldFileReader(resourceAsStream);
-		world = testReader.read();
-	}
-
-	/**
 	 * Initialize and log the client in.
 	 * @throws Exception If there's an exception.
 	 */
@@ -139,7 +121,8 @@ public class BlockedLocationTest
 	private void initWorldServer() throws Exception {
 		/* The world SQL handler used to test. */
 		WorldSQLHandler worldSQLHandler = new WorldSQLHandler("localhost", "jenjin_test", "jenjin_user", "jenjin_password");
-		worldServer = new WorldServer(world, worldSQLHandler);
+		worldServer = new WorldServer(new WorldFileReader(getClass().getResourceAsStream("/WorldFile01.xml")),
+				WorldServer.DEFAULT_UPS, WorldServer.DEFAULT_PORT, WorldClientHandler.class, worldSQLHandler);
 		worldServer.blockingStart();
 	}
 }
