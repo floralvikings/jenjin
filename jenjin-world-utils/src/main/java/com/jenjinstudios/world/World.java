@@ -151,4 +151,12 @@ public class World
 	 * @return The object with the specified id.
 	 */
 	public WorldObject getObject(int id) { return worldObjects.get(id); }
+
+	/**
+	 * Get the zone array.
+	 * @return The array of zone objects contained in this world.
+	 */
+	public Zone[] getZones() {
+		return zones;
+	}
 }
