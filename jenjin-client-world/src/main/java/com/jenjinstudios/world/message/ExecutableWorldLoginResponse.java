@@ -16,7 +16,7 @@ import java.util.logging.Logger;
 public class ExecutableWorldLoginResponse extends WorldClientExecutableMessage
 {
 	/** The logger for this class. */
-	private static final Logger LOGGER = Logger.getLogger(ExecutableWorldLoginResponse.class.getName());
+	private static final Logger LOGGER = Logger.getLogger(ExecutableWorldFileResponse.class.getName());
 	/** The player created as indicated by the world login response. */
 	private ClientPlayer player;
 

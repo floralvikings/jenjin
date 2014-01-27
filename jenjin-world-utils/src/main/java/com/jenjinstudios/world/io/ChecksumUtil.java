@@ -1,6 +1,5 @@
 package com.jenjinstudios.world.io;
 
-import java.io.*;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -11,39 +10,12 @@ import java.security.NoSuchAlgorithmException;
 public class ChecksumUtil
 {
 	/**
-	 * Get the md5 checksum of the given file.
-	 * @param file The file.
-	 * @return The md5 checksum.
-	 * @throws java.io.IOException If there's an error reading the file.
-	 * @throws java.security.NoSuchAlgorithmException If the MD5 digest algorithm is not found.
+	 * Get the MD5 Checksum for the given byte array.
+	 * @param bytes The byte array.
+	 * @return The MD5 checksum.
+	 * @throws NoSuchAlgorithmException If the MD5 algorith cannot be found.
 	 */
-	public static byte[] getMD5Checksum(File file) throws IOException, NoSuchAlgorithmException {
-		return getMD5Checksum(new FileInputStream(file));
-	}
-
-	/**
-	 * Get the md5 checksum of the given input stream.
-	 * @param stream The input stream.
-	 * @return The md5 checksum.
-	 * @throws java.io.IOException If there's an error reading the file.
-	 * @throws java.security.NoSuchAlgorithmException If the MD5 digest algorithm is not found.
-	 */
-	public static byte[] getMD5Checksum(InputStream stream) throws IOException, NoSuchAlgorithmException {
-		MessageDigest digest = MessageDigest.getInstance("MD5");
-		byte[] md5sum = new byte[]{Byte.MIN_VALUE};
-		byte[] buffer = new byte[8192];
-		int read;
-		try
-		{
-			while ((read = stream.read(buffer)) > 0)
-			{
-				digest.update(buffer, 0, read);
-			}
-			md5sum = digest.digest();
-		} finally
-		{
-			stream.close();
-		}
-		return md5sum;
+	public static byte[] getMD5Checksum(byte[] bytes) throws NoSuchAlgorithmException {
+		return MessageDigest.getInstance("MD5").digest(bytes);
 	}
 }

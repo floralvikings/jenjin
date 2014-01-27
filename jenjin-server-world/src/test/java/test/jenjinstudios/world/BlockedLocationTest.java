@@ -7,6 +7,8 @@ import com.jenjinstudios.world.math.Vector2D;
 import com.jenjinstudios.world.sql.WorldSQLHandler;
 import org.junit.*;
 
+import java.io.File;
+
 /**
  * Test the file-loading and blocked location functionality.
  * @author Caleb Brinkman
@@ -52,6 +54,11 @@ public class BlockedLocationTest
 		worldClient.shutdown();
 
 		worldServer.shutdown();
+
+		if(!new File("WorldTestFile.xml").delete())
+		{
+			System.out.println("Unable to delete world file.");
+		}
 	}
 
 	/**
@@ -104,8 +111,9 @@ public class BlockedLocationTest
 	 * @throws Exception If there's an exception.
 	 */
 	private void initWorldClient() throws Exception {
-		worldClient = new WorldClient("localhost", WorldServer.DEFAULT_PORT, "TestAccount01", "testPassword");
+		worldClient = new WorldClient(new File("WorldTestFile.xml"), "localhost", WorldServer.DEFAULT_PORT, "TestAccount01", "testPassword");
 		worldClient.blockingStart();
+		worldClient.sendBlockingWorldFileRequest();
 		worldClient.sendBlockingLoginRequest();
 
 		/* The WorldClientHandler used to test. */

@@ -81,4 +81,22 @@
         <executable language="java" side="client">com.jenjinstudios.world.message.ExecutableActorStepLengthMessage</executable>
     </message>
 
+    <message name="WorldChecksumRequest" id="20">
+        <executable language="java" side="server">com.jenjinstudios.world.message.ExecutableWorldChecksumRequest</executable>
+    </message>
+
+    <message name="WorldChecksumResponse" id="21">
+        <argument type="byte[]" name="checksum" />
+        <executable language="java" side="client">com.jenjinstudios.world.message.ExecutableWorldChecksumResponse</executable>
+    </message>
+
+    <message name="WorldFileRequest" id="22">
+        <executable language="java" side="server">com.jenjinstudios.world.message.ExecutableWorldFileRequest</executable>
+    </message>
+
+    <message name="WorldFileResponse" id="23">
+        <argument type="byte[]" name="fileBytes" />
+        <executable language="java" side="client">com.jenjinstudios.world.message.ExecutableWorldFileResponse</executable>
+    </message>
+
 </base_messages>

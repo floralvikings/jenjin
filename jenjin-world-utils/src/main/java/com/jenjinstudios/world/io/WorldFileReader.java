@@ -33,6 +33,8 @@ public class WorldFileReader
 	private final Document worldDocument;
 	/** The byte array containing the world file checksum. */
 	private final byte[] worldFileChecksum;
+	/** The bytes in the world file. */
+	private final byte[] worldFileBytes;
 
 	/**
 	 * Construct a new WorldFileReader pointing to the specified file.
@@ -41,8 +43,9 @@ public class WorldFileReader
 	 * @throws org.xml.sax.SAXException If there is an error parsing the world xml file.
 	 * @throws javax.xml.parsers.ParserConfigurationException If there is an error configuring the XML parser.
 	 * @throws java.security.NoSuchAlgorithmException If there is an error getting the checksum.
+	 * @throws javax.xml.transform.TransformerException If there's an error configuring the world file.
 	 */
-	public WorldFileReader(File worldFile) throws IOException, SAXException, ParserConfigurationException, NoSuchAlgorithmException {
+	public WorldFileReader(File worldFile) throws IOException, SAXException, ParserConfigurationException, NoSuchAlgorithmException, TransformerException {
 		this(new FileInputStream(worldFile));
 
 	}
@@ -54,18 +57,15 @@ public class WorldFileReader
 	 * @throws org.xml.sax.SAXException If there is an error parsing the world xml file.
 	 * @throws javax.xml.parsers.ParserConfigurationException If there is an error configuring the XML parser.
 	 * @throws java.security.NoSuchAlgorithmException If there is an error getting the MD5 algorithm.
+	 * @throws javax.xml.transform.TransformerException If there's an error configuring the world file.
 	 */
-	public WorldFileReader(InputStream inputStream) throws IOException, SAXException, ParserConfigurationException, NoSuchAlgorithmException {
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		copyStream(inputStream, baos);
-
-		InputStream inStream01 = new ByteArrayInputStream(baos.toByteArray());
-		InputStream inStream02 = new ByteArrayInputStream(baos.toByteArray());
+	public WorldFileReader(InputStream inputStream) throws IOException, SAXException, ParserConfigurationException, NoSuchAlgorithmException, TransformerException {
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder builder = factory.newDocumentBuilder();
-		worldDocument = builder.parse(inStream01);
+		worldDocument = builder.parse(inputStream);
 		worldDocument.getDocumentElement().normalize();
-		worldFileChecksum = ChecksumUtil.getMD5Checksum(inStream02);
+		worldFileBytes = readBytes();
+		worldFileChecksum = ChecksumUtil.getMD5Checksum(readBytes());
 	}
 
 	/**
@@ -103,6 +103,14 @@ public class WorldFileReader
 	 */
 	public byte[] getWorldFileChecksum() {
 		return worldFileChecksum;
+	}
+
+	/**
+	 * Get the bytes contained in the world file.
+	 * @return The bytes contained in the world file.
+	 */
+	public byte[] getWorldFileBytes() {
+		return worldFileBytes;
 	}
 
 	/**
@@ -157,21 +165,4 @@ public class WorldFileReader
 		return locations;
 	}
 
-	/**
-	 * Copy the specified input stream into the specified output stream.
-	 * @param input The input stream.
-	 * @param output The output stream.
-	 * @return The number of bytes copied.
-	 * @throws IOException If there is an error reading from either stream.
-	 */
-	private static int copyStream(InputStream input, OutputStream output) throws IOException{
-		byte[] buffer = new byte[1024];
-		int count = 0;
-		int n;
-		while (-1 != (n = input.read(buffer))) {
-			output.write(buffer, 0, n);
-			count += n;
-		}
-		return count;
-	}
 }
