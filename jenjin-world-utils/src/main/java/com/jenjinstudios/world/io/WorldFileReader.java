@@ -56,11 +56,16 @@ public class WorldFileReader
 	 * @throws java.security.NoSuchAlgorithmException If there is an error getting the MD5 algorithm.
 	 */
 	public WorldFileReader(InputStream inputStream) throws IOException, SAXException, ParserConfigurationException, NoSuchAlgorithmException {
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		copyStream(inputStream, baos);
+
+		InputStream inStream01 = new ByteArrayInputStream(baos.toByteArray());
+		InputStream inStream02 = new ByteArrayInputStream(baos.toByteArray());
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder builder = factory.newDocumentBuilder();
-		worldDocument = builder.parse(inputStream);
+		worldDocument = builder.parse(inStream01);
 		worldDocument.getDocumentElement().normalize();
-		worldFileChecksum = ChecksumUtil.getMD5Checksum(inputStream);
+		worldFileChecksum = ChecksumUtil.getMD5Checksum(inStream02);
 	}
 
 	/**
@@ -139,7 +144,7 @@ public class WorldFileReader
 			for (int j = 0; j < attributes.getLength(); j++)
 			{
 				Attr item = (Attr) attributes.item(i);
-				if (!"x".equals(item.getName()) && !"y".equals(item.getName()))
+				if (item != null && !"x".equals(item.getName()) && !"y".equals(item.getName()))
 				{
 					String name = item.getName();
 					String value = item.getValue();
@@ -150,5 +155,23 @@ public class WorldFileReader
 			locations[i] = new Location(x, y, locationProperties);
 		}
 		return locations;
+	}
+
+	/**
+	 * Copy the specified input stream into the specified output stream.
+	 * @param input The input stream.
+	 * @param output The output stream.
+	 * @return The number of bytes copied.
+	 * @throws IOException If there is an error reading from either stream.
+	 */
+	private static int copyStream(InputStream input, OutputStream output) throws IOException{
+		byte[] buffer = new byte[1024];
+		int count = 0;
+		int n;
+		while (-1 != (n = input.read(buffer))) {
+			output.write(buffer, 0, n);
+			count += n;
+		}
+		return count;
 	}
 }
