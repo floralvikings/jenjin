@@ -15,9 +15,9 @@ public class Zone
 	/** The number assigned to this Zone by the world on initialization. */
 	public final int id;
 	/** The number of {@code Location} objects in the x-axis. */
-	private final int xSize;
+	public final int xSize;
 	/** The number of {@code Location} objects in the y-axis. */
-	private final int ySize;
+	public final int ySize;
 	/** The grid of {@code Location} objects. */
 	private final Location[][] locationGrid;
 
