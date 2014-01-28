@@ -88,8 +88,8 @@ public class Vector2D
 		if (angle == MoveState.IDLE) return new Vector2D(this);
 		double cos = java.lang.Math.cos(angle);
 		double sin = java.lang.Math.sin(angle);
-		double newX = Math.round(xCoordinate + (distance * cos), 4);
-		double newY = Math.round(yCoordinate + (distance * sin), 4);
+		double newX = MathUtil.round(xCoordinate + (distance * cos), 4);
+		double newY = MathUtil.round(yCoordinate + (distance * sin), 4);
 		return new Vector2D(newX, newY);
 	}
 
@@ -112,6 +112,6 @@ public class Vector2D
 	public double getDistanceToVector(Vector2D vector2D) {
 		double xSquare = java.lang.Math.pow(vector2D.getXCoordinate() - xCoordinate, 2);
 		double ySquare = java.lang.Math.pow(vector2D.getYCoordinate() - yCoordinate, 2);
-		return Math.round(java.lang.Math.sqrt(xSquare + ySquare), 4);
+		return MathUtil.round(java.lang.Math.sqrt(xSquare + ySquare), 4);
 	}
 }

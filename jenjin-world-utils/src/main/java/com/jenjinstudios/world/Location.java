@@ -82,4 +82,10 @@ public class Location
 		return "(" + X_COORDINATE + ", " + Y_COORDINATE + ")";
 	}
 
+	public boolean equals(Object obj)
+	{
+		return (obj instanceof Location) &&
+				((Location) obj).X_COORDINATE == X_COORDINATE && ((Location) obj).Y_COORDINATE == Y_COORDINATE;
+	}
+
 }

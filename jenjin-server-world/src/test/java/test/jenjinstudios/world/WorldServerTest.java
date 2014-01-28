@@ -3,7 +3,7 @@ package test.jenjinstudios.world;
 import com.jenjinstudios.io.MessageRegistry;
 import com.jenjinstudios.world.*;
 import com.jenjinstudios.world.io.WorldFileReader;
-import com.jenjinstudios.world.math.Math;
+import com.jenjinstudios.world.math.MathUtil;
 import com.jenjinstudios.world.math.Vector2D;
 import com.jenjinstudios.world.sql.WorldSQLHandler;
 import org.junit.*;
@@ -151,8 +151,8 @@ public class WorldServerTest
 		int maxCoord = 5;
 		for (int i = 0; i < 10; i++)
 		{
-			double randomX = Math.round(java.lang.Math.random() * maxCoord, 4);
-			double randomY = Math.round(java.lang.Math.random() * maxCoord, 4);
+			double randomX = MathUtil.round(java.lang.Math.random() * maxCoord, 4);
+			double randomY = MathUtil.round(java.lang.Math.random() * maxCoord, 4);
 			Vector2D random = new Vector2D(randomX, randomY);
 			WorldTestUtils.moveClientPlayerTowardVector(random, clientPlayer, serverPlayer);
 			double distance = clientPlayer.getVector2D().getDistanceToVector(serverPlayer.getVector2D());
