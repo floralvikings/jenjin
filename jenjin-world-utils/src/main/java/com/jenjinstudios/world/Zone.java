@@ -55,6 +55,25 @@ public class Zone
 				locationGrid[l.X_COORDINATE][l.Y_COORDINATE] = l;
 			}
 		}
+
+		setLocationVisibility();
+	}
+
+	/**
+	 * Add the specified location to the correct ray based on whether it should be busy.
+	 * @param visibleRay The list of visible locations to which the location will be added if necessary.
+	 * @param invisibleRay The list of invisible locations to which the location will be added if necessary.
+	 * @param locsVisible Whether the location should be visible.
+	 * @param location The location.
+	 */
+	private static void addLocationToRays(LinkedList<Location> visibleRay, LinkedList<Location> invisibleRay, boolean locsVisible, Location location) {
+		if (locsVisible)
+		{
+			visibleRay.add(location);
+		} else
+		{
+			invisibleRay.add(location);
+		}
 	}
 
 	/**
@@ -125,27 +144,30 @@ public class Zone
 	 * Cast a circle using the given center and radius, returning all locations within the circle.  This method is very
 	 * slow and memory-intensive, so it should not be used during world updates.  Instead, call this method during
 	 * initialization.
-	 * @param centerX The center location x.
-	 * @param centerY The center location y.
+	 * @param center The center location.
 	 * @param radius The radius of the circle.
 	 * @return All locations lying within the specified circle.
 	 */
-	public HashSet<Location> castCircle(int centerX, int centerY, int radius) {
+	@SuppressWarnings("SuspiciousNameCombination")
+	public HashSet<Location> castVisibilityCircle(Location center, int radius) {
 		HashSet<Location> locations = new HashSet<>();
+		int centerY = center.X_COORDINATE;
+		int centerX = center.Y_COORDINATE;
 		int d = 3 - (2 * radius);
 		int x = 0;
 		int y = radius;
-
+		LinkedList<Location> visibleLocations = new LinkedList<>();
+		LinkedList<Location> invisibleLocations = new LinkedList<>();
 		do
 		{
-			locations.addAll(castRay(centerX, centerY, centerX + x, centerY + y));
-			locations.addAll(castRay(centerX, centerY, centerX + x, centerY - y));
-			locations.addAll(castRay(centerX, centerY, centerX - x, centerY + y));
-			locations.addAll(castRay(centerX, centerY, centerX - x, centerY - y));
-			locations.addAll(castRay(centerX, centerY, centerX + y, centerY + x));
-			locations.addAll(castRay(centerX, centerY, centerX + y, centerY - x));
-			locations.addAll(castRay(centerX, centerY, centerX - y, centerY + x));
-			locations.addAll(castRay(centerX, centerY, centerX - y, centerY - x));
+			castVisibleRay(visibleLocations, invisibleLocations, centerX, centerY, centerX + x, centerY + y);
+			castVisibleRay(visibleLocations, invisibleLocations, centerX, centerY, centerX + x, centerY - y);
+			castVisibleRay(visibleLocations, invisibleLocations, centerX, centerY, centerX - x, centerY + y);
+			castVisibleRay(visibleLocations, invisibleLocations, centerX, centerY, centerX - x, centerY - y);
+			castVisibleRay(visibleLocations, invisibleLocations, centerX, centerY, centerX + y, centerY + x);
+			castVisibleRay(visibleLocations, invisibleLocations, centerX, centerY, centerX + y, centerY - x);
+			castVisibleRay(visibleLocations, invisibleLocations, centerX, centerY, centerX - y, centerY + x);
+			castVisibleRay(visibleLocations, invisibleLocations, centerX, centerY, centerX - y, centerY - x);
 			if (d < 0)
 			{
 				d = d + (4 * x) + 6;
@@ -156,44 +178,51 @@ public class Zone
 			}
 			x++;
 		} while (x <= y);
+		locations.addAll(visibleLocations);
+		locations.removeAll(invisibleLocations);
 		return locations;
 	}
 
 	/**
 	 * This uses a modified version of Bresenhem's Line Algorithm, available in its original form <a
-	 * href=http://lifc.univ-fcomte.fr/~dedu/projects/bresenham/index.html>here.</a>
+	 * href=http://lifc.univ-fcomte.fr/~dedu/projects/bresenham/index.html>here.</a>  This algorithm works by casting a ray
+	 * until a Location with a LocationProperty containing the property "blocksVision" set to "true".
+	 * @param visibleRay The list to which to add visible locations.
+	 * @param invisibleRay The list to which to add to invisible locations.
 	 * @param x1 The starting x location.
 	 * @param y1 The starting y location.
 	 * @param x2 The ending x location.
 	 * @param y2 The ending y location.
-	 * @return A list of locations that lie along the ray.
 	 */
 	@SuppressWarnings("SuspiciousNameCombination")
-	public LinkedList<Location> castRay(int x1, int y1, int x2, int y2) {
-		LinkedList<Location> ray = new LinkedList<>();
-		// If slope is outside the range [-1,1], swap x and y
+	public void castVisibleRay(LinkedList<Location> visibleRay, LinkedList<Location> invisibleRay, int x1, int y1, int x2, int y2) {
+		boolean locsVisible = true;
 		int i;               // loop counter
 		int ystep, xstep;    // the step on y and x axis
 		int error;           // the error accumulated during the increment
 		int errorprev;       // *vision the previous value of the error variable
 		int y = y1, x = x1;  // the line points
-		int ddy, ddx;        // compulsory variables: the double values of dy and dx
+		double ddy, ddx;        // compulsory variables: the double values of dy and dx
 		int dx = x2 - x1;
 		int dy = y2 - y1;
-		ray.add(getLocationOnGrid(y1, x1));  // first point
+		visibleRay.add(getLocationOnGrid(y1, x1));  // first point
 		// NB the last point can't be here, because of its previous point (which has to be verified)
 		if (dy < 0)
 		{
 			ystep = -1;
 			dy = -dy;
 		} else
+		{
 			ystep = 1;
+		}
 		if (dx < 0)
 		{
 			xstep = -1;
 			dx = -dx;
 		} else
+		{
 			xstep = 1;
+		}
 		ddy = 2 * dy;  // work with double values for full precision
 		ddx = 2 * dx;
 		if (ddx >= ddy)
@@ -210,16 +239,57 @@ public class Zone
 					error -= ddx;
 					// three cases (octant == right->right-top for directions below):
 					if (error + errorprev < ddx)  // bottom square also
-						ray.add(getLocationOnGrid(y - ystep, x));
-					else if (error + errorprev > ddx)  // left square also
-						ray.add(getLocationOnGrid(y, x - xstep));
-					else
+					{
+						Location location = getLocationOnGrid(y - ystep, x);
+						if (location == null)
+						{
+							break;
+						}
+						locsVisible = !("true".equals(location.getLocationProperties().getProperty("blocksVision")) || invisibleRay.contains(location));
+						addLocationToRays(visibleRay, invisibleRay, locsVisible, location);
+					} else if (error + errorprev > ddx)  // left square also
+					{
+						Location location = getLocationOnGrid(y, x - xstep);
+						if (location == null)
+						{
+							break;
+						} else if ("true".equals(location.getLocationProperties().getProperty("blocksVision")) || invisibleRay.contains(location))
+						{
+							locsVisible = false;
+						}
+						addLocationToRays(visibleRay, invisibleRay, locsVisible, location);
+					} else
 					{  // corner: bottom and left squares also
-						ray.add(getLocationOnGrid(y - ystep, x));
-						ray.add(getLocationOnGrid(y, x - xstep));
+						Location location = getLocationOnGrid(y - ystep, x);
+						if (location == null)
+						{
+							break;
+						} else if ("true".equals(location.getLocationProperties().getProperty("blocksVision")) || invisibleRay.contains(location))
+						{
+							locsVisible = false;
+						}
+						addLocationToRays(visibleRay, invisibleRay, locsVisible, location);
+						location = getLocationOnGrid(y, x - xstep);
+						if (location == null)
+						{
+							break;
+						} else if ("true".equals(location.getLocationProperties().getProperty("blocksVision")) || invisibleRay.contains(location))
+						{
+							locsVisible = false;
+						}
+						addLocationToRays(visibleRay, invisibleRay, locsVisible, location);
+						visibleRay.add(location);
 					}
 				}
-				ray.add(getLocationOnGrid(y, x));
+				Location location = getLocationOnGrid(y, x);
+				if (location == null)
+				{
+					break;
+				} else if ("true".equals(location.getLocationProperties().getProperty("blocksVision")) || invisibleRay.contains(location))
+				{
+					locsVisible = false;
+				}
+				addLocationToRays(visibleRay, invisibleRay, locsVisible, location);
 				errorprev = error;
 			}
 		} else
@@ -234,21 +304,79 @@ public class Zone
 					x += xstep;
 					error -= ddy;
 					if (error + errorprev < ddy)
-						ray.add(getLocationOnGrid(y, x - xstep));
-					else if (error + errorprev > ddy)
-						ray.add(getLocationOnGrid(y - ystep, x));
-					else
 					{
-						ray.add(getLocationOnGrid(y, x - xstep));
-						ray.add(getLocationOnGrid(y - ystep, x));
+						Location location = getLocationOnGrid(y, x - xstep);
+						if (location == null)
+						{
+							break;
+						} else if ("true".equals(location.getLocationProperties().getProperty("blocksVision")) || invisibleRay.contains(location))
+						{
+							locsVisible = false;
+						}
+						addLocationToRays(visibleRay, invisibleRay, locsVisible, location);
+					} else
+					{
+						if (error + errorprev > ddy)
+						{
+							Location location = getLocationOnGrid(y - ystep, x);
+							if (location == null)
+							{
+								break;
+							} else if ("true".equals(location.getLocationProperties().getProperty("blocksVision")) || invisibleRay.contains(location))
+							{
+								locsVisible = false;
+							}
+							addLocationToRays(visibleRay, invisibleRay, locsVisible, location);
+						} else
+						{
+							Location location = getLocationOnGrid(y, x - xstep);
+							if (location == null)
+							{
+								break;
+							} else if ("true".equals(location.getLocationProperties().getProperty("blocksVision")) || invisibleRay.contains(location))
+							{
+								locsVisible = false;
+							}
+							addLocationToRays(visibleRay, invisibleRay, locsVisible, location);
+							location = getLocationOnGrid(y - ystep, x);
+							if (location == null)
+							{
+								break;
+							} else if ("true".equals(location.getLocationProperties().getProperty("blocksVision")) || invisibleRay.contains(location))
+							{
+								locsVisible = false;
+							}
+							addLocationToRays(visibleRay, invisibleRay, locsVisible, location);
+						}
 					}
 				}
-				ray.add(getLocationOnGrid(y, x));
+				Location location = getLocationOnGrid(y, x);
+				if (location == null)
+				{
+					break;
+				}
+				if ("true".equals(location.getLocationProperties().getProperty("blocksVision")) || invisibleRay.contains(location))
+				{
+					locsVisible = false;
+				}
+				addLocationToRays(visibleRay, invisibleRay, locsVisible, location);
 				errorprev = error;
 			}
 		}
 
-		return ray;
+
+	}
+
+	/** Add visible locations to initiated locations. */
+	private void setLocationVisibility() {
+		for (int x = 0; x < xSize; x++)
+		{
+			for (int y = 0; y < ySize; y++)
+			{
+				Location loc = getLocationOnGrid(x, y);
+				loc.setLocationsVisibleFrom(castVisibilityCircle(loc, SightedObject.VIEW_RADIUS));
+			}
+		}
 	}
 
 	/** Initialize the locations in the zone. */

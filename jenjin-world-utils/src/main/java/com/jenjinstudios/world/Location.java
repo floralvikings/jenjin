@@ -1,9 +1,6 @@
 package com.jenjinstudios.world;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
+import java.util.*;
 
 /**
  * Represents a location in the world's location grid.
@@ -21,6 +18,8 @@ public class Location
 	private final HashSet<WorldObject> objects;
 	/** The locationProperties of this location. */
 	private final LocationProperties locationProperties;
+	/** The locations visible from this one. */
+	private HashSet<Location> locationsVisibleFrom;
 
 	/**
 	 * Construct a new location at the given position in a zone grid.
@@ -43,6 +42,7 @@ public class Location
 		Y_COORDINATE = y;
 		this.locationProperties = locationProperties1;
 		objects = new HashSet<>();
+		locationsVisibleFrom = new HashSet<>();
 	}
 
 	/**
@@ -82,10 +82,20 @@ public class Location
 		return "(" + X_COORDINATE + ", " + Y_COORDINATE + ")";
 	}
 
-	public boolean equals(Object obj)
+	/**
+	 * Set the locations visible from this location.
+	 * @param visible The locations to be visible from this one.
+	 */
+	public void setLocationsVisibleFrom(Set<Location> visible)
 	{
-		return (obj instanceof Location) &&
-				((Location) obj).X_COORDINATE == X_COORDINATE && ((Location) obj).Y_COORDINATE == Y_COORDINATE;
+		locationsVisibleFrom.addAll(visible);
 	}
 
+	/**
+	 * Get the locations visible from this one.
+	 * @return The locations visible from this one.
+	 */
+	public Set<Location> getLocationsVisibleFrom() {
+		return locationsVisibleFrom;
+	}
 }

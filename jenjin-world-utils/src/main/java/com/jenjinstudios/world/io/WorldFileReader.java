@@ -151,7 +151,7 @@ public class WorldFileReader
 			TreeMap<String, String> properties = new TreeMap<>();
 			for (int j = 0; j < attributes.getLength(); j++)
 			{
-				Attr item = (Attr) attributes.item(i);
+				Attr item = (Attr) attributes.item(j);
 				if (item != null && !"x".equals(item.getName()) && !"y".equals(item.getName()))
 				{
 					String name = item.getName();
