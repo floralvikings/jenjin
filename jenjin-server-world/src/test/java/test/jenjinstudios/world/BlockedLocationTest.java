@@ -55,7 +55,7 @@ public class BlockedLocationTest
 
 		worldServer.shutdown();
 
-		if(!new File("WorldTestFile.xml").delete())
+		if(!new File("resources/WorldTestFile.xml").delete())
 		{
 			System.out.println("Unable to delete world file.");
 		}
@@ -111,7 +111,7 @@ public class BlockedLocationTest
 	 * @throws Exception If there's an exception.
 	 */
 	private void initWorldClient() throws Exception {
-		worldClient = new WorldClient(new File("WorldTestFile.xml"), "localhost", WorldServer.DEFAULT_PORT, "TestAccount01", "testPassword");
+		worldClient = new WorldClient(new File("resources/WorldTestFile.xml"), "localhost", WorldServer.DEFAULT_PORT, "TestAccount01", "testPassword");
 		worldClient.blockingStart();
 		worldClient.sendBlockingWorldFileRequest();
 		worldClient.sendBlockingLoginRequest();

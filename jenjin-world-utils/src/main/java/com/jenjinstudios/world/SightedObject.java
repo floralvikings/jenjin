@@ -12,7 +12,7 @@ import java.util.TreeMap;
 public class SightedObject extends WorldObject
 {
 	/** The radius of the square of visible locations. */
-	public static final int VIEW_RADIUS = 5;
+	public static final int VIEW_RADIUS = 10;
 	/** The array of visible locations. */
 	private final ArrayList<Location> visibleLocations;
 	/** The container for visible objects. */
@@ -60,7 +60,7 @@ public class SightedObject extends WorldObject
 		visibleLocations.clear();
 		if (getLocation() != null)
 		{
-			visibleLocations.addAll(getWorld().getLocationArea(getZoneID(), getVector2D(), VIEW_RADIUS));
+			visibleLocations.addAll(getLocation().getLocationsVisibleFrom());
 		}
 	}
 

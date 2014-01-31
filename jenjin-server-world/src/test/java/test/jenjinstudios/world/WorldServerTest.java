@@ -3,7 +3,7 @@ package test.jenjinstudios.world;
 import com.jenjinstudios.io.MessageRegistry;
 import com.jenjinstudios.world.*;
 import com.jenjinstudios.world.io.WorldFileReader;
-import com.jenjinstudios.world.math.Round;
+import com.jenjinstudios.world.math.MathUtil;
 import com.jenjinstudios.world.math.Vector2D;
 import com.jenjinstudios.world.sql.WorldSQLHandler;
 import org.junit.*;
@@ -58,6 +58,11 @@ public class WorldServerTest
 		worldClient.shutdown();
 
 		worldServer.shutdown();
+
+		if(!new File("resources/WorldTestFile.xml").delete())
+		{
+			System.out.println("Unable to delete world file.");
+		}
 	}
 
 	/**
@@ -66,8 +71,8 @@ public class WorldServerTest
 	 */
 	@Test
 	public void testActorVisibility() throws Exception {
-		Vector2D serverActorStartPosition = new Vector2D(0, 51);
-		Vector2D serverActorTargetPosition = new Vector2D(0, 49);
+		Vector2D serverActorStartPosition = new Vector2D(0, Location.SIZE  * (SightedObject.VIEW_RADIUS + 2));
+		Vector2D serverActorTargetPosition = new Vector2D(0, Location.SIZE * SightedObject.VIEW_RADIUS - 1);
 		Actor serverActor = new Actor("TestActor");
 		serverActor.setVector2D(serverActorStartPosition);
 		world.addObject(serverActor);
@@ -75,16 +80,15 @@ public class WorldServerTest
 		WorldTestUtils.moveServerActorToVector(serverActor, serverActorTargetPosition);
 
 		WorldObject clientActor = worldClient.getPlayer().getVisibleObjects().get(serverActor.getId());
-		Assert.assertNotNull(clientActor);
 		Assert.assertEquals(1, worldClient.getPlayer().getVisibleObjects().size());
+		Assert.assertNotNull(clientActor);
 		Thread.sleep(50);
 		Assert.assertEquals(serverActor.getVector2D(), clientActor.getVector2D());
 
 		WorldTestUtils.moveServerActorToVector(serverActor, serverActorStartPosition);
 		Assert.assertEquals(0, worldClient.getPlayer().getVisibleObjects().size());
 
-
-		WorldTestUtils.moveClientPlayerTowardVector(new Vector2D(0, 11), clientPlayer, serverPlayer);
+		WorldTestUtils.moveClientPlayerTowardVector(new Vector2D(0, Location.SIZE + 1), clientPlayer, serverPlayer);
 		Assert.assertEquals(1, worldClient.getPlayer().getVisibleObjects().size());
 		clientActor = worldClient.getPlayer().getVisibleObjects().get(serverActor.getId());
 		Assert.assertEquals(serverActor.getVector2D(), clientActor.getVector2D());
@@ -151,8 +155,8 @@ public class WorldServerTest
 		int maxCoord = 5;
 		for (int i = 0; i < 10; i++)
 		{
-			double randomX = Round.round(Math.random() * maxCoord, 4);
-			double randomY = Round.round(Math.random() * maxCoord, 4);
+			double randomX = MathUtil.round(java.lang.Math.random() * maxCoord, 4);
+			double randomY = MathUtil.round(java.lang.Math.random() * maxCoord, 4);
 			Vector2D random = new Vector2D(randomX, randomY);
 			WorldTestUtils.moveClientPlayerTowardVector(random, clientPlayer, serverPlayer);
 			double distance = clientPlayer.getVector2D().getDistanceToVector(serverPlayer.getVector2D());
@@ -165,7 +169,7 @@ public class WorldServerTest
 	 * @throws Exception If there's an exception.
 	 */
 	private void initWorldClient() throws Exception {
-		worldClient = new WorldClient(new File("WorldTestFile.xml"), "localhost", WorldServer.DEFAULT_PORT, "TestAccount01", "testPassword");
+		worldClient = new WorldClient(new File("resources/WorldTestFile.xml"), "localhost", WorldServer.DEFAULT_PORT, "TestAccount01", "testPassword");
 		worldClient.blockingStart();
 		worldClient.sendBlockingWorldFileRequest();
 		worldClient.sendBlockingLoginRequest();

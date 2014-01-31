@@ -86,10 +86,10 @@ public class Vector2D
 	 */
 	public Vector2D getVectorInDirection(double distance, double angle) {
 		if (angle == MoveState.IDLE) return new Vector2D(this);
-		double cos = Math.cos(angle);
-		double sin = Math.sin(angle);
-		double newX = Round.round(xCoordinate + (distance * cos), 4);
-		double newY = Round.round(yCoordinate + (distance * sin), 4);
+		double cos = java.lang.Math.cos(angle);
+		double sin = java.lang.Math.sin(angle);
+		double newX = MathUtil.round(xCoordinate + (distance * cos), 4);
+		double newY = MathUtil.round(yCoordinate + (distance * sin), 4);
 		return new Vector2D(newX, newY);
 	}
 
@@ -101,7 +101,7 @@ public class Vector2D
 	public double getAngleToVector(Vector2D vector2D) {
 		double xDist = vector2D.getXCoordinate() - xCoordinate;
 		double yDist = vector2D.getYCoordinate() - yCoordinate;
-		return Math.atan2(yDist, xDist);
+		return java.lang.Math.atan2(yDist, xDist);
 	}
 
 	/**
@@ -110,8 +110,8 @@ public class Vector2D
 	 * @return The distance.
 	 */
 	public double getDistanceToVector(Vector2D vector2D) {
-		double xSquare = Math.pow(vector2D.getXCoordinate() - xCoordinate, 2);
-		double ySquare = Math.pow(vector2D.getYCoordinate() - yCoordinate, 2);
-		return Round.round(Math.sqrt(xSquare + ySquare), 4);
+		double xSquare = java.lang.Math.pow(vector2D.getXCoordinate() - xCoordinate, 2);
+		double ySquare = java.lang.Math.pow(vector2D.getYCoordinate() - yCoordinate, 2);
+		return MathUtil.round(java.lang.Math.sqrt(xSquare + ySquare), 4);
 	}
 }
