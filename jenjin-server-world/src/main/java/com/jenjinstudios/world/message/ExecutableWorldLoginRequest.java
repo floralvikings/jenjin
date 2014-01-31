@@ -36,13 +36,15 @@ public class ExecutableWorldLoginRequest extends WorldExecutableMessage
 			try
 			{
 				getClientHandler().getServer().getWorld().addObject(player);
+				loginResponse.setArgument("id", player.getId());
 			} catch (InvalidLocationException ex)
 			{
 				loginResponse.setArgument("success", false);
 				loginResponse.setArgument("id", -1);
 				loginResponse.setArgument("loginTime", getClientHandler().getLoggedInTime());
-				loginResponse.setArgument("xCoord", 0d);
-				loginResponse.setArgument("zCoord", 0d);
+				loginResponse.setArgument("xCoordinate", 0d);
+				loginResponse.setArgument("yCoordinate", 0d);
+				loginResponse.setArgument("zoneNumber", -1);
 			}
 		}
 		getClientHandler().queueMessage(loginResponse);
@@ -70,15 +72,16 @@ public class ExecutableWorldLoginRequest extends WorldExecutableMessage
 		{
 			getClientHandler().setActor(player);
 			loginResponse.setArgument("loginTime", getClientHandler().getLoggedInTime());
-			loginResponse.setArgument("xCoord", player.getVector2D().getXCoordinate());
-			loginResponse.setArgument("zCoord", player.getVector2D().getZCoordinate());
-			loginResponse.setArgument("id", player.getId());
+			loginResponse.setArgument("xCoordinate", player.getVector2D().getXCoordinate());
+			loginResponse.setArgument("yCoordinate", player.getVector2D().getYCoordinate());
+			loginResponse.setArgument("zoneNumber", player.getZoneID());
 		} else
 		{
 			loginResponse.setArgument("id", -1);
 			loginResponse.setArgument("loginTime", getClientHandler().getLoggedInTime());
-			loginResponse.setArgument("xCoord", 0d);
-			loginResponse.setArgument("zCoord", 0d);
+			loginResponse.setArgument("xCoordinate", 0d);
+			loginResponse.setArgument("yCoordinate", 0d);
+			loginResponse.setArgument("zoneNumber", -1);
 		}
 
 

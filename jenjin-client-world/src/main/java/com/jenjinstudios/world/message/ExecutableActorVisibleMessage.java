@@ -2,8 +2,12 @@ package com.jenjinstudios.world.message;
 
 import com.jenjinstudios.io.Message;
 import com.jenjinstudios.world.ClientActor;
+import com.jenjinstudios.world.InvalidLocationException;
 import com.jenjinstudios.world.WorldClient;
 import com.jenjinstudios.world.state.MoveState;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Process an ActorVisibleMessage.
@@ -11,6 +15,8 @@ import com.jenjinstudios.world.state.MoveState;
  */
 public class ExecutableActorVisibleMessage extends WorldClientExecutableMessage
 {
+	/** The logger for this class. */
+	private static final Logger LOGGER = Logger.getLogger(ExecutableActorVisibleMessage.class.getName());
 	/** The newly visible actor. */
 	ClientActor newlyVisible;
 
@@ -25,7 +31,13 @@ public class ExecutableActorVisibleMessage extends WorldClientExecutableMessage
 
 	@Override
 	public void runSynced() {
-		getClient().addNewVisible(newlyVisible);
+		try
+		{
+			getClient().getWorld().addObject(newlyVisible, newlyVisible.getId());
+		} catch (InvalidLocationException e)
+		{
+			LOGGER.log(Level.INFO, "Tried to place newly visible actor in invalid location.");
+		}
 	}
 
 	@Override
@@ -34,14 +46,14 @@ public class ExecutableActorVisibleMessage extends WorldClientExecutableMessage
 		String name = (String) message.getArgument("name");
 		int id = (int) message.getArgument("id");
 		double xCoord = (double) message.getArgument("xCoordinate");
-		double zCoord = (double) message.getArgument("zCoordinate");
+		double yCoord = (double) message.getArgument("yCoordinate");
 		double direction = (double) message.getArgument("relativeAngle");
 		double angle = (double) message.getArgument("absoluteAngle");
 		int stepsFromLast = (int) message.getArgument("stepsTaken");
 		int stepsUntilChange = (int) message.getArgument("stepsUntilChange");
 
 		newlyVisible = new ClientActor(id, name);
-		newlyVisible.setVector2D(xCoord, zCoord);
+		newlyVisible.setVector2D(xCoord, yCoord);
 		MoveState state = new MoveState(direction, stepsUntilChange, angle);
 		newlyVisible.setCurrentMoveState(state);
 		newlyVisible.setStepsTaken(stepsFromLast);

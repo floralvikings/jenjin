@@ -19,8 +19,8 @@ public class WorldObjectTest
 	private float direction;
 	/** The x coordinate used for testing. */
 	private float xCoordinate;
-	/** The z coordinate used for testing. */
-	private float zCoordinate;
+	/** The y coordinate used for testing. */
+	private float yCoordinate;
 	/** The vector2D used for testing. */
 	private Vector2D vector2D;
 	/** The id used for testing. */
@@ -37,8 +37,8 @@ public class WorldObjectTest
 		worldObject = new WorldObject();
 		direction = 2.15f;
 		xCoordinate = 5.20f;
-		zCoordinate = 7.23f;
-		vector2D = new Vector2D(xCoordinate, zCoordinate);
+		yCoordinate = 7.23f;
+		vector2D = new Vector2D(xCoordinate, yCoordinate);
 		id = 123;
 		world = new World();
 		/* The zone used for testing. */
@@ -65,7 +65,7 @@ public class WorldObjectTest
 		worldObject.setVector2D(vector2D);
 		Assert.assertTrue(vector2D.equals(worldObject.getVector2D()));
 
-		worldObject.setVector2D(new Vector2D(xCoordinate, zCoordinate));
+		worldObject.setVector2D(new Vector2D(xCoordinate, yCoordinate));
 		Assert.assertTrue(vector2D.equals(worldObject.getVector2D()));
 	}
 
@@ -76,7 +76,7 @@ public class WorldObjectTest
 	@Test
 	public void testGetLocation() throws Exception {
 		worldObject.setVector2D(vector2D);
-		Assert.assertTrue(worldObject.getLocation() == world.getLocationForCoordinates(vector2D));
+		Assert.assertTrue(worldObject.getLocation() == world.getLocationForCoordinates(0, vector2D));
 	}
 
 	/**
