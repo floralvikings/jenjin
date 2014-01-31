@@ -19,7 +19,7 @@ public class Location
 	/** The locationProperties of this location. */
 	private final LocationProperties locationProperties;
 	/** The locations visible from this one. */
-	private HashSet<Location> locationsVisibleFrom;
+	private LinkedList<Location> locationsVisibleFrom;
 
 	/**
 	 * Construct a new location at the given position in a zone grid.
@@ -42,7 +42,7 @@ public class Location
 		Y_COORDINATE = y;
 		this.locationProperties = locationProperties1;
 		objects = new HashSet<>();
-		locationsVisibleFrom = new HashSet<>();
+		locationsVisibleFrom = new LinkedList<>();
 	}
 
 	/**
@@ -86,7 +86,7 @@ public class Location
 	 * Set the locations visible from this location.
 	 * @param visible The locations to be visible from this one.
 	 */
-	public void setLocationsVisibleFrom(Set<Location> visible)
+	public void setLocationsVisibleFrom(List<Location> visible)
 	{
 		locationsVisibleFrom.addAll(visible);
 	}
@@ -95,7 +95,7 @@ public class Location
 	 * Get the locations visible from this one.
 	 * @return The locations visible from this one.
 	 */
-	public Set<Location> getLocationsVisibleFrom() {
+	public LinkedList<Location> getLocationsVisibleFrom() {
 		return locationsVisibleFrom;
 	}
 }

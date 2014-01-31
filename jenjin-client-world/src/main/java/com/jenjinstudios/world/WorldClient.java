@@ -32,7 +32,6 @@ public class WorldClient extends AuthClient
 	/** The password used to login to the world. */
 	private final String password;
 	/** The world. */
-	// TODO Make this read from server
 	private World world;
 	/** The actor representing the player controlled by this client. */
 	private ClientPlayer player;
@@ -182,7 +181,7 @@ public class WorldClient extends AuthClient
 			{
 				Thread.sleep(10);
 			}
-			if (!worldFile.exists() && !worldFile.createNewFile())
+			if ((!worldFile.getParentFile().exists() && !worldFile.getParentFile().mkdirs()) || (!worldFile.exists() &&  !worldFile.createNewFile()))
 			{
 				throw new IOException("Unable to create new world file!");
 			}
