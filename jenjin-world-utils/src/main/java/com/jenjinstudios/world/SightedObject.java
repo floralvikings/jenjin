@@ -1,6 +1,7 @@
 package com.jenjinstudios.world;
 
 import java.util.ArrayList;
+import java.util.TreeMap;
 
 /**
  * The {@code SightedObject} class is a {@code WorldObject} which maintains a range of locations which are visible to
@@ -11,11 +12,11 @@ import java.util.ArrayList;
 public class SightedObject extends WorldObject
 {
 	/** The radius of the square of visible locations. */
-	public static final int VIEW_RADIUS = 5;
+	public static final int VIEW_RADIUS = 10;
 	/** The array of visible locations. */
 	private final ArrayList<Location> visibleLocations;
 	/** The container for visible objects. */
-	private final ArrayList<WorldObject> visibleObjects;
+	private final TreeMap<Integer, WorldObject> visibleObjects;
 	/** The list of newly visible objects. */
 	private final ArrayList<WorldObject> newlyVisibleObjects;
 	/** The list of newly invisible objects. */
@@ -32,10 +33,20 @@ public class SightedObject extends WorldObject
 	 */
 	public SightedObject(String name) {
 		super(name);
-		visibleObjects = new ArrayList<>();
+		visibleObjects = new TreeMap<>();
 		visibleLocations = new ArrayList<>();
 		newlyVisibleObjects = new ArrayList<>();
 		newlyInvisibleObjects = new ArrayList<>();
+	}
+
+	/**
+	 * Construct a new SightedObject.
+	 * @param name The name of this object.
+	 * @param id The id of the object.
+	 */
+	public SightedObject(String name, int id) {
+		this(name);
+		this.setId(id);
 	}
 
 	@Override
@@ -49,7 +60,7 @@ public class SightedObject extends WorldObject
 		visibleLocations.clear();
 		if (getLocation() != null)
 		{
-			visibleLocations.addAll(getWorld().getLocationArea(getLocation(), VIEW_RADIUS));
+			visibleLocations.addAll(getLocation().getLocationsVisibleFrom());
 		}
 	}
 
@@ -68,22 +79,25 @@ public class SightedObject extends WorldObject
 		}
 
 		newlyInvisibleObjects.clear();
-		newlyInvisibleObjects.addAll(visibleObjects);
+		newlyInvisibleObjects.addAll(visibleObjects.values());
 		newlyInvisibleObjects.removeAll(currentlyVisible);
 
 		newlyVisibleObjects.clear();
 		newlyVisibleObjects.addAll(currentlyVisible);
-		newlyVisibleObjects.removeAll(visibleObjects);
+		newlyVisibleObjects.removeAll(visibleObjects.values());
 
 		visibleObjects.clear();
-		visibleObjects.addAll(currentlyVisible);
+		for(WorldObject object : currentlyVisible)
+		{
+			visibleObjects.put(object.getId(), object);
+		}
 	}
 
 	/**
 	 * The container for visible objects.
 	 * @return An ArrayList containing all objects visible to this actor.
 	 */
-	public ArrayList<WorldObject> getVisibleObjects() {return visibleObjects;}
+	public TreeMap<Integer, WorldObject> getVisibleObjects() {return visibleObjects;}
 
 	/**
 	 * Get newly visible objects.

@@ -26,7 +26,7 @@ import static com.jenjinstudios.world.state.MoveState.IDLE;
 public class Actor extends SightedObject
 {
 	/** The length of each step. */
-	public static final double STEP_LENGTH = (double) Location.SIZE / (double) WorldServer.DEFAULT_UPS;
+	public static final double STEP_LENGTH = (double) Location.SIZE / 50d;
 	/** The maximum number of steps this actor is allowed to correct. */
 	public static final int MAX_CORRECT = 10;
 	/** The next move. */
@@ -51,6 +51,18 @@ public class Actor extends SightedObject
 	 */
 	public Actor(String name) {
 		super(name);
+		currentMoveState = new MoveState(IDLE, 0, 0);
+		nextMoveStates = new LinkedList<>();
+	}
+
+	/**
+	 * Construct a new Actor with the given ID and name.
+	 * @param name The name.
+	 * @param id The ID.
+	 */
+	public Actor(String name, int id)
+	{
+		super(name, id);
 		currentMoveState = new MoveState(IDLE, 0, 0);
 		nextMoveStates = new LinkedList<>();
 	}
@@ -102,7 +114,10 @@ public class Actor extends SightedObject
 	public boolean stepForward() {
 		if (currentMoveState.relativeAngle == IDLE) { return true; }
 		Vector2D newVector = getVector2D().getVectorInDirection(STEP_LENGTH, currentMoveState.stepAngle);
-		if (getWorld().isValidLocation(newVector))
+		Location newLocation = getWorld().getLocationForCoordinates(getZoneID(), newVector);
+		if(newLocation == null) { return false; }
+		boolean walkable = !"false".equals(newLocation.getLocationProperties().getProperty("walkable"));
+		if (walkable)
 		{
 			setVector2D(newVector);
 			return true;
@@ -121,7 +136,8 @@ public class Actor extends SightedObject
 		double stepAmount = STEP_LENGTH * overstepped;
 		Vector2D backVector = getVector2D().getVectorInDirection(stepAmount, currentMoveState.stepAngle - Math.PI);
 		Vector2D newVector = backVector.getVectorInDirection(stepAmount, nextState.stepAngle);
-		boolean success = getWorld().isValidLocation(newVector);
+		Location newLocation = getWorld().getLocationForCoordinates(getZoneID(), newVector);
+		boolean success = newLocation != null && !"false".equals(newLocation.getLocationProperties().getProperty("walkable"));
 		resetState();
 		if (success)
 		{
@@ -208,7 +224,7 @@ public class Actor extends SightedObject
 		while (!isValid && stepsToTake < MAX_CORRECT)
 		{
 			current = getVector2D().getVectorInDirection(STEP_LENGTH * stepsToTake, stepAngle);
-			isValid = getWorld().isValidLocation(current);
+			isValid = getWorld().isValidLocation(getZoneID(), current);
 			if (!isValid) { stepsToTake++; }
 		}
 		setVector2D(current);

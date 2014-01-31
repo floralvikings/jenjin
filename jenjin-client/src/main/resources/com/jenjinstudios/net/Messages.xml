@@ -1,0 +1,59 @@
+<?xml version="1.0" ?>
+
+<base_messages xmlns="" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation=" ">
+
+    <message name="InvalidMessage" id="-1">
+        <argument type="String" name="messageName" />
+        <argument type="short" name="messageID" />
+        <executable language="java" side="client">com.jenjinstudios.message.ClientExecutableInvalidMessage</executable>
+        <executable language="java" side="server">com.jenjinstudios.message.ServerExecutableInvalidMessage</executable>
+    </message>
+
+    <message name="FirstConnectResponse" id="0">
+        <argument type="int" name="ups" />
+    </message>
+
+    <message name="LoginRequest" id="1">
+        <argument type="String" name="username" encrypt="true" />
+        <argument type="String" name="password" encrypt="true" />
+        <executable language="java" side="server">com.jenjinstudios.message.ExecutableLoginRequest</executable>
+    </message>
+
+    <message name="LoginResponse" id="2">
+        <argument type="boolean" name="success" />
+        <argument type="long" name="loginTime" />
+        <executable language="java" side="client">com.jenjinstudios.message.ExecutableLoginResponse</executable>
+    </message>
+
+    <message name="LogoutRequest" id="3">
+        <executable language="java" side="server">com.jenjinstudios.message.ExecutableLogoutRequest</executable>
+    </message>
+
+    <message name="LogoutResponse" id="4">
+        <argument type="boolean" name="success" />
+        <executable language="java" side="client">com.jenjinstudios.message.ExecutableLogoutResponse</executable>
+    </message>
+
+    <message name="PublicKeyMessage" id="5">
+        <executable language="java" side="server">com.jenjinstudios.message.ExecutablePublicKeyMessage</executable>
+        <argument type="byte[]" name="key" />
+    </message>
+
+    <message name="AESKeyMessage" id="6">
+        <executable language="java" side="client">com.jenjinstudios.message.ExecutableAESKeyMessage</executable>
+        <argument type="byte[]" name="key" />
+    </message>
+
+    <message name="PingRequest" id="7">
+        <argument type="long" name="requestTimeNanos" />
+        <executable language="java" side="server">com.jenjinstudios.message.ExecutablePingRequest</executable>
+    </message>
+
+    <message name="PingResponse" id="8">
+        <argument type="long" name="requestTimeNanos" />
+        <executable language="java" side="client">com.jenjinstudios.message.ExecutablePingResponse</executable>
+    </message>
+
+
+
+</base_messages>

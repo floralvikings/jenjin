@@ -4,30 +4,27 @@ import com.jenjinstudios.io.Message;
 import com.jenjinstudios.world.WorldClient;
 
 /**
- * Handles processing an ActorInvisibleMessage.
+ * Handles login responses from the server.
  * @author Caleb Brinkman
  */
-public class ExecutableObjectInvisibleMessage extends WorldClientExecutableMessage
+public class ExecutableWorldFileResponse extends WorldClientExecutableMessage
 {
-	/** The ID of the object to be made invisible. */
-	private int id;
-
 	/**
 	 * Construct an ExecutableMessage with the given Message.
 	 * @param client The client invoking this message.
 	 * @param message The Message.
 	 */
-	public ExecutableObjectInvisibleMessage(WorldClient client, Message message) {
+	public ExecutableWorldFileResponse(WorldClient client, Message message) {
 		super(client, message);
 	}
 
 	@Override
 	public void runSynced() {
-		getClient().getWorld().removeObject(id);
 	}
 
 	@Override
 	public void runASync() {
-		id = (int) getMessage().getArgument("id");
+		getClient().setServerWorldFileBytes((byte[]) getMessage().getArgument("fileBytes"));
+		getClient().setHasReceivedWorldFile(true);
 	}
 }

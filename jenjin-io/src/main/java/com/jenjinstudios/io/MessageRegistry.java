@@ -13,9 +13,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 import java.nio.file.Paths;
-import java.security.CodeSource;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.TreeMap;
@@ -26,6 +24,7 @@ import java.util.zip.ZipInputStream;
 
 /**
  * Handles the registration of message classes and the information on how to reconstruct them from raw data.
+ *
  * @author Caleb Brinkman
  */
 public class MessageRegistry
@@ -43,27 +42,38 @@ public class MessageRegistry
 
 	/**
 	 * Register all messages found in registry files.  Also checks the JAR file.
+	 *
 	 * @param isServer Whether the program registering messages is a server or client-side program.
-	 * @throws java.io.IOException If there is an IO exception when reading XML files.
-	 * @throws javax.xml.parsers.ParserConfigurationException If there is an error parsing XML files.
+	 * @throws java.io.IOException      If there is an IO exception when reading XML files.
+	 * @throws javax.xml.parsers.ParserConfigurationException
+	 *                                  If there is an error parsing XML files.
 	 * @throws org.xml.sax.SAXException If there is an error parsing XML files.
 	 */
-	public static void registerXmlMessages(boolean isServer) throws ParserConfigurationException, SAXException, IOException {
+	public static void registerXmlMessages(boolean isServer) throws ParserConfigurationException, SAXException, IOException
+	{
 		try
 		{
-			// Search the JAR
-			CodeSource src = MessageRegistry.class.getProtectionDomain().getCodeSource();
+			String classPath = System.getProperty("java.class.path");
+			String[] pathElements = classPath.split(System.getProperty("path.separator"));
 
-			if (src != null)
+			for (String fileName : pathElements)
 			{
-				URL jar = src.getLocation();
-				ZipInputStream zip = new ZipInputStream(jar.openStream());
+				File file = new File(fileName);
+				if (file.isDirectory() || !file.exists())
+				{
+					continue;
+				}
+				FileInputStream inputStream = new FileInputStream(file);
+				ZipInputStream zip = new ZipInputStream(inputStream);
 				ZipEntry ze;
 				while ((ze = zip.getNextEntry()) != null)
 				{
 					String entryName = ze.getName();
 					if (entryName.endsWith("Messages.xml"))
+					{
+						System.out.println("Registering messages in: " + entryName);
 						parseXmlStream(MessageRegistry.class.getClassLoader().getResourceAsStream(entryName), isServer);
+					}
 				}
 			}
 
@@ -81,9 +91,11 @@ public class MessageRegistry
 
 	/**
 	 * Look for files that match the message registry format.
+	 *
 	 * @return An ArrayList of message registry files.
 	 */
-	private static ArrayList<File> findMessageFiles() {
+	private static ArrayList<File> findMessageFiles()
+	{
 		String rootDir = Paths.get("").toAbsolutePath().toString() + File.separator;
 		File rootFile = new File(rootDir);
 		return FileUtil.findFilesWithName(rootFile, messageFileName);
@@ -91,13 +103,16 @@ public class MessageRegistry
 
 	/**
 	 * Parse a stream for XML messages.
-	 * @param stream The stream to parse.
+	 *
+	 * @param stream   The stream to parse.
 	 * @param isServer Whether the program registering message is server or client side.
-	 * @throws java.io.IOException If this exception occurs.
-	 * @throws javax.xml.parsers.ParserConfigurationException If this exception occurs.
+	 * @throws java.io.IOException      If this exception occurs.
+	 * @throws javax.xml.parsers.ParserConfigurationException
+	 *                                  If this exception occurs.
 	 * @throws org.xml.sax.SAXException If this exception occurs.
 	 */
-	private static void parseXmlStream(InputStream stream, boolean isServer) throws IOException, SAXException, ParserConfigurationException {
+	private static void parseXmlStream(InputStream stream, boolean isServer) throws IOException, SAXException, ParserConfigurationException
+	{
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder builder = factory.newDocumentBuilder();
 		Document doc = builder.parse(stream);
@@ -121,23 +136,28 @@ public class MessageRegistry
 
 	/**
 	 * Parse the given XML file and register message therein.
-	 * @param xmlFile The XML file to be parsed.
+	 *
+	 * @param xmlFile  The XML file to be parsed.
 	 * @param isServer Whether the program registering message is server or client side.
-	 * @throws java.io.IOException If this exception occurs.
-	 * @throws javax.xml.parsers.ParserConfigurationException If this exception occurs.
+	 * @throws java.io.IOException      If this exception occurs.
+	 * @throws javax.xml.parsers.ParserConfigurationException
+	 *                                  If this exception occurs.
 	 * @throws org.xml.sax.SAXException If this exception occurs.
 	 */
-	private static void parseXmlFile(File xmlFile, boolean isServer) throws IOException, SAXException, ParserConfigurationException {
+	private static void parseXmlFile(File xmlFile, boolean isServer) throws IOException, SAXException, ParserConfigurationException
+	{
 		InputStream xmlStream = new FileInputStream(xmlFile);
 		parseXmlStream(xmlStream, isServer);
 	}
 
 	/**
 	 * Get the message type with the given name.
+	 *
 	 * @param name The name of the message type.
 	 * @return The MessageType with the given name.
 	 */
-	public static MessageType getMessageType(String name) {
+	public static MessageType getMessageType(String name)
+	{
 		if (!messagesRegistered)
 		{
 			LOGGER.log(Level.SEVERE, "Messages not registered!  Please remeber to call MessageRegistry.registerXmlMessages()");
@@ -148,10 +168,12 @@ public class MessageRegistry
 
 	/**
 	 * Get the MessageType with the given ID.
+	 *
 	 * @param id The id.
 	 * @return The MessageType with the given ID.
 	 */
-	public static MessageType getMessageType(short id) {
+	public static MessageType getMessageType(short id)
+	{
 		if (!messagesRegistered)
 		{
 			LOGGER.log(Level.SEVERE, "Messages not registered!  Please remeber to call MessageRegistry.registerXmlMessages()");
@@ -162,10 +184,12 @@ public class MessageRegistry
 
 	/**
 	 * Get the class names of argumentTypes for the class with the given registration ID.
+	 *
 	 * @param id The ID to lookup.
 	 * @return A LinkedList of class names.
 	 */
-	public static LinkedList<Class> getArgumentClasses(short id) {
+	public static LinkedList<Class> getArgumentClasses(short id)
+	{
 		if (!messagesRegistered)
 		{
 			LOGGER.log(Level.SEVERE, "Messages not registered!  Please remeber to call MessageRegistry.registerXmlMessages()");
