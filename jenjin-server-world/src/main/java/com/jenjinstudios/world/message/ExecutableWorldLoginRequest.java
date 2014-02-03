@@ -1,8 +1,8 @@
 package com.jenjinstudios.world.message;
 
 import com.jenjinstudios.io.Message;
-import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.InvalidLocationException;
+import com.jenjinstudios.world.Player;
 import com.jenjinstudios.world.WorldClientHandler;
 import com.jenjinstudios.world.sql.WorldSQLHandler;
 
@@ -15,7 +15,7 @@ public class ExecutableWorldLoginRequest extends WorldExecutableMessage
 	/** The SQL handler used by this executable message. */
 	private final WorldSQLHandler sqlHandler;
 	/** The player added to the world. */
-	private Actor player;
+	private Player player;
 	/** The LoginResponse to send to the client. */
 	private Message loginResponse;
 
