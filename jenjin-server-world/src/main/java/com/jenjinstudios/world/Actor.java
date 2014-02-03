@@ -91,7 +91,7 @@ public class Actor extends SightedObject
 	/** Take a step, changing state and correcting steps if necessary. */
 	public void step() {
 		int overstepped = getOverstepped();
-		MoveState idleState = new MoveState(IDLE, stepsTaken, currentMoveState.absoluteAngle);
+		MoveState idleState = new MoveState(IDLE, getStepsTaken(), getCurrentMoveState().absoluteAngle);
 		if (overstepped < MAX_CORRECT)
 		{
 			boolean stepCorrectionSuccess = (overstepped < 0) || (correctOverSteps(overstepped));
@@ -101,11 +101,16 @@ public class Actor extends SightedObject
 			}
 		} else
 		{
-			setForcedState(currentMoveState);
+			setForcedState(getCurrentMoveState());
 			stepForward();
 		}
-		stepsTaken++;
+		incrementStepCounter();
 	}
+
+	/**
+	 * Increment the stepsTaken counter.
+	 */
+	private void incrementStepCounter() {stepsTaken++;}
 
 	/**
 	 * Take a step according to the current move state.
