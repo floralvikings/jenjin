@@ -3,6 +3,7 @@ package com.jenjinstudios.world.sql;
 import com.jenjinstudios.sql.SQLHandler;
 import com.jenjinstudios.util.Hash;
 import com.jenjinstudios.world.Actor;
+import com.jenjinstudios.world.Player;
 import com.jenjinstudios.world.math.Vector2D;
 
 import java.sql.PreparedStatement;
@@ -44,8 +45,8 @@ public class WorldSQLHandler extends SQLHandler
 	 * @param password The player's password.
 	 * @return An actor pre-filled with the players information.
 	 */
-	public synchronized Actor logInPlayer(String username, String password) {
-		Actor player = null;
+	public synchronized Player logInPlayer(String username, String password) {
+		Player player = null;
 		if (!isConnected())
 			return player;
 		try
@@ -69,7 +70,7 @@ public class WorldSQLHandler extends SQLHandler
 				return player;
 			// Update the logged in column.
 			updateLoggedinColumn(username, true);
-			player = new Actor(username);
+			player = new Player(username);
 			player.setVector2D(coordinates);
 			player.setZoneID(zoneID);
 

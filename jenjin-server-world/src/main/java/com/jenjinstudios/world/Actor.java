@@ -90,22 +90,23 @@ public class Actor extends SightedObject
 
 	/** Take a step, changing state and correcting steps if necessary. */
 	public void step() {
-		int overstepped = getOverstepped();
-		MoveState idleState = new MoveState(IDLE, stepsTaken, currentMoveState.absoluteAngle);
-		if (overstepped < MAX_CORRECT)
+		MoveState idleState = new MoveState(IDLE, getStepsTaken(), getCurrentMoveState().absoluteAngle);
+		int stepsToTake = getNextState() != null ? getNextState().stepsUntilChange - getStepsTaken() : -1;
+		if(stepsToTake <= 0)
 		{
-			boolean stepCorrectionSuccess = (overstepped < 0) || (correctOverSteps(overstepped));
-			if (!stepCorrectionSuccess || !stepForward())
-			{
-				setForcedState(idleState);
-			}
-		} else
-		{
-			setForcedState(currentMoveState);
-			stepForward();
+			resetState();
 		}
-		stepsTaken++;
+		if (!stepForward())
+		{
+			setForcedState(idleState);
+		}
+		incrementStepCounter();
 	}
+
+	/**
+	 * Increment the stepsTaken counter.
+	 */
+	protected void incrementStepCounter() {stepsTaken++;}
 
 	/**
 	 * Take a step according to the current move state.
@@ -127,28 +128,8 @@ public class Actor extends SightedObject
 		}
 	}
 
-	/**
-	 * Correct the given number of steps at the specified angles.
-	 * @param overstepped The number of steps over.
-	 * @return Whether correcting the state was successful.
-	 */
-	private boolean correctOverSteps(int overstepped) {
-		double stepAmount = STEP_LENGTH * overstepped;
-		Vector2D backVector = getVector2D().getVectorInDirection(stepAmount, currentMoveState.stepAngle - Math.PI);
-		Vector2D newVector = backVector.getVectorInDirection(stepAmount, nextState.stepAngle);
-		Location newLocation = getWorld().getLocationForCoordinates(getZoneID(), newVector);
-		boolean success = newLocation != null && !"false".equals(newLocation.getLocationProperties().getProperty("walkable"));
-		resetState();
-		if (success)
-		{
-			stepsTaken = overstepped;
-			setVector2D(newVector);
-		}
-		return success;
-	}
-
 	/** Reset the move state, relativeAngle, and newState flag when changing the move state. */
-	private void resetState() {
+	protected void resetState() {
 		if (nextState == null) { return; }
 		stepsTaken = 0;
 		currentMoveState = nextState;
@@ -156,13 +137,6 @@ public class Actor extends SightedObject
 		newState = true;
 		setDirection(currentMoveState.absoluteAngle);
 	}
-
-	/**
-	 * Determine if a state change is necessary.
-	 * @return The number of steps needed to "correct" to set the actor to the correct state.  A negative number means no
-	 *         state change is necessary.
-	 */
-	private int getOverstepped() { return (nextState != null) ? stepsTaken - nextState.stepsUntilChange : -1; }
 
 	/** Reset the flags used by this actor. */
 	public void resetFlags() {
@@ -235,4 +209,17 @@ public class Actor extends SightedObject
 	 * @return The relative angle of movement of this actor.
 	 */
 	public double getMoveDirection() { return currentMoveState.relativeAngle; }
+
+	/**
+	 * Get the next state for this actor to follow.
+	 * @return The next state.
+	 */
+	protected MoveState getNextState() { return nextState; }
+
+	/**
+	 * Set the steps taken.
+	 * @param
+	 * stepsTaken The new number of steps taken.
+	 */
+	protected void setStepsTaken(int stepsTaken)	{ this.stepsTaken = stepsTaken;	}
 }
