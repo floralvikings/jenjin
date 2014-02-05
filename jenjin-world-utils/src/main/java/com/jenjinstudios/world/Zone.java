@@ -161,7 +161,7 @@ public class Zone
 			double distance = new Vector2D(centerX, centerY).getDistanceToVector(new Vector2D(location.X_COORDINATE, location.Y_COORDINATE));
 			if (distance <= radius)
 			{
-				LinkedList<Location> visibleRay = castVisibiltyRay(centerX, centerY, location.X_COORDINATE, location.Y_COORDINATE);
+				LinkedList<Location> visibleRay = castVisibilityRay(centerX, centerY, location.X_COORDINATE, location.Y_COORDINATE);
 				visibleLocations.addAll(visibleRay);
 			}
 		}
@@ -181,7 +181,7 @@ public class Zone
 	 * @return The ray cast from the given starting points to the given end points.
 	 */
 	@SuppressWarnings("SuspiciousNameCombination")
-	public LinkedList<Location> castVisibiltyRay(int x1, int y1, int x2, int y2) {
+	public LinkedList<Location> castVisibilityRay(int x1, int y1, int x2, int y2) {
 		LinkedList<Location> visibleRay = new LinkedList<>();
 		int i;               // loop counter
 		int yStep, xStep;    // the step on y and x axis
