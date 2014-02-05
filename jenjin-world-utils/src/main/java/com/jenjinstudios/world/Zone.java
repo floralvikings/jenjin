@@ -48,6 +48,16 @@ public class Zone
 		locationGrid = new Location[xSize][ySize];
 		constructLocations();
 
+		addSpecialLocations(specialLocations);
+
+		setLocationVisibility();
+	}
+
+	/**
+	 * Replace empty locations with the specified locations.
+	 * @param specialLocations The locations to be placed in the grid.
+	 */
+	private void addSpecialLocations(Location[] specialLocations) {
 		if (specialLocations != null)
 		{
 			for (Location l : specialLocations)
@@ -55,8 +65,6 @@ public class Zone
 				locationGrid[l.X_COORDINATE][l.Y_COORDINATE] = l;
 			}
 		}
-
-		setLocationVisibility();
 	}
 
 	/**
