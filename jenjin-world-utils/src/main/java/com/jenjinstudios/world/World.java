@@ -22,7 +22,7 @@ public class World
 	/** Construct a new World. */
 	public World() {
 		zones = new Zone[1];
-		zones[0] = new Zone(0, DEFAULT_SIZE, DEFAULT_SIZE);
+		zones[0] = new Zone(0, DEFAULT_SIZE, DEFAULT_SIZE, new Location[] { });
 		worldObjects = new ArrayList<>();
 	}
 

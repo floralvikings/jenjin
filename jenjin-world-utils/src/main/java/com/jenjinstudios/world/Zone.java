@@ -28,16 +28,6 @@ public class Zone
 	 * @param id The id number of the zone.
 	 * @param xSize The x length of the zone.
 	 * @param ySize The y length of zone.
-	 */
-	public Zone(int id, int xSize, int ySize) {
-		this(id, xSize, ySize, null);
-	}
-
-	/**
-	 * Construct a new zone with the given ID and size.
-	 * @param id The id number of the zone.
-	 * @param xSize The x length of the zone.
-	 * @param ySize The y length of zone.
 	 * @param specialLocations Any special locations that should be set on zone creation.
 	 */
 	public Zone(int id, int xSize, int ySize, Location[] specialLocations) {
