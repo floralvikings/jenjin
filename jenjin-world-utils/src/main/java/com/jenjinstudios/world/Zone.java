@@ -46,7 +46,7 @@ public class Zone
 		this.ySize = ySize;
 
 		locationGrid = new Location[xSize][ySize];
-		initLocations();
+		constructLocations();
 
 		if (specialLocations != null)
 		{
@@ -336,7 +336,7 @@ public class Zone
 	}
 
 	/** Initialize the locations in the zone. */
-	private void initLocations() {
+	private void constructLocations() {
 		for (int x = 0; x < xSize; x++)
 			for (int y = 0; y < ySize; y++)
 				locationGrid[x][y] = new Location(x, y);
