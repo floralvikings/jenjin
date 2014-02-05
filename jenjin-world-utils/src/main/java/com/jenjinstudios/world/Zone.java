@@ -226,43 +226,17 @@ public class Zone
 					// three cases (octant == right->right-top for directions below):
 					if (error + previousError < ddx)  // bottom square also
 					{
-						Location location = getLocationOnGrid(y - yStep, x);
-						if (location == null || "true".equals(location.getLocationProperties().getProperty("blocksVision")))
-						{
-							break;
-						}
-						visibleRay.add(location);
+						if (!addLocationToVisibilityRay(y - yStep, x, visibleRay)) break;
 					} else if (error + previousError > ddx)  // left square also
 					{
-						Location location = getLocationOnGrid(y, x - xStep);
-						if (location == null || "true".equals(location.getLocationProperties().getProperty("blocksVision")))
-						{
-							break;
-						}
-						visibleRay.add(location);
+						if (!addLocationToVisibilityRay(y, x - xStep, visibleRay)) break;
 					} else
 					{  // corner: bottom and left squares also
-						Location location = getLocationOnGrid(y - yStep, x);
-						if (location == null || "true".equals(location.getLocationProperties().getProperty("blocksVision")))
-						{
-							break;
-						}
-						visibleRay.add(location);
-						location = getLocationOnGrid(y, x - xStep);
-						if (location == null || "true".equals(location.getLocationProperties().getProperty("blocksVision")))
-						{
-							break;
-						}
-						visibleRay.add(location);
-						visibleRay.add(location);
+						if (!addLocationToVisibilityRay(y - yStep, x, visibleRay)) break;
+						if (!addLocationToVisibilityRay(y, x - xStep, visibleRay)) break;
 					}
 				}
-				Location location = getLocationOnGrid(y, x);
-				if (location == null || "true".equals(location.getLocationProperties().getProperty("blocksVision")))
-				{
-					break;
-				}
-				visibleRay.add(location);
+				if (!addLocationToVisibilityRay(y, x, visibleRay)) break;
 				previousError = error;
 			}
 		} else
@@ -278,49 +252,42 @@ public class Zone
 					error -= ddy;
 					if (error + previousError < ddy)
 					{
-						Location location = getLocationOnGrid(y, x - xStep);
-						if (location == null || "true".equals(location.getLocationProperties().getProperty("blocksVision")))
-						{
-							break;
-						}
-						visibleRay.add(location);
+						if(!addLocationToVisibilityRay(y, x - xStep, visibleRay)) break;
 					} else
 					{
 						if (error + previousError > ddy)
 						{
-							Location location = getLocationOnGrid(y - yStep, x);
-							if (location == null || "true".equals(location.getLocationProperties().getProperty("blocksVision")))
-							{
-								break;
-							}
-							visibleRay.add(location);
+							if(!addLocationToVisibilityRay(y - yStep, x, visibleRay)) break;
 						} else
 						{
-							Location location = getLocationOnGrid(y, x - xStep);
-							if (location == null || "true".equals(location.getLocationProperties().getProperty("blocksVision")))
-							{
-								break;
-							}
-							visibleRay.add(location);
-							location = getLocationOnGrid(y - yStep, x);
-							if (location == null || "true".equals(location.getLocationProperties().getProperty("blocksVision")))
-							{
-								break;
-							}
-							visibleRay.add(location);
+							if(!addLocationToVisibilityRay(y, x - xStep, visibleRay)) break;
+							if(!addLocationToVisibilityRay(y - yStep, x, visibleRay)) break;
 						}
 					}
 				}
-				Location location = getLocationOnGrid(y, x);
-				if (location == null || "true".equals(location.getLocationProperties().getProperty("blocksVision")))
-				{
-					break;
-				}
-				visibleRay.add(location);
+				if(!addLocationToVisibilityRay(y, x, visibleRay)) break;
 				previousError = error;
 			}
 		}
 		return visibleRay;
+	}
+
+	/**
+	 * Add the location at the given coordinates to the specified ray, returning true if the location was added, false if
+	 * not.
+	 * @param x The x coordinate.
+	 * @param y The y coordinate.
+	 * @param ray The ray.
+	 * @return true if the location was added.
+	 */
+	private boolean addLocationToVisibilityRay(int x, int y, LinkedList<Location> ray) {
+		Location location = getLocation(x, y);
+		if (location == null || "true".equals(location.getLocationProperties().getProperty("blocksVision")))
+		{
+			return false;
+		}
+		ray.add(location);
+		return true;
 	}
 
 	/** Add visible locations to initiated locations. */
