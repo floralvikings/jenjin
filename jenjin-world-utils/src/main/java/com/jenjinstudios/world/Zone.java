@@ -37,10 +37,9 @@ public class Zone
 
 		locationGrid = new Location[xSize][ySize];
 		constructLocations();
-
 		addSpecialLocations(specialLocations);
-
 		setLocationVisibility();
+		setAdjacentLocations();
 	}
 
 	/**
@@ -279,7 +278,7 @@ public class Zone
 	 * @return true if the location was added.
 	 */
 	private boolean addLocationToVisibilityRay(int x, int y, LinkedList<Location> ray) {
-		Location location = getLocationForCoordinates(x, y);
+		Location location = getLocationOnGrid(x, y);
 		if (location == null || "true".equals(location.getLocationProperties().getProperty("blocksVision")))
 		{
 			return false;
@@ -305,5 +304,14 @@ public class Zone
 		for (int x = 0; x < xSize; x++)
 			for (int y = 0; y < ySize; y++)
 				locationGrid[x][y] = new Location(x, y);
+	}
+
+	/**
+	 * Establish the locations adjacent to one another.
+	 */
+	private void setAdjacentLocations() {
+		for (int x = 0; x < xSize; x++)
+			for (int y = 0; y < ySize; y++)
+				locationGrid[x][y].setAdjacentLocations(this);
 	}
 }

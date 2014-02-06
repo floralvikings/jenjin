@@ -20,6 +20,16 @@ public class Location
 	private final LocationProperties locationProperties;
 	/** The locations visible from this one. */
 	private LinkedList<Location> locationsVisibleFrom;
+	/** Flags whether the adjacent locations are set. */
+	private boolean hasLocationsSet;
+	/** The location adjacent to the North. */
+	private Location adjNorth;
+	/** The location adjacent to the South. */
+	private Location adjSouth;
+	/** The location adjacent to the East. */
+	private Location adjEast;
+	/** The location adjacent to the West. */
+	private Location adjWest;
 
 	/**
 	 * Construct a new location at the given position in a zone grid.
@@ -36,8 +46,7 @@ public class Location
 	 * @param y The y coordinate.
 	 * @param locationProperties1 The locationProperties.
 	 */
-	public Location(int x, int y, LocationProperties locationProperties1)
-	{
+	public Location(int x, int y, LocationProperties locationProperties1) {
 		X_COORDINATE = x;
 		Y_COORDINATE = y;
 		this.locationProperties = locationProperties1;
@@ -83,19 +92,59 @@ public class Location
 	}
 
 	/**
-	 * Set the locations visible from this location.
-	 * @param visible The locations to be visible from this one.
-	 */
-	public void setLocationsVisibleFrom(List<Location> visible)
-	{
-		locationsVisibleFrom.addAll(visible);
-	}
-
-	/**
 	 * Get the locations visible from this one.
 	 * @return The locations visible from this one.
 	 */
 	public LinkedList<Location> getLocationsVisibleFrom() {
 		return locationsVisibleFrom;
+	}
+
+	/**
+	 * Set the locations visible from this location.
+	 * @param visible The locations to be visible from this one.
+	 */
+	public void setLocationsVisibleFrom(List<Location> visible) {
+		locationsVisibleFrom.addAll(visible);
+	}
+
+	/**
+	 * The location adjacent to the North.
+	 * @return The location adjacent to the north.
+	 */
+	public Location getAdjNorth() { return adjNorth; }
+
+	/**
+	 * The location adjacent to the South.
+	 * @return The location adjacent to the South.
+	 */
+	public Location getAdjSouth() { return adjSouth; }
+
+	/**
+	 * The location adjacent to the East.
+	 * @return The location adjacent to the East.
+	 */
+	public Location getAdjEast() { return adjEast; }
+
+	/**
+	 * The location adjacent to the West.
+	 * @return The data adjacent to the west.
+	 */
+	public Location getAdjWest() { return adjWest; }
+
+	/**
+	 * Set the locations adjacent to this one.
+	 * @param zone The zone in which this location (or rather, the "adjacent" locations) lie.
+	 */
+	protected void setAdjacentLocations(Zone zone) {
+		if (hasLocationsSet)
+		{
+			throw new IllegalStateException("Cannot set adjacent locations after they have already been set!");
+		}
+		hasLocationsSet = true;
+
+		adjNorth = zone.getLocationOnGrid(X_COORDINATE, Y_COORDINATE + 1);
+		adjSouth = zone.getLocationOnGrid(X_COORDINATE, Y_COORDINATE - 1);
+		adjEast = zone.getLocationOnGrid(X_COORDINATE + 1, Y_COORDINATE);
+		adjWest = zone.getLocationOnGrid(X_COORDINATE - 1, Y_COORDINATE);
 	}
 }
