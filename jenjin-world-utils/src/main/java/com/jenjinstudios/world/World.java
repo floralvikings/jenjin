@@ -102,7 +102,7 @@ public class World
 	public Location getLocationForCoordinates(int zoneID, Vector2D vector2D) {
 		if (!isValidLocation(zoneID, vector2D))
 			return null;
-		return zones[zoneID].getLocation(vector2D);
+		return zones[zoneID].getLocationForCoordinates(vector2D);
 	}
 
 	/**

@@ -76,7 +76,7 @@ public class Zone
 	 */
 	public ArrayList<Location> getLocationArea(Vector2D centerCoords, int radius) {
 		ArrayList<Location> areaGrid = new ArrayList<>();
-		Location center = getLocation(centerCoords);
+		Location center = getLocationForCoordinates(centerCoords);
 		int xStart = Math.max(center.X_COORDINATE - (radius - 1), 0);
 		int yStart = Math.max(center.Y_COORDINATE - (radius - 1), 0);
 		int xEnd = Math.min(center.X_COORDINATE + (radius - 1), locationGrid.length - 1);
@@ -95,8 +95,8 @@ public class Zone
 	 * @param centerCoords The coodinates.
 	 * @return The location at the specified coordinates.
 	 */
-	public Location getLocation(Vector2D centerCoords) {
-		return getLocation(centerCoords.getXCoordinate(), centerCoords.getYCoordinate());
+	public Location getLocationForCoordinates(Vector2D centerCoords) {
+		return getLocationForCoordinates(centerCoords.getXCoordinate(), centerCoords.getYCoordinate());
 	}
 
 	/**
@@ -105,7 +105,7 @@ public class Zone
 	 * @param y The y coordinate.
 	 * @return The location at the specified coordinates.
 	 */
-	public Location getLocation(double x, double y) {
+	public Location getLocationForCoordinates(double x, double y) {
 		return locationGrid[(int) x / Location.SIZE][(int) y / Location.SIZE];
 	}
 
@@ -279,7 +279,7 @@ public class Zone
 	 * @return true if the location was added.
 	 */
 	private boolean addLocationToVisibilityRay(int x, int y, LinkedList<Location> ray) {
-		Location location = getLocation(x, y);
+		Location location = getLocationForCoordinates(x, y);
 		if (location == null || "true".equals(location.getLocationProperties().getProperty("blocksVision")))
 		{
 			return false;
