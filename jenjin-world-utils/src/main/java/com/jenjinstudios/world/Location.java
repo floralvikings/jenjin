@@ -132,6 +132,20 @@ public class Location
 	public Location getAdjWest() { return adjWest; }
 
 	/**
+	 * Get a list of all adjacent locations.
+	 * @return The list of adjacent locations.
+	 */
+	public LinkedList<Location> getAdjacentLocations()
+	{
+		LinkedList<Location> adjacentLocations = new LinkedList<>();
+		adjacentLocations.add(getAdjNorth());
+		adjacentLocations.add(getAdjSouth());
+		adjacentLocations.add(getAdjEast());
+		adjacentLocations.add(getAdjWest());
+		return adjacentLocations;
+	}
+
+	/**
 	 * Set the locations adjacent to this one.
 	 * @param zone The zone in which this location (or rather, the "adjacent" locations) lie.
 	 */
