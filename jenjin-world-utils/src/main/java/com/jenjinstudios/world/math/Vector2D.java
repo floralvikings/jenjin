@@ -24,6 +24,16 @@ public class Vector2D
 	}
 
 	/**
+	 * Construct a new set of coordinates.
+	 * @param x The x coordinate.
+	 * @param y The y coordinate.
+	 */
+	public Vector2D(double x, double y) {
+		xCoordinate = x;
+		yCoordinate = y;
+	}
+
+	/**
 	 * Get the y coordinate.
 	 * @return The y coordinate.
 	 */
@@ -53,16 +63,6 @@ public class Vector2D
 	 */
 	public void setXCoordinate(double xCoordinate) {
 		this.xCoordinate = xCoordinate;
-	}
-
-	/**
-	 * Construct a new set of coordinates.
-	 * @param x The x coordinate.
-	 * @param y The y coordinate.
-	 */
-	public Vector2D(double x, double y) {
-		xCoordinate = x;
-		yCoordinate = y;
 	}
 
 	@Override
@@ -99,6 +99,11 @@ public class Vector2D
 	 * @return The angle to the supplied vector.
 	 */
 	public double getAngleToVector(Vector2D vector2D) {
+		if (vector2D.equals(this))
+		{
+			// Negative infinity specifies that the vectors are the same (can't get an angle).
+			return Double.NEGATIVE_INFINITY;
+		}
 		double xDist = vector2D.getXCoordinate() - xCoordinate;
 		double yDist = vector2D.getYCoordinate() - yCoordinate;
 		return java.lang.Math.atan2(yDist, xDist);
