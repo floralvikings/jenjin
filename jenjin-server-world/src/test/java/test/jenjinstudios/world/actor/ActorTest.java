@@ -80,7 +80,7 @@ public class ActorTest
 
 		world.addObject(player);
 
-		// first we move right a single step
+		// first we move left a single step
 		MoveState stepState = new MoveState(MoveState.BACK, 0, 0);
 		player.addMoveState(stepState);
 
