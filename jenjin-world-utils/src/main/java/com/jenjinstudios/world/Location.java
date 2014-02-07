@@ -30,6 +30,20 @@ public class Location
 	private Location adjEast;
 	/** The location adjacent to the West. */
 	private Location adjWest;
+	/** The location adjacent to the NorthEast. */
+	private Location adjNorthEast;
+	/** The location adjacent to the NorthWest. */
+	private Location adjNorthWest;
+	/** The location adjacent to the SouthEast. */
+	private Location adjSouthEast;
+	/** The location adjacent to the SouthWest. */
+	private Location adjSouthWest;
+	/** The locations adjacent to this one. */
+	private LinkedList<Location> adjacentLocations;
+	/** The locations adjacent to this one through which a path may be plotted. */
+	private LinkedList<Location> adjacentWalkableLocations;
+	/** The locations adjacent diagonally. */
+	private LinkedList<Location> diagonals;
 
 	/**
 	 * Construct a new location at the given position in a zone grid.
@@ -47,6 +61,8 @@ public class Location
 	 * @param locationProperties1 The locationProperties.
 	 */
 	public Location(int x, int y, LocationProperties locationProperties1) {
+		adjacentLocations = new LinkedList<>();
+		adjacentWalkableLocations = new LinkedList<>();
 		X_COORDINATE = x;
 		Y_COORDINATE = y;
 		this.locationProperties = locationProperties1;
@@ -58,54 +74,40 @@ public class Location
 	 * Get the locationProperties of this location.
 	 * @return The locationProperties of this location.
 	 */
-	public LocationProperties getLocationProperties() {
-		return locationProperties;
-	}
+	public LocationProperties getLocationProperties() { return locationProperties; }
 
 	/**
 	 * Get the objects residing in this location, as an array.
 	 * @return An array containing all objects residing in this location.
 	 */
-	public Collection<WorldObject> getObjects() {
-		return Collections.unmodifiableCollection(new ArrayList<>(objects));
-	}
+	public Collection<WorldObject> getObjects() { return Collections.unmodifiableCollection(new ArrayList<>(objects)); }
 
 	/**
 	 * Add the object to this location's object map.
 	 * @param object The object to add.
 	 */
-	public void addObject(WorldObject object) {
-		objects.add(object);
-	}
+	public void addObject(WorldObject object) { objects.add(object); }
 
 	/**
 	 * Remove an object from this location's object map.
 	 * @param object The object to remove.
 	 */
-	public void removeObject(WorldObject object) {
-		objects.remove(object);
-	}
+	public void removeObject(WorldObject object) { objects.remove(object); }
 
 	@Override
-	public String toString() {
-		return "(" + X_COORDINATE + ", " + Y_COORDINATE + ")";
-	}
+	public String toString() { return "(" + X_COORDINATE + ", " + Y_COORDINATE + ")"; }
 
 	/**
 	 * Get the locations visible from this one.
 	 * @return The locations visible from this one.
 	 */
-	public LinkedList<Location> getLocationsVisibleFrom() {
-		return locationsVisibleFrom;
-	}
+	public LinkedList<Location> getLocationsVisibleFrom() { return locationsVisibleFrom; }
 
 	/**
 	 * Set the locations visible from this location.
 	 * @param visible The locations to be visible from this one.
 	 */
-	public void setLocationsVisibleFrom(List<Location> visible) {
-		locationsVisibleFrom.addAll(visible);
-	}
+	public void setLocationsVisibleFrom(List<Location> visible) { locationsVisibleFrom.addAll(visible); }
 
 	/**
 	 * The location adjacent to the North.
@@ -135,15 +137,7 @@ public class Location
 	 * Get a list of all adjacent locations.
 	 * @return The list of adjacent locations.
 	 */
-	public LinkedList<Location> getAdjacentLocations()
-	{
-		LinkedList<Location> adjacentLocations = new LinkedList<>();
-		adjacentLocations.add(getAdjNorth());
-		adjacentLocations.add(getAdjSouth());
-		adjacentLocations.add(getAdjEast());
-		adjacentLocations.add(getAdjWest());
-		return adjacentLocations;
-	}
+	public List<Location> getAdjacentLocations() { return new LinkedList<>(adjacentLocations); }
 
 	/**
 	 * Set the locations adjacent to this one.
@@ -160,5 +154,90 @@ public class Location
 		adjSouth = zone.getLocationOnGrid(X_COORDINATE, Y_COORDINATE - 1);
 		adjEast = zone.getLocationOnGrid(X_COORDINATE + 1, Y_COORDINATE);
 		adjWest = zone.getLocationOnGrid(X_COORDINATE - 1, Y_COORDINATE);
+		adjNorthEast = zone.getLocationOnGrid(X_COORDINATE + 1, Y_COORDINATE + 1);
+		adjNorthWest = zone.getLocationOnGrid(X_COORDINATE - 1, Y_COORDINATE + 1);
+		adjSouthEast = zone.getLocationOnGrid(X_COORDINATE + 1, Y_COORDINATE - 1);
+		adjSouthWest = zone.getLocationOnGrid(X_COORDINATE - 1, Y_COORDINATE - 1);
+
+		diagonals = new LinkedList<>();
+		if (adjNorth != null)
+			adjacentLocations.add(adjNorth);
+		if (adjSouth != null)
+			adjacentLocations.add(adjSouth);
+		if (adjEast != null)
+			adjacentLocations.add(adjEast);
+		if (adjWest != null)
+			adjacentLocations.add(adjWest);
+		if (adjNorthEast != null)
+		{
+			adjacentLocations.add(adjNorthEast);
+			diagonals.add(adjNorthEast);
+		}
+		if (adjNorthWest != null)
+		{
+			adjacentLocations.add(adjNorthWest);
+			diagonals.add(adjNorthWest);
+		}
+		if (adjSouthEast != null)
+		{
+			adjacentLocations.add(adjSouthEast);
+			diagonals.add(adjSouthEast);
+		}
+		if (adjSouthWest != null)
+		{
+			adjacentLocations.add(adjSouthWest);
+			diagonals.add(adjSouthWest);
+		}
+	}
+
+	/**
+	 * The location adjacent to the NorthEast.
+	 * @return The location adjacent to the NorthEast.
+	 */
+	public Location getAdjNorthEast() { return adjNorthEast; }
+
+	/**
+	 * The location adjacent to the NorthWest.
+	 * @return The location adjacent to the NorthWest.
+	 */
+	public Location getAdjNorthWest() { return adjNorthWest; }
+
+	/**
+	 * The location adjacent to the SouthEast.
+	 * @return The location adjacent to the SouthEast.
+	 */
+	public Location getAdjSouthEast() { return adjSouthEast; }
+
+	/**
+	 * The location adjacent to the SouthWest.
+	 * @return The location adjacent to the SouthWest.
+	 */
+	public Location getAdjSouthWest() { return adjSouthWest; }
+
+	/**
+	 * Get a list of locations adjacent to this one, all of which can be walked to.
+	 * @return A list of adjacent, walkable locations.
+	 */
+	public List<Location> getAdjacentWalkableLocations() {
+		return new LinkedList<>(adjacentWalkableLocations);
+	}
+
+	/** Set the locations adjacent to this one which can be moved to while finding a path. */
+	protected void setAdjacentWalkableLocations() {
+		adjacentWalkableLocations.addAll(adjacentLocations);
+		for (Location walkable : adjacentLocations)
+		{
+			if ("false".equals(walkable.getLocationProperties().getProperty("walkable")))
+			{
+				adjacentWalkableLocations.remove(walkable);
+				for (Location blocked : walkable.getAdjacentLocations())
+				{
+					if (diagonals.contains(blocked))
+					{
+						adjacentWalkableLocations.remove(blocked);
+					}
+				}
+			}
+		}
 	}
 }

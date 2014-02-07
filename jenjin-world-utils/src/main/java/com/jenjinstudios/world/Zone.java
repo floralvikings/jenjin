@@ -313,5 +313,8 @@ public class Zone
 		for (int x = 0; x < xSize; x++)
 			for (int y = 0; y < ySize; y++)
 				locationGrid[x][y].setAdjacentLocations(this);
+		for (int x = 0; x < xSize; x++)
+			for (int y = 0; y < ySize; y++)
+				locationGrid[x][y].setAdjacentWalkableLocations();
 	}
 }
