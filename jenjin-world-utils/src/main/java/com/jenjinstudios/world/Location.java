@@ -1,5 +1,7 @@
 package com.jenjinstudios.world;
 
+import com.jenjinstudios.world.math.Vector2D;
+
 import java.util.*;
 
 /**
@@ -39,11 +41,13 @@ public class Location
 	/** The location adjacent to the SouthWest. */
 	private Location adjSouthWest;
 	/** The locations adjacent to this one. */
-	private LinkedList<Location> adjacentLocations;
+	private final LinkedList<Location> adjacentLocations;
 	/** The locations adjacent to this one through which a path may be plotted. */
-	private LinkedList<Location> adjacentWalkableLocations;
+	private final LinkedList<Location> adjacentWalkableLocations;
 	/** The locations adjacent diagonally. */
-	private LinkedList<Location> diagonals;
+	private final LinkedList<Location> diagonals;
+	/** The center of this Location. */
+	private final Vector2D center;
 
 	/**
 	 * Construct a new location at the given position in a zone grid.
@@ -61,10 +65,12 @@ public class Location
 	 * @param locationProperties1 The locationProperties.
 	 */
 	public Location(int x, int y, LocationProperties locationProperties1) {
+		diagonals = new LinkedList<>();
 		adjacentLocations = new LinkedList<>();
 		adjacentWalkableLocations = new LinkedList<>();
 		X_COORDINATE = x;
 		Y_COORDINATE = y;
+		center = new Vector2D(X_COORDINATE * SIZE + SIZE / 2, Y_COORDINATE * SIZE + SIZE / 2);
 		this.locationProperties = locationProperties1;
 		objects = new HashSet<>();
 		locationsVisibleFrom = new LinkedList<>();
@@ -159,7 +165,6 @@ public class Location
 		adjSouthEast = zone.getLocationOnGrid(X_COORDINATE + 1, Y_COORDINATE - 1);
 		adjSouthWest = zone.getLocationOnGrid(X_COORDINATE - 1, Y_COORDINATE - 1);
 
-		diagonals = new LinkedList<>();
 		if (adjNorth != null)
 			adjacentLocations.add(adjNorth);
 		if (adjSouth != null)
@@ -220,6 +225,14 @@ public class Location
 	 */
 	public List<Location> getAdjacentWalkableLocations() {
 		return new LinkedList<>(adjacentWalkableLocations);
+	}
+
+	/**
+	 * Get the Vector2D at the center of this location.
+	 * @return The Vector2D at the center of this location.
+	 */
+	public Vector2D getCenter() {
+		return center;
 	}
 
 	/** Set the locations adjacent to this one which can be moved to while finding a path. */
