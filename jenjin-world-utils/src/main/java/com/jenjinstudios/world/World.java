@@ -62,7 +62,7 @@ public class World
 		}
 
 		if (worldObjects.get(id) != null)
-			throw new IllegalArgumentException("addObject(WorldObject obj) argument 1 not allowed to be an occupied id!");
+			throw new IllegalArgumentException("addObject(WorldObject obj) argument 1 not allowed to be an occupied id: " + id);
 
 		object.setWorld(this);
 		object.setVector2D(object.getVector2D());
@@ -158,5 +158,19 @@ public class World
 	 */
 	public Zone[] getZones() {
 		return zones;
+	}
+
+	/**
+	 * Reset the world to it's original state.
+	 */
+	public void purgeObjects() {
+		synchronized (worldObjects)
+		{
+			ArrayList<WorldObject> copy = new ArrayList<>(worldObjects);
+			for(WorldObject obj : copy)
+			{
+				removeObject(obj);
+			}
+		}
 	}
 }
