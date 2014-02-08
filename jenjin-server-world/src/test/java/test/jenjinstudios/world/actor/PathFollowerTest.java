@@ -68,7 +68,6 @@ public class PathFollowerTest
 		for (int i = 0; i < num; i++)
 		{
 			world.update();
-			System.out.println(npc.getVector2D());
 		}
 	}
 }
