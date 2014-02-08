@@ -7,12 +7,12 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * Test the PathFollower class.
+ * Test the NPC class.
  * @author Caleb Brinkman
  */
 public class NPCTest
 {
-	/** The PathFollower used for testing. */
+	/** The NPC used for testing. */
 	NPC npc = new NPC();
 	/** The World used to test the actor. */
 	private World world;
