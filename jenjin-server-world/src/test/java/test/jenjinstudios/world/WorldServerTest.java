@@ -1,6 +1,7 @@
 package test.jenjinstudios.world;
 
 import com.jenjinstudios.io.MessageRegistry;
+import com.jenjinstudios.util.FileUtil;
 import com.jenjinstudios.world.*;
 import com.jenjinstudios.world.io.WorldFileReader;
 import com.jenjinstudios.world.math.MathUtil;
@@ -59,10 +60,8 @@ public class WorldServerTest
 
 		worldServer.shutdown();
 
-		if(!new File("resources/WorldTestFile.xml").delete())
-		{
-			System.out.println("Unable to delete world file.");
-		}
+		File resourcesDir = new File("resources/");
+		FileUtil.deleteRecursively(resourcesDir);
 	}
 
 	/**
