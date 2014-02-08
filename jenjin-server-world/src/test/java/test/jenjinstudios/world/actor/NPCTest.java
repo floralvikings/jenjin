@@ -10,7 +10,7 @@ import org.junit.Test;
  * Test the PathFollower class.
  * @author Caleb Brinkman
  */
-public class PathFollowerTest
+public class NPCTest
 {
 	/** The PathFollower used for testing. */
 	NPC npc = new NPC();
