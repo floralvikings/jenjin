@@ -132,8 +132,14 @@ public class WorldObject
 	 */
 	public String getName() { return name; }
 
+	/**  Set up this WorldObject before updating.  */
+	public void setUp() { }
+
 	/** Update this WorldObject. */
 	public void update() { }
+
+	/** Reset this WorldObject after updating. */
+	public void reset() { }
 
 	public String toString() { return name + ": " + id + " @ " + vector2D + " in " + location; }
 
