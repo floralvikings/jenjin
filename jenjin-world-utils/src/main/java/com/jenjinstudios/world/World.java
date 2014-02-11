@@ -122,7 +122,13 @@ public class World
 		{
 			for (WorldObject o : worldObjects)
 				if (o != null)
+					o.setUp();
+			for (WorldObject o : worldObjects)
+				if (o != null)
 					o.update();
+			for (WorldObject o : worldObjects)
+				if (o != null)
+					o.reset();
 		}
 	}
 
