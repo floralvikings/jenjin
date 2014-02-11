@@ -35,6 +35,8 @@ public class ClientPlayer extends SightedObject
 	private boolean isNewAbsolute;
 	/** Flags whether a new relative angle has been set. */
 	private boolean isNewRelative;
+	/** The Location before a step is taken. */
+	private Location locationBeforeStep;
 
 	/**
 	 * Construct an Actor with the given name.
@@ -105,11 +107,19 @@ public class ClientPlayer extends SightedObject
 	}
 
 	@Override
-	public void update() {
+	public void setUp() {
 		setAngles();
 		resetFlags();
-		Location locationBeforeStep = getLocation();
+		locationBeforeStep = getLocation();
+	}
+
+	@Override
+	public void update() {
 		step();
+	}
+
+	@Override
+	public void reset() {
 		// If we're in a new locations after stepping, update the visible array.
 		if (locationBeforeStep != getLocation() || getVisibleLocations().isEmpty())
 			resetVisibleLocations();
