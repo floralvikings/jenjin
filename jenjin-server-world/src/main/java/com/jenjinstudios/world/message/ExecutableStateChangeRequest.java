@@ -22,7 +22,7 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage
 
 	@Override
 	public void runSynced() {
-		Actor player = getClientHandler().getActor();
+		Actor player = getClientHandler().getPlayer();
 		MoveState newState;
 		double direction = (double) getMessage().getArgument("relativeAngle");
 		double angle = (double) getMessage().getArgument("absoluteAngle");

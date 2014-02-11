@@ -27,7 +27,7 @@ public class ExecutableWorldLogoutRequest extends WorldExecutableMessage
 
 	@Override
 	public void runSynced() {
-		Actor clientActor = getClientHandler().getActor();
+		Actor clientActor = getClientHandler().getPlayer();
 		clientActor.getWorld().removeObject(clientActor);
 	}
 
@@ -37,7 +37,7 @@ public class ExecutableWorldLogoutRequest extends WorldExecutableMessage
 		{
 			WorldClientHandler handler = getClientHandler();
 
-			boolean success = sqlHandler.logOutPlayer(handler.getActor());
+			boolean success = sqlHandler.logOutPlayer(handler.getPlayer());
 
 			handler.sendLogoutStatus(success);
 		}

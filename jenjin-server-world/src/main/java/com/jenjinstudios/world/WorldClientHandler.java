@@ -18,7 +18,7 @@ public class WorldClientHandler extends ClientHandler
 	/** The ID of the player controlled by this clienthandler. */
 	private long playerID = -1;
 	/** The Actor managed by this handler. */
-	private Actor actor;
+	private Player player;
 
 	/**
 	 * Construct a new Client Handler using the given socket.  When constructing a new ClientHandler, it is necessary to
@@ -34,21 +34,13 @@ public class WorldClientHandler extends ClientHandler
 	}
 
 	/**
-	 * Get the actor of this client handler.
-	 * @return The actor controlled by this client handler.
-	 */
-	public Actor getActor() {
-		return actor;
-	}
-
-	/**
 	 * Set the Actor managed by this handler.
-	 * @param actor The actor to be managed by this handler.
+	 * @param player The player to be managed by this handler.
 	 */
-	public void setActor(Actor actor) {
-		this.actor = actor;
-		setUsername(actor.getName());
-		setPlayerID(actor.getId());
+	public void setPlayer(Player player) {
+		this.player = player;
+		setUsername(player.getName());
+		setPlayerID(player.getId());
 	}
 
 	/**
@@ -64,7 +56,7 @@ public class WorldClientHandler extends ClientHandler
 	public void update() {
 		super.update();
 
-		if (actor == null)
+		if (player == null)
 			return;
 
 		queueForcesStateMessage();
@@ -80,11 +72,11 @@ public class WorldClientHandler extends ClientHandler
 	 * Get the player associated with this client handler.
 	 * @return The player associated with this client handler.
 	 */
-	public Actor getPlayer() { return actor; }
+	public Player getPlayer() { return player; }
 
 	/** Generate and queue messages for newly visible objects. */
 	private void queueNewlyVisibleMessages() {
-		for (WorldObject object : actor.getNewlyVisibleObjects())
+		for (WorldObject object : player.getNewlyVisibleObjects())
 		{
 			Message newlyVisibleMessage;
 			newlyVisibleMessage = WorldServerMessageGenerator.generateNewlyVisibleMessage(object);
@@ -94,7 +86,7 @@ public class WorldClientHandler extends ClientHandler
 
 	/** Generate and queue messages for newly invisible objects. */
 	private void queueNewlyInvisibleMessages() {
-		for (WorldObject object : actor.getNewlyInvisibleObjects())
+		for (WorldObject object : player.getNewlyInvisibleObjects())
 		{
 			Message newlyInvisibleMessage = WorldServerMessageGenerator.generateNewlyInvisibleMessage(object);
 			queueMessage(newlyInvisibleMessage);
@@ -103,7 +95,7 @@ public class WorldClientHandler extends ClientHandler
 
 	/** Generate and queue messages for actors with changed states. */
 	private void queueStateChangeMessages() {
-		for (WorldObject object : actor.getVisibleObjects().values())
+		for (WorldObject object : player.getVisibleObjects().values())
 		{
 			Actor changedActor;
 			if (object instanceof Actor && (changedActor = (Actor) object).isNewState())
@@ -116,7 +108,7 @@ public class WorldClientHandler extends ClientHandler
 
 	/** Generate and queue a ForcedStateMessage if necessary. */
 	private void queueForcesStateMessage() {
-		if (actor.isForcedState())
-			queueMessage(WorldServerMessageGenerator.generateForcedStateMessage(actor, server));
+		if (player.isForcedState())
+			queueMessage(WorldServerMessageGenerator.generateForcedStateMessage(player, server));
 	}
 }
