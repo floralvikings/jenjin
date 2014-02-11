@@ -41,6 +41,8 @@ public class Actor extends SightedObject
 	private MoveState nextState;
 	/** Flags whether the state of this actor was forced during this update. */
 	private boolean forcedState;
+	/** The Location before a step is taken. */
+	private Location locationBeforeStep;
 
 	/** Construct a new Actor. */
 	public Actor() { this(DEFAULT_NAME); }
@@ -60,8 +62,7 @@ public class Actor extends SightedObject
 	 * @param name The name.
 	 * @param id The ID.
 	 */
-	public Actor(String name, int id)
-	{
+	public Actor(String name, int id) {
 		super(name, id);
 		currentMoveState = new MoveState(IDLE, 0, 0);
 		nextMoveStates = new LinkedList<>();
@@ -77,10 +78,16 @@ public class Actor extends SightedObject
 	}
 
 	@Override
-	public void update() {
+	public void setUp() {
 		resetFlags();
-		Location locationBeforeStep = getLocation();
-		step();
+		locationBeforeStep = getLocation();
+	}
+
+	@Override
+	public void update() { step(); }
+
+	@Override
+	public void reset() {
 		// If we're in a new locations after stepping, update the visible array.
 		if (locationBeforeStep != getLocation() || getVisibleLocations().isEmpty())
 			resetVisibleLocations();
@@ -92,7 +99,7 @@ public class Actor extends SightedObject
 	public void step() {
 		MoveState idleState = new MoveState(IDLE, getStepsTaken(), getCurrentMoveState().absoluteAngle);
 		int stepsToTake = getNextState() != null ? getNextState().stepsUntilChange - getStepsTaken() : -1;
-		if(stepsToTake <= 0)
+		if (stepsToTake <= 0)
 		{
 			resetState();
 		}
@@ -104,11 +111,6 @@ public class Actor extends SightedObject
 	}
 
 	/**
-	 * Increment the stepsTaken counter.
-	 */
-	protected void incrementStepCounter() {stepsTaken++;}
-
-	/**
 	 * Take a step according to the current move state.
 	 * @return Whether the step forward was successful.
 	 */
@@ -116,7 +118,7 @@ public class Actor extends SightedObject
 		if (currentMoveState.relativeAngle == IDLE) { return true; }
 		Vector2D newVector = getVector2D().getVectorInDirection(STEP_LENGTH, currentMoveState.stepAngle);
 		Location newLocation = getWorld().getLocationForCoordinates(getZoneID(), newVector);
-		if(newLocation == null) { return false; }
+		if (newLocation == null) { return false; }
 		boolean walkable = !"false".equals(newLocation.getLocationProperties().getProperty("walkable"));
 		if (walkable)
 		{
@@ -126,16 +128,6 @@ public class Actor extends SightedObject
 		{
 			return false;
 		}
-	}
-
-	/** Reset the move state, relativeAngle, and newState flag when changing the move state. */
-	protected void resetState() {
-		if (nextState == null) { return; }
-		stepsTaken = 0;
-		currentMoveState = nextState;
-		nextState = nextMoveStates.poll();
-		newState = true;
-		setDirection(currentMoveState.absoluteAngle);
 	}
 
 	/** Reset the flags used by this actor. */
@@ -163,6 +155,12 @@ public class Actor extends SightedObject
 	public int getStepsTaken() { return stepsTaken; }
 
 	/**
+	 * Set the steps taken.
+	 * @param stepsTaken The new number of steps taken.
+	 */
+	protected void setStepsTaken(int stepsTaken) { this.stepsTaken = stepsTaken; }
+
+	/**
 	 * Get the actor's current move state.
 	 * @return The actor's current move state.
 	 */
@@ -187,6 +185,12 @@ public class Actor extends SightedObject
 	}
 
 	/**
+	 * Get the relative angle of movement of this actor.
+	 * @return The relative angle of movement of this actor.
+	 */
+	public double getMoveDirection() { return currentMoveState.relativeAngle; }
+
+	/**
 	 * Step the actor back to a valid location.
 	 * @param stepAngle The angle the actor is moving.
 	 */
@@ -204,22 +208,22 @@ public class Actor extends SightedObject
 		setVector2D(current);
 	}
 
-	/**
-	 * Get the relative angle of movement of this actor.
-	 * @return The relative angle of movement of this actor.
-	 */
-	public double getMoveDirection() { return currentMoveState.relativeAngle; }
+	/** Increment the stepsTaken counter. */
+	protected void incrementStepCounter() {stepsTaken++;}
+
+	/** Reset the move state, relativeAngle, and newState flag when changing the move state. */
+	protected void resetState() {
+		if (nextState == null) { return; }
+		stepsTaken = 0;
+		currentMoveState = nextState;
+		nextState = nextMoveStates.poll();
+		newState = true;
+		setDirection(currentMoveState.absoluteAngle);
+	}
 
 	/**
 	 * Get the next state for this actor to follow.
 	 * @return The next state.
 	 */
 	protected MoveState getNextState() { return nextState; }
-
-	/**
-	 * Set the steps taken.
-	 * @param
-	 * stepsTaken The new number of steps taken.
-	 */
-	protected void setStepsTaken(int stepsTaken)	{ this.stepsTaken = stepsTaken;	}
 }
