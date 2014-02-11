@@ -105,8 +105,6 @@ public class WorldClient extends AuthClient
 	 * @param player The player to be controlled by this client.
 	 */
 	public void setPlayer(ClientPlayer player) {
-		if (this.player != null)
-			throw new IllegalStateException("Player already set!");
 		this.player = player;
 	}
 
