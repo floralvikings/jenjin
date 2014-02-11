@@ -28,7 +28,11 @@ public class ExecutableWorldLogoutRequest extends WorldExecutableMessage
 	@Override
 	public void runSynced() {
 		Actor clientActor = getClientHandler().getPlayer();
-		clientActor.getWorld().removeObject(clientActor);
+		// Multiple logout requests can cause Player to be null; have to check first.
+		if(clientActor != null)
+		{
+			clientActor.getWorld().removeObject(clientActor);
+		}
 	}
 
 	@Override
