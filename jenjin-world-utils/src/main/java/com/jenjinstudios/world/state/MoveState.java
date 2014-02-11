@@ -54,6 +54,6 @@ public class MoveState
 
 	@Override
 	public String toString() {
-		return "[" + relativeAngle + "\u00B0, " + " " + absoluteAngle + "\u00B0] : " + stepsUntilChange;
+		return "(R:" + relativeAngle + "\u00B0, " + " A:" + absoluteAngle + "\u00B0) After " + stepsUntilChange;
 	}
 }
