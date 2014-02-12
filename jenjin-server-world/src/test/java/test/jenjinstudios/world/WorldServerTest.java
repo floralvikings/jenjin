@@ -68,7 +68,7 @@ public class WorldServerTest
 	 * Test the actor visibility after player and actor movement.
 	 * @throws Exception If there's an exception.
 	 */
-	@Test
+	@Test(timeout = 60000)
 	public void testActorVisibility() throws Exception {
 		Vector2D serverActorStartPosition = new Vector2D(0, Location.SIZE  * (SightedObject.VIEW_RADIUS + 2));
 		Vector2D serverActorTargetPosition = new Vector2D(0, Location.SIZE * SightedObject.VIEW_RADIUS - 1);
@@ -100,7 +100,7 @@ public class WorldServerTest
 	 * Test the state-forcing funcionalty.
 	 * @throws Exception If there's an exception.
 	 */
-	@Test
+	@Test(timeout = 60000)
 	public void testForcedStateFromEdge() throws Exception {
 		WorldTestUtils.idleClientPlayer(1, clientPlayer);
 		WorldTestUtils.moveClientPlayerTowardVector(new Vector2D(-1.0, 0), clientPlayer, serverPlayer);
@@ -113,7 +113,7 @@ public class WorldServerTest
 	 * Test the state forcing functionality.
 	 * @throws Exception If there's an exception.
 	 */
-	@Test
+	@Test(timeout = 60000)
 	public void testForcedState() throws Exception {
 		WorldTestUtils.moveClientPlayerTowardVector(new Vector2D(0.5, 0.5), clientPlayer, serverPlayer);
 		WorldTestUtils.moveClientPlayerTowardVector(new Vector2D(-0.5, -0.5), clientPlayer, serverPlayer);
@@ -125,7 +125,7 @@ public class WorldServerTest
 	 * Test basic movement.
 	 * @throws Exception If there's an exception.
 	 */
-	@Test
+	@Test(timeout = 60000)
 	public void testMovement() throws Exception {
 		Vector2D targetVector = new Vector2D(3.956, 3.7468);
 		WorldTestUtils.moveClientPlayerTowardVector(targetVector, clientPlayer, serverPlayer);
@@ -135,7 +135,7 @@ public class WorldServerTest
 	 * Test repeatedly forcing client.
 	 * @throws Exception If there's an exception.
 	 */
-	@Test
+	@Test(timeout = 60000)
 	public void testRepeatedForcedState() throws Exception {
 		WorldTestUtils.moveClientPlayerTowardVector(new Vector2D(.5, .5), clientPlayer, serverPlayer);
 		WorldTestUtils.moveClientPlayerTowardVector(new Vector2D(-1, -1), clientPlayer, serverPlayer);
@@ -148,7 +148,7 @@ public class WorldServerTest
 	 * Test movement to various random vectors.
 	 * @throws Exception If there's an exception.
 	 */
-	@Test
+	@Test(timeout = 60000)
 	public void testRandomMovement() throws Exception {
 		WorldTestUtils.idleClientPlayer(1, clientPlayer);
 		int maxCoord = 5;

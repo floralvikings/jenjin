@@ -65,7 +65,7 @@ public class BlockedLocationTest
 	 * Test attempting to walk into a "blocked" location.
 	 * @throws Exception If there's an Exception.
 	 */
-	@Test
+	@Test(timeout = 60000)
 	public void TestAttemptBlockedLocation() throws Exception {
 		Vector2D vector1 = new Vector2D(35, 0);
 		Vector2D attemptedVector2 = new Vector2D(35, 35);
