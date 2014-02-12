@@ -79,8 +79,8 @@ public class WorldClient extends AuthClient
 	public boolean sendBlockingLoginRequest() {
 		sendLoginRequest();
 		long startTime = System.currentTimeMillis();
-		long timepast = System.currentTimeMillis() - startTime;
-		while (isWaitingForLoginResponse() && (timepast < TIMEOUT_MILLIS))
+		long timePast = System.currentTimeMillis() - startTime;
+		while (!isLoggedIn() && isWaitingForLoginResponse() && (timePast < TIMEOUT_MILLIS))
 		{
 			try
 			{
@@ -89,7 +89,7 @@ public class WorldClient extends AuthClient
 			{
 				LOGGER.log(Level.WARNING, "Interrupted while waiting for login response.", e);
 			}
-			timepast = System.currentTimeMillis() - startTime;
+			timePast = System.currentTimeMillis() - startTime;
 		}
 		return isLoggedIn();
 	}
@@ -205,6 +205,8 @@ public class WorldClient extends AuthClient
 	 * @param moveState The move state used to generate the request.
 	 */
 	protected void sendStateChangeRequest(MoveState moveState) {
+		LOGGER.log(Level.FINEST, "Sending state change request: {0} from {1}",
+				new Object[] {moveState, Thread.currentThread().getName()});
 		Message stateChangeRequest = WorldClientMessageGenerator.generateStateChangeRequest(moveState);
 		queueMessage(stateChangeRequest);
 	}

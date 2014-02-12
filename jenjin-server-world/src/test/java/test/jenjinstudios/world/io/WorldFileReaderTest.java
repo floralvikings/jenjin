@@ -21,7 +21,7 @@ public class WorldFileReaderTest
 	 */
 	@Test
 	public void testRead() throws Exception {
-		InputStream resourceAsStream = getClass().getResourceAsStream("/WorldFile01.xml");
+		InputStream resourceAsStream = getClass().getResourceAsStream("/test/jenjinstudios/world/WorldFile01.xml");
 		WorldFileReader testReader = new WorldFileReader(resourceAsStream);
 		World world = testReader.read();
 		Location testLocation = world.getLocationForCoordinates(0, new Vector2D(Location.SIZE * 3, Location.SIZE * 3));

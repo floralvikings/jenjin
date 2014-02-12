@@ -186,7 +186,7 @@ public class WorldServerTest
 	private void initWorldServer() throws Exception {
 		/* The world SQL handler used to test. */
 		WorldSQLHandler worldSQLHandler = new WorldSQLHandler("localhost", "jenjin_test", "jenjin_user", "jenjin_password");
-		worldServer = new WorldServer(new WorldFileReader(getClass().getResourceAsStream("/WorldFile01.xml")),
+		worldServer = new WorldServer(new WorldFileReader(getClass().getResourceAsStream("/test/jenjinstudios/world/WorldFile01.xml")),
 				WorldServer.DEFAULT_UPS, WorldServer.DEFAULT_PORT, WorldClientHandler.class, worldSQLHandler);
 		world = worldServer.getWorld();
 		worldServer.blockingStart();

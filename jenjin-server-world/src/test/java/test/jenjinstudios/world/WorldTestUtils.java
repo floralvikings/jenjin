@@ -60,15 +60,15 @@ public class WorldTestUtils
 		idleClientPlayer(1, clientPlayer);
 		double newAngle = clientPlayer.getVector2D().getAngleToVector(newVector);
 		clientPlayer.setNewRelativeAngle(newAngle);
-		while (clientPlayer.getVector2D().getDistanceToVector(newVector) >= Actor.STEP_LENGTH)
+		double targetDistance = clientPlayer.getVector2D().getDistanceToVector(newVector);
+		while (targetDistance >= Actor.STEP_LENGTH && !clientPlayer.isForcedState())
 		{
-			if (clientPlayer.isForcedState()) { break; }
+			targetDistance = clientPlayer.getVector2D().getDistanceToVector(newVector);
 			Thread.sleep(10);
 		}
-		idleClientPlayer(15, clientPlayer);
-		double distance = clientPlayer.getVector2D().getDistanceToVector(serverPlayer.getVector2D());
-		if (distance > .001) { Thread.sleep(250); }
-		distance = clientPlayer.getVector2D().getDistanceToVector(serverPlayer.getVector2D());
-		Assert.assertEquals(distance, 0, .001);
+		int stepsToIdle = Math.abs(clientPlayer.getStepsTaken() - serverPlayer.getStepsTaken()) * 5;
+		idleClientPlayer(stepsToIdle, clientPlayer);
+		double playersDistance = clientPlayer.getVector2D().getDistanceToVector(serverPlayer.getVector2D());
+		Assert.assertEquals(0, playersDistance, .001);
 	}
 }

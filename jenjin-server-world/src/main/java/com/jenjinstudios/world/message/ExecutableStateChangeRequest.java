@@ -40,6 +40,7 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage
 		double angle = (double) getMessage().getArgument("absoluteAngle");
 		int stepsFromLast = (int) getMessage().getArgument("stepsUntilChange");
 		newState = new MoveState(direction, stepsFromLast, angle);
-		LOGGER.log(Level.FINEST, "Got State Change Request: " + newState);
+		LOGGER.log(Level.FINEST, "Got State Change Request: {0} for ClientHandler {1}",
+				new Object[]{newState, getClientHandler().getName()});
 	}
 }
