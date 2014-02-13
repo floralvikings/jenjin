@@ -19,9 +19,9 @@ public class Hash
 		try
 		{
 			//Convert the pass to an md5 hash string
-			byte[] pwbytes = input.getBytes("UTF-8");
+			byte[] passBytes = input.getBytes("UTF-8");
 			MessageDigest md = MessageDigest.getInstance("SHA-256");
-			byte[] encryption = md.digest(pwbytes);
+			byte[] encryption = md.digest(passBytes);
 			StringBuilder hexString = new StringBuilder();
 			for (byte anEncryption : encryption)
 			{ // Convert back to a string, making sure to include leading zeros.

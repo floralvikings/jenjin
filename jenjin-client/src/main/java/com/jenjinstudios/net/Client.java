@@ -95,7 +95,7 @@ public class Client extends Connection
 	@Override
 	public final void run() {
 		if (!isConnected()) connect();
-		// The ClientLoop is used to send messages in the outgoing queue and do syncrhonized executables.
+		// The ClientLoop is used to send messages in the outgoing queue and do synchronized actions.
 
 		sendMessagesTimer = new Timer("Client Update Loop", false);
 		sendMessagesTimer.scheduleAtFixedRate(new ClientLoop(this), 0, period);

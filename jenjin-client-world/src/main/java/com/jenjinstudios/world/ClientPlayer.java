@@ -197,7 +197,7 @@ public class ClientPlayer extends SightedObject
 	 * Reset the player's state.
 	 * @param position The new position.
 	 * @param relativeAngle The relative angle.
-	 * @param absoluteAngle The absolte angle.
+	 * @param absoluteAngle The absolute angle.
 	 */
 	private void resetState(Vector2D position, double relativeAngle, double absoluteAngle) {
 		setVector2D(position);

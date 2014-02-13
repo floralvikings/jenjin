@@ -45,15 +45,15 @@ public class ExecutableActorVisibleMessage extends WorldClientExecutableMessage
 		Message message = getMessage();
 		String name = (String) message.getArgument("name");
 		int id = (int) message.getArgument("id");
-		double xCoord = (double) message.getArgument("xCoordinate");
-		double yCoord = (double) message.getArgument("yCoordinate");
+		double xCoordinate = (double) message.getArgument("xCoordinate");
+		double yCoordinate = (double) message.getArgument("yCoordinate");
 		double direction = (double) message.getArgument("relativeAngle");
 		double angle = (double) message.getArgument("absoluteAngle");
 		int stepsFromLast = (int) message.getArgument("stepsTaken");
 		int stepsUntilChange = (int) message.getArgument("stepsUntilChange");
 
 		newlyVisible = new ClientActor(id, name);
-		newlyVisible.setVector2D(xCoord, yCoord);
+		newlyVisible.setVector2D(xCoordinate, yCoordinate);
 		MoveState state = new MoveState(direction, stepsUntilChange, angle);
 		newlyVisible.setCurrentMoveState(state);
 		newlyVisible.setStepsTaken(stepsFromLast);

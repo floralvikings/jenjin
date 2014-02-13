@@ -39,7 +39,7 @@ public abstract class Connection extends Thread
 	/** The AES key of this client. */
 	private byte[] aesKey;
 
-	/** Cosntruct a new Commuicator. */
+	/** Construct a new Communicator. */
 	protected Connection() {
 		outgoingMessages = new LinkedList<>();
 		pingTimes = new ArrayList<>();
@@ -243,7 +243,7 @@ public abstract class Connection extends Thread
 			socket.close();
 		} catch (IOException ignored)
 		{
-			// Link closing, possible _because_ of an IOExeption; will be shutting down.
+			// Link closing, possible _because_ of an IOException; will be shutting down.
 		} finally
 		{
 			connected = false;
