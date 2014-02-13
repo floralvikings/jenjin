@@ -30,6 +30,7 @@ public class LocationTest
 	}
 
 	/** Test the adjacent properties of locations. */
+	@SuppressWarnings("ConstantConditions")
 	@Test
 	public void testAdjacency() {
 		int xSize = 100;
