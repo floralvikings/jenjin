@@ -51,8 +51,8 @@ public class AuthClient extends Client
 	public boolean sendBlockingLoginRequest() {
 		sendLoginRequest();
 		long startTime = System.currentTimeMillis();
-		long timepast = System.currentTimeMillis() - startTime;
-		while (isWaitingForLoginResponse() && (timepast < TIMEOUT_MILLIS))
+		long timePast = System.currentTimeMillis() - startTime;
+		while (isWaitingForLoginResponse() && (timePast < TIMEOUT_MILLIS))
 		{
 			try
 			{
@@ -61,7 +61,7 @@ public class AuthClient extends Client
 			{
 				LOGGER.log(Level.WARNING, "Interrupted while waiting for login response.", e);
 			}
-			timepast = System.currentTimeMillis() - startTime;
+			timePast = System.currentTimeMillis() - startTime;
 		}
 		return isLoggedIn();
 	}
