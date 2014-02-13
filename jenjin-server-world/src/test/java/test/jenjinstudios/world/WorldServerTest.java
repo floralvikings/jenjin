@@ -170,16 +170,16 @@ public class WorldServerTest
 	 */
 	@Test(timeout = 60000)
 	public void testAttemptBlockedLocation() throws Exception {
-		Vector2D vector1 = new Vector2D(35, 0);
-		Vector2D attemptedVector2 = new Vector2D(35, 35);
-		Vector2D actualVector2 = new Vector2D(35, 29.8);
-		Vector2D vector3 = new Vector2D(35, 25);
-		Vector2D vector4 = new Vector2D(25, 25);
-		Vector2D vector5 = new Vector2D(25, 35);
-		Vector2D attemptedVector6 = new Vector2D(35, 35);
-		Vector2D actualVector6 = new Vector2D(29.8, 35);
-		Vector2D attemptedVector7 = new Vector2D(35, 35);
-		Vector2D actualVector7 = new Vector2D(29.8, 35);
+		Vector2D vector1 = new Vector2D(15, 0);
+		Vector2D attemptedVector2 = new Vector2D(15, 15);
+		Vector2D actualVector2 = new Vector2D(15, 9.8);
+		Vector2D vector3 = new Vector2D(15, 9);
+		Vector2D vector4 = new Vector2D(9, 9);
+		Vector2D vector5 = new Vector2D(9, 11);
+		Vector2D attemptedVector6 = new Vector2D(15, 11);
+		Vector2D actualVector6 = new Vector2D(9.8, 11);
+		Vector2D attemptedVector7 = new Vector2D(15, 15);
+		Vector2D actualVector7 = new Vector2D(9.8, 11);
 
 		// Move to (35, 0)
 		WorldTestUtils.moveClientPlayerTowardVector(vector1, clientPlayer, serverPlayer);

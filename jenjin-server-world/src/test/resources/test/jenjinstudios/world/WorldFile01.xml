@@ -1,5 +1,5 @@
 <world>
     <zone id="0" xSize="50" ySize="50">
-       <location x="3" y="3" walkable="false" />
+       <location x="1" y="1" walkable="false" />
     </zone>
 </world>

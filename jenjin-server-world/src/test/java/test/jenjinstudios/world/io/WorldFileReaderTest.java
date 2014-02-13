@@ -24,7 +24,7 @@ public class WorldFileReaderTest
 		InputStream resourceAsStream = getClass().getResourceAsStream("/test/jenjinstudios/world/WorldFile01.xml");
 		WorldFileReader testReader = new WorldFileReader(resourceAsStream);
 		World world = testReader.read();
-		Location testLocation = world.getLocationForCoordinates(0, new Vector2D(Location.SIZE * 3, Location.SIZE * 3));
+		Location testLocation = world.getLocationForCoordinates(0, new Vector2D(Location.SIZE, Location.SIZE));
 		LocationProperties testProperties = testLocation.getLocationProperties();
 		Assert.assertTrue("false".equals(testProperties.getProperty("walkable")));
 	}
