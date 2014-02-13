@@ -10,6 +10,7 @@ import com.jenjinstudios.world.sql.WorldSQLHandler;
 import org.junit.*;
 
 import java.io.File;
+import java.util.logging.Logger;
 
 /**
  * Test the world server.
@@ -17,6 +18,8 @@ import java.io.File;
  */
 public class WorldServerTest
 {
+	/** The Logger for this class. */
+	private static Logger LOGGER = Logger.getLogger(WorldServerTest.class.getName());
 	// Server fields
 	/** The world server used to test. */
 	private WorldServer worldServer;
