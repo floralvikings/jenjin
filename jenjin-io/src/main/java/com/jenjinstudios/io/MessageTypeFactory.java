@@ -64,7 +64,7 @@ public class MessageTypeFactory
 			String languageAttribute = currentExecutableElement.getAttribute("language");
 			String sideAttribute = currentExecutableElement.getAttribute("side");
 			// If it's in java, set the executable message class name.
-			if (languageAttribute.equalsIgnoreCase("java") && sideAttribute.equalsIgnoreCase("client"))
+			if ("java".equalsIgnoreCase(languageAttribute) && "client".equalsIgnoreCase(sideAttribute))
 				executableMessageClassName = currentExecutableElement.getTextContent();
 		}
 		if (executableMessageClassName != null)
@@ -99,7 +99,7 @@ public class MessageTypeFactory
 			String languageAttribute = currentExecutableElement.getAttribute("language");
 			String sideAttribute = currentExecutableElement.getAttribute("side");
 			// If it's in java, set the executable message class name.
-			if (languageAttribute.equalsIgnoreCase("java") && sideAttribute.equalsIgnoreCase("server"))
+			if ("java".equalsIgnoreCase(languageAttribute) && "server".equalsIgnoreCase(sideAttribute))
 				executableMessageClassName = currentExecutableElement.getTextContent();
 		}
 		if (executableMessageClassName != null)
