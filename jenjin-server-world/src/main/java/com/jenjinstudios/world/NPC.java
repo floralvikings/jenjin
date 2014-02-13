@@ -25,8 +25,6 @@ public class NPC extends Actor
 	private Player targetPlayer;
 	/** The list of targets to which a wandering NPC will move. */
 	private final ArrayList<Location> wanderTargets;
-	/** The amount of steps for which the NPC should idle in between reaching targets. */
-	private int idleTimeBetweenTargets = 100;
 
 	/**
 	 * Construct an NPC with the given name.
@@ -107,6 +105,8 @@ public class NPC extends Actor
 		{
 			if (getCurrentMoveState().relativeAngle == MoveState.IDLE && getNextState() == null)
 			{
+				/* The amount of steps for which the NPC should idle in between reaching targets. */
+				int idleTimeBetweenTargets = 100;
 				if (getStepsTaken() >= idleTimeBetweenTargets && !wanderTargets.isEmpty())
 				{
 					targetLocation = wanderTargets.get((int) (Math.random() * wanderTargets.size()));
