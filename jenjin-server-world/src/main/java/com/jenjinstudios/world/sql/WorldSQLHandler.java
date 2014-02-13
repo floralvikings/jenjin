@@ -45,7 +45,7 @@ public class WorldSQLHandler extends SQLHandler
 	 * @param password The player's password.
 	 * @return An actor pre-filled with the players information.
 	 */
-	public synchronized Player logInPlayer(String username, String password) {
+	public Player logInPlayer(String username, String password) {
 		Player player = null;
 		if (!isConnected())
 			return player;

@@ -72,20 +72,6 @@ public class Server<T extends ClientHandler> extends Thread
 	}
 
 	/**
-	 * Schedule a client to be removed during the next update.
-	 * @param handler The client handler to be removed.
-	 */
-	void removeClient(ClientHandler handler) {
-		synchronized (clientHandlers)
-		{
-			String username = handler.getUsername();
-			if (username != null) { clientsByUsername.remove(username); }
-			clientHandlers.set(handler.getHandlerId(), null);
-			numClients--;
-		}
-	}
-
-	/**
 	 * Add new clients that have connected to the client listeners.
 	 * @return true if new clients were added.
 	 */
@@ -193,15 +179,12 @@ public class Server<T extends ClientHandler> extends Thread
 	 * @param username The username of the client to look up.
 	 * @return The client with the username specified; null if there is no client with this username.
 	 */
-	public T getClientHandlerByUsername(String username) { return clientsByUsername.get(username); }
-
-	/**
-	 * Called by ClientHandler when the client sets a username.
-	 * @param username The username assigned to the ClientHandler.
-	 * @param handler The ClientHandler that has had a username set.
-	 */
-	@SuppressWarnings("unchecked")
-	void clientUsernameSet(String username, ClientHandler handler) { clientsByUsername.put(username, (T) handler); }
+	public T getClientHandlerByUsername(String username) {
+		synchronized (clientsByUsername)
+		{
+			return clientsByUsername.get(username);
+		}
+	}
 
 	/**
 	 * Get the current number of connected clients.
@@ -209,5 +192,32 @@ public class Server<T extends ClientHandler> extends Thread
 	 */
 	public int getNumClients() {
 		return numClients;
+	}
+
+	/**
+	 * Schedule a client to be removed during the next update.
+	 * @param handler The client handler to be removed.
+	 */
+	void removeClient(ClientHandler handler) {
+		String username = handler.getUsername();
+		if (username != null) { clientsByUsername.remove(username); }
+		synchronized (clientHandlers)
+		{
+			clientHandlers.set(handler.getHandlerId(), null);
+		}
+		numClients--;
+	}
+
+	/**
+	 * Called by ClientHandler when the client sets a username.
+	 * @param username The username assigned to the ClientHandler.
+	 * @param handler The ClientHandler that has had a username set.
+	 */
+	@SuppressWarnings("unchecked")
+	void clientUsernameSet(String username, ClientHandler handler) {
+		synchronized (clientsByUsername)
+		{
+			clientsByUsername.put(username, (T) handler);
+		}
 	}
 }
