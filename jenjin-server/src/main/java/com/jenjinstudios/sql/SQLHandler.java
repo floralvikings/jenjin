@@ -176,10 +176,10 @@ public class SQLHandler
 		String newValue = status ? "1" : "0";
 		String updateLoggedInQuery = "UPDATE " + dbName + ".users SET " + LOGGED_IN_COLUMN + "=" + newValue + " WHERE " +
 				"username = ?";
-		PreparedStatement updateLoggedin;
-		updateLoggedin = dbConnection.prepareStatement(updateLoggedInQuery);
-		updateLoggedin.setString(1, username);
-		updateLoggedin.executeUpdate();
-		updateLoggedin.close();
+		PreparedStatement updateLoggedIn;
+		updateLoggedIn = dbConnection.prepareStatement(updateLoggedInQuery);
+		updateLoggedIn.setString(1, username);
+		updateLoggedIn.executeUpdate();
+		updateLoggedIn.close();
 	}
 }
