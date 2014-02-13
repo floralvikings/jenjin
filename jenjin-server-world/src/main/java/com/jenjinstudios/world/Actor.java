@@ -44,26 +44,12 @@ public class Actor extends SightedObject
 	/** The Location before a step is taken. */
 	private Location locationBeforeStep;
 
-	/** Construct a new Actor. */
-	public Actor() { this(DEFAULT_NAME); }
-
 	/**
 	 * Construct an Actor with the given name.
 	 * @param name The name.
 	 */
 	public Actor(String name) {
 		super(name);
-		currentMoveState = new MoveState(IDLE, 0, 0);
-		nextMoveStates = new LinkedList<>();
-	}
-
-	/**
-	 * Construct a new Actor with the given ID and name.
-	 * @param name The name.
-	 * @param id The ID.
-	 */
-	public Actor(String name, int id) {
-		super(name, id);
 		currentMoveState = new MoveState(IDLE, 0, 0);
 		nextMoveStates = new LinkedList<>();
 	}
@@ -226,4 +212,10 @@ public class Actor extends SightedObject
 	 * @return The next state.
 	 */
 	protected MoveState getNextState() { return nextState; }
+
+	/**  Clear all upcoming move states. */
+	protected void clearMoveStates() {
+		nextState = null;
+		nextMoveStates.clear();
+	}
 }

@@ -13,7 +13,7 @@ import org.junit.Test;
 public class NPCTest
 {
 	/** The NPC used for testing. */
-	NPC npc = new NPC();
+	NPC npc = new NPC("Nearly Passable Cormorant");
 	/** The World used to test the actor. */
 	private World world;
 

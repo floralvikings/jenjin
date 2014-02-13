@@ -34,7 +34,7 @@ public class ActorTest
 	//@Ignore
 	public void testAddMoveState() throws Exception
 	{
-		Actor actor = new Actor();
+		Actor actor = new Actor("TestActor");
 
 		world.addObject(actor);
 		Assert.assertEquals(1, world.getObjectCount());

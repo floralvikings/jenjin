@@ -6,6 +6,7 @@ import com.jenjinstudios.world.math.Vector2D;
 import com.jenjinstudios.world.state.MoveState;
 
 import java.util.LinkedList;
+import java.util.TreeMap;
 
 /**
  * This class represents a Non-Player Character.
@@ -13,6 +14,84 @@ import java.util.LinkedList;
  */
 public class NPC extends Actor
 {
+	/** The behavior flags associated with this NPC. */
+	private TreeMap<String, Boolean> behaviorFlags;
+	/** The Location at which the NPC began following a player. */
+	private Location startLocation;
+	/** The location toward which this NPC is to move. */
+	private Location targetLocation;
+	/** The player currently being targeted. */
+	private Player targetPlayer;
+
+	/**
+	 * Construct an NPC with the given name.
+	 * @param name The name.
+	 */
+	public NPC(String name) {
+		this(name, new TreeMap<String, Boolean>());
+	}
+
+	/**
+	 * Construct an NPC with the given name and behavior flags.
+	 * @param name The name of the player.
+	 * @param behaviorFlags The behavior flags.
+	 */
+	public NPC(String name, TreeMap<String, Boolean> behaviorFlags) {
+		super(name);
+		this.behaviorFlags = behaviorFlags;
+	}
+
+	@Override
+	public void setUp(){
+		if(behaviorFlags.get("aggressive") != null && behaviorFlags.get("aggressive"))
+		{
+			if(targetPlayer == null && (targetLocation == null || targetLocation != startLocation))
+			{
+				targetPlayer = findPlayer();
+				targetLocation = targetPlayer != null ? targetPlayer.getLocation() : startLocation;
+				startLocation = targetLocation != null ? getLocation() : null;
+				plotPath(targetLocation);
+			}else if(targetPlayer != null)
+			{
+				if(getLocation() == targetLocation)
+				{
+					targetPlayer = null;
+					targetLocation = startLocation;
+					plotPath(targetLocation);
+				}else if(!targetLocation.getObjects().contains(targetPlayer))
+				{
+					if(getVisibleObjects().get(targetPlayer.getId()) != null)
+					{
+						targetLocation = targetPlayer.getLocation();
+						plotPath(targetLocation);
+					}else
+					{
+						targetLocation = startLocation;
+						plotPath(targetLocation);
+					}
+				}
+			}
+		}
+		/*
+		// TODO Player wandering
+		if wandering
+			if in target location and done idling and not targeting player
+				pick new target location
+				clear preset states
+				plotPath(new target)
+		 */
+	}
+
+	/**
+	 * Get a player from the map of visible objects.
+	 * @return The player, or null if none is found.
+	 */
+	private Player findPlayer()
+	{
+		for(WorldObject object : getVisibleObjects().values())
+			if(object instanceof Player) return (Player) object;
+		return null;
+	}
 
 	/**
 	 * Plot a path to the given Location, and begin following it immediately.
@@ -20,6 +99,7 @@ public class NPC extends Actor
 	 */
 	public void plotPath(Location target)
 	{
+		clearMoveStates();
 		LinkedList<Location> path = Pathfinder.findPath(getLocation(), target);
 		// Start will be current location.
 		Location prev = path.pop();

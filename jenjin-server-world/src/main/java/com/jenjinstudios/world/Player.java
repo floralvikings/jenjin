@@ -19,15 +19,6 @@ public class Player extends Actor
 		super(username);
 	}
 
-	/**
-	 * Construct a player with the given username and id.
-	 * @param username The username.
-	 * @param id The id.
-	 */
-	public Player(String username, int id) {
-		super(username, id);
-	}
-
 	/** Take a step, changing state and correcting steps if necessary. */
 	public void step() {
 		int overstepped = getOverstepped();
