@@ -22,7 +22,7 @@ public class WorldTestUtils
 		clientPlayer.setNewRelativeAngle(MoveState.IDLE);
 		while (clientPlayer.getRelativeAngle() != MoveState.IDLE || clientPlayer.getStepsTaken() < i)
 		{
-			Thread.sleep(1);
+			Thread.sleep(2);
 		}
 	}
 
@@ -64,7 +64,7 @@ public class WorldTestUtils
 		while (targetDistance >= Actor.STEP_LENGTH && !clientPlayer.isForcedState())
 		{
 			targetDistance = clientPlayer.getVector2D().getDistanceToVector(newVector);
-			Thread.sleep(1);
+			Thread.sleep(2);
 		}
 		int stepsToIdle = Math.abs(clientPlayer.getStepsTaken() - serverPlayer.getStepsTaken()) * 5;
 		idleClientPlayer(stepsToIdle, clientPlayer);
