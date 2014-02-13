@@ -157,8 +157,8 @@ public class WorldObject
 
 	/**
 	 * Set the object's vector based on coordinates.
-	 * @param xCoord The x coordinate.
-	 * @param yCoord The y coordinate.
+	 * @param xCoordinate The x coordinate.
+	 * @param yCoordinate The y coordinate.
 	 */
-	public void setVector2D(double xCoord, double yCoord) { this.setVector2D(new Vector2D(xCoord, yCoord)); }
+	public void setVector2D(double xCoordinate, double yCoordinate) { this.setVector2D(new Vector2D(xCoordinate, yCoordinate)); }
 }
