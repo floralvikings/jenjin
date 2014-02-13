@@ -2,12 +2,8 @@ package com.jenjinstudios.world.message;
 
 import com.jenjinstudios.io.Message;
 import com.jenjinstudios.world.ClientPlayer;
-import com.jenjinstudios.world.InvalidLocationException;
 import com.jenjinstudios.world.WorldClient;
 import com.jenjinstudios.world.WorldClientUpdater;
-
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Handles login responses from the server.
@@ -15,8 +11,6 @@ import java.util.logging.Logger;
  */
 public class ExecutableWorldLoginResponse extends WorldClientExecutableMessage
 {
-	/** The logger for this class. */
-	private static final Logger LOGGER = Logger.getLogger(ExecutableWorldFileResponse.class.getName());
 	/** The player created as indicated by the world login response. */
 	private ClientPlayer player;
 
@@ -41,13 +35,7 @@ public class ExecutableWorldLoginResponse extends WorldClientExecutableMessage
 		client.setLoggedInTime((long) getMessage().getArgument("loginTime"));
 		client.setName(client.getUsername());
 		client.setPlayer(player);
-		try
-		{
-			client.getWorld().addObject(player, player.getId());
-		} catch (InvalidLocationException e)
-		{
-			LOGGER.log(Level.INFO, "Tried to place newly visible actor in invalid location.");
-		}
+		client.getWorld().addObject(player, player.getId());
 
 		client.addRepeatedTask(new WorldClientUpdater(client));
 	}
