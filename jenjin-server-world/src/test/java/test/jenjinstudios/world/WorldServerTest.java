@@ -97,7 +97,7 @@ public class WorldServerTest
 	}
 
 	/**
-	 * Test the state-forcing funcionalty.
+	 * Test the state-forcing functionality.
 	 * @throws Exception If there's an exception.
 	 */
 	@Test(timeout = 60000)
@@ -151,11 +151,11 @@ public class WorldServerTest
 	@Test(timeout = 60000)
 	public void testRandomMovement() throws Exception {
 		WorldTestUtils.idleClientPlayer(1, clientPlayer);
-		int maxCoord = 5;
+		int maxCoordinate = 5;
 		for (int i = 0; i < 10; i++)
 		{
-			double randomX = MathUtil.round(java.lang.Math.random() * maxCoord, 4);
-			double randomY = MathUtil.round(java.lang.Math.random() * maxCoord, 4);
+			double randomX = MathUtil.round(java.lang.Math.random() * maxCoordinate, 4);
+			double randomY = MathUtil.round(java.lang.Math.random() * maxCoordinate, 4);
 			Vector2D random = new Vector2D(randomX, randomY);
 			WorldTestUtils.moveClientPlayerTowardVector(random, clientPlayer, serverPlayer);
 			double distance = clientPlayer.getVector2D().getDistanceToVector(serverPlayer.getVector2D());
