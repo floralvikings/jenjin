@@ -23,7 +23,7 @@ public class ExecutablePingResponse extends ClientExecutableMessage
 	public void runSynced() {
 		long requestTime = (long) getMessage().getArgument("requestTimeNanos");
 		long updateTime = getClient().getPeriod() * 1000000;
-		getClient().addPingTime(System.nanoTime() - requestTime - updateTime);
+		getClient().addPingTime((System.nanoTime() - requestTime - updateTime) / 1000000);
 	}
 
 	/** Run asynchronous portion of this message. */
