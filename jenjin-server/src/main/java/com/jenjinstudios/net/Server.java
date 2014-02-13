@@ -151,14 +151,14 @@ public class Server<T extends ClientHandler> extends Thread
 	 */
 	public final boolean blockingStart() {
 		long startTime = System.currentTimeMillis();
-		long timepast = System.currentTimeMillis() - startTime;
+		long timePast = System.currentTimeMillis() - startTime;
 		start();
-		while (!initialized && (timepast < TIMEOUT_MILLIS))
+		while (!initialized && (timePast < TIMEOUT_MILLIS))
 		{
 			try
 			{
 				Thread.sleep(10);
-				timepast = System.currentTimeMillis() - startTime;
+				timePast = System.currentTimeMillis() - startTime;
 			} catch (InterruptedException e)
 			{
 				LOGGER.log(Level.WARNING, "Server blocking start was interrupted.", e);
