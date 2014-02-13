@@ -5,7 +5,6 @@ import com.jenjinstudios.world.math.MathUtil;
 import com.jenjinstudios.world.math.Vector2D;
 import com.jenjinstudios.world.state.MoveState;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.TreeMap;
 
@@ -15,6 +14,8 @@ import java.util.TreeMap;
  */
 public class NPC extends Actor
 {
+	/** The list of targets to which a wandering NPC will move. */
+	private final LinkedList<Location> wanderTargets;
 	/** The behavior flags associated with this NPC. */
 	private TreeMap<String, Boolean> behaviorFlags;
 	/** The Location at which the NPC began following a player. */
@@ -23,8 +24,8 @@ public class NPC extends Actor
 	private Location targetLocation;
 	/** The player currently being targeted. */
 	private Player targetPlayer;
-	/** The list of targets to which a wandering NPC will move. */
-	private final ArrayList<Location> wanderTargets;
+	/** The index of the current wander target. */
+	private int wanderTargetIndex;
 
 	/**
 	 * Construct an NPC with the given name.
@@ -42,7 +43,7 @@ public class NPC extends Actor
 	public NPC(String name, TreeMap<String, Boolean> behaviorFlags) {
 		super(name);
 		this.behaviorFlags = behaviorFlags;
-		wanderTargets = new ArrayList<>();
+		wanderTargets = new LinkedList<>();
 	}
 
 	@Override
@@ -99,18 +100,33 @@ public class NPC extends Actor
 		}
 	}
 
+	/**
+	 * Add the specified Location to the list of possible wandering targets.
+	 * @param newTarget The Location to add to the target.
+	 */
+	public void addWanderTarget(Location newTarget) {
+		synchronized (wanderTargets)
+		{
+			wanderTargets.add(newTarget);
+		}
+	}
+
 	/** Perform the behavior of an NPC that "wanders". */
 	private void doWandersBehavior() {
-		if (targetPlayer == null && targetLocation == getLocation())
+		if (targetPlayer == null && targetLocation == getLocation() && !wanderTargets.isEmpty())
 		{
 			if (getCurrentMoveState().relativeAngle == MoveState.IDLE && getNextState() == null)
 			{
 				/* The amount of steps for which the NPC should idle in between reaching targets. */
 				int idleTimeBetweenTargets = 100;
-				if (getStepsTaken() >= idleTimeBetweenTargets && !wanderTargets.isEmpty())
+				if (getStepsTaken() >= idleTimeBetweenTargets)
 				{
-					targetLocation = wanderTargets.get((int) (Math.random() * wanderTargets.size()));
+					targetLocation = wanderTargets.get(wanderTargetIndex);
 					plotPath(targetLocation);
+					if (++wanderTargetIndex >= wanderTargets.size())
+					{
+						wanderTargetIndex = 0;
+					}
 				}
 			}
 		}
@@ -143,18 +159,6 @@ public class NPC extends Actor
 					plotPath(targetLocation);
 				}
 			}
-		}
-	}
-
-	/**
-	 * Add the specified Location to the list of possible wandering targets.
-	 * @param newTarget The Location to add to the target.
-	 */
-	public void addWanderTarget(Location newTarget)
-	{
-		synchronized (wanderTargets)
-		{
-			wanderTargets.add(newTarget);
 		}
 	}
 
