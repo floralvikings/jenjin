@@ -5,6 +5,7 @@ import com.jenjinstudios.world.math.MathUtil;
 import com.jenjinstudios.world.math.Vector2D;
 import com.jenjinstudios.world.state.MoveState;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.TreeMap;
 
@@ -22,6 +23,10 @@ public class NPC extends Actor
 	private Location targetLocation;
 	/** The player currently being targeted. */
 	private Player targetPlayer;
+	/** The list of targets to which a wandering NPC will move. */
+	private final ArrayList<Location> wanderTargets;
+	/** The amount of steps for which the NPC should idle in between reaching targets. */
+	private int idleTimeBetweenTargets = 100;
 
 	/**
 	 * Construct an NPC with the given name.
@@ -39,66 +44,31 @@ public class NPC extends Actor
 	public NPC(String name, TreeMap<String, Boolean> behaviorFlags) {
 		super(name);
 		this.behaviorFlags = behaviorFlags;
+		wanderTargets = new ArrayList<>();
 	}
 
 	@Override
-	public void setUp(){
-		if(behaviorFlags.get("aggressive") != null && behaviorFlags.get("aggressive"))
+	public void setUp() {
+		if (behaviorFlags.get("aggressive") != null && behaviorFlags.get("aggressive"))
 		{
-			if(targetPlayer == null && (targetLocation == null || targetLocation != startLocation))
-			{
-				targetPlayer = findPlayer();
-				targetLocation = targetPlayer != null ? targetPlayer.getLocation() : startLocation;
-				startLocation = targetLocation != null ? getLocation() : null;
-				plotPath(targetLocation);
-			}else if(targetPlayer != null)
-			{
-				if(getLocation() == targetLocation)
-				{
-					targetPlayer = null;
-					targetLocation = startLocation;
-					plotPath(targetLocation);
-				}else if(!targetLocation.getObjects().contains(targetPlayer))
-				{
-					if(getVisibleObjects().get(targetPlayer.getId()) != null)
-					{
-						targetLocation = targetPlayer.getLocation();
-						plotPath(targetLocation);
-					}else
-					{
-						targetLocation = startLocation;
-						plotPath(targetLocation);
-					}
-				}
-			}
+			doAggressiveBehavior();
 		}
-		/*
-		// TODO Player wandering
-		if wandering
-			if in target location and done idling and not targeting player
-				pick new target location
-				clear preset states
-				plotPath(new target)
-		 */
-	}
+		if (behaviorFlags.get("wanders") != null && behaviorFlags.get("wanders"))
+		{
+			doWandersBehavior();
+		}
 
-	/**
-	 * Get a player from the map of visible objects.
-	 * @return The player, or null if none is found.
-	 */
-	private Player findPlayer()
-	{
-		for(WorldObject object : getVisibleObjects().values())
-			if(object instanceof Player) return (Player) object;
-		return null;
 	}
 
 	/**
 	 * Plot a path to the given Location, and begin following it immediately.
 	 * @param target The target location.
 	 */
-	public void plotPath(Location target)
-	{
+	public void plotPath(Location target) {
+		if (target == null)
+		{
+			return;
+		}
 		clearMoveStates();
 		LinkedList<Location> path = Pathfinder.findPath(getLocation(), target);
 		// Start will be current location.
@@ -110,7 +80,7 @@ public class NPC extends Actor
 		MoveState moveState = new MoveState(MoveState.FRONT, getStepsTaken(), absAngle);
 		addMoveState(moveState);
 
-		while(!path.isEmpty())
+		while (!path.isEmpty())
 		{
 			Vector2D nextCenter = path.pop().getCenter();
 			int stepsToTake = (int) MathUtil.round(start.getDistanceToVector(prevCenter) / Actor.STEP_LENGTH, 0);
@@ -122,12 +92,79 @@ public class NPC extends Actor
 			start = prevCenter;
 			prevCenter = nextCenter;
 
-			if(path.isEmpty())
+			if (path.isEmpty())
 			{
 				stepsToTake = (int) MathUtil.round(start.getDistanceToVector(prevCenter) / Actor.STEP_LENGTH, 0);
-				MoveState idleState = new MoveState(MoveState.IDLE, stepsToTake,getCurrentMoveState().absoluteAngle);
+				MoveState idleState = new MoveState(MoveState.IDLE, stepsToTake, getCurrentMoveState().absoluteAngle);
 				addMoveState(idleState);
 			}
 		}
+	}
+
+	/** Perform the behavior of an NPC that "wanders". */
+	private void doWandersBehavior() {
+		if (targetPlayer == null && targetLocation == getLocation())
+		{
+			if (getCurrentMoveState().relativeAngle == MoveState.IDLE && getNextState() == null)
+			{
+				if (getStepsTaken() >= idleTimeBetweenTargets && !wanderTargets.isEmpty())
+				{
+					targetLocation = wanderTargets.get((int) (Math.random() * wanderTargets.size()));
+					plotPath(targetLocation);
+				}
+			}
+		}
+	}
+
+	/** Perform the behavior signature of an NPC that is "aggressive". */
+	private void doAggressiveBehavior() {
+		if (targetPlayer == null && (targetLocation == null || targetLocation != startLocation))
+		{
+			targetPlayer = findPlayer();
+			targetLocation = targetPlayer != null ? targetPlayer.getLocation() : startLocation;
+			startLocation = targetLocation != null ? getLocation() : null;
+			plotPath(targetLocation);
+		} else if (targetPlayer != null)
+		{
+			if (getLocation() == targetLocation)
+			{
+				targetPlayer = null;
+				targetLocation = startLocation;
+				plotPath(targetLocation);
+			} else if (!targetLocation.getObjects().contains(targetPlayer))
+			{
+				if (getVisibleObjects().get(targetPlayer.getId()) != null)
+				{
+					targetLocation = targetPlayer.getLocation();
+					plotPath(targetLocation);
+				} else
+				{
+					targetLocation = startLocation;
+					plotPath(targetLocation);
+				}
+			}
+		}
+	}
+
+	/**
+	 * Add the specified Location to the list of possible wandering targets.
+	 * @param newTarget The Location to add to the target.
+	 */
+	public void addWanderTarget(Location newTarget)
+	{
+		synchronized (wanderTargets)
+		{
+			wanderTargets.add(newTarget);
+		}
+	}
+
+	/**
+	 * Get a player from the map of visible objects.
+	 * @return The player, or null if none is found.
+	 */
+	private Player findPlayer() {
+		for (WorldObject object : getVisibleObjects().values())
+			if (object instanceof Player) return (Player) object;
+		return null;
 	}
 }
