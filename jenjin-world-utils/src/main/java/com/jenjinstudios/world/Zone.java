@@ -9,7 +9,7 @@ import java.util.LinkedList;
 
 /**
  * The {@code Zone} class represents a grid of {@code Location} objects within the {@code World}.  Zones cannot be
- * accessed from other Zones.  Suuport for this feature is planned in a future release.
+ * accessed from other Zones.  Support for this feature is planned in a future release.
  * @author Caleb Brinkman
  */
 public class Zone
@@ -57,9 +57,9 @@ public class Zone
 	}
 
 	/**
-	 * Determine if the coordinates of the vector are within this Zones boundries.
+	 * Determine if the coordinates of the vector are within this Zones boundaries.
 	 * @param vector2D The coordinates to check.
-	 * @return Whether the coordinates of the vector are within this Zones boundries.
+	 * @return Whether the coordinates of the vector are within this Zones boundaries.
 	 */
 	public boolean isValidLocation(Vector2D vector2D) {
 		double x = vector2D.getXCoordinate();
@@ -69,13 +69,13 @@ public class Zone
 
 	/**
 	 * Get an area of location objects.
-	 * @param centerCoords The center of the area to return.
+	 * @param centerCoordinates The center of the area to return.
 	 * @param radius The radius of the area.
 	 * @return An ArrayList containing all valid locations in the specified area.
 	 */
-	public ArrayList<Location> getLocationArea(Vector2D centerCoords, int radius) {
+	public ArrayList<Location> getLocationArea(Vector2D centerCoordinates, int radius) {
 		ArrayList<Location> areaGrid = new ArrayList<>();
-		Location center = getLocationForCoordinates(centerCoords);
+		Location center = getLocationForCoordinates(centerCoordinates);
 		int xStart = Math.max(center.X_COORDINATE - (radius - 1), 0);
 		int yStart = Math.max(center.Y_COORDINATE - (radius - 1), 0);
 		int xEnd = Math.min(center.X_COORDINATE + (radius - 1), locationGrid.length - 1);
@@ -91,11 +91,11 @@ public class Zone
 
 	/**
 	 * Get the location at the specified coordinates.
-	 * @param centerCoords The coodinates.
+	 * @param centerCoordinates The coordinates.
 	 * @return The location at the specified coordinates.
 	 */
-	public Location getLocationForCoordinates(Vector2D centerCoords) {
-		return getLocationForCoordinates(centerCoords.getXCoordinate(), centerCoords.getYCoordinate());
+	public Location getLocationForCoordinates(Vector2D centerCoordinates) {
+		return getLocationForCoordinates(centerCoordinates.getXCoordinate(), centerCoordinates.getYCoordinate());
 	}
 
 	/**
