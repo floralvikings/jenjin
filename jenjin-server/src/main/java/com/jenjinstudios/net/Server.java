@@ -141,7 +141,7 @@ public class Server<T extends ClientHandler> extends Thread
 	/** Run the server. */
 	@Override
 	public void run() {
-		clientListener.listen();
+		clientListener.startListening();
 		initialized = true;
 	}
 

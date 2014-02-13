@@ -84,7 +84,7 @@ class ClientListener<T extends ClientHandler> implements Runnable
 	}
 
 	/** Listen for clients in a new thread. If already listening this method does nothing. */
-	public void listen() {
+	public void startListening() {
 		if (listening)
 			return;
 		listening = true;
