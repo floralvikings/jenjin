@@ -15,7 +15,7 @@ public class WorldClientHandler extends ClientHandler
 {
 	/** The WorldServer owning this handler. */
 	private final WorldServer server;
-	/** The ID of the player controlled by this clienthandler. */
+	/** The ID of the player controlled by this client handler. */
 	private long playerID = -1;
 	/** The Actor managed by this handler. */
 	private Player player;
