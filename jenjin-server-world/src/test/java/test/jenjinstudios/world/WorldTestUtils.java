@@ -64,7 +64,7 @@ public class WorldTestUtils
 		while (targetDistance >= Actor.STEP_LENGTH && !clientPlayer.isForcedState())
 		{
 			targetDistance = clientPlayer.getVector2D().getDistanceToVector(newVector);
-			Thread.sleep(10);
+			Thread.sleep(1);
 		}
 		int stepsToIdle = Math.abs(clientPlayer.getStepsTaken() - serverPlayer.getStepsTaken()) * 5;
 		idleClientPlayer(stepsToIdle, clientPlayer);
