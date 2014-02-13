@@ -35,10 +35,10 @@ public class WorldClient extends AuthClient
 	private World world;
 	/** The actor representing the player controlled by this client. */
 	private ClientPlayer player;
-	/** Whether this client has reveived a world file checksum from the server. */
+	/** Whether this client has received a world file checksum from the server. */
 	private boolean hasReceivedWorldFileChecksum;
 	/** The world file checksum received from the server. */
-	private byte[] serverWorldfileChecksum;
+	private byte[] serverWorldFileChecksum;
 	/** The world file. */
 	private File worldFile;
 	/** The world file reader for this client. */
@@ -132,10 +132,10 @@ public class WorldClient extends AuthClient
 
 	/**
 	 * Set the checksum received from the server.
-	 * @param serverWorldfileChecksum The checksum received from the server.
+	 * @param serverWorldFileChecksum The checksum received from the server.
 	 */
-	public void setServerWorldfileChecksum(byte[] serverWorldfileChecksum) {
-		this.serverWorldfileChecksum = serverWorldfileChecksum;
+	public void setServerWorldFileChecksum(byte[] serverWorldFileChecksum) {
+		this.serverWorldFileChecksum = serverWorldFileChecksum;
 	}
 
 	/**
@@ -172,7 +172,7 @@ public class WorldClient extends AuthClient
 			Thread.sleep(10);
 		}
 
-		if (worldFileReader == null || !Arrays.equals(serverWorldfileChecksum, worldFileReader.getWorldFileChecksum()))
+		if (worldFileReader == null || !Arrays.equals(serverWorldFileChecksum, worldFileReader.getWorldFileChecksum()))
 		{
 			queueMessage(new Message("WorldFileRequest"));
 			while (!hasReceivedWorldFile)
