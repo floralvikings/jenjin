@@ -75,7 +75,7 @@ public class ServerTest
 	public void testLoginLogout() throws Exception {
 		assertEquals(0, server.getNumClients());
 
-		goodClient01 = new AuthClient("localhost", 51019, "TestAccount01", "testPassword");
+		goodClient01 = new AuthClient("localhost", 51019, "TestAccount1", "testPassword");
 		goodClient01.blockingStart();
 
 		assertTrue(goodClient01.sendBlockingLoginRequest());
@@ -96,7 +96,7 @@ public class ServerTest
 	@Test
 	public void testIncorrectPassword() throws Exception {
 		/* This client should fail to login. */
-		AuthClient badClient = new AuthClient("127.0.0.1", 51019, "TestAccount02", "This is an incorrect password.");
+		AuthClient badClient = new AuthClient("127.0.0.1", 51019, "TestAccount2", "This is an incorrect password.");
 		badClient.blockingStart();
 
 		assertFalse(badClient.sendBlockingLoginRequest());
@@ -111,13 +111,13 @@ public class ServerTest
 	 */
 	@Test
 	public void testGetLoggedInTime() throws Exception {
-		goodClient01 = new AuthClient("localhost", 51019, "TestAccount01", "testPassword");
+		goodClient01 = new AuthClient("localhost", 51019, "TestAccount1", "testPassword");
 		goodClient01.blockingStart();
 
 		assertTrue(goodClient01.isRunning());
 
 		assertTrue(goodClient01.sendBlockingLoginRequest());
-		ClientHandler handler = server.getClientHandlerByUsername("TestAccount01");
+		ClientHandler handler = server.getClientHandlerByUsername("TestAccount1");
 		assertEquals(handler.getLoggedInTime(), goodClient01.getLoggedInTime());
 		assertTrue(goodClient01.sendBlockingLogoutRequest());
 
@@ -130,10 +130,10 @@ public class ServerTest
 	 */
 	@Test
 	public void testAlreadyLoggedIn() throws Exception {
-		goodClient01 = new AuthClient("localhost", 51019, "TestAccount01", "testPassword");
+		goodClient01 = new AuthClient("localhost", 51019, "TestAccount1", "testPassword");
 		assertTrue(goodClient01.blockingStart());
 
-		sameClient = new AuthClient("127.0.0.1", 51019, "TestAccount01", "testPassword");
+		sameClient = new AuthClient("127.0.0.1", 51019, "TestAccount1", "testPassword");
 		sameClient.blockingStart();
 
 		assertTrue(goodClient01.sendBlockingLoginRequest());
@@ -155,10 +155,10 @@ public class ServerTest
 	 */
 	@Test
 	public void testEmergencyLogout() throws Exception {
-		goodClient01 = new AuthClient("localhost", 51019, "TestAccount01", "testPassword");
+		goodClient01 = new AuthClient("localhost", 51019, "TestAccount1", "testPassword");
 		goodClient01.blockingStart();
 
-		sameClient = new AuthClient("127.0.0.1", 51019, "TestAccount01", "testPassword");
+		sameClient = new AuthClient("127.0.0.1", 51019, "TestAccount1", "testPassword");
 		sameClient.blockingStart();
 
 		// This client logs in and shuts down before sending a proper logout request.

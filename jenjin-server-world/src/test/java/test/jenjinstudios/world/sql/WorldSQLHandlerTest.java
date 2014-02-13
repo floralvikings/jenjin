@@ -26,7 +26,7 @@ public class WorldSQLHandlerTest
 
 		assertTrue(worldSQLHandler.isConnected());
 
-		Actor player = worldSQLHandler.logInPlayer("TestAccount01", "testPassword");
+		Actor player = worldSQLHandler.logInPlayer("TestAccount1", "testPassword");
 		Vector2D origin = player.getVector2D();
 		Vector2D secondVector = new Vector2D(50, 50);
 
@@ -35,13 +35,13 @@ public class WorldSQLHandlerTest
 		player.setVector2D(secondVector);
 		assertTrue(worldSQLHandler.logOutPlayer(player));
 
-		player = worldSQLHandler.logInPlayer("TestAccount01", "testPassword");
+		player = worldSQLHandler.logInPlayer("TestAccount1", "testPassword");
 		assertEquals(secondVector, player.getVector2D());
 
 		player.setVector2D(origin);
 		assertTrue(worldSQLHandler.logOutPlayer(player));
 
-		player = worldSQLHandler.logInPlayer("TestAccount01", "testPassword");
+		player = worldSQLHandler.logInPlayer("TestAccount1", "testPassword");
 		assertEquals(origin, player.getVector2D());
 
 		assertTrue(worldSQLHandler.logOutPlayer(player));

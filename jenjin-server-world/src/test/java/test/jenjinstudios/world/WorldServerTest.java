@@ -221,8 +221,8 @@ public class WorldServerTest
 	@Test(timeout = 60000)
 	public void testRandomMovement() throws Exception {
 		idleClientPlayer(1, clientPlayer);
-		int maxCoordinate = 5;
-		for (int i = 0; i < 5; i++)
+		int maxCoordinate = 3;
+		for (int i = 0; i < 3; i++)
 		{
 			double randomX = MathUtil.round(java.lang.Math.random() * maxCoordinate, 4);
 			double randomY = MathUtil.round(java.lang.Math.random() * maxCoordinate, 4);
@@ -283,7 +283,7 @@ public class WorldServerTest
 	 * @throws Exception If there's an exception.
 	 */
 	private void initWorldClient() throws Exception {
-		worldClient = new WorldClient(new File("resources/WorldTestFile.xml"), "localhost", WorldServer.DEFAULT_PORT, "TestAccount01", "testPassword");
+		worldClient = new WorldClient(new File("resources/WorldTestFile.xml"), "localhost", WorldServer.DEFAULT_PORT, "TestAccount1", "testPassword");
 		worldClient.blockingStart();
 		worldClient.sendBlockingWorldFileRequest();
 		worldClient.sendBlockingLoginRequest();
