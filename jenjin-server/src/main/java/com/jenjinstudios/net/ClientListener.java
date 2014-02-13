@@ -27,26 +27,24 @@ class ClientListener<T extends ClientHandler> implements Runnable
 	/** The server socket. */
 	private ServerSocket serverSock;
 	/** The server. */
-	private final Server server;
+	private Server server;
 	/** The constructor called to create new handlers. */
 	private Constructor<T> handlerConstructor;
 
 	/**
 	 * Construct a new ClientListener for the given server on the given port.
-	 * @param s The server for which this listener will listen.
+	 * @param serverClass The server for which this listener will listen.
 	 * @param p The port on which to listen.
 	 * @param handlerClass The class of the ClientHandler to be used by this server.
 	 * @throws IOException If there is an error listening on the port.
 	 * @throws NoSuchMethodException If there is no appropriate constructor for the specified ClientHandler constructor.
 	 */
-	public ClientListener(Server s, int p, Class<T> handlerClass) throws IOException, NoSuchMethodException {
-		server = s;
+	public ClientListener(Class<? extends Server> serverClass, int p, Class<T> handlerClass) throws IOException, NoSuchMethodException {
 		PORT = p;
 		/* The class of client handlers created by this listener. */
 		try
 		{
-			handlerConstructor = handlerClass.getConstructor(s.getClass(), Socket.class);
-
+			handlerConstructor = handlerClass.getConstructor(serverClass, Socket.class);
 		} catch (NoSuchMethodException e)
 		{
 			LOGGER.log(Level.SEVERE, "Unable to find appropriate ClientHandler constructor: " + handlerClass.getName(), e);
@@ -83,10 +81,12 @@ class ClientListener<T extends ClientHandler> implements Runnable
 		serverSock.close();
 	}
 
-	/** Listen for clients in a new thread. If already listening this method does nothing. */
-	public void startListening() {
+	/** Listen for clients in a new thread. If already listening this method does nothing.
+	 * @param tServer The server */
+	public void startListening(Server<T> tServer) {
 		if (listening)
 			return;
+		this.server = tServer;
 		listening = true;
 		new Thread(this, "Client Listener " + PORT).start();
 	}

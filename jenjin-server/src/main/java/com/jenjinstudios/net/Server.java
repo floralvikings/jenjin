@@ -64,7 +64,7 @@ public class Server<T extends ClientHandler> extends Thread
 		UPS = ups;
 		PERIOD = 1000 / ups;
 		clientsByUsername = new TreeMap<>();
-		clientListener = (ClientListener<T>) new ClientListener<>(this, port, handlerClass);
+		clientListener = (ClientListener<T>) new ClientListener<>(getClass(), port, handlerClass);
 		clientHandlers = new ArrayList<>();
 		for (int i = 0; i < maxClients; i++)
 			clientHandlers.add(null);
@@ -141,7 +141,7 @@ public class Server<T extends ClientHandler> extends Thread
 	/** Run the server. */
 	@Override
 	public void run() {
-		clientListener.startListening();
+		clientListener.startListening(this);
 		initialized = true;
 	}
 
