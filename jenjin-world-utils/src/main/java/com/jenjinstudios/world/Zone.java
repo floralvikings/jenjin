@@ -277,6 +277,7 @@ public class Zone
 	 * @param ray The ray.
 	 * @return true if the location was added.
 	 */
+	@SuppressWarnings("BooleanMethodIsAlwaysInverted")
 	private boolean addLocationToVisibilityRay(int x, int y, LinkedList<Location> ray) {
 		Location location = getLocationOnGrid(x, y);
 		if (location == null || "true".equals(location.getLocationProperties().getProperty("blocksVision")))
