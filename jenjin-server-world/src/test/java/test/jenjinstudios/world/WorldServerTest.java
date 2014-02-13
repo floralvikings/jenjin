@@ -70,8 +70,9 @@ public class WorldServerTest
 	 */
 	@Test(timeout = 60000)
 	public void testActorVisibility() throws Exception {
-		Vector2D serverActorStartPosition = new Vector2D(0, Location.SIZE  * (SightedObject.VIEW_RADIUS + 2));
-		Vector2D serverActorTargetPosition = new Vector2D(0, Location.SIZE * SightedObject.VIEW_RADIUS - 1);
+		double visibilityEdge = Location.SIZE * (SightedObject.VIEW_RADIUS + 1);
+		Vector2D serverActorStartPosition = new Vector2D(0, visibilityEdge + 1);
+		Vector2D serverActorTargetPosition = new Vector2D(0, visibilityEdge - 1);
 		Actor serverActor = new Actor("TestActor");
 		serverActor.setVector2D(serverActorStartPosition);
 		world.addObject(serverActor);
@@ -152,7 +153,7 @@ public class WorldServerTest
 	public void testRandomMovement() throws Exception {
 		WorldTestUtils.idleClientPlayer(1, clientPlayer);
 		int maxCoordinate = 5;
-		for (int i = 0; i < 10; i++)
+		for (int i = 0; i < 5; i++)
 		{
 			double randomX = MathUtil.round(java.lang.Math.random() * maxCoordinate, 4);
 			double randomY = MathUtil.round(java.lang.Math.random() * maxCoordinate, 4);
@@ -161,6 +162,51 @@ public class WorldServerTest
 			double distance = clientPlayer.getVector2D().getDistanceToVector(serverPlayer.getVector2D());
 			Assert.assertEquals("Movement number " + i + " to " + random, 0, distance, .001);
 		}
+	}
+
+	/**
+	 * Test attempting to walk into a "blocked" location.
+	 * @throws Exception If there's an Exception.
+	 */
+	@Test(timeout = 60000)
+	public void testAttemptBlockedLocation() throws Exception {
+		Vector2D vector1 = new Vector2D(35, 0);
+		Vector2D attemptedVector2 = new Vector2D(35, 35);
+		Vector2D actualVector2 = new Vector2D(35, 29.8);
+		Vector2D vector3 = new Vector2D(35, 25);
+		Vector2D vector4 = new Vector2D(25, 25);
+		Vector2D vector5 = new Vector2D(25, 35);
+		Vector2D attemptedVector6 = new Vector2D(35, 35);
+		Vector2D actualVector6 = new Vector2D(29.8, 35);
+		Vector2D attemptedVector7 = new Vector2D(35, 35);
+		Vector2D actualVector7 = new Vector2D(29.8, 35);
+
+		// Move to (35, 0)
+		WorldTestUtils.moveClientPlayerTowardVector(vector1, clientPlayer, serverPlayer);
+		Assert.assertEquals(vector1, clientPlayer.getVector2D());
+
+		// Attempt to move to (35, 35)
+		// This attempt should be forced to stop one step away from
+		WorldTestUtils.moveClientPlayerTowardVector(attemptedVector2, clientPlayer, serverPlayer);
+		Assert.assertEquals(actualVector2, clientPlayer.getVector2D());
+
+		WorldTestUtils.moveClientPlayerTowardVector(vector3, clientPlayer, serverPlayer);
+		Assert.assertEquals(vector3, clientPlayer.getVector2D());
+
+		WorldTestUtils.moveClientPlayerTowardVector(vector4, clientPlayer, serverPlayer);
+		Assert.assertEquals(vector4, clientPlayer.getVector2D());
+
+		WorldTestUtils.moveClientPlayerTowardVector(vector5, clientPlayer, serverPlayer);
+		Assert.assertEquals(vector5, clientPlayer.getVector2D());
+
+		WorldTestUtils.moveClientPlayerTowardVector(vector5, clientPlayer, serverPlayer);
+		Assert.assertEquals(vector5, clientPlayer.getVector2D());
+
+		WorldTestUtils.moveClientPlayerTowardVector(attemptedVector6, clientPlayer, serverPlayer);
+		Assert.assertEquals(actualVector6, clientPlayer.getVector2D());
+
+		WorldTestUtils.moveClientPlayerTowardVector(attemptedVector7, clientPlayer, serverPlayer);
+		Assert.assertEquals(actualVector7, clientPlayer.getVector2D());
 	}
 
 	/**
