@@ -22,6 +22,9 @@ public class WorldServerTest
 {
 	/** The Logger for this class. */
 	private static Logger LOGGER = Logger.getLogger(WorldServerTest.class.getName());
+	/** The current test account being used. */
+	private static int testAccountNumber = 0;
+
 	// Server fields
 	/** The world server used to test. */
 	private WorldServer worldServer;
@@ -112,6 +115,7 @@ public class WorldServerTest
 	 */
 	@Before
 	public void setUp() throws Exception {
+		testAccountNumber++;
 		initWorldServer();
 		initWorldClient();
 	}
@@ -283,7 +287,7 @@ public class WorldServerTest
 	 * @throws Exception If there's an exception.
 	 */
 	private void initWorldClient() throws Exception {
-		worldClient = new WorldClient(new File("resources/WorldTestFile.xml"), "localhost", WorldServer.DEFAULT_PORT, "TestAccount1", "testPassword");
+		worldClient = new WorldClient(new File("resources/WorldTestFile.xml"), "localhost", WorldServer.DEFAULT_PORT, "TestAccount"+testAccountNumber, "testPassword");
 		worldClient.blockingStart();
 		worldClient.sendBlockingWorldFileRequest();
 		worldClient.sendBlockingLoginRequest();
