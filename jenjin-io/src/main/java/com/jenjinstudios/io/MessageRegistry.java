@@ -160,7 +160,7 @@ public class MessageRegistry
 	{
 		if (!messagesRegistered)
 		{
-			LOGGER.log(Level.SEVERE, "Messages not registered!  Please remeber to call MessageRegistry.registerXmlMessages()");
+			LOGGER.log(Level.SEVERE, "Messages not registered!  Please remember to call MessageRegistry.registerXmlMessages()");
 		}
 
 		return messageTypesByName.get(name);
@@ -176,7 +176,7 @@ public class MessageRegistry
 	{
 		if (!messagesRegistered)
 		{
-			LOGGER.log(Level.SEVERE, "Messages not registered!  Please remeber to call MessageRegistry.registerXmlMessages()");
+			LOGGER.log(Level.SEVERE, "Messages not registered!  Please remember to call MessageRegistry.registerXmlMessages()");
 		}
 
 		return messageTypesByID.get(id);
@@ -192,7 +192,7 @@ public class MessageRegistry
 	{
 		if (!messagesRegistered)
 		{
-			LOGGER.log(Level.SEVERE, "Messages not registered!  Please remeber to call MessageRegistry.registerXmlMessages()");
+			LOGGER.log(Level.SEVERE, "Messages not registered!  Please remember to call MessageRegistry.registerXmlMessages()");
 		}
 
 		LinkedList<Class> temp = new LinkedList<>();
