@@ -101,7 +101,7 @@ public class TaskedServer<T extends ClientHandler> extends Server<T>
 
 	/**
 	 * Synced tasks scheduled by client handlers.
-	 * @return The list of syncrhonized tasks scheduled by ClientHandlers.
+	 * @return The list of synchronized tasks scheduled by ClientHandlers.
 	 */
 	LinkedList<Runnable> getSyncedTasks() {
 		return syncedTasks;
