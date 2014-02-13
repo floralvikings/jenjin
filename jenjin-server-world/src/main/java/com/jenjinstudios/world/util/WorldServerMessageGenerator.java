@@ -6,7 +6,7 @@ import com.jenjinstudios.world.WorldObject;
 import com.jenjinstudios.world.WorldServer;
 
 /**
- * Used to generate Message objects that are relevent to the World and WorldClientHandler classes.
+ * Used to generate Message objects that are relevant to the World and WorldClientHandler classes.
  * @author Caleb Brinkman
  */
 public class WorldServerMessageGenerator
@@ -103,7 +103,7 @@ public class WorldServerMessageGenerator
 	}
 
 	/**
-	 * Generate a NewlyIvisibleObjectMessage for the given object.
+	 * Generate a NewlyInvisibleObjectMessage for the given object.
 	 * @param object The {@code WorldObject} that is newly invisible.
 	 * @return A {@code Message} for the newly invisible object.
 	 */
