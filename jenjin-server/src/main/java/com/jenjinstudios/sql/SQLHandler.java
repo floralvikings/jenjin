@@ -75,7 +75,7 @@ public class SQLHandler
 	 * @return true if the user was logged in successfully, false if the user was already logged in or the update to the
 	 *         database failed.
 	 */
-	public synchronized boolean logInUser(String username, String password) {
+	public boolean logInUser(String username, String password) {
 		boolean success = false;
 		if (!connected)
 			return success;
@@ -112,7 +112,7 @@ public class SQLHandler
 	 * @return true if the user was logged out successfully, false if the user was already logged out or the update to the
 	 *         database failed.
 	 */
-	public synchronized boolean logOutUser(String username) {
+	public boolean logOutUser(String username) {
 		boolean success = false;
 		if (!connected)
 			return success;
