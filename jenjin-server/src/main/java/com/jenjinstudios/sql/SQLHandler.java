@@ -161,6 +161,7 @@ public class SQLHandler
 	 * @throws SQLException If there is a SQL error.
 	 */
 	protected ResultSet makeUserQuery(String username) throws SQLException {
+
 		PreparedStatement statement = dbConnection.prepareStatement(USER_QUERY, TYPE_SCROLL_SENSITIVE, CONCUR_UPDATABLE);
 		statement.setString(1, username);
 		return statement.executeQuery();
