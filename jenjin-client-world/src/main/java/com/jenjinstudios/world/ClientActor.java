@@ -52,11 +52,14 @@ public class ClientActor extends WorldObject
 	 * @param newState The MoveState to add.
 	 */
 	public void addMoveState(MoveState newState) {
-		synchronized (nextMoveStates)
+		if (nextState == null)
+			nextState = newState;
+		else
 		{
-			if (nextState == null)
-				nextState = newState;
-			else nextMoveStates.add(newState);
+			synchronized (nextMoveStates)
+			{
+				nextMoveStates.add(newState);
+			}
 		}
 	}
 
