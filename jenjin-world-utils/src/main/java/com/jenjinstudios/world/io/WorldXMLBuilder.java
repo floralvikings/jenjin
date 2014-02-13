@@ -13,7 +13,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.util.TreeMap;
 
 /**
- * Used to create XML representations of World obejcts.
+ * Used to create XML representations of World objects.
  * @author Caleb Brinkman
  */
 public class WorldXmlBuilder
@@ -25,9 +25,9 @@ public class WorldXmlBuilder
 	/** The name of the zone ID attribute. */
 	public static final String ZONE_ID_ATTR = "id";
 	/** The name of the zone xSize attribute. */
-	public static final String ZONE_XSIZE_ATTR = "xSize";
+	public static final String ZONE_X_SIZE_ATTR = "xSize";
 	/** The name of the zone ySize attribute. */
-	public static final String ZONE_YSIZE_ATTR = "ySize";
+	public static final String ZONE_Y_SIZE_ATTR = "ySize";
 	/** The zone of the location element. */
 	public static final String LOC_TAG_NAME = "location";
 	/** The name of the location x attribute. */
@@ -70,8 +70,8 @@ public class WorldXmlBuilder
 	private static Element createZoneElement(Document doc, Zone zone) {
 		Element zoneElement = doc.createElement(ZONE_TAG_NAME);
 		zoneElement.setAttribute(ZONE_ID_ATTR, String.valueOf(zone.id));
-		zoneElement.setAttribute(ZONE_XSIZE_ATTR, String.valueOf(zone.xSize));
-		zoneElement.setAttribute(ZONE_YSIZE_ATTR, String.valueOf(zone.ySize));
+		zoneElement.setAttribute(ZONE_X_SIZE_ATTR, String.valueOf(zone.xSize));
+		zoneElement.setAttribute(ZONE_Y_SIZE_ATTR, String.valueOf(zone.ySize));
 		return zoneElement;
 	}
 
