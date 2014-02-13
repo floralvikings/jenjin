@@ -109,7 +109,7 @@ public class LocationTest
 	}
 
 	/**
-	 * Test the pathfinding functionality.
+	 * Test the path finding functionality.
 	 */
 	@Test
 	public void testFindPath()
