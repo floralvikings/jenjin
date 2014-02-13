@@ -112,7 +112,7 @@ public class World
 	 */
 	public boolean isValidLocation(int zoneID, Vector2D vector2D) {
 		Zone zone = zones[zoneID];
-		return !(zone != null && zone.isValidLocation(vector2D));
+		return !(zone != null && zone.isInvalidLocation(vector2D));
 	}
 
 	/** Update all objects in the world. */

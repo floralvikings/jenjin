@@ -61,10 +61,10 @@ public class Zone
 	 * @param vector2D The coordinates to check.
 	 * @return Whether the coordinates of the vector are within this Zones boundaries.
 	 */
-	public boolean isValidLocation(Vector2D vector2D) {
+	public boolean isInvalidLocation(Vector2D vector2D) {
 		double x = vector2D.getXCoordinate();
 		double y = vector2D.getYCoordinate();
-		return (x < 0 || y < 0 || x / Location.SIZE >= xSize || y / Location.SIZE >= ySize);
+		return !(x < 0 || y < 0 || x / Location.SIZE >= xSize || y / Location.SIZE >= ySize);
 	}
 
 	/**
