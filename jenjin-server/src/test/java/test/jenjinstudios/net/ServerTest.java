@@ -96,7 +96,7 @@ public class ServerTest
 	@Test
 	public void testIncorrectPassword() throws Exception {
 		/* This client should fail to login. */
-		AuthClient badClient = new AuthClient("127.0.0.1", 51019, "TestAccount02", "This is an incorrect password.  Teehee.");
+		AuthClient badClient = new AuthClient("127.0.0.1", 51019, "TestAccount02", "This is an incorrect password.");
 		badClient.blockingStart();
 
 		assertFalse(badClient.sendBlockingLoginRequest());
