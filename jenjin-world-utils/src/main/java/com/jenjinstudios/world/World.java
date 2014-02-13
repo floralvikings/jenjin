@@ -48,9 +48,8 @@ public class World
 	 * Add an object with the specified ID.
 	 * @param object The object to add.
 	 * @param id The id.
-	 * @throws InvalidLocationException If the object is to be added in an invalid location.
 	 */
-	public void addObject(WorldObject object, int id) throws InvalidLocationException {
+	public void addObject(WorldObject object, int id) {
 		if (object == null)
 			throw new IllegalArgumentException("addObject(WorldObject obj) argument 0 not allowed to be null!");
 
