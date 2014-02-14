@@ -182,13 +182,16 @@ public class MessageRegistry
 		MessageType type = messageTypesByID.get(id);
 		if(type == null)
 		{
-			throw new NullPointerException("Message " + id + " not registered.");
+			LOGGER.log(Level.SEVERE, "Message " + id + " not registered.");
 		}else if(type.argumentTypes == null)
 		{
-			throw new NullPointerException("Message " + id + " contains null argument types.");
+			LOGGER.log(Level.SEVERE, "Message " + id + " contains null argument types.");
 		}
-		for (int i = 0; i < type.argumentTypes.length; i++)
-			temp.add(type.argumentTypes[i].type);
+		else
+		{
+			for (int i = 0; i < type.argumentTypes.length; i++)
+				temp.add(type.argumentTypes[i].type);
+		}
 
 		return temp;
 	}

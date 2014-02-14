@@ -4,10 +4,8 @@ import javax.crypto.*;
 import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
 import java.io.DataInputStream;
-import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.SocketException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.LinkedList;
@@ -53,10 +51,33 @@ public class MessageInputStream
 			classes.toArray(classArray);
 			Object[] args = readMessageArgs(classes);
 			return new Message(id, args);
-		} catch (EOFException | SocketException e)
+		} catch (Exception e)
 		{
 			return null;
-			// This means the stream has closed.
+			// This means the stream has closed, or the an invalid message was found.
+		}
+	}
+
+	/**
+	 * Close the input stream.
+	 * @throws java.io.IOException If there is an IO error.
+	 */
+	public void close() throws IOException { inputStream.close(); }
+
+	/**
+	 * Set the AES key used to decrypt messages.
+	 * @param key The AES key used to decrypt messages.
+	 */
+	public void setAESKey(byte[] key) {
+		try
+		{
+			aesKey = new SecretKeySpec(key, "AES");
+			aesDecryptCipher = Cipher.getInstance("AES");
+			aesDecryptCipher.init(Cipher.DECRYPT_MODE, aesKey);
+		} catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException e)
+		{
+			LOGGER.log(Level.SEVERE, "Unable to create cipher, messages will not be decrypted.", e);
+			aesKey = null;
 		}
 	}
 
@@ -174,29 +195,6 @@ public class MessageInputStream
 			}
 		}
 		return received;
-	}
-
-	/**
-	 * Close the input stream.
-	 * @throws java.io.IOException If there is an IO error.
-	 */
-	public void close() throws IOException { inputStream.close(); }
-
-	/**
-	 * Set the AES key used to decrypt messages.
-	 * @param key The AES key used to decrypt messages.
-	 */
-	public void setAESKey(byte[] key) {
-		try
-		{
-			aesKey = new SecretKeySpec(key, "AES");
-			aesDecryptCipher = Cipher.getInstance("AES");
-			aesDecryptCipher.init(Cipher.DECRYPT_MODE, aesKey);
-		} catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException e)
-		{
-			LOGGER.log(Level.SEVERE, "Unable to create cipher, messages will not be decrypted.", e);
-			aesKey = null;
-		}
 	}
 
 }
