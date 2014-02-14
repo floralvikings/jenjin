@@ -124,4 +124,10 @@ public class Message
 		}
 		return argsArray;
 	}
+
+	@Override
+	public String toString()
+	{
+		return "Message" + id;
+	}
 }
