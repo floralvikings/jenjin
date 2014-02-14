@@ -150,22 +150,27 @@ public class WorldServerTest
 		serverActor.setVector2D(serverActorStartPosition);
 		world.addObject(serverActor);
 
+		LOGGER.log(Level.INFO, "Moving serverActor to {0}", serverActorTargetPosition);
 		moveServerActorToVector(serverActor, serverActorTargetPosition);
 
+		LOGGER.log(Level.INFO, "Asserting that clientPlayer can see serverPlayer");
 		WorldObject clientActor = worldClient.getPlayer().getVisibleObjects().get(serverActor.getId());
 		Assert.assertEquals(1, worldClient.getPlayer().getVisibleObjects().size());
 		Assert.assertNotNull(clientActor);
 		Thread.sleep(50);
 		Assert.assertEquals(serverActor.getVector2D(), clientActor.getVector2D());
 
+		LOGGER.log(Level.INFO, "Moving serverActor out of visible range.");
 		moveServerActorToVector(serverActor, serverActorStartPosition);
 		Assert.assertEquals(0, worldClient.getPlayer().getVisibleObjects().size());
 
+		LOGGER.log(Level.INFO, "Moving clientPlayer into visible range.");
 		moveClientPlayerTowardVector(new Vector2D(0, Location.SIZE + 1), worldClient, serverPlayer);
 		Assert.assertEquals(1, worldClient.getPlayer().getVisibleObjects().size());
 		clientActor = worldClient.getPlayer().getVisibleObjects().get(serverActor.getId());
 		Assert.assertEquals(serverActor.getVector2D(), clientActor.getVector2D());
 
+		LOGGER.log(Level.INFO, "Moving clientPlayer back to origin.");
 		moveClientPlayerTowardVector(Vector2D.ORIGIN, worldClient, serverPlayer);
 		Assert.assertEquals(0, worldClient.getPlayer().getVisibleObjects().size());
 	}
@@ -176,9 +181,9 @@ public class WorldServerTest
 	 */
 	@Test(timeout = 60000)
 	public void testForcedStateFromEdge() throws Exception {
-		idleClientPlayer(1, clientPlayer);
+		LOGGER.log(Level.INFO, "Attempting to move clientPlayer off edge of world.");
 		moveClientPlayerTowardVector(new Vector2D(-1.0, 0), worldClient, serverPlayer);
-		moveClientPlayerTowardVector(new Vector2D(1, 0), worldClient, serverPlayer);
+		//moveClientPlayerTowardVector(new Vector2D(1, 0), worldClient, serverPlayer);
 		Assert.assertFalse(clientPlayer.isForcedState());
 		Assert.assertEquals(serverPlayer.getVector2D(), clientPlayer.getVector2D());
 	}
@@ -287,7 +292,9 @@ public class WorldServerTest
 	 * @throws Exception If there's an exception.
 	 */
 	private void initWorldClient() throws Exception {
-		worldClient = new WorldClient(new File("resources/WorldTestFile.xml"), "localhost", WorldServer.DEFAULT_PORT, "TestAccount"+testAccountNumber, "testPassword");
+		String user = "TestAccount"+testAccountNumber;
+		LOGGER.log(Level.INFO, "Logging into account {0}", user);
+		worldClient = new WorldClient(new File("resources/WorldTestFile.xml"), "localhost", WorldServer.DEFAULT_PORT, user, "testPassword");
 		worldClient.blockingStart();
 		worldClient.sendBlockingWorldFileRequest();
 		worldClient.sendBlockingLoginRequest();
