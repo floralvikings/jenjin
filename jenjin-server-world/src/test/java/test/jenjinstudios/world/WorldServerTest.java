@@ -194,8 +194,8 @@ public class WorldServerTest
 	 */
 	@Test(timeout = 10000)
 	public void testForcedState() throws Exception {
-		moveClientPlayerTowardVector(new Vector2D(0.5, 0.5), worldClient, serverPlayer);
-		moveClientPlayerTowardVector(new Vector2D(-0.5, -0.5), worldClient, serverPlayer);
+		moveClientPlayerTowardVector(new Vector2D(0.0, 0.2), worldClient, serverPlayer);
+		moveClientPlayerTowardVector(new Vector2D(0.0, -0.4), worldClient, serverPlayer);
 		idleClientPlayer(5, clientPlayer);
 		Assert.assertEquals(clientPlayer.getVector2D(), serverPlayer.getVector2D());
 	}
