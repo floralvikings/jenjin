@@ -1,12 +1,12 @@
 package test.jenjinstudios.world.actor;
 
-import com.jenjinstudios.world.math.Vector2D;
 import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.World;
+import com.jenjinstudios.world.math.Vector2D;
 import com.jenjinstudios.world.state.MoveState;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.testng.Assert;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
 /**
  * Test the Actor class.
@@ -21,7 +21,7 @@ public class ActorTest
 	 * Set up the test.
 	 * @throws Exception If there's an exception.
 	 */
-	@Before
+	@BeforeMethod
 	public void setUp() throws Exception {
 		world = new World();
 	}
@@ -47,23 +47,23 @@ public class ActorTest
 		actor.addMoveState(new MoveState(MoveState.IDLE, 10, 0));
 
 		updateWorld(10);
-		Assert.assertEquals("State 1 X: ", 0, actor.getVector2D().getXCoordinate(), 0);
-		Assert.assertEquals("State 1 Y: ", 0, actor.getVector2D().getYCoordinate(), 0);
+		Assert.assertEquals(0, actor.getVector2D().getXCoordinate(), 0);
+		Assert.assertEquals(0, actor.getVector2D().getYCoordinate(), 0);
 		updateWorld(10);
-		Assert.assertEquals("State 2 X: ", 2.0, actor.getVector2D().getXCoordinate(), 0);
-		Assert.assertEquals("State 2 Y: ", 0, actor.getVector2D().getYCoordinate(), 0);
+		Assert.assertEquals(2.0, actor.getVector2D().getXCoordinate(), 0);
+		Assert.assertEquals(0, actor.getVector2D().getYCoordinate(), 0);
 		updateWorld(10);
-		Assert.assertEquals("State 3 X: ", 0, actor.getVector2D().getXCoordinate(), 0);
-		Assert.assertEquals("State 3 Y: ", 0, actor.getVector2D().getYCoordinate(), 0);
+		Assert.assertEquals(0, actor.getVector2D().getXCoordinate(), 0);
+		Assert.assertEquals(0, actor.getVector2D().getYCoordinate(), 0);
 		updateWorld(10);
-		Assert.assertEquals("State 4 X: ", 0, actor.getVector2D().getXCoordinate(), 0);
-		Assert.assertEquals("State 4 Y: ", 0, actor.getVector2D().getYCoordinate(), 0);
+		Assert.assertEquals(0, actor.getVector2D().getXCoordinate(), 0);
+		Assert.assertEquals(0, actor.getVector2D().getYCoordinate(), 0);
 		updateWorld(10);
-		Assert.assertEquals("State 5 X: ", 1.414, actor.getVector2D().getXCoordinate(), 0.001);
-		Assert.assertEquals("State 5 Y: ", 1.414, actor.getVector2D().getYCoordinate(), 0.001);
+		Assert.assertEquals(1.414, actor.getVector2D().getXCoordinate(), 0.001);
+		Assert.assertEquals(1.414, actor.getVector2D().getYCoordinate(), 0.001);
 		updateWorld(10);
-		Assert.assertEquals("State 6 X: ", 1.414, actor.getVector2D().getXCoordinate(), 0);
-		Assert.assertEquals("State 6 Y: ", 1.414, actor.getVector2D().getYCoordinate(), 0);
+		Assert.assertEquals(1.414, actor.getVector2D().getXCoordinate(), 0);
+		Assert.assertEquals(1.414, actor.getVector2D().getYCoordinate(), 0);
 
 		world.removeObject(actor);
 		Assert.assertEquals(0, world.getObjectCount());

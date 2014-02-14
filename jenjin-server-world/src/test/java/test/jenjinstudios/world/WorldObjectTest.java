@@ -3,9 +3,8 @@ package test.jenjinstudios.world;
 import com.jenjinstudios.world.math.Vector2D;
 import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.WorldObject;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.testng.Assert;
+import org.testng.annotations.*;
 
 /**
  * Test WorldObject class.
@@ -32,7 +31,7 @@ public class WorldObjectTest
 	 * Set up before each test.
 	 * @throws Exception If there is an exception.
 	 */
-	@Before
+	@BeforeMethod
 	public void setUp() throws Exception {
 		worldObject = new WorldObject();
 		direction = 2.15f;

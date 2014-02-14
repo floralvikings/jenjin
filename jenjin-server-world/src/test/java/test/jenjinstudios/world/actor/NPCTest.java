@@ -2,9 +2,8 @@ package test.jenjinstudios.world.actor;
 
 import com.jenjinstudios.world.*;
 import com.jenjinstudios.world.math.Vector2D;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.testng.Assert;
+import org.testng.annotations.*;
 
 /**
  * Test the NPC class.
@@ -21,7 +20,7 @@ public class NPCTest
 	 * Set up the test.
 	 * @throws Exception If there's an exception.
 	 */
-	@Before
+	@BeforeMethod
 	public void setUp() throws Exception {
 		world = new World();
 	}

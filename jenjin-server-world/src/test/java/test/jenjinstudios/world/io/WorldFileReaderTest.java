@@ -5,8 +5,8 @@ import com.jenjinstudios.world.LocationProperties;
 import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.io.WorldFileReader;
 import com.jenjinstudios.world.math.Vector2D;
-import org.junit.Assert;
-import org.junit.Test;
+import org.testng.Assert;
+import org.testng.annotations.*;
 
 import java.io.InputStream;
 

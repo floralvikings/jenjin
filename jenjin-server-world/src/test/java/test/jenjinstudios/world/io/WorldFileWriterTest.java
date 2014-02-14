@@ -7,10 +7,8 @@ import com.jenjinstudios.world.Zone;
 import com.jenjinstudios.world.io.WorldFileReader;
 import com.jenjinstudios.world.io.WorldFileWriter;
 import com.jenjinstudios.world.math.Vector2D;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.testng.annotations.*;
+import org.testng.Assert;
 
 import java.io.File;
 import java.util.TreeMap;
@@ -28,7 +26,7 @@ public class WorldFileWriterTest
 	 * Set up the tests.
 	 * @throws Exception If there's an exception.
 	 */
-	@Before
+	@BeforeMethod
 	public void setUp() throws Exception {
 		worldFile = new File("WorldFileWriterTest.xml");
 		if(worldFile.exists() && worldFile.delete())
@@ -41,7 +39,7 @@ public class WorldFileWriterTest
 	 * Tear down the test.
 	 * @throws Exception If there's an exception.
 	 */
-	@After
+	@AfterMethod
 	public void tearDown() throws Exception {
 		if(worldFile.exists() && worldFile.delete())
 		{

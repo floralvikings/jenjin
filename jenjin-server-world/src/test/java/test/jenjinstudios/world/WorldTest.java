@@ -3,8 +3,9 @@ package test.jenjinstudios.world;
 import com.jenjinstudios.world.math.Vector2D;
 import com.jenjinstudios.world.Location;
 import com.jenjinstudios.world.World;
-import org.junit.Assert;
-import org.junit.Test;
+import org.testng.Assert;
+import org.testng.annotations.Test;
+
 
 import java.util.ArrayList;
 

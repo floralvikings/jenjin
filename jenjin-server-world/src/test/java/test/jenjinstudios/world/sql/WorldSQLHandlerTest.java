@@ -3,10 +3,10 @@ package test.jenjinstudios.world.sql;
 import com.jenjinstudios.world.math.Vector2D;
 import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.sql.WorldSQLHandler;
-import org.junit.Test;
+import org.testng.annotations.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
 
 
 /**

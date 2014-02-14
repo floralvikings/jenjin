@@ -4,8 +4,8 @@ import com.jenjinstudios.world.Location;
 import com.jenjinstudios.world.LocationProperties;
 import com.jenjinstudios.world.Zone;
 import com.jenjinstudios.world.ai.Pathfinder;
-import org.junit.Assert;
-import org.junit.Test;
+import org.testng.Assert;
+import org.testng.annotations.*;
 
 import java.util.LinkedList;
 import java.util.logging.Level;

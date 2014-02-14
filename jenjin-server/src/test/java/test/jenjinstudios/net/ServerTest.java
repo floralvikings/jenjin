@@ -5,9 +5,7 @@ import com.jenjinstudios.net.AuthClient;
 import com.jenjinstudios.net.ClientHandler;
 import com.jenjinstudios.net.AuthServer;
 import com.jenjinstudios.sql.SQLHandler;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.testng.annotations.*;
 
 import java.io.IOException;
 

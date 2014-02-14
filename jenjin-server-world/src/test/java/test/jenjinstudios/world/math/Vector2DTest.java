@@ -1,8 +1,8 @@
 package test.jenjinstudios.world.math;
 
 import com.jenjinstudios.world.math.Vector2D;
-import org.junit.Assert;
-import org.junit.Test;
+import org.testng.Assert;
+import org.testng.annotations.*;
 
 /**
  * Test the coordinates class.
