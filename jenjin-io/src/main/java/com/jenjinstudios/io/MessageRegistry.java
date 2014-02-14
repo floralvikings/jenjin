@@ -180,6 +180,13 @@ public class MessageRegistry
 		LinkedList<Class> temp = new LinkedList<>();
 
 		MessageType type = messageTypesByID.get(id);
+		if(type == null)
+		{
+			throw new NullPointerException("Message " + id + " not registered.");
+		}else if(type.argumentTypes == null)
+		{
+			throw new NullPointerException("Message " + id + " contains null argument types.");
+		}
 		for (int i = 0; i < type.argumentTypes.length; i++)
 			temp.add(type.argumentTypes[i].type);
 

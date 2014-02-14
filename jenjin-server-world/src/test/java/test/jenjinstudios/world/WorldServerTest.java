@@ -141,7 +141,7 @@ public class WorldServerTest
 	 * Test the actor visibility after player and actor movement.
 	 * @throws Exception If there's an exception.
 	 */
-	@Test(timeout = 60000)
+	@Test(timeout = 10000)
 	public void testActorVisibility() throws Exception {
 		double visibilityEdge = Location.SIZE * (SightedObject.VIEW_RADIUS + 1);
 		Vector2D serverActorStartPosition = new Vector2D(0, visibilityEdge + 1);
@@ -179,7 +179,7 @@ public class WorldServerTest
 	 * Test the state-forcing functionality.
 	 * @throws Exception If there's an exception.
 	 */
-	@Test(timeout = 60000)
+	@Test(timeout = 10000)
 	public void testForcedStateFromEdge() throws Exception {
 		LOGGER.log(Level.INFO, "Attempting to move clientPlayer off edge of world.");
 		moveClientPlayerTowardVector(new Vector2D(-1.0, 0), worldClient, serverPlayer);
@@ -192,7 +192,7 @@ public class WorldServerTest
 	 * Test the state forcing functionality.
 	 * @throws Exception If there's an exception.
 	 */
-	@Test(timeout = 60000)
+	@Test(timeout = 10000)
 	public void testForcedState() throws Exception {
 		moveClientPlayerTowardVector(new Vector2D(0.5, 0.5), worldClient, serverPlayer);
 		moveClientPlayerTowardVector(new Vector2D(-0.5, -0.5), worldClient, serverPlayer);
@@ -204,7 +204,7 @@ public class WorldServerTest
 	 * Test basic movement.
 	 * @throws Exception If there's an exception.
 	 */
-	@Test(timeout = 60000)
+	@Test(timeout = 10000)
 	public void testMovement() throws Exception {
 		Vector2D targetVector = new Vector2D(3.956, 3.7468);
 		moveClientPlayerTowardVector(targetVector, worldClient, serverPlayer);
@@ -214,7 +214,7 @@ public class WorldServerTest
 	 * Test repeatedly forcing client.
 	 * @throws Exception If there's an exception.
 	 */
-	@Test(timeout = 60000)
+	@Test(timeout = 10000)
 	public void testRepeatedForcedState() throws Exception {
 		moveClientPlayerTowardVector(new Vector2D(.5, .5), worldClient, serverPlayer);
 		moveClientPlayerTowardVector(new Vector2D(-1, -1), worldClient, serverPlayer);
@@ -227,7 +227,7 @@ public class WorldServerTest
 	 * Test movement to various random vectors.
 	 * @throws Exception If there's an exception.
 	 */
-	@Test(timeout = 60000)
+	@Test(timeout = 10000)
 	public void testRandomMovement() throws Exception {
 		idleClientPlayer(1, clientPlayer);
 		int maxCoordinate = 3;
@@ -246,7 +246,7 @@ public class WorldServerTest
 	 * Test attempting to walk into a "blocked" location.
 	 * @throws Exception If there's an Exception.
 	 */
-	@Test(timeout = 60000)
+	@Test(timeout = 10000)
 	public void testAttemptBlockedLocation() throws Exception {
 		Vector2D vector1 = new Vector2D(15, 0);
 		Vector2D attemptedVector2 = new Vector2D(15, 15);
