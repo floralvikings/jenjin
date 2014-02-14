@@ -95,8 +95,9 @@ public class Client extends Connection
 	@Override
 	public final void run() {
 		if (!isConnected()) connect();
+		if(!isConnected())
+			return;
 		// The ClientLoop is used to send messages in the outgoing queue and do synchronized actions.
-
 		sendMessagesTimer = new Timer("Client Update Loop", false);
 		sendMessagesTimer.scheduleAtFixedRate(new ClientLoop(this), 0, period);
 
@@ -113,8 +114,7 @@ public class Client extends Connection
 		try
 		{
 			super.setSocket(new Socket(ADDRESS, PORT));
-			doPostConnectInit();
-			super.setConnected(true);
+			super.setConnected(doPostConnectInit());
 		} catch (IOException ex)
 		{
 			LOGGER.log(Level.SEVERE, "Unable to connect to server.", ex);
@@ -125,10 +125,15 @@ public class Client extends Connection
 	 * Take care of all the necessary initialization messages between client and server.  These include things like RSA key
 	 * exchanges and latency checks.
 	 * @throws IOException If there's an IOException when attempting to communicate with the server.
+	 * @return Whether the init was successful.
 	 */
-	private void doPostConnectInit() throws IOException {
+	private boolean doPostConnectInit() throws IOException {
 		// First, get and process the required FirstConnectResponse message from the server.
 		Message firstConnectResponse = getInputStream().readMessage();
+		if(firstConnectResponse == null)
+		{
+			return false;
+		}
 		int ups = (int) firstConnectResponse.getArgument("ups");
 		period = 1000 / ups;
 
@@ -139,6 +144,7 @@ public class Client extends Connection
 
 		// Finally, send a ping request to establish latency.
 		sendPing();
+		return true;
 	}
 
 	/** Tell the client threads to stop running. */

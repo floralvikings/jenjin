@@ -24,6 +24,8 @@ public class WorldServerTest
 	private static Logger LOGGER = Logger.getLogger(WorldServerTest.class.getName());
 	/** The current test account being used. */
 	private static int testAccountNumber = 0;
+	/** The port used to listen and connect. */
+	private static int port = WorldServer.DEFAULT_PORT;
 
 	// Server fields
 	/** The world server used to test. */
@@ -116,6 +118,7 @@ public class WorldServerTest
 	@Before
 	public void setUp() throws Exception {
 		testAccountNumber++;
+		port++;
 		initWorldServer();
 		initWorldClient();
 	}
@@ -294,7 +297,7 @@ public class WorldServerTest
 	private void initWorldClient() throws Exception {
 		String user = "TestAccount"+testAccountNumber;
 		LOGGER.log(Level.INFO, "Logging into account {0}", user);
-		worldClient = new WorldClient(new File("resources/WorldTestFile.xml"), "localhost", WorldServer.DEFAULT_PORT, user, "testPassword");
+		worldClient = new WorldClient(new File("resources/WorldTestFile.xml"), "localhost", port, user, "testPassword");
 		worldClient.blockingStart();
 		worldClient.sendBlockingWorldFileRequest();
 		worldClient.sendBlockingLoginRequest();
@@ -313,7 +316,7 @@ public class WorldServerTest
 		/* The world SQL handler used to test. */
 		WorldSQLHandler worldSQLHandler = new WorldSQLHandler("localhost", "jenjin_test", "jenjin_user", "jenjin_password");
 		worldServer = new WorldServer(new WorldFileReader(getClass().getResourceAsStream("/test/jenjinstudios/world/WorldFile01.xml")),
-				WorldServer.DEFAULT_UPS, WorldServer.DEFAULT_PORT, WorldClientHandler.class, worldSQLHandler);
+				WorldServer.DEFAULT_UPS, port, WorldClientHandler.class, worldSQLHandler);
 		world = worldServer.getWorld();
 		worldServer.blockingStart();
 	}
