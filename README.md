@@ -54,7 +54,5 @@ The Jenjin core architecture uses the following unmodified libraries:
 
 * [TestNG](http://testng.org/doc/index.html)
     * License: Apache 2.0
-* [Hamcrest](https://github.com/hamcrest/JavaHamcrest)
-    * License: BSD
 * [Drizzle](https://github.com/krummas/DrizzleJDBC)
     * License: BSD
