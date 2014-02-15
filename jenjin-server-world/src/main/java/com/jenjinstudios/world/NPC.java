@@ -114,7 +114,7 @@ public class NPC extends Actor
 
 	/** Perform the behavior of an NPC that "wanders". */
 	private void doWandersBehavior() {
-		if (targetPlayer == null && targetLocation == getLocation() && !wanderTargets.isEmpty())
+		if (targetPlayer == null && (targetLocation == getLocation() || targetLocation == null) && !wanderTargets.isEmpty())
 		{
 			if (getCurrentMoveState().relativeAngle == MoveState.IDLE && getNextState() == null)
 			{

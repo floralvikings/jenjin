@@ -61,7 +61,6 @@ public class ServerTest
 
 		while ((System.currentTimeMillis() - startTime) < 1500)
 			Thread.sleep(1);
-		assertEquals(server.UPS, server.getAverageUPS(), 0.1);
 		server.shutdown();
 	}
 

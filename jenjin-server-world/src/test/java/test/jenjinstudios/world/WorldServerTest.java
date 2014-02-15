@@ -345,6 +345,39 @@ public class WorldServerTest
 	}
 
 	/**
+	 * Test logging the player into and out of the world, including updating coordinates.
+	 * @throws Exception If there's an exception.
+	 */
+	@Test
+	public void testLoginLogout() throws Exception {
+		testAccountNumber ++;
+		WorldSQLHandler worldSQLHandler = new WorldSQLHandler("localhost", "jenjin_test", "jenjin_user",
+				"jenjin_password");
+
+		Assert.assertTrue(worldSQLHandler.isConnected());
+
+		Actor player = worldSQLHandler.logInPlayer("TestAccount" + testAccountNumber, "testPassword");
+		Vector2D origin = player.getVector2D();
+		Vector2D secondVector = new Vector2D(50, 50);
+
+		Assert.assertEquals(origin, player.getVector2D());
+
+		player.setVector2D(secondVector);
+		Assert.assertTrue(worldSQLHandler.logOutPlayer(player));
+
+		player = worldSQLHandler.logInPlayer("TestAccount" + testAccountNumber, "testPassword");
+		Assert.assertEquals(secondVector, player.getVector2D());
+
+		player.setVector2D(origin);
+		Assert.assertTrue(worldSQLHandler.logOutPlayer(player));
+
+		player = worldSQLHandler.logInPlayer("TestAccount" + testAccountNumber, "testPassword");
+		Assert.assertEquals(origin, player.getVector2D());
+
+		Assert.assertTrue(worldSQLHandler.logOutPlayer(player));
+	}
+
+	/**
 	 * Initialize the world and world server.
 	 * @throws Exception If there's an exception.
 	 */
