@@ -81,7 +81,10 @@ public class World
 		synchronized (worldObjects)
 		{
 			worldObjects.set(object.getId(), null);
-			object.getLocation().removeObject(object);
+			if(object.getLocation() != null)
+			{
+				object.getLocation().removeObject(object);
+			}
 		}
 		objectCount--;
 	}
