@@ -3,7 +3,7 @@ description = ''
 
 dependencies {
     compile group: 'org.drizzle.jdbc', name: 'drizzle-jdbc', version: '1.2'
-    compile project(':jenjin-io')
-    compile project(':jenjin-client')
+    compile project(':jenjin-core')
+    compile project(':jenjin-core-client')
 }
 

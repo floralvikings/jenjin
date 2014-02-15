@@ -1,0 +1,6 @@
+description = ''
+
+dependencies {
+    compile project(':jenjin-core-client')
+    compile project(':jenjin-world-core')
+}
