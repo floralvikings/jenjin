@@ -77,12 +77,12 @@ public class WorldObject
 		if (world != null)
 		{
 			location = world.getLocationForCoordinates(this.zoneID, this.vector2D);
-			if (oldLocation != location && location != null)
+			if (oldLocation != location && oldLocation != null)
 			{
-				if (oldLocation != null)
-				{
-					oldLocation.removeObject(this);
-				}
+				oldLocation.removeObject(this);
+			}
+			if(location != null)
+			{
 				location.addObject(this);
 			}
 		}
