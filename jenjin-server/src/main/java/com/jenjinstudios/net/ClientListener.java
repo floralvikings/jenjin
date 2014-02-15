@@ -131,7 +131,6 @@ class ClientListener<T extends ClientHandler> implements Runnable
 				addNewClient(sock);
 			} catch (SocketException ignored)
 			{
-				Server.LOGGER.log(Level.FINE, "Socket closed on connection attempt.: ", ignored);
 			} catch (IOException e)
 			{
 				Server.LOGGER.log(Level.WARNING, "Error connecting to client: ", e);

@@ -48,6 +48,7 @@ public class NPC extends Actor
 
 	@Override
 	public void setUp() {
+		super.setUp();
 		if (behaviorFlags.get("aggressive") != null && behaviorFlags.get("aggressive"))
 		{
 			doAggressiveBehavior();

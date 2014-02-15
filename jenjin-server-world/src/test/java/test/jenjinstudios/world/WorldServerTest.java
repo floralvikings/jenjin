@@ -8,11 +8,16 @@ import com.jenjinstudios.world.math.MathUtil;
 import com.jenjinstudios.world.math.Vector2D;
 import com.jenjinstudios.world.sql.WorldSQLHandler;
 import com.jenjinstudios.world.state.MoveState;
-import org.testng.*;
-import org.testng.annotations.*;
+import org.testng.Assert;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
 import java.io.File;
+import java.io.InputStream;
 import java.util.logging.Level;
+import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 /**
@@ -47,7 +52,11 @@ public class WorldServerTest
 	 * @throws Exception If there's an Exception.
 	 */
 	@BeforeClass
-	public static void construct() throws Exception { MessageRegistry.registerXmlMessages(true); }
+	public static void construct() throws Exception {
+		InputStream configFile = WorldServerTest.class.getResourceAsStream("/test/jenjinstudios/logger.properties");
+		LogManager.getLogManager().readConfiguration(configFile);
+		MessageRegistry.registerXmlMessages(true);
+	}
 
 	/**
 	 * Make the client player stay idle for the given number of steps.
@@ -86,8 +95,8 @@ public class WorldServerTest
 	}
 
 	/**
-	 * Move the client and server player to the given vector, by initiating the move client-side.  Also sends a ping
-	 * to the server with each sleep cycle.
+	 * Move the client and server player to the given vector, by initiating the move client-side.  Also sends a ping to the
+	 * server with each sleep cycle.
 	 * @param newVector The vector to which to move.
 	 * @param client The client.
 	 * @param serverPlayer The server player.
@@ -292,11 +301,37 @@ public class WorldServerTest
 	}
 
 	/**
+	 * Test NPC movement.
+	 * @throws Exception If there's an exception.
+	 */
+	@Test(timeOut = 10000)
+	public void testNPCMovement() throws Exception {
+		NPC testNPC = new NPC("TestNPC");
+		Location target = world.getZones()[0].getLocationOnGrid(0, 0);
+		testNPC.setVector2D(20, 5);
+		world.addObject(testNPC);
+		testNPC.plotPath(target);
+		double distance = testNPC.getVector2D().getDistanceToVector(target.getCenter());
+		while (distance >= Actor.STEP_LENGTH)
+		{
+			distance = testNPC.getVector2D().getDistanceToVector(target.getCenter());
+			Thread.sleep(10);
+		}
+
+		WorldObject clientNPC = clientPlayer.getVisibleObjects().get(testNPC.getId());
+		Assert.assertEquals(testNPC.getVector2D(), clientNPC.getVector2D());
+
+		// Make sure the NPC is in the same place.
+		Thread.sleep(100);
+		Assert.assertEquals(testNPC.getVector2D(), clientNPC.getVector2D());
+	}
+
+	/**
 	 * Initialize and log the client in.
 	 * @throws Exception If there's an exception.
 	 */
 	private void initWorldClient() throws Exception {
-		String user = "TestAccount"+testAccountNumber;
+		String user = "TestAccount" + testAccountNumber;
 		LOGGER.log(Level.INFO, "Logging into account {0}", user);
 		worldClient = new WorldClient(new File("resources/WorldTestFile.xml"), "localhost", port, user, "testPassword");
 		worldClient.blockingStart();
