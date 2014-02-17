@@ -1,7 +1,7 @@
 package com.jenjinstudios.net;
 
-import com.jenjinstudios.message.ClientExecutableMessage;
 import com.jenjinstudios.io.Message;
+import com.jenjinstudios.message.ClientExecutableMessage;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -19,6 +19,8 @@ public class Client extends Connection
 {
 	/** The logger associated with this class. */
 	public static final Logger LOGGER = Logger.getLogger(Client.class.getName());
+	/** The number of milliseconds before a blocking method should time out. */
+	public static long TIMEOUT_MILLIS = 30000;
 	/** The port over which the client communicates with the server. */
 	private final int PORT;
 	/** The address of the server to which this client will connect. */
@@ -33,8 +35,6 @@ public class Client extends Connection
 	private PublicKey publicKey;
 	/** The private key sent to the server. */
 	private PrivateKey privateKey;
-	/** The number of milliseconds before a blocking method should time out. */
-	public static long TIMEOUT_MILLIS = 30000;
 
 	/**
 	 * Construct a new client and attempt to connect to the server over the specified port.
@@ -95,13 +95,47 @@ public class Client extends Connection
 	@Override
 	public final void run() {
 		if (!isConnected()) connect();
-		if(!isConnected())
+		if (!isConnected())
 			return;
 		// The ClientLoop is used to send messages in the outgoing queue and do synchronized actions.
 		sendMessagesTimer = new Timer("Client Update Loop", false);
 		sendMessagesTimer.scheduleAtFixedRate(new ClientLoop(this), 0, period);
 
 		super.run();
+	}
+
+	/** Tell the client threads to stop running. */
+	public void shutdown() {
+		super.shutdown();
+		sendMessagesTimer.cancel();
+		closeLink();
+	}
+
+	/**
+	 * Add a task to the list of repeated synchronized tasks.
+	 * @param r The task to add.
+	 */
+	public void addRepeatedSyncedTask(Runnable r) {
+		synchronized (repeatedSyncedTasks)
+		{
+			repeatedSyncedTasks.add(r);
+		}
+	}
+
+	/**
+	 * Get the private key.
+	 * @return The private key.
+	 */
+	public PrivateKey getPrivateKey() {
+		return privateKey;
+	}
+
+	/**
+	 * Get the update period of this client.
+	 * @return The update period of this client.
+	 */
+	public int getPeriod() {
+		return period;
 	}
 
 	/**
@@ -124,13 +158,13 @@ public class Client extends Connection
 	/**
 	 * Take care of all the necessary initialization messages between client and server.  These include things like RSA key
 	 * exchanges and latency checks.
-	 * @throws IOException If there's an IOException when attempting to communicate with the server.
 	 * @return Whether the init was successful.
+	 * @throws IOException If there's an IOException when attempting to communicate with the server.
 	 */
 	private boolean doPostConnectInit() throws IOException {
 		// First, get and process the required FirstConnectResponse message from the server.
 		Message firstConnectResponse = getInputStream().readMessage();
-		if(firstConnectResponse == null)
+		if (firstConnectResponse == null)
 		{
 			return false;
 		}
@@ -147,13 +181,6 @@ public class Client extends Connection
 		return true;
 	}
 
-	/** Tell the client threads to stop running. */
-	public void shutdown() {
-		super.shutdown();
-		sendMessagesTimer.cancel();
-		closeLink();
-	}
-
 	/**
 	 * Get an executable message for a given message.
 	 * @param message The message to be used.
@@ -164,27 +191,12 @@ public class Client extends Connection
 		return (ClientExecutableMessage) ClientExecutableMessage.getClientExecutableMessageFor(this, message);
 	}
 
-	/**
-	 * Get the list of repeating tasks.
-	 * @return The list of repeating tasks.
-	 */
-	public LinkedList<Runnable> getRepeatedSyncedTasks() {
-		return repeatedSyncedTasks;
-	}
-
-	/**
-	 * Get the private key.
-	 * @return The private key.
-	 */
-	public PrivateKey getPrivateKey() {
-		return privateKey;
-	}
-
-	/**
-	 * Get the update period of this client.
-	 * @return The update period of this client.
-	 */
-	public int getPeriod() {
-		return period;
+	/** Run the repeated synchronized tasks. */
+	void runRepeatedSyncedTasks() {
+		synchronized (repeatedSyncedTasks)
+		{
+			for (Runnable r : repeatedSyncedTasks)
+				r.run();
+		}
 	}
 }

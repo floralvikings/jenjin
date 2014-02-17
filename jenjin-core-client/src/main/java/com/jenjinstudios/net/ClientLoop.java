@@ -22,13 +22,9 @@ public class ClientLoop extends TimerTask
 
 	@Override
 	public void run() {
-		for (Runnable r : client.getRepeatedSyncedTasks())
-			r.run();
-		for (Runnable r : client.getSyncedTasks())
-			r.run();
-
+		client.runRepeatedSyncedTasks();
+		client.runSyncedTasks();
 		client.sendAllMessages();
-
 	}
 
 }

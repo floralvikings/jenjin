@@ -22,11 +22,6 @@ public class SightedObject extends WorldObject
 	/** The list of newly invisible objects. */
 	private final ArrayList<WorldObject> newlyInvisibleObjects;
 
-	/** Construct a new SightedObject. */
-	public SightedObject() {
-		this(DEFAULT_NAME);
-	}
-
 	/**
 	 * Construct a new SightedObject.
 	 * @param name The name of this object.
@@ -54,6 +49,35 @@ public class SightedObject extends WorldObject
 		super.setWorld(world);
 		resetVisibleLocations();
 	}
+
+	/**
+	 * The container for visible objects.
+	 * @return An ArrayList containing all objects visible to this actor.
+	 */
+	public TreeMap<Integer, WorldObject> getVisibleObjects() {
+		synchronized (visibleObjects)
+		{
+			return new TreeMap<>(visibleObjects);
+		}
+	}
+
+	/**
+	 * Get newly visible objects.
+	 * @return A list of all objects newly visible.
+	 */
+	public ArrayList<WorldObject> getNewlyVisibleObjects() {return newlyVisibleObjects;}
+
+	/**
+	 * Get newly invisible objects.
+	 * @return A list of all objects newly invisible.
+	 */
+	public ArrayList<WorldObject> getNewlyInvisibleObjects() {return newlyInvisibleObjects;}
+
+	/**
+	 * Get the currently visible locations.
+	 * @return The array list of currently visible locations.
+	 */
+	public ArrayList<Location> getVisibleLocations() { return visibleLocations; }
 
 	/** Resets the array of currently visible location. */
 	protected void resetVisibleLocations() {
@@ -87,33 +111,9 @@ public class SightedObject extends WorldObject
 		newlyVisibleObjects.removeAll(visibleObjects.values());
 
 		visibleObjects.clear();
-		for(WorldObject object : currentlyVisible)
+		for (WorldObject object : currentlyVisible)
 		{
 			visibleObjects.put(object.getId(), object);
 		}
 	}
-
-	/**
-	 * The container for visible objects.
-	 * @return An ArrayList containing all objects visible to this actor.
-	 */
-	public TreeMap<Integer, WorldObject> getVisibleObjects() {return visibleObjects;}
-
-	/**
-	 * Get newly visible objects.
-	 * @return A list of all objects newly visible.
-	 */
-	public ArrayList<WorldObject> getNewlyVisibleObjects() {return newlyVisibleObjects;}
-
-	/**
-	 * Get newly invisible objects.
-	 * @return A list of all objects newly invisible.
-	 */
-	public ArrayList<WorldObject> getNewlyInvisibleObjects() {return newlyInvisibleObjects;}
-
-	/**
-	 * Get the currently visible locations.
-	 * @return The array list of currently visible locations.
-	 */
-	public ArrayList<Location> getVisibleLocations() { return visibleLocations; }
 }

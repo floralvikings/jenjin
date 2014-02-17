@@ -234,6 +234,12 @@ public abstract class Connection extends Thread
 		return temp;
 	}
 
+	/** Run the list of synchronized tasks. */
+	void runSyncedTasks() {
+		for (Runnable r : getSyncedTasks())
+			r.run();
+	}
+
 	/** Close the link with the server. */
 	protected void closeLink() {
 		try

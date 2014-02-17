@@ -78,6 +78,10 @@ public class World
 	 * @param object The object to remove.
 	 */
 	public void removeObject(WorldObject object) {
+		if(object == null)
+		{
+			return;
+		}
 		synchronized (worldObjects)
 		{
 			worldObjects.set(object.getId(), null);
