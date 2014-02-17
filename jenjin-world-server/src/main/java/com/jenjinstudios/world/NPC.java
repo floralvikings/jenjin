@@ -160,6 +160,9 @@ public class NPC extends Actor
 					plotPath(targetLocation);
 				}
 			}
+		}else if(getLocation() == startLocation)
+		{
+			targetLocation = null;
 		}
 	}
 
