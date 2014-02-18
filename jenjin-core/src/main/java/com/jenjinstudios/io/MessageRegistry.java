@@ -67,7 +67,6 @@ public class MessageRegistry
 					String entryName = ze.getName();
 					if (entryName.endsWith("Messages.xml"))
 					{
-						System.out.println("Registering messages in: " + entryName);
 						parseXmlStream(MessageRegistry.class.getClassLoader().getResourceAsStream(entryName), isServer);
 					}
 				}
