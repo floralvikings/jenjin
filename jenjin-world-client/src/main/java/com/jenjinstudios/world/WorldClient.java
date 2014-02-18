@@ -205,8 +205,6 @@ public class WorldClient extends AuthClient
 	 * @param moveState The move state used to generate the request.
 	 */
 	protected void sendStateChangeRequest(MoveState moveState) {
-		LOGGER.log(Level.FINEST, "Sending state change request: {0} from {1}",
-				new Object[] {moveState, Thread.currentThread().getName()});
 		Message stateChangeRequest = WorldClientMessageGenerator.generateStateChangeRequest(moveState);
 		queueMessage(stateChangeRequest);
 	}
