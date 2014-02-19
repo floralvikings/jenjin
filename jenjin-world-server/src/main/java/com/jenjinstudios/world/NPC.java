@@ -141,14 +141,9 @@ public class NPC extends Actor
 			targetLocation = targetPlayer != null ? targetPlayer.getLocation() : startLocation;
 			startLocation = targetLocation != null ? getLocation() : null;
 			plotPath(targetLocation);
-		} else if (targetPlayer != null)
+		} else if (getLocation() == targetLocation && targetPlayer != null)
 		{
-			if (getLocation() == targetLocation)
-			{
-				targetPlayer = null;
-				targetLocation = startLocation;
-				plotPath(targetLocation);
-			} else if (!targetLocation.getObjects().contains(targetPlayer))
+			if (!targetLocation.getObjects().contains(targetPlayer))
 			{
 				if (getVisibleObjects().get(targetPlayer.getId()) != null)
 				{
@@ -157,10 +152,16 @@ public class NPC extends Actor
 				} else
 				{
 					targetLocation = startLocation;
+					targetPlayer = null;
 					plotPath(targetLocation);
 				}
+			} else
+			{
+				targetPlayer = null;
+				targetLocation = startLocation;
+				plotPath(targetLocation);
 			}
-		}else if(getLocation() == startLocation)
+		} else if (getLocation() == startLocation && targetLocation == startLocation)
 		{
 			targetLocation = null;
 		}
