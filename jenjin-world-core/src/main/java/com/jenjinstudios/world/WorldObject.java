@@ -141,7 +141,7 @@ public class WorldObject
 	/** Reset this WorldObject after updating. */
 	public void reset() { }
 
-	public String toString() { return name + ": " + id + " @ " + vector2D + " in " + location; }
+	public String toString() { return name + ": " + id; }
 
 	/**
 	 * Get the id number of the zone in which this player is located.

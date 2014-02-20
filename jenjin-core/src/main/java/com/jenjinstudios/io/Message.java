@@ -128,6 +128,6 @@ public class Message
 	@Override
 	public String toString()
 	{
-		return "Message " + id + " " + name;
+		return "Message " + id + " " + name + " " + argumentsByName;
 	}
 }

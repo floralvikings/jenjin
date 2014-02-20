@@ -133,6 +133,7 @@ public abstract class Connection extends Thread
 	public void writeMessage(Message o) {
 		try
 		{
+			LOGGER.log(Level.FINEST, "Connection {0} writing message {1}", new Object[] {getName(), o});
 			getOutputStream().writeMessage(o);
 		} catch (IOException e)
 		{
@@ -202,7 +203,10 @@ public abstract class Connection extends Thread
 		{
 			Message currentMessage;
 			while ((currentMessage = getInputStream().readMessage()) != null)
+			{
+				LOGGER.log(Level.FINEST, "Connection {0} reading message {1}", new Object[] {getName(), currentMessage});
 				processMessage(currentMessage);
+			}
 		} catch (IOException ex)
 		{
 			LOGGER.log(Level.SEVERE, "Error retrieving message from server.", ex);

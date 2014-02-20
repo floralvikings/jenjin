@@ -34,6 +34,5 @@ public class ExecutableObjectInvisibleMessage extends WorldClientExecutableMessa
 	@Override
 	public void runASync() {
 		id = (int) getMessage().getArgument("id");
-		LOGGER.log(Level.FINEST, "Processing ObjectInvisibleMessage for object {0}", id);
 	}
 }
