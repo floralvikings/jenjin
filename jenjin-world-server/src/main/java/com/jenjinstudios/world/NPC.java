@@ -75,18 +75,20 @@ public class NPC extends Actor
 		Location prev = path.pop();
 		Vector2D start = getVector2D();
 		Vector2D prevCenter = prev.getCenter();
-		double absAngle = getVector2D().getAngleToVector(prevCenter);
-		// Create a move state to start moving forward, right now, toward the target vector.
-		MoveState moveState = new MoveState(MoveState.FRONT, getStepsTaken(), absAngle);
+		double currentAngle = getVector2D().getAngleToVector(prevCenter);
+		// Create a move state to start moving forward, right now, toward the center of the current location.
+		MoveState moveState = new MoveState(MoveState.FRONT, getStepsTaken(), currentAngle);
 		addMoveState(moveState);
+		int stepsToTake;
 
 		while (!path.isEmpty())
 		{
+			// TODO save angle and refrain from resetting state if angle is the same.  Save bandwidth.
 			Vector2D nextCenter = path.pop().getCenter();
-			int stepsToTake = (int) MathUtil.round(start.getDistanceToVector(prevCenter) / Actor.STEP_LENGTH, 0);
-			absAngle = prevCenter.getAngleToVector(nextCenter);
+			currentAngle = prevCenter.getAngleToVector(nextCenter);
+			stepsToTake = (int) MathUtil.round(start.getDistanceToVector(prevCenter) / Actor.STEP_LENGTH, 0);
 
-			MoveState nextState = new MoveState(MoveState.FRONT, stepsToTake, absAngle);
+			MoveState nextState = new MoveState(MoveState.FRONT, stepsToTake, currentAngle);
 			addMoveState(nextState);
 
 			start = prevCenter;
