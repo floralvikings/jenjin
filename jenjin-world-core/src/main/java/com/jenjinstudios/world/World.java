@@ -2,9 +2,7 @@ package com.jenjinstudios.world;
 
 import com.jenjinstudios.world.math.Vector2D;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Contains all the Zones, Locations and GameObjects.
@@ -15,9 +13,7 @@ public class World
 	/** The list of in-world Zones. */
 	private final Zone[] zones;
 	/** The GameObjects contained in the world. */
-	private final ArrayList<WorldObject> worldObjects;
-	/** The number of objects currently in the world. */
-	private int objectCount;
+	private final WorldObjectTree worldObjects;
 
 	/** Construct a new World. */
 	public World() {
@@ -25,7 +21,7 @@ public class World
 		/* The default size of the world's location grid. */
 		int DEFAULT_SIZE = 50;
 		zones[0] = new Zone(0, DEFAULT_SIZE, DEFAULT_SIZE, new Location[]{});
-		worldObjects = new ArrayList<>();
+		worldObjects = new WorldObjectTree();
 	}
 
 	/**
@@ -34,7 +30,7 @@ public class World
 	 */
 	public World(Zone[] zones) {
 		this.zones = zones;
-		worldObjects = new ArrayList<>();
+		worldObjects = new WorldObjectTree();
 	}
 
 	/**
@@ -54,13 +50,6 @@ public class World
 		if (object == null)
 			throw new IllegalArgumentException("addObject(WorldObject obj) argument 0 not allowed to be null!");
 
-		worldObjects.ensureCapacity(id + 1);
-
-		while (worldObjects.size() <= id)
-		{
-			worldObjects.add(null);
-		}
-
 		if (worldObjects.get(id) != null)
 			throw new IllegalArgumentException("addObject(WorldObject obj) argument 1 not allowed to be an occupied id: " + id);
 
@@ -69,9 +58,8 @@ public class World
 		synchronized (worldObjects)
 		{
 			object.setId(id);
-			worldObjects.add(id, object);
+			worldObjects.put(id, object);
 		}
-		objectCount++;
 	}
 
 	/**
@@ -79,15 +67,7 @@ public class World
 	 * @param object The object to remove.
 	 */
 	public void removeObject(WorldObject object) {
-		synchronized (worldObjects)
-		{
-			worldObjects.set(object.getId(), null);
-			if (object.getLocation() != null)
-			{
-				object.getLocation().removeObject(object);
-			}
-		}
-		objectCount--;
+		removeObject(object.getId());
 	}
 
 	/**
@@ -95,12 +75,10 @@ public class World
 	 * @param id The id.
 	 */
 	public void removeObject(int id) {
-		WorldObject object;
 		synchronized (worldObjects)
 		{
-			object = worldObjects.get(id);
+			worldObjects.remove(id);
 		}
-		removeObject(object);
 	}
 
 	/**
@@ -130,13 +108,14 @@ public class World
 	public void update() {
 		synchronized (worldObjects)
 		{
-			for (WorldObject o : worldObjects)
+			Collection<WorldObject> values = worldObjects.values();
+			for (WorldObject o : values)
 				if (o != null)
 					o.setUp();
-			for (WorldObject o : worldObjects)
+			for (WorldObject o : values)
 				if (o != null)
 					o.update();
-			for (WorldObject o : worldObjects)
+			for (WorldObject o : values)
 				if (o != null)
 					o.reset();
 		}
@@ -159,7 +138,7 @@ public class World
 	 * Get the number of objects currently in the world.
 	 * @return The number of objects currently in the world.
 	 */
-	public int getObjectCount() { return objectCount; }
+	public int getObjectCount() { return worldObjects.size(); }
 
 	/**
 	 * Get an object by its id.
@@ -207,11 +186,7 @@ public class World
 	public void purgeObjects() {
 		synchronized (worldObjects)
 		{
-			ArrayList<WorldObject> copy = new ArrayList<>(worldObjects);
-			for (WorldObject obj : copy)
-			{
-				removeObject(obj);
-			}
+			worldObjects.clear();
 		}
 	}
 }

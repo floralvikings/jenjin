@@ -317,9 +317,9 @@ public class WorldServerTest
 			distance = testNPC.getVector2D().getDistanceToVector(target.getCenter());
 			Thread.sleep(10);
 		}
-
 		WorldObject clientNPC = clientPlayer.getVisibleObjects().get(testNPC.getId());
-		Assert.assertEquals(testNPC.getVector2D(), clientNPC.getVector2D());
+		distance = testNPC.getVector2D().getDistanceToVector(clientNPC.getVector2D());
+		Assert.assertEquals(distance, 0, Actor.STEP_LENGTH);
 
 		// Make sure the NPC is in the same place.
 		Thread.sleep(100);
