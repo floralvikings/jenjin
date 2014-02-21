@@ -1,7 +1,6 @@
 package com.jenjinstudios.world.message;
 
 import com.jenjinstudios.io.Message;
-import com.jenjinstudios.world.InvalidLocationException;
 import com.jenjinstudios.world.Player;
 import com.jenjinstudios.world.WorldClientHandler;
 import com.jenjinstudios.world.sql.WorldSQLHandler;
@@ -33,19 +32,8 @@ public class ExecutableWorldLoginRequest extends WorldExecutableMessage
 	public void runSynced() {
 		if (player != null)
 		{
-			try
-			{
-				getClientHandler().getServer().getWorld().addObject(player);
-				loginResponse.setArgument("id", player.getId());
-			} catch (InvalidLocationException ex)
-			{
-				loginResponse.setArgument("success", false);
-				loginResponse.setArgument("id", -1);
-				loginResponse.setArgument("loginTime", getClientHandler().getLoggedInTime());
-				loginResponse.setArgument("xCoordinate", 0d);
-				loginResponse.setArgument("yCoordinate", 0d);
-				loginResponse.setArgument("zoneNumber", -1);
-			}
+			getClientHandler().getServer().getWorld().addObject(player);
+			loginResponse.setArgument("id", player.getId());
 		}
 		getClientHandler().queueMessage(loginResponse);
 

@@ -27,7 +27,7 @@ import java.util.logging.Logger;
 public class WorldServerTest
 {
 	/** The Logger for this class. */
-	private static Logger LOGGER = Logger.getLogger(WorldServerTest.class.getName());
+	private static final Logger LOGGER = Logger.getLogger(WorldServerTest.class.getName());
 	/** The current test account being used. */
 	private static int testAccountNumber = 0;
 	/** The port used to listen and connect. */
@@ -64,7 +64,7 @@ public class WorldServerTest
 	 * @param clientPlayer The client player.
 	 * @throws InterruptedException If there's an issue waiting for the player to be idle for the given number of steps.
 	 */
-	public static void idleClientPlayer(int i, ClientPlayer clientPlayer) throws InterruptedException {
+	private static void idleClientPlayer(int i, ClientPlayer clientPlayer) throws InterruptedException {
 		clientPlayer.setNewRelativeAngle(MoveState.IDLE);
 		while (clientPlayer.getRelativeAngle() != MoveState.IDLE || clientPlayer.getStepsTaken() < i)
 		{
@@ -78,7 +78,7 @@ public class WorldServerTest
 	 * @param newVector The target vector.
 	 * @throws InterruptedException If there is an error blocking until the target is reached.
 	 */
-	public static void moveServerActorToVector(Actor serverActor, Vector2D newVector) throws InterruptedException {
+	private static void moveServerActorToVector(Actor serverActor, Vector2D newVector) throws InterruptedException {
 		int stepsTaken = serverActor.getStepsTaken();
 		double newAngle = serverActor.getVector2D().getAngleToVector(newVector);
 		MoveState newState = new MoveState(newAngle, stepsTaken, 0);
@@ -102,7 +102,7 @@ public class WorldServerTest
 	 * @param serverPlayer The server player.
 	 * @throws InterruptedException If there's an exception.
 	 */
-	public static void moveClientPlayerTowardVector(Vector2D newVector, WorldClient client, Actor serverPlayer) throws InterruptedException {
+	private static void moveClientPlayerTowardVector(Vector2D newVector, WorldClient client, Actor serverPlayer) throws InterruptedException {
 		ClientPlayer clientPlayer = client.getPlayer();
 		// Make sure not to send multiple states during the same update.
 		idleClientPlayer(1, clientPlayer);
@@ -307,12 +307,12 @@ public class WorldServerTest
 	@Test(timeOut = 10000)
 	public void testNPCMovement() throws Exception {
 		NPC testNPC = new NPC("TestNPC");
-		Location target = world.getZones()[0].getLocationOnGrid(0, 0);
+		Location target = world.getZone(0).getLocationOnGrid(0, 0);
 		testNPC.setVector2D(20, 5);
 		world.addObject(testNPC);
 		testNPC.plotPath(target);
 		double distance = testNPC.getVector2D().getDistanceToVector(target.getCenter());
-		while (distance >= Actor.STEP_LENGTH)
+		while (distance >= Actor.STEP_LENGTH - .001)
 		{
 			distance = testNPC.getVector2D().getDistanceToVector(target.getCenter());
 			Thread.sleep(10);

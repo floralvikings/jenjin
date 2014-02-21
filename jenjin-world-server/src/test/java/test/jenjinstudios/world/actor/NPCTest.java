@@ -12,7 +12,7 @@ import org.testng.annotations.*;
 public class NPCTest
 {
 	/** The NPC used for testing. */
-	NPC npc = new NPC("Nearly Passable Cormorant");
+	private final NPC npc = new NPC("Nearly Passable Cormorant");
 	/** The World used to test the actor. */
 	private World world;
 
@@ -31,8 +31,8 @@ public class NPCTest
 	 */
 	@Test
 	public void testPath() throws Exception {
-		Location startLocation = world.getZones()[0].getLocationOnGrid(3, 3);
-		Location targetLocation = world.getZones()[0].getLocationOnGrid(5, 7);
+		Location startLocation = world.getZone(0).getLocationOnGrid(3, 3);
+		Location targetLocation = world.getZone(0).getLocationOnGrid(5, 7);
 		npc.setVector2D(startLocation.getCenter());
 
 		world.addObject(npc);

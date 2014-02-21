@@ -10,6 +10,7 @@ import org.w3c.dom.Element;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import java.util.List;
 import java.util.TreeMap;
 
 /**
@@ -19,21 +20,21 @@ import java.util.TreeMap;
 public class WorldXmlBuilder
 {
 	/** The tag name for World objects. */
-	public static final String WORLD_TAG_NAME = "world";
+	private static final String WORLD_TAG_NAME = "world";
 	/** The tag name for zone objects. */
-	public static final String ZONE_TAG_NAME = "zone";
+	private static final String ZONE_TAG_NAME = "zone";
 	/** The name of the zone ID attribute. */
-	public static final String ZONE_ID_ATTR = "id";
+	private static final String ZONE_ID_ATTR = "id";
 	/** The name of the zone xSize attribute. */
-	public static final String ZONE_X_SIZE_ATTR = "xSize";
+	private static final String ZONE_X_SIZE_ATTR = "xSize";
 	/** The name of the zone ySize attribute. */
-	public static final String ZONE_Y_SIZE_ATTR = "ySize";
+	private static final String ZONE_Y_SIZE_ATTR = "ySize";
 	/** The zone of the location element. */
-	public static final String LOC_TAG_NAME = "location";
+	private static final String LOC_TAG_NAME = "location";
 	/** The name of the location x attribute. */
-	public static final String LOC_X_ATTR = "x";
+	private static final String LOC_X_ATTR = "x";
 	/** The name of the location y attribute. */
-	public static final String LOC_Y_ATTR = "y";
+	private static final String LOC_Y_ATTR = "y";
 
 	/**
 	 * Create an XML document from the given world.
@@ -50,9 +51,10 @@ public class WorldXmlBuilder
 		Element rootElement = doc.createElement(WORLD_TAG_NAME);
 		doc.appendChild(rootElement);
 
-		Zone[] zones = world.getZones();
-		for (Zone zone : zones)
+		List<Integer> zoneIDs = world.getZoneIDs();
+		for (int id : zoneIDs)
 		{
+			Zone zone = world.getZone(id);
 			Element zoneElement = createZoneElement(doc, zone);
 			addLocationNodes(doc, zone, zoneElement);
 			rootElement.appendChild(zoneElement);

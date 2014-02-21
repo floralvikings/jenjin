@@ -3,6 +3,8 @@ package com.jenjinstudios.world;
 import com.jenjinstudios.world.math.Vector2D;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Contains all the Zones, Locations and GameObjects.
@@ -10,8 +12,6 @@ import java.util.ArrayList;
  */
 public class World
 {
-	/** The size of the world's location grid. */
-	public final int DEFAULT_SIZE = 50;
 	/** The list of in-world Zones. */
 	private final Zone[] zones;
 	/** The GameObjects contained in the world. */
@@ -22,7 +22,9 @@ public class World
 	/** Construct a new World. */
 	public World() {
 		zones = new Zone[1];
-		zones[0] = new Zone(0, DEFAULT_SIZE, DEFAULT_SIZE, new Location[] { });
+		/* The default size of the world's location grid. */
+		int DEFAULT_SIZE = 50;
+		zones[0] = new Zone(0, DEFAULT_SIZE, DEFAULT_SIZE, new Location[]{});
 		worldObjects = new ArrayList<>();
 	}
 
@@ -38,9 +40,8 @@ public class World
 	/**
 	 * Add an object to the world.
 	 * @param object The object to add.
-	 * @throws InvalidLocationException If an object is attempted to be added with an invalid location.
 	 */
-	public void addObject(WorldObject object) throws InvalidLocationException {
+	public void addObject(WorldObject object) {
 		this.addObject(object, worldObjects.size());
 	}
 
@@ -55,7 +56,7 @@ public class World
 
 		worldObjects.ensureCapacity(id + 1);
 
-		while(worldObjects.size() <= id)
+		while (worldObjects.size() <= id)
 		{
 			worldObjects.add(null);
 		}
@@ -78,14 +79,10 @@ public class World
 	 * @param object The object to remove.
 	 */
 	public void removeObject(WorldObject object) {
-		if(object == null)
-		{
-			return;
-		}
 		synchronized (worldObjects)
 		{
 			worldObjects.set(object.getId(), null);
-			if(object.getLocation() != null)
+			if (object.getLocation() != null)
 			{
 				object.getLocation().removeObject(object);
 			}
@@ -97,7 +94,14 @@ public class World
 	 * Remove the object with the specified id.
 	 * @param id The id.
 	 */
-	public void removeObject(int id) { this.removeObject(worldObjects.get(id)); }
+	public void removeObject(int id) {
+		WorldObject object;
+		synchronized (worldObjects)
+		{
+			object = worldObjects.get(id);
+		}
+		removeObject(object);
+	}
 
 	/**
 	 * Get the location from the zone grid that contains the specified vector2D.
@@ -165,21 +169,46 @@ public class World
 	public WorldObject getObject(int id) { return worldObjects.get(id); }
 
 	/**
-	 * Get the zone array.
-	 * @return The array of zone objects contained in this world.
+	 * Get a list of all valid Zone IDs in this world.
+	 * @return A List of all IDs which are linked to a zone.
 	 */
-	public Zone[] getZones() {
-		return zones;
+	public List<Integer> getZoneIDs()
+	{
+		LinkedList<Integer> r = new LinkedList<>();
+		synchronized (zones)
+		{
+			for(Zone z : zones)
+			{
+				r.add(z.id);
+			}
+		}
+		return r;
 	}
 
 	/**
-	 * Reset the world to it's original state.
+	 * Get the zone with the given id.
+	 * @param id The id of the zone to retrieve.
+	 * @return The zone with the given id.
 	 */
+	public Zone getZone(int id) {
+		Zone r = null;
+		synchronized (zones)
+		{
+			for (Zone z : zones)
+			{
+				if (z.id == id)
+					r = z;
+			}
+		}
+		return r;
+	}
+
+	/** Reset the world to it's original state. */
 	public void purgeObjects() {
 		synchronized (worldObjects)
 		{
 			ArrayList<WorldObject> copy = new ArrayList<>(worldObjects);
-			for(WorldObject obj : copy)
+			for (WorldObject obj : copy)
 			{
 				removeObject(obj);
 			}
