@@ -73,18 +73,28 @@ public class WorldObject
 	 */
 	public void setVector2D(Vector2D vector2D) {
 		this.vector2D = new Vector2D(vector2D);
-		Location oldLocation = location;
+
 		if (world != null)
 		{
-			location = world.getLocationForCoordinates(this.zoneID, this.vector2D);
-			if (oldLocation != location && oldLocation != null)
-			{
-				oldLocation.removeObject(this);
-			}
-			if(location != null)
-			{
-				location.addObject(this);
-			}
+			Location newLocation = world.getLocationForCoordinates(this.zoneID, this.vector2D);
+			setLocation(newLocation);
+		}
+	}
+
+	/**
+	 * Set this objects new location.
+	 * @param newLocation The new location.
+	 */
+	protected void setLocation(Location newLocation) {
+		Location oldLocation = location;
+		location = newLocation;
+		if (oldLocation != location && oldLocation != null)
+		{
+			oldLocation.removeObject(this);
+		}
+		if(location != null)
+		{
+			location.addObject(this);
 		}
 	}
 
@@ -120,10 +130,7 @@ public class WorldObject
 		if (this.world != null)
 			throw new IllegalArgumentException("The world has already been set for this object.");
 		this.world = world;
-		location = world.getLocationForCoordinates(this.zoneID, this.vector2D);
-
-		if (location != null)
-			location.addObject(this);
+		setLocation(world.getLocationForCoordinates(this.zoneID, this.vector2D));
 	}
 
 	/**
