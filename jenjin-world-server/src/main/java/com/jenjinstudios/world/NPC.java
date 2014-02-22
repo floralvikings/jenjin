@@ -72,6 +72,10 @@ public class NPC extends Actor
 		clearMoveStates();
 		LinkedList<Location> path = Pathfinder.findPath(getLocation(), target);
 		// Start will be current location.
+		if(path.isEmpty())
+		{
+			return;
+		}
 		Location prev = path.pop();
 		Vector2D start = getVector2D();
 		Vector2D prevCenter = prev.getCenter();
