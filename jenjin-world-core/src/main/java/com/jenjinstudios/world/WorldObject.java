@@ -8,8 +8,6 @@ import com.jenjinstudios.world.math.Vector2D;
  */
 public class WorldObject
 {
-	/** The default name of this actor. */
-	public static final String DEFAULT_NAME = "Object";
 	/** The name of this actor. */
 	private final String name;
 	/** The zoneID in which this actor is located. */
@@ -25,10 +23,6 @@ public class WorldObject
 	/** The location in which this object is residing. */
 	private Location location;
 
-	/** Construct a new WorldObject. */
-	public WorldObject() {
-		this(DEFAULT_NAME);
-	}
 
 	/**
 	 * Construct a new WorldObject.
