@@ -38,6 +38,7 @@ public class WorldServerMessageGenerator
 		newlyVisibleMessage = new Message("ActorVisibleMessage");
 		newlyVisibleMessage.setArgument("name", newlyVisible.getName());
 		newlyVisibleMessage.setArgument("id", newlyVisible.getId());
+		newlyVisibleMessage.setArgument("resourceID", newlyVisible.getResourceID());
 		newlyVisibleMessage.setArgument("xCoordinate", newlyVisible.getVector2D().getXCoordinate());
 		newlyVisibleMessage.setArgument("yCoordinate", newlyVisible.getVector2D().getYCoordinate());
 		newlyVisibleMessage.setArgument("relativeAngle", newlyVisible.getCurrentMoveState().relativeAngle);
@@ -57,6 +58,7 @@ public class WorldServerMessageGenerator
 		newlyVisibleMessage = new Message("ObjectVisibleMessage");
 		newlyVisibleMessage.setArgument("name", object.getName());
 		newlyVisibleMessage.setArgument("id", object.getId());
+		newlyVisibleMessage.setArgument("resourceID", object.getResourceID());
 		newlyVisibleMessage.setArgument("xCoordinate", object.getVector2D().getXCoordinate());
 		newlyVisibleMessage.setArgument("yCoordinate", object.getVector2D().getYCoordinate());
 		return newlyVisibleMessage;
