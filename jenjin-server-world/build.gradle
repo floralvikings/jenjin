@@ -1,7 +1,0 @@
-description = ''
-
-dependencies {
-    compile project(':jenjin-server')
-    compile project(':jenjin-world-utils')
-    compile project(':jenjin-client-world')
-}
