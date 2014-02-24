@@ -36,16 +36,6 @@ public class WorldObject
 	}
 
 	/**
-	 * Create a World Object with the specified id.
-	 * @param id The id of the object.
-	 * @param name The name of the object.
-	 */
-	public WorldObject(int id, String name) {
-		this(name);
-		setId(id);
-	}
-
-	/**
 	 * Get the relativeAngle in which this object is facing, in radians.
 	 * @return The relativeAngle in which this object is facing.
 	 */
