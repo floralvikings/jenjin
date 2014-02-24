@@ -37,10 +37,10 @@ public class WorldObject
 
 	/**
 	 * Create a World Object with the specified id.
-	 * @param name The name of the object.
 	 * @param id The id of the object.
+	 * @param name The name of the object.
 	 */
-	public WorldObject(String name, int id) {
+	public WorldObject(int id, String name) {
 		this(name);
 		setId(id);
 	}

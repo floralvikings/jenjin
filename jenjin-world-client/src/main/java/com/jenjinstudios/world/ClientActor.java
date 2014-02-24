@@ -42,7 +42,7 @@ public class ClientActor extends WorldObject
 	 * @param name The name.
 	 */
 	public ClientActor(int id, String name) {
-		super(name, id);
+		super(id, name);
 		nextMoveStates = new LinkedList<>();
 		currentMoveState = new MoveState(MoveState.IDLE, 0, 0);
 	}
