@@ -22,6 +22,8 @@ public class WorldObject
 	private World world;
 	/** The location in which this object is residing. */
 	private Location location;
+	/** The resource ID number for this object. */
+	private int resourceID;
 
 
 	/**
@@ -76,21 +78,16 @@ public class WorldObject
 	}
 
 	/**
-	 * Set this objects new location.
-	 * @param newLocation The new location.
+	 * Get the resourceID for this object.
+	 * @return The resourceID for this object.
 	 */
-	protected void setLocation(Location newLocation) {
-		Location oldLocation = location;
-		location = newLocation;
-		if (oldLocation != location && oldLocation != null)
-		{
-			oldLocation.removeObject(this);
-		}
-		if(location != null)
-		{
-			location.addObject(this);
-		}
-	}
+	public int getResourceID() { return resourceID; }
+
+	/**
+	 * Set the resourceID for this object.
+	 * @param resourceID The resourceID for this object.
+	 */
+	public void setResourceID(int resourceID) { this.resourceID = resourceID; }
 
 	/**
 	 * Get this object's ID number.
@@ -109,6 +106,23 @@ public class WorldObject
 	 * @return This object's location.
 	 */
 	public Location getLocation() { return location; }
+
+	/**
+	 * Set this objects new location.
+	 * @param newLocation The new location.
+	 */
+	protected void setLocation(Location newLocation) {
+		Location oldLocation = location;
+		location = newLocation;
+		if (oldLocation != location && oldLocation != null)
+		{
+			oldLocation.removeObject(this);
+		}
+		if (location != null)
+		{
+			location.addObject(this);
+		}
+	}
 
 	/**
 	 * Get the world in which this object is located.
@@ -133,7 +147,7 @@ public class WorldObject
 	 */
 	public String getName() { return name; }
 
-	/**  Set up this WorldObject before updating.  */
+	/** Set up this WorldObject before updating. */
 	public void setUp() { }
 
 	/** Update this WorldObject. */
@@ -161,5 +175,7 @@ public class WorldObject
 	 * @param xCoordinate The x coordinate.
 	 * @param yCoordinate The y coordinate.
 	 */
-	public void setVector2D(double xCoordinate, double yCoordinate) { this.setVector2D(new Vector2D(xCoordinate, yCoordinate)); }
+	public void setVector2D(double xCoordinate, double yCoordinate) {
+		this.setVector2D(new Vector2D(xCoordinate, yCoordinate));
+	}
 }
