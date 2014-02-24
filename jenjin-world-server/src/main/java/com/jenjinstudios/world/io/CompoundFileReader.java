@@ -6,10 +6,7 @@ import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
@@ -21,14 +18,11 @@ public class CompoundFileReader
 {
 	/** The world being built from the XML. */
 	private final World world;
-	/** The WorldFileReader. */
-	private final InputStream worldFileStream;
 	/** The NPCFileReader. */
 	private NPCFileReader npcFileReader;
 
 	/**
 	 * Construct a new NPCFileReader for the given file.
-	 * @param world The world which will be used to retrieve location references; this object is not modified, only read.
 	 * @param npcFile The file containing the NPC info.
 	 * @throws java.io.IOException If there's an error reading the file.
 	 * @throws javax.xml.parsers.ParserConfigurationException If there's an error parsing the XML.
@@ -36,7 +30,7 @@ public class CompoundFileReader
 	 * @throws java.security.NoSuchAlgorithmException If transform algorithms cannot be found.
 	 * @throws javax.xml.transform.TransformerException If there is a Transformer Exception.
 	 */
-	public CompoundFileReader(World world, File npcFile) throws IOException, ParserConfigurationException, SAXException, TransformerException, NoSuchAlgorithmException {
+	public CompoundFileReader(File npcFile) throws IOException, ParserConfigurationException, SAXException, TransformerException, NoSuchAlgorithmException {
 		this(new FileInputStream(npcFile));
 	}
 
@@ -50,11 +44,12 @@ public class CompoundFileReader
 	 * @throws javax.xml.transform.TransformerException If there is a Transformer Exception.
 	 */
 	public CompoundFileReader(InputStream inputStream) throws ParserConfigurationException, IOException, SAXException, TransformerException, NoSuchAlgorithmException {
-		worldFileStream = inputStream;
+		InputStream worldFileStream = new NonClosableBufferedInputStream(inputStream);
+		worldFileStream.mark(Integer.MAX_VALUE);
 		WorldFileReader worldFileReader = new WorldFileReader(worldFileStream);
 		world = worldFileReader.read();
 		worldFileStream.reset();
-		npcFileReader = new NPCFileReader(world, inputStream);
+		npcFileReader = new NPCFileReader(world, worldFileStream);
 	}
 
 	/**
@@ -68,5 +63,23 @@ public class CompoundFileReader
 			world.addObject(npc);
 		}
 		return world;
+	}
+
+	/** A quick and dirty reusable input stream so the file can be read twice. */
+	private class NonClosableBufferedInputStream extends BufferedInputStream
+	{
+		/**
+		 * Construct a new NonClosableInputStream.
+		 * @param in The input stream used to build this one.
+		 */
+		public NonClosableBufferedInputStream(InputStream in) {
+			super(in);
+			super.mark(Integer.MAX_VALUE);
+		}
+
+		@Override
+		public void close() throws IOException {
+			super.reset();
+		}
 	}
 }
