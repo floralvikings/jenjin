@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * The {@code Zone} class represents a grid of {@code Location} objects within the {@code World}.  Zones cannot be
@@ -14,6 +16,8 @@ import java.util.LinkedList;
  */
 public class Zone
 {
+	/** The Logger for this class. */
+	private static final Logger LOGGER = Logger.getLogger(Zone.class.getName());
 	/** The number assigned to this Zone by the world on initialization. */
 	public final int id;
 	/** The number of {@code Location} objects in the x-axis. */
@@ -36,9 +40,13 @@ public class Zone
 		this.ySize = ySize;
 
 		locationGrid = new Location[xSize][ySize];
+		LOGGER.log(Level.FINEST, "Constructing Locations.");
 		constructLocations();
+		LOGGER.log(Level.FINEST, "Adding Special Locations.");
 		addSpecialLocations(specialLocations);
+		LOGGER.log(Level.FINEST, "Calculating Location Visibility.");
 		setLocationVisibility();
+		LOGGER.log(Level.FINEST, "Calculating Location Adjacency.");
 		setAdjacentLocations();
 	}
 
