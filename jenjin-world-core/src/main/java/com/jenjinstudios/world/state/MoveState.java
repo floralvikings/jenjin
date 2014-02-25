@@ -54,6 +54,33 @@ public class MoveState
 
 	@Override
 	public String toString() {
-		return "(R:" + relativeAngle + "\u00B0, " + " A:" + absoluteAngle + "\u00B0) After " + stepsUntilChange;
+		return "RelAng: " + relativeAngleString() + ", AbsAng: " + absoluteAngle + " Steps: " + stepsUntilChange;
+	}
+
+	/**
+	 * Get a string representation of the relative angle.  Used to report cardinal directions instead of numbers.
+	 * @return The string representation of the relative angle.
+	 */
+	private String relativeAngleString()
+	{
+		String cheese = String.valueOf(relativeAngle);
+		if(relativeAngle == FRONT) {
+			cheese = "FRONT";
+		}else if(relativeAngle == FRONT_RIGHT) {
+			cheese = "FRONT_RIGHT";
+		}else if (relativeAngle == FRONT_LEFT) {
+			cheese = "FRONT_LEFT";
+		}else if (relativeAngle == BACK) {
+			cheese = "BACK";
+		}else if(relativeAngle == BACK_LEFT) {
+			cheese = "BACK_LEFT";
+		}else if(relativeAngle == BACK_RIGHT) {
+			cheese = "BACK_RIGHT";
+		}else if(relativeAngle == LEFT) {
+			cheese = "LEFT";
+		}else if(relativeAngle == RIGHT) {
+			cheese = "RIGHT";
+		}
+		return cheese;
 	}
 }

@@ -33,7 +33,7 @@ public class WorldObjectTest
 	 */
 	@BeforeMethod
 	public void setUp() throws Exception {
-		worldObject = new WorldObject();
+		worldObject = new WorldObject("Test Object");
 		direction = 2.15f;
 		xCoordinate = 5.20f;
 		yCoordinate = 7.23f;
@@ -84,7 +84,7 @@ public class WorldObjectTest
 	 */
 	@Test
 	public void testSetId() throws Exception {
-		WorldObject worldObject1 = new WorldObject();
+		WorldObject worldObject1 = new WorldObject("Test Object");
 		worldObject1.setId(id);
 		Assert.assertEquals(id, worldObject1.getId());
 	}

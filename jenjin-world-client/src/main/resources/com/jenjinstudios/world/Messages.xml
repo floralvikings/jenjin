@@ -13,6 +13,7 @@
         <executable language="java" side="client">com.jenjinstudios.world.message.ExecutableObjectVisibleMessage</executable>
         <argument type="String" name="name" encrypt="true" />
         <argument type="int" name="id" />
+        <argument type="int" name="resourceID" />
         <argument type="double" name="xCoordinate" />
         <argument type="double" name="yCoordinate" />
     </message>
@@ -21,6 +22,7 @@
         <executable language="java" side="client">com.jenjinstudios.world.message.ExecutableActorVisibleMessage</executable>
         <argument type="String" name="name" encrypt="true" />
         <argument type="int" name="id" />
+        <argument type="int" name="resourceID" />
         <argument type="double" name="xCoordinate" />
         <argument type="double" name="yCoordinate" />
         <argument type="double" name="relativeAngle" />

@@ -32,11 +32,13 @@ public class ExecutableObjectVisibleMessage extends WorldClientExecutableMessage
 		Message message = getMessage();
 		String name = (String) message.getArgument("name");
 		int id = (int) message.getArgument("id");
+		int resourceID = (int) message.getArgument("resourceID");
 		double xCoordinate = (double) message.getArgument("xCoordinate");
 		double yCoordinate = (double) message.getArgument("yCoordinate");
 
 		newlyVisible = new WorldObject(name);
 		newlyVisible.setId(id);
+		newlyVisible.setResourceID(resourceID);
 		newlyVisible.setVector2D(xCoordinate, yCoordinate);
 	}
 }
