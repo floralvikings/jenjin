@@ -164,7 +164,7 @@ public class WorldClient extends AuthClient
 	 * @throws org.xml.sax.SAXException If there's an error with the XML.
 	 */
 	public void sendBlockingWorldFileRequest() throws InterruptedException, NoSuchAlgorithmException, SAXException, TransformerException, ParserConfigurationException, IOException {
-		Message worldFileChecksumRequest = new Message("WorldChecksumRequest");
+		Message worldFileChecksumRequest = new Message(this, "WorldChecksumRequest");
 		queueMessage(worldFileChecksumRequest);
 
 		while (!hasReceivedWorldFileChecksum)
@@ -174,7 +174,7 @@ public class WorldClient extends AuthClient
 
 		if (worldFileReader == null || !Arrays.equals(serverWorldFileChecksum, worldFileReader.getWorldFileChecksum()))
 		{
-			queueMessage(new Message("WorldFileRequest"));
+			queueMessage(new Message(this, "WorldFileRequest"));
 			while (!hasReceivedWorldFile)
 			{
 				Thread.sleep(10);
@@ -195,7 +195,7 @@ public class WorldClient extends AuthClient
 
 	/** Send a LoginRequest to the server. */
 	private void sendLoginRequest() {
-		Message loginRequest = WorldClientMessageGenerator.generateLoginRequest(getUsername(), password);
+		Message loginRequest = WorldClientMessageGenerator.generateLoginRequest(this, getUsername(), password);
 		setWaitingForLoginResponse(true);
 		queueMessage(loginRequest);
 	}
@@ -205,13 +205,13 @@ public class WorldClient extends AuthClient
 	 * @param moveState The move state used to generate the request.
 	 */
 	protected void sendStateChangeRequest(MoveState moveState) {
-		Message stateChangeRequest = WorldClientMessageGenerator.generateStateChangeRequest(moveState);
+		Message stateChangeRequest = WorldClientMessageGenerator.generateStateChangeRequest(this, moveState);
 		queueMessage(stateChangeRequest);
 	}
 
 	@Override
 	protected void sendLogoutRequest() {
-		Message logoutRequest = new Message("WorldLogoutRequest");
+		Message logoutRequest = new Message(this, "WorldLogoutRequest");
 
 		// Send the request, continue when response is received.
 		setWaitingForLogoutResponse(true);

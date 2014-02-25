@@ -2,7 +2,6 @@ package com.jenjinstudios.message;
 
 import com.jenjinstudios.io.ExecutableMessage;
 import com.jenjinstudios.io.Message;
-import com.jenjinstudios.io.MessageRegistry;
 import com.jenjinstudios.io.MessageType;
 import com.jenjinstudios.net.ClientHandler;
 
@@ -41,7 +40,7 @@ public abstract class ServerExecutableMessage extends ExecutableMessage
 	@SuppressWarnings("unchecked")
 	public static ExecutableMessage getServerExecutableMessageFor(ClientHandler handler, Message message) {
 		ExecutableMessage r = null;
-		MessageType messageType = MessageRegistry.getMessageType(message.getID());
+		MessageType messageType = handler.getMessageRegistry().getMessageType(message.getID());
 		// Get the executable message classes registered.
 		Class<? extends ExecutableMessage> execClass = messageType.serverExecutableMessageClass;
 		try
@@ -69,7 +68,7 @@ public abstract class ServerExecutableMessage extends ExecutableMessage
 			LOGGER.log(Level.SEVERE, "Constructor not correct for: " + execClass.getName(), e);
 		} catch (NullPointerException e)
 		{
-			LOGGER.log(Level.SEVERE, "No client-side executable message found for: " + message, e);
+			LOGGER.log(Level.SEVERE, "No server-side executable message found for: " + message + " " + messageType, e);
 		}
 
 		return r;

@@ -28,7 +28,7 @@ public class ExecutablePingRequest extends ServerExecutableMessage
 	/** Run asynchronous portion of this message. */
 	@Override
 	public void runASync() {
-		Message pingResponse = new Message("PingResponse");
+		Message pingResponse = new Message(getClientHandler(), "PingResponse");
 		pingResponse.setArgument("requestTimeNanos", getMessage().getArgument("requestTimeNanos"));
 		try
 		{

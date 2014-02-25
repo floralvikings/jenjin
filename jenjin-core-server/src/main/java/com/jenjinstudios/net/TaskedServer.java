@@ -1,5 +1,8 @@
 package com.jenjinstudios.net;
 
+import org.xml.sax.SAXException;
+
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.Timer;
@@ -26,8 +29,10 @@ public class TaskedServer<T extends ClientHandler> extends Server<T>
 	 * @param handlerClass The class of ClientHandler used by this Server.
 	 * @throws java.io.IOException If there is an IO Error initializing the server.
 	 * @throws NoSuchMethodException If there is no appropriate constructor for the specified ClientHandler constructor.
+	 * @throws javax.xml.parsers.ParserConfigurationException If there is an error parsing XML files.
+	 * @throws org.xml.sax.SAXException If there is an error parsing XML files.
 	 */
-	public TaskedServer(int ups, int port, Class<? extends T> handlerClass) throws IOException, NoSuchMethodException {
+	public TaskedServer(int ups, int port, Class<? extends T> handlerClass) throws IOException, NoSuchMethodException, ParserConfigurationException, SAXException {
 		super(ups, port, handlerClass);
 		repeatedTasks = new LinkedList<>();
 		syncedTasks = new LinkedList<>();

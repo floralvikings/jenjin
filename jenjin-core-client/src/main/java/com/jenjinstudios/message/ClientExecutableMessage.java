@@ -2,7 +2,6 @@ package com.jenjinstudios.message;
 
 import com.jenjinstudios.io.ExecutableMessage;
 import com.jenjinstudios.io.Message;
-import com.jenjinstudios.io.MessageRegistry;
 import com.jenjinstudios.io.MessageType;
 import com.jenjinstudios.net.Client;
 
@@ -30,7 +29,7 @@ public abstract class ClientExecutableMessage extends ExecutableMessage
 	protected ClientExecutableMessage(Client client, Message message) {
 		super(message);
 
-		if (!getClass().isAssignableFrom(MessageRegistry.getMessageType(message.getID()).clientExecutableMessageClass))
+		if (!getClass().isAssignableFrom(client.getMessageRegistry().getMessageType(message.getID()).clientExecutableMessageClass))
 			throw new IllegalArgumentException("Message supplied to " + getClass().getName() + "is invalid.");
 
 		this.client = client;
@@ -46,7 +45,7 @@ public abstract class ClientExecutableMessage extends ExecutableMessage
 	public static ExecutableMessage getClientExecutableMessageFor(Client client, Message message) {
 		ExecutableMessage r = null;
 
-		MessageType messageType = MessageRegistry.getMessageType(message.getID());
+		MessageType messageType = client.getMessageRegistry().getMessageType(message.getID());
 		Class<? extends ExecutableMessage> execClass = messageType.clientExecutableMessageClass;
 
 		try

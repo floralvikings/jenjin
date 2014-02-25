@@ -1,5 +1,9 @@
 package com.jenjinstudios.net;
 
+import com.jenjinstudios.io.MessageRegistry;
+import org.xml.sax.SAXException;
+
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -35,6 +39,8 @@ public class Server<T extends ClientHandler> extends Thread
 	private volatile boolean initialized;
 	/** The current number of connected clients. */
 	private int numClients;
+	/** The MessageRegistry used by this server. */
+	private final MessageRegistry messageRegistry;
 
 	/**
 	 * Construct a new Server without a SQLHandler.
@@ -43,8 +49,10 @@ public class Server<T extends ClientHandler> extends Thread
 	 * @param handlerClass The class of ClientHandler used by this Server.
 	 * @throws java.io.IOException If there is an IO Error initializing the server.
 	 * @throws NoSuchMethodException If there is no appropriate constructor for the specified ClientHandler constructor.
+	 * @throws javax.xml.parsers.ParserConfigurationException If there is an error parsing XML files.
+	 * @throws org.xml.sax.SAXException If there is an error parsing XML files.
 	 */
-	public Server(int ups, int port, Class<? extends T> handlerClass) throws IOException, NoSuchMethodException {
+	public Server(int ups, int port, Class<? extends T> handlerClass) throws IOException, NoSuchMethodException, ParserConfigurationException, SAXException {
 		this(ups, port, handlerClass, DEFAULT_MAX_CLIENTS);
 	}
 
@@ -56,10 +64,13 @@ public class Server<T extends ClientHandler> extends Thread
 	 * @param maxClients The maximum number of clients.
 	 * @throws java.io.IOException If there is an IO Error initializing the server.
 	 * @throws NoSuchMethodException If there is no appropriate constructor for the specified ClientHandler constructor.
+	 * @throws javax.xml.parsers.ParserConfigurationException If there is an error parsing XML files.
+	 * @throws org.xml.sax.SAXException If there is an error parsing XML files.
 	 */
 	@SuppressWarnings("unchecked")
-	public Server(int ups, int port, Class<? extends T> handlerClass, int maxClients) throws IOException, NoSuchMethodException {
+	public Server(int ups, int port, Class<? extends T> handlerClass, int maxClients) throws IOException, NoSuchMethodException, ParserConfigurationException, SAXException {
 		super("Server");
+		messageRegistry = new MessageRegistry(true);
 		LOGGER.log(Level.FINE, "Initializing Server.");
 		UPS = ups;
 		PERIOD = 1000 / ups;
@@ -193,6 +204,12 @@ public class Server<T extends ClientHandler> extends Thread
 	public int getNumClients() {
 		return numClients;
 	}
+
+	/**
+	 * Get the MessageRegistry used by this server.
+	 * @return The MessageRegistry used by this server,
+	 */
+	public MessageRegistry getMessageRegistry() { return messageRegistry; }
 
 	/**
 	 * Schedule a client to be removed during the next update.

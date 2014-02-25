@@ -1,8 +1,11 @@
 package com.jenjinstudios.net;
 
 import com.jenjinstudios.io.Message;
+import com.jenjinstudios.io.MessageRegistry;
 import com.jenjinstudios.message.ClientExecutableMessage;
+import org.xml.sax.SAXException;
 
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.net.Socket;
 import java.security.*;
@@ -41,12 +44,15 @@ public class Client extends Connection
 	 * @param address The address of the server to which to connect
 	 * @param port The port over which to connect to the server.
 	 * @throws java.security.NoSuchAlgorithmException If there is an error generating encryption keys.
+	 * @throws java.io.IOException If there is an IO exception when reading XML files.
+	 * @throws javax.xml.parsers.ParserConfigurationException If there is an error parsing XML files.
+	 * @throws org.xml.sax.SAXException If there is an error parsing XML files.
 	 */
-	protected Client(String address, int port) throws NoSuchAlgorithmException {
+	protected Client(String address, int port) throws NoSuchAlgorithmException, ParserConfigurationException, SAXException, IOException {
 		ADDRESS = address;
 		PORT = port;
 		repeatedSyncedTasks = new LinkedList<>();
-
+		setMessageRegistry(new MessageRegistry(false));
 		try
 		{
 			KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
@@ -172,7 +178,7 @@ public class Client extends Connection
 		period = 1000 / ups;
 
 		// Next, queue up the PublicKeyMessage used to exchange the encrypted AES key used for encryption.
-		Message publicKeyMessage = new Message("PublicKeyMessage");
+		Message publicKeyMessage = new Message(this, "PublicKeyMessage");
 		publicKeyMessage.setArgument("key", publicKey.getEncoded());
 		queueMessage(publicKeyMessage);
 

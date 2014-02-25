@@ -1,6 +1,7 @@
 package com.jenjinstudios.world;
 
 import com.jenjinstudios.io.Message;
+import com.jenjinstudios.io.MessageRegistry;
 import com.jenjinstudios.net.ClientHandler;
 import com.jenjinstudios.world.util.WorldServerMessageGenerator;
 
@@ -25,12 +26,13 @@ public class WorldClientHandler extends ClientHandler
 	 * send the client a FirstConnectResponse message with the server's UPS
 	 * @param s The server for which this handler works.
 	 * @param sk The socket used to communicate with the client.
+	 * @param messageRegistry The MessageRegistry for this ClientHandler.
 	 * @throws java.io.IOException If the socket is unable to connect.
 	 */
-	public WorldClientHandler(WorldServer s, Socket sk) throws IOException {
-		super(s, sk);
+	public WorldClientHandler(WorldServer s, Socket sk, MessageRegistry messageRegistry) throws IOException {
+		super(s, sk, messageRegistry);
 		server = s;
-		queueMessage(WorldServerMessageGenerator.generateActorStepLengthMessage());
+		queueMessage(WorldServerMessageGenerator.generateActorStepLengthMessage(this));
 	}
 
 	/**
@@ -79,7 +81,7 @@ public class WorldClientHandler extends ClientHandler
 		for (WorldObject object : player.getNewlyVisibleObjects())
 		{
 			Message newlyVisibleMessage;
-			newlyVisibleMessage = WorldServerMessageGenerator.generateNewlyVisibleMessage(object);
+			newlyVisibleMessage = WorldServerMessageGenerator.generateNewlyVisibleMessage(this, object);
 			queueMessage(newlyVisibleMessage);
 		}
 	}
@@ -88,7 +90,7 @@ public class WorldClientHandler extends ClientHandler
 	private void queueNewlyInvisibleMessages() {
 		for (WorldObject object : player.getNewlyInvisibleObjects())
 		{
-			Message newlyInvisibleMessage = WorldServerMessageGenerator.generateNewlyInvisibleMessage(object);
+			Message newlyInvisibleMessage = WorldServerMessageGenerator.generateNewlyInvisibleMessage(this, object);
 			queueMessage(newlyInvisibleMessage);
 		}
 	}
@@ -100,7 +102,7 @@ public class WorldClientHandler extends ClientHandler
 			Actor changedActor;
 			if (object instanceof Actor && (changedActor = (Actor) object).isNewState())
 			{
-				Message newState = WorldServerMessageGenerator.generateChangeStateMessage(changedActor);
+				Message newState = WorldServerMessageGenerator.generateChangeStateMessage(this, changedActor);
 				queueMessage(newState);
 			}
 		}
@@ -109,6 +111,6 @@ public class WorldClientHandler extends ClientHandler
 	/** Generate and queue a ForcedStateMessage if necessary. */
 	private void queueForcesStateMessage() {
 		if (player.isForcedState())
-			queueMessage(WorldServerMessageGenerator.generateForcedStateMessage(player, server));
+			queueMessage(WorldServerMessageGenerator.generateForcedStateMessage(this, player, server));
 	}
 }

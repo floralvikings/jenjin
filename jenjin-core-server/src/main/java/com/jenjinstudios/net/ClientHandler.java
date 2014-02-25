@@ -2,6 +2,7 @@ package com.jenjinstudios.net;
 
 import com.jenjinstudios.io.ExecutableMessage;
 import com.jenjinstudios.io.Message;
+import com.jenjinstudios.io.MessageRegistry;
 import com.jenjinstudios.message.ServerExecutableMessage;
 
 import java.io.IOException;
@@ -30,14 +31,16 @@ public class ClientHandler extends Connection
 	 * send the client a FirstConnectResponse message with the server's UPS
 	 * @param s The server for which this handler works.
 	 * @param sk The socket used to communicate with the client.
+	 * @param messageRegistry The MessageRegistry for this ClientHandler.
 	 * @throws IOException If the socket is unable to connect.
 	 */
-	public ClientHandler(AuthServer<? extends ClientHandler> s, Socket sk) throws IOException {
+	public ClientHandler(AuthServer<? extends ClientHandler> s, Socket sk, MessageRegistry messageRegistry) throws IOException {
 		setName("ClientHandler: " + sk.getInetAddress());
+		setMessageRegistry(messageRegistry);
 		server = s;
 		super.setSocket(sk);
 
-		Message firstConnectResponse = new Message("FirstConnectResponse");
+		Message firstConnectResponse = new Message(this, "FirstConnectResponse");
 		firstConnectResponse.setArgument("ups", server.UPS);
 		queueMessage(firstConnectResponse);
 	}
@@ -116,7 +119,7 @@ public class ClientHandler extends Connection
 	 */
 	public void sendLogoutStatus(boolean success) {
 		loggedIn = !success;
-		Message logoutResponse = new Message("LogoutResponse");
+		Message logoutResponse = new Message(this, "LogoutResponse");
 		logoutResponse.setArgument("success", success);
 		queueMessage(logoutResponse);
 	}

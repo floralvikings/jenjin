@@ -53,7 +53,7 @@ public class ExecutableWorldLoginRequest extends WorldExecutableMessage
 		success = player != null;
 		getClientHandler().setLoginStatus(success);
 
-		loginResponse = new Message("WorldLoginResponse");
+		loginResponse = new Message(getClientHandler(), "WorldLoginResponse");
 		loginResponse.setArgument("success", success);
 
 		if (success)

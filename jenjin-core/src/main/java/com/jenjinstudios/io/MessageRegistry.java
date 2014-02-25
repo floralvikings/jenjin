@@ -38,43 +38,43 @@ public class MessageRegistry
 	private static final TreeMap<String, MessageType> messageTypesByName = new TreeMap<>();
 	/** Flags whether messages have been registered. */
 	private static boolean messagesRegistered;
+	/** Whether this registry is for a server or not. */
+	private final boolean isServer;
 
 	/**
-	 * Register all messages found in registry files.  Also checks the JAR file.
-	 * @param isServer Whether the program registering messages is a server or client-side program.
+	 * Construct a new MessageRegistry.
+	 * @param isServer Whether or not this registry is for a server.
 	 * @throws java.io.IOException If there is an IO exception when reading XML files.
 	 * @throws javax.xml.parsers.ParserConfigurationException If there is an error parsing XML files.
 	 * @throws org.xml.sax.SAXException If there is an error parsing XML files.
 	 */
-	public static void registerXmlMessages(boolean isServer) throws ParserConfigurationException, SAXException, IOException {
+	public MessageRegistry(boolean isServer) throws IOException, SAXException, ParserConfigurationException {
+		this.isServer = isServer;
+		registerXmlMessages();
+	}
+
+	/**
+	 * Register all messages found in registry files.  Also checks the JAR file.
+	 * @throws java.io.IOException If there is an IO exception when reading XML files.
+	 * @throws javax.xml.parsers.ParserConfigurationException If there is an error parsing XML files.
+	 * @throws org.xml.sax.SAXException If there is an error parsing XML files.
+	 */
+	public void registerXmlMessages() throws ParserConfigurationException, SAXException, IOException {
 		try
 		{
-			String classPath = System.getProperty("java.class.path");
-			String[] pathElements = classPath.split(System.getProperty("path.separator"));
-
-			for (String fileName : pathElements)
+			LinkedList<String> jarMessageEntries = findJarMessageEntries();
+			for(String entry : jarMessageEntries)
 			{
-				File file = new File(fileName);
-				if (file.isDirectory() || !file.exists())
-				{
-					continue;
-				}
-				FileInputStream inputStream = new FileInputStream(file);
-				ZipInputStream zip = new ZipInputStream(inputStream);
-				ZipEntry ze;
-				while ((ze = zip.getNextEntry()) != null)
-				{
-					String entryName = ze.getName();
-					if (entryName.endsWith("Messages.xml"))
-					{
-						parseXmlStream(MessageRegistry.class.getClassLoader().getResourceAsStream(entryName), isServer);
-					}
-				}
+				LOGGER.log(Level.INFO, "Registering XML entry {0}", entry);
+				parseXmlStream(MessageRegistry.class.getClassLoader().getResourceAsStream(entry), isServer);
 			}
-
 			// Search the directories
 			ArrayList<File> messageFiles = findMessageFiles();
-			for (File f : messageFiles) parseXmlFile(f, isServer);
+			for (File f : messageFiles)
+			{
+				LOGGER.log(Level.INFO, "Registering XML file {0}", f);
+				parseXmlFile(f, isServer);
+			}
 			messagesRegistered = true;
 
 		} catch (IOException | SAXException | ParserConfigurationException e)
@@ -82,6 +82,38 @@ public class MessageRegistry
 			LOGGER.log(Level.INFO, "Unable to parse XML files.", e);
 			throw e;
 		}
+	}
+
+	/**
+	 * Find the Messages.xml ZipEntry objects in the classpath.
+	 * @return The list of found entries.
+	 * @throws IOException If there's an IOException.
+	 */
+	private static LinkedList<String> findJarMessageEntries() throws IOException {
+		LinkedList<String> jarMessageEntries = new LinkedList<>();
+		String classPath = System.getProperty("java.class.path");
+		String[] pathElements = classPath.split(System.getProperty("path.separator"));
+
+		for (String fileName : pathElements)
+		{
+			File file = new File(fileName);
+			if (file.isDirectory() || !file.exists())
+			{
+				continue;
+			}
+			FileInputStream inputStream = new FileInputStream(file);
+			ZipInputStream zip = new ZipInputStream(inputStream);
+			ZipEntry ze;
+			while ((ze = zip.getNextEntry()) != null)
+			{
+				String entryName = ze.getName();
+				if (entryName.endsWith("Messages.xml"))
+				{
+					jarMessageEntries.add(entryName);
+				}
+			}
+		}
+		return jarMessageEntries;
 	}
 
 	/**
@@ -115,7 +147,7 @@ public class MessageRegistry
 		{
 			Element currentMessageElement = (Element) messageElements.item(i);
 			MessageType messageType = MessageTypeFactory.parseMessageElement(currentMessageElement, isServer);
-			if (messageType != null)
+			if (messageType != null && !messageTypesByID.containsKey(messageType.id) && !messageTypesByName.containsKey(messageType.name))
 			{
 				// Add the message type to the two trees.
 				messageTypesByID.put(messageType.id, messageType);
@@ -142,7 +174,7 @@ public class MessageRegistry
 	 * @param name The name of the message type.
 	 * @return The MessageType with the given name.
 	 */
-	public static MessageType getMessageType(String name) {
+	public MessageType getMessageType(String name) {
 		if (!messagesRegistered)
 		{
 			LOGGER.log(Level.SEVERE, "Messages not registered!  Please remember to call MessageRegistry.registerXmlMessages()");
@@ -156,7 +188,7 @@ public class MessageRegistry
 	 * @param id The id.
 	 * @return The MessageType with the given ID.
 	 */
-	public static MessageType getMessageType(short id) {
+	public MessageType getMessageType(short id) {
 		if (!messagesRegistered)
 		{
 			LOGGER.log(Level.SEVERE, "Messages not registered!  Please remember to call MessageRegistry.registerXmlMessages()");
@@ -170,7 +202,7 @@ public class MessageRegistry
 	 * @param id The ID to lookup.
 	 * @return A LinkedList of class names.
 	 */
-	public static LinkedList<Class> getArgumentClasses(short id) {
+	public LinkedList<Class> getArgumentClasses(short id) {
 		if (!messagesRegistered)
 		{
 			LOGGER.log(Level.SEVERE, "Messages not registered!  Please remember to call MessageRegistry.registerXmlMessages()");

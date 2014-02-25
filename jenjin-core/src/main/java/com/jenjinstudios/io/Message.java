@@ -1,5 +1,7 @@
 package com.jenjinstudios.io;
 
+import com.jenjinstudios.net.Connection;
+
 import java.util.TreeMap;
 
 /**
@@ -24,13 +26,14 @@ public class Message
 	 * shouldn't) the arguments you pass <b>must</b> fill every available argument and be passed in the order in which they
 	 * appear in the XML file.
 	 *
+	 * @param connection The Connection creating this message.
 	 * @param id   The ID of the message type for this message.
 	 * @param args The arguments of this message.  This <b>must</b> fill every available argument for the message.
 	 */
-	public Message(short id, Object... args)
+	public Message(Connection connection, short id, Object... args)
 	{
 		this.id = id;
-		messageType = MessageRegistry.getMessageType(id);
+		messageType = connection.getMessageRegistry().getMessageType(id);
 		name = messageType.name;
 		argumentsByName = new TreeMap<>();
 		for (int i = 0; i < messageType.argumentTypes.length; i++)
@@ -44,11 +47,12 @@ public class Message
 	 * Construct a new Message using the MessageType specified by the given name; every argument in this message must be
 	 * set using the {@code setArgument} method before it can be sent properly over socket.
 	 *
+	 * @param connection The Connection creating this message.
 	 * @param name The name of the MessageType being filled by this message.
 	 */
-	public Message(String name)
+	public Message(Connection connection, String name)
 	{
-		messageType = MessageRegistry.getMessageType(name);
+		messageType = connection.getMessageRegistry().getMessageType(name);
 		this.name = messageType.name;
 		id = messageType.id;
 		argumentsByName = new TreeMap<>();

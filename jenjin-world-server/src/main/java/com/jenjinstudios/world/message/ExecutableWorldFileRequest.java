@@ -25,7 +25,7 @@ public class ExecutableWorldFileRequest extends WorldExecutableMessage
 	@Override
 	public void runASync() {
 		byte[] worldFileBytes = getClientHandler().getServer().getWorldFileBytes();
-		Message response = new Message("WorldFileResponse");
+		Message response = new Message(getClientHandler(), "WorldFileResponse");
 		response.setArgument("fileBytes", worldFileBytes);
 		getClientHandler().queueMessage(response);
 	}
