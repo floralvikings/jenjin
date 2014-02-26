@@ -33,11 +33,11 @@ public class MessageRegistry
 	/** The file name of message registry classed. */
 	private static final String messageFileName = "Messages.xml";
 	/** A map that stores messages types sorted by ID. */
-	private static final TreeMap<Short, MessageType> messageTypesByID = new TreeMap<>();
+	private final TreeMap<Short, MessageType> messageTypesByID = new TreeMap<>();
 	/** A map that stores message types sorted by name. */
-	private static final TreeMap<String, MessageType> messageTypesByName = new TreeMap<>();
+	private final TreeMap<String, MessageType> messageTypesByName = new TreeMap<>();
 	/** Flags whether messages have been registered. */
-	private static boolean messagesRegistered;
+	private boolean messagesRegistered;
 	/** Whether this registry is for a server or not. */
 	private final boolean isServer;
 
@@ -73,7 +73,7 @@ public class MessageRegistry
 			for (File f : messageFiles)
 			{
 				LOGGER.log(Level.INFO, "Registering XML file {0}", f);
-				parseXmlFile(f, isServer);
+				parseXmlFile(f);
 			}
 			messagesRegistered = true;
 
@@ -134,7 +134,7 @@ public class MessageRegistry
 	 * @throws javax.xml.parsers.ParserConfigurationException If this exception occurs.
 	 * @throws org.xml.sax.SAXException If this exception occurs.
 	 */
-	private static void parseXmlStream(InputStream stream, boolean isServer) throws IOException, SAXException, ParserConfigurationException {
+	private void parseXmlStream(InputStream stream, boolean isServer) throws IOException, SAXException, ParserConfigurationException {
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder builder = factory.newDocumentBuilder();
 		Document doc = builder.parse(stream);
@@ -159,12 +159,11 @@ public class MessageRegistry
 	/**
 	 * Parse the given XML file and register message therein.
 	 * @param xmlFile The XML file to be parsed.
-	 * @param isServer Whether the program registering message is server or client side.
 	 * @throws java.io.IOException If this exception occurs.
 	 * @throws javax.xml.parsers.ParserConfigurationException If this exception occurs.
 	 * @throws org.xml.sax.SAXException If this exception occurs.
 	 */
-	private static void parseXmlFile(File xmlFile, boolean isServer) throws IOException, SAXException, ParserConfigurationException {
+	private void parseXmlFile(File xmlFile) throws IOException, SAXException, ParserConfigurationException {
 		InputStream xmlStream = new FileInputStream(xmlFile);
 		parseXmlStream(xmlStream, isServer);
 	}
@@ -229,6 +228,30 @@ public class MessageRegistry
 		}
 
 		return temp;
+	}
+
+	/**
+	 * Disable the ExecutableMessage invoked by the message with the given name.
+	 * @param messageName The name of the message.
+	 */
+	public void disableExecutableMessage(String messageName)
+	{
+		MessageType type = messageTypesByName.get(messageName);
+		short id = type.id;
+		ArgumentType[] argumentTypes = type.argumentTypes;
+		Class<? extends ExecutableMessage> clientExecutableMessageClass = type.clientExecutableMessageClass;
+		Class<? extends ExecutableMessage> serverExecutableMessageClass = type.serverExecutableMessageClass;
+		MessageType newMessageType;
+		if(isServer)
+		{
+			newMessageType = new MessageType(id, messageName, argumentTypes, clientExecutableMessageClass, null);
+		}else
+		{
+			newMessageType = new MessageType(id, messageName, argumentTypes, null, serverExecutableMessageClass);
+		}
+		messageTypesByName.put(messageName, newMessageType);
+		messageTypesByID.put(id, newMessageType);
+
 	}
 
 }
