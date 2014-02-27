@@ -1,14 +1,7 @@
 package com.jenjinstudios.io;
 
 import com.jenjinstudios.util.FileUtil;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -16,6 +9,7 @@ import java.io.InputStream;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -36,60 +30,25 @@ public class MessageRegistry
 	private final TreeMap<Short, MessageType> messageTypesByID = new TreeMap<>();
 	/** A map that stores message types sorted by name. */
 	private final TreeMap<String, MessageType> messageTypesByName = new TreeMap<>();
-	/** Flags whether messages have been registered. */
-	private boolean messagesRegistered;
 	/** Whether this registry is for a server or not. */
 	private final boolean isServer;
+	/** Flags whether messages have been registered. */
+	private boolean messagesRegistered;
 
 	/**
 	 * Construct a new MessageRegistry.
 	 * @param isServer Whether or not this registry is for a server.
-	 * @throws java.io.IOException If there is an IO exception when reading XML files.
-	 * @throws javax.xml.parsers.ParserConfigurationException If there is an error parsing XML files.
-	 * @throws org.xml.sax.SAXException If there is an error parsing XML files.
 	 */
-	public MessageRegistry(boolean isServer) throws IOException, SAXException, ParserConfigurationException {
+	public MessageRegistry(boolean isServer) {
 		this.isServer = isServer;
 		registerXmlMessages();
 	}
 
 	/**
-	 * Register all messages found in registry files.  Also checks the JAR file.
-	 * @throws java.io.IOException If there is an IO exception when reading XML files.
-	 * @throws javax.xml.parsers.ParserConfigurationException If there is an error parsing XML files.
-	 * @throws org.xml.sax.SAXException If there is an error parsing XML files.
-	 */
-	public void registerXmlMessages() throws ParserConfigurationException, SAXException, IOException {
-		try
-		{
-			LinkedList<String> jarMessageEntries = findJarMessageEntries();
-			for(String entry : jarMessageEntries)
-			{
-				LOGGER.log(Level.INFO, "Registering XML entry {0}", entry);
-				parseXmlStream(MessageRegistry.class.getClassLoader().getResourceAsStream(entry), isServer);
-			}
-			// Search the directories
-			ArrayList<File> messageFiles = findMessageFiles();
-			for (File f : messageFiles)
-			{
-				LOGGER.log(Level.INFO, "Registering XML file {0}", f);
-				parseXmlFile(f);
-			}
-			messagesRegistered = true;
-
-		} catch (IOException | SAXException | ParserConfigurationException e)
-		{
-			LOGGER.log(Level.INFO, "Unable to parse XML files.", e);
-			throw e;
-		}
-	}
-
-	/**
 	 * Find the Messages.xml ZipEntry objects in the classpath.
 	 * @return The list of found entries.
-	 * @throws IOException If there's an IOException.
 	 */
-	private static LinkedList<String> findJarMessageEntries() throws IOException {
+	private static LinkedList<String> findJarMessageEntries() {
 		LinkedList<String> jarMessageEntries = new LinkedList<>();
 		String classPath = System.getProperty("java.class.path");
 		String[] pathElements = classPath.split(System.getProperty("path.separator"));
@@ -97,21 +56,22 @@ public class MessageRegistry
 		for (String fileName : pathElements)
 		{
 			File file = new File(fileName);
-			if (file.isDirectory() || !file.exists())
+			if (file.isDirectory() || !file.exists()) { continue; }
+			try
 			{
-				continue;
-			}
-			FileInputStream inputStream = new FileInputStream(file);
-			ZipInputStream zip = new ZipInputStream(inputStream);
-			ZipEntry ze;
-			while ((ze = zip.getNextEntry()) != null)
-			{
-				String entryName = ze.getName();
-				if (entryName.endsWith("Messages.xml"))
+				FileInputStream inputStream = new FileInputStream(file);
+				ZipInputStream zip = new ZipInputStream(inputStream);
+				ZipEntry ze;
+				while ((ze = zip.getNextEntry()) != null)
 				{
-					jarMessageEntries.add(entryName);
+					String entryName = ze.getName();
+					if (entryName.endsWith("Messages.xml")) { jarMessageEntries.add(entryName); }
 				}
+			} catch (IOException ex)
+			{
+				LOGGER.log(Level.WARNING, "Unable to read JAR entry " + fileName, ex);
 			}
+
 		}
 		return jarMessageEntries;
 	}
@@ -124,48 +84,6 @@ public class MessageRegistry
 		String rootDir = Paths.get("").toAbsolutePath().toString() + File.separator;
 		File rootFile = new File(rootDir);
 		return FileUtil.findFilesWithName(rootFile, messageFileName);
-	}
-
-	/**
-	 * Parse a stream for XML messages.
-	 * @param stream The stream to parse.
-	 * @param isServer Whether the program registering message is server or client side.
-	 * @throws java.io.IOException If this exception occurs.
-	 * @throws javax.xml.parsers.ParserConfigurationException If this exception occurs.
-	 * @throws org.xml.sax.SAXException If this exception occurs.
-	 */
-	private void parseXmlStream(InputStream stream, boolean isServer) throws IOException, SAXException, ParserConfigurationException {
-		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-		DocumentBuilder builder = factory.newDocumentBuilder();
-		Document doc = builder.parse(stream);
-
-		doc.getDocumentElement().normalize();
-
-		NodeList messageElements = doc.getElementsByTagName("message");
-
-		for (int i = 0; i < messageElements.getLength(); i++)
-		{
-			Element currentMessageElement = (Element) messageElements.item(i);
-			MessageType messageType = MessageTypeFactory.parseMessageElement(currentMessageElement, isServer);
-			if (messageType != null && !messageTypesByID.containsKey(messageType.id) && !messageTypesByName.containsKey(messageType.name))
-			{
-				// Add the message type to the two trees.
-				messageTypesByID.put(messageType.id, messageType);
-				messageTypesByName.put(messageType.name, messageType);
-			}
-		}
-	}
-
-	/**
-	 * Parse the given XML file and register message therein.
-	 * @param xmlFile The XML file to be parsed.
-	 * @throws java.io.IOException If this exception occurs.
-	 * @throws javax.xml.parsers.ParserConfigurationException If this exception occurs.
-	 * @throws org.xml.sax.SAXException If this exception occurs.
-	 */
-	private void parseXmlFile(File xmlFile) throws IOException, SAXException, ParserConfigurationException {
-		InputStream xmlStream = new FileInputStream(xmlFile);
-		parseXmlStream(xmlStream, isServer);
 	}
 
 	/**
@@ -210,18 +128,17 @@ public class MessageRegistry
 		LinkedList<Class> temp = new LinkedList<>();
 
 		MessageType type = messageTypesByID.get(id);
-		if(type == null)
+		if (type == null)
 		{
 			String message = "Message " + id + " not registered.";
 			LOGGER.log(Level.SEVERE, message);
 			throw new RuntimeException(message);
-		}else if(type.argumentTypes == null)
+		} else if (type.argumentTypes == null)
 		{
 			String message = "Message " + id + " contains null argument types.";
 			LOGGER.log(Level.SEVERE, message);
 			throw new RuntimeException(message);
-		}
-		else
+		} else
 		{
 			for (int i = 0; i < type.argumentTypes.length; i++)
 				temp.add(type.argumentTypes[i].type);
@@ -234,24 +151,98 @@ public class MessageRegistry
 	 * Disable the ExecutableMessage invoked by the message with the given name.
 	 * @param messageName The name of the message.
 	 */
-	public void disableExecutableMessage(String messageName)
-	{
+	public void disableExecutableMessage(String messageName) {
 		MessageType type = messageTypesByName.get(messageName);
 		short id = type.id;
 		ArgumentType[] argumentTypes = type.argumentTypes;
 		Class<? extends ExecutableMessage> clientExecutableMessageClass = type.clientExecutableMessageClass;
 		Class<? extends ExecutableMessage> serverExecutableMessageClass = type.serverExecutableMessageClass;
 		MessageType newMessageType;
-		if(isServer)
+		if (isServer)
 		{
 			newMessageType = new MessageType(id, messageName, argumentTypes, clientExecutableMessageClass, null);
-		}else
+		} else
 		{
 			newMessageType = new MessageType(id, messageName, argumentTypes, null, serverExecutableMessageClass);
 		}
 		messageTypesByName.put(messageName, newMessageType);
 		messageTypesByID.put(id, newMessageType);
 
+	}
+
+	/** Register all messages found in registry files.  Also checks the JAR file. */
+	private void registerXmlMessages() {
+		LinkedList<InputStream> streamsToRead = new LinkedList<>();
+		addJarMessageEntries(streamsToRead);
+		addMessageFiles(streamsToRead);
+		readXmlStreams(streamsToRead);
+		messagesRegistered = true;
+	}
+
+	/**
+	 * Parse the XML streams and register the discovered MessageTypes.
+	 * @param streamsToRead The streams containing the XML data to be parsed.
+	 */
+	private void readXmlStreams(LinkedList<InputStream> streamsToRead) {
+		for (InputStream inputStream : streamsToRead)
+		{
+			try
+			{
+				MessageXmlReader reader = new MessageXmlReader(inputStream);
+				addAllMessages(reader.readMessageTypes(isServer));
+			} catch (Exception ex)
+			{
+				LOGGER.log(Level.INFO, "Unable to parse XML file", ex);
+			}
+		}
+	}
+
+	/**
+	 * Add the Messages.xml entries in the working directory and add their InputStream to the given list.
+	 * @param streamsToRead The list to which to add the input streams.
+	 */
+	private void addMessageFiles(LinkedList<InputStream> streamsToRead) {
+		ArrayList<File> messageFiles = findMessageFiles();
+		for (File f : messageFiles)
+		{
+			LOGGER.log(Level.INFO, "Registering XML file {0}", f);
+			try
+			{
+				streamsToRead.add(new FileInputStream(f));
+			} catch (IOException ex)
+			{
+				LOGGER.log(Level.WARNING, "Unable to create input stream for " + f, ex);
+			}
+		}
+	}
+
+	/**
+	 * Add the Messages.xml entries in the classpath and add their InputStream to the given list.
+	 * @param streamsToRead The list to which to add the input streams.
+	 */
+	private void addJarMessageEntries(LinkedList<InputStream> streamsToRead) {
+		LinkedList<String> jarMessageEntries = findJarMessageEntries();
+		for (String entry : jarMessageEntries)
+		{
+			LOGGER.log(Level.INFO, "Registering XML entry {0}", entry);
+			streamsToRead.add(getClass().getClassLoader().getResourceAsStream(entry));
+		}
+	}
+
+	/**
+	 * Register all message types within the given list.
+	 * @param messageTypes The list of message types to add.
+	 */
+	private void addAllMessages(List<MessageType> messageTypes) {
+		for (MessageType messageType : messageTypes)
+		{
+			if (messageType != null && !messageTypesByID.containsKey(messageType.id) && !messageTypesByName.containsKey(messageType.name))
+			{
+				// Add the message type to the two trees.
+				messageTypesByID.put(messageType.id, messageType);
+				messageTypesByName.put(messageType.name, messageType);
+			}
+		}
 	}
 
 }

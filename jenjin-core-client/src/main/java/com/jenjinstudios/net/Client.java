@@ -3,9 +3,7 @@ package com.jenjinstudios.net;
 import com.jenjinstudios.io.Message;
 import com.jenjinstudios.io.MessageRegistry;
 import com.jenjinstudios.message.ClientExecutableMessage;
-import org.xml.sax.SAXException;
 
-import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.net.Socket;
 import java.security.*;
@@ -43,12 +41,8 @@ public class Client extends Connection
 	 * Construct a new client and attempt to connect to the server over the specified port.
 	 * @param address The address of the server to which to connect
 	 * @param port The port over which to connect to the server.
-	 * @throws java.security.NoSuchAlgorithmException If there is an error generating encryption keys.
-	 * @throws java.io.IOException If there is an IO exception when reading XML files.
-	 * @throws javax.xml.parsers.ParserConfigurationException If there is an error parsing XML files.
-	 * @throws org.xml.sax.SAXException If there is an error parsing XML files.
 	 */
-	protected Client(String address, int port) throws NoSuchAlgorithmException, ParserConfigurationException, SAXException, IOException {
+	protected Client(String address, int port) {
 		ADDRESS = address;
 		PORT = port;
 		repeatedSyncedTasks = new LinkedList<>();
@@ -63,7 +57,6 @@ public class Client extends Connection
 		} catch (NoSuchAlgorithmException e)
 		{
 			LOGGER.log(Level.SEVERE, "Unable to create RSA key pair!", e);
-			throw e;
 		}
 	}
 
