@@ -5,7 +5,7 @@ allprojects {
 
 
     group = 'com.jenjinstudios'
-    version = '0.4.0-alpha'
+    version = '0.5.0-alpha'
 
 }
 
@@ -22,11 +22,19 @@ subprojects {
     }
 
     dependencies {
-        testCompile 'junit:junit:4.11'
+        testCompile 'org.testng:testng:6.8.7'
     }
 
     test {
+        useTestNG()
+        maxParallelForks = 8;
         workingDir = project.rootDir
+        beforeTest { descriptor ->
+            logger.lifecycle("Running test: " + descriptor)
+        }
+        afterTest { descriptor ->
+            logger.lifecycle("Completed test: " + descriptor)
+        }
     }
 
     tasks.withType(Compile) {
