@@ -1,11 +1,12 @@
 package test.jenjinstudios.net;
 
-import com.jenjinstudios.io.MessageRegistry;
 import com.jenjinstudios.net.AuthClient;
-import com.jenjinstudios.net.ClientHandler;
 import com.jenjinstudios.net.AuthServer;
+import com.jenjinstudios.net.ClientHandler;
 import com.jenjinstudios.sql.SQLHandler;
-import org.testng.annotations.*;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
 
 import java.io.IOException;
 
@@ -32,7 +33,6 @@ public class ServerTest
 	 */
 	@BeforeClass
 	public static void construct() throws Exception {
-		MessageRegistry.registerXmlMessages(true);
 		/* The SQLHandler used for testing. */
 		SQLHandler sqlHandler = new SQLHandler("localhost", "jenjin_test", "jenjin_user",
 				"jenjin_password");

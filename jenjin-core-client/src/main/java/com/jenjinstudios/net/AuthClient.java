@@ -1,7 +1,10 @@
 package com.jenjinstudios.net;
 
 import com.jenjinstudios.io.Message;
+import org.xml.sax.SAXException;
 
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -37,8 +40,11 @@ public class AuthClient extends Client
 	 * @param username The username that will be used by this client.
 	 * @param password The password that will be used by this client.
 	 * @throws java.security.NoSuchAlgorithmException If there is an error generating encryption keys.
+	 * @throws java.io.IOException If there is an IO exception when reading XML files.
+	 * @throws javax.xml.parsers.ParserConfigurationException If there is an error parsing XML files.
+	 * @throws org.xml.sax.SAXException If there is an error parsing XML files.
 	 */
-	public AuthClient(String address, int port, String username, String password) throws NoSuchAlgorithmException {
+	public AuthClient(String address, int port, String username, String password) throws NoSuchAlgorithmException, IOException, SAXException, ParserConfigurationException {
 		super(address, port);
 		this.username = username;
 		this.password = password;
@@ -100,7 +106,7 @@ public class AuthClient extends Client
 	 * @return The LoginRequest message.
 	 */
 	private Message generateLoginRequest() {// Create the login request.
-		Message loginRequest = new Message("LoginRequest");
+		Message loginRequest = new Message(this, "LoginRequest");
 		loginRequest.setArgument("username", username);
 		loginRequest.setArgument("password", password);
 		return loginRequest;
@@ -146,7 +152,7 @@ public class AuthClient extends Client
 
 	/** Send a logout request to the server. */
 	protected void sendLogoutRequest() {
-		Message logoutRequest = new Message("LogoutRequest");
+		Message logoutRequest = new Message(this, "LogoutRequest");
 
 		// Send the request, continue when response is received.
 		setWaitingForLogoutResponse(true);

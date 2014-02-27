@@ -38,7 +38,7 @@ public class ExecutablePublicKeyMessage extends ServerExecutableMessage
 
 	@Override
 	public void runASync() {
-		Message aesMessage = new Message("AESKeyMessage");
+		Message aesMessage = new Message(getClientHandler(), "AESKeyMessage");
 		byte[] encryptedAESKey = MessageInputStream.NO_KEY;
 		try
 		{

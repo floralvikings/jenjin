@@ -1,6 +1,5 @@
 package test.jenjinstudios.world;
 
-import com.jenjinstudios.io.MessageRegistry;
 import com.jenjinstudios.util.FileUtil;
 import com.jenjinstudios.world.*;
 import com.jenjinstudios.world.io.WorldFileReader;
@@ -55,7 +54,6 @@ public class WorldServerTest
 	public static void construct() throws Exception {
 		InputStream configFile = WorldServerTest.class.getResourceAsStream("/test/jenjinstudios/logger.properties");
 		LogManager.getLogManager().readConfiguration(configFile);
-		MessageRegistry.registerXmlMessages(true);
 	}
 
 	/**
@@ -327,30 +325,12 @@ public class WorldServerTest
 	}
 
 	/**
-	 * Initialize and log the client in.
-	 * @throws Exception If there's an exception.
-	 */
-	private void initWorldClient() throws Exception {
-		String user = "TestAccount" + testAccountNumber;
-		LOGGER.log(Level.INFO, "Logging into account {0}", user);
-		worldClient = new WorldClient(new File("resources/WorldTestFile.xml"), "localhost", port, user, "testPassword");
-		worldClient.blockingStart();
-		worldClient.sendBlockingWorldFileRequest();
-		worldClient.sendBlockingLoginRequest();
-
-		/* The WorldClientHandler used to test. */
-		WorldClientHandler worldClientHandler = worldServer.getClientHandlerByUsername(worldClient.getUsername());
-		clientPlayer = worldClient.getPlayer();
-		serverPlayer = worldClientHandler.getPlayer();
-	}
-
-	/**
 	 * Test logging the player into and out of the world, including updating coordinates.
 	 * @throws Exception If there's an exception.
 	 */
 	@Test
 	public void testLoginLogout() throws Exception {
-		testAccountNumber ++;
+		testAccountNumber++;
 		WorldSQLHandler worldSQLHandler = new WorldSQLHandler("localhost", "jenjin_test", "jenjin_user",
 				"jenjin_password");
 
@@ -375,6 +355,24 @@ public class WorldServerTest
 		Assert.assertEquals(origin, player.getVector2D());
 
 		Assert.assertTrue(worldSQLHandler.logOutPlayer(player));
+	}
+
+	/**
+	 * Initialize and log the client in.
+	 * @throws Exception If there's an exception.
+	 */
+	private void initWorldClient() throws Exception {
+		String user = "TestAccount" + testAccountNumber;
+		LOGGER.log(Level.INFO, "Logging into account {0}", user);
+		worldClient = new WorldClient(new File("resources/WorldTestFile.xml"), "localhost", port, user, "testPassword");
+		worldClient.blockingStart();
+		worldClient.sendBlockingWorldFileRequest();
+		worldClient.sendBlockingLoginRequest();
+
+		/* The WorldClientHandler used to test. */
+		WorldClientHandler worldClientHandler = worldServer.getClientHandlerByUsername(worldClient.getUsername());
+		clientPlayer = worldClient.getPlayer();
+		serverPlayer = worldClientHandler.getPlayer();
 	}
 
 	/**

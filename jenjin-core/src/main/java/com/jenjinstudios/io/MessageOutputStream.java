@@ -1,5 +1,7 @@
 package com.jenjinstudios.io;
 
+import com.jenjinstudios.net.Connection;
+
 import javax.crypto.*;
 import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
@@ -21,6 +23,8 @@ public class MessageOutputStream
 	private static final Logger LOGGER = Logger.getLogger(MessageOutputStream.class.getName());
 	/** The output stream used by this message stream. */
 	private final DataOutputStream outputStream;
+	/** The connection using this stream. */
+	private final Connection connection;
 	/** The AES key used to encrypt messages from this client handler. */
 	private SecretKey aesKey;
 	/** The AES cipher. */
@@ -29,10 +33,12 @@ public class MessageOutputStream
 	/**
 	 * Creates a new message output stream to write data to the specified underlying output stream. The counter {@code
 	 * written} is set to zero.
+	 * @param connection The connection using this stream.
 	 * @param out the underlying output stream, to be saved for later use.
 	 * @see java.io.FilterOutputStream#out
 	 */
-	public MessageOutputStream(OutputStream out) {
+	public MessageOutputStream(Connection connection, OutputStream out) {
+		this.connection = connection;
 		outputStream = new DataOutputStream(out);
 	}
 
@@ -43,7 +49,7 @@ public class MessageOutputStream
 	 */
 	public void writeMessage(Message message) throws IOException {
 		Object[] args = message.getArgs();
-		MessageType messageType = MessageRegistry.getMessageType(message.getID());
+		MessageType messageType = connection.getMessageRegistry().getMessageType(message.getID());
 		ArgumentType[] argumentTypes = messageType.argumentTypes;
 		int id = message.getID();
 		outputStream.writeShort(id);

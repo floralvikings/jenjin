@@ -11,10 +11,10 @@ import java.util.logging.Logger;
  * Generates MessageTypes based on XML elements.
  * @author Caleb Brinkman
  */
-public class MessageTypeFactory
+public class MessageTypeParser
 {
 	/** The Logger for this class. */
-	private static final Logger LOGGER = Logger.getLogger(MessageTypeFactory.class.getName());
+	private static final Logger LOGGER = Logger.getLogger(MessageTypeParser.class.getName());
 
 	/**
 	 * Get a message type by parsing the XML element specified.  Returns null if the element could not be properly parsed.

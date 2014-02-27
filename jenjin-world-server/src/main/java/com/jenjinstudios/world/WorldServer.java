@@ -3,7 +3,9 @@ package com.jenjinstudios.world;
 import com.jenjinstudios.net.AuthServer;
 import com.jenjinstudios.world.io.WorldFileReader;
 import com.jenjinstudios.world.sql.WorldSQLHandler;
+import org.xml.sax.SAXException;
 
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 
 /**
@@ -32,9 +34,11 @@ public class WorldServer extends AuthServer<WorldClientHandler>
 	 * @param sqlHandler The WorldSqlHandler used to communicate with the MySql Database.
 	 * @throws java.io.IOException If there is an IO Error when initializing the server.
 	 * @throws NoSuchMethodException If there is no appropriate constructor for the specified ClientHandler constructor.
+	 * @throws javax.xml.parsers.ParserConfigurationException If there is an error parsing XML files.
+	 * @throws org.xml.sax.SAXException If there is an error parsing XML files.
 	 */
 	public WorldServer(WorldFileReader worldFileReader, int ups, int port, Class<? extends WorldClientHandler> wchClass,
-					   WorldSQLHandler sqlHandler) throws IOException, NoSuchMethodException
+					   WorldSQLHandler sqlHandler) throws IOException, NoSuchMethodException, ParserConfigurationException, SAXException
 	{
 		super(ups, port, wchClass, sqlHandler);
 		this.world = worldFileReader.read();

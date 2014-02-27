@@ -1,5 +1,7 @@
 package com.jenjinstudios.net;
 
+import com.jenjinstudios.io.MessageRegistry;
+
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -44,7 +46,7 @@ class ClientListener<T extends ClientHandler> implements Runnable
 		/* The class of client handlers created by this listener. */
 		try
 		{
-			handlerConstructor = handlerClass.getConstructor(serverClass, Socket.class);
+			handlerConstructor = handlerClass.getConstructor(serverClass, Socket.class, MessageRegistry.class);
 		} catch (NoSuchMethodException e)
 		{
 			LOGGER.log(Level.SEVERE, "Unable to find appropriate ClientHandler constructor: " + handlerClass.getName(), e);
@@ -109,8 +111,7 @@ class ClientListener<T extends ClientHandler> implements Runnable
 	private void addNewClient(Socket sock) {
 		try
 		{
-			T newHandler = handlerConstructor.newInstance(server, sock);
-
+			T newHandler = handlerConstructor.newInstance(server, sock, server.getMessageRegistry());
 			addNewClient(newHandler);
 		} catch (InstantiationException | IllegalAccessException e)
 		{

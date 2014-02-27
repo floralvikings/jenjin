@@ -1,5 +1,7 @@
 package com.jenjinstudios.io;
 
+import com.jenjinstudios.net.Connection;
+
 import javax.crypto.*;
 import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
@@ -24,6 +26,8 @@ public class MessageInputStream
 	private static final Logger LOGGER = Logger.getLogger(MessageInputStream.class.getName());
 	/** The output stream used by this message stream. */
 	private final DataInputStream inputStream;
+	/** The Connection using this stream. */
+	private final Connection connection;
 	/** The AES key used to encrypt outgoing messages. */
 	private SecretKey aesKey;
 	/** The cipher used to decrypt messages. */
@@ -31,9 +35,11 @@ public class MessageInputStream
 
 	/**
 	 * Construct a new {@code MessageInputStream} from the given InputStream.
+	 * @param connection The connection using this stream.
 	 * @param inputStream The InputStream from which messages will be read.
 	 */
-	public MessageInputStream(InputStream inputStream) {
+	public MessageInputStream(Connection connection, InputStream inputStream) {
+		this.connection = connection;
 		this.inputStream = new DataInputStream(inputStream);
 	}
 
@@ -46,11 +52,11 @@ public class MessageInputStream
 		try
 		{
 			short id = inputStream.readShort();
-			LinkedList<Class> classes = MessageRegistry.getArgumentClasses(id);
+			LinkedList<Class> classes =connection.getMessageRegistry().getArgumentClasses(id);
 			Class<?>[] classArray = new Class[classes.size()];
 			classes.toArray(classArray);
 			Object[] args = readMessageArgs(classes);
-			return new Message(id, args);
+			return new Message(connection, id, args);
 		} catch (Exception e)
 		{
 			return null;

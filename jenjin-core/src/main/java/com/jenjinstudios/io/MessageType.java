@@ -1,5 +1,6 @@
 package com.jenjinstudios.io;
 
+import java.util.Arrays;
 import java.util.TreeMap;
 
 /**
@@ -48,4 +49,7 @@ public class MessageType
 	 * @return The ArgumentType with the given name.
 	 */
 	public ArgumentType getArgumentType(String name) { return argumentTypeTreeMap.get(name); }
+
+	@Override
+	public String toString() { return name + " " + id + ": " + Arrays.toString(argumentTypes) + " " + serverExecutableMessageClass; }
 }

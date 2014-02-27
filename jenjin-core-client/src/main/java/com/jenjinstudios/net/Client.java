@@ -1,6 +1,7 @@
 package com.jenjinstudios.net;
 
 import com.jenjinstudios.io.Message;
+import com.jenjinstudios.io.MessageRegistry;
 import com.jenjinstudios.message.ClientExecutableMessage;
 
 import java.io.IOException;
@@ -40,13 +41,12 @@ public class Client extends Connection
 	 * Construct a new client and attempt to connect to the server over the specified port.
 	 * @param address The address of the server to which to connect
 	 * @param port The port over which to connect to the server.
-	 * @throws java.security.NoSuchAlgorithmException If there is an error generating encryption keys.
 	 */
-	protected Client(String address, int port) throws NoSuchAlgorithmException {
+	protected Client(String address, int port) {
 		ADDRESS = address;
 		PORT = port;
 		repeatedSyncedTasks = new LinkedList<>();
-
+		setMessageRegistry(new MessageRegistry(false));
 		try
 		{
 			KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
@@ -57,7 +57,6 @@ public class Client extends Connection
 		} catch (NoSuchAlgorithmException e)
 		{
 			LOGGER.log(Level.SEVERE, "Unable to create RSA key pair!", e);
-			throw e;
 		}
 	}
 
@@ -172,7 +171,7 @@ public class Client extends Connection
 		period = 1000 / ups;
 
 		// Next, queue up the PublicKeyMessage used to exchange the encrypted AES key used for encryption.
-		Message publicKeyMessage = new Message("PublicKeyMessage");
+		Message publicKeyMessage = new Message(this, "PublicKeyMessage");
 		publicKeyMessage.setArgument("key", publicKey.getEncoded());
 		queueMessage(publicKeyMessage);
 

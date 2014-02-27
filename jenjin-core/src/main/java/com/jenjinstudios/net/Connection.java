@@ -1,9 +1,6 @@
 package com.jenjinstudios.net;
 
-import com.jenjinstudios.io.ExecutableMessage;
-import com.jenjinstudios.io.Message;
-import com.jenjinstudios.io.MessageInputStream;
-import com.jenjinstudios.io.MessageOutputStream;
+import com.jenjinstudios.io.*;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -38,6 +35,8 @@ public abstract class Connection extends Thread
 	private volatile boolean connected;
 	/** The AES key of this client. */
 	private byte[] aesKey;
+	/** The message registry for this class. */
+	private MessageRegistry messageRegistry;
 
 	/** Construct a new Communicator. */
 	protected Connection() {
@@ -54,13 +53,13 @@ public abstract class Connection extends Thread
 	 */
 	public void setSocket(Socket socket) throws IOException {
 		this.socket = socket;
-		setOutputStream(new MessageOutputStream(socket.getOutputStream()));
-		setInputStream(new MessageInputStream(socket.getInputStream()));
+		setOutputStream(new MessageOutputStream(this, socket.getOutputStream()));
+		setInputStream(new MessageInputStream(this, socket.getInputStream()));
 	}
 
 	/** Send a ping request. */
 	public void sendPing() {
-		Message pingRequest = new Message("PingRequest");
+		Message pingRequest = new Message(this, "PingRequest");
 		pingRequest.setArgument("requestTimeNanos", System.nanoTime());
 		queueMessage(pingRequest);
 	}
@@ -115,6 +114,18 @@ public abstract class Connection extends Thread
 		this.connected = connected;
 	}
 
+	/**
+	 * Get the MessageRegistry for this Connection.
+	 * @return The MessageRegistry for this Connection.
+	 */
+	public MessageRegistry getMessageRegistry() { return messageRegistry; }
+
+	/**
+	 * Set the MessageRegistry for this Connection.
+	 * @param messageRegistry The MessageRegistry for this Connection.
+	 */
+	protected void setMessageRegistry(MessageRegistry messageRegistry) { this.messageRegistry = messageRegistry; }
+
 	/** Send all messages in the outgoing queue.  This method should only be called from the client update thread. */
 	public void sendAllMessages() {
 		synchronized (outgoingMessages)
@@ -133,7 +144,7 @@ public abstract class Connection extends Thread
 	public void writeMessage(Message o) {
 		try
 		{
-			LOGGER.log(Level.FINEST, "Connection {0} writing message {1}", new Object[] {getName(), o});
+			LOGGER.log(Level.FINEST, "Connection {0} writing message {1}", new Object[]{getName(), o});
 			getOutputStream().writeMessage(o);
 		} catch (IOException e)
 		{
@@ -204,7 +215,7 @@ public abstract class Connection extends Thread
 			Message currentMessage;
 			while ((currentMessage = getInputStream().readMessage()) != null)
 			{
-				LOGGER.log(Level.FINEST, "Connection {0} reading message {1}", new Object[] {getName(), currentMessage});
+				LOGGER.log(Level.FINEST, "Connection {0} reading message {1}", new Object[]{getName(), currentMessage});
 				processMessage(currentMessage);
 			}
 		} catch (IOException ex)
@@ -283,7 +294,7 @@ public abstract class Connection extends Thread
 			}
 		} else
 		{
-			Message invalid = new Message("InvalidMessage");
+			Message invalid = new Message(this, "InvalidMessage");
 			invalid.setArgument("messageName", message.name);
 			invalid.setArgument("messageID", message.getID());
 			queueMessage(invalid);
