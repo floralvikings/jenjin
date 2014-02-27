@@ -152,6 +152,7 @@ public class MessageRegistry
 	 * @param messageName The name of the message.
 	 */
 	public void disableExecutableMessage(String messageName) {
+		LOGGER.log(Level.FINE, "Disabling message: {0}", messageName);
 		MessageType type = messageTypesByName.get(messageName);
 		short id = type.id;
 		ArgumentType[] argumentTypes = type.argumentTypes;
@@ -184,16 +185,22 @@ public class MessageRegistry
 	 * @param streamsToRead The streams containing the XML data to be parsed.
 	 */
 	private void readXmlStreams(LinkedList<InputStream> streamsToRead) {
+		LinkedList<String> disabled = new LinkedList<>();
 		for (InputStream inputStream : streamsToRead)
 		{
 			try
 			{
 				MessageXmlReader reader = new MessageXmlReader(inputStream);
 				addAllMessages(reader.readMessageTypes(isServer));
+				disabled.addAll(reader.readDisabledMessages());
 			} catch (Exception ex)
 			{
 				LOGGER.log(Level.INFO, "Unable to parse XML file", ex);
 			}
+		}
+		for(String disabledMessageName : disabled)
+		{
+			disableExecutableMessage(disabledMessageName);
 		}
 	}
 

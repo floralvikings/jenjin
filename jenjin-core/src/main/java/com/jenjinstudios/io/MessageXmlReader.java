@@ -10,6 +10,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -54,5 +55,22 @@ public class MessageXmlReader
 		}
 
 		return messageTypes;
+	}
+
+	/**
+	 * Read all the message types that should be disabled.
+	 * @return The disabled message types.
+	 */
+	public Collection<? extends String> readDisabledMessages() {
+		LinkedList<String> messageNames = new LinkedList<>();
+		NodeList disabledElements = messageDoc.getElementsByTagName("disabled_message");
+
+		for (int i = 0; i < disabledElements.getLength(); i++)
+		{
+			Element currentMessageElement = (Element) disabledElements.item(i);
+			messageNames.add(currentMessageElement.getAttribute("name"));
+		}
+
+		return messageNames;
 	}
 }
