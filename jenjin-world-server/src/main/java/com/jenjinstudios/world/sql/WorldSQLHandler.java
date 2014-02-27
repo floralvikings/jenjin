@@ -127,9 +127,12 @@ public class WorldSQLHandler extends SQLHandler
 		String updateLoggedInQuery = "UPDATE " + dbName + ".users SET " + X_COORD + "=" + xCoord + ", " + Y_COORD +
 				"=" + yCoord + " WHERE " + "username = ?";
 		PreparedStatement updatePlayerStatement;
-		updatePlayerStatement = super.dbConnection.prepareStatement(updateLoggedInQuery);
-		updatePlayerStatement.setString(1, username);
-		updatePlayerStatement.executeUpdate();
-		updatePlayerStatement.close();
+		synchronized (dbConnection)
+		{
+			updatePlayerStatement = super.dbConnection.prepareStatement(updateLoggedInQuery);
+			updatePlayerStatement.setString(1, username);
+			updatePlayerStatement.executeUpdate();
+			updatePlayerStatement.close();
+		}
 	}
 }

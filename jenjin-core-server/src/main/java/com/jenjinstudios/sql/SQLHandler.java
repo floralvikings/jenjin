@@ -23,20 +23,14 @@ public class SQLHandler
 	private static final Logger LOGGER = Logger.getLogger(SQLHandler.class.getName());
 	/** The String used in connection protocol. */
 	private static final String connectionStringProtocol = "jdbc:mysql:thin://";
-	/** The username used to access the database. */
-	private final String dbUsername;
-	/** The password used to access the database. */
-	private final String dbPassword;
 	/** The name of the database used by this server. */
 	protected final String dbName;
-	/** The url used to connect with the SQL database. */
-	private final String dbUrl;
+	/** The connection used to communicate with the SQL database. */
+	protected final Connection dbConnection;
 	/** The string used to get all information about the user. */
 	private final String USER_QUERY;
 	/** Flags whether this SQLHandler is connected to the database. */
 	private boolean connected;
-	/** The connection used to communicate with the SQL database. */
-	protected Connection dbConnection;
 
 	/**
 	 * Create a new SQLHandler with the given database information, and connect to the database.
@@ -47,11 +41,8 @@ public class SQLHandler
 	 * @throws SQLException If there is an issue connecting to the database.
 	 */
 	public SQLHandler(String dbAddress, String dbName, String dbUsername, String dbPassword) throws SQLException {
-		/* The address of the database to which to connect. */
-		this.dbUsername = dbUsername;
-		this.dbPassword = dbPassword;
 		this.dbName = dbName;
-		dbUrl = connectionStringProtocol + dbAddress + "/" + dbName;
+		String dbUrl = connectionStringProtocol + dbAddress + "/" + dbName;
 		try
 		{
 			Class.forName("org.drizzle.jdbc.DrizzleDriver").newInstance();
@@ -61,7 +52,8 @@ public class SQLHandler
 		}
 		USER_QUERY = "SELECT * FROM " + dbName + ".users WHERE username = ?";
 
-		connectToDatabase();
+		dbConnection = DriverManager.getConnection(dbUrl, dbUsername, dbPassword);
+		connected = true;
 	}
 
 	/**
@@ -136,16 +128,6 @@ public class SQLHandler
 		return success;
 	}
 
-
-	/**
-	 * Attempt to connect to the database.
-	 * @throws SQLException If there is an error connecting to the SQL database.
-	 */
-	private void connectToDatabase() throws SQLException {
-		dbConnection = DriverManager.getConnection(dbUrl, dbUsername, dbPassword);
-		connected = true;
-	}
-
 	/**
 	 * Get whether this SQLHandler is connected to the database.
 	 * @return true if the SQLHandler has successfully connected to the database.
@@ -161,10 +143,12 @@ public class SQLHandler
 	 * @throws SQLException If there is a SQL error.
 	 */
 	protected ResultSet makeUserQuery(String username) throws SQLException {
-
-		PreparedStatement statement = dbConnection.prepareStatement(USER_QUERY, TYPE_SCROLL_SENSITIVE, CONCUR_UPDATABLE);
-		statement.setString(1, username);
-		return statement.executeQuery();
+		synchronized (dbConnection)
+		{
+			PreparedStatement statement = dbConnection.prepareStatement(USER_QUERY, TYPE_SCROLL_SENSITIVE, CONCUR_UPDATABLE);
+			statement.setString(1, username);
+			return statement.executeQuery();
+		}
 	}
 
 	/**
@@ -178,9 +162,12 @@ public class SQLHandler
 		String updateLoggedInQuery = "UPDATE " + dbName + ".users SET " + LOGGED_IN_COLUMN + "=" + newValue + " WHERE " +
 				"username = ?";
 		PreparedStatement updateLoggedIn;
-		updateLoggedIn = dbConnection.prepareStatement(updateLoggedInQuery);
-		updateLoggedIn.setString(1, username);
-		updateLoggedIn.executeUpdate();
-		updateLoggedIn.close();
+		synchronized (dbConnection)
+		{
+			updateLoggedIn = dbConnection.prepareStatement(updateLoggedInQuery);
+			updateLoggedIn.setString(1, username);
+			updateLoggedIn.executeUpdate();
+			updateLoggedIn.close();
+		}
 	}
 }
