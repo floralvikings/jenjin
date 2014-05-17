@@ -19,7 +19,7 @@ public class CompoundFileReader
 	/** The world being built from the XML. */
 	private final World world;
 	/** The NPCFileReader. */
-	private NPCFileReader npcFileReader;
+	private NpcFileReader npcFileReader;
 
 	/**
 	 * Construct a new NPCFileReader for the given file.
@@ -49,7 +49,7 @@ public class CompoundFileReader
 		WorldFileReader worldFileReader = new WorldFileReader(worldFileStream);
 		world = worldFileReader.read();
 		worldFileStream.reset();
-		npcFileReader = new NPCFileReader(world, worldFileStream);
+		npcFileReader = new NpcFileReader(world, worldFileStream);
 	}
 
 	/**
