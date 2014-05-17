@@ -109,7 +109,6 @@ public class WorldServerTest
 		double targetDistance = clientPlayer.getVector2D().getDistanceToVector(newVector);
 		while (targetDistance >= Actor.STEP_LENGTH && !clientPlayer.isForcedState())
 		{
-			client.sendPing();
 			Thread.sleep(2);
 			targetDistance = clientPlayer.getVector2D().getDistanceToVector(newVector);
 		}
