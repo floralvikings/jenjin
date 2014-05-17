@@ -24,7 +24,7 @@ import java.util.TreeMap;
  * The class responsible for reading NPCs from an xml file.
  * @author Caleb Brinkman
  */
-public class NPCFileReader
+public class NpcFileReader
 {
 	/** The tag name for the root "zone" tags. */
 	public static final String NPC_TAG_NAME = "npc";
@@ -41,7 +41,7 @@ public class NPCFileReader
 	 * @throws ParserConfigurationException If there's an error parsing the XML.
 	 * @throws SAXException If there's an error validating the XML.
 	 */
-	public NPCFileReader(World world, File npcFile) throws IOException, ParserConfigurationException, SAXException {
+	public NpcFileReader(World world, File npcFile) throws IOException, ParserConfigurationException, SAXException {
 		this(world, new FileInputStream(npcFile));
 	}
 
@@ -53,7 +53,7 @@ public class NPCFileReader
 	 * @throws IOException If there's an error reading the stream.
 	 * @throws SAXException If there's an error validating the XML.
 	 */
-	public NPCFileReader(World world, InputStream inputStream) throws ParserConfigurationException, IOException, SAXException {
+	public NpcFileReader(World world, InputStream inputStream) throws ParserConfigurationException, IOException, SAXException {
 		this.world = world;
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder builder = factory.newDocumentBuilder();
