@@ -43,6 +43,8 @@ public class Actor extends SightedObject
 	private boolean forcedState;
 	/** The Location before a step is taken. */
 	private Location locationBeforeStep;
+	/** The time at which this actor finished it's last step. */
+	private long lastStepTime;
 
 	/**
 	 * Construct an Actor with the given name.
@@ -59,8 +61,7 @@ public class Actor extends SightedObject
 	 * @param newState The MoveState to add.
 	 */
 	public void addMoveState(MoveState newState) {
-		if (nextState == null)
-		{ nextState = newState; } else nextMoveStates.add(newState);
+		if (nextState == null) { nextState = newState; } else nextMoveStates.add(newState);
 	}
 
 	@Override
@@ -83,17 +84,19 @@ public class Actor extends SightedObject
 
 	/** Take a step, changing state and correcting steps if necessary. */
 	public void step() {
+		if (lastStepTime == 0) {
+			lastStepTime = System.nanoTime();
+		}
 		MoveState idleState = new MoveState(IDLE, getStepsTaken(), getCurrentMoveState().absoluteAngle);
 		int stepsToTake = getNextState() != null ? getNextState().stepsUntilChange - getStepsTaken() : -1;
-		if (stepsToTake <= 0)
-		{
+		if (stepsToTake <= 0) {
 			resetState();
 		}
-		if (!stepForward())
-		{
+		if (!stepForward()) {
 			setForcedState(idleState);
 		}
 		incrementStepCounter();
+		lastStepTime = System.nanoTime();
 	}
 
 	/**
@@ -106,12 +109,10 @@ public class Actor extends SightedObject
 		Location newLocation = getWorld().getLocationForCoordinates(getZoneID(), newVector);
 		if (newLocation == null) { return false; }
 		boolean walkable = !"false".equals(newLocation.getLocationProperties().getProperty("walkable"));
-		if (walkable)
-		{
+		if (walkable) {
 			setVector2D(newVector);
 			return true;
-		} else
-		{
+		} else {
 			return false;
 		}
 	}
@@ -185,8 +186,7 @@ public class Actor extends SightedObject
 		boolean isValid = false;
 		int stepsToTake = 0;
 		Vector2D current = getVector2D().getVectorInDirection(STEP_LENGTH * MAX_CORRECT, stepAngle);
-		while (!isValid && stepsToTake < MAX_CORRECT)
-		{
+		while (!isValid && stepsToTake < MAX_CORRECT) {
 			current = getVector2D().getVectorInDirection(STEP_LENGTH * stepsToTake, stepAngle);
 			isValid = getWorld().isValidLocation(getZoneID(), current);
 			if (!isValid) { stepsToTake++; }
@@ -213,9 +213,22 @@ public class Actor extends SightedObject
 	 */
 	protected MoveState getNextState() { return nextState; }
 
-	/**  Clear all upcoming move states. */
+	/** Clear all upcoming move states. */
 	protected void clearMoveStates() {
 		nextState = null;
 		nextMoveStates.clear();
 	}
+
+	/**
+	 * Get the time at which this actor finished it's last step.
+	 * @return The time at which this actor finished it's last step.
+	 */
+	public long getLastStepTime() { return lastStepTime; }
+
+	/**
+	 * Set the time at which this actor finished it's last step.  This method should only be used when the actor's step has
+	 * to be modified outside of the normal step cycle.
+	 * @param lastStepTime The new time to use for this actors last completed step.
+	 */
+	public void setLastStepTime(long lastStepTime) { this.lastStepTime = lastStepTime; }
 }
