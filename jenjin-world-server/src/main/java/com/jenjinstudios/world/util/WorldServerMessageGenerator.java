@@ -48,6 +48,7 @@ public class WorldServerMessageGenerator
 		newlyVisibleMessage.setArgument("absoluteAngle", newlyVisible.getMoveAngle());
 		newlyVisibleMessage.setArgument("stepsTaken", newlyVisible.getStepsTaken());
 		newlyVisibleMessage.setArgument("stepsUntilChange", newlyVisible.getCurrentMoveState().stepsUntilChange);
+		newlyVisibleMessage.setArgument("timeOfVisibility", 0l); // TODO Set this properly.
 		return newlyVisibleMessage;
 	}
 
@@ -80,6 +81,10 @@ public class WorldServerMessageGenerator
 		newState.setArgument("relativeAngle", changedActor.getCurrentMoveState().relativeAngle);
 		newState.setArgument("absoluteAngle", changedActor.getCurrentMoveState().absoluteAngle);
 		newState.setArgument("stepsUntilChange", changedActor.getCurrentMoveState().stepsUntilChange);
+		// TODO Set these properly
+		newState.setArgument("timeOfChange", 0l);
+		newState.setArgument("xCoord", 0.0d);
+		newState.setArgument("yCoord", 0.0d);
 		return newState;
 	}
 

@@ -21,6 +21,10 @@ public class WorldClientMessageGenerator
 		stateChangeRequest.setArgument("relativeAngle", moveState.relativeAngle);
 		stateChangeRequest.setArgument("absoluteAngle", moveState.absoluteAngle);
 		stateChangeRequest.setArgument("stepsUntilChange", moveState.stepsUntilChange);
+		// TODO Set these properly.
+		stateChangeRequest.setArgument("timeOfChange", 0l);
+		stateChangeRequest.setArgument("xCoord", 0.0d);
+		stateChangeRequest.setArgument("yCoord", 0.0d);
 		return stateChangeRequest;
 	}
 
