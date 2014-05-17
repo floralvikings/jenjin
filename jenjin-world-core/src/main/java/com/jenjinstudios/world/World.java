@@ -14,6 +14,7 @@ public class World
 	private final Zone[] zones;
 	/** The GameObjects contained in the world. */
 	private final WorldObjectTree worldObjects;
+	private long lastUpdateCompleted;
 
 	/** Construct a new World. */
 	public World() {
@@ -115,6 +116,7 @@ public class World
 			for (WorldObject o : values)
 				if (o != null)
 					o.update();
+			lastUpdateCompleted = System.nanoTime();
 			for (WorldObject o : values)
 				if (o != null)
 					o.reset();
@@ -188,5 +190,13 @@ public class World
 		{
 			worldObjects.clear();
 		}
+	}
+
+	/**
+	 * Get the time at which the most recent update completed.
+	 * @return The time at which the most recent update completed.
+	 */
+	public long getLastUpdateCompleted() {
+		return lastUpdateCompleted;
 	}
 }

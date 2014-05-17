@@ -37,6 +37,8 @@ public class ClientPlayer extends SightedObject
 	private boolean isNewRelative;
 	/** The Location before a step is taken. */
 	private Location locationBeforeStep;
+	/** The time at which this actor finished it's last step. */
+	private long lastStepTime;
 
 	/**
 	 * Construct an Actor with the given name.
@@ -115,7 +117,11 @@ public class ClientPlayer extends SightedObject
 
 	@Override
 	public void update() {
+		if (getLastStepTime() == 0) {
+			setLastStepTime(getWorld().getLastUpdateCompleted());
+		}
 		step();
+		setLastStepTime(System.nanoTime());
 	}
 
 	@Override
@@ -235,7 +241,30 @@ public class ClientPlayer extends SightedObject
 		stepsTaken++;
 		if (!isIdle)
 		{
-			setVector2D(getVector2D().getVectorInDirection(ClientActor.STEP_LENGTH, trueAngle));
+			double stepLength = calcStepLength();
+			setVector2D(getVector2D().getVectorInDirection(stepLength, trueAngle));
 		}
 	}
+
+	/**
+	 * Calculate the step length at the current time.
+	 * @return The current step length.
+	 */
+	protected double calcStepLength() {
+		return ((System.nanoTime() - (double)getLastStepTime()) / 1000000000)
+				* ClientActor.MOVE_SPEED;
+	}
+
+	/**
+	 * Get the time at which this actor finished it's last step.
+	 * @return The time at which this actor finished it's last step.
+	 */
+	public long getLastStepTime() { return lastStepTime; }
+
+	/**
+	 * Set the time at which this actor finished it's last step.  This method should only be used when the actor's step has
+	 * to be modified outside of the normal step cycle.
+	 * @param lastStepTime The new time to use for this actors last completed step.
+	 */
+	public void setLastStepTime(long lastStepTime) { this.lastStepTime = lastStepTime; }
 }

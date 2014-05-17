@@ -20,20 +20,23 @@ public class Player extends Actor
 	}
 
 	/** Take a step, changing state and correcting steps if necessary. */
+	@Override
 	public void step() {
 		int overstepped = getOverstepped();
 		MoveState idleState = new MoveState(IDLE, getStepsTaken(), getCurrentMoveState().absoluteAngle);
+		// Have to convert from nanos to seconds
+		double stepLength = calcStepLength();
 		if (overstepped < MAX_CORRECT)
 		{
 			boolean stepCorrectionSuccess = (overstepped < 0) || (correctOverSteps(overstepped));
-			if (!stepCorrectionSuccess || !stepForward())
+			if (!stepCorrectionSuccess || !stepForward(stepLength))
 			{
 				setForcedState(idleState);
 			}
 		} else
 		{
 			setForcedState(getCurrentMoveState());
-			stepForward();
+			stepForward(stepLength);
 		}
 		incrementStepCounter();
 	}

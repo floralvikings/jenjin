@@ -11,12 +11,12 @@ import static com.jenjinstudios.world.state.MoveState.IDLE;
  * The {@code ClientActor} class is used to represent a server-side {@code Actor} object on the client side.  It is an
  * object capable of movement.
  * <p/>
- * Actors start with a {@code MoveState} with {@code MoveState.IDLE}.  Each update, the Actor checks to see if
- * there are any MoveStates in the queue.  If there are, it checks the first state in line for the number of steps
- * needed before the state changes.  Once the number of steps has been reached, the state switches to that of the first
- * position in the queue, and the Actor's step counter is reset.  If an Actor "oversteps," which is determined if the
- * Actor has taken more than the required number of steps to change state, the Actor is moved back by the "overstepped"
- * number of states, the Actor's state is updated, and the Actor then takes the number of extra steps in the correct
+ * Actors start with a {@code MoveState} with {@code MoveState.IDLE}.  Each update, the Actor checks to see if there are
+ * any MoveStates in the queue.  If there are, it checks the first state in line for the number of steps needed before
+ * the state changes.  Once the number of steps has been reached, the state switches to that of the first position in
+ * the queue, and the Actor's step counter is reset.  If an Actor "oversteps," which is determined if the Actor has
+ * taken more than the required number of steps to change state, the Actor is moved back by the "overstepped" number of
+ * states, the Actor's state is updated, and the Actor then takes the number of extra steps in the correct
  * relativeAngle.
  * <p/>
  * An Actor's state is considered "changed" when the Actor is facing a new relativeAngle or moving in a new
@@ -27,6 +27,8 @@ public class ClientActor extends WorldObject
 {
 	/** The length of each step. */
 	public static double STEP_LENGTH = 5;
+	/** The move speed of an Actor. */
+	public static double MOVE_SPEED = 10.0d; // TODO Set this from server.
 	/** The next moves. */
 	private final LinkedList<MoveState> nextMoveStates;
 	/** The next move. */
@@ -35,6 +37,8 @@ public class ClientActor extends WorldObject
 	private MoveState currentMoveState;
 	/** The number of steps taken since the last move. */
 	private int stepsTaken = 0;
+	/** The time at which this actor completed it's last step. */
+	private long lastStepTime;
 
 	/**
 	 * Construct an Actor with the given name.
@@ -55,10 +59,8 @@ public class ClientActor extends WorldObject
 	public void addMoveState(MoveState newState) {
 		if (nextState == null)
 			nextState = newState;
-		else
-		{
-			synchronized (nextMoveStates)
-			{
+		else {
+			synchronized (nextMoveStates) {
 				nextMoveStates.add(newState);
 			}
 		}
@@ -66,20 +68,34 @@ public class ClientActor extends WorldObject
 
 	@Override
 	public void update() {
+		if (getLastStepTime() == 0) {
+			setLastStepTime(getWorld().getLastUpdateCompleted());
+		}
 		step();
+		setLastStepTime(System.nanoTime());
 	}
 
 	/** Take a step, changing state and correcting steps if necessary. */
 	private void step() {
 		if (getOverstepped() >= 0) { correctOverSteps(getOverstepped()); }
-		stepForward();
+		double stepLength = calcStepLength();
+		stepForward(stepLength);
 		stepsTaken++;
 	}
 
 	/** Take a step according to the current move state. */
-	public void stepForward() {
+	public void stepForward(double stepLength) {
 		if (currentMoveState.relativeAngle == IDLE) return;
-		setVector2D(getVector2D().getVectorInDirection(STEP_LENGTH, currentMoveState.stepAngle));
+		setVector2D(getVector2D().getVectorInDirection(stepLength, currentMoveState.stepAngle));
+	}
+
+	/**
+	 * Calculate the step length at the current time.
+	 * @return The current step length.
+	 */
+	protected double calcStepLength() {
+		return ((System.nanoTime() - (double)getLastStepTime()) / 1000000000)
+				* MOVE_SPEED;
 	}
 
 	/**
@@ -87,8 +103,7 @@ public class ClientActor extends WorldObject
 	 * @param overstepped The number of steps over.
 	 */
 	private void correctOverSteps(int overstepped) {
-		if (overstepped > 0)
-		{
+		if (overstepped > 0) {
 			double stepAmount = STEP_LENGTH * overstepped;
 			Vector2D backVector = getVector2D().getVectorInDirection(stepAmount, currentMoveState.stepAngle - Math.PI);
 			Vector2D newVector = backVector.getVectorInDirection(stepAmount, nextState.stepAngle);
@@ -130,4 +145,17 @@ public class ClientActor extends WorldObject
 	public void setCurrentMoveState(MoveState currentMoveState) {
 		this.currentMoveState = currentMoveState;
 	}
+
+	/**
+	 * Get the time at which this actor completed its last step.
+	 * @return The time at which this actor completed its last step.
+	 */
+	public long getLastStepTime() { return lastStepTime; }
+
+	/**
+	 * Set the time at which this actor completed its last step.  This should be called any time an actor's position is set
+	 * manually so that the following step doesn't "overshoot".
+	 * @param lastStepTime The new time at which the actor completed its last step.
+	 */
+	public void setLastStepTime(long lastStepTime) { this.lastStepTime = lastStepTime; }
 }

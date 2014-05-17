@@ -27,6 +27,8 @@ public class Actor extends SightedObject
 {
 	/** The length of each step. */
 	public static final double STEP_LENGTH = (double) Location.SIZE / 50d;
+	/** The speed of an Actor, in units per second. */
+	public static final double MOVE_SPEED = 10.0d;
 	/** The maximum number of steps this actor is allowed to correct. */
 	public static final int MAX_CORRECT = 10;
 	/** The next move. */
@@ -71,7 +73,13 @@ public class Actor extends SightedObject
 	}
 
 	@Override
-	public void update() { step(); }
+	public void update() {
+		if (getLastStepTime() == 0) {
+			setLastStepTime(getWorld().getLastUpdateCompleted());
+		}
+		step();
+		setLastStepTime(System.nanoTime());
+	}
 
 	@Override
 	public void reset() {
@@ -84,28 +92,37 @@ public class Actor extends SightedObject
 
 	/** Take a step, changing state and correcting steps if necessary. */
 	public void step() {
-		if (lastStepTime == 0) {
-			lastStepTime = System.nanoTime();
-		}
+
 		MoveState idleState = new MoveState(IDLE, getStepsTaken(), getCurrentMoveState().absoluteAngle);
 		int stepsToTake = getNextState() != null ? getNextState().stepsUntilChange - getStepsTaken() : -1;
 		if (stepsToTake <= 0) {
 			resetState();
 		}
-		if (!stepForward()) {
+		// Have to convert from nanoseconds to seconds
+		double stepLength = calcStepLength();
+		if (!stepForward(stepLength)) {
 			setForcedState(idleState);
 		}
 		incrementStepCounter();
-		lastStepTime = System.nanoTime();
+	}
+
+	/**
+	 * Calculate the step length at the current time.
+	 * @return The current step length.
+	 */
+	protected double calcStepLength() {
+		return ((System.nanoTime() - (double)getLastStepTime()) / 1000000000)
+				* Actor.MOVE_SPEED;
 	}
 
 	/**
 	 * Take a step according to the current move state.
 	 * @return Whether the step forward was successful.
+	 * @param stepLength The amount to step forward.
 	 */
-	public boolean stepForward() {
+	public boolean stepForward(double stepLength) {
 		if (currentMoveState.relativeAngle == IDLE) { return true; }
-		Vector2D newVector = getVector2D().getVectorInDirection(STEP_LENGTH, currentMoveState.stepAngle);
+		Vector2D newVector = getVector2D().getVectorInDirection(stepLength, currentMoveState.stepAngle);
 		Location newLocation = getWorld().getLocationForCoordinates(getZoneID(), newVector);
 		if (newLocation == null) { return false; }
 		boolean walkable = !"false".equals(newLocation.getLocationProperties().getProperty("walkable"));

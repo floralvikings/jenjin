@@ -148,7 +148,7 @@ public abstract class Connection extends Thread
 			getOutputStream().writeMessage(o);
 		} catch (IOException e)
 		{
-			LOGGER.log(Level.SEVERE, "Unable to write message to socket, shutting down.", e);
+			LOGGER.log(Level.SEVERE, "Unable to write message " + o + " to socket, shutting down.", e);
 			shutdown();
 		}
 	}

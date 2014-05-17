@@ -45,6 +45,9 @@ public class WorldServerTest
 	private WorldClient worldClient;
 	/** The client-side player used for testing. */
 	private ClientPlayer clientPlayer;
+	/** The tolerance for distance between a the client and server positions of an actor.
+	 * This allows for the client and server to have a single update of descrepancy between them. */
+	private static final double vectorTolerance = (Actor.MOVE_SPEED / (double)WorldServer.DEFAULT_UPS);
 
 	/**
 	 * Construct the test.
@@ -115,7 +118,9 @@ public class WorldServerTest
 		int stepsToIdle = Math.abs(clientPlayer.getStepsTaken() - serverPlayer.getStepsTaken()) * 5;
 		idleClientPlayer(stepsToIdle, clientPlayer);
 		double playersDistance = clientPlayer.getVector2D().getDistanceToVector(serverPlayer.getVector2D());
-		Assert.assertEquals(0, playersDistance, .001);
+		// TODO Move out of this method.  Maybe a separate test?  Sounds like the Movement test, actually...
+		// Tolerance of 5% of expected move rate.
+		Assert.assertEquals(0, playersDistance, vectorTolerance);
 	}
 
 	/**
@@ -167,8 +172,8 @@ public class WorldServerTest
 		WorldObject clientActor = worldClient.getPlayer().getVisibleObjects().get(serverActor.getId());
 		Assert.assertEquals(1, worldClient.getPlayer().getVisibleObjects().size());
 		Assert.assertNotNull(clientActor);
-		Thread.sleep(50);
-		Assert.assertEquals(serverActor.getVector2D(), clientActor.getVector2D());
+		Thread.sleep(100);
+		assertClientAndServerInSamePosition(serverActor, clientActor);
 
 		LOGGER.log(Level.INFO, "Moving serverActor out of visible range.");
 		moveServerActorToVector(serverActor, serverActorStartPosition);
@@ -178,11 +183,16 @@ public class WorldServerTest
 		moveClientPlayerTowardVector(new Vector2D(0, Location.SIZE + 1), worldClient, serverPlayer);
 		Assert.assertEquals(1, worldClient.getPlayer().getVisibleObjects().size());
 		clientActor = worldClient.getPlayer().getVisibleObjects().get(serverActor.getId());
-		Assert.assertEquals(serverActor.getVector2D(), clientActor.getVector2D());
+		assertClientAndServerInSamePosition(serverActor, clientActor);
 
 		LOGGER.log(Level.INFO, "Moving clientPlayer back to origin.");
 		moveClientPlayerTowardVector(Vector2D.ORIGIN, worldClient, serverPlayer);
 		Assert.assertEquals(0, worldClient.getPlayer().getVisibleObjects().size());
+	}
+
+	private void assertClientAndServerInSamePosition(Actor serverActor, WorldObject clientActor) {
+		double distance = serverActor.getVector2D().getDistanceToVector(clientActor.getVector2D());
+		Assert.assertEquals(distance, 0, vectorTolerance);
 	}
 
 	/**
@@ -195,7 +205,7 @@ public class WorldServerTest
 		moveClientPlayerTowardVector(new Vector2D(-1.0, 0), worldClient, serverPlayer);
 		//moveClientPlayerTowardVector(new Vector2D(1, 0), worldClient, serverPlayer);
 		Assert.assertFalse(clientPlayer.isForcedState());
-		Assert.assertEquals(serverPlayer.getVector2D(), clientPlayer.getVector2D());
+		assertClientAndServerInSamePosition(serverPlayer, clientPlayer);
 	}
 
 	/**
@@ -248,7 +258,7 @@ public class WorldServerTest
 			Vector2D random = new Vector2D(randomX, randomY);
 			moveClientPlayerTowardVector(random, worldClient, serverPlayer);
 			double distance = clientPlayer.getVector2D().getDistanceToVector(serverPlayer.getVector2D());
-			Assert.assertEquals(0, distance, .001);
+			Assert.assertEquals(0, distance, vectorTolerance);
 		}
 	}
 
@@ -260,8 +270,8 @@ public class WorldServerTest
 	public void testAttemptBlockedLocation() throws Exception {
 		Vector2D vector1 = new Vector2D(15, 0);
 		Vector2D attemptedVector2 = new Vector2D(15, 15);
-		Vector2D actualVector2 = new Vector2D(15, 9.8);
-		Vector2D vector3 = new Vector2D(15, 9);
+		Vector2D actualVector2 = new Vector2D(15, 10);
+		Vector2D vector3 = new Vector2D(15, 5);
 		Vector2D vector4 = new Vector2D(9, 9);
 		Vector2D vector5 = new Vector2D(9, 11);
 		Vector2D attemptedVector6 = new Vector2D(15, 11);
@@ -271,30 +281,36 @@ public class WorldServerTest
 
 		// Move to (35, 0)
 		moveClientPlayerTowardVector(vector1, worldClient, serverPlayer);
-		Assert.assertEquals(vector1, clientPlayer.getVector2D());
+		assertClientAtVector(vector1);
 
 		// Attempt to move to (35, 35)
 		// This attempt should be forced to stop one step away from
 		moveClientPlayerTowardVector(attemptedVector2, worldClient, serverPlayer);
-		Assert.assertEquals(actualVector2, clientPlayer.getVector2D());
+		assertClientAtVector(actualVector2);
 
 		moveClientPlayerTowardVector(vector3, worldClient, serverPlayer);
-		Assert.assertEquals(vector3, clientPlayer.getVector2D());
+		assertClientAtVector(vector3);
 
 		moveClientPlayerTowardVector(vector4, worldClient, serverPlayer);
-		Assert.assertEquals(vector4, clientPlayer.getVector2D());
+		assertClientAtVector(vector4);
 
 		moveClientPlayerTowardVector(vector5, worldClient, serverPlayer);
-		Assert.assertEquals(vector5, clientPlayer.getVector2D());
+		assertClientAtVector(vector5);
 
 		moveClientPlayerTowardVector(vector5, worldClient, serverPlayer);
-		Assert.assertEquals(vector5, clientPlayer.getVector2D());
+		assertClientAtVector(vector5);
 
 		moveClientPlayerTowardVector(attemptedVector6, worldClient, serverPlayer);
-		Assert.assertEquals(actualVector6, clientPlayer.getVector2D());
+		assertClientAtVector(actualVector6);
 
 		moveClientPlayerTowardVector(attemptedVector7, worldClient, serverPlayer);
-		Assert.assertEquals(actualVector7, clientPlayer.getVector2D());
+		assertClientAtVector(actualVector7);
+	}
+
+	private void assertClientAtVector(Vector2D vector1) {
+		double distance = vector1.getDistanceToVector(clientPlayer.getVector2D());
+		Assert.assertEquals(distance, 0, vectorTolerance,
+				"V: " + clientPlayer.getVector2D() + " " + "V1: " + vector1);
 	}
 
 	/**
@@ -320,7 +336,7 @@ public class WorldServerTest
 
 		// Make sure the NPC is in the same place.
 		Thread.sleep(100);
-		Assert.assertEquals(testNPC.getVector2D(), clientNPC.getVector2D());
+		assertClientAndServerInSamePosition(testNPC, clientNPC);
 	}
 
 	/**
