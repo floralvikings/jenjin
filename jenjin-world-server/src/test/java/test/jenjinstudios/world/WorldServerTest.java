@@ -46,8 +46,10 @@ public class WorldServerTest
 	/** The client-side player used for testing. */
 	private ClientPlayer clientPlayer;
 	/**
-	 * The tolerance for distance between a the client and server positions of an actor. This allows for the client and
-	 * server to have a single update of descrepancy between them.
+	 * The tolerance for distance between a the client and server positions of an actor. This is roughly how much an
+	 * actor should move during an update (assuming default UPS, which these tests do).  This means that the client
+	 * and server can have about one update's worth of discrepancy between them before the tests fail.  This is
+	 * intended to avoid spurious test failures that could be caused by unforeseen lag on one of the threads.
 	 */
 	private static final double vectorTolerance = (Actor.MOVE_SPEED / (double) WorldServer.DEFAULT_UPS);
 
@@ -86,7 +88,7 @@ public class WorldServerTest
 		MoveState newState = new MoveState(newAngle, stepsTaken, 0);
 		serverActor.addMoveState(newState);
 		double distanceToNewVector = serverActor.getVector2D().getDistanceToVector(newVector);
-		while (distanceToNewVector > Actor.STEP_LENGTH && !serverActor.isForcedState()) {
+		while (distanceToNewVector > vectorTolerance && !serverActor.isForcedState()) {
 			Thread.sleep(10);
 			distanceToNewVector = serverActor.getVector2D().getDistanceToVector(newVector);
 		}
@@ -110,16 +112,12 @@ public class WorldServerTest
 		double newAngle = clientPlayer.getVector2D().getAngleToVector(newVector);
 		clientPlayer.setNewRelativeAngle(newAngle);
 		double targetDistance = clientPlayer.getVector2D().getDistanceToVector(newVector);
-		while (targetDistance >= Actor.STEP_LENGTH && !clientPlayer.isForcedState()) {
+		while (targetDistance >= vectorTolerance && !clientPlayer.isForcedState()) {
 			Thread.sleep(2);
 			targetDistance = clientPlayer.getVector2D().getDistanceToVector(newVector);
 		}
 		int stepsToIdle = Math.abs(clientPlayer.getStepsTaken() - serverPlayer.getStepsTaken()) * 5;
 		idleClientPlayer(stepsToIdle, clientPlayer);
-		double playersDistance = clientPlayer.getVector2D().getDistanceToVector(serverPlayer.getVector2D());
-		// TODO Move out of this method.  Maybe a separate test?  Sounds like the Movement test, actually...
-		// Tolerance of 5% of expected move rate.
-		Assert.assertEquals(0, playersDistance, vectorTolerance);
 	}
 
 	/**
@@ -323,13 +321,13 @@ public class WorldServerTest
 		world.addObject(testNPC);
 		testNPC.plotPath(target);
 		double distance = testNPC.getVector2D().getDistanceToVector(target.getCenter());
-		while (distance >= Actor.STEP_LENGTH - .001) {
+		while (distance >= vectorTolerance) {
 			distance = testNPC.getVector2D().getDistanceToVector(target.getCenter());
 			Thread.sleep(10);
 		}
 		WorldObject clientNPC = clientPlayer.getVisibleObjects().get(testNPC.getId());
 		distance = testNPC.getVector2D().getDistanceToVector(clientNPC.getVector2D());
-		Assert.assertEquals(distance, 0, Actor.STEP_LENGTH);
+		Assert.assertEquals(distance, 0, vectorTolerance);
 
 		// Make sure the NPC is in the same place.
 		Thread.sleep(100);
