@@ -45,9 +45,11 @@ public class WorldServerTest
 	private WorldClient worldClient;
 	/** The client-side player used for testing. */
 	private ClientPlayer clientPlayer;
-	/** The tolerance for distance between a the client and server positions of an actor.
-	 * This allows for the client and server to have a single update of descrepancy between them. */
-	private static final double vectorTolerance = (Actor.MOVE_SPEED / (double)WorldServer.DEFAULT_UPS);
+	/**
+	 * The tolerance for distance between a the client and server positions of an actor. This allows for the client and
+	 * server to have a single update of descrepancy between them.
+	 */
+	private static final double vectorTolerance = (Actor.MOVE_SPEED / (double) WorldServer.DEFAULT_UPS);
 
 	/**
 	 * Construct the test.
@@ -67,8 +69,7 @@ public class WorldServerTest
 	 */
 	private static void idleClientPlayer(int i, ClientPlayer clientPlayer) throws InterruptedException {
 		clientPlayer.setNewRelativeAngle(MoveState.IDLE);
-		while (clientPlayer.getRelativeAngle() != MoveState.IDLE || clientPlayer.getStepsTaken() < i)
-		{
+		while (clientPlayer.getRelativeAngle() != MoveState.IDLE || clientPlayer.getStepsTaken() < i) {
 			Thread.sleep(2);
 		}
 	}
@@ -85,8 +86,7 @@ public class WorldServerTest
 		MoveState newState = new MoveState(newAngle, stepsTaken, 0);
 		serverActor.addMoveState(newState);
 		double distanceToNewVector = serverActor.getVector2D().getDistanceToVector(newVector);
-		while (distanceToNewVector > Actor.STEP_LENGTH && !serverActor.isForcedState())
-		{
+		while (distanceToNewVector > Actor.STEP_LENGTH && !serverActor.isForcedState()) {
 			Thread.sleep(10);
 			distanceToNewVector = serverActor.getVector2D().getDistanceToVector(newVector);
 		}
@@ -110,8 +110,7 @@ public class WorldServerTest
 		double newAngle = clientPlayer.getVector2D().getAngleToVector(newVector);
 		clientPlayer.setNewRelativeAngle(newAngle);
 		double targetDistance = clientPlayer.getVector2D().getDistanceToVector(newVector);
-		while (targetDistance >= Actor.STEP_LENGTH && !clientPlayer.isForcedState())
-		{
+		while (targetDistance >= Actor.STEP_LENGTH && !clientPlayer.isForcedState()) {
 			Thread.sleep(2);
 			targetDistance = clientPlayer.getVector2D().getDistanceToVector(newVector);
 		}
@@ -251,8 +250,7 @@ public class WorldServerTest
 	public void testRandomMovement() throws Exception {
 		idleClientPlayer(1, clientPlayer);
 		int maxCoordinate = 3;
-		for (int i = 0; i < 3; i++)
-		{
+		for (int i = 0; i < 3; i++) {
 			double randomX = MathUtil.round(java.lang.Math.random() * maxCoordinate, 4);
 			double randomY = MathUtil.round(java.lang.Math.random() * maxCoordinate, 4);
 			Vector2D random = new Vector2D(randomX, randomY);
@@ -325,8 +323,7 @@ public class WorldServerTest
 		world.addObject(testNPC);
 		testNPC.plotPath(target);
 		double distance = testNPC.getVector2D().getDistanceToVector(target.getCenter());
-		while (distance >= Actor.STEP_LENGTH - .001)
-		{
+		while (distance >= Actor.STEP_LENGTH - .001) {
 			distance = testNPC.getVector2D().getDistanceToVector(target.getCenter());
 			Thread.sleep(10);
 		}

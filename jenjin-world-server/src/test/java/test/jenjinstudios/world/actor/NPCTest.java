@@ -15,6 +15,11 @@ public class NPCTest
 	private final NPC npc = new NPC("Nearly Passable Cormorant");
 	/** The World used to test the actor. */
 	private World world;
+	/**
+	 * The tolerance for distance between a the client and server positions of an actor. This allows for the client and
+	 * server to have a single update of descrepancy between them.
+	 */
+	private static final double vectorTolerance = (Actor.MOVE_SPEED / (double) WorldServer.DEFAULT_UPS);
 
 	/**
 	 * Set up the test.
@@ -29,7 +34,7 @@ public class NPCTest
 	 * Test the path finding capability.
 	 * @throws Exception If there's an exception.
 	 */
-	@Test
+	@Test(timeOut = 30000)
 	public void testPath() throws Exception {
 		Location startLocation = world.getZone(0).getLocationOnGrid(3, 3);
 		Location targetLocation = world.getZone(0).getLocationOnGrid(5, 7);
@@ -38,25 +43,40 @@ public class NPCTest
 		world.addObject(npc);
 		npc.plotPath(targetLocation);
 
-		updateWorld(71);
 		double distance = npc.getVector2D().getDistanceToVector(new Vector2D(45, 45));
-		Assert.assertEquals(0, distance, Actor.STEP_LENGTH);
+		while(distance > vectorTolerance) {
+			Thread.sleep(5);
+			updateWorld(1);
+			distance = npc.getVector2D().getDistanceToVector(new Vector2D(45, 45));
+		}
 
-		updateWorld(71);
 		distance = npc.getVector2D().getDistanceToVector(new Vector2D(55, 55));
-		Assert.assertEquals(0, distance, Actor.STEP_LENGTH);
+		while(distance > vectorTolerance) {
+			Thread.sleep(5);
+			updateWorld(1);
+			distance = npc.getVector2D().getDistanceToVector(new Vector2D(55, 55));
+		}
 
-		updateWorld(50);
 		distance = npc.getVector2D().getDistanceToVector(new Vector2D(55, 65));
-		Assert.assertEquals(0, distance, Actor.STEP_LENGTH);
+		while(distance > vectorTolerance) {
+			Thread.sleep(10);
+			updateWorld(1);
+			distance = npc.getVector2D().getDistanceToVector(new Vector2D(55, 65));
+		}
 
-		updateWorld(50);
 		distance = npc.getVector2D().getDistanceToVector(new Vector2D(55, 75));
-		Assert.assertEquals(0, distance, Actor.STEP_LENGTH);
+		while(distance > vectorTolerance) {
+			Thread.sleep(10);
+			updateWorld(1);
+			distance = npc.getVector2D().getDistanceToVector(new Vector2D(55, 75));
+		}
 
-		updateWorld(1000);
+		for(int i=0; i< 100; i++) {
+			updateWorld(10);
+			Thread.sleep(1);
+		}
 		distance = npc.getVector2D().getDistanceToVector(new Vector2D(55, 75));
-		Assert.assertEquals(0, distance, Actor.STEP_LENGTH);
+		Assert.assertEquals(0, distance, vectorTolerance);
 	}
 
 	/**
