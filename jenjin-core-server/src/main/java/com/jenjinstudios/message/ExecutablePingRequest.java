@@ -2,7 +2,6 @@ package com.jenjinstudios.message;
 
 import com.jenjinstudios.io.Message;
 import com.jenjinstudios.net.ClientHandler;
-import com.jenjinstudios.util.ServerMessageFactory;
 
 import java.io.IOException;
 
@@ -30,15 +29,14 @@ public class ExecutablePingRequest extends ServerExecutableMessage
 	@Override
 	public void runASync() {
 		ClientHandler clientHandler = getClientHandler();
-		long requestTimeNanos = (long)getMessage().getArgument("requestTimeNanos");
+		long requestTimeNanos = (long) getMessage().getArgument("requestTimeNanos");
 
-		Message pingResponse = ServerMessageFactory.generatePingResponse(clientHandler, requestTimeNanos);
-		try
-		{
+		Message pingResponse = getClientHandler().getMessageFactory()
+				.generatePingResponse(requestTimeNanos);
+		try {
 			// Try to force the message through immediately, ignoring queue and sync times.
 			clientHandler.forceMessage(pingResponse);
-		} catch (IOException e)
-		{
+		} catch (IOException e) {
 			// If that fails, queue it normally. This will return a ping time scewed by the server update cycle.
 			clientHandler.queueMessage(pingResponse);
 		}

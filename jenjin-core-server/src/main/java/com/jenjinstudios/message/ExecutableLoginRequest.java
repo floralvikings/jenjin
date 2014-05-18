@@ -3,7 +3,6 @@ package com.jenjinstudios.message;
 import com.jenjinstudios.io.Message;
 import com.jenjinstudios.net.ClientHandler;
 import com.jenjinstudios.sql.SQLHandler;
-import com.jenjinstudios.util.ServerMessageFactory;
 
 /**
  * Executes the necessary actions to deal with a login response.
@@ -32,10 +31,9 @@ public class ExecutableLoginRequest extends ServerExecutableMessage
 	@Override
 	public void runASync() {
 		boolean success = false;
-		if (sqlHandler == null || getClientHandler().isLoggedIn())
-		{
+		if (sqlHandler == null || getClientHandler().isLoggedIn()) {
 			long loggedInTime = getClientHandler().getLoggedInTime();
-			Message loginResponse = ServerMessageFactory.generateLoginResponse(getClientHandler(), success, loggedInTime);
+			Message loginResponse = getClientHandler().getMessageFactory().generateLoginResponse(getClientHandler(), success, loggedInTime);
 			getClientHandler().queueMessage(loginResponse);
 			return;
 		}
@@ -45,7 +43,7 @@ public class ExecutableLoginRequest extends ServerExecutableMessage
 
 		getClientHandler().setLoginStatus(success);
 		long loggedInTime = getClientHandler().getLoggedInTime();
-		Message loginResponse = ServerMessageFactory.generateLoginResponse(getClientHandler(), success, loggedInTime);
+		Message loginResponse = getClientHandler().getMessageFactory().generateLoginResponse(getClientHandler(), success, loggedInTime);
 		getClientHandler().queueMessage(loginResponse);
 
 		if (success)

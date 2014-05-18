@@ -29,6 +29,7 @@ public class Client extends Connection
 	private final String ADDRESS;
 	/** The list of tasks that this client will execute each update cycle. */
 	private final LinkedList<Runnable> repeatedSyncedTasks;
+	private final ClientMessageFactory messageFactory;
 	/** The period of the update in milliseconds. */
 	private int period;
 	/** The timer that manages the update loop. */
@@ -59,6 +60,7 @@ public class Client extends Connection
 		{
 			LOGGER.log(Level.SEVERE, "Unable to create RSA key pair!", e);
 		}
+		this.messageFactory = new ClientMessageFactory(this);
 	}
 
 	/**
@@ -168,11 +170,12 @@ public class Client extends Connection
 		{
 			return false;
 		}
+		System.out.println(firstConnectResponse);
 		int ups = (int) firstConnectResponse.getArgument("ups");
 		period = 1000 / ups;
 
 		// Next, queue up the PublicKeyMessage used to exchange the encrypted AES key used for encryption.
-		Message publicKeyMessage = ClientMessageFactory.generatePublicKeyMessage(this, publicKey);
+		Message publicKeyMessage = getMessageFactory().generatePublicKeyMessage(publicKey);
 		queueMessage(publicKeyMessage);
 
 		// Finally, send a ping request to establish latency.
@@ -198,4 +201,6 @@ public class Client extends Connection
 				r.run();
 		}
 	}
+
+	public ClientMessageFactory getMessageFactory() { return messageFactory; }
 }

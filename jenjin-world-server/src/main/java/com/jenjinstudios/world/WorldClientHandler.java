@@ -16,10 +16,12 @@ public class WorldClientHandler extends ClientHandler
 {
 	/** The WorldServer owning this handler. */
 	private final WorldServer server;
+	private final WorldServerMessageFactory messageFactory;
 	/** The ID of the player controlled by this client handler. */
 	private long playerID = -1;
 	/** The Actor managed by this handler. */
 	private Player player;
+	private boolean hasSentActorStepMessage;
 
 	/**
 	 * Construct a new Client Handler using the given socket.  When constructing a new ClientHandler, it is necessary to
@@ -32,7 +34,7 @@ public class WorldClientHandler extends ClientHandler
 	public WorldClientHandler(WorldServer s, Socket sk, MessageRegistry messageRegistry) throws IOException {
 		super(s, sk, messageRegistry);
 		server = s;
-		queueMessage(WorldServerMessageFactory.generateActorStepLengthMessage(this));
+		this.messageFactory = new WorldServerMessageFactory(this);
 	}
 
 	/**
@@ -58,6 +60,11 @@ public class WorldClientHandler extends ClientHandler
 	public void update() {
 		super.update();
 
+		if (!hasSentActorStepMessage) {
+			queueMessage(getMessageFactory().generateActorStepLengthMessage());
+			hasSentActorStepMessage = true;
+		}
+
 		if (player == null)
 			return;
 
@@ -78,31 +85,27 @@ public class WorldClientHandler extends ClientHandler
 
 	/** Generate and queue messages for newly visible objects. */
 	private void queueNewlyVisibleMessages() {
-		for (WorldObject object : player.getNewlyVisibleObjects())
-		{
+		for (WorldObject object : player.getNewlyVisibleObjects()) {
 			Message newlyVisibleMessage;
-			newlyVisibleMessage = WorldServerMessageFactory.generateNewlyVisibleMessage(this, object);
+			newlyVisibleMessage = getMessageFactory().generateNewlyVisibleMessage(object);
 			queueMessage(newlyVisibleMessage);
 		}
 	}
 
 	/** Generate and queue messages for newly invisible objects. */
 	private void queueNewlyInvisibleMessages() {
-		for (WorldObject object : player.getNewlyInvisibleObjects())
-		{
-			Message newlyInvisibleMessage = WorldServerMessageFactory.generateNewlyInvisibleMessage(this, object);
+		for (WorldObject object : player.getNewlyInvisibleObjects()) {
+			Message newlyInvisibleMessage = getMessageFactory().generateNewlyInvisibleMessage(object);
 			queueMessage(newlyInvisibleMessage);
 		}
 	}
 
 	/** Generate and queue messages for actors with changed states. */
 	private void queueStateChangeMessages() {
-		for (WorldObject object : player.getVisibleObjects().values())
-		{
+		for (WorldObject object : player.getVisibleObjects().values()) {
 			Actor changedActor;
-			if (object instanceof Actor && (changedActor = (Actor) object).isNewState())
-			{
-				Message newState = WorldServerMessageFactory.generateChangeStateMessage(this, changedActor);
+			if (object instanceof Actor && (changedActor = (Actor) object).isNewState()) {
+				Message newState = getMessageFactory().generateChangeStateMessage(changedActor);
 				queueMessage(newState);
 			}
 		}
@@ -111,6 +114,8 @@ public class WorldClientHandler extends ClientHandler
 	/** Generate and queue a ForcedStateMessage if necessary. */
 	private void queueForcesStateMessage() {
 		if (player.isForcedState())
-			queueMessage(WorldServerMessageFactory.generateForcedStateMessage(this, player, server));
+			queueMessage(getMessageFactory().generateForcedStateMessage(player, server));
 	}
+
+	public WorldServerMessageFactory getMessageFactory() { return messageFactory; }
 }

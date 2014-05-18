@@ -1,23 +1,30 @@
 package com.jenjinstudios.world.util;
 
 import com.jenjinstudios.io.Message;
-import com.jenjinstudios.net.Connection;
+import com.jenjinstudios.util.ClientMessageFactory;
+import com.jenjinstudios.world.WorldClient;
 import com.jenjinstudios.world.state.MoveState;
 
 /**
  * Generates messages for the client.
  * @author Caleb Brinkman
  */
-public class WorldClientMessageFactory
+public class WorldClientMessageFactory extends ClientMessageFactory
 {
+	private final WorldClient worldClient;
+
+	public WorldClientMessageFactory(WorldClient client) {
+		super(client);
+		worldClient = client;
+	}
+
 	/**
 	 * Generate a state change request for the given move state.
-	 * @param connection The connection generating this message.
 	 * @param moveState The state used to generate a state change request.
 	 * @return The generated message.
 	 */
-	public static Message generateStateChangeRequest(Connection connection, MoveState moveState) {
-		Message stateChangeRequest = new Message(connection, "StateChangeRequest");
+	public Message generateStateChangeRequest(MoveState moveState) {
+		Message stateChangeRequest = new Message(worldClient, "StateChangeRequest");
 		stateChangeRequest.setArgument("relativeAngle", moveState.relativeAngle);
 		stateChangeRequest.setArgument("absoluteAngle", moveState.absoluteAngle);
 		stateChangeRequest.setArgument("stepsUntilChange", moveState.stepsUntilChange);
@@ -30,21 +37,20 @@ public class WorldClientMessageFactory
 
 	/**
 	 * Generate a LoginRequest message.
-	 * @param connection The connection generating this message.
 	 * @param username The username.
 	 * @param password The password.
 	 * @return The LoginRequest message.
 	 */
-	public static Message generateLoginRequest(Connection connection, String username, String password) {
-		Message loginRequest = new Message(connection, "WorldLoginRequest");
+	public Message generateLoginRequest(String username, String password) {
+		Message loginRequest = new Message(worldClient, "WorldLoginRequest");
 		loginRequest.setArgument("username", username);
 		loginRequest.setArgument("password", password);
 		return loginRequest;
 	}
 
-	public static Message generateWorldLogoutRequest(Connection conn) {return new Message(conn, "WorldLogoutRequest");}
+	public Message generateWorldLogoutRequest() {return new Message(worldClient, "WorldLogoutRequest");}
 
-	public static Message generateWorldFileRequest(Connection conn) {return new Message(conn, "WorldFileRequest");}
+	public Message generateWorldFileRequest() {return new Message(worldClient, "WorldFileRequest");}
 
-	public static Message generateWorldChecksumRequest(Connection conn) {return new Message(conn, "WorldChecksumRequest");}
+	public Message generateWorldChecksumRequest() {return new Message(worldClient, "WorldChecksumRequest");}
 }

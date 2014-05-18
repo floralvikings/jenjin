@@ -1,7 +1,6 @@
 package com.jenjinstudios.net;
 
 import com.jenjinstudios.io.Message;
-import com.jenjinstudios.util.ClientMessageFactory;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -59,13 +58,10 @@ public class AuthClient extends Client
 		sendLoginRequest();
 		long startTime = System.currentTimeMillis();
 		long timePast = System.currentTimeMillis() - startTime;
-		while (isWaitingForLoginResponse() && (timePast < TIMEOUT_MILLIS))
-		{
-			try
-			{
+		while (isWaitingForLoginResponse() && (timePast < TIMEOUT_MILLIS)) {
+			try {
 				Thread.sleep(10);
-			} catch (InterruptedException e)
-			{
+			} catch (InterruptedException e) {
 				LOGGER.log(Level.WARNING, "Interrupted while waiting for login response.", e);
 			}
 			timePast = System.currentTimeMillis() - startTime;
@@ -91,11 +87,10 @@ public class AuthClient extends Client
 
 	/** Send a login request to the server. */
 	private void sendLoginRequest() {
-		if (username == null || password == null)
-		{
+		if (username == null || password == null) {
 			throw new IllegalStateException("Attempted to login without username or password");
 		}
-		Message loginRequest = ClientMessageFactory.generateLoginRequest(this, username, password);
+		Message loginRequest = getMessageFactory().generateLoginRequest(username, password);
 
 		// Send the request, continue when the response is received.
 		setWaitingForLoginResponse(true);
@@ -126,13 +121,10 @@ public class AuthClient extends Client
 		sendLogoutRequest();
 		long startTime = System.currentTimeMillis();
 		long timePast = System.currentTimeMillis() - startTime;
-		while (isWaitingForLogoutResponse() && (timePast < TIMEOUT_MILLIS))
-		{
-			try
-			{
+		while (isWaitingForLogoutResponse() && (timePast < TIMEOUT_MILLIS)) {
+			try {
 				Thread.sleep(10);
-			} catch (InterruptedException e)
-			{
+			} catch (InterruptedException e) {
 				LOGGER.log(Level.WARNING, "Interrupted while waiting for login response.", e);
 			}
 			timePast = System.currentTimeMillis() - startTime;
@@ -142,7 +134,7 @@ public class AuthClient extends Client
 
 	/** Send a logout request to the server. */
 	protected void sendLogoutRequest() {
-		Message logoutRequest = ClientMessageFactory.generateLogoutRequest(this);
+		Message logoutRequest = getMessageFactory().generateLogoutRequest();
 
 		// Send the request, continue when response is received.
 		setWaitingForLogoutResponse(true);

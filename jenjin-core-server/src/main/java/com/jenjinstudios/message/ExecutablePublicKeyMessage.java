@@ -2,9 +2,6 @@ package com.jenjinstudios.message;
 
 import com.jenjinstudios.io.Message;
 import com.jenjinstudios.net.ClientHandler;
-import com.jenjinstudios.util.ServerMessageFactory;
-
-import java.util.logging.Logger;
 
 /**
  * This class handles processing a PublicKeyMessage from the client.
@@ -27,7 +24,8 @@ public class ExecutablePublicKeyMessage extends ServerExecutableMessage
 
 	@Override
 	public void runASync() {
-		Message aesMessage = ServerMessageFactory.generateAESKeyMessage(getClientHandler(), (byte[]) getMessage().getArgument("key"));
+		Message aesMessage = getClientHandler().getMessageFactory()
+				.generateAESKeyMessage((byte[]) getMessage().getArgument("key"));
 
 		// Send the AESKeyMessage
 		getClientHandler().queueMessage(aesMessage);

@@ -17,6 +17,7 @@ public class ClientHandler extends Connection
 {
 	/** The server. */
 	private final AuthServer<? extends ClientHandler> server;
+	private final ServerMessageFactory messageFactory;
 	/** The id of the client handler. */
 	private int handlerId = -1;
 	/** Flags whether the user is logged in. */
@@ -25,6 +26,7 @@ public class ClientHandler extends Connection
 	private String username;
 	/** The time at which this client was successfully logged in. */
 	private long loggedInTime;
+	private boolean firstConnectResponseSent;
 
 
 	/**
@@ -41,8 +43,14 @@ public class ClientHandler extends Connection
 		server = s;
 		super.setSocket(sk);
 
-		Message firstConnectResponse = ServerMessageFactory.generateFirstConnectResponse(this);
+		this.messageFactory = new ServerMessageFactory(this);
+	}
+
+	public void sendFirstConnectResponse() {
+		if(firstConnectResponseSent) return;
+		Message firstConnectResponse = getMessageFactory().generateFirstConnectResponse(getServer().UPS);
 		queueMessage(firstConnectResponse);
+		firstConnectResponseSent = true;
 	}
 
 	/**
@@ -119,7 +127,7 @@ public class ClientHandler extends Connection
 	 */
 	public void sendLogoutStatus(boolean success) {
 		loggedIn = !success;
-		Message logoutResponse = ServerMessageFactory.generateLogoutResponse(this, success);
+		Message logoutResponse = getMessageFactory().generateLogoutResponse(success);
 		queueMessage(logoutResponse);
 	}
 
@@ -166,4 +174,7 @@ public class ClientHandler extends Connection
 	public void forceMessage(Message message) throws IOException {
 		getOutputStream().writeMessage(message);
 	}
+
+	@Override
+	public ServerMessageFactory getMessageFactory() { return messageFactory; }
 }

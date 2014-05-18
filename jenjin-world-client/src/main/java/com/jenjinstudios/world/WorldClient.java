@@ -31,6 +31,7 @@ public class WorldClient extends AuthClient
 	public static long TIMEOUT_MILLIS = 30000;
 	/** The password used to login to the world. */
 	private final String password;
+	private final WorldClientMessageFactory messageFactory;
 	/** The world. */
 	private World world;
 	/** The actor representing the player controlled by this client. */
@@ -73,6 +74,7 @@ public class WorldClient extends AuthClient
 			this.worldFileReader = new WorldFileReader(worldFile);
 			this.world = worldFileReader.read();
 		}
+		this.messageFactory = new WorldClientMessageFactory(this);
 	}
 
 	@Override
@@ -164,7 +166,7 @@ public class WorldClient extends AuthClient
 	 * @throws org.xml.sax.SAXException If there's an error with the XML.
 	 */
 	public void sendBlockingWorldFileRequest() throws InterruptedException, NoSuchAlgorithmException, SAXException, TransformerException, ParserConfigurationException, IOException {
-		Message worldFileChecksumRequest = WorldClientMessageFactory.generateWorldChecksumRequest(this);
+		Message worldFileChecksumRequest = getMessageFactory().generateWorldChecksumRequest();
 		queueMessage(worldFileChecksumRequest);
 
 		while (!hasReceivedWorldFileChecksum)
@@ -174,7 +176,7 @@ public class WorldClient extends AuthClient
 
 		if (worldFileReader == null || !Arrays.equals(serverWorldFileChecksum, worldFileReader.getWorldFileChecksum()))
 		{
-			queueMessage(WorldClientMessageFactory.generateWorldFileRequest(this));
+			queueMessage(getMessageFactory().generateWorldFileRequest());
 			while (!hasReceivedWorldFile)
 			{
 				Thread.sleep(10);
@@ -195,7 +197,7 @@ public class WorldClient extends AuthClient
 
 	/** Send a LoginRequest to the server. */
 	private void sendLoginRequest() {
-		Message loginRequest = WorldClientMessageFactory.generateLoginRequest(this, getUsername(), password);
+		Message loginRequest = getMessageFactory().generateLoginRequest(getUsername(), password);
 		setWaitingForLoginResponse(true);
 		queueMessage(loginRequest);
 	}
@@ -205,16 +207,18 @@ public class WorldClient extends AuthClient
 	 * @param moveState The move state used to generate the request.
 	 */
 	protected void sendStateChangeRequest(MoveState moveState) {
-		Message stateChangeRequest = WorldClientMessageFactory.generateStateChangeRequest(this, moveState);
+		Message stateChangeRequest = getMessageFactory().generateStateChangeRequest(moveState);
 		queueMessage(stateChangeRequest);
 	}
 
 	@Override
 	protected void sendLogoutRequest() {
-		Message logoutRequest = WorldClientMessageFactory.generateWorldLogoutRequest(this);
+		Message logoutRequest = getMessageFactory().generateWorldLogoutRequest();
 
 		// Send the request, continue when response is received.
 		setWaitingForLogoutResponse(true);
 		queueMessage(logoutRequest);
 	}
+
+	public WorldClientMessageFactory getMessageFactory() {return messageFactory; }
 }

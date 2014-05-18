@@ -1,7 +1,7 @@
 package com.jenjinstudios.net;
 
 import com.jenjinstudios.io.*;
-import com.jenjinstudios.util.AgnosticMessageFactory;
+import com.jenjinstudios.util.MessageFactory;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -24,6 +24,7 @@ public abstract class Connection extends Thread
 	private final LinkedList<Message> outgoingMessages;
 	/** The "one-shot" tasks to be executed in the current client loop. */
 	private final LinkedList<Runnable> syncedTasks;
+	private MessageFactory messageFactory;
 	/** Flags whether the client threads should be running. */
 	private volatile boolean running;
 	/** The input stream used to read messages. */
@@ -44,7 +45,7 @@ public abstract class Connection extends Thread
 		outgoingMessages = new LinkedList<>();
 		pingTimes = new ArrayList<>();
 		syncedTasks = new LinkedList<>();
-
+		messageFactory = new MessageFactory(this);
 	}
 
 	/**
@@ -60,7 +61,7 @@ public abstract class Connection extends Thread
 
 	/** Send a ping request. */
 	public void sendPing() {
-		Message pingRequest = AgnosticMessageFactory.generatePingRequest(this);
+		Message pingRequest = messageFactory.generatePingRequest();
 		queueMessage(pingRequest);
 	}
 
@@ -294,9 +295,10 @@ public abstract class Connection extends Thread
 			}
 		} else
 		{
-			Message invalid = AgnosticMessageFactory.generateInvalidMessage(this, message);
+			Message invalid = messageFactory.generateInvalidMessage(message);
 			queueMessage(invalid);
 		}
 	}
 
+	public MessageFactory getMessageFactory() {	return messageFactory; }
 }

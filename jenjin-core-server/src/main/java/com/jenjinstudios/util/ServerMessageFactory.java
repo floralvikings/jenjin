@@ -16,24 +16,30 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /** @author Caleb Brinkman */
-public class ServerMessageFactory
+public class ServerMessageFactory extends MessageFactory
 {
 	private static final Logger LOGGER = Logger.getLogger(ServerMessageFactory.class.getName());
+	private final ClientHandler clientHandler;
 
-	public static Message generateLogoutResponse(Connection conn, boolean success) {
-		Message logoutResponse = new Message(conn, "LogoutResponse");
+	public ServerMessageFactory(ClientHandler conn) {
+		super(conn);
+		this.clientHandler = conn;
+	}
+
+	public Message generateLogoutResponse(boolean success) {
+		Message logoutResponse = new Message(clientHandler, "LogoutResponse");
 		logoutResponse.setArgument("success", success);
 		return logoutResponse;
 	}
 
-	public static Message generateFirstConnectResponse(ClientHandler conn) {
-		Message firstConnectResponse = new Message(conn, "FirstConnectResponse");
-		firstConnectResponse.setArgument("ups", conn.getServer().UPS);
+	public Message generateFirstConnectResponse(int ups) {
+		Message firstConnectResponse = new Message(clientHandler, "FirstConnectResponse");
+		firstConnectResponse.setArgument("ups", ups);
 		return firstConnectResponse;
 	}
 
-	public static Message generateAESKeyMessage(Connection conn, byte[] publicKeyBytes) {
-		Message aesMessage = new Message(conn, "AESKeyMessage");
+	public Message generateAESKeyMessage(byte[] publicKeyBytes) {
+		Message aesMessage = new Message(clientHandler, "AESKeyMessage");
 		byte[] encryptedAESKey = MessageInputStream.NO_KEY;
 		try {
 			// Generate an AES key.
@@ -41,7 +47,7 @@ public class ServerMessageFactory
 			keyGenerator.init(128);
 			byte[] aesKeyBytes = keyGenerator.generateKey().getEncoded();
 			// Set the output stream and input stream aes key for the client handler.
-			conn.setAESKey(aesKeyBytes);
+			clientHandler.setAESKey(aesKeyBytes);
 			// Get the public key from the message.
 			PublicKey publicKey = KeyFactory.getInstance("RSA").generatePublic(new X509EncodedKeySpec(publicKeyBytes));
 			// Create a cipher using the public key, and encrypt the AES key.
@@ -65,13 +71,13 @@ public class ServerMessageFactory
 		return aesMessage;
 	}
 
-	public static Message generatePingResponse(ClientHandler clientHandler, long requestTimeNanos) {
+	public Message generatePingResponse(long requestTimeNanos) {
 		Message pingResponse = new Message(clientHandler, "PingResponse");
 		pingResponse.setArgument("requestTimeNanos", requestTimeNanos);
 		return pingResponse;
 	}
 
-	public static Message generateLoginResponse(Connection conn, boolean success, long loggedInTime) {
+	public Message generateLoginResponse(Connection conn, boolean success, long loggedInTime) {
 		Message loginResponse = new Message(conn, "LoginResponse");
 		loginResponse.setArgument("success", success);
 		loginResponse.setArgument("loginTime", loggedInTime);

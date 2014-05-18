@@ -2,7 +2,6 @@ package com.jenjinstudios.world.message;
 
 import com.jenjinstudios.io.Message;
 import com.jenjinstudios.world.WorldClientHandler;
-import com.jenjinstudios.world.util.WorldServerMessageFactory;
 
 /**
  * Process a WorldChecksumRequest.
@@ -26,7 +25,7 @@ public class ExecutableWorldChecksumRequest extends WorldExecutableMessage
 	@Override
 	public void runASync() {
 		byte[] checkSum = getClientHandler().getServer().getWorldFileChecksum();
-		Message response = WorldServerMessageFactory.generateWorldChecksumResponse(getClientHandler(), checkSum);
+		Message response = getClientHandler().getMessageFactory().generateWorldChecksumResponse(checkSum);
 		getClientHandler().queueMessage(response);
 	}
 
