@@ -1,6 +1,7 @@
 package com.jenjinstudios.net;
 
 import com.jenjinstudios.io.Message;
+import com.jenjinstudios.util.ClientMessageFactory;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -94,22 +95,11 @@ public class AuthClient extends Client
 		{
 			throw new IllegalStateException("Attempted to login without username or password");
 		}
-		Message loginRequest = generateLoginRequest();
+		Message loginRequest = ClientMessageFactory.generateLoginRequest(this, username, password);
 
 		// Send the request, continue when the response is received.
 		setWaitingForLoginResponse(true);
 		queueMessage(loginRequest);
-	}
-
-	/**
-	 * Generate a LoginRequest message.
-	 * @return The LoginRequest message.
-	 */
-	private Message generateLoginRequest() {// Create the login request.
-		Message loginRequest = new Message(this, "LoginRequest");
-		loginRequest.setArgument("username", username);
-		loginRequest.setArgument("password", password);
-		return loginRequest;
 	}
 
 	/**
@@ -152,7 +142,7 @@ public class AuthClient extends Client
 
 	/** Send a logout request to the server. */
 	protected void sendLogoutRequest() {
-		Message logoutRequest = new Message(this, "LogoutRequest");
+		Message logoutRequest = ClientMessageFactory.generateLogoutRequest(this);
 
 		// Send the request, continue when response is received.
 		setWaitingForLogoutResponse(true);

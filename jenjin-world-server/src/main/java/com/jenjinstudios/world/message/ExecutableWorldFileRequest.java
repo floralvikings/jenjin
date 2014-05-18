@@ -2,6 +2,7 @@ package com.jenjinstudios.world.message;
 
 import com.jenjinstudios.io.Message;
 import com.jenjinstudios.world.WorldClientHandler;
+import com.jenjinstudios.world.util.WorldServerMessageFactory;
 
 /**
  * Process a WorldChecksumRequest.
@@ -25,8 +26,7 @@ public class ExecutableWorldFileRequest extends WorldExecutableMessage
 	@Override
 	public void runASync() {
 		byte[] worldFileBytes = getClientHandler().getServer().getWorldFileBytes();
-		Message response = new Message(getClientHandler(), "WorldFileResponse");
-		response.setArgument("fileBytes", worldFileBytes);
+		Message response = WorldServerMessageFactory.generateWorldFileResponse(getClientHandler(), worldFileBytes);
 		getClientHandler().queueMessage(response);
 	}
 }

@@ -8,7 +8,7 @@ import com.jenjinstudios.world.state.MoveState;
  * Generates messages for the client.
  * @author Caleb Brinkman
  */
-public class WorldClientMessageGenerator
+public class WorldClientMessageFactory
 {
 	/**
 	 * Generate a state change request for the given move state.
@@ -41,4 +41,10 @@ public class WorldClientMessageGenerator
 		loginRequest.setArgument("password", password);
 		return loginRequest;
 	}
+
+	public static Message generateWorldLogoutRequest(Connection conn) {return new Message(conn, "WorldLogoutRequest");}
+
+	public static Message generateWorldFileRequest(Connection conn) {return new Message(conn, "WorldFileRequest");}
+
+	public static Message generateWorldChecksumRequest(Connection conn) {return new Message(conn, "WorldChecksumRequest");}
 }

@@ -4,6 +4,7 @@ import com.jenjinstudios.io.ExecutableMessage;
 import com.jenjinstudios.io.Message;
 import com.jenjinstudios.io.MessageRegistry;
 import com.jenjinstudios.message.ServerExecutableMessage;
+import com.jenjinstudios.util.ServerMessageFactory;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -40,8 +41,7 @@ public class ClientHandler extends Connection
 		server = s;
 		super.setSocket(sk);
 
-		Message firstConnectResponse = new Message(this, "FirstConnectResponse");
-		firstConnectResponse.setArgument("ups", server.UPS);
+		Message firstConnectResponse = ServerMessageFactory.generateFirstConnectResponse(this);
 		queueMessage(firstConnectResponse);
 	}
 
@@ -119,8 +119,7 @@ public class ClientHandler extends Connection
 	 */
 	public void sendLogoutStatus(boolean success) {
 		loggedIn = !success;
-		Message logoutResponse = new Message(this, "LogoutResponse");
-		logoutResponse.setArgument("success", success);
+		Message logoutResponse = ServerMessageFactory.generateLogoutResponse(this, success);
 		queueMessage(logoutResponse);
 	}
 

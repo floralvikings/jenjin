@@ -10,7 +10,7 @@ import com.jenjinstudios.world.WorldServer;
  * Used to generate Message objects that are relevant to the World and WorldClientHandler classes.
  * @author Caleb Brinkman
  */
-public class WorldServerMessageGenerator
+public class WorldServerMessageFactory
 {
 	/**
 	 * Generate an appropriate message for a newly visible object.
@@ -126,5 +126,21 @@ public class WorldServerMessageGenerator
 		Message newlyInvisibleMessage = new Message(connection, "ObjectInvisibleMessage");
 		newlyInvisibleMessage.setArgument("id", object.getId());
 		return newlyInvisibleMessage;
+	}
+
+	public static Message generateWorldLoginResponse(Connection conn) {
+		return new Message(conn, "WorldLoginResponse");
+	}
+
+	public static Message generateWorldFileResponse(Connection conn, byte[] worldFileBytes) {
+		Message response = new Message(conn, "WorldFileResponse");
+		response.setArgument("fileBytes", worldFileBytes);
+		return response;
+	}
+
+	public static Message generateWorldChecksumResponse(Connection conn, byte[] checkSum) {
+		Message response = new Message(conn, "WorldChecksumResponse");
+		response.setArgument("checksum", checkSum);
+		return response;
 	}
 }

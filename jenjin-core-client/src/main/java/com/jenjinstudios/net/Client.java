@@ -3,6 +3,7 @@ package com.jenjinstudios.net;
 import com.jenjinstudios.io.Message;
 import com.jenjinstudios.io.MessageRegistry;
 import com.jenjinstudios.message.ClientExecutableMessage;
+import com.jenjinstudios.util.ClientMessageFactory;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -171,8 +172,7 @@ public class Client extends Connection
 		period = 1000 / ups;
 
 		// Next, queue up the PublicKeyMessage used to exchange the encrypted AES key used for encryption.
-		Message publicKeyMessage = new Message(this, "PublicKeyMessage");
-		publicKeyMessage.setArgument("key", publicKey.getEncoded());
+		Message publicKeyMessage = ClientMessageFactory.generatePublicKeyMessage(this, publicKey);
 		queueMessage(publicKeyMessage);
 
 		// Finally, send a ping request to establish latency.

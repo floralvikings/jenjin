@@ -3,7 +3,7 @@ package com.jenjinstudios.world;
 import com.jenjinstudios.io.Message;
 import com.jenjinstudios.io.MessageRegistry;
 import com.jenjinstudios.net.ClientHandler;
-import com.jenjinstudios.world.util.WorldServerMessageGenerator;
+import com.jenjinstudios.world.util.WorldServerMessageFactory;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -32,7 +32,7 @@ public class WorldClientHandler extends ClientHandler
 	public WorldClientHandler(WorldServer s, Socket sk, MessageRegistry messageRegistry) throws IOException {
 		super(s, sk, messageRegistry);
 		server = s;
-		queueMessage(WorldServerMessageGenerator.generateActorStepLengthMessage(this));
+		queueMessage(WorldServerMessageFactory.generateActorStepLengthMessage(this));
 	}
 
 	/**
@@ -81,7 +81,7 @@ public class WorldClientHandler extends ClientHandler
 		for (WorldObject object : player.getNewlyVisibleObjects())
 		{
 			Message newlyVisibleMessage;
-			newlyVisibleMessage = WorldServerMessageGenerator.generateNewlyVisibleMessage(this, object);
+			newlyVisibleMessage = WorldServerMessageFactory.generateNewlyVisibleMessage(this, object);
 			queueMessage(newlyVisibleMessage);
 		}
 	}
@@ -90,7 +90,7 @@ public class WorldClientHandler extends ClientHandler
 	private void queueNewlyInvisibleMessages() {
 		for (WorldObject object : player.getNewlyInvisibleObjects())
 		{
-			Message newlyInvisibleMessage = WorldServerMessageGenerator.generateNewlyInvisibleMessage(this, object);
+			Message newlyInvisibleMessage = WorldServerMessageFactory.generateNewlyInvisibleMessage(this, object);
 			queueMessage(newlyInvisibleMessage);
 		}
 	}
@@ -102,7 +102,7 @@ public class WorldClientHandler extends ClientHandler
 			Actor changedActor;
 			if (object instanceof Actor && (changedActor = (Actor) object).isNewState())
 			{
-				Message newState = WorldServerMessageGenerator.generateChangeStateMessage(this, changedActor);
+				Message newState = WorldServerMessageFactory.generateChangeStateMessage(this, changedActor);
 				queueMessage(newState);
 			}
 		}
@@ -111,6 +111,6 @@ public class WorldClientHandler extends ClientHandler
 	/** Generate and queue a ForcedStateMessage if necessary. */
 	private void queueForcesStateMessage() {
 		if (player.isForcedState())
-			queueMessage(WorldServerMessageGenerator.generateForcedStateMessage(this, player, server));
+			queueMessage(WorldServerMessageFactory.generateForcedStateMessage(this, player, server));
 	}
 }

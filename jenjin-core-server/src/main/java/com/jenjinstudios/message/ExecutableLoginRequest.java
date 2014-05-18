@@ -3,6 +3,7 @@ package com.jenjinstudios.message;
 import com.jenjinstudios.io.Message;
 import com.jenjinstudios.net.ClientHandler;
 import com.jenjinstudios.sql.SQLHandler;
+import com.jenjinstudios.util.ServerMessageFactory;
 
 /**
  * Executes the necessary actions to deal with a login response.
@@ -33,9 +34,8 @@ public class ExecutableLoginRequest extends ServerExecutableMessage
 		boolean success = false;
 		if (sqlHandler == null || getClientHandler().isLoggedIn())
 		{
-			Message loginResponse = new Message(getClientHandler(), "LoginResponse");
-			loginResponse.setArgument("success", success);
-			loginResponse.setArgument("loginTime", getClientHandler().getLoggedInTime());
+			long loggedInTime = getClientHandler().getLoggedInTime();
+			Message loginResponse = ServerMessageFactory.generateLoginResponse(getClientHandler(), success, loggedInTime);
 			getClientHandler().queueMessage(loginResponse);
 			return;
 		}
@@ -44,10 +44,8 @@ public class ExecutableLoginRequest extends ServerExecutableMessage
 		success = sqlHandler.logInUser(username, password);
 
 		getClientHandler().setLoginStatus(success);
-
-		Message loginResponse = new Message(getClientHandler(), "LoginResponse");
-		loginResponse.setArgument("success", success);
-		loginResponse.setArgument("loginTime", getClientHandler().getLoggedInTime());
+		long loggedInTime = getClientHandler().getLoggedInTime();
+		Message loginResponse = ServerMessageFactory.generateLoginResponse(getClientHandler(), success, loggedInTime);
 		getClientHandler().queueMessage(loginResponse);
 
 		if (success)

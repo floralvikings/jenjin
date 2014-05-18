@@ -4,7 +4,7 @@ import com.jenjinstudios.io.Message;
 import com.jenjinstudios.net.AuthClient;
 import com.jenjinstudios.world.io.WorldFileReader;
 import com.jenjinstudios.world.state.MoveState;
-import com.jenjinstudios.world.util.WorldClientMessageGenerator;
+import com.jenjinstudios.world.util.WorldClientMessageFactory;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -164,7 +164,7 @@ public class WorldClient extends AuthClient
 	 * @throws org.xml.sax.SAXException If there's an error with the XML.
 	 */
 	public void sendBlockingWorldFileRequest() throws InterruptedException, NoSuchAlgorithmException, SAXException, TransformerException, ParserConfigurationException, IOException {
-		Message worldFileChecksumRequest = new Message(this, "WorldChecksumRequest");
+		Message worldFileChecksumRequest = WorldClientMessageFactory.generateWorldChecksumRequest(this);
 		queueMessage(worldFileChecksumRequest);
 
 		while (!hasReceivedWorldFileChecksum)
@@ -174,7 +174,7 @@ public class WorldClient extends AuthClient
 
 		if (worldFileReader == null || !Arrays.equals(serverWorldFileChecksum, worldFileReader.getWorldFileChecksum()))
 		{
-			queueMessage(new Message(this, "WorldFileRequest"));
+			queueMessage(WorldClientMessageFactory.generateWorldFileRequest(this));
 			while (!hasReceivedWorldFile)
 			{
 				Thread.sleep(10);
@@ -195,7 +195,7 @@ public class WorldClient extends AuthClient
 
 	/** Send a LoginRequest to the server. */
 	private void sendLoginRequest() {
-		Message loginRequest = WorldClientMessageGenerator.generateLoginRequest(this, getUsername(), password);
+		Message loginRequest = WorldClientMessageFactory.generateLoginRequest(this, getUsername(), password);
 		setWaitingForLoginResponse(true);
 		queueMessage(loginRequest);
 	}
@@ -205,13 +205,13 @@ public class WorldClient extends AuthClient
 	 * @param moveState The move state used to generate the request.
 	 */
 	protected void sendStateChangeRequest(MoveState moveState) {
-		Message stateChangeRequest = WorldClientMessageGenerator.generateStateChangeRequest(this, moveState);
+		Message stateChangeRequest = WorldClientMessageFactory.generateStateChangeRequest(this, moveState);
 		queueMessage(stateChangeRequest);
 	}
 
 	@Override
 	protected void sendLogoutRequest() {
-		Message logoutRequest = new Message(this, "WorldLogoutRequest");
+		Message logoutRequest = WorldClientMessageFactory.generateWorldLogoutRequest(this);
 
 		// Send the request, continue when response is received.
 		setWaitingForLogoutResponse(true);

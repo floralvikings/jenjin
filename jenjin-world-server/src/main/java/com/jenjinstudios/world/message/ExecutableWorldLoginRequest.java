@@ -4,6 +4,7 @@ import com.jenjinstudios.io.Message;
 import com.jenjinstudios.world.Player;
 import com.jenjinstudios.world.WorldClientHandler;
 import com.jenjinstudios.world.sql.WorldSQLHandler;
+import com.jenjinstudios.world.util.WorldServerMessageFactory;
 
 /**
  * Handles requests to login to the world.
@@ -53,7 +54,7 @@ public class ExecutableWorldLoginRequest extends WorldExecutableMessage
 		success = player != null;
 		getClientHandler().setLoginStatus(success);
 
-		loginResponse = new Message(getClientHandler(), "WorldLoginResponse");
+		loginResponse = WorldServerMessageFactory.generateWorldLoginResponse(getClientHandler());
 		loginResponse.setArgument("success", success);
 
 		if (success)
@@ -71,7 +72,5 @@ public class ExecutableWorldLoginRequest extends WorldExecutableMessage
 			loginResponse.setArgument("yCoordinate", 0d);
 			loginResponse.setArgument("zoneNumber", -1);
 		}
-
-
 	}
 }

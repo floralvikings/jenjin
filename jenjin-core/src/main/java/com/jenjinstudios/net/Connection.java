@@ -1,6 +1,7 @@
 package com.jenjinstudios.net;
 
 import com.jenjinstudios.io.*;
+import com.jenjinstudios.util.AgnosticMessageFactory;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -59,8 +60,7 @@ public abstract class Connection extends Thread
 
 	/** Send a ping request. */
 	public void sendPing() {
-		Message pingRequest = new Message(this, "PingRequest");
-		pingRequest.setArgument("requestTimeNanos", System.nanoTime());
+		Message pingRequest = AgnosticMessageFactory.generatePingRequest(this);
 		queueMessage(pingRequest);
 	}
 
@@ -294,10 +294,9 @@ public abstract class Connection extends Thread
 			}
 		} else
 		{
-			Message invalid = new Message(this, "InvalidMessage");
-			invalid.setArgument("messageName", message.name);
-			invalid.setArgument("messageID", message.getID());
+			Message invalid = AgnosticMessageFactory.generateInvalidMessage(this, message);
 			queueMessage(invalid);
 		}
 	}
+
 }
