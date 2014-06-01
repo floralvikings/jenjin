@@ -6,6 +6,7 @@ import java.util.TreeMap;
  * Used to store WorldObjects.
  * @author Caleb Brinkman
  */
+// TODO Change to use HashMap
 public class WorldObjectTree extends TreeMap<Integer, WorldObject>
 {
 	@Override
