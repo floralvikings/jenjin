@@ -44,7 +44,8 @@ public class ExecutableActorVisibleMessage extends WorldClientExecutableMessage
 		newlyVisible = new ClientActor(id, name);
 		newlyVisible.setResourceID(resourceID);
 		newlyVisible.setVector2D(xCoordinate, yCoordinate);
-		MoveState state = new MoveState(direction, stepsUntilChange, angle);
+		// TODO Maybe should be replaced with world update time?
+		MoveState state = new MoveState(direction, stepsUntilChange, angle, newlyVisible.getVector2D(), System.nanoTime());
 		newlyVisible.setCurrentMoveState(state);
 		newlyVisible.setStepsTaken(stepsFromLast);
 	}

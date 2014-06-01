@@ -49,7 +49,8 @@ public class ClientActor extends WorldObject
 		super(name);
 		setId(id);
 		nextMoveStates = new LinkedList<>();
-		currentMoveState = new MoveState(MoveState.IDLE, 0, 0);
+		// TODO Set from world update time
+		currentMoveState = new MoveState(MoveState.IDLE, 0, 0, getVector2D(), System.nanoTime());
 	}
 
 	/**

@@ -74,7 +74,8 @@ public class NPC extends Actor
 		if (target != null) {
 			if (getCurrentMoveState().relativeAngle == MoveState.IDLE) {
 				double angle = getVector2D().getAngleToVector(target);
-				addMoveState(new MoveState(MoveState.FRONT, getStepsTaken(), angle));
+				// TODO Set from world update time.
+				addMoveState(new MoveState(MoveState.FRONT, getStepsTaken(), angle, getVector2D(), System.nanoTime()));
 				return;
 			}
 			double distance = getVector2D().getDistanceToVector(target);
@@ -83,9 +84,11 @@ public class NPC extends Actor
 				Vector2D newTarget = currentPath.peek();
 				if (newTarget != null) {
 					double angle = getVector2D().getAngleToVector(newTarget);
-					addMoveState(new MoveState(MoveState.FRONT, getStepsTaken(), angle));
+					// TODO Set from world update time.
+					addMoveState(new MoveState(MoveState.FRONT, getStepsTaken(), angle, getVector2D(), System.nanoTime()));
 				} else {
-					addMoveState(new MoveState(MoveState.IDLE, getStepsTaken(), getCurrentMoveState().absoluteAngle));
+					// TODO Set from world update time
+					addMoveState(new MoveState(MoveState.IDLE, getStepsTaken(), getCurrentMoveState().absoluteAngle, getVector2D(), System.nanoTime()));
 				}
 			}
 		}

@@ -85,14 +85,16 @@ public class WorldServerTest
 	private static void moveServerActorToVector(Actor serverActor, Vector2D newVector) throws InterruptedException {
 		int stepsTaken = serverActor.getStepsTaken();
 		double newAngle = serverActor.getVector2D().getAngleToVector(newVector);
-		MoveState newState = new MoveState(newAngle, stepsTaken, 0);
+		// TODO Set properly
+		MoveState newState = new MoveState(newAngle, stepsTaken, 0, serverActor.getVector2D(), System.nanoTime());
 		serverActor.addMoveState(newState);
 		double distanceToNewVector = serverActor.getVector2D().getDistanceToVector(newVector);
 		while (distanceToNewVector > vectorTolerance && !serverActor.isForcedState()) {
 			Thread.sleep(10);
 			distanceToNewVector = serverActor.getVector2D().getDistanceToVector(newVector);
 		}
-		MoveState idleState = new MoveState(MoveState.IDLE, serverActor.getStepsTaken(), 0);
+		// TODO Set properly
+		MoveState idleState = new MoveState(MoveState.IDLE, serverActor.getStepsTaken(), 0, serverActor.getVector2D(), System.nanoTime());
 		serverActor.addMoveState(idleState);
 		Thread.sleep(10);
 	}

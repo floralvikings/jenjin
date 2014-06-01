@@ -23,7 +23,8 @@ public class Player extends Actor
 	@Override
 	public void step() {
 		int overstepped = getOverstepped();
-		MoveState idleState = new MoveState(IDLE, getStepsTaken(), getCurrentMoveState().absoluteAngle);
+		// TODO Set from world update time
+		MoveState idleState = new MoveState(IDLE, getStepsTaken(), getCurrentMoveState().absoluteAngle, getVector2D(), System.nanoTime());
 		// Have to convert from nanos to seconds
 		double stepLength = calcStepLength();
 		if (overstepped < MAX_CORRECT)

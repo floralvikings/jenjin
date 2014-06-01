@@ -54,7 +54,8 @@ public class Actor extends SightedObject
 	 */
 	public Actor(String name) {
 		super(name);
-		currentMoveState = new MoveState(IDLE, 0, 0);
+		// TODO Replace with world update time, if possible?  Since world hasn't been set here, may not be.
+		currentMoveState = new MoveState(IDLE, 0, 0, getVector2D(), System.nanoTime());
 		nextMoveStates = new LinkedList<>();
 	}
 
@@ -92,8 +93,8 @@ public class Actor extends SightedObject
 
 	/** Take a step, changing state and correcting steps if necessary. */
 	public void step() {
-
-		MoveState idleState = new MoveState(IDLE, getStepsTaken(), getCurrentMoveState().absoluteAngle);
+		// TODO Replace with world update time
+		MoveState idleState = new MoveState(IDLE, getStepsTaken(), getCurrentMoveState().absoluteAngle, getVector2D(), System.nanoTime());
 		int stepsToTake = getNextState() != null ? getNextState().stepsUntilChange - getStepsTaken() : -1;
 		if (stepsToTake <= 0) {
 			resetState();

@@ -161,7 +161,8 @@ public class ClientPlayer extends SightedObject
 	 */
 	public void forcePosition(Vector2D position, double relativeAngle, double absoluteAngle, int stepsToTake) {
 		isForced = true;
-		forcedState = new MoveState(this.relativeAngle, 0, this.absoluteAngle);
+		// TODO Set from world update time.
+		forcedState = new MoveState(this.relativeAngle, 0, this.absoluteAngle, this.getVector2D(), System.nanoTime());
 		resetState(position, relativeAngle, absoluteAngle);
 		for (int i = 0; i < stepsToTake; i++)
 			step();
@@ -191,7 +192,8 @@ public class ClientPlayer extends SightedObject
 		{
 			return;
 		}
-		MoveState toBeSaved = new MoveState(relativeAngle, stepsTaken, absoluteAngle);
+		// TODO Set from world update time.
+		MoveState toBeSaved = new MoveState(relativeAngle, stepsTaken, absoluteAngle, getVector2D(), System.nanoTime());
 		synchronized (savedStates)
 		{
 			savedStates.add(toBeSaved);

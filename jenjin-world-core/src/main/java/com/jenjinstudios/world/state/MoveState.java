@@ -1,5 +1,7 @@
 package com.jenjinstudios.world.state;
 
+import com.jenjinstudios.world.math.Vector2D;
+
 /**
  * The {@code MovementState} class is used to establish what an {@code Actor}'s movement state is.  The {@code
  * stepsUntilChange} field indicates the number of steps (updates) the Actor should take before it changes to the {@code
@@ -36,6 +38,10 @@ public class MoveState
 	public final double absoluteAngle;
 	/** The actual angle of movement given the relativeAngle and move angle. */
 	public final double stepAngle;
+	/** The position at which this change took place. */
+	public final Vector2D position;
+	/** The time at which the change took place. */
+	public final long time;
 
 	/**
 	 * Construct a new MoveState.
@@ -43,10 +49,12 @@ public class MoveState
 	 * @param stepsUntilChange The steps in the last movement.
 	 * @param absoluteAngle The angle of movement.
 	 */
-	public MoveState(double relativeAngle, int stepsUntilChange, double absoluteAngle) {
+	public MoveState(double relativeAngle, int stepsUntilChange, double absoluteAngle, Vector2D position, long time) {
 		this.relativeAngle = relativeAngle;
 		this.stepsUntilChange = stepsUntilChange;
 		this.absoluteAngle = absoluteAngle;
+		this.position = position;
+		this.time = time;
 
 		double sAngle = relativeAngle != IDLE ? absoluteAngle + relativeAngle : IDLE;
 		stepAngle = (sAngle < 0) ? (sAngle + TWO_PI) : (sAngle % TWO_PI);

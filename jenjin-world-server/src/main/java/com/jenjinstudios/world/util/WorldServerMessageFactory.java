@@ -54,7 +54,7 @@ public class WorldServerMessageFactory extends ServerMessageFactory
 		newlyVisibleMessage.setArgument("absoluteAngle", newlyVisible.getMoveAngle());
 		newlyVisibleMessage.setArgument("stepsTaken", newlyVisible.getStepsTaken());
 		newlyVisibleMessage.setArgument("stepsUntilChange", newlyVisible.getCurrentMoveState().stepsUntilChange);
-		newlyVisibleMessage.setArgument("timeOfVisibility", 0l); // TODO Set this properly.
+		newlyVisibleMessage.setArgument("timeOfVisibility", System.nanoTime()); // TODO Replace with world update time
 		return newlyVisibleMessage;
 	}
 
@@ -85,10 +85,9 @@ public class WorldServerMessageFactory extends ServerMessageFactory
 		newState.setArgument("relativeAngle", changedActor.getCurrentMoveState().relativeAngle);
 		newState.setArgument("absoluteAngle", changedActor.getCurrentMoveState().absoluteAngle);
 		newState.setArgument("stepsUntilChange", changedActor.getCurrentMoveState().stepsUntilChange);
-		// TODO Set these properly
-		newState.setArgument("timeOfChange", 0l);
-		newState.setArgument("xCoord", 0.0d);
-		newState.setArgument("yCoord", 0.0d);
+		newState.setArgument("timeOfChange", changedActor.getCurrentMoveState().time);
+		newState.setArgument("xCoord", changedActor.getCurrentMoveState().position.getXCoordinate());
+		newState.setArgument("yCoord", changedActor.getCurrentMoveState().position.getYCoordinate());
 		return newState;
 	}
 
