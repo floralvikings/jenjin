@@ -170,7 +170,6 @@ public class Client extends Connection
 		{
 			return false;
 		}
-		System.out.println(firstConnectResponse);
 		int ups = (int) firstConnectResponse.getArgument("ups");
 		period = 1000 / ups;
 

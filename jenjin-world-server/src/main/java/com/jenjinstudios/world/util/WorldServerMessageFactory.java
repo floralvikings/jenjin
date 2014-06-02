@@ -6,6 +6,10 @@ import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.WorldClientHandler;
 import com.jenjinstudios.world.WorldObject;
 import com.jenjinstudios.world.WorldServer;
+import com.jenjinstudios.world.state.MoveState;
+
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Used to generate Message objects that are relevant to the World and WorldClientHandler classes.
@@ -50,11 +54,11 @@ public class WorldServerMessageFactory extends ServerMessageFactory
 		newlyVisibleMessage.setArgument("resourceID", newlyVisible.getResourceID());
 		newlyVisibleMessage.setArgument("xCoordinate", newlyVisible.getVector2D().getXCoordinate());
 		newlyVisibleMessage.setArgument("yCoordinate", newlyVisible.getVector2D().getYCoordinate());
-		newlyVisibleMessage.setArgument("relativeAngle", newlyVisible.getCurrentMoveState().relativeAngle);
-		newlyVisibleMessage.setArgument("absoluteAngle", newlyVisible.getMoveAngle());
-		newlyVisibleMessage.setArgument("stepsTaken", newlyVisible.getStepsTaken());
-		newlyVisibleMessage.setArgument("stepsUntilChange", newlyVisible.getCurrentMoveState().stepsUntilChange);
-		newlyVisibleMessage.setArgument("timeOfVisibility", System.nanoTime()); // TODO Replace with world update time
+		newlyVisibleMessage.setArgument("relativeAngle", newlyVisible.getRelativeAngle());
+		newlyVisibleMessage.setArgument("absoluteAngle", newlyVisible.getAbsoluteAngle());
+		newlyVisibleMessage.setArgument("stepsTaken", 0);
+		newlyVisibleMessage.setArgument("stepsUntilChange", 0);
+		newlyVisibleMessage.setArgument("timeOfVisibility", newlyVisible.getWorld().getLastUpdateStarted());
 		return newlyVisibleMessage;
 	}
 
@@ -79,16 +83,21 @@ public class WorldServerMessageFactory extends ServerMessageFactory
 	 * @param changedActor The actor with a new state.
 	 * @return The state change message.
 	 */
-	public Message generateChangeStateMessage(Actor changedActor) {
-		Message newState = new Message(worldClientHandler, "StateChangeMessage");
-		newState.setArgument("id", changedActor.getId());
-		newState.setArgument("relativeAngle", changedActor.getCurrentMoveState().relativeAngle);
-		newState.setArgument("absoluteAngle", changedActor.getCurrentMoveState().absoluteAngle);
-		newState.setArgument("stepsUntilChange", changedActor.getCurrentMoveState().stepsUntilChange);
-		newState.setArgument("timeOfChange", changedActor.getCurrentMoveState().time);
-		newState.setArgument("xCoord", changedActor.getCurrentMoveState().position.getXCoordinate());
-		newState.setArgument("yCoord", changedActor.getCurrentMoveState().position.getYCoordinate());
-		return newState;
+	public List<Message> generateChangeStateMessage(Actor changedActor) {
+		List<Message> messages = new LinkedList<>();
+		for(MoveState m : changedActor.getStateChanges())
+		{
+			Message newState = new Message(worldClientHandler, "StateChangeMessage");
+			newState.setArgument("id", changedActor.getId());
+			newState.setArgument("relativeAngle", m.relativeAngle);
+			newState.setArgument("absoluteAngle", m.absoluteAngle);
+			newState.setArgument("stepsUntilChange", m.stepsUntilChange);
+			newState.setArgument("timeOfChange", m.time);
+			newState.setArgument("xCoord", m.position.getXCoordinate());
+			newState.setArgument("yCoord", m.position.getYCoordinate());
+			messages.add(newState);
+		}
+		return messages;
 	}
 
 	/**
@@ -99,8 +108,8 @@ public class WorldServerMessageFactory extends ServerMessageFactory
 	 */
 	public Message generateForcedStateMessage(Actor actor, WorldServer server) {
 		Message forcedStateMessage = new Message(worldClientHandler, "ForceStateMessage");
-		forcedStateMessage.setArgument("relativeAngle", actor.getMoveDirection());
-		forcedStateMessage.setArgument("absoluteAngle", actor.getMoveAngle());
+		forcedStateMessage.setArgument("relativeAngle", actor.getRelativeAngle());
+		forcedStateMessage.setArgument("absoluteAngle", actor.getAbsoluteAngle());
 		forcedStateMessage.setArgument("xCoordinate", actor.getVector2D().getXCoordinate());
 		forcedStateMessage.setArgument("yCoordinate", actor.getVector2D().getYCoordinate());
 		forcedStateMessage.setArgument("timeOfForce", server.getCycleStartTime());

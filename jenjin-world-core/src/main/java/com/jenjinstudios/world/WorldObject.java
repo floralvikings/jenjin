@@ -15,7 +15,7 @@ public class WorldObject
 	/** The vector2D in the world at which the object is located. */
 	private Vector2D vector2D;
 	/** The relativeAngle in which this object is facing. */
-	private double direction;
+	private double absoluteAngle;
 	/** The ID number of this object. */
 	private int id = Integer.MIN_VALUE;
 	/** The world in which this object exists. */
@@ -39,13 +39,13 @@ public class WorldObject
 	 * Get the relativeAngle in which this object is facing, in radians.
 	 * @return The relativeAngle in which this object is facing.
 	 */
-	public double getDirection() { return direction; }
+	public double getAbsoluteAngle() { return absoluteAngle; }
 
 	/**
 	 * Set the relativeAngle in which this object is facing.
-	 * @param direction The new relativeAngle for this object to face.
+	 * @param absoluteAngle The new relativeAngle for this object to face.
 	 */
-	public void setDirection(double direction) { this.direction = direction; }
+	public void setAbsoluteAngle(double absoluteAngle) { this.absoluteAngle = absoluteAngle; }
 
 	/**
 	 * Get this object's current position.

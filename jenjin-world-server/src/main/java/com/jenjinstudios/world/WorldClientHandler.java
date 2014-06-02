@@ -7,6 +7,7 @@ import com.jenjinstudios.world.util.WorldServerMessageFactory;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.util.List;
 
 /**
  * Handles clients for a world server.
@@ -105,8 +106,8 @@ public class WorldClientHandler extends ClientHandler
 		for (WorldObject object : player.getVisibleObjects().values()) {
 			Actor changedActor;
 			if (object instanceof Actor && (changedActor = (Actor) object).isNewState()) {
-				Message newState = getMessageFactory().generateChangeStateMessage(changedActor);
-				queueMessage(newState);
+				List<Message> newState = getMessageFactory().generateChangeStateMessage(changedActor);
+				for(Message m : newState){ queueMessage(m);}
 			}
 		}
 	}

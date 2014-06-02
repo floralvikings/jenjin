@@ -29,10 +29,10 @@ public class WorldFileWriterTest
 	@BeforeMethod
 	public void setUp() throws Exception {
 		worldFile = new File("WorldFileWriterTest.xml");
-		if(worldFile.exists() && worldFile.delete())
-		{
-			System.out.println("Deleting world test file before test.");
-		}
+		if(worldFile.exists()) worldFile.delete();
+
+
+
 	}
 
 	/**
@@ -41,10 +41,7 @@ public class WorldFileWriterTest
 	 */
 	@AfterMethod
 	public void tearDown() throws Exception {
-		if(worldFile.exists() && worldFile.delete())
-		{
-			System.out.println("Deleting world test file after test.");
-		}
+		if(worldFile.exists()) worldFile.delete();
 	}
 
 	/**

@@ -1,5 +1,7 @@
 package com.jenjinstudios.world.math;
 
+import static com.jenjinstudios.world.state.MoveState.IDLE;
+
 /**
  * This class is used to simplify rounding.
  * @author Caleb Brinkman
@@ -21,4 +23,14 @@ public class MathUtil
 		return (double) tmp / factor;
 	}
 
+	/**
+	 * Given the specified relative and absolute angles, determine the angle in which an actor should move.
+	 * @param abs The absolute angle.
+	 * @param rel The relative angle.
+	 * @return The value of the angles combined.
+	 */
+	public static double calcStepAngle(double abs, double rel) {
+		double sAngle = rel != IDLE ? abs + rel : IDLE;
+		return (sAngle < 0) ? (sAngle + (Math.PI * 2)) : (sAngle % (Math.PI * 2));
+	}
 }

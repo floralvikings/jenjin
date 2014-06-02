@@ -31,20 +31,6 @@ public class WorldServerTest
 	private static int testAccountNumber = 0;
 	/** The port used to listen and connect. */
 	private static int port = WorldServer.DEFAULT_PORT;
-
-	// Server fields
-	/** The world server used to test. */
-	private WorldServer worldServer;
-	/** The world used for testing. */
-	private World world;
-	/** The server-side actor representing the player. */
-	private Actor serverPlayer;
-
-	// Client fields
-	/** The world client used to test. */
-	private WorldClient worldClient;
-	/** The client-side player used for testing. */
-	private ClientPlayer clientPlayer;
 	/**
 	 * The tolerance for distance between a the client and server positions of an actor. This is roughly how much an
 	 * actor should move during an update (assuming default UPS, which these tests do).  This means that the client
@@ -52,6 +38,16 @@ public class WorldServerTest
 	 * intended to avoid spurious test failures that could be caused by unforeseen lag on one of the threads.
 	 */
 	private static final double vectorTolerance = (Actor.MOVE_SPEED / (double) WorldServer.DEFAULT_UPS);
+	/** The world server used to test. */
+	private WorldServer worldServer;
+	/** The world used for testing. */
+	private World world;
+	/** The server-side actor representing the player. */
+	private Actor serverPlayer;
+	/** The world client used to test. */
+	private WorldClient worldClient;
+	/** The client-side player used for testing. */
+	private ClientPlayer clientPlayer;
 
 	/**
 	 * Construct the test.
@@ -61,65 +57,6 @@ public class WorldServerTest
 	public static void construct() throws Exception {
 		InputStream configFile = WorldServerTest.class.getResourceAsStream("/test/jenjinstudios/logger.properties");
 		LogManager.getLogManager().readConfiguration(configFile);
-	}
-
-	/**
-	 * Make the client player stay idle for the given number of steps.
-	 * @param i The number of steps.
-	 * @param clientPlayer The client player.
-	 * @throws InterruptedException If there's an issue waiting for the player to be idle for the given number of steps.
-	 */
-	private static void idleClientPlayer(int i, ClientPlayer clientPlayer) throws InterruptedException {
-		clientPlayer.setNewRelativeAngle(MoveState.IDLE);
-		while (clientPlayer.getRelativeAngle() != MoveState.IDLE || clientPlayer.getStepsTaken() < i) {
-			Thread.sleep(2);
-		}
-	}
-
-	/**
-	 * Move the specified actor to within one STEP_LENGTH of the specified vector.
-	 * @param serverActor The actor.
-	 * @param newVector The target vector.
-	 * @throws InterruptedException If there is an error blocking until the target is reached.
-	 */
-	private static void moveServerActorToVector(Actor serverActor, Vector2D newVector) throws InterruptedException {
-		int stepsTaken = serverActor.getStepsTaken();
-		double newAngle = serverActor.getVector2D().getAngleToVector(newVector);
-		// TODO Set properly
-		MoveState newState = new MoveState(newAngle, stepsTaken, 0, serverActor.getVector2D(), System.nanoTime());
-		serverActor.addMoveState(newState);
-		double distanceToNewVector = serverActor.getVector2D().getDistanceToVector(newVector);
-		while (distanceToNewVector > vectorTolerance && !serverActor.isForcedState()) {
-			Thread.sleep(10);
-			distanceToNewVector = serverActor.getVector2D().getDistanceToVector(newVector);
-		}
-		// TODO Set properly
-		MoveState idleState = new MoveState(MoveState.IDLE, serverActor.getStepsTaken(), 0, serverActor.getVector2D(), System.nanoTime());
-		serverActor.addMoveState(idleState);
-		Thread.sleep(10);
-	}
-
-	/**
-	 * Move the client and server player to the given vector, by initiating the move client-side.  Also sends a ping to the
-	 * server with each sleep cycle.
-	 * @param newVector The vector to which to move.
-	 * @param client The client.
-	 * @param serverPlayer The server player.
-	 * @throws InterruptedException If there's an exception.
-	 */
-	private static void moveClientPlayerTowardVector(Vector2D newVector, WorldClient client, Actor serverPlayer) throws InterruptedException {
-		ClientPlayer clientPlayer = client.getPlayer();
-		// Make sure not to send multiple states during the same update.
-		idleClientPlayer(1, clientPlayer);
-		double newAngle = clientPlayer.getVector2D().getAngleToVector(newVector);
-		clientPlayer.setNewRelativeAngle(newAngle);
-		double targetDistance = clientPlayer.getVector2D().getDistanceToVector(newVector);
-		while (targetDistance >= vectorTolerance && !clientPlayer.isForcedState()) {
-			Thread.sleep(2);
-			targetDistance = clientPlayer.getVector2D().getDistanceToVector(newVector);
-		}
-		int stepsToIdle = Math.abs(clientPlayer.getStepsTaken() - serverPlayer.getStepsTaken()) * 5;
-		idleClientPlayer(stepsToIdle, clientPlayer);
 	}
 
 	/**
@@ -171,7 +108,7 @@ public class WorldServerTest
 		WorldObject clientActor = worldClient.getPlayer().getVisibleObjects().get(serverActor.getId());
 		Assert.assertEquals(1, worldClient.getPlayer().getVisibleObjects().size());
 		Assert.assertNotNull(clientActor);
-		Thread.sleep(100);
+		Thread.sleep(500);
 		assertClientAndServerInSamePosition(serverActor, clientActor);
 
 		LOGGER.log(Level.INFO, "Moving serverActor out of visible range.");
@@ -179,19 +116,14 @@ public class WorldServerTest
 		Assert.assertEquals(0, worldClient.getPlayer().getVisibleObjects().size());
 
 		LOGGER.log(Level.INFO, "Moving clientPlayer into visible range.");
-		moveClientPlayerTowardVector(new Vector2D(0, Location.SIZE + 1), worldClient, serverPlayer);
+		moveClientPlayerTowardVector(new Vector2D(0, Location.SIZE + 1), worldClient);
 		Assert.assertEquals(1, worldClient.getPlayer().getVisibleObjects().size());
 		clientActor = worldClient.getPlayer().getVisibleObjects().get(serverActor.getId());
 		assertClientAndServerInSamePosition(serverActor, clientActor);
 
 		LOGGER.log(Level.INFO, "Moving clientPlayer back to origin.");
-		moveClientPlayerTowardVector(Vector2D.ORIGIN, worldClient, serverPlayer);
+		moveClientPlayerTowardVector(Vector2D.ORIGIN, worldClient);
 		Assert.assertEquals(0, worldClient.getPlayer().getVisibleObjects().size());
-	}
-
-	private void assertClientAndServerInSamePosition(Actor serverActor, WorldObject clientActor) {
-		double distance = serverActor.getVector2D().getDistanceToVector(clientActor.getVector2D());
-		Assert.assertEquals(distance, 0, vectorTolerance);
 	}
 
 	/**
@@ -201,7 +133,7 @@ public class WorldServerTest
 	@Test(timeOut = 10000)
 	public void testForcedStateFromEdge() throws Exception {
 		LOGGER.log(Level.INFO, "Attempting to move clientPlayer off edge of world.");
-		moveClientPlayerTowardVector(new Vector2D(-1.0, 0), worldClient, serverPlayer);
+		moveClientPlayerTowardVector(new Vector2D(-1.0, 0), worldClient);
 		//moveClientPlayerTowardVector(new Vector2D(1, 0), worldClient, serverPlayer);
 		Assert.assertFalse(clientPlayer.isForcedState());
 		assertClientAndServerInSamePosition(serverPlayer, clientPlayer);
@@ -213,20 +145,11 @@ public class WorldServerTest
 	 */
 	@Test(timeOut = 10000)
 	public void testForcedState() throws Exception {
-		moveClientPlayerTowardVector(new Vector2D(0.0, 0.2), worldClient, serverPlayer);
-		moveClientPlayerTowardVector(new Vector2D(0.0, -0.4), worldClient, serverPlayer);
-		idleClientPlayer(5, clientPlayer);
+		moveClientPlayerTowardVector(new Vector2D(0.0, 0.2), worldClient);
+		moveClientPlayerTowardVector(new Vector2D(0.0, -0.4), worldClient);
+		clientPlayer.setRelativeAngle(MoveState.IDLE);
+		Thread.sleep(100);
 		Assert.assertEquals(clientPlayer.getVector2D(), serverPlayer.getVector2D());
-	}
-
-	/**
-	 * Test basic movement.
-	 * @throws Exception If there's an exception.
-	 */
-	@Test(timeOut = 10000)
-	public void testMovement() throws Exception {
-		Vector2D targetVector = new Vector2D(3.956, 3.7468);
-		moveClientPlayerTowardVector(targetVector, worldClient, serverPlayer);
 	}
 
 	/**
@@ -235,11 +158,11 @@ public class WorldServerTest
 	 */
 	@Test(timeOut = 10000)
 	public void testRepeatedForcedState() throws Exception {
-		moveClientPlayerTowardVector(new Vector2D(.5, .5), worldClient, serverPlayer);
-		moveClientPlayerTowardVector(new Vector2D(-1, -1), worldClient, serverPlayer);
-		moveClientPlayerTowardVector(new Vector2D(.5, .5), worldClient, serverPlayer);
-		moveClientPlayerTowardVector(new Vector2D(-1, -1), worldClient, serverPlayer);
-		moveClientPlayerTowardVector(new Vector2D(.5, .5), worldClient, serverPlayer);
+		moveClientPlayerTowardVector(new Vector2D(.5, .5), worldClient);
+		moveClientPlayerTowardVector(new Vector2D(-1, -1), worldClient);
+		moveClientPlayerTowardVector(new Vector2D(.5, .5), worldClient);
+		moveClientPlayerTowardVector(new Vector2D(-1, -1), worldClient);
+		moveClientPlayerTowardVector(new Vector2D(.5, .5), worldClient);
 	}
 
 	/**
@@ -248,13 +171,14 @@ public class WorldServerTest
 	 */
 	@Test(timeOut = 10000)
 	public void testRandomMovement() throws Exception {
-		idleClientPlayer(1, clientPlayer);
+		clientPlayer.setRelativeAngle(MoveState.IDLE);
+		Thread.sleep(100);
 		int maxCoordinate = 3;
 		for (int i = 0; i < 3; i++) {
 			double randomX = MathUtil.round(java.lang.Math.random() * maxCoordinate, 4);
 			double randomY = MathUtil.round(java.lang.Math.random() * maxCoordinate, 4);
 			Vector2D random = new Vector2D(randomX, randomY);
-			moveClientPlayerTowardVector(random, worldClient, serverPlayer);
+			moveClientPlayerTowardVector(random, worldClient);
 			double distance = clientPlayer.getVector2D().getDistanceToVector(serverPlayer.getVector2D());
 			Assert.assertEquals(0, distance, vectorTolerance);
 		}
@@ -278,37 +202,31 @@ public class WorldServerTest
 		Vector2D actualVector7 = new Vector2D(9.8, 11);
 
 		// Move to (35, 0)
-		moveClientPlayerTowardVector(vector1, worldClient, serverPlayer);
+		moveClientPlayerTowardVector(vector1, worldClient);
 		assertClientAtVector(vector1);
 
 		// Attempt to move to (35, 35)
 		// This attempt should be forced to stop one step away from
-		moveClientPlayerTowardVector(attemptedVector2, worldClient, serverPlayer);
+		moveClientPlayerTowardVector(attemptedVector2, worldClient);
 		assertClientAtVector(actualVector2);
 
-		moveClientPlayerTowardVector(vector3, worldClient, serverPlayer);
+		moveClientPlayerTowardVector(vector3, worldClient);
 		assertClientAtVector(vector3);
 
-		moveClientPlayerTowardVector(vector4, worldClient, serverPlayer);
+		moveClientPlayerTowardVector(vector4, worldClient);
 		assertClientAtVector(vector4);
 
-		moveClientPlayerTowardVector(vector5, worldClient, serverPlayer);
+		moveClientPlayerTowardVector(vector5, worldClient);
 		assertClientAtVector(vector5);
 
-		moveClientPlayerTowardVector(vector5, worldClient, serverPlayer);
+		moveClientPlayerTowardVector(vector5, worldClient);
 		assertClientAtVector(vector5);
 
-		moveClientPlayerTowardVector(attemptedVector6, worldClient, serverPlayer);
+		moveClientPlayerTowardVector(attemptedVector6, worldClient);
 		assertClientAtVector(actualVector6);
 
-		moveClientPlayerTowardVector(attemptedVector7, worldClient, serverPlayer);
+		moveClientPlayerTowardVector(attemptedVector7, worldClient);
 		assertClientAtVector(actualVector7);
-	}
-
-	private void assertClientAtVector(Vector2D vector1) {
-		double distance = vector1.getDistanceToVector(clientPlayer.getVector2D());
-		Assert.assertEquals(distance, 0, vectorTolerance,
-				"V: " + clientPlayer.getVector2D() + " " + "V1: " + vector1);
 	}
 
 	/**
@@ -340,7 +258,7 @@ public class WorldServerTest
 	 * Test logging the player into and out of the world, including updating coordinates.
 	 * @throws Exception If there's an exception.
 	 */
-	@Test
+	@Test(timeOut = 10000)
 	public void testLoginLogout() throws Exception {
 		testAccountNumber++;
 		WorldSQLHandler worldSQLHandler = new WorldSQLHandler("localhost", "jenjin_test", "jenjin_user",
@@ -367,6 +285,54 @@ public class WorldServerTest
 		Assert.assertEquals(origin, player.getVector2D());
 
 		Assert.assertTrue(worldSQLHandler.logOutPlayer(player));
+	}
+
+	/**
+	 * Test the movement of the client-side player.
+	 * @throws Exception If there's an exception.
+	 */
+	@Test(timeOut =  10000)
+	public void testClientPlayerMovement() throws Exception {
+		ClientPlayer player = worldClient.getPlayer();
+		// Initial position should be (0.0,0.0)
+		player.setRelativeAngle(MoveState.FRONT);
+		// This should sleep for roughly 1 second plus one update.
+		Thread.sleep(1000);
+		player.setRelativeAngle(MoveState.IDLE);
+		Vector2D expected  = new Vector2D(10, 0);
+		double dist = expected.getDistanceToVector(player.getVector2D());
+		Assert.assertEquals(dist, 0, vectorTolerance);
+	}
+
+	/**
+	 * Test movement synchronization between client and server-side players.
+	 * @throws Exception If there's an exception.
+	 */
+	@Test(timeOut = 10000)
+	public void testSynchronizedPlayerMovement() throws Exception {
+		// Start and stop the player a few times to make sure the server is keeping up.
+		ClientPlayer player = worldClient.getPlayer();
+		player.setRelativeAngle(MoveState.FRONT);
+		Thread.sleep(500);
+		player.setRelativeAngle(MoveState.IDLE);
+		Thread.sleep(500);
+		player.setRelativeAngle(MoveState.FRONT);
+		Thread.sleep(500);
+		player.setRelativeAngle(MoveState.IDLE);
+		Thread.sleep(500);
+		player.setRelativeAngle(MoveState.FRONT);
+		Thread.sleep(500);
+		player.setRelativeAngle(MoveState.IDLE);
+		Thread.sleep(500);
+		double dist = serverPlayer.getVector2D().getDistanceToVector(player.getVector2D());
+		Assert.assertEquals(dist, 0, vectorTolerance, "Server Vector: " +
+				serverPlayer.getVector2D() + " Client Vector: " + player.getVector2D());
+	}
+
+	private void assertClientAtVector(Vector2D vector1) {
+		double distance = vector1.getDistanceToVector(clientPlayer.getVector2D());
+		Assert.assertEquals(distance, 0, vectorTolerance,
+				"V: " + clientPlayer.getVector2D() + " " + "V1: " + vector1);
 	}
 
 	/**
@@ -400,4 +366,48 @@ public class WorldServerTest
 		worldServer.blockingStart();
 	}
 
+	/**
+	 * Move the specified actor to within one STEP_LENGTH of the specified vector.
+	 * @param serverActor The actor.
+	 * @param newVector The target vector.
+	 * @throws InterruptedException If there is an error blocking until the target is reached.
+	 */
+	private static void moveServerActorToVector(Actor serverActor, Vector2D newVector) throws InterruptedException {
+		double newAngle = serverActor.getVector2D().getAngleToVector(newVector);
+		serverActor.setRelativeAngle(newAngle);
+		double distanceToNewVector = serverActor.getVector2D().getDistanceToVector(newVector);
+		while (distanceToNewVector > vectorTolerance && !serverActor.isForcedState()) {
+			Thread.sleep(10);
+			distanceToNewVector = serverActor.getVector2D().getDistanceToVector(newVector);
+		}
+		serverActor.setRelativeAngle(MoveState.IDLE);
+		Thread.sleep(10);
+	}
+
+	/**
+	 * Move the client and server player to the given vector, by initiating the move client-side.  Also sends a ping to the
+	 * server with each sleep cycle.
+	 * @param newVector The vector to which to move.
+	 * @param client The client.
+	 * @throws InterruptedException If there's an exception.
+	 */
+	private static void moveClientPlayerTowardVector(Vector2D newVector, WorldClient client) throws InterruptedException {
+		ClientPlayer clientPlayer = client.getPlayer();
+		double newAngle = clientPlayer.getVector2D().getAngleToVector(newVector);
+		clientPlayer.setRelativeAngle(newAngle);
+		double targetDistance = clientPlayer.getVector2D().getDistanceToVector(newVector);
+		while (targetDistance >= vectorTolerance && !clientPlayer.isForcedState()) {
+			Thread.sleep(2);
+			targetDistance = clientPlayer.getVector2D().getDistanceToVector(newVector);
+		}
+		clientPlayer.setRelativeAngle(MoveState.IDLE);
+		// Have to have a little padding for latency.
+		Thread.sleep(10);
+	}
+
+	private void assertClientAndServerInSamePosition(Actor serverActor, WorldObject clientActor) {
+		double distance = serverActor.getVector2D().getDistanceToVector(clientActor.getVector2D());
+		Assert.assertEquals(distance, 0, vectorTolerance, "Server Vector: " + serverActor.getVector2D() +
+			" Client Vector: " + clientActor.getVector2D());
+	}
 }
