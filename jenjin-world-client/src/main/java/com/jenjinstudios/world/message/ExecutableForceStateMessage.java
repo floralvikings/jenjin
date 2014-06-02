@@ -31,6 +31,7 @@ public class ExecutableForceStateMessage extends WorldClientExecutableMessage
 
 	@Override
 	public void runSynced() {
+		System.out.println("Forcing Position: " + vector2D);
 		ClientPlayer player = getClient().getPlayer();
 		player.setAbsoluteAngle(absoluteAngle);
 		player.setRelativeAngle(relativeAngle);
@@ -50,7 +51,7 @@ public class ExecutableForceStateMessage extends WorldClientExecutableMessage
 		double angle = MathUtil.calcStepAngle(absoluteAngle,relativeAngle);
 		Vector2D oldPos = new Vector2D(x, y);
 		long timeOfStep = System.nanoTime();
-		double dist = ClientActor.MOVE_SPEED * ((timeOfStep - timeOfForce) / 100000000);
+		double dist = ClientActor.MOVE_SPEED * ((double)(timeOfStep - timeOfForce) / 100000000d);
 		vector2D = oldPos.getVectorInDirection(dist,angle);
 	}
 }

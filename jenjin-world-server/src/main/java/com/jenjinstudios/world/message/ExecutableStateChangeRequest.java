@@ -51,7 +51,7 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage
 		double y = (double) getMessage().getArgument("yCoord");
 		Vector2D oldPosition = new Vector2D(x,y);
 		double angle = MathUtil.calcStepAngle(absoluteAngle, relativeAngle);
-		distance = ClientActor.MOVE_SPEED * ((System.nanoTime() - time) / 1000000000);
+		distance = ClientActor.MOVE_SPEED * ((double)(System.nanoTime() - time) / 1000000000d);
 		position = oldPosition.getVectorInDirection(distance, angle);
 	}
 }

@@ -88,7 +88,7 @@ public class Actor extends SightedObject
 		if (newState) {
 			resetAngles();
 			synchronized (stateChanges) {
-				stateChanges.add(new MoveState(getRelativeAngle(), 0, getAbsoluteAngle(), vectorBeforeStep, getLastStepTime()));
+				stateChanges.add(new MoveState(getRelativeAngle(), 0, getAbsoluteAngle(), getVector2D(), getLastStepTime()));
 			}
 			newState = false;
 		}

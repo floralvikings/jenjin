@@ -5,7 +5,6 @@ import com.jenjinstudios.world.ClientActor;
 import com.jenjinstudios.world.WorldClient;
 import com.jenjinstudios.world.math.MathUtil;
 import com.jenjinstudios.world.math.Vector2D;
-import com.jenjinstudios.world.state.MoveState;
 
 /**
  * Process an ActorVisibleMessage.
@@ -47,7 +46,7 @@ public class ExecutableActorVisibleMessage extends WorldClientExecutableMessage
 		newlyVisible = new ClientActor(id, name);
 		newlyVisible.setResourceID(resourceID);
 		double dist = ClientActor.MOVE_SPEED *
-				((System.nanoTime() - timeOfVisibility) / 1000000000);
+				((double) (System.nanoTime() - timeOfVisibility) / 1000000000d);
 		double angle = MathUtil.calcStepAngle(absoluteAngle, relativeAngle);
 		Vector2D oldVector = new Vector2D(xCoordinate, yCoordinate);
 		Vector2D newVector = oldVector.getVectorInDirection(dist, angle);

@@ -116,13 +116,13 @@ public class WorldServerTest
 		Assert.assertEquals(0, worldClient.getPlayer().getVisibleObjects().size());
 
 		LOGGER.log(Level.INFO, "Moving clientPlayer into visible range.");
-		moveClientPlayerTowardVector(new Vector2D(0, Location.SIZE + 1), worldClient);
+		movePlayerToVector(new Vector2D(0, Location.SIZE + 1));
 		Assert.assertEquals(1, worldClient.getPlayer().getVisibleObjects().size());
 		clientActor = worldClient.getPlayer().getVisibleObjects().get(serverActor.getId());
 		assertClientAndServerInSamePosition(serverActor, clientActor);
 
 		LOGGER.log(Level.INFO, "Moving clientPlayer back to origin.");
-		moveClientPlayerTowardVector(Vector2D.ORIGIN, worldClient);
+		movePlayerToVector(Vector2D.ORIGIN);
 		Assert.assertEquals(0, worldClient.getPlayer().getVisibleObjects().size());
 	}
 
@@ -133,8 +133,8 @@ public class WorldServerTest
 	@Test(timeOut = 10000)
 	public void testForcedStateFromEdge() throws Exception {
 		LOGGER.log(Level.INFO, "Attempting to move clientPlayer off edge of world.");
-		moveClientPlayerTowardVector(new Vector2D(-1.0, 0), worldClient);
-		//moveClientPlayerTowardVector(new Vector2D(1, 0), worldClient, serverPlayer);
+		movePlayerToVector(new Vector2D(-1.0, 0));
+		//movePlayerToVector(new Vector2D(1, 0), worldClient, serverPlayer);
 		Assert.assertFalse(clientPlayer.isForcedState());
 		assertClientAndServerInSamePosition(serverPlayer, clientPlayer);
 	}
@@ -145,11 +145,13 @@ public class WorldServerTest
 	 */
 	@Test(timeOut = 10000)
 	public void testForcedState() throws Exception {
-		moveClientPlayerTowardVector(new Vector2D(0.0, 0.2), worldClient);
-		moveClientPlayerTowardVector(new Vector2D(0.0, -0.4), worldClient);
-		clientPlayer.setRelativeAngle(MoveState.IDLE);
-		Thread.sleep(100);
-		Assert.assertEquals(clientPlayer.getVector2D(), serverPlayer.getVector2D());
+		movePlayerToVector(new Vector2D(0.0, 0.2));
+		movePlayerToVector(new Vector2D(0.0, -0.4));
+		double distance = clientPlayer.getVector2D().getDistanceToVector(Vector2D.ORIGIN);
+		Assert.assertEquals(distance, 0, vectorTolerance, "Client Vector: " + clientPlayer.getVector2D());
+		distance = clientPlayer.getVector2D().getDistanceToVector(serverPlayer.getVector2D());
+		Assert.assertEquals(distance, 0, vectorTolerance, "Client Vector: " + clientPlayer.getVector2D() +
+			" Server Vector: " + serverPlayer.getVector2D());
 	}
 
 	/**
@@ -158,11 +160,30 @@ public class WorldServerTest
 	 */
 	@Test(timeOut = 10000)
 	public void testRepeatedForcedState() throws Exception {
-		moveClientPlayerTowardVector(new Vector2D(.5, .5), worldClient);
-		moveClientPlayerTowardVector(new Vector2D(-1, -1), worldClient);
-		moveClientPlayerTowardVector(new Vector2D(.5, .5), worldClient);
-		moveClientPlayerTowardVector(new Vector2D(-1, -1), worldClient);
-		moveClientPlayerTowardVector(new Vector2D(.5, .5), worldClient);
+		movePlayerToVector(new Vector2D(.5, .5));
+		double distance = clientPlayer.getVector2D().getDistanceToVector(serverPlayer.getVector2D());
+		Assert.assertEquals(0, distance, vectorTolerance, " Server Vector: " + serverPlayer.getVector2D() +
+				serverPlayer.getRelativeAngle() +
+				" Client Vector: " + clientPlayer.getVector2D());
+		movePlayerToVector(new Vector2D(-1, -1));
+		distance = clientPlayer.getVector2D().getDistanceToVector(serverPlayer.getVector2D());
+		Assert.assertEquals(0, distance, vectorTolerance, " Server Vector: " + serverPlayer.getVector2D() +
+				serverPlayer.getRelativeAngle() +
+				" Client Vector: " + clientPlayer.getVector2D());
+		movePlayerToVector(new Vector2D(.5, .5));
+		distance = clientPlayer.getVector2D().getDistanceToVector(serverPlayer.getVector2D());
+		Assert.assertEquals(0, distance, vectorTolerance, " Server Vector: " + serverPlayer.getVector2D() +
+				serverPlayer.getRelativeAngle() +
+				" Client Vector: " + clientPlayer.getVector2D());
+		movePlayerToVector(new Vector2D(-1, -1));
+		Assert.assertEquals(0, distance, vectorTolerance, " Server Vector: " + serverPlayer.getVector2D() +
+				serverPlayer.getRelativeAngle() +
+				" Client Vector: " + clientPlayer.getVector2D());
+		movePlayerToVector(new Vector2D(.5, .5));
+		distance = clientPlayer.getVector2D().getDistanceToVector(serverPlayer.getVector2D());
+		Assert.assertEquals(0, distance, vectorTolerance, " Server Vector: " + serverPlayer.getVector2D() +
+				serverPlayer.getRelativeAngle() +
+				" Client Vector: " + clientPlayer.getVector2D());
 	}
 
 	/**
@@ -177,10 +198,11 @@ public class WorldServerTest
 		for (int i = 0; i < 3; i++) {
 			double randomX = MathUtil.round(java.lang.Math.random() * maxCoordinate, 4);
 			double randomY = MathUtil.round(java.lang.Math.random() * maxCoordinate, 4);
-			Vector2D random = new Vector2D(randomX, randomY);
-			moveClientPlayerTowardVector(random, worldClient);
+			Vector2D target = new Vector2D(randomX, randomY);
+			movePlayerToVector(target);
 			double distance = clientPlayer.getVector2D().getDistanceToVector(serverPlayer.getVector2D());
-			Assert.assertEquals(0, distance, vectorTolerance);
+			Assert.assertEquals(0, distance, vectorTolerance, "Server Vector: " + serverPlayer.getVector2D() +
+					" Client Vector: " + clientPlayer.getVector2D() + " Target Vector: " + target );
 		}
 	}
 
@@ -202,30 +224,30 @@ public class WorldServerTest
 		Vector2D actualVector7 = new Vector2D(9.8, 11);
 
 		// Move to (35, 0)
-		moveClientPlayerTowardVector(vector1, worldClient);
+		movePlayerToVector(vector1);
 		assertClientAtVector(vector1);
 
 		// Attempt to move to (35, 35)
 		// This attempt should be forced to stop one step away from
-		moveClientPlayerTowardVector(attemptedVector2, worldClient);
+		movePlayerToVector(attemptedVector2);
 		assertClientAtVector(actualVector2);
 
-		moveClientPlayerTowardVector(vector3, worldClient);
+		movePlayerToVector(vector3);
 		assertClientAtVector(vector3);
 
-		moveClientPlayerTowardVector(vector4, worldClient);
+		movePlayerToVector(vector4);
 		assertClientAtVector(vector4);
 
-		moveClientPlayerTowardVector(vector5, worldClient);
+		movePlayerToVector(vector5);
 		assertClientAtVector(vector5);
 
-		moveClientPlayerTowardVector(vector5, worldClient);
+		movePlayerToVector(vector5);
 		assertClientAtVector(vector5);
 
-		moveClientPlayerTowardVector(attemptedVector6, worldClient);
+		movePlayerToVector(attemptedVector6);
 		assertClientAtVector(actualVector6);
 
-		moveClientPlayerTowardVector(attemptedVector7, worldClient);
+		movePlayerToVector(attemptedVector7);
 		assertClientAtVector(actualVector7);
 	}
 
@@ -293,14 +315,9 @@ public class WorldServerTest
 	 */
 	@Test(timeOut =  10000)
 	public void testClientPlayerMovement() throws Exception {
-		ClientPlayer player = worldClient.getPlayer();
-		// Initial position should be (0.0,0.0)
-		player.setRelativeAngle(MoveState.FRONT);
-		// This should sleep for roughly 1 second plus one update.
-		Thread.sleep(1000);
-		player.setRelativeAngle(MoveState.IDLE);
-		Vector2D expected  = new Vector2D(10, 0);
-		double dist = expected.getDistanceToVector(player.getVector2D());
+		Vector2D target  = new Vector2D(10, 0);
+		movePlayerToVector(target);
+		double dist = target.getDistanceToVector(clientPlayer.getVector2D());
 		Assert.assertEquals(dist, 0, vectorTolerance);
 	}
 
@@ -311,22 +328,12 @@ public class WorldServerTest
 	@Test(timeOut = 10000)
 	public void testSynchronizedPlayerMovement() throws Exception {
 		// Start and stop the player a few times to make sure the server is keeping up.
-		ClientPlayer player = worldClient.getPlayer();
-		player.setRelativeAngle(MoveState.FRONT);
-		Thread.sleep(500);
-		player.setRelativeAngle(MoveState.IDLE);
-		Thread.sleep(500);
-		player.setRelativeAngle(MoveState.FRONT);
-		Thread.sleep(500);
-		player.setRelativeAngle(MoveState.IDLE);
-		Thread.sleep(500);
-		player.setRelativeAngle(MoveState.FRONT);
-		Thread.sleep(500);
-		player.setRelativeAngle(MoveState.IDLE);
-		Thread.sleep(500);
-		double dist = serverPlayer.getVector2D().getDistanceToVector(player.getVector2D());
+		movePlayerToVector(new Vector2D(4, 0));
+		movePlayerToVector(new Vector2D(8, 0));
+		movePlayerToVector(new Vector2D(10, 0));
+		double dist = serverPlayer.getVector2D().getDistanceToVector(clientPlayer.getVector2D());
 		Assert.assertEquals(dist, 0, vectorTolerance, "Server Vector: " +
-				serverPlayer.getVector2D() + " Client Vector: " + player.getVector2D());
+				serverPlayer.getVector2D() + " Client Vector: " + clientPlayer.getVector2D());
 	}
 
 	private void assertClientAtVector(Vector2D vector1) {
@@ -349,7 +356,9 @@ public class WorldServerTest
 
 		/* The WorldClientHandler used to test. */
 		WorldClientHandler worldClientHandler = worldServer.getClientHandlerByUsername(worldClient.getUsername());
-		clientPlayer = worldClient.getPlayer();
+		while(clientPlayer == null) {
+			clientPlayer = worldClient.getPlayer();
+		}
 		serverPlayer = worldClientHandler.getPlayer();
 	}
 
@@ -387,22 +396,26 @@ public class WorldServerTest
 	/**
 	 * Move the client and server player to the given vector, by initiating the move client-side.  Also sends a ping to the
 	 * server with each sleep cycle.
-	 * @param newVector The vector to which to move.
-	 * @param client The client.
+	 * @param target The vector to which to move.
 	 * @throws InterruptedException If there's an exception.
 	 */
-	private static void moveClientPlayerTowardVector(Vector2D newVector, WorldClient client) throws InterruptedException {
-		ClientPlayer clientPlayer = client.getPlayer();
-		double newAngle = clientPlayer.getVector2D().getAngleToVector(newVector);
-		clientPlayer.setRelativeAngle(newAngle);
-		double targetDistance = clientPlayer.getVector2D().getDistanceToVector(newVector);
-		while (targetDistance >= vectorTolerance && !clientPlayer.isForcedState()) {
+	private void movePlayerToVector(Vector2D target) throws InterruptedException {
+		double angle = clientPlayer.getVector2D().getAngleToVector(target);
+		double dist = clientPlayer.getVector2D().getDistanceToVector(target);
+		clientPlayer.setRelativeAngle(angle);
+		long timeToSleep = (long)(1000 * (dist / ClientActor.MOVE_SPEED));
+		// Have to wait for the new angle to be set
+		for(int i=0; i<timeToSleep; i+=2) {
 			Thread.sleep(2);
-			targetDistance = clientPlayer.getVector2D().getDistanceToVector(newVector);
+			if(clientPlayer.getVector2D().getDistanceToVector(target) <= vectorTolerance) {
+				break;
+			}
 		}
 		clientPlayer.setRelativeAngle(MoveState.IDLE);
-		// Have to have a little padding for latency.
-		Thread.sleep(10);
+		Thread.sleep(100);
+		while(serverPlayer.getRelativeAngle() != MoveState.IDLE) {
+			Thread.sleep(2);
+		}
 	}
 
 	private void assertClientAndServerInSamePosition(Actor serverActor, WorldObject clientActor) {
