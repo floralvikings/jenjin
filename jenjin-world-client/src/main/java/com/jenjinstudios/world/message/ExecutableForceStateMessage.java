@@ -31,7 +31,6 @@ public class ExecutableForceStateMessage extends WorldClientExecutableMessage
 
 	@Override
 	public void runSynced() {
-		System.out.println("Forcing Position: " + vector2D);
 		ClientPlayer player = getClient().getPlayer();
 		player.setAbsoluteAngle(absoluteAngle);
 		player.setRelativeAngle(relativeAngle);

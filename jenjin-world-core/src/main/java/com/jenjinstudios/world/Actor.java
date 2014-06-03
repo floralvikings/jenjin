@@ -86,11 +86,11 @@ public class Actor extends SightedObject
 		// Reset the array of visible actors.
 		resetVisibleObjects();
 		if (newState) {
+            newState = false;
 			resetAngles();
 			synchronized (stateChanges) {
 				stateChanges.add(new MoveState(getRelativeAngle(), 0, getAbsoluteAngle(), getVector2D(), getLastStepTime()));
 			}
-			newState = false;
 		}
 	}
 
