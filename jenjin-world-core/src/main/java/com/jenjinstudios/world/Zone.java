@@ -152,12 +152,12 @@ public class Zone
 		for (int x = xStart; x <= xEnd; x++)
 		{
 				Location location = getLocationOnGrid(x, yStart);
-				if (location != null && !"false".equals(location.getLocationProperties().getProperty("walkable")))
+				if (location != null)
 				{
 					endpointLocations.add(location);
 				}
             location = getLocationOnGrid(x, yEnd);
-            if (location != null && !"false".equals(location.getLocationProperties().getProperty("walkable")))
+            if (location != null)
             {
                 endpointLocations.add(location);
             }
@@ -167,12 +167,12 @@ public class Zone
         for (int y = yStart; y <= yEnd; y++)
         {
             Location location = getLocationOnGrid(xStart, y);
-            if (location != null && !"false".equals(location.getLocationProperties().getProperty("walkable")))
+            if (location != null)
             {
                 endpointLocations.add(location);
             }
             location = getLocationOnGrid(xEnd, y);
-            if (location != null && !"false".equals(location.getLocationProperties().getProperty("walkable")))
+            if (location != null)
             {
                 endpointLocations.add(location);
             }
