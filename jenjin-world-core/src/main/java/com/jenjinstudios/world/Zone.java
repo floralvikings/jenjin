@@ -142,26 +142,44 @@ public class Zone
 		int centerY = center.X_COORDINATE;
 		int centerX = center.Y_COORDINATE;
 		HashSet<Location> visibleLocations = new HashSet<>();
-		LinkedList<Location> locationsInSquare = new LinkedList<>();
+		LinkedList<Location> endpointLocations = new LinkedList<>();
 
-		int xStart = centerX - radius;
-		int yStart = centerY - radius;
-		int xEnd = centerX + radius;
-		int yEnd = centerY + radius;
+		int xStart = centerX - radius >= 0 ? centerX - radius : 0;
+		int yStart = centerY - radius >= 0 ? centerY - radius : 0;
+		int xEnd = centerX + radius < locationGrid.length ? centerX + radius : locationGrid.length - 1;
+		int yEnd = centerY + radius < locationGrid[0].length ? centerY + radius : locationGrid[0].length - 1;
 
 		for (int x = xStart; x <= xEnd; x++)
 		{
-			for (int y = yStart; y <= yEnd; y++)
-			{
-				Location location = getLocationOnGrid(x, y);
+				Location location = getLocationOnGrid(x, yStart);
 				if (location != null && !"false".equals(location.getLocationProperties().getProperty("walkable")))
 				{
-					locationsInSquare.add(location);
+					endpointLocations.add(location);
 				}
-			}
+            location = getLocationOnGrid(x, yEnd);
+            if (location != null && !"false".equals(location.getLocationProperties().getProperty("walkable")))
+            {
+                endpointLocations.add(location);
+            }
+
 		}
 
-		for (Location location : locationsInSquare)
+        for (int y = yStart; y <= yEnd; y++)
+        {
+            Location location = getLocationOnGrid(xStart, y);
+            if (location != null && !"false".equals(location.getLocationProperties().getProperty("walkable")))
+            {
+                endpointLocations.add(location);
+            }
+            location = getLocationOnGrid(xEnd, y);
+            if (location != null && !"false".equals(location.getLocationProperties().getProperty("walkable")))
+            {
+                endpointLocations.add(location);
+            }
+
+        }
+
+		for (Location location : endpointLocations)
 		{
 			double distance = new Vector2D(centerX, centerY).getDistanceToVector(new Vector2D(location.X_COORDINATE, location.Y_COORDINATE));
 			if (distance <= radius)
