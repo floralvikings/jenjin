@@ -142,61 +142,49 @@ public class Zone
 		int centerY = center.X_COORDINATE;
 		int centerX = center.Y_COORDINATE;
 		HashSet<Location> visibleLocations = new HashSet<>();
-		LinkedList<Location> endpointLocations = new LinkedList<>();
 
-		int xStart = centerX - radius >= 0 ? centerX - radius : 0;
-		int yStart = centerY - radius >= 0 ? centerY - radius : 0;
-		int xEnd = centerX + radius < locationGrid.length ? centerX + radius : locationGrid.length - 1;
-		int yEnd = centerY + radius < locationGrid[0].length ? centerY + radius : locationGrid[0].length - 1;
+		LinkedList<Vector2D> circle = castCircle(centerX, centerY, radius);
 
-		for (int x = xStart; x <= xEnd; x++)
-		{
-				Location location = getLocationOnGrid(x, yStart);
-				if (location != null)
-				{
-					endpointLocations.add(location);
-				}
-            location = getLocationOnGrid(x, yEnd);
-            if (location != null)
-            {
-                endpointLocations.add(location);
-            }
-
-		}
-
-        for (int y = yStart; y <= yEnd; y++)
-        {
-            Location location = getLocationOnGrid(xStart, y);
-            if (location != null)
-            {
-                endpointLocations.add(location);
-            }
-            location = getLocationOnGrid(xEnd, y);
-            if (location != null)
-            {
-                endpointLocations.add(location);
-            }
-
-        }
-
-		for (Location location : endpointLocations)
-		{
-			double distance = new Vector2D(centerX, centerY).getDistanceToVector(new Vector2D(location.X_COORDINATE, location.Y_COORDINATE));
-			if (distance <= radius)
-			{
-				LinkedList<Location> visibleRay = castVisibilityRay(centerX, centerY, location.X_COORDINATE, location.Y_COORDINATE);
-				visibleLocations.addAll(visibleRay);
-			}
+		for(Vector2D vector2D : circle) {
+			int x = (int) vector2D.getXCoordinate();
+			int y = (int) vector2D.getYCoordinate();
+			visibleLocations.addAll(castVisibilityRay(centerX, centerY, x, y));
 		}
 
 		locations.addAll(visibleLocations);
 		return locations;
 	}
 
+	public LinkedList<Vector2D> castCircle(int x0, int y0, int radius) {
+		int x = radius, y = 0;
+		int radiusError = 1-x;
+		LinkedList<Vector2D> circle = new LinkedList<>();
+		while(x >= y)
+		{
+			circle.add(new Vector2D(x + x0, y + y0));
+			circle.add(new Vector2D(y + x0, x + y0));
+			circle.add(new Vector2D(-x + x0, y + y0));
+			circle.add(new Vector2D(-y + x0, x + y0));
+			circle.add(new Vector2D(-x + x0, -y + y0));
+			circle.add(new Vector2D(-y + x0, -x + y0));
+			circle.add(new Vector2D(x + x0, -y + y0));
+			circle.add(new Vector2D(y + x0, -x + y0));
+			y++;
+			if (radiusError<0)
+			{
+				radiusError += 2 * y + 1;
+			} else {
+				x--;
+				radiusError+= 2 * (y - x + 1);
+			}
+		}
+		return circle;
+	}
+
 	/**
 	 * This uses a modified version of Bresenhem's Line Algorithm, available in its original form <a
-	 * href=http://lifc.univ-fcomte.fr/~dedu/projects/bresenham/index.html>here.</a>  This algorithm works by casting a ray
-	 * until a Location with a LocationProperty containing the property "blocksVision" set to "true".
+	 * href=http://lifc.univ-fcomte.fr/~dedu/projects/bresenham/index.html>here.</a>  This algorithm works by casting a
+	 * ray until a Location with a LocationProperty containing the property "blocksVision" set to "true".
 	 * @param x1 The starting x location.
 	 * @param y1 The starting y location.
 	 * @param x2 The ending x location.
@@ -275,20 +263,20 @@ public class Zone
 					error -= ddy;
 					if (error + previousError < ddy)
 					{
-						if(!addLocationToVisibilityRay(y, x - xStep, visibleRay)) break;
+						if (!addLocationToVisibilityRay(y, x - xStep, visibleRay)) break;
 					} else
 					{
 						if (error + previousError > ddy)
 						{
-							if(!addLocationToVisibilityRay(y - yStep, x, visibleRay)) break;
+							if (!addLocationToVisibilityRay(y - yStep, x, visibleRay)) break;
 						} else
 						{
-							if(!addLocationToVisibilityRay(y, x - xStep, visibleRay)) break;
-							if(!addLocationToVisibilityRay(y - yStep, x, visibleRay)) break;
+							if (!addLocationToVisibilityRay(y, x - xStep, visibleRay)) break;
+							if (!addLocationToVisibilityRay(y - yStep, x, visibleRay)) break;
 						}
 					}
 				}
-				if(!addLocationToVisibilityRay(y, x, visibleRay)) break;
+				if (!addLocationToVisibilityRay(y, x, visibleRay)) break;
 				previousError = error;
 			}
 		}
@@ -296,8 +284,8 @@ public class Zone
 	}
 
 	/**
-	 * Add the location at the given coordinates to the specified ray, returning true if the location was added, false if
-	 * not.
+	 * Add the location at the given coordinates to the specified ray, returning true if the location was added, false
+	 * if not.
 	 * @param x The x coordinate.
 	 * @param y The y coordinate.
 	 * @param ray The ray.
