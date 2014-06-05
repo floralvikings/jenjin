@@ -2,8 +2,6 @@ package com.jenjinstudios.world;
 
 import com.jenjinstudios.world.state.MoveState;
 
-import java.util.LinkedList;
-
 /**
  * The Client-Side representation of a player.
  * @author Caleb Brinkman
@@ -30,26 +28,30 @@ public class ClientPlayer extends Actor
 	 */
 	public void setAbsoluteAngle(double absoluteAngle) {
 		// Helps reduce repetitive messages trying to force walking through a wall.
-		if (forcedMoveState != null && absoluteAngle == forcedMoveState.absoluteAngle) {
+		if (forcedMoveState != null && absoluteAngle == forcedMoveState.absoluteAngle)
+		{
 			return;
 		}
+		forcedMoveState = null;
 		super.setAbsoluteAngle(absoluteAngle);
 	}
 
 	public void setRelativeAngle(double relativeAngle) {
 		// TODO Better way of handling this check?
 		// Helps reduce repetitive messages trying to force walking through a wall.
-		if (forcedMoveState != null && relativeAngle == forcedMoveState.relativeAngle) {
+		if (forcedMoveState != null && relativeAngle == forcedMoveState.relativeAngle)
+		{
 			return;
 		}
+		forcedMoveState = null;
 		super.setRelativeAngle(relativeAngle);
 	}
 
 	/** Mark that the actor has been forced to its current position. */
 	public void forcePosition() {
-		setForcedState(true);
 		forcedMoveState = new MoveState(getNewRelAngle(), 0, getNewAbsAngle(),
 				getVector2D(), getWorld().getLastUpdateStarted());
+		setForcedState(forcedMoveState);
 	}
 
 	/**

@@ -3,6 +3,7 @@ package com.jenjinstudios.world;
 import com.jenjinstudios.io.Message;
 import com.jenjinstudios.io.MessageRegistry;
 import com.jenjinstudios.net.ClientHandler;
+import com.jenjinstudios.world.state.MoveState;
 import com.jenjinstudios.world.util.WorldServerMessageFactory;
 
 import java.io.IOException;
@@ -115,8 +116,9 @@ public class WorldClientHandler extends ClientHandler
 
 	/** Generate and queue a ForcedStateMessage if necessary. */
 	private void queueForcesStateMessage() {
-		if (player.isForcedState())
-			queueMessage(getMessageFactory().generateForcedStateMessage(player, server));
+		MoveState forcedState = player.getForcedState();
+		if (forcedState != null)
+			queueMessage(getMessageFactory().generateForcedStateMessage(forcedState, server));
 	}
 
 	public WorldServerMessageFactory getMessageFactory() { return messageFactory; }

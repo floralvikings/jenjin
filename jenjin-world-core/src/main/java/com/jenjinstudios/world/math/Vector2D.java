@@ -75,7 +75,7 @@ public class Vector2D
 
 	@Override
 	public String toString() {
-		return "(" + xCoordinate + ", " + yCoordinate + ")";
+		return String.format("(%.3f, %.3f)", xCoordinate, yCoordinate);
 	}
 
 	/**

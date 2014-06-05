@@ -37,7 +37,7 @@ public class WorldServerTest
 	 * server can have about one update's worth of discrepancy between them before the tests fail.  This is intended to
 	 * avoid spurious test failures that could be caused by unforeseen lag on one of the threads.
 	 */
-	private static final double vectorTolerance = (Actor.MOVE_SPEED / (double) WorldServer.DEFAULT_UPS);
+	private static final double vectorTolerance = (Actor.MOVE_SPEED / (double) WorldServer.DEFAULT_UPS) * 1.1;
 
 	/**
 	 * Construct the test.
@@ -115,8 +115,6 @@ public class WorldServerTest
 		Player serverPlayer = server.getClientHandlerByUsername(client.getUsername()).getPlayer();
 		LOGGER.log(Level.INFO, "Attempting to move clientPlayer off edge of world.");
 		movePlayerToVector(client, server, new Vector2D(-1.0, 0));
-		//movePlayerToVector(new Vector2D(1, 0), worldClient, serverPlayer);
-		Assert.assertFalse(clientPlayer.isForcedState());
 		assertClientAndServerInSamePosition(serverPlayer, clientPlayer);
 		tearDown(client, server);
 	}
@@ -219,7 +217,7 @@ public class WorldServerTest
 		Vector2D attemptedVector6 = new Vector2D(15, 11);
 		Vector2D actualVector6 = new Vector2D(9.8, 11);
 		Vector2D attemptedVector7 = new Vector2D(15, 15);
-		Vector2D actualVector7 = new Vector2D(9.8, 11);
+		Vector2D actualVector7 = new Vector2D(10, 11);
 
 		// Move to (35, 0)
 		movePlayerToVector(client, server, vector1);
@@ -393,7 +391,7 @@ public class WorldServerTest
 		double newAngle = serverActor.getVector2D().getAngleToVector(newVector);
 		serverActor.setRelativeAngle(newAngle);
 		double distanceToNewVector = serverActor.getVector2D().getDistanceToVector(newVector);
-		while (distanceToNewVector > vectorTolerance && !serverActor.isForcedState())
+		while (distanceToNewVector > vectorTolerance && (serverActor.getForcedState() == null))
 		{
 			Thread.sleep(10);
 			distanceToNewVector = serverActor.getVector2D().getDistanceToVector(newVector);
@@ -414,6 +412,7 @@ public class WorldServerTest
 		Player serverPlayer = server.getClientHandlerByUsername(client.getUsername()).getPlayer();
 		double angle = clientPlayer.getVector2D().getAngleToVector(target);
 		double dist = clientPlayer.getVector2D().getDistanceToVector(target);
+		if(dist <= vectorTolerance) return;
 		clientPlayer.setRelativeAngle(angle);
 		long timeToSleep = (long) (1000 * (dist / ClientActor.MOVE_SPEED));
 		// Have to wait for the new angle to be set

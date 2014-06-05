@@ -35,7 +35,7 @@ public class Actor extends SightedObject
 	/** Flags whether this actor has changed to a new state during this update. */
 	private boolean newState;
 	/** Flags whether the state of this actor was forced during this update. */
-	private boolean forcedState;
+	private MoveState forcedState;
 	/** The Location before a step is taken. */
 	private Vector2D vectorBeforeStep;
 	/** The time at which this actor finished it's last step. */
@@ -61,7 +61,6 @@ public class Actor extends SightedObject
 
 	@Override
 	public void setUp() {
-		resetFlags();
 		vectorBeforeStep = getVector2D();
 		synchronized (stateChanges) {
 			stateChanges.clear();
@@ -98,7 +97,7 @@ public class Actor extends SightedObject
 	public void step() {
 		double stepLength = calcStepLength();
 		if (!stepForward(stepLength)) {
-			forcedState = true;
+			forcedState = new MoveState(MoveState.IDLE, 0, getAbsoluteAngle(), getVector2D(), lastStepTime);
 			setRelativeAngle(MoveState.IDLE);
 		}
 	}
@@ -126,11 +125,6 @@ public class Actor extends SightedObject
 		return walkable;
 	}
 
-	/** Reset the flags used by this actor. */
-	protected void resetFlags() {
-		forcedState = false;
-	}
-
 	public LinkedList<MoveState> getStateChanges() {
 		synchronized (stateChanges) { return new LinkedList<>(stateChanges); }
 	}
@@ -139,7 +133,11 @@ public class Actor extends SightedObject
 	 * Get whether this actor was forced into a state during the most recent update.
 	 * @return Whether this actor was forced into a state during the most recent update.
 	 */
-	public boolean isForcedState() { return forcedState; }
+	public MoveState getForcedState() {
+		MoveState temp = forcedState;
+		forcedState = null;
+		return temp;
+	}
 
 	/**
 	 * Get the time at which this actor finished it's last step.
@@ -187,5 +185,5 @@ public class Actor extends SightedObject
 
 	protected double getNewAbsAngle() { return newAbsAngle; }
 
-	protected void setForcedState(boolean forcedState) { this.forcedState = forcedState; }
+	protected void setForcedState(MoveState forcedState) { this.forcedState = forcedState; }
 }

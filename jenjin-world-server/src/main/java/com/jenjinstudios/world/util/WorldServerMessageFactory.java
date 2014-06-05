@@ -102,16 +102,16 @@ public class WorldServerMessageFactory extends ServerMessageFactory
 
 	/**
 	 * Generate a forced state message.
-	 * @param actor The actor who's state has been forced.
+	 * @param forcedState The state to which the player was forced.
 	 * @param server The server in which the world is running.
 	 * @return A forced state message for the actor's state at the beginning of this server "tick".
 	 */
-	public Message generateForcedStateMessage(Actor actor, WorldServer server) {
+	public Message generateForcedStateMessage(MoveState forcedState, WorldServer server) {
 		Message forcedStateMessage = new Message(worldClientHandler, "ForceStateMessage");
-		forcedStateMessage.setArgument("relativeAngle", actor.getRelativeAngle());
-		forcedStateMessage.setArgument("absoluteAngle", actor.getAbsoluteAngle());
-		forcedStateMessage.setArgument("xCoordinate", actor.getVector2D().getXCoordinate());
-		forcedStateMessage.setArgument("yCoordinate", actor.getVector2D().getYCoordinate());
+		forcedStateMessage.setArgument("relativeAngle", forcedState.relativeAngle);
+		forcedStateMessage.setArgument("absoluteAngle", forcedState.absoluteAngle);
+		forcedStateMessage.setArgument("xCoordinate", forcedState.position.getXCoordinate());
+		forcedStateMessage.setArgument("yCoordinate", forcedState.position.getYCoordinate());
 		forcedStateMessage.setArgument("timeOfForce", server.getCycleStartTime());
 		return forcedStateMessage;
 	}
