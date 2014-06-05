@@ -8,6 +8,7 @@ import com.jenjinstudios.world.math.Vector2D;
 import com.jenjinstudios.world.sql.WorldSQLHandler;
 import com.jenjinstudios.world.state.MoveState;
 import org.testng.Assert;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -448,5 +449,14 @@ public class WorldServerTest
 
 		File resourcesDir = new File("resources/");
 		FileUtil.deleteRecursively(resourcesDir);
+	}
+
+	@AfterClass
+	public static void resetDB() throws Exception{
+		WorldSQLHandler worldSQLHandler = new WorldSQLHandler("localhost", "jenjin_test", "jenjin_user", "jenjin_password");
+		for(int i=1; i <= testAccountNumber; i++) {
+			String user = "TestAccount" + i;
+			worldSQLHandler.logOutPlayer(new Actor(user));
+		}
 	}
 }
