@@ -17,9 +17,9 @@ public class NPCTest
 	private World world;
 	/**
 	 * The tolerance for distance between a the client and server positions of an actor. This allows for the client and
-	 * server to have a single update of descrepancy between them.
+	 * server to have a single update of discrepancy between them.
 	 */
-	private static final double vectorTolerance = (Actor.MOVE_SPEED / (double) WorldServer.DEFAULT_UPS);
+	private static final double vectorTolerance = (Actor.MOVE_SPEED / (double) WorldServer.DEFAULT_UPS) * 1.1;
 
 	/**
 	 * Set up the test.

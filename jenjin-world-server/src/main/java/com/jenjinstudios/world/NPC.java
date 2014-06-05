@@ -74,9 +74,8 @@ public class NPC extends Actor
 		if (target != null) {
 			if (getRelativeAngle() == MoveState.IDLE) {
 				double angle = getVector2D().getAngleToVector(target);
-				// TODO Set from world update time.
-				// TODO Rewrite without using Actor state queue
-				//addMoveState(new MoveState(MoveState.FRONT, getStepsTaken(), angle, getVector2D(), System.nanoTime()));
+				setAbsoluteAngle(angle);
+				setRelativeAngle(MoveState.FRONT);
 				return;
 			}
 			double distance = getVector2D().getDistanceToVector(target);
@@ -85,13 +84,10 @@ public class NPC extends Actor
 				Vector2D newTarget = currentPath.peek();
 				if (newTarget != null) {
 					double angle = getVector2D().getAngleToVector(newTarget);
-					// TODO Set from world update time.
-					// TODO Rewrite without using Actor state queue
-					//addMoveState(new MoveState(MoveState.FRONT, getStepsTaken(), angle, getVector2D(), System.nanoTime()));
+					setAbsoluteAngle(angle);
+					setRelativeAngle(MoveState.FRONT);
 				} else {
-					// TODO Set from world update time
-					// TODO Rewrite without using Actor state queue
-					//addMoveState(new MoveState(MoveState.IDLE, getStepsTaken(), getAbsoluteAngle(), getVector2D(), System.nanoTime()));
+					setRelativeAngle(MoveState.IDLE);
 				}
 			}
 		}
@@ -131,7 +127,13 @@ public class NPC extends Actor
 
 	/** Perform the behavior of an NPC that "wanders". */
 	private void doWandersBehavior() {
-		// TODO Will need rewrite
+		if(currentPath.isEmpty()) {
+			plotPath(wanderTargets.get(wanderTargetIndex));
+			wanderTargetIndex ++;
+			if(wanderTargetIndex == wanderTargets.size()) {
+				wanderTargetIndex = 0;
+			}
+		}
 	}
 
 	/** Perform the behavior signature of an NPC that is "aggressive". */
