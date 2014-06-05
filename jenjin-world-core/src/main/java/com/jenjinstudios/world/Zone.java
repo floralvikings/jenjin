@@ -44,8 +44,6 @@ public class Zone
 		constructLocations();
 		LOGGER.log(Level.FINEST, "Adding Special Locations.");
 		addSpecialLocations(specialLocations);
-		LOGGER.log(Level.FINEST, "Calculating Location Visibility.");
-		setLocationVisibility();
 		LOGGER.log(Level.FINEST, "Calculating Location Adjacency.");
 		setAdjacentLocations();
 	}
@@ -300,18 +298,6 @@ public class Zone
 		}
 		ray.add(location);
 		return true;
-	}
-
-	/** Add visible locations to initiated locations. */
-	private void setLocationVisibility() {
-		for (int x = 0; x < xSize; x++)
-		{
-			for (int y = 0; y < ySize; y++)
-			{
-				Location loc = getLocationOnGrid(x, y);
-				loc.setLocationsVisibleFrom(castVisibilityCircle(loc, SightedObject.VIEW_RADIUS));
-			}
-		}
 	}
 
 	/** Initialize the locations in the zone. */

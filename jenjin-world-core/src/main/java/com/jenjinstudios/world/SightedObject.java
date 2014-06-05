@@ -34,16 +34,6 @@ public class SightedObject extends WorldObject
 		newlyInvisibleObjects = new ArrayList<>();
 	}
 
-	/**
-	 * Construct a new SightedObject.
-	 * @param name The name of this object.
-	 * @param id The id of the object.
-	 */
-	public SightedObject(String name, int id) {
-		this(name);
-		this.setId(id);
-	}
-
 	@Override
 	public void setWorld(World world) {
 		super.setWorld(world);
@@ -84,7 +74,8 @@ public class SightedObject extends WorldObject
 		visibleLocations.clear();
 		if (getLocation() != null)
 		{
-			visibleLocations.addAll(getLocation().getLocationsVisibleFrom());
+			Zone zone = getWorld().getZone(getZoneID());
+			visibleLocations.addAll(zone.castVisibilityCircle(getLocation(), VIEW_RADIUS));
 		}
 	}
 

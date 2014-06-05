@@ -20,8 +20,6 @@ public class Location
 	private final HashSet<WorldObject> objects;
 	/** The locationProperties of this location. */
 	private final LocationProperties locationProperties;
-	/** The locations visible from this one. */
-	private LinkedList<Location> locationsVisibleFrom;
 	/** Flags whether the adjacent locations are set. */
 	private boolean hasLocationsSet;
 	/** The location adjacent to the North. */
@@ -73,7 +71,6 @@ public class Location
 		center = new Vector2D(X_COORDINATE * SIZE + SIZE / 2, Y_COORDINATE * SIZE + SIZE / 2);
 		this.locationProperties = locationProperties1;
 		objects = new HashSet<>();
-		locationsVisibleFrom = new LinkedList<>();
 	}
 
 	/**
@@ -102,18 +99,6 @@ public class Location
 
 	@Override
 	public String toString() { return "(" + X_COORDINATE + ", " + Y_COORDINATE + ")"; }
-
-	/**
-	 * Get the locations visible from this one.
-	 * @return The locations visible from this one.
-	 */
-	public LinkedList<Location> getLocationsVisibleFrom() { return locationsVisibleFrom; }
-
-	/**
-	 * Set the locations visible from this location.
-	 * @param visible The locations to be visible from this one.
-	 */
-	public void setLocationsVisibleFrom(List<Location> visible) { locationsVisibleFrom.addAll(visible); }
 
 	/**
 	 * The location adjacent to the North.
