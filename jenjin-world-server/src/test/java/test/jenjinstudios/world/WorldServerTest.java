@@ -132,7 +132,7 @@ public class WorldServerTest
 		movePlayerToVector(client, server, new Vector2D(0.0, 1.0));
 		movePlayerToVector(client, server, new Vector2D(0.0, -0.4));
 
-		double distance = serverPlayer.getVector2D().getDistanceToVector(Vector2D.ORIGIN);
+		double distance = serverPlayer.getVector2D().getDistanceToVector(new Vector2D(0, 0.2));
 		Assert.assertEquals(distance, 0, vectorTolerance);
 
 		tearDown(client, server);
