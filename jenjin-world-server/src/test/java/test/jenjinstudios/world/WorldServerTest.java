@@ -128,15 +128,13 @@ public class WorldServerTest
 	public void testForcedState() throws Exception {
 		WorldServer server = initWorldServer(port);
 		WorldClient client = initWorldClient(port);
-		ClientPlayer clientPlayer = client.getPlayer();
 		Player serverPlayer = server.getClientHandlerByUsername(client.getUsername()).getPlayer();
-		movePlayerToVector(client, server, new Vector2D(0.0, 0.2));
+		movePlayerToVector(client, server, new Vector2D(0.0, 1.0));
 		movePlayerToVector(client, server, new Vector2D(0.0, -0.4));
-		double distance = clientPlayer.getVector2D().getDistanceToVector(Vector2D.ORIGIN);
-		Assert.assertEquals(distance, 0, vectorTolerance, "Client Vector: " + clientPlayer.getVector2D());
-		distance = clientPlayer.getVector2D().getDistanceToVector(serverPlayer.getVector2D());
-		Assert.assertEquals(distance, 0, vectorTolerance, "Client Vector: " + clientPlayer.getVector2D() +
-				" Server Vector: " + serverPlayer.getVector2D());
+
+		double distance = serverPlayer.getVector2D().getDistanceToVector(Vector2D.ORIGIN);
+		Assert.assertEquals(distance, 0, vectorTolerance);
+
 		tearDown(client, server);
 	}
 
