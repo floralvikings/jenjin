@@ -70,6 +70,7 @@ public class WorldServerTest
 
 		double edge = Location.SIZE * (SightedObject.VIEW_RADIUS + 1);
 		Vector2D startPos = new Vector2D(0, edge + 1);
+		// Should be (0, 109)
 		Vector2D targetPos = new Vector2D(0, edge - 1);
 		Actor serverActor = new Actor("TestActor");
 		serverActor.setVector2D(startPos);
@@ -398,7 +399,8 @@ public class WorldServerTest
 			distanceToNewVector = serverActor.getVector2D().getDistanceToVector(newVector);
 		}
 		serverActor.setRelativeAngle(MoveState.IDLE);
-		Thread.sleep(10);
+		// Give client time to "catch up".
+		Thread.sleep(100);
 	}
 
 	/**

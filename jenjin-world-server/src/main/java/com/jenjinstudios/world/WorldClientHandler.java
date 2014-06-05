@@ -105,7 +105,8 @@ public class WorldClientHandler extends ClientHandler
 	private void queueStateChangeMessages() {
 		for (WorldObject object : player.getVisibleObjects().values()) {
 			Actor changedActor;
-			if (object instanceof Actor && (changedActor = (Actor) object).isNewState()) {
+			if (object instanceof Actor) {
+				changedActor = (Actor) object;
 				List<Message> newState = getMessageFactory().generateChangeStateMessage(changedActor);
 				for(Message m : newState){ queueMessage(m);}
 			}

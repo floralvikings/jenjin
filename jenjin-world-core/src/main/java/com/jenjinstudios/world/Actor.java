@@ -131,12 +131,6 @@ public class Actor extends SightedObject
 		forcedState = false;
 	}
 
-	/**
-	 * Get whether this actor has initialized a new state during this update.
-	 * @return Whether the actor has changed moved states since the beginning of this update.
-	 */
-	public boolean isNewState() { return newState; }
-
 	public LinkedList<MoveState> getStateChanges() {
 		synchronized (stateChanges) { return new LinkedList<>(stateChanges); }
 	}
