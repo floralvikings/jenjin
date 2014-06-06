@@ -23,6 +23,8 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage
 	private Vector2D position;
 	/** The distance from the received position to the new position. */
 	private double distance;
+	/** The position before correction. */
+	private Vector2D uncorrectedPosition;
 
 	/**
 	 * Construct a new ExecutableMessage.  Must be implemented by subclasses.
@@ -36,7 +38,8 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage
 	@Override
 	public void runSynced() {
 		Actor player = getClientHandler().getPlayer();
-		if(distance > MAX_CORRECT_DISTANCE) {
+		double originDistance = player.getVector2D().getDistanceToVector(uncorrectedPosition);
+		if(originDistance > MAX_CORRECT_DISTANCE || distance > MAX_CORRECT_DISTANCE) {
 			// TODO Force player state here.
 			return;
 		}
@@ -53,9 +56,9 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage
 		long time = (long) getMessage().getArgument("timeOfChange");
 		double x = (double) getMessage().getArgument("xCoordinate");
 		double y = (double) getMessage().getArgument("yCoordinate");
-		Vector2D oldPosition = new Vector2D(x,y);
+		uncorrectedPosition = new Vector2D(x,y);
 		double angle = MathUtil.calcStepAngle(absoluteAngle, relativeAngle);
 		distance = ClientActor.MOVE_SPEED * ((double)(System.nanoTime() - time) / 1000000000d);
-		position = oldPosition.getVectorInDirection(distance, angle);
+		position = uncorrectedPosition.getVectorInDirection(distance, angle);
 	}
 }
