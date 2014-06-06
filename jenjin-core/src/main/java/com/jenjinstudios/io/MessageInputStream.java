@@ -48,7 +48,7 @@ public class MessageInputStream
 	 * @return The Message constructed form the data stream.
 	 * @throws IOException If there is an IO error.
 	 */
-	public Message readMessage() throws IOException {
+	public Message readMessage() {
 		try
 		{
 			short id = inputStream.readShort();

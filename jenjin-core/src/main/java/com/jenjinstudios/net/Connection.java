@@ -219,9 +219,6 @@ public abstract class Connection extends Thread
 				LOGGER.log(Level.FINEST, "Connection {0} reading message {1}", new Object[]{getName(), currentMessage});
 				processMessage(currentMessage);
 			}
-		} catch (IOException ex)
-		{
-			LOGGER.log(Level.SEVERE, "Error retrieving message from server.", ex);
 		} finally
 		{
 			shutdown();

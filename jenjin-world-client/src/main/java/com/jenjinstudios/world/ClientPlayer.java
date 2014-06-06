@@ -49,7 +49,7 @@ public class ClientPlayer extends Actor
 
 	/** Mark that the actor has been forced to its current position. */
 	public void forcePosition() {
-		forcedMoveState = new MoveState(getNewRelAngle(), 0, getNewAbsAngle(),
+		forcedMoveState = new MoveState(getNewRelAngle(), getNewAbsAngle(),
 				getVector2D(), getWorld().getLastUpdateStarted());
 		setForcedState(forcedMoveState);
 	}

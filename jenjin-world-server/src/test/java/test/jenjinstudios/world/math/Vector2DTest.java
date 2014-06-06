@@ -21,11 +21,8 @@ public class Vector2DTest
 		Assert.assertEquals(7, vector2D02.getYCoordinate(), 0);
 		Assert.assertEquals(5, vector2D02.getXCoordinate(), 0);
 
-		vector2D02.setXCoordinate(2);
-		vector2D02.setYCoordinate(3);
-
-		Assert.assertEquals(2, vector2D02.getXCoordinate(), 0);
-		Assert.assertEquals(3, vector2D02.getYCoordinate(), 0);
+		Assert.assertEquals(5, vector2D02.getXCoordinate(), 0);
+		Assert.assertEquals(7, vector2D02.getYCoordinate(), 0);
 	}
 
 	/** Test the relativeAngle math methods. */

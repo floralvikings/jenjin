@@ -95,7 +95,4 @@ public class ClientActor extends WorldObject
 	 */
 	public void setRelativeAngle(double relativeAngle) { this.relativeAngle = relativeAngle; }
 
-	@Override
-	public void setAbsoluteAngle(double absoluteAngle) { super.setAbsoluteAngle(absoluteAngle); }
-
 }

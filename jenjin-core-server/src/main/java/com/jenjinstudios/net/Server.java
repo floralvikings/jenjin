@@ -1,9 +1,7 @@
 package com.jenjinstudios.net;
 
 import com.jenjinstudios.io.MessageRegistry;
-import org.xml.sax.SAXException;
 
-import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -52,7 +50,7 @@ public class Server<T extends ClientHandler> extends Thread
 	 * @throws javax.xml.parsers.ParserConfigurationException If there is an error parsing XML files.
 	 * @throws org.xml.sax.SAXException If there is an error parsing XML files.
 	 */
-	public Server(int ups, int port, Class<? extends T> handlerClass) throws IOException, NoSuchMethodException, ParserConfigurationException, SAXException {
+	public Server(int ups, int port, Class<? extends T> handlerClass) throws IOException, NoSuchMethodException {
 		this(ups, port, handlerClass, DEFAULT_MAX_CLIENTS);
 	}
 

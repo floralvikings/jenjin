@@ -6,7 +6,6 @@ import com.jenjinstudios.world.WorldClient;
 import com.jenjinstudios.world.WorldObject;
 import com.jenjinstudios.world.math.MathUtil;
 import com.jenjinstudios.world.math.Vector2D;
-import com.jenjinstudios.world.state.MoveState;
 
 /**
  * Process a StateChangeMessage.

@@ -55,7 +55,7 @@ public class Actor extends SightedObject
 		relativeAngle = MoveState.IDLE;
 		// TODO Replace with world update time, if possible?  Since world hasn't been set here, may not be.
 		synchronized (stateChanges) {
-			stateChanges.add(new MoveState(IDLE, 0, 0, getVector2D(), System.nanoTime()));
+			stateChanges.add(new MoveState(IDLE, 0, getVector2D(), System.nanoTime()));
 		}
 	}
 
@@ -88,7 +88,7 @@ public class Actor extends SightedObject
             newState = false;
 			resetAngles();
 			synchronized (stateChanges) {
-				stateChanges.add(new MoveState(getRelativeAngle(), 0, getAbsoluteAngle(), getVector2D(), getLastStepTime()));
+				stateChanges.add(new MoveState(getRelativeAngle(), getAbsoluteAngle(), getVector2D(), getLastStepTime()));
 			}
 		}
 	}
@@ -97,7 +97,7 @@ public class Actor extends SightedObject
 	public void step() {
 		double stepLength = calcStepLength();
 		if (!stepForward(stepLength)) {
-			forcedState = new MoveState(MoveState.IDLE, 0, getAbsoluteAngle(), getVector2D(), lastStepTime);
+			forcedState = new MoveState(MoveState.IDLE, getAbsoluteAngle(), getVector2D(), lastStepTime);
 			setRelativeAngle(MoveState.IDLE);
 		}
 	}

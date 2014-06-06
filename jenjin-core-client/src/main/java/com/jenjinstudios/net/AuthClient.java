@@ -1,11 +1,7 @@
 package com.jenjinstudios.net;
 
 import com.jenjinstudios.io.Message;
-import org.xml.sax.SAXException;
 
-import javax.xml.parsers.ParserConfigurationException;
-import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -44,7 +40,7 @@ public class AuthClient extends Client
 	 * @throws javax.xml.parsers.ParserConfigurationException If there is an error parsing XML files.
 	 * @throws org.xml.sax.SAXException If there is an error parsing XML files.
 	 */
-	public AuthClient(String address, int port, String username, String password) throws NoSuchAlgorithmException, IOException, SAXException, ParserConfigurationException {
+	public AuthClient(String address, int port, String username, String password) {
 		super(address, port);
 		this.username = username;
 		this.password = password;

@@ -46,12 +46,11 @@ public class MoveState
 	/**
 	 * Construct a new MoveState.
 	 * @param relativeAngle The relativeAngle of movement.
-	 * @param stepsUntilChange The steps in the last movement.
 	 * @param absoluteAngle The angle of movement.
 	 */
-	public MoveState(double relativeAngle, int stepsUntilChange, double absoluteAngle, Vector2D position, long time) {
+	public MoveState(double relativeAngle, double absoluteAngle, Vector2D position, long time) {
 		this.relativeAngle = relativeAngle;
-		this.stepsUntilChange = stepsUntilChange;
+		this.stepsUntilChange = 0;
 		this.absoluteAngle = absoluteAngle;
 		this.position = position;
 		this.time = time;
