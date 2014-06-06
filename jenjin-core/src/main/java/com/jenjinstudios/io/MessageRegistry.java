@@ -57,10 +57,10 @@ public class MessageRegistry
 		{
 			File file = new File(fileName);
 			if (file.isDirectory() || !file.exists()) { continue; }
-			try
-			{
+			try(
 				FileInputStream inputStream = new FileInputStream(file);
-				ZipInputStream zip = new ZipInputStream(inputStream);
+				ZipInputStream zip = new ZipInputStream(inputStream))
+			{
 				ZipEntry ze;
 				while ((ze = zip.getNextEntry()) != null)
 				{
