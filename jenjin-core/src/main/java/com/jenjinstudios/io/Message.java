@@ -30,7 +30,7 @@ public class Message
 	 * @param id   The ID of the message type for this message.
 	 * @param args The arguments of this message.  This <b>must</b> fill every available argument for the message.
 	 */
-	protected Message(Connection connection, short id, Object... args)
+	Message(Connection connection, short id, Object... args)
 	{
 		this.id = id;
 		messageType = connection.getMessageRegistry().getMessageType(id);
@@ -94,7 +94,7 @@ public class Message
 	 *
 	 * @return true if all arguments have been set, and correctly.
 	 */
-	public boolean isInvalid()
+	boolean isInvalid()
 	{
 		return argumentsByName.size() != messageType.argumentTypes.length;
 	}

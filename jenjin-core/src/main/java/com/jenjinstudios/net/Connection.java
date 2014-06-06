@@ -17,13 +17,14 @@ import java.util.logging.Logger;
 public abstract class Connection extends Thread
 {
 	/** The logger used for this class. */
-	protected static final Logger LOGGER = Logger.getLogger(Connection.class.getName());
+	private static final Logger LOGGER = Logger.getLogger(Connection.class.getName());
 	/** The list of collected ping times. */
 	private final ArrayList<Long> pingTimes;
 	/** The collection of messages to send at the next broadcast. */
 	private final LinkedList<Message> outgoingMessages;
 	/** The "one-shot" tasks to be executed in the current client loop. */
 	private final LinkedList<Runnable> syncedTasks;
+	/** The MessageFactory used by this connection. */
 	private final MessageFactory messageFactory;
 	/** Flags whether the client threads should be running. */
 	private volatile boolean running;
@@ -40,7 +41,7 @@ public abstract class Connection extends Thread
 	/** The message registry for this class. */
 	private MessageRegistry messageRegistry;
 
-	/** Construct a new Communicator. */
+	/** Construct a new Connection. */
 	protected Connection() {
 		outgoingMessages = new LinkedList<>();
 		pingTimes = new ArrayList<>();

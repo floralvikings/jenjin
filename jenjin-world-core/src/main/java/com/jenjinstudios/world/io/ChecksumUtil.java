@@ -7,7 +7,7 @@ import java.security.NoSuchAlgorithmException;
  * Used to get file checksums.
  * @author Caleb Brinkman
  */
-public class ChecksumUtil
+class ChecksumUtil
 {
 	/**
 	 * Get the MD5 Checksum for the given byte array.

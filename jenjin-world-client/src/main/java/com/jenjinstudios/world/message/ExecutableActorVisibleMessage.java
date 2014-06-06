@@ -13,7 +13,7 @@ import com.jenjinstudios.world.math.Vector2D;
 public class ExecutableActorVisibleMessage extends WorldClientExecutableMessage
 {
 	/** The newly visible actor. */
-	ClientActor newlyVisible;
+	private ClientActor newlyVisible;
 
 	/**
 	 * Construct an ExecutableMessage with the given Message.

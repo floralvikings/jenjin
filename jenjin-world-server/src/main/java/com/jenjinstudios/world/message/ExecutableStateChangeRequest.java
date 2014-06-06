@@ -6,6 +6,7 @@ import com.jenjinstudios.world.ClientActor;
 import com.jenjinstudios.world.WorldClientHandler;
 import com.jenjinstudios.world.math.MathUtil;
 import com.jenjinstudios.world.math.Vector2D;
+import com.jenjinstudios.world.state.MoveState;
 
 /**
  * Process a StateChangeRequest.
@@ -45,6 +46,8 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage
 			// state change requests of the same direction over and over?  They've effectively just
 			// increased their speed by 10x.  This requires some thought.
 			// TODO Force player state here.
+			player.setForcedState(new MoveState(player.getRelativeAngle(),
+					player.getAbsoluteAngle(), player.getVector2D(), System.nanoTime()));
 			return;
 		}
 		player.setRelativeAngle(relativeAngle);

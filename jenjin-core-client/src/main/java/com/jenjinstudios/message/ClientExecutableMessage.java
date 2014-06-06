@@ -26,7 +26,7 @@ public abstract class ClientExecutableMessage extends ExecutableMessage
 	 * @param client The client invoking this message.
 	 * @param message The Message.
 	 */
-	protected ClientExecutableMessage(Client client, Message message) {
+	ClientExecutableMessage(Client client, Message message) {
 		super(message);
 
 		if (!getClass().isAssignableFrom(client.getMessageRegistry().getMessageType(message.getID()).clientExecutableMessageClass))
@@ -82,7 +82,7 @@ public abstract class ClientExecutableMessage extends ExecutableMessage
 	 * Get the client invoking this ExecutableMessage.
 	 * @return The client invoking this ExecutableMessage.
 	 */
-	public Client getClient() {
+	Client getClient() {
 		return client;
 	}
 }

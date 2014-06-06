@@ -28,6 +28,7 @@ public class ClientActor extends WorldObject
 	public static final double MOVE_SPEED = 10.0d; // TODO Set this from server.
 	/** The time at which this actor completed it's last step. */
 	private long lastStepTime;
+	/** The relative angle of this actor. */
 	private double relativeAngle;
 
 	/**
@@ -42,7 +43,8 @@ public class ClientActor extends WorldObject
 
 	@Override
 	public void update() {
-		if (getLastStepTime() == 0) {
+		if (getLastStepTime() == 0)
+		{
 			setLastStepTime(getWorld().getLastUpdateCompleted());
 		}
 		step();
@@ -55,8 +57,11 @@ public class ClientActor extends WorldObject
 		stepForward(stepLength);
 	}
 
-	/** Take a step according to the current move state. */
-	public void stepForward(double stepLength) {
+	/**
+	 * Take a step according to the current move state.
+	 * @param stepLength The length of the step to take.
+	 */
+	void stepForward(double stepLength) {
 		if (relativeAngle == IDLE) return;
 		setVector2D(getVector2D().getVectorInDirection(stepLength, MathUtil.calcStepAngle(getAbsoluteAngle(), getRelativeAngle())));
 	}
@@ -65,7 +70,7 @@ public class ClientActor extends WorldObject
 	 * Calculate the step length at the current time.
 	 * @return The current step length.
 	 */
-	protected double calcStepLength() {
+	double calcStepLength() {
 		return ((System.nanoTime() - (double) getLastStepTime()) / 1000000000)
 				* MOVE_SPEED;
 	}
@@ -74,11 +79,11 @@ public class ClientActor extends WorldObject
 	 * Get the time at which this actor completed its last step.
 	 * @return The time at which this actor completed its last step.
 	 */
-	public long getLastStepTime() { return lastStepTime; }
+	long getLastStepTime() { return lastStepTime; }
 
 	/**
-	 * Set the time at which this actor completed its last step.  This should be called any time an actor's position is set
-	 * manually so that the following step doesn't "overshoot".
+	 * Set the time at which this actor completed its last step.  This should be called any time an actor's position is
+	 * set manually so that the following step doesn't "overshoot".
 	 * @param lastStepTime The new time at which the actor completed its last step.
 	 */
 	public void setLastStepTime(long lastStepTime) { this.lastStepTime = lastStepTime; }
@@ -87,7 +92,7 @@ public class ClientActor extends WorldObject
 	 * Get the relative angle of this actor.
 	 * @return The relative angle of this actor.
 	 */
-	public double getRelativeAngle() { return relativeAngle; }
+	double getRelativeAngle() { return relativeAngle; }
 
 	/**
 	 * Set the relative angle of this actor.

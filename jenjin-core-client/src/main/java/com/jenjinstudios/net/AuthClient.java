@@ -15,7 +15,7 @@ public class AuthClient extends Client
 	/** The logger associated with this class. */
 	private static final Logger LOGGER = Logger.getLogger(AuthClient.class.getName());
 	/** The number of milliseconds before a blocking method should time out. */
-	public static final long TIMEOUT_MILLIS = 30000;
+	private static final long TIMEOUT_MILLIS = 30000;
 	/** The username this client will use when logging in. */
 	private final String username;
 	/** The password this client will use when logging in. */
@@ -35,10 +35,6 @@ public class AuthClient extends Client
 	 * @param port The port over which this client will attempt to connect.
 	 * @param username The username that will be used by this client.
 	 * @param password The password that will be used by this client.
-	 * @throws java.security.NoSuchAlgorithmException If there is an error generating encryption keys.
-	 * @throws java.io.IOException If there is an IO exception when reading XML files.
-	 * @throws javax.xml.parsers.ParserConfigurationException If there is an error parsing XML files.
-	 * @throws org.xml.sax.SAXException If there is an error parsing XML files.
 	 */
 	public AuthClient(String address, int port, String username, String password) {
 		super(address, port);
@@ -105,7 +101,7 @@ public class AuthClient extends Client
 	 * Get whether this client has received a login response.
 	 * @return Whether the client has received a login response.
 	 */
-	public boolean isWaitingForLoginResponse() {
+	protected boolean isWaitingForLoginResponse() {
 		return waitingForLoginResponse;
 	}
 
@@ -149,7 +145,7 @@ public class AuthClient extends Client
 	 * Get whether this client has received a logout response.
 	 * @return Whether this client has received a logout response.
 	 */
-	public boolean isWaitingForLogoutResponse() {
+	boolean isWaitingForLogoutResponse() {
 		return waitingForLogoutResponse;
 	}
 
