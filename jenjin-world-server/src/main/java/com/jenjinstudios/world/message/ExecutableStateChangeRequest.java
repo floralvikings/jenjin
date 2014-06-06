@@ -13,7 +13,7 @@ import com.jenjinstudios.world.math.Vector2D;
  */
 public class ExecutableStateChangeRequest extends WorldExecutableMessage
 {
-	/** The maximum allowable correction distance.*/
+	/** The maximum allowable correction distance. */
 	public static final double MAX_CORRECT_DISTANCE = 2.0;
 	/** The new relative angle. */
 	private double relativeAngle;
@@ -39,7 +39,8 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage
 	public void runSynced() {
 		Actor player = getClientHandler().getPlayer();
 		double originDistance = player.getVector2D().getDistanceToVector(uncorrectedPosition);
-		if(originDistance > MAX_CORRECT_DISTANCE || distance > MAX_CORRECT_DISTANCE) {
+		if (originDistance > MAX_CORRECT_DISTANCE || distance > MAX_CORRECT_DISTANCE)
+		{
 			// TODO Force player state here.
 			return;
 		}
@@ -56,9 +57,9 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage
 		long time = (long) getMessage().getArgument("timeOfChange");
 		double x = (double) getMessage().getArgument("xCoordinate");
 		double y = (double) getMessage().getArgument("yCoordinate");
-		uncorrectedPosition = new Vector2D(x,y);
+		uncorrectedPosition = new Vector2D(x, y);
 		double angle = MathUtil.calcStepAngle(absoluteAngle, relativeAngle);
-		distance = ClientActor.MOVE_SPEED * ((double)(System.nanoTime() - time) / 1000000000d);
+		distance = ClientActor.MOVE_SPEED * ((double) (System.nanoTime() - time) / 1000000000d);
 		position = uncorrectedPosition.getVectorInDirection(distance, angle);
 	}
 }
