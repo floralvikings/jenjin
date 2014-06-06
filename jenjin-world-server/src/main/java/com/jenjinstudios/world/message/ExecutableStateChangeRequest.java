@@ -41,6 +41,9 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage
 		double originDistance = player.getVector2D().getDistanceToVector(uncorrectedPosition);
 		if (originDistance > MAX_CORRECT_DISTANCE || distance > MAX_CORRECT_DISTANCE)
 		{
+			// What if player hacks their jar and increases the move speed to be the max correct, then spoofs
+			// state change requests of the same direction over and over?  They've effectively just
+			// increased their speed by 10x.  This requires some thought.
 			// TODO Force player state here.
 			return;
 		}
