@@ -49,9 +49,8 @@ public class WorldSQLHandler extends SQLHandler
 		Player player;
 		if (!isConnected())
 			return null;
-		try
+		try (ResultSet results = makeUserQuery(username))
 		{
-			ResultSet results = makeUserQuery(username);
 			results.next();
 			// Determine if the user is logged in.  If yes, end of method.
 			boolean loggedIn = results.getBoolean(LOGGED_IN_COLUMN);
@@ -63,8 +62,6 @@ public class WorldSQLHandler extends SQLHandler
 			boolean passwordCorrect = hashedPassword != null && hashedPassword.equalsIgnoreCase(results.getString("password"));
 			Vector2D coordinates = new Vector2D(results.getDouble(X_COORD), results.getDouble(Y_COORD));
 			int zoneID = results.getInt(ZONE_ID);
-			// Any SQL stuff has to come before this line.
-			results.getStatement().close();
 			// If the password's bad, login fail.
 			if (!passwordCorrect)
 				return null;
