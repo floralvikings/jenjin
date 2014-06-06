@@ -180,7 +180,7 @@ public class Zone
 	}
 
 	/**
-	 * This uses a modified version of Bresenhem's Line Algorithm, available in its original form <a
+	 * This uses a modified version of Bresenham's Line Algorithm, available in its original form <a
 	 * href=http://lifc.univ-fcomte.fr/~dedu/projects/bresenham/index.html>here.</a>  This algorithm works by casting a
 	 * ray until a Location with a LocationProperty containing the property "blocksVision" set to "true".
 	 * @param x1 The starting x location.

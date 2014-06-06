@@ -47,8 +47,8 @@ public class ExecutableStateChangeMessage extends WorldClientExecutableMessage
 		relativeAngle = (double) getMessage().getArgument("relativeAngle");
 		absoluteAngle = (double) getMessage().getArgument("absoluteAngle");
 		long time = (long) getMessage().getArgument("timeOfChange");
-		double x = (double) getMessage().getArgument("xCoord");
-		double y = (double) getMessage().getArgument("yCoord");
+		double x = (double) getMessage().getArgument("xCoordinate");
+		double y = (double) getMessage().getArgument("yCoordinate");
 		Vector2D oldVector = new Vector2D(x, y);
 		double angle = MathUtil.calcStepAngle(absoluteAngle, relativeAngle);
 		double dist = ClientActor.MOVE_SPEED *

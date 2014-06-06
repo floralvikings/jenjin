@@ -37,7 +37,7 @@ public class ExecutablePingRequest extends ServerExecutableMessage
 			// Try to force the message through immediately, ignoring queue and sync times.
 			clientHandler.forceMessage(pingResponse);
 		} catch (IOException e) {
-			// If that fails, queue it normally. This will return a ping time scewed by the server update cycle.
+			// If that fails, queue it normally. This will return a ping time skewed by the server update cycle.
 			clientHandler.queueMessage(pingResponse);
 		}
 	}

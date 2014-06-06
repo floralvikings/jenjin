@@ -11,8 +11,13 @@ import com.jenjinstudios.world.state.MoveState;
  */
 public class WorldClientMessageFactory extends ClientMessageFactory
 {
+	/** The client for which this factory generates messages. */
 	private final WorldClient worldClient;
 
+	/**
+	 * Construct a new WorldClientMessageFactory working for the given client.
+	 * @param client The client.
+	 */
 	public WorldClientMessageFactory(WorldClient client) {
 		super(client);
 		worldClient = client;
@@ -30,8 +35,8 @@ public class WorldClientMessageFactory extends ClientMessageFactory
 		stateChangeRequest.setArgument("stepsUntilChange", moveState.stepsUntilChange);
 		// TODO Set these properly.
 		stateChangeRequest.setArgument("timeOfChange", moveState.time);
-		stateChangeRequest.setArgument("xCoord", moveState.position.getXCoordinate());
-		stateChangeRequest.setArgument("yCoord", moveState.position.getYCoordinate());
+		stateChangeRequest.setArgument("xCoordinate", moveState.position.getXCoordinate());
+		stateChangeRequest.setArgument("yCoordinate", moveState.position.getYCoordinate());
 		return stateChangeRequest;
 	}
 
@@ -48,9 +53,21 @@ public class WorldClientMessageFactory extends ClientMessageFactory
 		return loginRequest;
 	}
 
+	/**
+	 * Generate a world logout request.
+	 * @return The world logout request.
+	 */
 	public Message generateWorldLogoutRequest() {return new Message(worldClient, "WorldLogoutRequest");}
 
+	/**
+	 * Generate a world file request.
+	 * @return The file request.
+	 */
 	public Message generateWorldFileRequest() {return new Message(worldClient, "WorldFileRequest");}
 
+	/**
+	 * Generate a request for the checksum of the world file.
+	 * @return The request for the checksum.
+	 */
 	public Message generateWorldChecksumRequest() {return new Message(worldClient, "WorldChecksumRequest");}
 }

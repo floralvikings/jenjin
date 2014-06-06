@@ -34,7 +34,7 @@ public class WorldServerTest
 	/**
 	 * The tolerance for distance between a the client and server positions of an actor. This is roughly how much an
 	 * actor should move during an update (assuming default UPS, which these tests do).  This means that the client and
-	 * server can have about one update's worth of discrepancy between them before the tests fail.  This is intended to
+	 * server can have about one update worth of discrepancy between them before the tests fail.  This is intended to
 	 * avoid spurious test failures that could be caused by unforeseen lag on one of the threads.
 	 */
 	private static final double vectorTolerance = (Actor.MOVE_SPEED / (double) WorldServer.DEFAULT_UPS) * 1.1;

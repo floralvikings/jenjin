@@ -16,6 +16,7 @@ import java.util.logging.Logger;
  * Handles SQL stuff for a WorldServer.
  * @author Caleb Brinkman
  */
+@SuppressWarnings("SpellCheckingInspection")
 public class WorldSQLHandler extends SQLHandler
 {
 	/** The column name of the X coordinate. */
