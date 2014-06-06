@@ -89,13 +89,11 @@ public class WorldSQLHandler extends SQLHandler
 		if (!isConnected())
 			return false;
 		String username = actor.getName();
-		try
+		try(ResultSet results = makeUserQuery(username))
 		{
-			ResultSet results = makeUserQuery(username);
 			results.next();
 			// Determine if the user is logged in.  If no, end of method.
 			boolean loggedIn = results.getBoolean(LOGGED_IN_COLUMN);
-			results.getStatement().close();
 			if (!loggedIn)
 				return false;
 
@@ -104,7 +102,7 @@ public class WorldSQLHandler extends SQLHandler
 			success = true;
 		} catch (SQLException e)
 		{
-			LOGGER.log(Level.FINE, "Failed to log out user: {0}", username);
+			LOGGER.log(Level.WARNING, "Failed to log out user: {0}", username);
 			success = false;
 		}
 
@@ -123,13 +121,14 @@ public class WorldSQLHandler extends SQLHandler
 
 		String updateLoggedInQuery = "UPDATE " + dbName + ".users SET " + X_COORD + "=" + xCoord + ", " + Y_COORD +
 				"=" + yCoord + " WHERE " + "username = ?";
-		PreparedStatement updatePlayerStatement;
 		synchronized (dbConnection)
 		{
-			updatePlayerStatement = super.dbConnection.prepareStatement(updateLoggedInQuery);
-			updatePlayerStatement.setString(1, username);
-			updatePlayerStatement.executeUpdate();
-			updatePlayerStatement.close();
+			try(PreparedStatement updatePlayerStatement = super.dbConnection.prepareStatement(updateLoggedInQuery))
+			{
+				updatePlayerStatement.setString(1, username);
+				updatePlayerStatement.executeUpdate();
+				updatePlayerStatement.close();
+			}
 		}
 	}
 }
