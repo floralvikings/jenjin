@@ -31,6 +31,7 @@ public class WorldClient extends AuthClient
 	public static final long TIMEOUT_MILLIS = 30000;
 	/** The password used to login to the world. */
 	private final String password;
+	/** The message factory used to generate messages for this client. */
 	private final WorldClientMessageFactory messageFactory;
 	/** The world. */
 	private World world;
@@ -181,13 +182,15 @@ public class WorldClient extends AuthClient
 			{
 				Thread.sleep(10);
 			}
-			if ((!worldFile.getParentFile().exists() && !worldFile.getParentFile().mkdirs()) || (!worldFile.exists() &&  !worldFile.createNewFile()))
+			if ((!worldFile.getParentFile().exists() && !worldFile.getParentFile().mkdirs()) || (!worldFile.exists() && !worldFile.createNewFile()))
 			{
 				throw new IOException("Unable to create new world file!");
 			}
-			FileOutputStream worldOut = new FileOutputStream(worldFile);
-			worldOut.write(serverWorldFileBytes);
-			worldOut.close();
+			try(FileOutputStream worldOut = new FileOutputStream(worldFile))
+			{
+				worldOut.write(serverWorldFileBytes);
+				worldOut.close();
+			}
 			worldFileReader = new WorldFileReader(new ByteArrayInputStream(serverWorldFileBytes));
 			world = worldFileReader.read();
 		}
