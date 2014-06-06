@@ -11,7 +11,7 @@ import com.jenjinstudios.world.math.Vector2D;
 public class MoveState
 {
 	/** The constant for 2*PI. */
-	public static double TWO_PI = (2 * Math.PI);
+	public static final double TWO_PI = (2 * Math.PI);
 	/** The constant used for an "idle" move state. */
 	public static final double IDLE = Double.NEGATIVE_INFINITY;
 	/** The forward state. */

@@ -39,8 +39,6 @@ public class ExecutableActorVisibleMessage extends WorldClientExecutableMessage
 		double yCoordinate = (double) message.getArgument("yCoordinate");
 		double relativeAngle = (double) message.getArgument("relativeAngle");
 		double absoluteAngle = (double) message.getArgument("absoluteAngle");
-		int stepsFromLast = (int) message.getArgument("stepsTaken");
-		int stepsUntilChange = (int) message.getArgument("stepsUntilChange");
 		long timeOfVisibility = (long) message.getArgument("timeOfVisibility");
 
 		newlyVisible = new ClientActor(id, name);

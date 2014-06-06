@@ -50,10 +50,10 @@ public class ExecutableStateChangeMessage extends WorldClientExecutableMessage
 		long time = (long) getMessage().getArgument("timeOfChange");
 		double x = (double) getMessage().getArgument("xCoord");
 		double y = (double) getMessage().getArgument("yCoord");
-		Vector2D oldVector = new Vector2D(x,y);
+		Vector2D oldVector = new Vector2D(x, y);
 		double angle = MathUtil.calcStepAngle(absoluteAngle, relativeAngle);
 		double dist = ClientActor.MOVE_SPEED *
-				((double)(System.nanoTime() - time) / 1000000000d);
+				((double) (System.nanoTime() - time) / 1000000000d);
 		position = oldVector.getVectorInDirection(dist, angle);
 	}
 }

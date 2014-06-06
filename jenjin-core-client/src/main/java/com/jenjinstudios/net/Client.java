@@ -22,7 +22,7 @@ public class Client extends Connection
 	/** The logger associated with this class. */
 	public static final Logger LOGGER = Logger.getLogger(Client.class.getName());
 	/** The number of milliseconds before a blocking method should time out. */
-	public static long TIMEOUT_MILLIS = 30000;
+	private static final long TIMEOUT_MILLIS = 30000;
 	/** The port over which the client communicates with the server. */
 	private final int PORT;
 	/** The address of the server to which this client will connect. */
@@ -163,7 +163,7 @@ public class Client extends Connection
 	 * @return Whether the init was successful.
 	 * @throws IOException If there's an IOException when attempting to communicate with the server.
 	 */
-	private boolean doPostConnectInit() throws IOException {
+	private boolean doPostConnectInit() {
 		// First, get and process the required FirstConnectResponse message from the server.
 		Message firstConnectResponse = getInputStream().readMessage();
 		if (firstConnectResponse == null)

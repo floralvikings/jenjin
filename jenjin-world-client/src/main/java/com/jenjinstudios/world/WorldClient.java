@@ -28,7 +28,7 @@ public class WorldClient extends AuthClient
 	/** The logger associated with this class. */
 	private static final Logger LOGGER = Logger.getLogger(WorldClient.class.getName());
 	/** The number of milliseconds before a blocking method should time out. */
-	public static long TIMEOUT_MILLIS = 30000;
+	public static final long TIMEOUT_MILLIS = 30000;
 	/** The password used to login to the world. */
 	private final String password;
 	private final WorldClientMessageFactory messageFactory;
@@ -41,7 +41,7 @@ public class WorldClient extends AuthClient
 	/** The world file checksum received from the server. */
 	private byte[] serverWorldFileChecksum;
 	/** The world file. */
-	private File worldFile;
+	private final File worldFile;
 	/** The world file reader for this client. */
 	private WorldFileReader worldFileReader;
 	/** Whether this client has received the world file. */

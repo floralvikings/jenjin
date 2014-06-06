@@ -24,7 +24,7 @@ public abstract class Connection extends Thread
 	private final LinkedList<Message> outgoingMessages;
 	/** The "one-shot" tasks to be executed in the current client loop. */
 	private final LinkedList<Runnable> syncedTasks;
-	private MessageFactory messageFactory;
+	private final MessageFactory messageFactory;
 	/** Flags whether the client threads should be running. */
 	private volatile boolean running;
 	/** The input stream used to read messages. */

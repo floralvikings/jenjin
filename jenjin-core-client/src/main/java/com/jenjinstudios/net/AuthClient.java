@@ -15,11 +15,11 @@ public class AuthClient extends Client
 	/** The logger associated with this class. */
 	private static final Logger LOGGER = Logger.getLogger(AuthClient.class.getName());
 	/** The number of milliseconds before a blocking method should time out. */
-	public static long TIMEOUT_MILLIS = 30000;
+	public static final long TIMEOUT_MILLIS = 30000;
 	/** The username this client will use when logging in. */
-	private String username;
+	private final String username;
 	/** The password this client will use when logging in. */
-	private String password;
+	private final String password;
 	/** Whether the user is logged in. */
 	private boolean loggedIn;
 	/** The time at which this client was successfully logged in. */

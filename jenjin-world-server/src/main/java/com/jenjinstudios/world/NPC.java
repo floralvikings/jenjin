@@ -18,7 +18,7 @@ public class NPC extends Actor
 	/** The list of targets to which a wandering NPC will move. */
 	private final LinkedList<Location> wanderTargets;
 	/** The behavior flags associated with this NPC. */
-	private TreeMap<String, Boolean> behaviorFlags;
+	private final TreeMap<String, Boolean> behaviorFlags;
 	/** The Location at which the NPC began following a player. */
 	private Location startLocation;
 	/** The location toward which this NPC is to move. */

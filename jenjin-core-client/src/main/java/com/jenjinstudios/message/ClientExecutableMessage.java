@@ -17,7 +17,7 @@ import java.util.logging.Logger;
 public abstract class ClientExecutableMessage extends ExecutableMessage
 {
 	/** The Logger for this class. */
-	private static final Logger LOGGER = Logger.getLogger(ExecutableMessage.class.getName());
+	private static final Logger LOGGER = Logger.getLogger(ClientExecutableMessage.class.getName());
 	/** The client invoking this ExecutableMessage. */
 	private final Client client;
 

@@ -22,7 +22,7 @@ public class Server<T extends ClientHandler> extends Thread
 	/** The logger used by this class. */
 	public static final Logger LOGGER = Logger.getLogger(Server.class.getName());
 	/** The number of milliseconds before a blocking method should time out. */
-	public static long TIMEOUT_MILLIS = 30000;
+	public static final long TIMEOUT_MILLIS = 30000;
 	/** The updates per second. */
 	public final int UPS;
 	/** The period of the update in milliseconds. */
