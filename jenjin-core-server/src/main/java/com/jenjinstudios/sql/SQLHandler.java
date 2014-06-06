@@ -68,7 +68,7 @@ public class SQLHandler
 	 *         database failed.
 	 */
 	public boolean logInUser(String username, String password) {
-		boolean success = false;
+		boolean success;
 		if (!connected)
 			return false;
 		try
@@ -105,7 +105,7 @@ public class SQLHandler
 	 *         database failed.
 	 */
 	public boolean logOutUser(String username) {
-		boolean success = false;
+		boolean success;
 		if (!connected)
 			return false;
 		try

@@ -46,7 +46,7 @@ public class WorldSQLHandler extends SQLHandler
 	 * @return An actor pre-filled with the players information.
 	 */
 	public Player logInPlayer(String username, String password) {
-		Player player = null;
+		Player player;
 		if (!isConnected())
 			return null;
 		try
@@ -88,7 +88,7 @@ public class WorldSQLHandler extends SQLHandler
 	 * @return Whether the actor was successfully logged out.
 	 */
 	public boolean logOutPlayer(Actor actor) {
-		boolean success = false;
+		boolean success;
 		if (!isConnected())
 			return false;
 		String username = actor.getName();
