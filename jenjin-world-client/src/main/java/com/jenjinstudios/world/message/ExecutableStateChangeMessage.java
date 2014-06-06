@@ -46,7 +46,6 @@ public class ExecutableStateChangeMessage extends WorldClientExecutableMessage
 		actorID = (int) getMessage().getArgument("id");
 		relativeAngle = (double) getMessage().getArgument("relativeAngle");
 		absoluteAngle = (double) getMessage().getArgument("absoluteAngle");
-		int stepsUntilChange = (int) getMessage().getArgument("stepsUntilChange");
 		long time = (long) getMessage().getArgument("timeOfChange");
 		double x = (double) getMessage().getArgument("xCoord");
 		double y = (double) getMessage().getArgument("yCoord");

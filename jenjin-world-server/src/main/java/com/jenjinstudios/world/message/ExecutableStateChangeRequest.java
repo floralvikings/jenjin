@@ -45,7 +45,6 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage
 	public void runASync() {
 		relativeAngle = (double) getMessage().getArgument("relativeAngle");
 		absoluteAngle = (double) getMessage().getArgument("absoluteAngle");
-		int stepsFromLast = (int) getMessage().getArgument("stepsUntilChange");
 		long time = (long) getMessage().getArgument("timeOfChange");
 		double x = (double) getMessage().getArgument("xCoord");
 		double y = (double) getMessage().getArgument("yCoord");
