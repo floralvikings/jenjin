@@ -48,7 +48,7 @@ public class WorldSQLHandler extends SQLHandler
 	public Player logInPlayer(String username, String password) {
 		Player player = null;
 		if (!isConnected())
-			return player;
+			return null;
 		try
 		{
 			ResultSet results = makeUserQuery(username);
@@ -56,7 +56,7 @@ public class WorldSQLHandler extends SQLHandler
 			// Determine if the user is logged in.  If yes, end of method.
 			boolean loggedIn = results.getBoolean(LOGGED_IN_COLUMN);
 			if (loggedIn)
-				return player;
+				return null;
 			// Hash the user-supplied password with the salt in the database.
 			String hashedPassword = Hash.getHashedString(password, results.getString("salt"));
 			// Determine if the correct password was supplied.
@@ -67,7 +67,7 @@ public class WorldSQLHandler extends SQLHandler
 			results.getStatement().close();
 			// If the password's bad, login fail.
 			if (!passwordCorrect)
-				return player;
+				return null;
 			// Update the logged in column.
 			updateLoggedinColumn(username, true);
 			player = new Player(username);
@@ -90,7 +90,7 @@ public class WorldSQLHandler extends SQLHandler
 	public boolean logOutPlayer(Actor actor) {
 		boolean success = false;
 		if (!isConnected())
-			return success;
+			return false;
 		String username = actor.getName();
 		try
 		{
@@ -100,7 +100,7 @@ public class WorldSQLHandler extends SQLHandler
 			boolean loggedIn = results.getBoolean(LOGGED_IN_COLUMN);
 			results.getStatement().close();
 			if (!loggedIn)
-				return success;
+				return false;
 
 			updateLoggedinColumn(username, false);
 			updatePlayer(actor);

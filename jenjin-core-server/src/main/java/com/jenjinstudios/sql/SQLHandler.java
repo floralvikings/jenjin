@@ -70,7 +70,7 @@ public class SQLHandler
 	public boolean logInUser(String username, String password) {
 		boolean success = false;
 		if (!connected)
-			return success;
+			return false;
 		try
 		{
 			ResultSet results = makeUserQuery(username);
@@ -78,14 +78,14 @@ public class SQLHandler
 			// Determine if the user is logged in.  If yes, end of method.
 			boolean loggedIn = results.getBoolean(LOGGED_IN_COLUMN);
 			if (loggedIn)
-				return success;
+				return false;
 			// Hash the user-supplied password with the salt in the database.
 			String hashedPassword = Hash.getHashedString(password, results.getString("salt"));
 			// Determine if the correct password was supplied.
 			boolean passwordCorrect = hashedPassword != null && hashedPassword.equalsIgnoreCase(results.getString("password"));
 			results.getStatement().close();
 			if (!passwordCorrect)
-				return success;
+				return false;
 
 			updateLoggedinColumn(username, true);
 			success = true;
@@ -107,7 +107,7 @@ public class SQLHandler
 	public boolean logOutUser(String username) {
 		boolean success = false;
 		if (!connected)
-			return success;
+			return false;
 		try
 		{
 			ResultSet results = makeUserQuery(username);
@@ -116,7 +116,7 @@ public class SQLHandler
 			boolean loggedIn = results.getBoolean(LOGGED_IN_COLUMN);
 			results.getStatement().close();
 			if (!loggedIn)
-				return success;
+				return false;
 
 			updateLoggedinColumn(username, false);
 			success = true;

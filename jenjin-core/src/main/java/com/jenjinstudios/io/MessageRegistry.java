@@ -133,11 +133,6 @@ public class MessageRegistry
 			String message = "Message " + id + " not registered.";
 			LOGGER.log(Level.SEVERE, message);
 			throw new RuntimeException(message);
-		} else if (type.argumentTypes == null)
-		{
-			String message = "Message " + id + " contains null argument types.";
-			LOGGER.log(Level.SEVERE, message);
-			throw new RuntimeException(message);
 		} else
 		{
 			for (int i = 0; i < type.argumentTypes.length; i++)
