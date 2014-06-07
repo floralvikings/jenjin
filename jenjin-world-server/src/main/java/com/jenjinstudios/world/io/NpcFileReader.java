@@ -27,7 +27,7 @@ import java.util.TreeMap;
 public class NpcFileReader
 {
 	/** The tag name for the root "zone" tags. */
-	public static final String NPC_TAG_NAME = "npc";
+	private static final String NPC_TAG_NAME = "npc";
 	/** The XML document storing the NPC data. */
 	private final Document npcDocument;
 	/** The world in which to look for locations. */

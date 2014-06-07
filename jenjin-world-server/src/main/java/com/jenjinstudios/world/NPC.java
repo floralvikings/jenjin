@@ -14,7 +14,7 @@ import java.util.TreeMap;
 public class NPC extends Actor
 {
 	/** Dictates how close an actor must be to a target before the actor is considered to have "reached" it.*/
-	public static final double TARGET_DISTANCE = 0.2;
+	private static final double TARGET_DISTANCE = 0.2;
 	/** The list of targets to which a wandering NPC will move. */
 	private final LinkedList<Location> wanderTargets;
 	/** The behavior flags associated with this NPC. */

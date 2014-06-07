@@ -13,7 +13,7 @@ import java.util.Stack;
 public class Pathfinder
 {
 	/** The maximum number of nodes to check before giving up and assuming the path cannot be found. */
-	public static final int NODE_LIMIT = 1000;
+	private static final int NODE_LIMIT = 1000;
 
 	/**
 	 * Find a path between the two locations.

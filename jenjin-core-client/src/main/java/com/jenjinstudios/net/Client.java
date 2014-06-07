@@ -29,6 +29,7 @@ public class Client extends Connection
 	private final String ADDRESS;
 	/** The list of tasks that this client will execute each update cycle. */
 	private final LinkedList<Runnable> repeatedSyncedTasks;
+	/** The message factory used by this client. */
 	private final ClientMessageFactory messageFactory;
 	/** The period of the update in milliseconds. */
 	private int period;
@@ -161,7 +162,6 @@ public class Client extends Connection
 	 * Take care of all the necessary initialization messages between client and server.  These include things like RSA key
 	 * exchanges and latency checks.
 	 * @return Whether the init was successful.
-	 * @throws IOException If there's an IOException when attempting to communicate with the server.
 	 */
 	private boolean doPostConnectInit() {
 		// First, get and process the required FirstConnectResponse message from the server.
