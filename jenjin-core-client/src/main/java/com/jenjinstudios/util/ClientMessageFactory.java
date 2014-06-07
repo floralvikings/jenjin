@@ -5,7 +5,10 @@ import com.jenjinstudios.net.Client;
 
 import java.security.PublicKey;
 
-/** @author Caleb Brinkman */
+/**
+ * Used to generate messages for the Jenjin core client.
+ * @author Caleb Brinkman
+ */
 public class ClientMessageFactory extends MessageFactory
 {
 	private final Client client;

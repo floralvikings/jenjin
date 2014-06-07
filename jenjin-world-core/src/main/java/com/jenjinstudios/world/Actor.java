@@ -129,6 +129,10 @@ public class Actor extends SightedObject
 		return walkable;
 	}
 
+	/**
+	 * Get the list of state changes this actor has made since its last update.
+	 * @return The list of state changes.
+	 */
 	public LinkedList<MoveState> getStateChanges() {
 		synchronized (stateChanges) { return new LinkedList<>(stateChanges); }
 	}

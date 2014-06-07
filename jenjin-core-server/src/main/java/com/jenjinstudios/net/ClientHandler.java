@@ -17,6 +17,7 @@ public class ClientHandler extends Connection
 {
 	/** The server. */
 	private final AuthServer<? extends ClientHandler> server;
+	/** The message factory used by this ClientHandler. */
 	private final ServerMessageFactory messageFactory;
 	/** The id of the client handler. */
 	private int handlerId = -1;
@@ -26,6 +27,7 @@ public class ClientHandler extends Connection
 	private String username;
 	/** The time at which this client was successfully logged in. */
 	private long loggedInTime;
+	/** Flags whether the connection acknowledgement response has been sent. */
 	private boolean firstConnectResponseSent;
 
 
@@ -46,6 +48,9 @@ public class ClientHandler extends Connection
 		this.messageFactory = new ServerMessageFactory(this);
 	}
 
+	/**
+	 * Send a connection acknowledgement response.
+	 */
 	public void sendFirstConnectResponse() {
 		if(firstConnectResponseSent) return;
 		Message firstConnectResponse = getMessageFactory().generateFirstConnectResponse(getServer().UPS);
