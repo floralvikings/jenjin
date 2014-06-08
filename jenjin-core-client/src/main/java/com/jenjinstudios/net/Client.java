@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.net.Socket;
 import java.security.*;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Timer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -28,7 +29,7 @@ public class Client extends Connection
 	/** The address of the server to which this client will connect. */
 	private final String ADDRESS;
 	/** The list of tasks that this client will execute each update cycle. */
-	private final LinkedList<Runnable> repeatedSyncedTasks;
+	private final List<Runnable> repeatedSyncedTasks;
 	/** The message factory used by this client. */
 	private final ClientMessageFactory messageFactory;
 	/** The period of the update in milliseconds. */
@@ -112,17 +113,6 @@ public class Client extends Connection
 		super.shutdown();
 		sendMessagesTimer.cancel();
 		closeLink();
-	}
-
-	/**
-	 * Add a task to the list of repeated synchronized tasks.
-	 * @param r The task to add.
-	 */
-	public void addRepeatedSyncedTask(Runnable r) {
-		synchronized (repeatedSyncedTasks)
-		{
-			repeatedSyncedTasks.add(r);
-		}
 	}
 
 	/**

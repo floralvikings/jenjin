@@ -1,7 +1,6 @@
 package com.jenjinstudios.world;
 
-import java.util.ArrayList;
-import java.util.TreeMap;
+import java.util.*;
 
 /**
  * The {@code SightedObject} class is a {@code WorldObject} which maintains a range of locations which are visible to
@@ -18,9 +17,9 @@ public class SightedObject extends WorldObject
 	/** The container for visible objects. */
 	private final TreeMap<Integer, WorldObject> visibleObjects;
 	/** The list of newly visible objects. */
-	private final ArrayList<WorldObject> newlyVisibleObjects;
+	private final List<WorldObject> newlyVisibleObjects;
 	/** The list of newly invisible objects. */
-	private final ArrayList<WorldObject> newlyInvisibleObjects;
+	private final List<WorldObject> newlyInvisibleObjects;
 
 	/**
 	 * Construct a new SightedObject.
@@ -44,7 +43,7 @@ public class SightedObject extends WorldObject
 	 * The container for visible objects.
 	 * @return An ArrayList containing all objects visible to this actor.
 	 */
-	public TreeMap<Integer, WorldObject> getVisibleObjects() {
+	public AbstractMap<Integer, WorldObject> getVisibleObjects() {
 		synchronized (visibleObjects)
 		{
 			return new TreeMap<>(visibleObjects);
@@ -55,19 +54,19 @@ public class SightedObject extends WorldObject
 	 * Get newly visible objects.
 	 * @return A list of all objects newly visible.
 	 */
-	public ArrayList<WorldObject> getNewlyVisibleObjects() {return newlyVisibleObjects;}
+	public Iterable<WorldObject> getNewlyVisibleObjects() {return newlyVisibleObjects;}
 
 	/**
 	 * Get newly invisible objects.
 	 * @return A list of all objects newly invisible.
 	 */
-	public ArrayList<WorldObject> getNewlyInvisibleObjects() {return newlyInvisibleObjects;}
+	public Iterable<WorldObject> getNewlyInvisibleObjects() {return newlyInvisibleObjects;}
 
 	/**
 	 * Get the currently visible locations.
 	 * @return The array list of currently visible locations.
 	 */
-	public ArrayList<Location> getVisibleLocations() { return visibleLocations; }
+	public AbstractCollection<Location> getVisibleLocations() { return visibleLocations; }
 
 	/** Resets the array of currently visible location. */
 	protected void resetVisibleLocations() {

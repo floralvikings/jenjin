@@ -2,6 +2,7 @@ package com.jenjinstudios.io;
 
 import com.jenjinstudios.net.Connection;
 
+import java.util.Map;
 import java.util.TreeMap;
 
 /**
@@ -16,7 +17,7 @@ public class Message
 	/** The message type of this message. */
 	private final MessageType messageType;
 	/** The arguments for this message by name. */
-	private final TreeMap<String, Object> argumentsByName;
+	private final Map<String, Object> argumentsByName;
 	/** The ID of this message. */
 	private final short id;
 

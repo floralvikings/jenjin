@@ -11,9 +11,9 @@ public class Vector2D
 	/** The vector representing (0,0). */
 	public static final Vector2D ORIGIN = new Vector2D(0, 0);
 	/** The x coordinate. */
-	private double xCoordinate;
+	private final double xCoordinate;
 	/** The y coordinate. */
-	private double yCoordinate;
+	private final double yCoordinate;
 
 	/**
 	 * Construct a new set of vector2D copying another set.

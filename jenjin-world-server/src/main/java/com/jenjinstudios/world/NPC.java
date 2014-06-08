@@ -4,8 +4,7 @@ import com.jenjinstudios.world.ai.Pathfinder;
 import com.jenjinstudios.world.math.Vector2D;
 import com.jenjinstudios.world.state.MoveState;
 
-import java.util.LinkedList;
-import java.util.TreeMap;
+import java.util.*;
 
 /**
  * This class represents a Non-Player Character.
@@ -16,7 +15,7 @@ public class NPC extends Actor
 	/** Dictates how close an actor must be to a target before the actor is considered to have "reached" it.*/
 	private static final double TARGET_DISTANCE = 0.2;
 	/** The list of targets to which a wandering NPC will move. */
-	private final LinkedList<Location> wanderTargets;
+	private final List<Location> wanderTargets;
 	/** The behavior flags associated with this NPC. */
 	private final TreeMap<String, Boolean> behaviorFlags;
 	/** The Location at which the NPC began following a player. */
@@ -28,7 +27,7 @@ public class NPC extends Actor
 	/** The index of the current wander target. */
 	private int wanderTargetIndex;
 	/** The path currently being followed by this actor. */
-	private final LinkedList<Vector2D> currentPath;
+	private final Queue<Vector2D> currentPath;
 
 	/**
 	 * Construct an NPC with the given name.
@@ -80,7 +79,7 @@ public class NPC extends Actor
 			}
 			double distance = getVector2D().getDistanceToVector(target);
 			if (distance <= TARGET_DISTANCE) {
-				currentPath.pop();
+				currentPath.remove();
 				Vector2D newTarget = currentPath.peek();
 				if (newTarget != null) {
 					double angle = getVector2D().getAngleToVector(newTarget);

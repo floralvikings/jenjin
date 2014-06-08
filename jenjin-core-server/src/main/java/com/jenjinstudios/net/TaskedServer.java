@@ -1,7 +1,9 @@
 package com.jenjinstudios.net;
 
 import java.io.IOException;
+import java.util.Deque;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Timer;
 
 /**
@@ -11,7 +13,7 @@ import java.util.Timer;
 public class TaskedServer<T extends ClientHandler> extends Server<T>
 {
 	/** Tasks to be repeated in the main loop. */
-	private final LinkedList<Runnable> repeatedTasks;
+	private final List<Runnable> repeatedTasks;
 	/** Synced tasks scheduled by client handlers. */
 	private final LinkedList<Runnable> syncedTasks;
 	/** The timer that controls the server loop. */
@@ -95,7 +97,7 @@ public class TaskedServer<T extends ClientHandler> extends Server<T>
 	 * Tasks to be repeated in the main loop.
 	 * @return The list of repeated tasks to be executed by this server.
 	 */
-	LinkedList<Runnable> getRepeatedTasks() {
+	Iterable<Runnable> getRepeatedTasks() {
 		return repeatedTasks;
 	}
 
@@ -103,7 +105,7 @@ public class TaskedServer<T extends ClientHandler> extends Server<T>
 	 * Synced tasks scheduled by client handlers.
 	 * @return The list of synchronized tasks scheduled by ClientHandlers.
 	 */
-	LinkedList<Runnable> getSyncedTasks() {
+	Deque<Runnable> getSyncedTasks() {
 		return syncedTasks;
 	}
 }

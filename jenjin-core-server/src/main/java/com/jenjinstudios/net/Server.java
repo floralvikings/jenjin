@@ -3,9 +3,7 @@ package com.jenjinstudios.net;
 import com.jenjinstudios.io.MessageRegistry;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -30,9 +28,9 @@ public class Server<T extends ClientHandler> extends Thread
 	/** The list of {@code ClientListener}s working for this server. */
 	private final ClientListener<T> clientListener;
 	/** The list of {@code ClientHandler}s working for this server. */
-	private final ArrayList<T> clientHandlers;
+	private final List<T> clientHandlers;
 	/** The map of clients stored by username. */
-	private final TreeMap<String, T> clientsByUsername;
+	private final Map<String, T> clientsByUsername;
 	/** Indicates whether this server is initialized. */
 	private volatile boolean initialized;
 	/** The current number of connected clients. */

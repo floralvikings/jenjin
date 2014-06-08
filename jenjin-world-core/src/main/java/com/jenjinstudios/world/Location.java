@@ -43,7 +43,7 @@ public class Location
 	/** The locations adjacent to this one through which a path may be plotted. */
 	private final LinkedList<Location> adjacentWalkableLocations;
 	/** The locations adjacent diagonally. */
-	private final LinkedList<Location> diagonals;
+	private final List<Location> diagonals;
 	/** The center of this Location. */
 	private final Vector2D center;
 

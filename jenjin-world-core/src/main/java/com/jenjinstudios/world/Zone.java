@@ -2,10 +2,7 @@ package com.jenjinstudios.world;
 
 import com.jenjinstudios.world.math.Vector2D;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.LinkedList;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -135,7 +132,7 @@ public class Zone
 	 * @return All locations lying within the specified circle.
 	 */
 	@SuppressWarnings("SuspiciousNameCombination")
-	public LinkedList<Location> castVisibilityCircle(Location center, int radius) {
+	public Collection<Location> castVisibilityCircle(Location center, int radius) {
 		LinkedList<Location> locations = new LinkedList<>();
 		int centerY = center.X_COORDINATE;
 		int centerX = center.Y_COORDINATE;
@@ -197,7 +194,7 @@ public class Zone
 	 * @return The ray cast from the given starting points to the given end points.
 	 */
 	@SuppressWarnings("SuspiciousNameCombination")
-	public LinkedList<Location> castVisibilityRay(int x1, int y1, int x2, int y2) {
+	public Collection<Location> castVisibilityRay(int x1, int y1, int x2, int y2) {
 		LinkedList<Location> visibleRay = new LinkedList<>();
 		int i;               // loop counter
 		int yStep, xStep;    // the step on y and x axis
@@ -297,7 +294,7 @@ public class Zone
 	 * @return true if the location was added.
 	 */
 	@SuppressWarnings("BooleanMethodIsAlwaysInverted")
-	private boolean addLocationToVisibilityRay(int x, int y, LinkedList<Location> ray) {
+	private boolean addLocationToVisibilityRay(int x, int y, List<Location> ray) {
 		Location location = getLocationOnGrid(x, y);
 		if (location == null || "true".equals(location.getLocationProperties().getProperty("blocksVision")))
 		{
