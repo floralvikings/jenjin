@@ -346,6 +346,11 @@ public class WorldServerTest
 				serverPlayer.getVector2D() + " Client Vector: " + clientPlayer.getVector2D());
 	}
 
+	/**
+	 * Assert that the player for the given client is at the given vector.
+	 * @param client The client.
+	 * @param vector1 The vector.
+	 */
 	private void assertClientAtVector(WorldClient client, Vector2D vector1) {
 		double distance = vector1.getDistanceToVector(client.getPlayer().getVector2D());
 		Assert.assertEquals(distance, 0, vectorTolerance,
@@ -354,7 +359,9 @@ public class WorldServerTest
 
 	/**
 	 * Initialize and log the client in.
+	 * @param port The port number on which to start the client.
 	 * @throws Exception If there's an exception.
+	 * @return The initialized, logged in client.
 	 */
 	private static WorldClient initWorldClient(int port) throws Exception {
 		String user = "TestAccount" + testAccountNumber;
@@ -368,7 +375,9 @@ public class WorldServerTest
 
 	/**
 	 * Initialize the world and world server.
+	 * @param port The port on which to initialize the server.
 	 * @throws Exception If there's an exception.
+	 * @return The initialized server.
 	 */
 	private static WorldServer initWorldServer(int port) throws Exception {
 		/* The world SQL handler used to test. */
@@ -404,6 +413,8 @@ public class WorldServerTest
 	/**
 	 * Move the client and server player to the given vector, by initiating the move client-side.  Also sends a ping to
 	 * the server with each sleep cycle.
+	 * @param client The client.
+	 * @param server The server.
 	 * @param target The vector to which to move.
 	 * @throws InterruptedException If there's an exception.
 	 */
@@ -432,12 +443,23 @@ public class WorldServerTest
 		}
 	}
 
+	/**
+	 * Assert the client and the server actor are within one vectorTolerance of each other.
+	 * @param serverActor The server actor.
+	 * @param clientActor The client actor.
+	 */
 	private void assertClientAndServerInSamePosition(Actor serverActor, WorldObject clientActor) {
 		double distance = serverActor.getVector2D().getDistanceToVector(clientActor.getVector2D());
 		Assert.assertEquals(distance, 0, vectorTolerance, "Server Vector: " + serverActor.getVector2D() +
 				" Client Vector: " + clientActor.getVector2D());
 	}
 
+	/**
+	 * Tear down the client and server.
+	 * @param client The client.
+	 * @param server The server.
+	 * @throws Exception If there's an exception.
+	 */
 	public static void tearDown(WorldClient client, WorldServer server) throws Exception {
 		Player serverPlayer = server.getClientHandlerByUsername(client.getUsername()).getPlayer();
 		serverPlayer.setVector2D(new Vector2D(0, 0));
@@ -450,6 +472,10 @@ public class WorldServerTest
 		FileUtil.deleteRecursively(resourcesDir);
 	}
 
+	/**
+	 * Reset the database in the even of a test failure.
+	 * @throws Exception If there's an exception.
+	 */
 	@AfterClass
 	public static void resetDB() throws Exception{
 		WorldSQLHandler worldSQLHandler = new WorldSQLHandler("localhost", "jenjin_test", "jenjin_user", "jenjin_password");
