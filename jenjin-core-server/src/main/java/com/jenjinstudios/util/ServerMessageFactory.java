@@ -105,7 +105,7 @@ public class ServerMessageFactory extends MessageFactory
 
 	/**
 	 * Generate a response to a login attempt.
-	 * @param success Whether the loging attempt was successful.
+	 * @param success Whether the login attempt was successful.
 	 * @param loggedInTime The time of the successful login.
 	 * @return The LoginResponse message.
 	 */

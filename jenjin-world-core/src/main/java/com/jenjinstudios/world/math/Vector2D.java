@@ -42,27 +42,11 @@ public class Vector2D
 	}
 
 	/**
-	 * Set the y coordinate.
-	 * @param yCoordinate The new Y coordinate.
-	 */
-	public void setYCoordinate(double yCoordinate) {
-		this.yCoordinate = yCoordinate;
-	}
-
-	/**
 	 * Get the x coordinate.
 	 * @return The x coordinate.
 	 */
 	public double getXCoordinate() {
 		return xCoordinate;
-	}
-
-	/**
-	 * Set the x coordinate.
-	 * @param xCoordinate The new x coordinate.
-	 */
-	public void setXCoordinate(double xCoordinate) {
-		this.xCoordinate = xCoordinate;
 	}
 
 	@Override

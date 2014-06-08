@@ -17,8 +17,11 @@ public class World
 	private final Zone[] zones;
 	/** The GameObjects contained in the world. */
 	private final WorldObjectTree worldObjects;
+	/** The time at which the most recent update completed. */
 	private long lastUpdateCompleted;
+	/** The start time of the most recent update. */
 	private long lastUpdateStarted;
+	/** The time taken by the most recent update. */
 	private long lastUpdateTime;
 
 	/** Construct a new World. */

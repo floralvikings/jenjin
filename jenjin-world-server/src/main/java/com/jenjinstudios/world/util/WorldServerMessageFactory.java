@@ -17,8 +17,13 @@ import java.util.List;
  */
 public class WorldServerMessageFactory extends ServerMessageFactory
 {
+	/** The WorldClientHandler for which this message factory works. */
 	private final WorldClientHandler worldClientHandler;
 
+	/**
+	 * Construct a new WorldServerMessageFactory.
+	 * @param conn The WorldClientHandler for which this message factory works.
+	 */
 	public WorldServerMessageFactory(WorldClientHandler conn) {
 		super(conn);
 		this.worldClientHandler = conn;
@@ -137,16 +142,30 @@ public class WorldServerMessageFactory extends ServerMessageFactory
 		return newlyInvisibleMessage;
 	}
 
+	/**
+	 * Generate a WorldLoginResponse.
+	 * @return The WorldLoginResponse.
+	 */
 	public Message generateWorldLoginResponse() {
 		return new Message(worldClientHandler, "WorldLoginResponse");
 	}
 
+	/**
+	 * Generate a response to a WorldFileRequest.
+	 * @param worldFileBytes The bytes of the world file.
+	 * @return The WorldFileResponse.
+	 */
 	public Message generateWorldFileResponse(byte[] worldFileBytes) {
 		Message response = new Message(worldClientHandler, "WorldFileResponse");
 		response.setArgument("fileBytes", worldFileBytes);
 		return response;
 	}
 
+	/**
+	 * Generate a response to a WorldChecksumRequest.
+	 * @param checkSum The bytes of the world file's checksum.
+	 * @return The WorldChecksumResponse.
+	 */
 	public Message generateWorldChecksumResponse(byte[] checkSum) {
 		Message response = new Message(worldClientHandler, "WorldChecksumResponse");
 		response.setArgument("checksum", checkSum);

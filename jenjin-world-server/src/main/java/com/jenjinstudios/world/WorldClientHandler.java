@@ -18,11 +18,13 @@ public class WorldClientHandler extends ClientHandler
 {
 	/** The WorldServer owning this handler. */
 	private final WorldServer server;
+	/** The MessageFactory owned by this client handler. */
 	private final WorldServerMessageFactory messageFactory;
 	/** The ID of the player controlled by this client handler. */
 	private long playerID = -1;
 	/** The Actor managed by this handler. */
 	private Player player;
+	/** Whether this handler has sent the actor step length message. */
 	private boolean hasSentActorStepMessage;
 
 	/**

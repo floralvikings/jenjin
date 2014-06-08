@@ -46,7 +46,6 @@ public class MessageInputStream
 	/**
 	 * Read a Message or subclass from the DataStream.
 	 * @return The Message constructed form the data stream.
-	 * @throws IOException If there is an IO error.
 	 */
 	public Message readMessage() {
 		try
