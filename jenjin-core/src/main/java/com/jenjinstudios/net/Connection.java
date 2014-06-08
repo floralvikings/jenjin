@@ -304,5 +304,5 @@ public abstract class Connection extends Thread
 	 * custom message factory (and they all should).
 	 * @return The MessageFactory working for this connection.
 	 */
-	public MessageFactory getMessageFactory() {	return messageFactory; }
+	public abstract MessageFactory getMessageFactory();
 }
