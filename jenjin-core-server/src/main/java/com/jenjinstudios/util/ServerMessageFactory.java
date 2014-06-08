@@ -3,7 +3,6 @@ package com.jenjinstudios.util;
 import com.jenjinstudios.io.Message;
 import com.jenjinstudios.io.MessageInputStream;
 import com.jenjinstudios.net.ClientHandler;
-import com.jenjinstudios.net.Connection;
 
 import javax.crypto.*;
 import java.security.InvalidKeyException;
@@ -15,29 +14,51 @@ import java.security.spec.X509EncodedKeySpec;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/** @author Caleb Brinkman */
+/** Used to generate messages for the Jenjin core server.
+ * @author Caleb Brinkman */
 public class ServerMessageFactory extends MessageFactory
 {
+	/** The logger used by this class. */
 	private static final Logger LOGGER = Logger.getLogger(ServerMessageFactory.class.getName());
+	/** The ClientHandler for which this message factory works. */
 	private final ClientHandler clientHandler;
 
+	/**
+	 * Construct a new ServerMessageFactory.
+	 * @param conn The ClientHandler for which this message factory works.
+	 */
 	public ServerMessageFactory(ClientHandler conn) {
 		super(conn);
 		this.clientHandler = conn;
 	}
 
+	/**
+	 * Generate a LogoutResponse.
+	 * @param success Whether the logout attempt was successful.
+	 * @return The LogoutResponse.
+	 */
 	public Message generateLogoutResponse(boolean success) {
 		Message logoutResponse = new Message(clientHandler, "LogoutResponse");
 		logoutResponse.setArgument("success", success);
 		return logoutResponse;
 	}
 
+	/**
+	 * Generate a FirstConnectResponse to be sent to the client to indicate a successful connection has been established.
+	 * @param ups The Updates Per Second being run by the server.
+	 * @return The FirstConnectResponse.
+	 */
 	public Message generateFirstConnectResponse(int ups) {
 		Message firstConnectResponse = new Message(clientHandler, "FirstConnectResponse");
 		firstConnectResponse.setArgument("ups", ups);
 		return firstConnectResponse;
 	}
 
+	/**
+	 * Generate a new AESKeyMessage.
+	 * @param publicKeyBytes The bytes of the public key.
+	 * @return The AESKeyMessage.
+	 */
 	public Message generateAESKeyMessage(byte[] publicKeyBytes) {
 		Message aesMessage = new Message(clientHandler, "AESKeyMessage");
 		byte[] encryptedAESKey = MessageInputStream.NO_KEY;
@@ -71,14 +92,25 @@ public class ServerMessageFactory extends MessageFactory
 		return aesMessage;
 	}
 
+	/**
+	 * Generate a response to a PingRequest.
+	 * @param requestTimeNanos The time at which the ping request was made.
+	 * @return The PingResponse message.
+	 */
 	public Message generatePingResponse(long requestTimeNanos) {
 		Message pingResponse = new Message(clientHandler, "PingResponse");
 		pingResponse.setArgument("requestTimeNanos", requestTimeNanos);
 		return pingResponse;
 	}
 
-	public Message generateLoginResponse(Connection conn, boolean success, long loggedInTime) {
-		Message loginResponse = new Message(conn, "LoginResponse");
+	/**
+	 * Generate a response to a login attempt.
+	 * @param success Whether the loging attempt was successful.
+	 * @param loggedInTime The time of the successful login.
+	 * @return The LoginResponse message.
+	 */
+	public Message generateLoginResponse(boolean success, long loggedInTime) {
+		Message loginResponse = new Message(clientHandler, "LoginResponse");
 		loginResponse.setArgument("success", success);
 		loginResponse.setArgument("loginTime", loggedInTime);
 		return loginResponse;

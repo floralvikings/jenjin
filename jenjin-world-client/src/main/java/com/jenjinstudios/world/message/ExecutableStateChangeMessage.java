@@ -15,8 +15,11 @@ public class ExecutableStateChangeMessage extends WorldClientExecutableMessage
 {
 	/** The ID of the actor to which to add the state. */
 	private int actorID;
+	/** The new relative angle of the actor. */
 	private double relativeAngle;
+	/** The new absolute angle of the actor. */
 	private double absoluteAngle;
+	/** The new position of the actor. */
 	private Vector2D position;
 
 	/**

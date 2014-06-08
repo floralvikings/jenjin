@@ -10,8 +10,6 @@ import com.jenjinstudios.world.math.Vector2D;
  */
 public class MoveState
 {
-	/** The constant for 2*PI. */
-	public static final double TWO_PI = (2 * Math.PI);
 	/** The constant used for an "idle" move state. */
 	public static final double IDLE = Double.NEGATIVE_INFINITY;
 	/** The forward state. */
@@ -36,8 +34,6 @@ public class MoveState
 	public final double relativeAngle;
 	/** The angle of movement. */
 	public final double absoluteAngle;
-	/** The actual angle of movement given the relativeAngle and move angle. */
-	public final double stepAngle;
 	/** The position at which this change took place. */
 	public final Vector2D position;
 	/** The time at which the change took place. */
@@ -47,6 +43,8 @@ public class MoveState
 	 * Construct a new MoveState.
 	 * @param relativeAngle The relativeAngle of movement.
 	 * @param absoluteAngle The angle of movement.
+	 * @param position The position at which the state change took place.
+	 * @param time The time in nanoseconds at which the state change took place.
 	 */
 	public MoveState(double relativeAngle, double absoluteAngle, Vector2D position, long time) {
 		this.relativeAngle = relativeAngle;
@@ -55,8 +53,6 @@ public class MoveState
 		this.position = position;
 		this.time = time;
 
-		double sAngle = relativeAngle != IDLE ? absoluteAngle + relativeAngle : IDLE;
-		stepAngle = (sAngle < 0) ? (sAngle + TWO_PI) : (sAngle % TWO_PI);
 	}
 
 	@Override

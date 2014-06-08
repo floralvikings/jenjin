@@ -33,7 +33,7 @@ public class ExecutableLoginRequest extends ServerExecutableMessage
 		boolean success;
 		if (sqlHandler == null || getClientHandler().isLoggedIn()) {
 			long loggedInTime = getClientHandler().getLoggedInTime();
-			Message loginResponse = getClientHandler().getMessageFactory().generateLoginResponse(getClientHandler(), false, loggedInTime);
+			Message loginResponse = getClientHandler().getMessageFactory().generateLoginResponse(false, loggedInTime);
 			getClientHandler().queueMessage(loginResponse);
 			return;
 		}
@@ -43,7 +43,7 @@ public class ExecutableLoginRequest extends ServerExecutableMessage
 
 		getClientHandler().setLoginStatus(success);
 		long loggedInTime = getClientHandler().getLoggedInTime();
-		Message loginResponse = getClientHandler().getMessageFactory().generateLoginResponse(getClientHandler(), success, loggedInTime);
+		Message loginResponse = getClientHandler().getMessageFactory().generateLoginResponse(success, loggedInTime);
 		getClientHandler().queueMessage(loginResponse);
 
 		if (success)
