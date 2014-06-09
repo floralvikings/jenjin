@@ -1,8 +1,7 @@
-package test.jenjinstudios.world.io;
+package com.jenjinstudios.world.io;
 
 import com.jenjinstudios.world.NPC;
 import com.jenjinstudios.world.World;
-import com.jenjinstudios.world.io.NpcFileReader;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -22,7 +21,7 @@ public class NPCFileReaderTest
 	@Test
 	public void testRead() throws Exception {
 		World testWorld = new World();
-		InputStream resourceAsStream = getClass().getResourceAsStream("/test/jenjinstudios/world/NPCFile01.xml");
+		InputStream resourceAsStream = getClass().getResourceAsStream("/com/jenjinstudios/world/NPCFile01.xml");
 		NpcFileReader npcFileReader = new NpcFileReader(testWorld, resourceAsStream);
 		List<NPC> npcList = npcFileReader.read();
 		for(NPC npc : npcList)

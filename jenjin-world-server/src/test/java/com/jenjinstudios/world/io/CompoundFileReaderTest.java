@@ -1,9 +1,8 @@
-package test.jenjinstudios.world.io;
+package com.jenjinstudios.world.io;
 
 import com.jenjinstudios.world.Location;
 import com.jenjinstudios.world.LocationProperties;
 import com.jenjinstudios.world.World;
-import com.jenjinstudios.world.io.CompoundFileReader;
 import com.jenjinstudios.world.math.Vector2D;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -22,7 +21,7 @@ public class CompoundFileReaderTest
 	 */
 	@Test
 	public void testRead() throws Exception {
-		InputStream resourceAsStream = getClass().getResourceAsStream("/test/jenjinstudios/world/CompoundFile01.xml");
+		InputStream resourceAsStream = getClass().getResourceAsStream("/com/jenjinstudios/world/CompoundFile01.xml");
 		CompoundFileReader testReader = new CompoundFileReader(resourceAsStream);
 		World world = testReader.read();
 

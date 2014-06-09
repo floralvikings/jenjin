@@ -1,9 +1,6 @@
-package test.jenjinstudios.world;
+package com.jenjinstudios.world;
 
-import com.jenjinstudios.world.WorldObject;
 import com.jenjinstudios.world.math.Vector2D;
-import com.jenjinstudios.world.Location;
-import com.jenjinstudios.world.World;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -41,7 +38,7 @@ public class WorldTest
 	public void testPurgeObjects() throws Exception {
 		World testWorld = new World();
 		int random = (int) (Math.random() * 100);
-		for(int i=0; i<random; i++)
+		for (int i = 0; i < random; i++)
 		{
 			Vector2D randomVector = new Vector2D(Math.random() * 100, Math.random() * 100);
 			WorldObject randomObject = new WorldObject("Random Object " + i);

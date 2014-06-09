@@ -1,8 +1,5 @@
-package test.jenjinstudios.world;
+package com.jenjinstudios.world;
 
-import com.jenjinstudios.world.Location;
-import com.jenjinstudios.world.LocationProperties;
-import com.jenjinstudios.world.Zone;
 import com.jenjinstudios.world.ai.Pathfinder;
 import org.testng.Assert;
 import org.testng.annotations.*;
@@ -42,7 +39,7 @@ public class LocationTest
 			int randomX = (int) (Math.random() * xSize);
 			int randomY = (int) (Math.random() * ySize);
 			String messageString = "Testing adjacency at random location ({0}, {1}) during test number {2}";
-			Object[] messageArgs = new Object[] { randomX, randomY, i };
+			Object[] messageArgs = new Object[]{randomX, randomY, i};
 			LOGGER.log(Level.FINE, messageString, messageArgs);
 			Location randomLocation = testZone.getLocationOnGrid(randomX, randomY);
 			Location northLocation = randomLocation.getAdjNorth();
@@ -86,22 +83,22 @@ public class LocationTest
 				Assert.assertEquals(randomLocation, westLocation.getAdjEast());
 			}
 
-			if(southEastLocation != null)
+			if (southEastLocation != null)
 			{
 				Assert.assertEquals(randomLocation, southEastLocation.getAdjNorthWest());
 			}
 
-			if(southWestLocation != null)
+			if (southWestLocation != null)
 			{
 				Assert.assertEquals(randomLocation, southWestLocation.getAdjNorthEast());
 			}
 
-			if(northWestLocation != null)
+			if (northWestLocation != null)
 			{
 				Assert.assertEquals(randomLocation, northWestLocation.getAdjSouthEast());
 			}
 
-			if(northEastLocation != null)
+			if (northEastLocation != null)
 			{
 				Assert.assertEquals(randomLocation, northEastLocation.getAdjSouthWest());
 			}
@@ -112,8 +109,7 @@ public class LocationTest
 	 * Test the path finding functionality.
 	 */
 	@Test
-	public void testFindPath()
-	{
+	public void testFindPath() {
 		int xSize = 100;
 		int ySize = 100;
 		LocationProperties blocked = new LocationProperties();
@@ -129,13 +125,13 @@ public class LocationTest
 
 
 		LinkedList<Location> correctPath = new LinkedList<>();
-		correctPath.add(testZone.getLocationOnGrid(3,3));
-		correctPath.add(testZone.getLocationOnGrid(4,4));
-		correctPath.add(testZone.getLocationOnGrid(4,5));
-		correctPath.add(testZone.getLocationOnGrid(5,5));
-		correctPath.add(testZone.getLocationOnGrid(6,5));
-		correctPath.add(testZone.getLocationOnGrid(7,4));
-		correctPath.add(testZone.getLocationOnGrid(7,3));
+		correctPath.add(testZone.getLocationOnGrid(3, 3));
+		correctPath.add(testZone.getLocationOnGrid(4, 4));
+		correctPath.add(testZone.getLocationOnGrid(4, 5));
+		correctPath.add(testZone.getLocationOnGrid(5, 5));
+		correctPath.add(testZone.getLocationOnGrid(6, 5));
+		correctPath.add(testZone.getLocationOnGrid(7, 4));
+		correctPath.add(testZone.getLocationOnGrid(7, 3));
 
 
 		Assert.assertEquals(correctPath, foundPath);

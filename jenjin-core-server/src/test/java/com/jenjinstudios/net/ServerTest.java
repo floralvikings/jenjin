@@ -1,8 +1,5 @@
-package test.jenjinstudios.net;
+package com.jenjinstudios.net;
 
-import com.jenjinstudios.net.AuthClient;
-import com.jenjinstudios.net.AuthServer;
-import com.jenjinstudios.net.ClientHandler;
 import com.jenjinstudios.sql.SQLHandler;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;

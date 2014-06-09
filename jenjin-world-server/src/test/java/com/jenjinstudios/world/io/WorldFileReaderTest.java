@@ -1,9 +1,8 @@
-package test.jenjinstudios.world.io;
+package com.jenjinstudios.world.io;
 
 import com.jenjinstudios.world.Location;
 import com.jenjinstudios.world.LocationProperties;
 import com.jenjinstudios.world.World;
-import com.jenjinstudios.world.io.WorldFileReader;
 import com.jenjinstudios.world.math.Vector2D;
 import org.testng.Assert;
 import org.testng.annotations.*;
@@ -21,7 +20,7 @@ public class WorldFileReaderTest
 	 */
 	@Test
 	public void testRead() throws Exception {
-		InputStream resourceAsStream = getClass().getResourceAsStream("/test/jenjinstudios/world/WorldFile01.xml");
+		InputStream resourceAsStream = getClass().getResourceAsStream("/com/jenjinstudios/world/WorldFile01.xml");
 		WorldFileReader testReader = new WorldFileReader(resourceAsStream);
 		World world = testReader.read();
 		Location testLocation = world.getLocationForCoordinates(0, new Vector2D(Location.SIZE, Location.SIZE));

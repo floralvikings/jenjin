@@ -1,11 +1,9 @@
-package test.jenjinstudios.world.io;
+package com.jenjinstudios.world.io;
 
 import com.jenjinstudios.world.Location;
 import com.jenjinstudios.world.LocationProperties;
 import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.Zone;
-import com.jenjinstudios.world.io.WorldFileReader;
-import com.jenjinstudios.world.io.WorldFileWriter;
 import com.jenjinstudios.world.math.Vector2D;
 import org.testng.annotations.*;
 import org.testng.Assert;
@@ -33,10 +31,10 @@ public class WorldFileWriterTest
 	@BeforeMethod
 	public void setUp() throws Exception {
 		worldFile = new File("WorldFileWriterTest.xml");
-		if(worldFile.exists() && worldFile.delete()) {
+		if (worldFile.exists() && worldFile.delete())
+		{
 			LOGGER.log(Level.INFO, "Deleted test file.");
 		}
-
 
 
 	}
@@ -47,7 +45,8 @@ public class WorldFileWriterTest
 	 */
 	@AfterMethod
 	public void tearDown() throws Exception {
-		if(worldFile.exists() && worldFile.delete()) {
+		if (worldFile.exists() && worldFile.delete())
+		{
 			LOGGER.log(Level.INFO, "Deleted test file.");
 		}
 	}
@@ -61,8 +60,8 @@ public class WorldFileWriterTest
 		TreeMap<String, String> map = new TreeMap<>();
 		map.put("walkable", "false");
 		Location testLocation = new Location(1, 1, new LocationProperties(map));
-		Location[] locArray = { testLocation };
-		World writeWorld = new World(new Zone[] { new Zone(0, 5, 5, locArray )});
+		Location[] locArray = {testLocation};
+		World writeWorld = new World(new Zone[]{new Zone(0, 5, 5, locArray)});
 
 		WorldFileWriter worldFileWriter = new WorldFileWriter(writeWorld);
 		worldFileWriter.write(worldFile);

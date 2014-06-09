@@ -1,10 +1,10 @@
-package test.jenjinstudios.world.actor;
+package com.jenjinstudios.world.actor;
 
 import com.jenjinstudios.world.*;
 import com.jenjinstudios.world.math.Vector2D;
 import org.testng.Assert;
 import org.testng.annotations.*;
-import test.jenjinstudios.world.WorldServerTest;
+import com.jenjinstudios.world.WorldServerTest;
 
 /**
  * Test the NPC class.
@@ -89,7 +89,8 @@ public class NPCTest extends WorldServerTest
 			distance = npc.getVector2D().getDistanceToVector(new Vector2D(55, 75));
 		}
 
-		for(int i=0; i< 100; i++) {
+		for (int i = 0; i < 100; i++)
+		{
 			updateWorld(world, 10);
 			Thread.sleep(1);
 		}

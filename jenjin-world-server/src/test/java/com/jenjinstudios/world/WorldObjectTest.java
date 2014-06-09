@@ -1,8 +1,6 @@
-package test.jenjinstudios.world;
+package com.jenjinstudios.world;
 
 import com.jenjinstudios.world.math.Vector2D;
-import com.jenjinstudios.world.World;
-import com.jenjinstudios.world.WorldObject;
 import org.testng.Assert;
 import org.testng.annotations.*;
 

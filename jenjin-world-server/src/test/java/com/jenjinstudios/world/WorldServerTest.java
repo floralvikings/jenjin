@@ -1,7 +1,6 @@
-package test.jenjinstudios.world;
+package com.jenjinstudios.world;
 
 import com.jenjinstudios.util.FileUtil;
-import com.jenjinstudios.world.*;
 import com.jenjinstudios.world.io.WorldFileReader;
 import com.jenjinstudios.world.math.Vector2D;
 import com.jenjinstudios.world.sql.WorldSQLHandler;
@@ -43,7 +42,7 @@ public class WorldServerTest
 	 */
 	@BeforeClass
 	public static void construct() throws Exception {
-		InputStream configFile = WorldServerTest.class.getResourceAsStream("/test/jenjinstudios/logger.properties");
+		InputStream configFile = WorldServerTest.class.getResourceAsStream("/com/jenjinstudios/logger.properties");
 		LogManager.getLogManager().readConfiguration(configFile);
 	}
 
@@ -95,7 +94,7 @@ public class WorldServerTest
 		WorldSQLHandler worldSQLHandler = new WorldSQLHandler("localhost", "jenjin_test", "jenjin_user", "jenjin_password");
 		WorldServer worldServer = new WorldServer(
 				new WorldFileReader(
-						WorldServerTest.class.getResourceAsStream("/test/jenjinstudios/world/WorldFile01.xml")),
+						WorldServerTest.class.getResourceAsStream("/com/jenjinstudios/world/WorldFile01.xml")),
 				WorldServer.DEFAULT_UPS, port, WorldClientHandler.class, worldSQLHandler);
 		worldServer.blockingStart();
 		return worldServer;
