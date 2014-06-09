@@ -8,6 +8,7 @@ import com.jenjinstudios.world.WorldObject;
  * Process an ActorVisibleMessage.
  * @author Caleb Brinkman
  */
+@SuppressWarnings("WeakerAccess")
 public class ExecutableObjectVisibleMessage extends WorldClientExecutableMessage
 {
 	/** The newly visible actor. */

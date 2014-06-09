@@ -12,6 +12,7 @@ import com.jenjinstudios.world.state.MoveState;
  * Process a StateChangeRequest.
  * @author Caleb Brinkman
  */
+@SuppressWarnings("WeakerAccess")
 public class ExecutableStateChangeRequest extends WorldExecutableMessage
 {
 	/** The maximum allowable correction distance. */
