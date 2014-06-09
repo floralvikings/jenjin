@@ -30,14 +30,14 @@ public class WorldServerTest
 	/** The current test account being used. */
 	private static int testAccountNumber = 0;
 	/** The port used to listen and connect. */
-	private static int port = WorldServer.DEFAULT_PORT;
+	public static int port = WorldServer.DEFAULT_PORT;
 	/**
 	 * The tolerance for distance between a the client and server positions of an actor. This is roughly how much an
 	 * actor should move during an update (assuming default UPS, which these tests do).  This means that the client and
 	 * server can have about one update worth of discrepancy between them before the tests fail.  This is intended to
 	 * avoid spurious test failures that could be caused by unforeseen lag on one of the threads.
 	 */
-	private static final double vectorTolerance = (Actor.MOVE_SPEED / (double) WorldServer.DEFAULT_UPS) * 1.1;
+	public static final double vectorTolerance = (Actor.MOVE_SPEED / (double) WorldServer.DEFAULT_UPS) * 1.1;
 
 	/**
 	 * Construct the test.
@@ -54,7 +54,7 @@ public class WorldServerTest
 	 * @throws Exception If there's an exception.
 	 */
 	@BeforeMethod
-	public void setUp() throws Exception {
+	public static void setUp() throws Exception {
 		testAccountNumber++;
 		port++;
 	}
@@ -312,22 +312,6 @@ public class WorldServerTest
 	}
 
 	/**
-	 * Test the movement of the client-side player.
-	 * @throws Exception If there's an exception.
-	 */
-	@Test(timeOut = 10000)
-	public void testClientPlayerMovement() throws Exception {
-		WorldServer server = initWorldServer(port);
-		WorldClient client = initWorldClient(port);
-		ClientPlayer clientPlayer = client.getPlayer();
-		Vector2D target = new Vector2D(10, 0);
-		movePlayerToVector(client, server, target);
-		double dist = target.getDistanceToVector(clientPlayer.getVector2D());
-		Assert.assertEquals(dist, 0, vectorTolerance);
-		tearDown(client, server);
-	}
-
-	/**
 	 * Test movement synchronization between client and server-side players.
 	 * @throws Exception If there's an exception.
 	 */
@@ -363,7 +347,7 @@ public class WorldServerTest
 	 * @throws Exception If there's an exception.
 	 * @return The initialized, logged in client.
 	 */
-	private static WorldClient initWorldClient(int port) throws Exception {
+	public static WorldClient initWorldClient(int port) throws Exception {
 		String user = "TestAccount" + testAccountNumber;
 		LOGGER.log(Level.INFO, "Logging into account {0}", user);
 		WorldClient worldClient = new WorldClient(new File("resources/WorldTestFile.xml"), "localhost", port, user, "testPassword");
@@ -379,7 +363,7 @@ public class WorldServerTest
 	 * @throws Exception If there's an exception.
 	 * @return The initialized server.
 	 */
-	private static WorldServer initWorldServer(int port) throws Exception {
+	public static WorldServer initWorldServer(int port) throws Exception {
 		/* The world SQL handler used to test. */
 		WorldSQLHandler worldSQLHandler = new WorldSQLHandler("localhost", "jenjin_test", "jenjin_user", "jenjin_password");
 		WorldServer worldServer = new WorldServer(
@@ -418,7 +402,7 @@ public class WorldServerTest
 	 * @param target The vector to which to move.
 	 * @throws InterruptedException If there's an exception.
 	 */
-	private void movePlayerToVector(WorldClient client, WorldServer server, Vector2D target) throws InterruptedException {
+	public static void movePlayerToVector(WorldClient client, WorldServer server, Vector2D target) throws InterruptedException {
 		ClientPlayer clientPlayer = client.getPlayer();
 		Player serverPlayer = server.getClientHandlerByUsername(client.getUsername()).getPlayer();
 		double angle = clientPlayer.getVector2D().getAngleToVector(target);
