@@ -107,7 +107,7 @@ public class Zone
 	 * @param y The y coordinate.
 	 * @return The location at the specified coordinates.
 	 */
-	public Location getLocationForCoordinates(double x, double y) {
+	protected Location getLocationForCoordinates(double x, double y) {
 		return locationGrid[(int) x / Location.SIZE][(int) y / Location.SIZE];
 	}
 
@@ -157,7 +157,7 @@ public class Zone
 	 * @param radius The radius of the circle.
 	 * @return A list of locations containing the perimeter of the circle.
 	 */
-	public LinkedList<Vector2D> castCircle(int x0, int y0, int radius) {
+	protected LinkedList<Vector2D> castCircle(int x0, int y0, int radius) {
 		int x = radius, y = 0;
 		int radiusError = 1-x;
 		LinkedList<Vector2D> circle = new LinkedList<>();
@@ -194,7 +194,7 @@ public class Zone
 	 * @return The ray cast from the given starting points to the given end points.
 	 */
 	@SuppressWarnings("SuspiciousNameCombination")
-	public Collection<Location> castVisibilityRay(int x1, int y1, int x2, int y2) {
+	protected Collection<Location> castVisibilityRay(int x1, int y1, int x2, int y2) {
 		LinkedList<Location> visibleRay = new LinkedList<>();
 		int i;               // loop counter
 		int yStep, xStep;    // the step on y and x axis
