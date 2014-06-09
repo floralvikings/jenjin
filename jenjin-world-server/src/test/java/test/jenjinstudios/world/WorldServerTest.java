@@ -312,25 +312,6 @@ public class WorldServerTest
 	}
 
 	/**
-	 * Test movement synchronization between client and server-side players.
-	 * @throws Exception If there's an exception.
-	 */
-	@Test(timeOut = 10000)
-	public void testSynchronizedPlayerMovement() throws Exception {
-		WorldServer server = initWorldServer(port);
-		WorldClient client = initWorldClient(port);
-		ClientPlayer clientPlayer = client.getPlayer();
-		Player serverPlayer = server.getClientHandlerByUsername(client.getUsername()).getPlayer();
-		// Start and stop the player a few times to make sure the server is keeping up.
-		movePlayerToVector(client, server, new Vector2D(4, 0));
-		movePlayerToVector(client, server, new Vector2D(8, 0));
-		movePlayerToVector(client, server, new Vector2D(10, 0));
-		double dist = serverPlayer.getVector2D().getDistanceToVector(clientPlayer.getVector2D());
-		Assert.assertEquals(dist, 0, vectorTolerance, "Server Vector: " +
-				serverPlayer.getVector2D() + " Client Vector: " + clientPlayer.getVector2D());
-	}
-
-	/**
 	 * Assert that the player for the given client is at the given vector.
 	 * @param client The client.
 	 * @param vector1 The vector.
@@ -344,8 +325,8 @@ public class WorldServerTest
 	/**
 	 * Initialize and log the client in.
 	 * @param port The port number on which to start the client.
-	 * @throws Exception If there's an exception.
 	 * @return The initialized, logged in client.
+	 * @throws Exception If there's an exception.
 	 */
 	public static WorldClient initWorldClient(int port) throws Exception {
 		String user = "TestAccount" + testAccountNumber;
@@ -360,8 +341,8 @@ public class WorldServerTest
 	/**
 	 * Initialize the world and world server.
 	 * @param port The port on which to initialize the server.
-	 * @throws Exception If there's an exception.
 	 * @return The initialized server.
+	 * @throws Exception If there's an exception.
 	 */
 	public static WorldServer initWorldServer(int port) throws Exception {
 		/* The world SQL handler used to test. */
@@ -407,7 +388,7 @@ public class WorldServerTest
 		Player serverPlayer = server.getClientHandlerByUsername(client.getUsername()).getPlayer();
 		double angle = clientPlayer.getVector2D().getAngleToVector(target);
 		double dist = clientPlayer.getVector2D().getDistanceToVector(target);
-		if(dist <= vectorTolerance) return;
+		if (dist <= vectorTolerance) return;
 		clientPlayer.setRelativeAngle(angle);
 		long timeToSleep = (long) (1000 * (dist / ClientActor.MOVE_SPEED));
 		// Have to wait for the new angle to be set
@@ -461,9 +442,10 @@ public class WorldServerTest
 	 * @throws Exception If there's an exception.
 	 */
 	@AfterClass
-	public static void resetDB() throws Exception{
+	public static void resetDB() throws Exception {
 		WorldSQLHandler worldSQLHandler = new WorldSQLHandler("localhost", "jenjin_test", "jenjin_user", "jenjin_password");
-		for(int i=1; i <= testAccountNumber; i++) {
+		for (int i = 1; i <= testAccountNumber; i++)
+		{
 			String user = "TestAccount" + i;
 			worldSQLHandler.logOutPlayer(new Actor(user));
 		}
