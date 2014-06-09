@@ -14,7 +14,7 @@ import java.util.logging.Logger;
 /**
  * @author Caleb Brinkman
  */
-public class ForcedStateTest
+public class ForcedStateTest extends WorldServerTest
 {
 	/** The logger for this class. */
 	private static final Logger LOGGER = Logger.getLogger(ForcedStateTest.class.getName());

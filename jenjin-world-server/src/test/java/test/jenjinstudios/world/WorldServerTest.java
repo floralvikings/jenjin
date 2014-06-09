@@ -3,7 +3,6 @@ package test.jenjinstudios.world;
 import com.jenjinstudios.util.FileUtil;
 import com.jenjinstudios.world.*;
 import com.jenjinstudios.world.io.WorldFileReader;
-import com.jenjinstudios.world.math.MathUtil;
 import com.jenjinstudios.world.math.Vector2D;
 import com.jenjinstudios.world.sql.WorldSQLHandler;
 import com.jenjinstudios.world.state.MoveState;
@@ -11,7 +10,6 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
 
 import java.io.File;
 import java.io.InputStream;
@@ -28,7 +26,7 @@ public class WorldServerTest
 	/** The Logger for this class. */
 	private static final Logger LOGGER = Logger.getLogger(WorldServerTest.class.getName());
 	/** The current test account being used. */
-	private static int testAccountNumber = 0;
+	public static int testAccountNumber = 0;
 	/** The port used to listen and connect. */
 	public static int port = WorldServer.DEFAULT_PORT;
 	/**
@@ -57,139 +55,6 @@ public class WorldServerTest
 	public static void setUp() throws Exception {
 		testAccountNumber++;
 		port++;
-	}
-
-	/**
-	 * Test the actor visibility after player and actor movement.
-	 * @throws Exception If there's an exception.
-	 */
-	@Test(timeOut = 10000)
-	public void testActorVisibility() throws Exception {
-		WorldServer server = initWorldServer(port);
-		WorldClient client = initWorldClient(port);
-
-		double edge = Location.SIZE * (SightedObject.VIEW_RADIUS + 1);
-		Vector2D startPos = new Vector2D(0, edge + 1);
-		// Should be (0, 109)
-		Vector2D targetPos = new Vector2D(0, edge - 1);
-		Actor serverActor = new Actor("TestActor");
-		serverActor.setVector2D(startPos);
-		server.getWorld().addObject(serverActor);
-
-		LOGGER.log(Level.INFO, "Moving serverActor to {0}", targetPos);
-		moveServerActorToVector(serverActor, targetPos);
-
-		LOGGER.log(Level.INFO, "Asserting that clientPlayer can see serverPlayer");
-		WorldObject clientActor = client.getPlayer().getVisibleObjects().get(serverActor.getId());
-		Assert.assertEquals(1, client.getPlayer().getVisibleObjects().size());
-		Assert.assertNotNull(clientActor);
-		Thread.sleep(500);
-		assertClientAndServerInSamePosition(serverActor, clientActor);
-
-		LOGGER.log(Level.INFO, "Moving serverActor out of visible range.");
-		moveServerActorToVector(serverActor, startPos);
-		Assert.assertEquals(0, client.getPlayer().getVisibleObjects().size());
-
-		LOGGER.log(Level.INFO, "Moving clientPlayer into visible range.");
-		movePlayerToVector(client, server, new Vector2D(0, Location.SIZE + 1));
-		Assert.assertEquals(1, client.getPlayer().getVisibleObjects().size());
-		clientActor = client.getPlayer().getVisibleObjects().get(serverActor.getId());
-		assertClientAndServerInSamePosition(serverActor, clientActor);
-
-		LOGGER.log(Level.INFO, "Moving clientPlayer back to origin.");
-		movePlayerToVector(client, server, Vector2D.ORIGIN);
-		Assert.assertEquals(0, client.getPlayer().getVisibleObjects().size());
-
-		tearDown(client, server);
-	}
-
-	/**
-	 * Test movement to various random vectors.
-	 * @throws Exception If there's an exception.
-	 */
-	@Test(timeOut = 10000)
-	public void testRandomMovement() throws Exception {
-		WorldServer server = initWorldServer(port);
-		WorldClient client = initWorldClient(port);
-		ClientPlayer clientPlayer = client.getPlayer();
-		Player serverPlayer = server.getClientHandlerByUsername(client.getUsername()).getPlayer();
-		clientPlayer.setRelativeAngle(MoveState.IDLE);
-		Thread.sleep(100);
-		int maxCoordinate = 3;
-		for (int i = 0; i < 3; i++)
-		{
-			double randomX = MathUtil.round(java.lang.Math.random() * maxCoordinate, 4);
-			double randomY = MathUtil.round(java.lang.Math.random() * maxCoordinate, 4);
-			Vector2D target = new Vector2D(randomX, randomY);
-			movePlayerToVector(client, server, target);
-			double distance = clientPlayer.getVector2D().getDistanceToVector(serverPlayer.getVector2D());
-			Assert.assertEquals(0, distance, vectorTolerance, "Server Vector: " + serverPlayer.getVector2D() +
-					" Client Vector: " + clientPlayer.getVector2D() + " Target Vector: " + target);
-		}
-		tearDown(client, server);
-	}
-
-	/**
-	 * Test NPC movement.
-	 * @throws Exception If there's an exception.
-	 */
-	@Test(timeOut = 10000)
-	public void testNPCMovement() throws Exception {
-		WorldServer server = initWorldServer(port);
-		WorldClient client = initWorldClient(port);
-		ClientPlayer clientPlayer = client.getPlayer();
-		NPC testNPC = new NPC("TestNPC");
-		Location target = server.getWorld().getZone(0).getLocationOnGrid(0, 0);
-		testNPC.setVector2D(20, 5);
-		server.getWorld().addObject(testNPC);
-		testNPC.plotPath(target);
-		double distance = testNPC.getVector2D().getDistanceToVector(target.getCenter());
-		while (distance >= vectorTolerance)
-		{
-			distance = testNPC.getVector2D().getDistanceToVector(target.getCenter());
-			Thread.sleep(10);
-		}
-		WorldObject clientNPC = clientPlayer.getVisibleObjects().get(testNPC.getId());
-		distance = testNPC.getVector2D().getDistanceToVector(clientNPC.getVector2D());
-		Assert.assertEquals(distance, 0, vectorTolerance);
-
-		// Make sure the NPC is in the same place.
-		Thread.sleep(100);
-		assertClientAndServerInSamePosition(testNPC, clientNPC);
-		tearDown(client, server);
-	}
-
-	/**
-	 * Test logging the player into and out of the world, including updating coordinates.
-	 * @throws Exception If there's an exception.
-	 */
-	@Test(timeOut = 10000)
-	public void testLoginLogout() throws Exception {
-		testAccountNumber++;
-		WorldSQLHandler worldSQLHandler = new WorldSQLHandler("localhost", "jenjin_test", "jenjin_user",
-				"jenjin_password");
-
-		Assert.assertTrue(worldSQLHandler.isConnected());
-
-		Actor player = worldSQLHandler.logInPlayer("TestAccount" + testAccountNumber, "testPassword");
-		Vector2D origin = player.getVector2D();
-		Vector2D secondVector = new Vector2D(50, 50);
-
-		Assert.assertEquals(origin, player.getVector2D());
-
-		player.setVector2D(secondVector);
-		Assert.assertTrue(worldSQLHandler.logOutPlayer(player));
-
-		player = worldSQLHandler.logInPlayer("TestAccount" + testAccountNumber, "testPassword");
-		Assert.assertEquals(secondVector, player.getVector2D());
-
-		player.setVector2D(origin);
-		Assert.assertTrue(worldSQLHandler.logOutPlayer(player));
-
-		player = worldSQLHandler.logInPlayer("TestAccount" + testAccountNumber, "testPassword");
-		Assert.assertEquals(origin, player.getVector2D());
-
-		Assert.assertTrue(worldSQLHandler.logOutPlayer(player));
 	}
 
 	/**
@@ -242,7 +107,7 @@ public class WorldServerTest
 	 * @param newVector The target vector.
 	 * @throws InterruptedException If there is an error blocking until the target is reached.
 	 */
-	private static void moveServerActorToVector(Actor serverActor, Vector2D newVector) throws InterruptedException {
+	public static void moveServerActorToVector(Actor serverActor, Vector2D newVector) throws InterruptedException {
 		double newAngle = serverActor.getVector2D().getAngleToVector(newVector);
 		serverActor.setRelativeAngle(newAngle);
 		double distanceToNewVector = serverActor.getVector2D().getDistanceToVector(newVector);

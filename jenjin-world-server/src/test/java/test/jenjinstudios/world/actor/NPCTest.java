@@ -4,30 +4,42 @@ import com.jenjinstudios.world.*;
 import com.jenjinstudios.world.math.Vector2D;
 import org.testng.Assert;
 import org.testng.annotations.*;
+import test.jenjinstudios.world.WorldServerTest;
 
 /**
  * Test the NPC class.
  * @author Caleb Brinkman
  */
-public class NPCTest
+public class NPCTest extends WorldServerTest
 {
-	/** The NPC used for testing. */
-	private final NPC npc = new NPC("Nearly Passable Cormorant");
-	/** The World used to test the actor. */
-	private World world;
 	/**
-	 * The tolerance for distance between a the client and server positions of an actor. This allows for the client and
-	 * server to have a single update of discrepancy between them.
-	 */
-	private static final double vectorTolerance = (Actor.MOVE_SPEED / (double) WorldServer.DEFAULT_UPS) * 1.1;
-
-	/**
-	 * Set up the test.
+	 * Test NPC movement.
 	 * @throws Exception If there's an exception.
 	 */
-	@BeforeMethod
-	public void setUp() throws Exception {
-		world = new World();
+	@Test(timeOut = 10000)
+	public static void testNPCMovement() throws Exception {
+		WorldServer server = WorldServerTest.initWorldServer(WorldServerTest.port);
+		WorldClient client = WorldServerTest.initWorldClient(WorldServerTest.port);
+		ClientPlayer clientPlayer = client.getPlayer();
+		NPC testNPC = new NPC("TestNPC");
+		Location target = server.getWorld().getZone(0).getLocationOnGrid(0, 0);
+		testNPC.setVector2D(20, 5);
+		server.getWorld().addObject(testNPC);
+		testNPC.plotPath(target);
+		double distance = testNPC.getVector2D().getDistanceToVector(target.getCenter());
+		while (distance >= WorldServerTest.vectorTolerance)
+		{
+			distance = testNPC.getVector2D().getDistanceToVector(target.getCenter());
+			Thread.sleep(10);
+		}
+		WorldObject clientNPC = clientPlayer.getVisibleObjects().get(testNPC.getId());
+		distance = testNPC.getVector2D().getDistanceToVector(clientNPC.getVector2D());
+		Assert.assertEquals(distance, 0, WorldServerTest.vectorTolerance);
+
+		// Make sure the NPC is in the same place.
+		Thread.sleep(100);
+		WorldServerTest.assertClientAndServerInSamePosition(testNPC, clientNPC);
+		WorldServerTest.tearDown(client, server);
 	}
 
 	/**
@@ -36,6 +48,8 @@ public class NPCTest
 	 */
 	@Test(timeOut = 30000)
 	public void testPath() throws Exception {
+		World world = new World();
+		NPC npc = new NPC("Nearly Passable Cormorant");
 		Location startLocation = world.getZone(0).getLocationOnGrid(3, 3);
 		Location targetLocation = world.getZone(0).getLocationOnGrid(5, 7);
 		npc.setVector2D(startLocation.getCenter());
@@ -44,46 +58,51 @@ public class NPCTest
 		npc.plotPath(targetLocation);
 
 		double distance = npc.getVector2D().getDistanceToVector(new Vector2D(45, 45));
-		while(distance > vectorTolerance) {
+		while (distance > WorldServerTest.vectorTolerance)
+		{
 			Thread.sleep(5);
-			updateWorld(1);
+			updateWorld(world, 1);
 			distance = npc.getVector2D().getDistanceToVector(new Vector2D(45, 45));
 		}
 
 		distance = npc.getVector2D().getDistanceToVector(new Vector2D(55, 55));
-		while(distance > vectorTolerance) {
+		while (distance > WorldServerTest.vectorTolerance)
+		{
 			Thread.sleep(5);
-			updateWorld(1);
+			updateWorld(world, 1);
 			distance = npc.getVector2D().getDistanceToVector(new Vector2D(55, 55));
 		}
 
 		distance = npc.getVector2D().getDistanceToVector(new Vector2D(55, 65));
-		while(distance > vectorTolerance) {
+		while (distance > WorldServerTest.vectorTolerance)
+		{
 			Thread.sleep(10);
-			updateWorld(1);
+			updateWorld(world, 1);
 			distance = npc.getVector2D().getDistanceToVector(new Vector2D(55, 65));
 		}
 
 		distance = npc.getVector2D().getDistanceToVector(new Vector2D(55, 75));
-		while(distance > vectorTolerance) {
+		while (distance > WorldServerTest.vectorTolerance)
+		{
 			Thread.sleep(10);
-			updateWorld(1);
+			updateWorld(world, 1);
 			distance = npc.getVector2D().getDistanceToVector(new Vector2D(55, 75));
 		}
 
 		for(int i=0; i< 100; i++) {
-			updateWorld(10);
+			updateWorld(world, 10);
 			Thread.sleep(1);
 		}
 		distance = npc.getVector2D().getDistanceToVector(new Vector2D(55, 75));
-		Assert.assertEquals(0, distance, vectorTolerance);
+		Assert.assertEquals(0, distance, WorldServerTest.vectorTolerance);
 	}
 
 	/**
 	 * Update the world the given number of times.
+	 * @param world The world to update.
 	 * @param num The number of times to update the world.
 	 */
-	private void updateWorld(int num) {
+	private static void updateWorld(World world, int num) {
 		for (int i = 0; i < num; i++)
 		{
 			world.update();
