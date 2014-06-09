@@ -104,77 +104,6 @@ public class WorldServerTest
 	}
 
 	/**
-	 * Test the state-forcing functionality.
-	 * @throws Exception If there's an exception.
-	 */
-	@Test(timeOut = 10000)
-	public void testForcedStateFromEdge() throws Exception {
-		WorldServer server = initWorldServer(port);
-		WorldClient client = initWorldClient(port);
-		ClientPlayer clientPlayer = client.getPlayer();
-		Player serverPlayer = server.getClientHandlerByUsername(client.getUsername()).getPlayer();
-		LOGGER.log(Level.INFO, "Attempting to move clientPlayer off edge of world.");
-		movePlayerToVector(client, server, new Vector2D(-1.0, 0));
-		assertClientAndServerInSamePosition(serverPlayer, clientPlayer);
-		tearDown(client, server);
-	}
-
-	/**
-	 * Test the state forcing functionality.
-	 * @throws Exception If there's an exception.
-	 */
-	@Test(timeOut = 10000)
-	public void testForcedState() throws Exception {
-		WorldServer server = initWorldServer(port);
-		WorldClient client = initWorldClient(port);
-		Player serverPlayer = server.getClientHandlerByUsername(client.getUsername()).getPlayer();
-		movePlayerToVector(client, server, new Vector2D(0.0, 1.0));
-		movePlayerToVector(client, server, new Vector2D(0.0, -0.4));
-
-		double distance = serverPlayer.getVector2D().getDistanceToVector(new Vector2D(0, 0.2));
-		Assert.assertEquals(distance, 0, vectorTolerance);
-
-		tearDown(client, server);
-	}
-
-	/**
-	 * Test repeatedly forcing client.
-	 * @throws Exception If there's an exception.
-	 */
-	@Test(timeOut = 10000)
-	public void testRepeatedForcedState() throws Exception {
-		WorldServer server = initWorldServer(port);
-		WorldClient client = initWorldClient(port);
-		ClientPlayer clientPlayer = client.getPlayer();
-		Player serverPlayer = server.getClientHandlerByUsername(client.getUsername()).getPlayer();
-		movePlayerToVector(client, server, new Vector2D(.5, .5));
-		double distance = clientPlayer.getVector2D().getDistanceToVector(serverPlayer.getVector2D());
-		Assert.assertEquals(0, distance, vectorTolerance, " Server Vector: " + serverPlayer.getVector2D() +
-				serverPlayer.getRelativeAngle() +
-				" Client Vector: " + clientPlayer.getVector2D());
-		movePlayerToVector(client, server, new Vector2D(-1, -1));
-		distance = clientPlayer.getVector2D().getDistanceToVector(serverPlayer.getVector2D());
-		Assert.assertEquals(0, distance, vectorTolerance, " Server Vector: " + serverPlayer.getVector2D() +
-				serverPlayer.getRelativeAngle() +
-				" Client Vector: " + clientPlayer.getVector2D());
-		movePlayerToVector(client, server, new Vector2D(.5, .5));
-		distance = clientPlayer.getVector2D().getDistanceToVector(serverPlayer.getVector2D());
-		Assert.assertEquals(0, distance, vectorTolerance, " Server Vector: " + serverPlayer.getVector2D() +
-				serverPlayer.getRelativeAngle() +
-				" Client Vector: " + clientPlayer.getVector2D());
-		movePlayerToVector(client, server, new Vector2D(-1, -1));
-		Assert.assertEquals(0, distance, vectorTolerance, " Server Vector: " + serverPlayer.getVector2D() +
-				serverPlayer.getRelativeAngle() +
-				" Client Vector: " + clientPlayer.getVector2D());
-		movePlayerToVector(client, server, new Vector2D(.5, .5));
-		distance = clientPlayer.getVector2D().getDistanceToVector(serverPlayer.getVector2D());
-		Assert.assertEquals(0, distance, vectorTolerance, " Server Vector: " + serverPlayer.getVector2D() +
-				serverPlayer.getRelativeAngle() +
-				" Client Vector: " + clientPlayer.getVector2D());
-		tearDown(client, server);
-	}
-
-	/**
 	 * Test movement to various random vectors.
 	 * @throws Exception If there's an exception.
 	 */
@@ -197,54 +126,6 @@ public class WorldServerTest
 			Assert.assertEquals(0, distance, vectorTolerance, "Server Vector: " + serverPlayer.getVector2D() +
 					" Client Vector: " + clientPlayer.getVector2D() + " Target Vector: " + target);
 		}
-		tearDown(client, server);
-	}
-
-	/**
-	 * Test attempting to walk into a "blocked" location.
-	 * @throws Exception If there's an Exception.
-	 */
-	@Test(timeOut = 10000)
-	public void testAttemptBlockedLocation() throws Exception {
-		WorldServer server = initWorldServer(port);
-		WorldClient client = initWorldClient(port);
-		Vector2D vector1 = new Vector2D(15, 0);
-		Vector2D attemptedVector2 = new Vector2D(15, 15);
-		Vector2D actualVector2 = new Vector2D(15, 10);
-		Vector2D vector3 = new Vector2D(15, 5);
-		Vector2D vector4 = new Vector2D(9, 9);
-		Vector2D vector5 = new Vector2D(9, 11);
-		Vector2D attemptedVector6 = new Vector2D(15, 11);
-		Vector2D actualVector6 = new Vector2D(9.8, 11);
-		Vector2D attemptedVector7 = new Vector2D(15, 15);
-		Vector2D actualVector7 = new Vector2D(10, 11);
-
-		// Move to (35, 0)
-		movePlayerToVector(client, server, vector1);
-		assertClientAtVector(client, vector1);
-
-		// Attempt to move to (35, 35)
-		// This attempt should be forced to stop one step away from
-		movePlayerToVector(client, server, attemptedVector2);
-		assertClientAtVector(client, actualVector2);
-
-		movePlayerToVector(client, server, vector3);
-		assertClientAtVector(client, vector3);
-
-		movePlayerToVector(client, server, vector4);
-		assertClientAtVector(client, vector4);
-
-		movePlayerToVector(client, server, vector5);
-		assertClientAtVector(client, vector5);
-
-		movePlayerToVector(client, server, vector5);
-		assertClientAtVector(client, vector5);
-
-		movePlayerToVector(client, server, attemptedVector6);
-		assertClientAtVector(client, actualVector6);
-
-		movePlayerToVector(client, server, attemptedVector7);
-		assertClientAtVector(client, actualVector7);
 		tearDown(client, server);
 	}
 
@@ -316,7 +197,7 @@ public class WorldServerTest
 	 * @param client The client.
 	 * @param vector1 The vector.
 	 */
-	private void assertClientAtVector(WorldClient client, Vector2D vector1) {
+	public static void assertClientAtVector(WorldClient client, Vector2D vector1) {
 		double distance = vector1.getDistanceToVector(client.getPlayer().getVector2D());
 		Assert.assertEquals(distance, 0, vectorTolerance,
 				"V: " + client.getPlayer().getVector2D() + " " + "V1: " + vector1);
@@ -413,7 +294,7 @@ public class WorldServerTest
 	 * @param serverActor The server actor.
 	 * @param clientActor The client actor.
 	 */
-	private void assertClientAndServerInSamePosition(Actor serverActor, WorldObject clientActor) {
+	public static void assertClientAndServerInSamePosition(Actor serverActor, WorldObject clientActor) {
 		double distance = serverActor.getVector2D().getDistanceToVector(clientActor.getVector2D());
 		Assert.assertEquals(distance, 0, vectorTolerance, "Server Vector: " + serverActor.getVector2D() +
 				" Client Vector: " + clientActor.getVector2D());

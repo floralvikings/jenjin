@@ -13,7 +13,7 @@ import org.testng.annotations.Test;
 /**
  * @author Caleb Brinkman
  */
-public class ClientPlayerTest
+public class PlayerTest
 {
 
 	/**
