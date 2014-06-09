@@ -125,9 +125,9 @@ public class WorldServerMessageFactory extends ServerMessageFactory
 	 * Generate a step length message.
 	 * @return The message.
 	 */
-	public Message generateActorStepLengthMessage() {
-		Message stepLengthMessage = new Message(worldClientHandler, "ActorStepMessage");
-		stepLengthMessage.setArgument("stepLength", Actor.STEP_LENGTH);
+	public Message generateActorMoveSpeedMessage() {
+		Message stepLengthMessage = new Message(worldClientHandler, "ActorMoveSpeed");
+		stepLengthMessage.setArgument("moveSpeed", Actor.MOVE_SPEED);
 		return stepLengthMessage;
 	}
 

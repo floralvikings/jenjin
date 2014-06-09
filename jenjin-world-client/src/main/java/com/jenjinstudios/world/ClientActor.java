@@ -22,10 +22,8 @@ import static com.jenjinstudios.world.state.MoveState.IDLE;
  */
 public class ClientActor extends WorldObject
 {
-	/** The length of each step. */
-	public static double STEP_LENGTH = 5;
 	/** The move speed of an Actor. */
-	public static final double MOVE_SPEED = 10.0d; // TODO Set this from server.
+	public static double MOVE_SPEED = 10.0d;
 	/** The time at which this actor completed it's last step. */
 	private long lastStepTime;
 	/** The relative angle of this actor. */

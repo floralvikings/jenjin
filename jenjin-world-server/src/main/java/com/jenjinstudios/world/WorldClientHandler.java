@@ -65,7 +65,7 @@ public class WorldClientHandler extends ClientHandler
 		super.update();
 
 		if (!hasSentActorStepMessage) {
-			queueMessage(getMessageFactory().generateActorStepLengthMessage());
+			queueMessage(getMessageFactory().generateActorMoveSpeedMessage());
 			hasSentActorStepMessage = true;
 		}
 

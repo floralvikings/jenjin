@@ -85,9 +85,9 @@
         <executable language="java" side="client">com.jenjinstudios.world.message.ExecutableWorldLogoutResponse</executable>
     </message>
 
-    <message name="ActorStepMessage" id="19">
-        <argument type="double" name="stepLength" />
-        <executable language="java" side="client">com.jenjinstudios.world.message.ExecutableActorStepLengthMessage</executable>
+    <message name="ActorMoveSpeed" id="19">
+        <argument type="double" name="moveSpeed" />
+        <executable language="java" side="client">com.jenjinstudios.world.message.ExecutableActorMoveSpeedMessage</executable>
     </message>
 
     <message name="WorldChecksumRequest" id="20">

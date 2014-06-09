@@ -8,14 +8,14 @@ import com.jenjinstudios.world.WorldClient;
  * Sets the ClientActor step length.
  * @author Caleb Brinkman
  */
-public class ExecutableActorStepLengthMessage extends WorldClientExecutableMessage
+public class ExecutableActorMoveSpeedMessage extends WorldClientExecutableMessage
 {
 	/**
 	 * Construct an ExecutableMessage with the given Message.
 	 * @param client The client invoking this message.
 	 * @param message The Message.
 	 */
-	public ExecutableActorStepLengthMessage(WorldClient client, Message message) {
+	public ExecutableActorMoveSpeedMessage(WorldClient client, Message message) {
 		super(client, message);
 	}
 
@@ -27,6 +27,6 @@ public class ExecutableActorStepLengthMessage extends WorldClientExecutableMessa
 	/** Run asynchronous portion of this message. */
 	@Override
 	public void runASync() {
-		ClientActor.STEP_LENGTH = (double) getMessage().getArgument("stepLength");
+		ClientActor.MOVE_SPEED = (double) getMessage().getArgument("moveSpeed");
 	}
 }

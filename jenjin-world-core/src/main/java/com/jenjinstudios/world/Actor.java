@@ -26,8 +26,6 @@ import static com.jenjinstudios.world.state.MoveState.IDLE;
  */
 public class Actor extends SightedObject
 {
-	/** The length of each step. */
-	public static final double STEP_LENGTH = (double) Location.SIZE / 50d;
 	/** The speed of an Actor, in units per second. */
 	public static final double MOVE_SPEED = 10.0d;
 	/** The next move. */
