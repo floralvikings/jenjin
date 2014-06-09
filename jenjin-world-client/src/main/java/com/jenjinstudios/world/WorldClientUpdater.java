@@ -29,7 +29,7 @@ public class WorldClientUpdater implements Runnable
 		worldClient.getWorld().update();
 		if (player != null)
 		{
-			LinkedList<MoveState> newStates = player.getSavedStates();
+			LinkedList<MoveState> newStates = player.getStateChanges();
 			while (!newStates.isEmpty())
 				worldClient.sendStateChangeRequest(newStates.remove());
 		}

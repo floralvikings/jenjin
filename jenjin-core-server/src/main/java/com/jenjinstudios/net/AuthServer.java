@@ -1,9 +1,7 @@
 package com.jenjinstudios.net;
 
 import com.jenjinstudios.sql.SQLHandler;
-import org.xml.sax.SAXException;
 
-import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 
 /**
@@ -22,11 +20,10 @@ public class AuthServer<T extends ClientHandler> extends TaskedServer<T>
 	 * @param handlerClass The class of ClientHandler used by this Server.
 	 * @param sqlHandler The SqlHandler responsible for communicating with a MySql database.
 	 * @throws java.io.IOException If there is an IO Error when initializing the server.
-	 * @throws NoSuchMethodException If there is no appropriate constructor for the specified ClientHandler constructor.
-	 * @throws javax.xml.parsers.ParserConfigurationException If there is an error parsing XML files.
-	 * @throws org.xml.sax.SAXException If there is an error parsing XML files.
+	 * @throws NoSuchMethodException If there is no appropriate constructor for the specified ClientHandler
+	 * constructor.
 	 */
-	public AuthServer(int ups, int port, Class<? extends T> handlerClass, SQLHandler sqlHandler) throws IOException, NoSuchMethodException, ParserConfigurationException, SAXException {
+	public AuthServer(int ups, int port, Class<? extends T> handlerClass, SQLHandler sqlHandler) throws IOException, NoSuchMethodException {
 		super(ups, port, handlerClass);
 		this.sqlHandler = sqlHandler;
 	}

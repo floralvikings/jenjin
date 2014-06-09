@@ -3,10 +3,12 @@ package com.jenjinstudios.world;
 import com.jenjinstudios.io.Message;
 import com.jenjinstudios.io.MessageRegistry;
 import com.jenjinstudios.net.ClientHandler;
-import com.jenjinstudios.world.util.WorldServerMessageGenerator;
+import com.jenjinstudios.world.state.MoveState;
+import com.jenjinstudios.world.util.WorldServerMessageFactory;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.util.List;
 
 /**
  * Handles clients for a world server.
@@ -16,10 +18,14 @@ public class WorldClientHandler extends ClientHandler
 {
 	/** The WorldServer owning this handler. */
 	private final WorldServer server;
+	/** The MessageFactory owned by this client handler. */
+	private final WorldServerMessageFactory messageFactory;
 	/** The ID of the player controlled by this client handler. */
 	private long playerID = -1;
 	/** The Actor managed by this handler. */
 	private Player player;
+	/** Whether this handler has sent the actor step length message. */
+	private boolean hasSentActorStepMessage;
 
 	/**
 	 * Construct a new Client Handler using the given socket.  When constructing a new ClientHandler, it is necessary to
@@ -32,7 +38,7 @@ public class WorldClientHandler extends ClientHandler
 	public WorldClientHandler(WorldServer s, Socket sk, MessageRegistry messageRegistry) throws IOException {
 		super(s, sk, messageRegistry);
 		server = s;
-		queueMessage(WorldServerMessageGenerator.generateActorStepLengthMessage(this));
+		this.messageFactory = new WorldServerMessageFactory(this);
 	}
 
 	/**
@@ -58,6 +64,11 @@ public class WorldClientHandler extends ClientHandler
 	public void update() {
 		super.update();
 
+		if (!hasSentActorStepMessage) {
+			queueMessage(getMessageFactory().generateActorMoveSpeedMessage());
+			hasSentActorStepMessage = true;
+		}
+
 		if (player == null)
 			return;
 
@@ -78,39 +89,39 @@ public class WorldClientHandler extends ClientHandler
 
 	/** Generate and queue messages for newly visible objects. */
 	private void queueNewlyVisibleMessages() {
-		for (WorldObject object : player.getNewlyVisibleObjects())
-		{
+		for (WorldObject object : player.getNewlyVisibleObjects()) {
 			Message newlyVisibleMessage;
-			newlyVisibleMessage = WorldServerMessageGenerator.generateNewlyVisibleMessage(this, object);
+			newlyVisibleMessage = getMessageFactory().generateNewlyVisibleMessage(object);
 			queueMessage(newlyVisibleMessage);
 		}
 	}
 
 	/** Generate and queue messages for newly invisible objects. */
 	private void queueNewlyInvisibleMessages() {
-		for (WorldObject object : player.getNewlyInvisibleObjects())
-		{
-			Message newlyInvisibleMessage = WorldServerMessageGenerator.generateNewlyInvisibleMessage(this, object);
+		for (WorldObject object : player.getNewlyInvisibleObjects()) {
+			Message newlyInvisibleMessage = getMessageFactory().generateNewlyInvisibleMessage(object);
 			queueMessage(newlyInvisibleMessage);
 		}
 	}
 
 	/** Generate and queue messages for actors with changed states. */
 	private void queueStateChangeMessages() {
-		for (WorldObject object : player.getVisibleObjects().values())
-		{
+		for (WorldObject object : player.getVisibleObjects().values()) {
 			Actor changedActor;
-			if (object instanceof Actor && (changedActor = (Actor) object).isNewState())
-			{
-				Message newState = WorldServerMessageGenerator.generateChangeStateMessage(this, changedActor);
-				queueMessage(newState);
+			if (object instanceof Actor) {
+				changedActor = (Actor) object;
+				List<Message> newState = getMessageFactory().generateChangeStateMessage(changedActor);
+				for(Message m : newState){ queueMessage(m);}
 			}
 		}
 	}
 
 	/** Generate and queue a ForcedStateMessage if necessary. */
 	private void queueForcesStateMessage() {
-		if (player.isForcedState())
-			queueMessage(WorldServerMessageGenerator.generateForcedStateMessage(this, player, server));
+		MoveState forcedState = player.getForcedState();
+		if (forcedState != null)
+			queueMessage(getMessageFactory().generateForcedStateMessage(forcedState, server));
 	}
+
+	public WorldServerMessageFactory getMessageFactory() { return messageFactory; }
 }

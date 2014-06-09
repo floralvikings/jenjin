@@ -1,6 +1,7 @@
 package com.jenjinstudios.io;
 
 import java.util.Arrays;
+import java.util.Map;
 import java.util.TreeMap;
 
 /**
@@ -20,7 +21,7 @@ public class MessageType
 	/** The class of the server executable message associated with this type. */
 	public final Class<? extends ExecutableMessage> serverExecutableMessageClass;
 	/** The argument types for this message, sorted by name. */
-	private final TreeMap<String, ArgumentType> argumentTypeTreeMap;
+	private final Map<String, ArgumentType> argumentTypeTreeMap;
 
 	/**
 	 * Construct a new MessageType with the given information.

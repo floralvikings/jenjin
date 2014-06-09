@@ -1,10 +1,9 @@
 package com.jenjinstudios.net;
 
-import org.xml.sax.SAXException;
-
-import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
+import java.util.Deque;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Timer;
 
 /**
@@ -14,7 +13,7 @@ import java.util.Timer;
 public class TaskedServer<T extends ClientHandler> extends Server<T>
 {
 	/** Tasks to be repeated in the main loop. */
-	private final LinkedList<Runnable> repeatedTasks;
+	private final List<Runnable> repeatedTasks;
 	/** Synced tasks scheduled by client handlers. */
 	private final LinkedList<Runnable> syncedTasks;
 	/** The timer that controls the server loop. */
@@ -29,10 +28,8 @@ public class TaskedServer<T extends ClientHandler> extends Server<T>
 	 * @param handlerClass The class of ClientHandler used by this Server.
 	 * @throws java.io.IOException If there is an IO Error initializing the server.
 	 * @throws NoSuchMethodException If there is no appropriate constructor for the specified ClientHandler constructor.
-	 * @throws javax.xml.parsers.ParserConfigurationException If there is an error parsing XML files.
-	 * @throws org.xml.sax.SAXException If there is an error parsing XML files.
 	 */
-	public TaskedServer(int ups, int port, Class<? extends T> handlerClass) throws IOException, NoSuchMethodException, ParserConfigurationException, SAXException {
+	public TaskedServer(int ups, int port, Class<? extends T> handlerClass) throws IOException, NoSuchMethodException {
 		super(ups, port, handlerClass);
 		repeatedTasks = new LinkedList<>();
 		syncedTasks = new LinkedList<>();
@@ -100,7 +97,7 @@ public class TaskedServer<T extends ClientHandler> extends Server<T>
 	 * Tasks to be repeated in the main loop.
 	 * @return The list of repeated tasks to be executed by this server.
 	 */
-	LinkedList<Runnable> getRepeatedTasks() {
+	Iterable<Runnable> getRepeatedTasks() {
 		return repeatedTasks;
 	}
 
@@ -108,7 +105,7 @@ public class TaskedServer<T extends ClientHandler> extends Server<T>
 	 * Synced tasks scheduled by client handlers.
 	 * @return The list of synchronized tasks scheduled by ClientHandlers.
 	 */
-	LinkedList<Runnable> getSyncedTasks() {
+	Deque<Runnable> getSyncedTasks() {
 		return syncedTasks;
 	}
 }

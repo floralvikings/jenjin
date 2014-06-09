@@ -7,10 +7,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
@@ -27,9 +24,9 @@ public class MessageRegistry
 	/** The file name of message registry classed. */
 	private static final String messageFileName = "Messages.xml";
 	/** A map that stores messages types sorted by ID. */
-	private final TreeMap<Short, MessageType> messageTypesByID = new TreeMap<>();
+	private final Map<Short, MessageType> messageTypesByID = new TreeMap<>();
 	/** A map that stores message types sorted by name. */
-	private final TreeMap<String, MessageType> messageTypesByName = new TreeMap<>();
+	private final Map<String, MessageType> messageTypesByName = new TreeMap<>();
 	/** Whether this registry is for a server or not. */
 	private final boolean isServer;
 	/** Flags whether messages have been registered. */
@@ -57,10 +54,10 @@ public class MessageRegistry
 		{
 			File file = new File(fileName);
 			if (file.isDirectory() || !file.exists()) { continue; }
-			try
-			{
+			try(
 				FileInputStream inputStream = new FileInputStream(file);
-				ZipInputStream zip = new ZipInputStream(inputStream);
+				ZipInputStream zip = new ZipInputStream(inputStream))
+			{
 				ZipEntry ze;
 				while ((ze = zip.getNextEntry()) != null)
 				{
@@ -133,11 +130,6 @@ public class MessageRegistry
 			String message = "Message " + id + " not registered.";
 			LOGGER.log(Level.SEVERE, message);
 			throw new RuntimeException(message);
-		} else if (type.argumentTypes == null)
-		{
-			String message = "Message " + id + " contains null argument types.";
-			LOGGER.log(Level.SEVERE, message);
-			throw new RuntimeException(message);
 		} else
 		{
 			for (int i = 0; i < type.argumentTypes.length; i++)
@@ -184,7 +176,7 @@ public class MessageRegistry
 	 * Parse the XML streams and register the discovered MessageTypes.
 	 * @param streamsToRead The streams containing the XML data to be parsed.
 	 */
-	private void readXmlStreams(LinkedList<InputStream> streamsToRead) {
+	private void readXmlStreams(Iterable<InputStream> streamsToRead) {
 		LinkedList<String> disabled = new LinkedList<>();
 		for (InputStream inputStream : streamsToRead)
 		{
@@ -208,7 +200,7 @@ public class MessageRegistry
 	 * Add the Messages.xml entries in the working directory and add their InputStream to the given list.
 	 * @param streamsToRead The list to which to add the input streams.
 	 */
-	private void addMessageFiles(LinkedList<InputStream> streamsToRead) {
+	private void addMessageFiles(List<InputStream> streamsToRead) {
 		ArrayList<File> messageFiles = findMessageFiles();
 		for (File f : messageFiles)
 		{
@@ -227,7 +219,7 @@ public class MessageRegistry
 	 * Add the Messages.xml entries in the classpath and add their InputStream to the given list.
 	 * @param streamsToRead The list to which to add the input streams.
 	 */
-	private void addJarMessageEntries(LinkedList<InputStream> streamsToRead) {
+	private void addJarMessageEntries(List<InputStream> streamsToRead) {
 		LinkedList<String> jarMessageEntries = findJarMessageEntries();
 		for (String entry : jarMessageEntries)
 		{

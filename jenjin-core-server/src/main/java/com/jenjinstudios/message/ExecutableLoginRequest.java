@@ -30,12 +30,10 @@ public class ExecutableLoginRequest extends ServerExecutableMessage
 
 	@Override
 	public void runASync() {
-		boolean success = false;
-		if (sqlHandler == null || getClientHandler().isLoggedIn())
-		{
-			Message loginResponse = new Message(getClientHandler(), "LoginResponse");
-			loginResponse.setArgument("success", success);
-			loginResponse.setArgument("loginTime", getClientHandler().getLoggedInTime());
+		boolean success;
+		if (sqlHandler == null || getClientHandler().isLoggedIn()) {
+			long loggedInTime = getClientHandler().getLoggedInTime();
+			Message loginResponse = getClientHandler().getMessageFactory().generateLoginResponse(false, loggedInTime);
 			getClientHandler().queueMessage(loginResponse);
 			return;
 		}
@@ -44,10 +42,8 @@ public class ExecutableLoginRequest extends ServerExecutableMessage
 		success = sqlHandler.logInUser(username, password);
 
 		getClientHandler().setLoginStatus(success);
-
-		Message loginResponse = new Message(getClientHandler(), "LoginResponse");
-		loginResponse.setArgument("success", success);
-		loginResponse.setArgument("loginTime", getClientHandler().getLoggedInTime());
+		long loggedInTime = getClientHandler().getLoggedInTime();
+		Message loginResponse = getClientHandler().getMessageFactory().generateLoginResponse(success, loggedInTime);
 		getClientHandler().queueMessage(loginResponse);
 
 		if (success)

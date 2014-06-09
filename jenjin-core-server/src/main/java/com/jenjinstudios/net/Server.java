@@ -1,13 +1,9 @@
 package com.jenjinstudios.net;
 
 import com.jenjinstudios.io.MessageRegistry;
-import org.xml.sax.SAXException;
 
-import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -20,11 +16,11 @@ import java.util.logging.Logger;
 public class Server<T extends ClientHandler> extends Thread
 {
 	/** The default number of max clients. */
-	public static final int DEFAULT_MAX_CLIENTS = 100;
+	private static final int DEFAULT_MAX_CLIENTS = 100;
 	/** The logger used by this class. */
 	public static final Logger LOGGER = Logger.getLogger(Server.class.getName());
 	/** The number of milliseconds before a blocking method should time out. */
-	public static long TIMEOUT_MILLIS = 30000;
+	private static final long TIMEOUT_MILLIS = 30000;
 	/** The updates per second. */
 	public final int UPS;
 	/** The period of the update in milliseconds. */
@@ -32,9 +28,9 @@ public class Server<T extends ClientHandler> extends Thread
 	/** The list of {@code ClientListener}s working for this server. */
 	private final ClientListener<T> clientListener;
 	/** The list of {@code ClientHandler}s working for this server. */
-	private final ArrayList<T> clientHandlers;
+	private final List<T> clientHandlers;
 	/** The map of clients stored by username. */
-	private final TreeMap<String, T> clientsByUsername;
+	private final Map<String, T> clientsByUsername;
 	/** Indicates whether this server is initialized. */
 	private volatile boolean initialized;
 	/** The current number of connected clients. */
@@ -49,10 +45,8 @@ public class Server<T extends ClientHandler> extends Thread
 	 * @param handlerClass The class of ClientHandler used by this Server.
 	 * @throws java.io.IOException If there is an IO Error initializing the server.
 	 * @throws NoSuchMethodException If there is no appropriate constructor for the specified ClientHandler constructor.
-	 * @throws javax.xml.parsers.ParserConfigurationException If there is an error parsing XML files.
-	 * @throws org.xml.sax.SAXException If there is an error parsing XML files.
 	 */
-	public Server(int ups, int port, Class<? extends T> handlerClass) throws IOException, NoSuchMethodException, ParserConfigurationException, SAXException {
+	public Server(int ups, int port, Class<? extends T> handlerClass) throws IOException, NoSuchMethodException {
 		this(ups, port, handlerClass, DEFAULT_MAX_CLIENTS);
 	}
 

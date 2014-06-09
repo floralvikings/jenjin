@@ -11,9 +11,9 @@ public class Vector2D
 	/** The vector representing (0,0). */
 	public static final Vector2D ORIGIN = new Vector2D(0, 0);
 	/** The x coordinate. */
-	private double xCoordinate;
+	private final double xCoordinate;
 	/** The y coordinate. */
-	private double yCoordinate;
+	private final double yCoordinate;
 
 	/**
 	 * Construct a new set of vector2D copying another set.
@@ -42,27 +42,11 @@ public class Vector2D
 	}
 
 	/**
-	 * Set the y coordinate.
-	 * @param yCoordinate The new Y coordinate.
-	 */
-	public void setYCoordinate(double yCoordinate) {
-		this.yCoordinate = yCoordinate;
-	}
-
-	/**
 	 * Get the x coordinate.
 	 * @return The x coordinate.
 	 */
 	public double getXCoordinate() {
 		return xCoordinate;
-	}
-
-	/**
-	 * Set the x coordinate.
-	 * @param xCoordinate The new x coordinate.
-	 */
-	public void setXCoordinate(double xCoordinate) {
-		this.xCoordinate = xCoordinate;
 	}
 
 	@Override
@@ -75,7 +59,7 @@ public class Vector2D
 
 	@Override
 	public String toString() {
-		return "(" + xCoordinate + ", " + yCoordinate + ")";
+		return String.format("(%.3f, %.3f)", xCoordinate, yCoordinate);
 	}
 
 	/**

@@ -10,6 +10,7 @@ import java.util.logging.Logger;
  * Handles processing an ActorInvisibleMessage.
  * @author Caleb Brinkman
  */
+@SuppressWarnings("WeakerAccess")
 public class ExecutableObjectInvisibleMessage extends WorldClientExecutableMessage
 {
 	/** The logger for this class. */

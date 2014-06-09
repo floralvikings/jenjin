@@ -112,6 +112,7 @@ class ClientListener<T extends ClientHandler> implements Runnable
 		try
 		{
 			T newHandler = handlerConstructor.newInstance(server, sock, server.getMessageRegistry());
+			newHandler.sendFirstConnectResponse();
 			addNewClient(newHandler);
 		} catch (InstantiationException | IllegalAccessException e)
 		{

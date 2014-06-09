@@ -30,8 +30,7 @@ public class ExecutableWorldLoginRequest extends WorldExecutableMessage
 
 	@Override
 	public void runSynced() {
-		if (player != null)
-		{
+		if (player != null) {
 			getClientHandler().getServer().getWorld().addObject(player);
 			loginResponse.setArgument("id", player.getId());
 		}
@@ -42,8 +41,7 @@ public class ExecutableWorldLoginRequest extends WorldExecutableMessage
 	@Override
 	public void runASync() {
 		boolean success;
-		if (sqlHandler != null && !getClientHandler().isLoggedIn())
-		{
+		if (sqlHandler != null && !getClientHandler().isLoggedIn()) {
 			String username = (String) getMessage().getArgument("username");
 			String password = (String) getMessage().getArgument("password");
 			/* The map used to create the player. */
@@ -53,25 +51,21 @@ public class ExecutableWorldLoginRequest extends WorldExecutableMessage
 		success = player != null;
 		getClientHandler().setLoginStatus(success);
 
-		loginResponse = new Message(getClientHandler(), "WorldLoginResponse");
+		loginResponse = getClientHandler().getMessageFactory().generateWorldLoginResponse();
 		loginResponse.setArgument("success", success);
 
-		if (success)
-		{
+		if (success) {
 			getClientHandler().setPlayer(player);
 			loginResponse.setArgument("loginTime", getClientHandler().getLoggedInTime());
 			loginResponse.setArgument("xCoordinate", player.getVector2D().getXCoordinate());
 			loginResponse.setArgument("yCoordinate", player.getVector2D().getYCoordinate());
 			loginResponse.setArgument("zoneNumber", player.getZoneID());
-		} else
-		{
+		} else {
 			loginResponse.setArgument("id", -1);
 			loginResponse.setArgument("loginTime", getClientHandler().getLoggedInTime());
 			loginResponse.setArgument("xCoordinate", 0d);
 			loginResponse.setArgument("yCoordinate", 0d);
 			loginResponse.setArgument("zoneNumber", -1);
 		}
-
-
 	}
 }

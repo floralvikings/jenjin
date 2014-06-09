@@ -1,12 +1,10 @@
 package com.jenjinstudios.world;
 
 import com.jenjinstudios.world.ai.Pathfinder;
-import com.jenjinstudios.world.math.MathUtil;
 import com.jenjinstudios.world.math.Vector2D;
 import com.jenjinstudios.world.state.MoveState;
 
-import java.util.LinkedList;
-import java.util.TreeMap;
+import java.util.*;
 
 /**
  * This class represents a Non-Player Character.
@@ -14,10 +12,12 @@ import java.util.TreeMap;
  */
 public class NPC extends Actor
 {
+	/** Dictates how close an actor must be to a target before the actor is considered to have "reached" it.*/
+	private static final double TARGET_DISTANCE = 0.2;
 	/** The list of targets to which a wandering NPC will move. */
-	private final LinkedList<Location> wanderTargets;
+	private final List<Location> wanderTargets;
 	/** The behavior flags associated with this NPC. */
-	private TreeMap<String, Boolean> behaviorFlags;
+	private final TreeMap<String, Boolean> behaviorFlags;
 	/** The Location at which the NPC began following a player. */
 	private Location startLocation;
 	/** The location toward which this NPC is to move. */
@@ -26,6 +26,8 @@ public class NPC extends Actor
 	private Player targetPlayer;
 	/** The index of the current wander target. */
 	private int wanderTargetIndex;
+	/** The path currently being followed by this actor. */
+	private final Queue<Vector2D> currentPath;
 
 	/**
 	 * Construct an NPC with the given name.
@@ -44,20 +46,50 @@ public class NPC extends Actor
 		super(name);
 		this.behaviorFlags = behaviorFlags;
 		wanderTargets = new LinkedList<>();
+		currentPath = new LinkedList<>();
 	}
 
 	@Override
 	public void setUp() {
 		super.setUp();
-		if (behaviorFlags.get("aggressive") != null && behaviorFlags.get("aggressive"))
-		{
+		if (behaviorFlags.get("aggressive") != null && behaviorFlags.get("aggressive")) {
 			doAggressiveBehavior();
 		}
-		if (behaviorFlags.get("wanders") != null && behaviorFlags.get("wanders"))
-		{
+		if (behaviorFlags.get("wanders") != null && behaviorFlags.get("wanders")) {
 			doWandersBehavior();
 		}
 
+	}
+
+	@Override
+	public void update() {
+		super.update();
+		followPath();
+	}
+
+	/** Continue following the current path by choosing a new target if necessary. */
+	private void followPath() {
+		Vector2D target = currentPath.peek();
+		if (target != null) {
+			if (getRelativeAngle() == MoveState.IDLE) {
+				double angle = getVector2D().getAngleToVector(target);
+				setAbsoluteAngle(angle);
+				setRelativeAngle(MoveState.FRONT);
+				return;
+			}
+			double distance = getVector2D().getDistanceToVector(target);
+			if (distance <= TARGET_DISTANCE) {
+				currentPath.remove();
+				Vector2D newTarget = currentPath.peek();
+				if (newTarget != null) {
+					double angle = getVector2D().getAngleToVector(newTarget);
+					setAbsoluteAngle(angle);
+					setRelativeAngle(MoveState.FRONT);
+				} else {
+					setRelativeAngle(MoveState.IDLE);
+				}
+			}
+		}
 	}
 
 	/**
@@ -65,45 +97,20 @@ public class NPC extends Actor
 	 * @param target The target location.
 	 */
 	public void plotPath(Location target) {
-		if (target == null)
-		{
+		if (target == null) {
 			return;
 		}
-		clearMoveStates();
+		currentPath.clear();
 		LinkedList<Location> path = Pathfinder.findPath(getLocation(), target);
 		// Start will be current location.
-		if(path.isEmpty())
-		{
+		if (path.isEmpty()) {
 			return;
 		}
-		Location prev = path.pop();
-		Vector2D start = getVector2D();
-		Vector2D prevCenter = prev.getCenter();
-		double currentAngle = getVector2D().getAngleToVector(prevCenter);
-		// Create a move state to start moving forward, right now, toward the center of the current location.
-		MoveState moveState = new MoveState(MoveState.FRONT, getStepsTaken(), currentAngle);
-		addMoveState(moveState);
-		int stepsToTake;
 
-		while (!path.isEmpty())
-		{
+		while (!path.isEmpty()) {
 			// TODO save angle and refrain from resetting state if angle is the same.  Save bandwidth.
 			Vector2D nextCenter = path.pop().getCenter();
-			currentAngle = prevCenter.getAngleToVector(nextCenter);
-			stepsToTake = (int) MathUtil.round(start.getDistanceToVector(prevCenter) / Actor.STEP_LENGTH, 0);
-
-			MoveState nextState = new MoveState(MoveState.FRONT, stepsToTake, currentAngle);
-			addMoveState(nextState);
-
-			start = prevCenter;
-			prevCenter = nextCenter;
-
-			if (path.isEmpty())
-			{
-				stepsToTake = (int) MathUtil.round(start.getDistanceToVector(prevCenter) / Actor.STEP_LENGTH, 0);
-				MoveState idleState = new MoveState(MoveState.IDLE, stepsToTake, getCurrentMoveState().absoluteAngle);
-				addMoveState(idleState);
-			}
+			currentPath.add(nextCenter);
 		}
 	}
 
@@ -112,63 +119,45 @@ public class NPC extends Actor
 	 * @param newTarget The Location to add to the target.
 	 */
 	public void addWanderTarget(Location newTarget) {
-		synchronized (wanderTargets)
-		{
+		synchronized (wanderTargets) {
 			wanderTargets.add(newTarget);
 		}
 	}
 
 	/** Perform the behavior of an NPC that "wanders". */
 	private void doWandersBehavior() {
-		if (targetPlayer == null && (targetLocation == getLocation() || targetLocation == null) && !wanderTargets.isEmpty())
-		{
-			if (getCurrentMoveState().relativeAngle == MoveState.IDLE && getNextState() == null)
-			{
-				/* The amount of steps for which the NPC should idle in between reaching targets. */
-				int idleTimeBetweenTargets = 100;
-				if (getStepsTaken() >= idleTimeBetweenTargets)
-				{
-					targetLocation = wanderTargets.get(wanderTargetIndex);
-					plotPath(targetLocation);
-					if (++wanderTargetIndex >= wanderTargets.size())
-					{
-						wanderTargetIndex = 0;
-					}
-				}
+		if(currentPath.isEmpty()) {
+			plotPath(wanderTargets.get(wanderTargetIndex));
+			wanderTargetIndex ++;
+			if(wanderTargetIndex == wanderTargets.size()) {
+				wanderTargetIndex = 0;
 			}
 		}
 	}
 
 	/** Perform the behavior signature of an NPC that is "aggressive". */
 	private void doAggressiveBehavior() {
-		if (targetPlayer == null && (targetLocation == null || targetLocation != startLocation))
-		{
+		if (targetPlayer == null && (targetLocation == null || targetLocation != startLocation)) {
 			targetPlayer = findPlayer();
 			targetLocation = targetPlayer != null ? targetPlayer.getLocation() : startLocation;
 			startLocation = targetLocation != null ? getLocation() : null;
 			plotPath(targetLocation);
-		} else if (getLocation() == targetLocation && targetPlayer != null)
-		{
-			if (!targetLocation.getObjects().contains(targetPlayer))
-			{
-				if (getVisibleObjects().get(targetPlayer.getId()) != null)
-				{
+		} else if (getLocation() == targetLocation && targetPlayer != null) {
+			if (!targetLocation.getObjects().contains(targetPlayer)) {
+				if (getVisibleObjects().get(targetPlayer.getId()) != null) {
 					targetLocation = targetPlayer.getLocation();
 					plotPath(targetLocation);
-				} else
-				{
+				} else {
 					targetLocation = startLocation;
 					targetPlayer = null;
 					plotPath(targetLocation);
 				}
-			} else
-			{
+			} else {
 				targetPlayer = null;
 				targetLocation = startLocation;
 				plotPath(targetLocation);
 			}
-		} else if (getLocation() == startLocation && targetLocation == startLocation)
-		{
+		} else if (getLocation() == startLocation && targetLocation == startLocation) {
 			targetLocation = null;
 		}
 	}

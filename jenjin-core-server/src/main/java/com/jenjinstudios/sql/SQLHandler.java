@@ -68,24 +68,22 @@ public class SQLHandler
 	 *         database failed.
 	 */
 	public boolean logInUser(String username, String password) {
-		boolean success = false;
+		boolean success;
 		if (!connected)
-			return success;
-		try
+			return false;
+		try(ResultSet results = makeUserQuery(username))
 		{
-			ResultSet results = makeUserQuery(username);
 			results.next();
 			// Determine if the user is logged in.  If yes, end of method.
 			boolean loggedIn = results.getBoolean(LOGGED_IN_COLUMN);
 			if (loggedIn)
-				return success;
+				return false;
 			// Hash the user-supplied password with the salt in the database.
 			String hashedPassword = Hash.getHashedString(password, results.getString("salt"));
 			// Determine if the correct password was supplied.
 			boolean passwordCorrect = hashedPassword != null && hashedPassword.equalsIgnoreCase(results.getString("password"));
-			results.getStatement().close();
 			if (!passwordCorrect)
-				return success;
+				return false;
 
 			updateLoggedinColumn(username, true);
 			success = true;
@@ -105,18 +103,16 @@ public class SQLHandler
 	 *         database failed.
 	 */
 	public boolean logOutUser(String username) {
-		boolean success = false;
+		boolean success;
 		if (!connected)
-			return success;
-		try
+			return false;
+		try(ResultSet results = makeUserQuery(username))
 		{
-			ResultSet results = makeUserQuery(username);
 			results.next();
 			// Determine if the user is logged in.  If no, end of method.
 			boolean loggedIn = results.getBoolean(LOGGED_IN_COLUMN);
-			results.getStatement().close();
 			if (!loggedIn)
-				return success;
+				return false;
 
 			updateLoggedinColumn(username, false);
 			success = true;
@@ -145,6 +141,7 @@ public class SQLHandler
 	protected ResultSet makeUserQuery(String username) throws SQLException {
 		synchronized (dbConnection)
 		{
+			@SuppressWarnings("resource") // Need to suppress warning, result set must be closed by calling method.
 			PreparedStatement statement = dbConnection.prepareStatement(USER_QUERY, TYPE_SCROLL_SENSITIVE, CONCUR_UPDATABLE);
 			statement.setString(1, username);
 			return statement.executeQuery();
@@ -161,13 +158,14 @@ public class SQLHandler
 		String newValue = status ? "1" : "0";
 		String updateLoggedInQuery = "UPDATE " + dbName + ".users SET " + LOGGED_IN_COLUMN + "=" + newValue + " WHERE " +
 				"username = ?";
-		PreparedStatement updateLoggedIn;
 		synchronized (dbConnection)
 		{
-			updateLoggedIn = dbConnection.prepareStatement(updateLoggedInQuery);
-			updateLoggedIn.setString(1, username);
-			updateLoggedIn.executeUpdate();
-			updateLoggedIn.close();
+			try(PreparedStatement updateLoggedIn = dbConnection.prepareStatement(updateLoggedInQuery))
+			{
+				updateLoggedIn.setString(1, username);
+				updateLoggedIn.executeUpdate();
+				updateLoggedIn.close();
+			}
 		}
 	}
 }

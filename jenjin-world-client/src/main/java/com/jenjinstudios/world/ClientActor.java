@@ -1,9 +1,6 @@
 package com.jenjinstudios.world;
 
-import com.jenjinstudios.world.math.Vector2D;
-import com.jenjinstudios.world.state.MoveState;
-
-import java.util.LinkedList;
+import com.jenjinstudios.world.math.MathUtil;
 
 import static com.jenjinstudios.world.state.MoveState.IDLE;
 
@@ -11,12 +8,12 @@ import static com.jenjinstudios.world.state.MoveState.IDLE;
  * The {@code ClientActor} class is used to represent a server-side {@code Actor} object on the client side.  It is an
  * object capable of movement.
  * <p/>
- * Actors start with a {@code MoveState} with {@code MoveState.IDLE}.  Each update, the Actor checks to see if
- * there are any MoveStates in the queue.  If there are, it checks the first state in line for the number of steps
- * needed before the state changes.  Once the number of steps has been reached, the state switches to that of the first
- * position in the queue, and the Actor's step counter is reset.  If an Actor "oversteps," which is determined if the
- * Actor has taken more than the required number of steps to change state, the Actor is moved back by the "overstepped"
- * number of states, the Actor's state is updated, and the Actor then takes the number of extra steps in the correct
+ * Actors start with a {@code MoveState} with {@code MoveState.IDLE}.  Each update, the Actor checks to see if there are
+ * any MoveStates in the queue.  If there are, it checks the first state in line for the number of steps needed before
+ * the state changes.  Once the number of steps has been reached, the state switches to that of the first position in
+ * the queue, and the Actor's step counter is reset.  If an Actor "oversteps," which is determined if the Actor has
+ * taken more than the required number of steps to change state, the Actor is moved back by the "overstepped" number of
+ * states, the Actor's state is updated, and the Actor then takes the number of extra steps in the correct
  * relativeAngle.
  * <p/>
  * An Actor's state is considered "changed" when the Actor is facing a new relativeAngle or moving in a new
@@ -25,16 +22,12 @@ import static com.jenjinstudios.world.state.MoveState.IDLE;
  */
 public class ClientActor extends WorldObject
 {
-	/** The length of each step. */
-	public static double STEP_LENGTH = 5;
-	/** The next moves. */
-	private final LinkedList<MoveState> nextMoveStates;
-	/** The next move. */
-	private MoveState nextState;
-	/** The current move. */
-	private MoveState currentMoveState;
-	/** The number of steps taken since the last move. */
-	private int stepsTaken = 0;
+	/** The move speed of an Actor. */
+	public static double MOVE_SPEED = 10.0d;
+	/** The time at which this actor completed it's last step. */
+	private long lastStepTime;
+	/** The relative angle of this actor. */
+	private double relativeAngle;
 
 	/**
 	 * Construct an Actor with the given name.
@@ -44,90 +37,65 @@ public class ClientActor extends WorldObject
 	public ClientActor(int id, String name) {
 		super(name);
 		setId(id);
-		nextMoveStates = new LinkedList<>();
-		currentMoveState = new MoveState(MoveState.IDLE, 0, 0);
-	}
-
-	/**
-	 * Add a new MoveState to the actor's queue.
-	 * @param newState The MoveState to add.
-	 */
-	public void addMoveState(MoveState newState) {
-		if (nextState == null)
-			nextState = newState;
-		else
-		{
-			synchronized (nextMoveStates)
-			{
-				nextMoveStates.add(newState);
-			}
-		}
 	}
 
 	@Override
 	public void update() {
+		if (getLastStepTime() == 0)
+		{
+			setLastStepTime(getWorld().getLastUpdateCompleted());
+		}
 		step();
+		setLastStepTime(System.nanoTime());
 	}
 
 	/** Take a step, changing state and correcting steps if necessary. */
 	private void step() {
-		if (getOverstepped() >= 0) { correctOverSteps(getOverstepped()); }
-		stepForward();
-		stepsTaken++;
-	}
-
-	/** Take a step according to the current move state. */
-	public void stepForward() {
-		if (currentMoveState.relativeAngle == IDLE) return;
-		setVector2D(getVector2D().getVectorInDirection(STEP_LENGTH, currentMoveState.stepAngle));
+		double stepLength = calcStepLength();
+		stepForward(stepLength);
 	}
 
 	/**
-	 * Correct the given number of steps at the specified angles.
-	 * @param overstepped The number of steps over.
+	 * Take a step according to the current move state.
+	 * @param stepLength The length of the step to take.
 	 */
-	private void correctOverSteps(int overstepped) {
-		if (overstepped > 0)
-		{
-			double stepAmount = STEP_LENGTH * overstepped;
-			Vector2D backVector = getVector2D().getVectorInDirection(stepAmount, currentMoveState.stepAngle - Math.PI);
-			Vector2D newVector = backVector.getVectorInDirection(stepAmount, nextState.stepAngle);
-			setVector2D(newVector);
-		}
-		resetState();
-		stepsTaken = overstepped;
+	void stepForward(double stepLength) {
+		if (relativeAngle == IDLE) return;
+		setVector2D(getVector2D().getVectorInDirection(stepLength, MathUtil.calcStepAngle(getAbsoluteAngle(), getRelativeAngle())));
 	}
 
 	/**
-	 * Determine if a state change is necessary.
-	 * @return The number of steps needed to "correct" to set the actor to the correct state.  A negative number means no
-	 *         state change is necessary.
+	 * Calculate the step length at the current time.
+	 * @return The current step length.
 	 */
-	private int getOverstepped() {
-		return nextState != null ? stepsTaken - nextState.stepsUntilChange : -1;
-	}
-
-	/** Reset the move state, relativeAngle, and newState flag when changing the move state. */
-	private void resetState() {
-		stepsTaken = 0;
-		currentMoveState = nextState;
-		nextState = nextMoveStates.poll();
-		setDirection(currentMoveState.absoluteAngle);
+	double calcStepLength() {
+		return ((System.nanoTime() - (double) getLastStepTime()) / 1000000000)
+				* MOVE_SPEED;
 	}
 
 	/**
-	 * Set the number of steps taken since the last move.
-	 * @param stepsTaken The number of steps taken since the last move.
+	 * Get the time at which this actor completed its last step.
+	 * @return The time at which this actor completed its last step.
 	 */
-	public void setStepsTaken(int stepsTaken) {
-		this.stepsTaken = stepsTaken;
-	}
+	long getLastStepTime() { return lastStepTime; }
 
 	/**
-	 * Sets the current move state.  Should only be called when the actor is created.
-	 * @param currentMoveState The current move state.
+	 * Set the time at which this actor completed its last step.  This should be called any time an actor's position is
+	 * set manually so that the following step doesn't "overshoot".
+	 * @param lastStepTime The new time at which the actor completed its last step.
 	 */
-	public void setCurrentMoveState(MoveState currentMoveState) {
-		this.currentMoveState = currentMoveState;
-	}
+	public void setLastStepTime(long lastStepTime) { this.lastStepTime = lastStepTime; }
+
+	/**
+	 * Get the relative angle of this actor.
+	 * @return The relative angle of this actor.
+	 */
+	double getRelativeAngle() { return relativeAngle; }
+
+	/**
+	 * Set the relative angle of this actor.
+	 * @param relativeAngle The new relative angle.
+	 */
+	public void setRelativeAngle(double relativeAngle) { this.relativeAngle = relativeAngle; }
+
 }

@@ -28,16 +28,18 @@ public class ExecutablePingRequest extends ServerExecutableMessage
 	/** Run asynchronous portion of this message. */
 	@Override
 	public void runASync() {
-		Message pingResponse = new Message(getClientHandler(), "PingResponse");
-		pingResponse.setArgument("requestTimeNanos", getMessage().getArgument("requestTimeNanos"));
-		try
-		{
+		ClientHandler clientHandler = getClientHandler();
+		long requestTimeNanos = (long) getMessage().getArgument("requestTimeNanos");
+
+		Message pingResponse = getClientHandler().getMessageFactory()
+				.generatePingResponse(requestTimeNanos);
+		try {
 			// Try to force the message through immediately, ignoring queue and sync times.
-			getClientHandler().forceMessage(pingResponse);
-		} catch (IOException e)
-		{
-			// If that fails, queue it normally. This will return a ping time scewed by the server update cycle.
-			getClientHandler().queueMessage(pingResponse);
+			clientHandler.forceMessage(pingResponse);
+		} catch (IOException e) {
+			// If that fails, queue it normally. This will return a ping time skewed by the server update cycle.
+			clientHandler.queueMessage(pingResponse);
 		}
 	}
+
 }

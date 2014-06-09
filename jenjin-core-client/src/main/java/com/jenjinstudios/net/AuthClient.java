@@ -1,11 +1,7 @@
 package com.jenjinstudios.net;
 
 import com.jenjinstudios.io.Message;
-import org.xml.sax.SAXException;
 
-import javax.xml.parsers.ParserConfigurationException;
-import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -19,11 +15,11 @@ public class AuthClient extends Client
 	/** The logger associated with this class. */
 	private static final Logger LOGGER = Logger.getLogger(AuthClient.class.getName());
 	/** The number of milliseconds before a blocking method should time out. */
-	public static long TIMEOUT_MILLIS = 30000;
+	private static final long TIMEOUT_MILLIS = 30000;
 	/** The username this client will use when logging in. */
-	private String username;
+	private final String username;
 	/** The password this client will use when logging in. */
-	private String password;
+	private final String password;
 	/** Whether the user is logged in. */
 	private boolean loggedIn;
 	/** The time at which this client was successfully logged in. */
@@ -39,12 +35,8 @@ public class AuthClient extends Client
 	 * @param port The port over which this client will attempt to connect.
 	 * @param username The username that will be used by this client.
 	 * @param password The password that will be used by this client.
-	 * @throws java.security.NoSuchAlgorithmException If there is an error generating encryption keys.
-	 * @throws java.io.IOException If there is an IO exception when reading XML files.
-	 * @throws javax.xml.parsers.ParserConfigurationException If there is an error parsing XML files.
-	 * @throws org.xml.sax.SAXException If there is an error parsing XML files.
 	 */
-	public AuthClient(String address, int port, String username, String password) throws NoSuchAlgorithmException, IOException, SAXException, ParserConfigurationException {
+	public AuthClient(String address, int port, String username, String password) {
 		super(address, port);
 		this.username = username;
 		this.password = password;
@@ -58,13 +50,10 @@ public class AuthClient extends Client
 		sendLoginRequest();
 		long startTime = System.currentTimeMillis();
 		long timePast = System.currentTimeMillis() - startTime;
-		while (isWaitingForLoginResponse() && (timePast < TIMEOUT_MILLIS))
-		{
-			try
-			{
+		while (isWaitingForLoginResponse() && (timePast < TIMEOUT_MILLIS)) {
+			try {
 				Thread.sleep(10);
-			} catch (InterruptedException e)
-			{
+			} catch (InterruptedException e) {
 				LOGGER.log(Level.WARNING, "Interrupted while waiting for login response.", e);
 			}
 			timePast = System.currentTimeMillis() - startTime;
@@ -90,26 +79,14 @@ public class AuthClient extends Client
 
 	/** Send a login request to the server. */
 	private void sendLoginRequest() {
-		if (username == null || password == null)
-		{
+		if (username == null || password == null) {
 			throw new IllegalStateException("Attempted to login without username or password");
 		}
-		Message loginRequest = generateLoginRequest();
+		Message loginRequest = getMessageFactory().generateLoginRequest(username, password);
 
 		// Send the request, continue when the response is received.
 		setWaitingForLoginResponse(true);
 		queueMessage(loginRequest);
-	}
-
-	/**
-	 * Generate a LoginRequest message.
-	 * @return The LoginRequest message.
-	 */
-	private Message generateLoginRequest() {// Create the login request.
-		Message loginRequest = new Message(this, "LoginRequest");
-		loginRequest.setArgument("username", username);
-		loginRequest.setArgument("password", password);
-		return loginRequest;
 	}
 
 	/**
@@ -124,7 +101,7 @@ public class AuthClient extends Client
 	 * Get whether this client has received a login response.
 	 * @return Whether the client has received a login response.
 	 */
-	public boolean isWaitingForLoginResponse() {
+	protected boolean isWaitingForLoginResponse() {
 		return waitingForLoginResponse;
 	}
 
@@ -136,13 +113,10 @@ public class AuthClient extends Client
 		sendLogoutRequest();
 		long startTime = System.currentTimeMillis();
 		long timePast = System.currentTimeMillis() - startTime;
-		while (isWaitingForLogoutResponse() && (timePast < TIMEOUT_MILLIS))
-		{
-			try
-			{
+		while (isWaitingForLogoutResponse() && (timePast < TIMEOUT_MILLIS)) {
+			try {
 				Thread.sleep(10);
-			} catch (InterruptedException e)
-			{
+			} catch (InterruptedException e) {
 				LOGGER.log(Level.WARNING, "Interrupted while waiting for login response.", e);
 			}
 			timePast = System.currentTimeMillis() - startTime;
@@ -152,7 +126,7 @@ public class AuthClient extends Client
 
 	/** Send a logout request to the server. */
 	protected void sendLogoutRequest() {
-		Message logoutRequest = new Message(this, "LogoutRequest");
+		Message logoutRequest = getMessageFactory().generateLogoutRequest();
 
 		// Send the request, continue when response is received.
 		setWaitingForLogoutResponse(true);
@@ -171,7 +145,7 @@ public class AuthClient extends Client
 	 * Get whether this client has received a logout response.
 	 * @return Whether this client has received a logout response.
 	 */
-	public boolean isWaitingForLogoutResponse() {
+	boolean isWaitingForLogoutResponse() {
 		return waitingForLogoutResponse;
 	}
 

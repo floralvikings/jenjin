@@ -16,6 +16,7 @@ import java.util.logging.Logger;
  * Handles SQL stuff for a WorldServer.
  * @author Caleb Brinkman
  */
+@SuppressWarnings("SpellCheckingInspection")
 public class WorldSQLHandler extends SQLHandler
 {
 	/** The column name of the X coordinate. */
@@ -46,28 +47,25 @@ public class WorldSQLHandler extends SQLHandler
 	 * @return An actor pre-filled with the players information.
 	 */
 	public Player logInPlayer(String username, String password) {
-		Player player = null;
+		Player player;
 		if (!isConnected())
-			return player;
-		try
+			return null;
+		try (ResultSet results = makeUserQuery(username))
 		{
-			ResultSet results = makeUserQuery(username);
 			results.next();
 			// Determine if the user is logged in.  If yes, end of method.
 			boolean loggedIn = results.getBoolean(LOGGED_IN_COLUMN);
 			if (loggedIn)
-				return player;
+				return null;
 			// Hash the user-supplied password with the salt in the database.
 			String hashedPassword = Hash.getHashedString(password, results.getString("salt"));
 			// Determine if the correct password was supplied.
 			boolean passwordCorrect = hashedPassword != null && hashedPassword.equalsIgnoreCase(results.getString("password"));
 			Vector2D coordinates = new Vector2D(results.getDouble(X_COORD), results.getDouble(Y_COORD));
 			int zoneID = results.getInt(ZONE_ID);
-			// Any SQL stuff has to come before this line.
-			results.getStatement().close();
 			// If the password's bad, login fail.
 			if (!passwordCorrect)
-				return player;
+				return null;
 			// Update the logged in column.
 			updateLoggedinColumn(username, true);
 			player = new Player(username);
@@ -88,26 +86,24 @@ public class WorldSQLHandler extends SQLHandler
 	 * @return Whether the actor was successfully logged out.
 	 */
 	public boolean logOutPlayer(Actor actor) {
-		boolean success = false;
+		boolean success;
 		if (!isConnected())
-			return success;
+			return false;
 		String username = actor.getName();
-		try
+		try(ResultSet results = makeUserQuery(username))
 		{
-			ResultSet results = makeUserQuery(username);
 			results.next();
 			// Determine if the user is logged in.  If no, end of method.
 			boolean loggedIn = results.getBoolean(LOGGED_IN_COLUMN);
-			results.getStatement().close();
 			if (!loggedIn)
-				return success;
+				return false;
 
 			updateLoggedinColumn(username, false);
 			updatePlayer(actor);
 			success = true;
 		} catch (SQLException e)
 		{
-			LOGGER.log(Level.FINE, "Failed to log out user: {0}", username);
+			LOGGER.log(Level.WARNING, "Failed to log out user: {0}", username);
 			success = false;
 		}
 
@@ -126,13 +122,14 @@ public class WorldSQLHandler extends SQLHandler
 
 		String updateLoggedInQuery = "UPDATE " + dbName + ".users SET " + X_COORD + "=" + xCoord + ", " + Y_COORD +
 				"=" + yCoord + " WHERE " + "username = ?";
-		PreparedStatement updatePlayerStatement;
 		synchronized (dbConnection)
 		{
-			updatePlayerStatement = super.dbConnection.prepareStatement(updateLoggedInQuery);
-			updatePlayerStatement.setString(1, username);
-			updatePlayerStatement.executeUpdate();
-			updatePlayerStatement.close();
+			try(PreparedStatement updatePlayerStatement = super.dbConnection.prepareStatement(updateLoggedInQuery))
+			{
+				updatePlayerStatement.setString(1, username);
+				updatePlayerStatement.executeUpdate();
+				updatePlayerStatement.close();
+			}
 		}
 	}
 }

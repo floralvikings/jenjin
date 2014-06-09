@@ -12,6 +12,8 @@ import org.testng.Assert;
 
 import java.io.File;
 import java.util.TreeMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Test the WorldFileWriter class.
@@ -19,6 +21,8 @@ import java.util.TreeMap;
  */
 public class WorldFileWriterTest
 {
+	/** The Logged for this test. */
+	private static final Logger LOGGER = Logger.getLogger(WorldFileWriterTest.class.getName());
 	/** The file to be written to for testing purposes. */
 	File worldFile;
 
@@ -29,10 +33,12 @@ public class WorldFileWriterTest
 	@BeforeMethod
 	public void setUp() throws Exception {
 		worldFile = new File("WorldFileWriterTest.xml");
-		if(worldFile.exists() && worldFile.delete())
-		{
-			System.out.println("Deleting world test file before test.");
+		if(worldFile.exists() && worldFile.delete()) {
+			LOGGER.log(Level.INFO, "Deleted test file.");
 		}
+
+
+
 	}
 
 	/**
@@ -41,9 +47,8 @@ public class WorldFileWriterTest
 	 */
 	@AfterMethod
 	public void tearDown() throws Exception {
-		if(worldFile.exists() && worldFile.delete())
-		{
-			System.out.println("Deleting world test file after test.");
+		if(worldFile.exists() && worldFile.delete()) {
+			LOGGER.log(Level.INFO, "Deleted test file.");
 		}
 	}
 

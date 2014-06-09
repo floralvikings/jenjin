@@ -1,6 +1,6 @@
 package com.jenjinstudios.net;
 
-import java.util.LinkedList;
+import java.util.Deque;
 import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -18,9 +18,9 @@ class ServerLoop extends TimerTask
 	/** The server for which this loop runs. */
 	private final TaskedServer server;
 	/** The list of synchronized tasks to be executed by the loop. */
-	private final LinkedList<Runnable> syncedTasks;
+	private final Deque<Runnable> syncedTasks;
 	/** The list of repeated tasks to be executed by the loop. */
-	private final LinkedList<Runnable> repeatedTasks;
+	private final Iterable<Runnable> repeatedTasks;
 	/** The start time, in nanoseconds, of the current cycle. */
 	private volatile long cycleStart = 0;
 	/** The current cycle number. */

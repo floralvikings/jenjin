@@ -3,7 +3,8 @@ package com.jenjinstudios.world.message;
 import com.jenjinstudios.io.Message;
 import com.jenjinstudios.world.ClientActor;
 import com.jenjinstudios.world.WorldClient;
-import com.jenjinstudios.world.state.MoveState;
+import com.jenjinstudios.world.math.MathUtil;
+import com.jenjinstudios.world.math.Vector2D;
 
 /**
  * Process an ActorVisibleMessage.
@@ -12,7 +13,7 @@ import com.jenjinstudios.world.state.MoveState;
 public class ExecutableActorVisibleMessage extends WorldClientExecutableMessage
 {
 	/** The newly visible actor. */
-	ClientActor newlyVisible;
+	private ClientActor newlyVisible;
 
 	/**
 	 * Construct an ExecutableMessage with the given Message.
@@ -36,16 +37,19 @@ public class ExecutableActorVisibleMessage extends WorldClientExecutableMessage
 		int resourceID = (int) message.getArgument("resourceID");
 		double xCoordinate = (double) message.getArgument("xCoordinate");
 		double yCoordinate = (double) message.getArgument("yCoordinate");
-		double direction = (double) message.getArgument("relativeAngle");
-		double angle = (double) message.getArgument("absoluteAngle");
-		int stepsFromLast = (int) message.getArgument("stepsTaken");
-		int stepsUntilChange = (int) message.getArgument("stepsUntilChange");
+		double relativeAngle = (double) message.getArgument("relativeAngle");
+		double absoluteAngle = (double) message.getArgument("absoluteAngle");
+		long timeOfVisibility = (long) message.getArgument("timeOfVisibility");
 
 		newlyVisible = new ClientActor(id, name);
 		newlyVisible.setResourceID(resourceID);
-		newlyVisible.setVector2D(xCoordinate, yCoordinate);
-		MoveState state = new MoveState(direction, stepsUntilChange, angle);
-		newlyVisible.setCurrentMoveState(state);
-		newlyVisible.setStepsTaken(stepsFromLast);
+		double dist = ClientActor.MOVE_SPEED *
+				((double) (System.nanoTime() - timeOfVisibility) / 1000000000d);
+		double angle = MathUtil.calcStepAngle(absoluteAngle, relativeAngle);
+		Vector2D oldVector = new Vector2D(xCoordinate, yCoordinate);
+		Vector2D newVector = oldVector.getVectorInDirection(dist, angle);
+		newlyVisible.setVector2D(newVector);
+		newlyVisible.setAbsoluteAngle(absoluteAngle);
+		newlyVisible.setRelativeAngle(relativeAngle);
 	}
 }

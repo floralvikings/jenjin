@@ -1,11 +1,13 @@
 package com.jenjinstudios.net;
 
 import com.jenjinstudios.io.*;
+import com.jenjinstudios.util.MessageFactory;
 
 import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -16,13 +18,15 @@ import java.util.logging.Logger;
 public abstract class Connection extends Thread
 {
 	/** The logger used for this class. */
-	protected static final Logger LOGGER = Logger.getLogger(Connection.class.getName());
+	private static final Logger LOGGER = Logger.getLogger(Connection.class.getName());
 	/** The list of collected ping times. */
-	private final ArrayList<Long> pingTimes;
+	private final List<Long> pingTimes;
 	/** The collection of messages to send at the next broadcast. */
 	private final LinkedList<Message> outgoingMessages;
 	/** The "one-shot" tasks to be executed in the current client loop. */
-	private final LinkedList<Runnable> syncedTasks;
+	private final List<Runnable> syncedTasks;
+	/** The MessageFactory used by this connection. */
+	private final MessageFactory messageFactory;
 	/** Flags whether the client threads should be running. */
 	private volatile boolean running;
 	/** The input stream used to read messages. */
@@ -38,12 +42,12 @@ public abstract class Connection extends Thread
 	/** The message registry for this class. */
 	private MessageRegistry messageRegistry;
 
-	/** Construct a new Communicator. */
+	/** Construct a new Connection. */
 	protected Connection() {
 		outgoingMessages = new LinkedList<>();
 		pingTimes = new ArrayList<>();
 		syncedTasks = new LinkedList<>();
-
+		messageFactory = new MessageFactory(this);
 	}
 
 	/**
@@ -51,16 +55,15 @@ public abstract class Connection extends Thread
 	 * @param socket The socket to be used by this communicator.
 	 * @throws IOException If there is an exception creating message streams.
 	 */
-	public void setSocket(Socket socket) throws IOException {
+	protected void setSocket(Socket socket) throws IOException {
 		this.socket = socket;
 		setOutputStream(new MessageOutputStream(this, socket.getOutputStream()));
 		setInputStream(new MessageInputStream(this, socket.getInputStream()));
 	}
 
 	/** Send a ping request. */
-	public void sendPing() {
-		Message pingRequest = new Message(this, "PingRequest");
-		pingRequest.setArgument("requestTimeNanos", System.nanoTime());
+	protected void sendPing() {
+		Message pingRequest = messageFactory.generatePingRequest();
 		queueMessage(pingRequest);
 	}
 
@@ -102,7 +105,7 @@ public abstract class Connection extends Thread
 	 * Flags whether this communicator is connected.
 	 * @return true if this communicator is currently connected to a server.
 	 */
-	public boolean isConnected() {
+	protected boolean isConnected() {
 		return connected;
 	}
 
@@ -141,14 +144,14 @@ public abstract class Connection extends Thread
 	 * Send the specified message to the client.
 	 * @param o The message to send to the client.
 	 */
-	public void writeMessage(Message o) {
+	protected void writeMessage(Message o) {
 		try
 		{
 			LOGGER.log(Level.FINEST, "Connection {0} writing message {1}", new Object[]{getName(), o});
 			getOutputStream().writeMessage(o);
 		} catch (IOException e)
 		{
-			LOGGER.log(Level.SEVERE, "Unable to write message to socket, shutting down.", e);
+			LOGGER.log(Level.SEVERE, "Unable to write message " + o + " to socket, shutting down.", e);
 			shutdown();
 		}
 	}
@@ -157,7 +160,7 @@ public abstract class Connection extends Thread
 	 * Get the output stream used by this communicator.
 	 * @return The output stream used by this communicator.
 	 */
-	public MessageOutputStream getOutputStream() {
+	protected MessageOutputStream getOutputStream() {
 		return outputStream;
 	}
 
@@ -170,7 +173,7 @@ public abstract class Connection extends Thread
 	}
 
 	/** Shutdown this communicator. */
-	public void shutdown() {
+	protected void shutdown() {
 		running = false;
 	}
 
@@ -178,7 +181,7 @@ public abstract class Connection extends Thread
 	 * Get the AES key used by this client.
 	 * @return The byte form of the AES key used by this client.
 	 */
-	public byte[] getAesKey() {
+	protected byte[] getAesKey() {
 		return aesKey;
 	}
 
@@ -196,7 +199,7 @@ public abstract class Connection extends Thread
 	 * Get the input stream used.
 	 * @return The input stream.
 	 */
-	public MessageInputStream getInputStream() {
+	protected MessageInputStream getInputStream() {
 		return inputStream;
 	}
 
@@ -218,9 +221,6 @@ public abstract class Connection extends Thread
 				LOGGER.log(Level.FINEST, "Connection {0} reading message {1}", new Object[]{getName(), currentMessage});
 				processMessage(currentMessage);
 			}
-		} catch (IOException ex)
-		{
-			LOGGER.log(Level.SEVERE, "Error retrieving message from server.", ex);
 		} finally
 		{
 			shutdown();
@@ -239,7 +239,7 @@ public abstract class Connection extends Thread
 	 * The "one-shot" tasks to be executed in the current client loop.
 	 * @return The list of Synced Tasks
 	 */
-	public LinkedList<Runnable> getSyncedTasks() {
+	protected Iterable<Runnable> getSyncedTasks() {
 		LinkedList<Runnable> temp = new LinkedList<>();
 		synchronized (syncedTasks)
 		{
@@ -294,10 +294,15 @@ public abstract class Connection extends Thread
 			}
 		} else
 		{
-			Message invalid = new Message(this, "InvalidMessage");
-			invalid.setArgument("messageName", message.name);
-			invalid.setArgument("messageID", message.getID());
+			Message invalid = messageFactory.generateInvalidMessage(message);
 			queueMessage(invalid);
 		}
 	}
+
+	/**
+	 * Get the message factory working for this connection.  This should be overridden in any classes that use a
+	 * custom message factory (and they all should).
+	 * @return The MessageFactory working for this connection.
+	 */
+	public abstract MessageFactory getMessageFactory();
 }

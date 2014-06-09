@@ -18,7 +18,7 @@ import java.util.logging.Logger;
 public class LocationTest
 {
 	/** The logger for this class. */
-	public static final Logger LOGGER = Logger.getLogger(LocationTest.class.getName());
+	private static final Logger LOGGER = Logger.getLogger(LocationTest.class.getName());
 
 	/** Test the coordinate values. */
 	@Test

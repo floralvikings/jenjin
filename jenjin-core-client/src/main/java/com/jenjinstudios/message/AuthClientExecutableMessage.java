@@ -10,7 +10,7 @@ import com.jenjinstudios.net.AuthClient;
 public abstract class AuthClientExecutableMessage extends ClientExecutableMessage
 {
 	/** The client invoking this ExecutableMessage. */
-	private AuthClient client;
+	private final AuthClient client;
 
 	/**
 	 * Construct an ExecutableMessage with the given Message.
@@ -26,7 +26,7 @@ public abstract class AuthClientExecutableMessage extends ClientExecutableMessag
 	 * Get the client invoking this ExecutableMessage.
 	 * @return The client invoking this ExecutableMessage.
 	 */
-	public AuthClient getClient() {
+	protected AuthClient getClient() {
 		return client;
 	}
 }

@@ -7,7 +7,7 @@ import java.util.TimerTask;
  * @author Caleb Brinkman
  */
 
-public class ClientLoop extends TimerTask
+class ClientLoop extends TimerTask
 {
 	/** The Client for this loop. */
 	private final Client client;

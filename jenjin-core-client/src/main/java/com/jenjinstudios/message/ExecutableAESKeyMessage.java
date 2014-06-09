@@ -19,6 +19,7 @@ import java.util.logging.Logger;
  * Handles processing an AESKeyMessage from the server.
  * @author Caleb Brinkman
  */
+@SuppressWarnings("WeakerAccess")
 public class ExecutableAESKeyMessage extends ClientExecutableMessage
 {
 	/** The Logger for this class. */

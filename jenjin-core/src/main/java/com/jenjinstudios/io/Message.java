@@ -2,6 +2,7 @@ package com.jenjinstudios.io;
 
 import com.jenjinstudios.net.Connection;
 
+import java.util.Map;
 import java.util.TreeMap;
 
 /**
@@ -16,7 +17,7 @@ public class Message
 	/** The message type of this message. */
 	private final MessageType messageType;
 	/** The arguments for this message by name. */
-	private final TreeMap<String, Object> argumentsByName;
+	private final Map<String, Object> argumentsByName;
 	/** The ID of this message. */
 	private final short id;
 
@@ -30,7 +31,7 @@ public class Message
 	 * @param id   The ID of the message type for this message.
 	 * @param args The arguments of this message.  This <b>must</b> fill every available argument for the message.
 	 */
-	public Message(Connection connection, short id, Object... args)
+	Message(Connection connection, short id, Object... args)
 	{
 		this.id = id;
 		messageType = connection.getMessageRegistry().getMessageType(id);
@@ -94,7 +95,7 @@ public class Message
 	 *
 	 * @return true if all arguments have been set, and correctly.
 	 */
-	public boolean isInvalid()
+	boolean isInvalid()
 	{
 		return argumentsByName.size() != messageType.argumentTypes.length;
 	}

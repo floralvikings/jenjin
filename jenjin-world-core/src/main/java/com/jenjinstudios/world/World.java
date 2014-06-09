@@ -2,7 +2,10 @@ package com.jenjinstudios.world;
 
 import com.jenjinstudios.world.math.Vector2D;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Contains all the Zones, Locations and GameObjects.
@@ -13,7 +16,13 @@ public class World
 	/** The list of in-world Zones. */
 	private final Zone[] zones;
 	/** The GameObjects contained in the world. */
-	private final WorldObjectTree worldObjects;
+	private final WorldObjectMap worldObjects;
+	/** The time at which the most recent update completed. */
+	private long lastUpdateCompleted;
+	/** The start time of the most recent update. */
+	private long lastUpdateStarted;
+	/** The time taken by the most recent update. */
+	private long lastUpdateTime;
 
 	/** Construct a new World. */
 	public World() {
@@ -21,7 +30,7 @@ public class World
 		/* The default size of the world's location grid. */
 		int DEFAULT_SIZE = 50;
 		zones[0] = new Zone(0, DEFAULT_SIZE, DEFAULT_SIZE, new Location[]{});
-		worldObjects = new WorldObjectTree();
+		worldObjects = new WorldObjectMap();
 	}
 
 	/**
@@ -30,7 +39,7 @@ public class World
 	 */
 	public World(Zone[] zones) {
 		this.zones = zones;
-		worldObjects = new WorldObjectTree();
+		worldObjects = new WorldObjectMap();
 	}
 
 	/**
@@ -55,8 +64,7 @@ public class World
 
 		object.setWorld(this);
 		object.setVector2D(object.getVector2D());
-		synchronized (worldObjects)
-		{
+		synchronized (worldObjects) {
 			object.setId(id);
 			worldObjects.put(id, object);
 		}
@@ -75,8 +83,7 @@ public class World
 	 * @param id The id.
 	 */
 	public void removeObject(int id) {
-		synchronized (worldObjects)
-		{
+		synchronized (worldObjects) {
 			worldObjects.remove(id);
 		}
 	}
@@ -106,19 +113,23 @@ public class World
 
 	/** Update all objects in the world. */
 	public void update() {
-		synchronized (worldObjects)
-		{
+		lastUpdateStarted = System.nanoTime();
+		synchronized (worldObjects) {
 			Collection<WorldObject> values = worldObjects.values();
 			for (WorldObject o : values)
 				if (o != null)
 					o.setUp();
+
 			for (WorldObject o : values)
 				if (o != null)
 					o.update();
+
 			for (WorldObject o : values)
 				if (o != null)
 					o.reset();
 		}
+		lastUpdateCompleted = System.nanoTime();
+		lastUpdateTime = lastUpdateCompleted - lastUpdateStarted;
 	}
 
 	/**
@@ -151,13 +162,10 @@ public class World
 	 * Get a list of all valid Zone IDs in this world.
 	 * @return A List of all IDs which are linked to a zone.
 	 */
-	public List<Integer> getZoneIDs()
-	{
+	public List<Integer> getZoneIDs() {
 		LinkedList<Integer> r = new LinkedList<>();
-		synchronized (zones)
-		{
-			for(Zone z : zones)
-			{
+		synchronized (zones) {
+			for (Zone z : zones) {
 				r.add(z.id);
 			}
 		}
@@ -171,10 +179,8 @@ public class World
 	 */
 	public Zone getZone(int id) {
 		Zone r = null;
-		synchronized (zones)
-		{
-			for (Zone z : zones)
-			{
+		synchronized (zones) {
+			for (Zone z : zones) {
 				if (z.id == id)
 					r = z;
 			}
@@ -184,9 +190,28 @@ public class World
 
 	/** Reset the world to it's original state. */
 	public void purgeObjects() {
-		synchronized (worldObjects)
-		{
+		synchronized (worldObjects) {
 			worldObjects.clear();
 		}
 	}
+
+	/**
+	 * Get the time at which the most recent update completed.
+	 * @return The time at which the most recent update completed.
+	 */
+	public long getLastUpdateCompleted() {
+		return lastUpdateCompleted;
+	}
+
+	/**
+	 * Get the time taken by the previous update.
+	 * @return The time taken by the previous update.
+	 */
+	public long getLastUpdateTime() { return lastUpdateTime; }
+
+	/**
+	 * Get the time at which the most recent update started.
+	 * @return The time at which the most recent update started.
+	 */
+	public long getLastUpdateStarted() { return lastUpdateStarted; }
 }

@@ -3,11 +3,13 @@ package com.jenjinstudios.net;
 import com.jenjinstudios.io.Message;
 import com.jenjinstudios.io.MessageRegistry;
 import com.jenjinstudios.message.ClientExecutableMessage;
+import com.jenjinstudios.util.ClientMessageFactory;
 
 import java.io.IOException;
 import java.net.Socket;
 import java.security.*;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Timer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -21,13 +23,15 @@ public class Client extends Connection
 	/** The logger associated with this class. */
 	public static final Logger LOGGER = Logger.getLogger(Client.class.getName());
 	/** The number of milliseconds before a blocking method should time out. */
-	public static long TIMEOUT_MILLIS = 30000;
+	private static final long TIMEOUT_MILLIS = 30000;
 	/** The port over which the client communicates with the server. */
 	private final int PORT;
 	/** The address of the server to which this client will connect. */
 	private final String ADDRESS;
 	/** The list of tasks that this client will execute each update cycle. */
-	private final LinkedList<Runnable> repeatedSyncedTasks;
+	private final List<Runnable> repeatedSyncedTasks;
+	/** The message factory used by this client. */
+	private final ClientMessageFactory messageFactory;
 	/** The period of the update in milliseconds. */
 	private int period;
 	/** The timer that manages the update loop. */
@@ -58,6 +62,7 @@ public class Client extends Connection
 		{
 			LOGGER.log(Level.SEVERE, "Unable to create RSA key pair!", e);
 		}
+		this.messageFactory = new ClientMessageFactory(this);
 	}
 
 	/**
@@ -111,17 +116,6 @@ public class Client extends Connection
 	}
 
 	/**
-	 * Add a task to the list of repeated synchronized tasks.
-	 * @param r The task to add.
-	 */
-	public void addRepeatedSyncedTask(Runnable r) {
-		synchronized (repeatedSyncedTasks)
-		{
-			repeatedSyncedTasks.add(r);
-		}
-	}
-
-	/**
 	 * Get the private key.
 	 * @return The private key.
 	 */
@@ -158,9 +152,8 @@ public class Client extends Connection
 	 * Take care of all the necessary initialization messages between client and server.  These include things like RSA key
 	 * exchanges and latency checks.
 	 * @return Whether the init was successful.
-	 * @throws IOException If there's an IOException when attempting to communicate with the server.
 	 */
-	private boolean doPostConnectInit() throws IOException {
+	private boolean doPostConnectInit() {
 		// First, get and process the required FirstConnectResponse message from the server.
 		Message firstConnectResponse = getInputStream().readMessage();
 		if (firstConnectResponse == null)
@@ -171,8 +164,7 @@ public class Client extends Connection
 		period = 1000 / ups;
 
 		// Next, queue up the PublicKeyMessage used to exchange the encrypted AES key used for encryption.
-		Message publicKeyMessage = new Message(this, "PublicKeyMessage");
-		publicKeyMessage.setArgument("key", publicKey.getEncoded());
+		Message publicKeyMessage = getMessageFactory().generatePublicKeyMessage(publicKey);
 		queueMessage(publicKeyMessage);
 
 		// Finally, send a ping request to establish latency.
@@ -198,4 +190,6 @@ public class Client extends Connection
 				r.run();
 		}
 	}
+
+	public ClientMessageFactory getMessageFactory() { return messageFactory; }
 }

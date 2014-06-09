@@ -4,6 +4,7 @@ import com.jenjinstudios.io.ExecutableMessage;
 import com.jenjinstudios.io.Message;
 import com.jenjinstudios.io.MessageRegistry;
 import com.jenjinstudios.message.ServerExecutableMessage;
+import com.jenjinstudios.util.ServerMessageFactory;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -16,6 +17,8 @@ public class ClientHandler extends Connection
 {
 	/** The server. */
 	private final AuthServer<? extends ClientHandler> server;
+	/** The message factory used by this ClientHandler. */
+	private final ServerMessageFactory messageFactory;
 	/** The id of the client handler. */
 	private int handlerId = -1;
 	/** Flags whether the user is logged in. */
@@ -24,6 +27,8 @@ public class ClientHandler extends Connection
 	private String username;
 	/** The time at which this client was successfully logged in. */
 	private long loggedInTime;
+	/** Flags whether the connection acknowledgement response has been sent. */
+	private boolean firstConnectResponseSent;
 
 
 	/**
@@ -40,9 +45,17 @@ public class ClientHandler extends Connection
 		server = s;
 		super.setSocket(sk);
 
-		Message firstConnectResponse = new Message(this, "FirstConnectResponse");
-		firstConnectResponse.setArgument("ups", server.UPS);
+		this.messageFactory = new ServerMessageFactory(this);
+	}
+
+	/**
+	 * Send a connection acknowledgement response.
+	 */
+	public void sendFirstConnectResponse() {
+		if(firstConnectResponseSent) return;
+		Message firstConnectResponse = getMessageFactory().generateFirstConnectResponse(getServer().UPS);
 		queueMessage(firstConnectResponse);
+		firstConnectResponseSent = true;
 	}
 
 	/**
@@ -119,8 +132,7 @@ public class ClientHandler extends Connection
 	 */
 	public void sendLogoutStatus(boolean success) {
 		loggedIn = !success;
-		Message logoutResponse = new Message(this, "LogoutResponse");
-		logoutResponse.setArgument("success", success);
+		Message logoutResponse = getMessageFactory().generateLogoutResponse(success);
 		queueMessage(logoutResponse);
 	}
 
@@ -167,4 +179,7 @@ public class ClientHandler extends Connection
 	public void forceMessage(Message message) throws IOException {
 		getOutputStream().writeMessage(message);
 	}
+
+	@Override
+	public ServerMessageFactory getMessageFactory() { return messageFactory; }
 }

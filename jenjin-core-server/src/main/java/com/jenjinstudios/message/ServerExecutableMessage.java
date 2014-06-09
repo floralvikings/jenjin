@@ -78,7 +78,7 @@ public abstract class ServerExecutableMessage extends ExecutableMessage
 	 * Get the ClientHandler invoking this message.
 	 * @return The ClientHandler invoking this message.
 	 */
-	public ClientHandler getClientHandler() {
+	protected ClientHandler getClientHandler() {
 		return clientHandler;
 	}
 }
