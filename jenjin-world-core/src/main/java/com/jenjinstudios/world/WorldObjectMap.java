@@ -1,13 +1,12 @@
 package com.jenjinstudios.world;
 
-import java.util.TreeMap;
+import java.util.HashMap;
 
 /**
  * Used to store WorldObjects.
  * @author Caleb Brinkman
  */
-// TODO Change to use HashMap
-public class WorldObjectTree extends TreeMap<Integer, WorldObject>
+public class WorldObjectMap extends HashMap<Integer, WorldObject>
 {
 	@Override
 	public WorldObject remove(Object key) {

@@ -16,7 +16,7 @@ public class World
 	/** The list of in-world Zones. */
 	private final Zone[] zones;
 	/** The GameObjects contained in the world. */
-	private final WorldObjectTree worldObjects;
+	private final WorldObjectMap worldObjects;
 	/** The time at which the most recent update completed. */
 	private long lastUpdateCompleted;
 	/** The start time of the most recent update. */
@@ -30,7 +30,7 @@ public class World
 		/* The default size of the world's location grid. */
 		int DEFAULT_SIZE = 50;
 		zones[0] = new Zone(0, DEFAULT_SIZE, DEFAULT_SIZE, new Location[]{});
-		worldObjects = new WorldObjectTree();
+		worldObjects = new WorldObjectMap();
 	}
 
 	/**
@@ -39,7 +39,7 @@ public class World
 	 */
 	public World(Zone[] zones) {
 		this.zones = zones;
-		worldObjects = new WorldObjectTree();
+		worldObjects = new WorldObjectMap();
 	}
 
 	/**
