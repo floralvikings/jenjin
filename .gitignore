@@ -1,0 +1,6 @@
+*.iml
+*build/
+jenjin.log
+.idea/
+.gradle/
+resources/
