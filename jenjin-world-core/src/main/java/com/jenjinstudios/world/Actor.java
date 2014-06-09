@@ -55,10 +55,6 @@ public class Actor extends SightedObject
 		super(name);
 		stateChanges = new LinkedList<>();
 		relativeAngle = MoveState.IDLE;
-		// TODO Replace with world update time, if possible?  Since world hasn't been set here, may not be.
-		synchronized (stateChanges) {
-			stateChanges.add(new MoveState(IDLE, 0, getVector2D(), System.nanoTime()));
-		}
 	}
 
 	@Override

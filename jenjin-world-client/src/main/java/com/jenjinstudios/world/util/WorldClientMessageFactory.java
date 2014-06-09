@@ -33,7 +33,6 @@ public class WorldClientMessageFactory extends ClientMessageFactory
 		stateChangeRequest.setArgument("relativeAngle", moveState.relativeAngle);
 		stateChangeRequest.setArgument("absoluteAngle", moveState.absoluteAngle);
 		stateChangeRequest.setArgument("stepsUntilChange", moveState.stepsUntilChange);
-		// TODO Set these properly.
 		stateChangeRequest.setArgument("timeOfChange", moveState.time);
 		stateChangeRequest.setArgument("xCoordinate", moveState.position.getXCoordinate());
 		stateChangeRequest.setArgument("yCoordinate", moveState.position.getYCoordinate());
