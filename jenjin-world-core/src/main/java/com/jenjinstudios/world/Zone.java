@@ -138,7 +138,7 @@ public class Zone
 		int centerX = center.Y_COORDINATE;
 		HashSet<Location> visibleLocations = new HashSet<>();
 
-		LinkedList<Vector2D> circle = castCircle(centerX, centerY, radius);
+		List<Vector2D> circle = castCircle(centerX, centerY, radius);
 
 		for(Vector2D vector2D : circle) {
 			int x = (int) vector2D.getXCoordinate();
@@ -157,7 +157,7 @@ public class Zone
 	 * @param radius The radius of the circle.
 	 * @return A list of locations containing the perimeter of the circle.
 	 */
-	protected LinkedList<Vector2D> castCircle(int x0, int y0, int radius) {
+	protected List<Vector2D> castCircle(int x0, int y0, int radius) {
 		int x = radius, y = 0;
 		int radiusError = 1-x;
 		LinkedList<Vector2D> circle = new LinkedList<>();
