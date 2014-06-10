@@ -1,5 +1,6 @@
 package com.jenjinstudios.world;
 
+import com.jenjinstudios.world.math.MathUtil;
 import com.jenjinstudios.world.math.Vector2D;
 
 import java.util.*;
@@ -138,7 +139,7 @@ public class Zone
 		int centerX = center.Y_COORDINATE;
 		HashSet<Location> visibleLocations = new HashSet<>();
 
-		List<Vector2D> circle = castCircle(centerX, centerY, radius);
+		List<Vector2D> circle = MathUtil.castCircle(centerX, centerY, radius);
 
 		for(Vector2D vector2D : circle) {
 			int x = (int) vector2D.getXCoordinate();
@@ -148,39 +149,6 @@ public class Zone
 
 		locations.addAll(visibleLocations);
 		return locations;
-	}
-
-	/**
-	 * Use Bresenham's circle algorithm to find a circle of locations with the given center coordinates and radius.
-	 * @param x0 The center x coordinate.
-	 * @param y0 The center y coordinate.
-	 * @param radius The radius of the circle.
-	 * @return A list of locations containing the perimeter of the circle.
-	 */
-	protected List<Vector2D> castCircle(int x0, int y0, int radius) {
-		int x = radius, y = 0;
-		int radiusError = 1-x;
-		LinkedList<Vector2D> circle = new LinkedList<>();
-		while(x >= y)
-		{
-			circle.add(new Vector2D(x + x0, y + y0));
-			circle.add(new Vector2D(y + x0, x + y0));
-			circle.add(new Vector2D(-x + x0, y + y0));
-			circle.add(new Vector2D(-y + x0, x + y0));
-			circle.add(new Vector2D(-x + x0, -y + y0));
-			circle.add(new Vector2D(-y + x0, -x + y0));
-			circle.add(new Vector2D(x + x0, -y + y0));
-			circle.add(new Vector2D(y + x0, -x + y0));
-			y++;
-			if (radiusError<0)
-			{
-				radiusError += 2 * y + 1;
-			} else {
-				x--;
-				radiusError+= 2 * (y - x + 1);
-			}
-		}
-		return circle;
 	}
 
 	/**
