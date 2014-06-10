@@ -61,8 +61,6 @@ public class WorldServerMessageFactory extends ServerMessageFactory
 		newlyVisibleMessage.setArgument("yCoordinate", newlyVisible.getVector2D().getYCoordinate());
 		newlyVisibleMessage.setArgument("relativeAngle", newlyVisible.getRelativeAngle());
 		newlyVisibleMessage.setArgument("absoluteAngle", newlyVisible.getAbsoluteAngle());
-		newlyVisibleMessage.setArgument("stepsTaken", 0);
-		newlyVisibleMessage.setArgument("stepsUntilChange", 0);
 		newlyVisibleMessage.setArgument("timeOfVisibility", newlyVisible.getWorld().getLastUpdateStarted());
 		return newlyVisibleMessage;
 	}
@@ -90,13 +88,12 @@ public class WorldServerMessageFactory extends ServerMessageFactory
 	 */
 	public List<Message> generateChangeStateMessage(Actor changedActor) {
 		List<Message> messages = new LinkedList<>();
-		for(MoveState m : changedActor.getStateChanges())
+		for (MoveState m : changedActor.getStateChanges())
 		{
 			Message newState = new Message(worldClientHandler, "StateChangeMessage");
 			newState.setArgument("id", changedActor.getId());
 			newState.setArgument("relativeAngle", m.relativeAngle);
 			newState.setArgument("absoluteAngle", m.absoluteAngle);
-			newState.setArgument("stepsUntilChange", m.stepsUntilChange);
 			newState.setArgument("timeOfChange", m.time);
 			newState.setArgument("xCoordinate", m.position.getXCoordinate());
 			newState.setArgument("yCoordinate", m.position.getYCoordinate());

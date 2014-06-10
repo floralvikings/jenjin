@@ -6,7 +6,6 @@
         <executable language="java" side="server">com.jenjinstudios.world.message.ExecutableStateChangeRequest</executable>
         <argument type="double" name="relativeAngle" />
         <argument type="double" name="absoluteAngle" />
-        <argument type="int" name="stepsUntilChange" />
         <argument type="long" name="timeOfChange" />
         <argument type="double" name="xCoordinate" />
         <argument type="double" name="yCoordinate" />
@@ -30,8 +29,6 @@
         <argument type="double" name="yCoordinate" />
         <argument type="double" name="relativeAngle" />
         <argument type="double" name="absoluteAngle" />
-        <argument type="int" name="stepsTaken" />
-        <argument type="int" name="stepsUntilChange" />
         <argument type="long" name="timeOfVisibility" />
     </message>
 
@@ -45,7 +42,6 @@
         <argument type="int" name="id" />
         <argument type="double" name="relativeAngle" />
         <argument type="double" name="absoluteAngle" />
-        <argument type="int" name="stepsUntilChange" />
         <argument type="long" name="timeOfChange" />
         <argument type="double" name="xCoordinate" />
         <argument type="double" name="yCoordinate" />
