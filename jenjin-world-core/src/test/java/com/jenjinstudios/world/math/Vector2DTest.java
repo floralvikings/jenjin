@@ -26,7 +26,7 @@ public class Vector2DTest
 
 	/** Test the relativeAngle math methods. */
 	@Test
-	public void testDirectionMath() {
+	public void getGetVectorInDirection() {
 		Vector2D original = new Vector2D(5, 5);
 
 		double right = 0;
