@@ -11,6 +11,10 @@ import static com.jenjinstudios.world.state.MoveState.IDLE;
  */
 public class MathUtil
 {
+	public MathUtil() {
+		throw new RuntimeException("Instances of MathUtil should not be invoked.");
+	}
+
 	/**
 	 * MathUtil the given number to the given decimal place.
 	 * @param value The number to round.
