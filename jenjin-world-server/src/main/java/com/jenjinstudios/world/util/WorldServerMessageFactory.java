@@ -94,7 +94,7 @@ public class WorldServerMessageFactory extends ServerMessageFactory
 			newState.setArgument("id", changedActor.getId());
 			newState.setArgument("relativeAngle", m.relativeAngle);
 			newState.setArgument("absoluteAngle", m.absoluteAngle);
-			newState.setArgument("timeOfChange", m.time);
+			newState.setArgument("timeOfChange", m.timeOfChange);
 			newState.setArgument("xCoordinate", m.position.getXCoordinate());
 			newState.setArgument("yCoordinate", m.position.getYCoordinate());
 			messages.add(newState);

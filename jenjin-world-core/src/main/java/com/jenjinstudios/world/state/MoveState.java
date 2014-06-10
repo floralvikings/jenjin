@@ -3,9 +3,7 @@ package com.jenjinstudios.world.state;
 import com.jenjinstudios.world.math.Vector2D;
 
 /**
- * The {@code MovementState} class is used to establish what an {@code Actor}'s movement state is.  The {@code
- * stepsUntilChange} field indicates the number of steps (updates) the Actor should take before it changes to the {@code
- * MovementDirection} specified.
+ * The {@code MovementState} class is used to establish what an {@code Actor}'s movement state is.
  * @author Caleb Brinkman
  */
 public class MoveState
@@ -28,8 +26,6 @@ public class MoveState
 	public static final double LEFT = Math.PI * 0.5;
 	/** The front-left state. */
 	public static final double FRONT_LEFT = Math.PI * 0.25;
-	/** The number of steps in the last move. */
-	public final int stepsUntilChange;
 	/** The relativeAngle of movement. */
 	public final double relativeAngle;
 	/** The angle of movement. */
@@ -37,27 +33,26 @@ public class MoveState
 	/** The position at which this change took place. */
 	public final Vector2D position;
 	/** The time at which the change took place. */
-	public final long time;
+	public final long timeOfChange;
 
 	/**
 	 * Construct a new MoveState.
 	 * @param relativeAngle The relativeAngle of movement.
 	 * @param absoluteAngle The angle of movement.
 	 * @param position The position at which the state change took place.
-	 * @param time The time in nanoseconds at which the state change took place.
+	 * @param timeOfChange The time in nanoseconds at which the state change took place.
 	 */
-	public MoveState(double relativeAngle, double absoluteAngle, Vector2D position, long time) {
+	public MoveState(double relativeAngle, double absoluteAngle, Vector2D position, long timeOfChange) {
 		this.relativeAngle = relativeAngle;
-		this.stepsUntilChange = 0;
 		this.absoluteAngle = absoluteAngle;
 		this.position = position;
-		this.time = time;
+		this.timeOfChange = timeOfChange;
 
 	}
 
 	@Override
 	public String toString() {
-		return "RelAng: " + relativeAngleString() + ", AbsAng: " + absoluteAngle + " Steps: " + stepsUntilChange;
+		return "RelAng: " + relativeAngleString() + ", AbsAng: " + absoluteAngle;
 	}
 
 	/**

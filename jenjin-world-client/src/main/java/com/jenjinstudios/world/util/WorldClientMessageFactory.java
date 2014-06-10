@@ -32,7 +32,7 @@ public class WorldClientMessageFactory extends ClientMessageFactory
 		Message stateChangeRequest = new Message(worldClient, "StateChangeRequest");
 		stateChangeRequest.setArgument("relativeAngle", moveState.relativeAngle);
 		stateChangeRequest.setArgument("absoluteAngle", moveState.absoluteAngle);
-		stateChangeRequest.setArgument("timeOfChange", moveState.time);
+		stateChangeRequest.setArgument("timeOfChange", moveState.timeOfChange);
 		stateChangeRequest.setArgument("xCoordinate", moveState.position.getXCoordinate());
 		stateChangeRequest.setArgument("yCoordinate", moveState.position.getYCoordinate());
 		return stateChangeRequest;
