@@ -1,7 +1,7 @@
 package com.jenjinstudios.world.math;
 
 import org.testng.Assert;
-import org.testng.annotations.*;
+import org.testng.annotations.Test;
 
 /**
  * Test the coordinates class.
@@ -69,6 +69,48 @@ public class Vector2DTest
 		stepped = original.getVectorInDirection(1, backLeft);
 		Assert.assertEquals(expectedX, stepped.getXCoordinate(), 0.1);
 		Assert.assertEquals(expectedY, stepped.getYCoordinate(), 0.1);
+	}
+
+	@Test
+	public void testEquals() {
+		Vector2D vector1 = new Vector2D(10, 10);
+		Vector2D vector2 = new Vector2D(10, 10);
+		Assert.assertTrue(vector1.equals(vector2));
+	}
+
+	@Test
+	public void testEqualsNonVector() {
+		Vector2D vector1 = new Vector2D(10, 10);
+		String foo = "bar";
+		//noinspection EqualsBetweenInconvertibleTypes
+		Assert.assertFalse(vector1.equals(foo));
+	}
+
+	@Test
+	public void testGetAngleToVector() {
+		Vector2D vector1 = new Vector2D(0, 0);
+		Vector2D vector2 = new Vector2D(5, 5);
+		double angle = vector1.getAngleToVector(vector2);
+		double expectedAngle = Math.PI * .25;
+		Assert.assertEquals(angle, expectedAngle);
+	}
+
+	@Test
+	public void testGetAngleToEqualVector() {
+		Vector2D vector1 = new Vector2D(10, 10);
+		Vector2D vector2 = new Vector2D(10, 10);
+		double angle = vector1.getAngleToVector(vector2);
+		double expectedAngle = Double.NEGATIVE_INFINITY;
+		Assert.assertEquals(angle, expectedAngle);
+	}
+
+	@Test
+	public void testGetDistanceToVector() {
+		Vector2D vector1 = new Vector2D(0, 0);
+		Vector2D vector2 = new Vector2D(0, 5);
+		double distance = vector1.getDistanceToVector(vector2);
+		double expectedDistance = 5;
+		Assert.assertEquals(distance, expectedDistance);
 	}
 
 }
