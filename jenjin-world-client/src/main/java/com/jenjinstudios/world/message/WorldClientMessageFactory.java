@@ -1,6 +1,7 @@
 package com.jenjinstudios.world.message;
 
 import com.jenjinstudios.io.Message;
+import com.jenjinstudios.io.MessageRegistry;
 import com.jenjinstudios.message.ClientMessageFactory;
 import com.jenjinstudios.world.WorldClient;
 import com.jenjinstudios.world.state.MoveState;
@@ -18,8 +19,8 @@ public class WorldClientMessageFactory extends ClientMessageFactory
 	 * Construct a new WorldClientMessageFactory working for the given client.
 	 * @param client The client.
 	 */
-	public WorldClientMessageFactory(WorldClient client) {
-		super(client);
+	public WorldClientMessageFactory(WorldClient client, MessageRegistry messageRegistry) {
+		super(client, messageRegistry);
 		worldClient = client;
 	}
 

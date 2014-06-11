@@ -75,7 +75,7 @@ public class WorldClient extends AuthClient
 			this.worldFileReader = new WorldFileReader(worldFile);
 			this.world = worldFileReader.read();
 		}
-		this.messageFactory = new WorldClientMessageFactory(this);
+		this.messageFactory = new WorldClientMessageFactory(this, getMessageRegistry());
 	}
 
 	@Override

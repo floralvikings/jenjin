@@ -1,6 +1,7 @@
 package com.jenjinstudios.message;
 
 import com.jenjinstudios.io.Message;
+import com.jenjinstudios.io.MessageRegistry;
 import com.jenjinstudios.net.Client;
 import com.jenjinstudios.util.MessageFactory;
 
@@ -19,8 +20,8 @@ public class ClientMessageFactory extends MessageFactory
 	 * Construct a new ClientMessageFactory.
 	 * @param client The client for which the message factory works.
 	 */
-	public ClientMessageFactory(Client client) {
-		super(client);
+	public ClientMessageFactory(Client client, MessageRegistry messageRegistry) {
+		super(client, messageRegistry);
 		this.client = client;
 	}
 

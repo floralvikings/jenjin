@@ -43,11 +43,12 @@ public abstract class Connection extends Thread
 	private MessageRegistry messageRegistry;
 
 	/** Construct a new Connection. */
-	protected Connection() {
+	protected Connection(MessageRegistry messageRegistry) {
+		this.messageRegistry = messageRegistry;
 		outgoingMessages = new LinkedList<>();
 		pingTimes = new ArrayList<>();
 		syncedTasks = new LinkedList<>();
-		messageFactory = new MessageFactory(this);
+		messageFactory = new MessageFactory(this, messageRegistry);
 	}
 
 	/**
@@ -122,12 +123,6 @@ public abstract class Connection extends Thread
 	 * @return The MessageRegistry for this Connection.
 	 */
 	public MessageRegistry getMessageRegistry() { return messageRegistry; }
-
-	/**
-	 * Set the MessageRegistry for this Connection.
-	 * @param messageRegistry The MessageRegistry for this Connection.
-	 */
-	protected void setMessageRegistry(MessageRegistry messageRegistry) { this.messageRegistry = messageRegistry; }
 
 	/** Send all messages in the outgoing queue.  This method should only be called from the client update thread. */
 	public void sendAllMessages() {

@@ -40,12 +40,12 @@ public class ClientHandler extends Connection
 	 * @throws IOException If the socket is unable to connect.
 	 */
 	public ClientHandler(AuthServer<? extends ClientHandler> s, Socket sk, MessageRegistry messageRegistry) throws IOException {
+		super(messageRegistry);
 		setName("ClientHandler: " + sk.getInetAddress());
-		setMessageRegistry(messageRegistry);
 		server = s;
 		super.setSocket(sk);
 
-		this.messageFactory = new ServerMessageFactory(this);
+		this.messageFactory = new ServerMessageFactory(this, getMessageRegistry());
 	}
 
 	/**

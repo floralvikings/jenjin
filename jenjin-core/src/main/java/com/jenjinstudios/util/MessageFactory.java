@@ -1,6 +1,7 @@
 package com.jenjinstudios.util;
 
 import com.jenjinstudios.io.Message;
+import com.jenjinstudios.io.MessageRegistry;
 import com.jenjinstudios.net.Connection;
 
 /**
@@ -13,12 +14,17 @@ public class MessageFactory
 	 * The connection for which this factory is working.
 	 */
 	private final Connection connection;
+	private final MessageRegistry messageRegistry;
 
 	/**
 	 * Construct a new MessageFactory working for the given connection.
 	 * @param conn The connection for which this message factory works.
+	 * @param messageRegistry The message registery for this factory.
 	 */
-	public MessageFactory(Connection conn) { this.connection = conn; }
+	public MessageFactory(Connection conn, MessageRegistry messageRegistry) {
+		this.connection = conn;
+		this.messageRegistry = messageRegistry;
+	}
 
 	/**
 	 * Generate a "ping" request.

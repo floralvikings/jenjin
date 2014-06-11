@@ -244,4 +244,8 @@ public class MessageRegistry
 		}
 	}
 
+	public Message getMessage(String name) {
+		// TODO Fix this nonsense.
+		return new Message(null, name);
+	}
 }

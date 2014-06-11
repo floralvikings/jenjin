@@ -2,6 +2,7 @@ package com.jenjinstudios.message;
 
 import com.jenjinstudios.io.Message;
 import com.jenjinstudios.io.MessageInputStream;
+import com.jenjinstudios.io.MessageRegistry;
 import com.jenjinstudios.net.ClientHandler;
 import com.jenjinstudios.util.MessageFactory;
 
@@ -30,8 +31,8 @@ public class ServerMessageFactory extends MessageFactory
 	 * Construct a new ServerMessageFactory.
 	 * @param conn The ClientHandler for which this message factory works.
 	 */
-	public ServerMessageFactory(ClientHandler conn) {
-		super(conn);
+	public ServerMessageFactory(ClientHandler conn, MessageRegistry messageRegistry) {
+		super(conn, messageRegistry);
 		this.clientHandler = conn;
 	}
 

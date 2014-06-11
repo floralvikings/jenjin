@@ -1,6 +1,7 @@
 package com.jenjinstudios.world.message;
 
 import com.jenjinstudios.io.Message;
+import com.jenjinstudios.io.MessageRegistry;
 import com.jenjinstudios.message.ServerMessageFactory;
 import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.WorldClientHandler;
@@ -24,8 +25,8 @@ public class WorldServerMessageFactory extends ServerMessageFactory
 	 * Construct a new WorldServerMessageFactory.
 	 * @param conn The WorldClientHandler for which this message factory works.
 	 */
-	public WorldServerMessageFactory(WorldClientHandler conn) {
-		super(conn);
+	public WorldServerMessageFactory(WorldClientHandler conn, MessageRegistry messageRegistry) {
+		super(conn, messageRegistry);
 		this.worldClientHandler = conn;
 	}
 

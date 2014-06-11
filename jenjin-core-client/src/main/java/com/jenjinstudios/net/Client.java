@@ -47,10 +47,10 @@ public class Client extends Connection
 	 * @param port The port over which to connect to the server.
 	 */
 	protected Client(String address, int port) {
+		super(new MessageRegistry(false));
 		ADDRESS = address;
 		PORT = port;
 		repeatedSyncedTasks = new LinkedList<>();
-		setMessageRegistry(new MessageRegistry(false));
 		try
 		{
 			KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
@@ -62,7 +62,7 @@ public class Client extends Connection
 		{
 			LOGGER.log(Level.SEVERE, "Unable to create RSA key pair!", e);
 		}
-		this.messageFactory = new ClientMessageFactory(this);
+		this.messageFactory = new ClientMessageFactory(this, getMessageRegistry());
 	}
 
 	/**

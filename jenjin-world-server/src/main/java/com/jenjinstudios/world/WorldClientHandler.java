@@ -38,7 +38,7 @@ public class WorldClientHandler extends ClientHandler
 	public WorldClientHandler(WorldServer s, Socket sk, MessageRegistry messageRegistry) throws IOException {
 		super(s, sk, messageRegistry);
 		server = s;
-		this.messageFactory = new WorldServerMessageFactory(this);
+		this.messageFactory = new WorldServerMessageFactory(this, getMessageRegistry());
 	}
 
 	/**
