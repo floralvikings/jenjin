@@ -1,6 +1,6 @@
 package com.jenjinstudios.io;
 
-import com.jenjinstudios.util.FileUtil;
+import com.jenjinstudios.util.Files;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -54,9 +54,9 @@ public class MessageRegistry
 		{
 			File file = new File(fileName);
 			if (file.isDirectory() || !file.exists()) { continue; }
-			try(
-				FileInputStream inputStream = new FileInputStream(file);
-				ZipInputStream zip = new ZipInputStream(inputStream))
+			try (
+					FileInputStream inputStream = new FileInputStream(file);
+					ZipInputStream zip = new ZipInputStream(inputStream))
 			{
 				ZipEntry ze;
 				while ((ze = zip.getNextEntry()) != null)
@@ -80,7 +80,7 @@ public class MessageRegistry
 	private static ArrayList<File> findMessageFiles() {
 		String rootDir = Paths.get("").toAbsolutePath().toString() + File.separator;
 		File rootFile = new File(rootDir);
-		return FileUtil.findFilesWithName(rootFile, messageFileName);
+		return Files.search(rootFile, messageFileName);
 	}
 
 	/**
@@ -190,7 +190,7 @@ public class MessageRegistry
 				LOGGER.log(Level.INFO, "Unable to parse XML file", ex);
 			}
 		}
-		for(String disabledMessageName : disabled)
+		for (String disabledMessageName : disabled)
 		{
 			disableExecutableMessage(disabledMessageName);
 		}

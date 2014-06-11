@@ -3,7 +3,7 @@ package com.jenjinstudios.net;
 import com.jenjinstudios.io.Message;
 import com.jenjinstudios.io.MessageRegistry;
 import com.jenjinstudios.message.ClientExecutableMessage;
-import com.jenjinstudios.util.ClientMessageFactory;
+import com.jenjinstudios.message.ClientMessageFactory;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -132,8 +132,8 @@ public class Client extends Connection
 	}
 
 	/**
-	 * Attempt to connect to the server at {@code ADDRESS} over {@code PORT}  This method must be called <i>before</i> the
-	 * client thread is started.
+	 * Attempt to connect to the server at {@code ADDRESS} over {@code PORT}  This method must be called <i>before</i>
+	 * the client thread is started.
 	 */
 	private void connect() {
 		if (isConnected()) // No need to connect if we're already connected.
@@ -149,8 +149,8 @@ public class Client extends Connection
 	}
 
 	/**
-	 * Take care of all the necessary initialization messages between client and server.  These include things like RSA key
-	 * exchanges and latency checks.
+	 * Take care of all the necessary initialization messages between client and server.  These include things like RSA
+	 * key exchanges and latency checks.
 	 * @return Whether the init was successful.
 	 */
 	private boolean doPostConnectInit() {

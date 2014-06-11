@@ -1,8 +1,9 @@
-package com.jenjinstudios.util;
+package com.jenjinstudios.message;
 
 import com.jenjinstudios.io.Message;
 import com.jenjinstudios.io.MessageInputStream;
 import com.jenjinstudios.net.ClientHandler;
+import com.jenjinstudios.util.MessageFactory;
 
 import javax.crypto.*;
 import java.security.InvalidKeyException;
@@ -14,8 +15,10 @@ import java.security.spec.X509EncodedKeySpec;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/** Used to generate messages for the Jenjin core server.
- * @author Caleb Brinkman */
+/**
+ * Used to generate messages for the Jenjin core server.
+ * @author Caleb Brinkman
+ */
 public class ServerMessageFactory extends MessageFactory
 {
 	/** The logger used by this class. */
@@ -44,7 +47,8 @@ public class ServerMessageFactory extends MessageFactory
 	}
 
 	/**
-	 * Generate a FirstConnectResponse to be sent to the client to indicate a successful connection has been established.
+	 * Generate a FirstConnectResponse to be sent to the client to indicate a successful connection has been
+	 * established.
 	 * @param ups The Updates Per Second being run by the server.
 	 * @return The FirstConnectResponse.
 	 */
@@ -62,7 +66,8 @@ public class ServerMessageFactory extends MessageFactory
 	public Message generateAESKeyMessage(byte[] publicKeyBytes) {
 		Message aesMessage = new Message(clientHandler, "AESKeyMessage");
 		byte[] encryptedAESKey = MessageInputStream.NO_KEY;
-		try {
+		try
+		{
 			// Generate an AES key.
 			KeyGenerator keyGenerator = KeyGenerator.getInstance("AES");
 			keyGenerator.init(128);
@@ -75,15 +80,20 @@ public class ServerMessageFactory extends MessageFactory
 			Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
 			cipher.init(Cipher.ENCRYPT_MODE, publicKey);
 			encryptedAESKey = cipher.doFinal(aesKeyBytes);
-		} catch (NoSuchAlgorithmException e) {
+		} catch (NoSuchAlgorithmException e)
+		{
 			LOGGER.log(Level.SEVERE, "Unable to create AES key!", e);
-		} catch (InvalidKeySpecException e) {
+		} catch (InvalidKeySpecException e)
+		{
 			LOGGER.log(Level.SEVERE, "Unable to create public key from received bytes!", e);
-		} catch (NoSuchPaddingException | BadPaddingException e) {
+		} catch (NoSuchPaddingException | BadPaddingException e)
+		{
 			LOGGER.log(Level.SEVERE, "Incorrect padding specified in RSA encryption?!?", e);
-		} catch (InvalidKeyException e) {
+		} catch (InvalidKeyException e)
+		{
 			LOGGER.log(Level.SEVERE, "Unable to encrypt RSA, invalid key received!", e);
-		} catch (IllegalBlockSizeException e) {
+		} catch (IllegalBlockSizeException e)
+		{
 			LOGGER.log(Level.SEVERE, "Illegal block size?!?", e);
 		}
 

@@ -4,7 +4,7 @@ import com.jenjinstudios.io.Message;
 import com.jenjinstudios.io.MessageRegistry;
 import com.jenjinstudios.net.ClientHandler;
 import com.jenjinstudios.world.state.MoveState;
-import com.jenjinstudios.world.util.WorldServerMessageFactory;
+import com.jenjinstudios.world.message.WorldServerMessageFactory;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -64,7 +64,8 @@ public class WorldClientHandler extends ClientHandler
 	public void update() {
 		super.update();
 
-		if (!hasSentActorStepMessage) {
+		if (!hasSentActorStepMessage)
+		{
 			queueMessage(getMessageFactory().generateActorMoveSpeedMessage());
 			hasSentActorStepMessage = true;
 		}
@@ -89,7 +90,8 @@ public class WorldClientHandler extends ClientHandler
 
 	/** Generate and queue messages for newly visible objects. */
 	private void queueNewlyVisibleMessages() {
-		for (WorldObject object : player.getNewlyVisibleObjects()) {
+		for (WorldObject object : player.getNewlyVisibleObjects())
+		{
 			Message newlyVisibleMessage;
 			newlyVisibleMessage = getMessageFactory().generateNewlyVisibleMessage(object);
 			queueMessage(newlyVisibleMessage);
@@ -98,7 +100,8 @@ public class WorldClientHandler extends ClientHandler
 
 	/** Generate and queue messages for newly invisible objects. */
 	private void queueNewlyInvisibleMessages() {
-		for (WorldObject object : player.getNewlyInvisibleObjects()) {
+		for (WorldObject object : player.getNewlyInvisibleObjects())
+		{
 			Message newlyInvisibleMessage = getMessageFactory().generateNewlyInvisibleMessage(object);
 			queueMessage(newlyInvisibleMessage);
 		}
@@ -106,12 +109,14 @@ public class WorldClientHandler extends ClientHandler
 
 	/** Generate and queue messages for actors with changed states. */
 	private void queueStateChangeMessages() {
-		for (WorldObject object : player.getVisibleObjects().values()) {
+		for (WorldObject object : player.getVisibleObjects().values())
+		{
 			Actor changedActor;
-			if (object instanceof Actor) {
+			if (object instanceof Actor)
+			{
 				changedActor = (Actor) object;
 				List<Message> newState = getMessageFactory().generateChangeStateMessage(changedActor);
-				for(Message m : newState){ queueMessage(m);}
+				for (Message m : newState) { queueMessage(m);}
 			}
 		}
 	}

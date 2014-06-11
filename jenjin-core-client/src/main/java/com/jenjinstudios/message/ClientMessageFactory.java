@@ -1,7 +1,8 @@
-package com.jenjinstudios.util;
+package com.jenjinstudios.message;
 
 import com.jenjinstudios.io.Message;
 import com.jenjinstudios.net.Client;
+import com.jenjinstudios.util.MessageFactory;
 
 import java.security.PublicKey;
 

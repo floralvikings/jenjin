@@ -4,7 +4,7 @@ import com.jenjinstudios.io.Message;
 import com.jenjinstudios.net.AuthClient;
 import com.jenjinstudios.world.io.WorldFileReader;
 import com.jenjinstudios.world.state.MoveState;
-import com.jenjinstudios.world.util.WorldClientMessageFactory;
+import com.jenjinstudios.world.message.WorldClientMessageFactory;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -51,8 +51,8 @@ public class WorldClient extends AuthClient
 	private byte[] serverWorldFileBytes;
 
 	/**
-	 * Construct a client connecting to the given address over the given port.  This client <i>must</i> have a username and
-	 * password.
+	 * Construct a client connecting to the given address over the given port.  This client <i>must</i> have a username
+	 * and password.
 	 * @param worldFile The file containing the world information.
 	 * @param address The address to which this client will attempt to connect.
 	 * @param port The port over which this client will attempt to connect.
@@ -186,7 +186,7 @@ public class WorldClient extends AuthClient
 			{
 				throw new IOException("Unable to create new world file!");
 			}
-			try(FileOutputStream worldOut = new FileOutputStream(worldFile))
+			try (FileOutputStream worldOut = new FileOutputStream(worldFile))
 			{
 				worldOut.write(serverWorldFileBytes);
 				worldOut.close();

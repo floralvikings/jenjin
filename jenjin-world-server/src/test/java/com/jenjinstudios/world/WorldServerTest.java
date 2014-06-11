@@ -1,6 +1,6 @@
 package com.jenjinstudios.world;
 
-import com.jenjinstudios.util.FileUtil;
+import com.jenjinstudios.util.Files;
 import com.jenjinstudios.world.io.WorldFileReader;
 import com.jenjinstudios.world.math.Vector2D;
 import com.jenjinstudios.world.sql.WorldSQLHandler;
@@ -179,7 +179,7 @@ public class WorldServerTest
 		server.shutdown();
 
 		File resourcesDir = new File("resources/");
-		FileUtil.deleteRecursively(resourcesDir);
+		Files.deleteRecursively(resourcesDir);
 	}
 
 	/**

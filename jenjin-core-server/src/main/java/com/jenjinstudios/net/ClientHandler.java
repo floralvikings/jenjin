@@ -4,7 +4,7 @@ import com.jenjinstudios.io.ExecutableMessage;
 import com.jenjinstudios.io.Message;
 import com.jenjinstudios.io.MessageRegistry;
 import com.jenjinstudios.message.ServerExecutableMessage;
-import com.jenjinstudios.util.ServerMessageFactory;
+import com.jenjinstudios.message.ServerMessageFactory;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -52,7 +52,7 @@ public class ClientHandler extends Connection
 	 * Send a connection acknowledgement response.
 	 */
 	public void sendFirstConnectResponse() {
-		if(firstConnectResponseSent) return;
+		if (firstConnectResponseSent) return;
 		Message firstConnectResponse = getMessageFactory().generateFirstConnectResponse(getServer().UPS);
 		queueMessage(firstConnectResponse);
 		firstConnectResponseSent = true;
@@ -170,9 +170,9 @@ public class ClientHandler extends Connection
 	}
 
 	/**
-	 * Immediately force send a message. This method should only be used if a message is <i>extremely</i> time dependent,
-	 * otherwise messages should be queued using the {@code queueMessage} method, because this method may cause
-	 * synchronization issues.
+	 * Immediately force send a message. This method should only be used if a message is <i>extremely</i> time
+	 * dependent, otherwise messages should be queued using the {@code queueMessage} method, because this method may
+	 * cause synchronization issues.
 	 * @param message The message to send.
 	 * @throws IOException If there is an IOException.
 	 */
