@@ -3,7 +3,6 @@ package com.jenjinstudios.world.message;
 import com.jenjinstudios.io.Message;
 import com.jenjinstudios.io.MessageRegistry;
 import com.jenjinstudios.message.ClientMessageFactory;
-import com.jenjinstudios.world.WorldClient;
 import com.jenjinstudios.world.state.MoveState;
 
 /**
@@ -12,16 +11,12 @@ import com.jenjinstudios.world.state.MoveState;
  */
 public class WorldClientMessageFactory extends ClientMessageFactory
 {
-	/** The client for which this factory generates messages. */
-	private final WorldClient worldClient;
 
 	/**
 	 * Construct a new WorldClientMessageFactory working for the given client.
-	 * @param client The client.
 	 */
-	public WorldClientMessageFactory(WorldClient client, MessageRegistry messageRegistry) {
-		super(client, messageRegistry);
-		worldClient = client;
+	public WorldClientMessageFactory(MessageRegistry messageRegistry) {
+		super(messageRegistry);
 	}
 
 	/**
@@ -30,7 +25,7 @@ public class WorldClientMessageFactory extends ClientMessageFactory
 	 * @return The generated message.
 	 */
 	public Message generateStateChangeRequest(MoveState moveState) {
-		Message stateChangeRequest = new Message(worldClient, "StateChangeRequest");
+		Message stateChangeRequest = new Message("StateChangeRequest", getMessageRegistry());
 		stateChangeRequest.setArgument("relativeAngle", moveState.relativeAngle);
 		stateChangeRequest.setArgument("absoluteAngle", moveState.absoluteAngle);
 		stateChangeRequest.setArgument("timeOfChange", moveState.timeOfChange);
@@ -46,7 +41,7 @@ public class WorldClientMessageFactory extends ClientMessageFactory
 	 * @return The LoginRequest message.
 	 */
 	public Message generateLoginRequest(String username, String password) {
-		Message loginRequest = new Message(worldClient, "WorldLoginRequest");
+		Message loginRequest = new Message("WorldLoginRequest", getMessageRegistry());
 		loginRequest.setArgument("username", username);
 		loginRequest.setArgument("password", password);
 		return loginRequest;
@@ -56,17 +51,17 @@ public class WorldClientMessageFactory extends ClientMessageFactory
 	 * Generate a world logout request.
 	 * @return The world logout request.
 	 */
-	public Message generateWorldLogoutRequest() {return new Message(worldClient, "WorldLogoutRequest");}
+	public Message generateWorldLogoutRequest() {return new Message("WorldLogoutRequest", getMessageRegistry());}
 
 	/**
 	 * Generate a world file request.
 	 * @return The file request.
 	 */
-	public Message generateWorldFileRequest() {return new Message(worldClient, "WorldFileRequest");}
+	public Message generateWorldFileRequest() {return new Message("WorldFileRequest", getMessageRegistry());}
 
 	/**
 	 * Generate a request for the checksum of the world file.
 	 * @return The request for the checksum.
 	 */
-	public Message generateWorldChecksumRequest() {return new Message(worldClient, "WorldChecksumRequest");}
+	public Message generateWorldChecksumRequest() {return new Message("WorldChecksumRequest", getMessageRegistry());}
 }

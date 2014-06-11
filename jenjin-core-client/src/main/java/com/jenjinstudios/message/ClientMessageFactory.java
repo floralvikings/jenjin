@@ -2,7 +2,6 @@ package com.jenjinstudios.message;
 
 import com.jenjinstudios.io.Message;
 import com.jenjinstudios.io.MessageRegistry;
-import com.jenjinstudios.net.Client;
 import com.jenjinstudios.util.MessageFactory;
 
 import java.security.PublicKey;
@@ -13,16 +12,12 @@ import java.security.PublicKey;
  */
 public class ClientMessageFactory extends MessageFactory
 {
-	/** The client for which this message factory works. */
-	private final Client client;
 
 	/**
 	 * Construct a new ClientMessageFactory.
-	 * @param client The client for which the message factory works.
 	 */
-	public ClientMessageFactory(Client client, MessageRegistry messageRegistry) {
-		super(client, messageRegistry);
-		this.client = client;
+	public ClientMessageFactory(MessageRegistry messageRegistry) {
+		super(messageRegistry);
 	}
 
 	/**
@@ -31,7 +26,7 @@ public class ClientMessageFactory extends MessageFactory
 	 * @return The PublicKeyMessage.
 	 */
 	public Message generatePublicKeyMessage(PublicKey publicKey) {
-		Message publicKeyMessage = new Message(client, "PublicKeyMessage");
+		Message publicKeyMessage = new Message("PublicKeyMessage", getMessageRegistry());
 		publicKeyMessage.setArgument("key", publicKey.getEncoded());
 		return publicKeyMessage;
 	}
@@ -40,7 +35,7 @@ public class ClientMessageFactory extends MessageFactory
 	 * Generate a LogoutRequest message.
 	 * @return The LogoutRequestMessage.
 	 */
-	public Message generateLogoutRequest() {return new Message(client, "LogoutRequest");}
+	public Message generateLogoutRequest() {return new Message("LogoutRequest", getMessageRegistry());}
 
 	/**
 	 * Generate a LoginRequest message.  This message will be encrypted if possible.
@@ -49,7 +44,7 @@ public class ClientMessageFactory extends MessageFactory
 	 * @return The LoginRequest message.
 	 */
 	public Message generateLoginRequest(String username, String password) {// Create the login request.
-		Message loginRequest = new Message(client, "LoginRequest");
+		Message loginRequest = new Message("LoginRequest", getMessageRegistry());
 		loginRequest.setArgument("username", username);
 		loginRequest.setArgument("password", password);
 		return loginRequest;

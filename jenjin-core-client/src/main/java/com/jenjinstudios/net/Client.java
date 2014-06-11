@@ -62,7 +62,7 @@ public class Client extends Connection
 		{
 			LOGGER.log(Level.SEVERE, "Unable to create RSA key pair!", e);
 		}
-		this.messageFactory = new ClientMessageFactory(this, getMessageRegistry());
+		this.messageFactory = new ClientMessageFactory(getMessageRegistry());
 	}
 
 	/**

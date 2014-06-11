@@ -48,7 +48,7 @@ public abstract class Connection extends Thread
 		outgoingMessages = new LinkedList<>();
 		pingTimes = new ArrayList<>();
 		syncedTasks = new LinkedList<>();
-		messageFactory = new MessageFactory(this, messageRegistry);
+		messageFactory = new MessageFactory(messageRegistry);
 	}
 
 	/**
@@ -295,8 +295,8 @@ public abstract class Connection extends Thread
 	}
 
 	/**
-	 * Get the message factory working for this connection.  This should be overridden in any classes that use a
-	 * custom message factory (and they all should).
+	 * Get the message factory working for this connection.  This should be overridden in any classes that use a custom
+	 * message factory (and they all should).
 	 * @return The MessageFactory working for this connection.
 	 */
 	public abstract MessageFactory getMessageFactory();

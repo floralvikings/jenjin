@@ -2,7 +2,6 @@ package com.jenjinstudios.util;
 
 import com.jenjinstudios.io.Message;
 import com.jenjinstudios.io.MessageRegistry;
-import com.jenjinstudios.net.Connection;
 
 /**
  * Used to generate messages to be passed between client and server.
@@ -10,19 +9,13 @@ import com.jenjinstudios.net.Connection;
  */
 public class MessageFactory
 {
-	/**
-	 * The connection for which this factory is working.
-	 */
-	private final Connection connection;
 	private final MessageRegistry messageRegistry;
 
 	/**
 	 * Construct a new MessageFactory working for the given connection.
-	 * @param conn The connection for which this message factory works.
-	 * @param messageRegistry The message registery for this factory.
+	 * @param messageRegistry The message registry for this factory.
 	 */
-	public MessageFactory(Connection conn, MessageRegistry messageRegistry) {
-		this.connection = conn;
+	public MessageFactory(MessageRegistry messageRegistry) {
 		this.messageRegistry = messageRegistry;
 	}
 
@@ -31,7 +24,7 @@ public class MessageFactory
 	 * @return A "PintRequest" message.
 	 */
 	public Message generatePingRequest() {
-		Message pingRequest = new Message(getConnection(), "PingRequest");
+		Message pingRequest = new Message("PingRequest", messageRegistry);
 		pingRequest.setArgument("requestTimeNanos", System.nanoTime());
 		return pingRequest;
 	}
@@ -42,15 +35,12 @@ public class MessageFactory
 	 * @return The "InvalidMessage" message.
 	 */
 	public Message generateInvalidMessage(Message message) {
-		Message invalid = new Message(getConnection(), "InvalidMessage");
+		Message invalid = new Message("InvalidMessage", messageRegistry);
 		invalid.setArgument("messageName", message.name);
 		invalid.setArgument("messageID", message.getID());
 		return invalid;
 	}
 
-	/**
-	 * Get the connection for which this MessageFactory works.
-	 * @return The connection for which this MessageFactory works.
-	 */
-	protected Connection getConnection() { return connection; }
+	public MessageRegistry getMessageRegistry() { return messageRegistry; }
+
 }
