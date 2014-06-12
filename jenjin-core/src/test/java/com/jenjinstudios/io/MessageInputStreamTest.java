@@ -85,6 +85,8 @@ public class MessageInputStreamTest
 		String encryptedString = DatatypeConverter.printHexBinary(
 				aesEncryptCipher.doFinal(sBytes));
 
+		Assert.assertNotEquals("FooBar", encryptedString);
+
 		mock.mockReadBoolean(true);
 		mock.mockReadUtf(encryptedString);
 
