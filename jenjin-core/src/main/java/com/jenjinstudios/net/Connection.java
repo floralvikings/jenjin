@@ -58,8 +58,8 @@ public abstract class Connection extends Thread
 	 */
 	protected void setSocket(Socket socket) throws IOException {
 		this.socket = socket;
-		setOutputStream(new MessageOutputStream(this, socket.getOutputStream()));
-		setInputStream(new MessageInputStream(this, socket.getInputStream()));
+		setOutputStream(new MessageOutputStream(messageRegistry, socket.getOutputStream()));
+		setInputStream(new MessageInputStream(messageRegistry, socket.getInputStream()));
 	}
 
 	/** Send a ping request. */
