@@ -56,6 +56,7 @@ public class MessageInputStream
 			return new Message(messageRegistry, id, args);
 		} catch (Exception e)
 		{
+			// TODO Improve this error handling
 			return null;
 			// This means the stream has closed, or the an invalid message was found.
 		}

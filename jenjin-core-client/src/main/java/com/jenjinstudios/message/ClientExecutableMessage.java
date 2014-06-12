@@ -4,6 +4,7 @@ import com.jenjinstudios.io.ExecutableMessage;
 import com.jenjinstudios.io.Message;
 import com.jenjinstudios.io.MessageType;
 import com.jenjinstudios.net.Client;
+import com.jenjinstudios.net.Connection;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -56,7 +57,10 @@ public abstract class ClientExecutableMessage extends ExecutableMessage
 			for (Constructor<? extends ExecutableMessage> constructor : execConstructors)
 			{
 				// Check to see if the first argument is a Client
-				if (Client.class.isAssignableFrom(constructor.getParameterTypes()[0]))
+				Class<?> firstParam = constructor.getParameterTypes()[0];
+				// Allow standard "Connection" class - for ExecutableMessages applicable to both client and server.
+				if (Client.class.isAssignableFrom(firstParam) ||
+						firstParam.getName().equals(Connection.class.getName()))
 					execConstructor = constructor;
 			}
 			if (execConstructor != null)

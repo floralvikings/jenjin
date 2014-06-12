@@ -2,17 +2,6 @@
 
 <base_messages xmlns="" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation=" ">
 
-    <message name="DisabledMessage" id="-2">
-        <executable language="java" side="server">com.jenjinstudios.message.DisabledExecutableMessage</executable>
-    </message>
-
-    <message name="InvalidMessage" id="-1">
-        <argument type="String" name="messageName" />
-        <argument type="short" name="messageID" />
-        <executable language="java" side="client">com.jenjinstudios.message.ClientExecutableInvalidMessage</executable>
-        <executable language="java" side="server">com.jenjinstudios.message.ServerExecutableInvalidMessage</executable>
-    </message>
-
     <message name="FirstConnectResponse" id="0">
         <argument type="int" name="ups" />
     </message>
