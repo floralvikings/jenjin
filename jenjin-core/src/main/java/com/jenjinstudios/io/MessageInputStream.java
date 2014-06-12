@@ -57,7 +57,7 @@ public class MessageInputStream
 		} catch (Exception e)
 		{
 			// TODO Improve this error handling
-			LOGGER.log(Level.SEVERE, "Unable to parse message from stream: ", e);
+			LOGGER.log(Level.SEVERE, "Unable to parse message from stream: {0}", e.getMessage());
 			return null;
 			// This means the stream has closed, or the an invalid message was found.
 		}
