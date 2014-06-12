@@ -51,7 +51,7 @@ public class WorldServerMessageFactory extends ServerMessageFactory
 	 */
 	public Message generateActorVisibleMessage(Actor newlyVisible) {
 		Message newlyVisibleMessage;
-		newlyVisibleMessage = new Message("ActorVisibleMessage", getMessageRegistry());
+		newlyVisibleMessage = getMessageRegistry().createMessage("ActorVisibleMessage");
 		newlyVisibleMessage.setArgument("name", newlyVisible.getName());
 		newlyVisibleMessage.setArgument("id", newlyVisible.getId());
 		newlyVisibleMessage.setArgument("resourceID", newlyVisible.getResourceID());
@@ -70,7 +70,7 @@ public class WorldServerMessageFactory extends ServerMessageFactory
 	 */
 	public Message generateObjectVisibleMessage(WorldObject object) {
 		Message newlyVisibleMessage;
-		newlyVisibleMessage = new Message("ObjectVisibleMessage", getMessageRegistry());
+		newlyVisibleMessage = getMessageRegistry().createMessage("ObjectVisibleMessage");
 		newlyVisibleMessage.setArgument("name", object.getName());
 		newlyVisibleMessage.setArgument("id", object.getId());
 		newlyVisibleMessage.setArgument("resourceID", object.getResourceID());
@@ -88,7 +88,7 @@ public class WorldServerMessageFactory extends ServerMessageFactory
 		List<Message> messages = new LinkedList<>();
 		for (MoveState m : changedActor.getStateChanges())
 		{
-			Message newState = new Message("StateChangeMessage", getMessageRegistry());
+			Message newState = getMessageRegistry().createMessage("StateChangeMessage");
 			newState.setArgument("id", changedActor.getId());
 			newState.setArgument("relativeAngle", m.relativeAngle);
 			newState.setArgument("absoluteAngle", m.absoluteAngle);
@@ -107,7 +107,7 @@ public class WorldServerMessageFactory extends ServerMessageFactory
 	 * @return A forced state message for the actor's state at the beginning of this server "tick".
 	 */
 	public Message generateForcedStateMessage(MoveState forcedState, WorldServer server) {
-		Message forcedStateMessage = new Message("ForceStateMessage", getMessageRegistry());
+		Message forcedStateMessage = getMessageRegistry().createMessage("ForceStateMessage");
 		forcedStateMessage.setArgument("relativeAngle", forcedState.relativeAngle);
 		forcedStateMessage.setArgument("absoluteAngle", forcedState.absoluteAngle);
 		forcedStateMessage.setArgument("xCoordinate", forcedState.position.getXCoordinate());
@@ -121,7 +121,7 @@ public class WorldServerMessageFactory extends ServerMessageFactory
 	 * @return The message.
 	 */
 	public Message generateActorMoveSpeedMessage() {
-		Message stepLengthMessage = new Message("ActorMoveSpeed", getMessageRegistry());
+		Message stepLengthMessage = getMessageRegistry().createMessage("ActorMoveSpeed");
 		stepLengthMessage.setArgument("moveSpeed", Actor.MOVE_SPEED);
 		return stepLengthMessage;
 	}
@@ -132,7 +132,7 @@ public class WorldServerMessageFactory extends ServerMessageFactory
 	 * @return A {@code Message} for the newly invisible object.
 	 */
 	public Message generateNewlyInvisibleMessage(WorldObject object) {
-		Message newlyInvisibleMessage = new Message("ObjectInvisibleMessage", getMessageRegistry());
+		Message newlyInvisibleMessage = getMessageRegistry().createMessage("ObjectInvisibleMessage");
 		newlyInvisibleMessage.setArgument("id", object.getId());
 		return newlyInvisibleMessage;
 	}
@@ -142,7 +142,7 @@ public class WorldServerMessageFactory extends ServerMessageFactory
 	 * @return The WorldLoginResponse.
 	 */
 	public Message generateWorldLoginResponse() {
-		return new Message("WorldLoginResponse", getMessageRegistry());
+		return getMessageRegistry().createMessage("WorldLoginResponse");
 	}
 
 	/**
@@ -151,7 +151,7 @@ public class WorldServerMessageFactory extends ServerMessageFactory
 	 * @return The WorldFileResponse.
 	 */
 	public Message generateWorldFileResponse(byte[] worldFileBytes) {
-		Message response = new Message("WorldFileResponse", getMessageRegistry());
+		Message response = getMessageRegistry().createMessage("WorldFileResponse");
 		response.setArgument("fileBytes", worldFileBytes);
 		return response;
 	}
@@ -162,7 +162,7 @@ public class WorldServerMessageFactory extends ServerMessageFactory
 	 * @return The WorldChecksumResponse.
 	 */
 	public Message generateWorldChecksumResponse(byte[] checkSum) {
-		Message response = new Message("WorldChecksumResponse", getMessageRegistry());
+		Message response = getMessageRegistry().createMessage("WorldChecksumResponse");
 		response.setArgument("checksum", checkSum);
 		return response;
 	}

@@ -42,7 +42,7 @@ public class ServerMessageFactory extends MessageFactory
 	 * @return The LogoutResponse.
 	 */
 	public Message generateLogoutResponse(boolean success) {
-		Message logoutResponse = new Message("LogoutResponse", getMessageRegistry());
+		Message logoutResponse = getMessageRegistry().createMessage("LogoutResponse");
 		logoutResponse.setArgument("success", success);
 		return logoutResponse;
 	}
@@ -54,7 +54,7 @@ public class ServerMessageFactory extends MessageFactory
 	 * @return The FirstConnectResponse.
 	 */
 	public Message generateFirstConnectResponse(int ups) {
-		Message firstConnectResponse = new Message("FirstConnectResponse", getMessageRegistry());
+		Message firstConnectResponse = getMessageRegistry().createMessage("FirstConnectResponse");
 		firstConnectResponse.setArgument("ups", ups);
 		return firstConnectResponse;
 	}
@@ -65,7 +65,7 @@ public class ServerMessageFactory extends MessageFactory
 	 * @return The AESKeyMessage.
 	 */
 	public Message generateAESKeyMessage(byte[] publicKeyBytes) {
-		Message aesMessage = new Message("AESKeyMessage", getMessageRegistry());
+		Message aesMessage = getMessageRegistry().createMessage("AESKeyMessage");
 		byte[] encryptedAESKey = MessageInputStream.NO_KEY;
 		try
 		{
@@ -109,7 +109,7 @@ public class ServerMessageFactory extends MessageFactory
 	 * @return The PingResponse message.
 	 */
 	public Message generatePingResponse(long requestTimeNanos) {
-		Message pingResponse = new Message("PingResponse", getMessageRegistry());
+		Message pingResponse = getMessageRegistry().createMessage("PingResponse");
 		pingResponse.setArgument("requestTimeNanos", requestTimeNanos);
 		return pingResponse;
 	}
@@ -121,7 +121,7 @@ public class ServerMessageFactory extends MessageFactory
 	 * @return The LoginResponse message.
 	 */
 	public Message generateLoginResponse(boolean success, long loggedInTime) {
-		Message loginResponse = new Message("LoginResponse", getMessageRegistry());
+		Message loginResponse = getMessageRegistry().createMessage("LoginResponse");
 		loginResponse.setArgument("success", success);
 		loginResponse.setArgument("loginTime", loggedInTime);
 		return loginResponse;

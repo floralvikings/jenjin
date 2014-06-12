@@ -15,16 +15,14 @@ public class MessageFactory
 	 * Construct a new MessageFactory working for the given connection.
 	 * @param messageRegistry The message registry for this factory.
 	 */
-	public MessageFactory(MessageRegistry messageRegistry) {
-		this.messageRegistry = messageRegistry;
-	}
+	public MessageFactory(MessageRegistry messageRegistry) { this.messageRegistry = messageRegistry; }
 
 	/**
 	 * Generate a "ping" request.
 	 * @return A "PintRequest" message.
 	 */
 	public Message generatePingRequest() {
-		Message pingRequest = new Message("PingRequest", messageRegistry);
+		Message pingRequest = messageRegistry.createMessage("PingRequest");
 		pingRequest.setArgument("requestTimeNanos", System.nanoTime());
 		return pingRequest;
 	}
@@ -35,7 +33,7 @@ public class MessageFactory
 	 * @return The "InvalidMessage" message.
 	 */
 	public Message generateInvalidMessage(Message message) {
-		Message invalid = new Message("InvalidMessage", messageRegistry);
+		Message invalid = messageRegistry.createMessage("InvalidMessage");
 		invalid.setArgument("messageName", message.name);
 		invalid.setArgument("messageID", message.getID());
 		return invalid;

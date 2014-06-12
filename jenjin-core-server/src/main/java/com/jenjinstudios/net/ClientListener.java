@@ -54,6 +54,7 @@ class ClientListener<T extends ClientHandler> implements Runnable
 		}
 		listening = false;
 		newClientHandlers = new LinkedList<>();
+		LOGGER.log(Level.FINEST, "Opening socket on port: {0}", PORT);
 		serverSock = new ServerSocket(PORT);
 	}
 

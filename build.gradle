@@ -27,7 +27,7 @@ subprojects {
 
     test {
         useTestNG()
-        maxParallelForks = 8;
+        maxParallelForks = 1;
         workingDir = project.rootDir
         beforeTest { descriptor ->
             logger.lifecycle("Running test: " + descriptor)

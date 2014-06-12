@@ -25,7 +25,7 @@ public class WorldClientMessageFactory extends ClientMessageFactory
 	 * @return The generated message.
 	 */
 	public Message generateStateChangeRequest(MoveState moveState) {
-		Message stateChangeRequest = new Message("StateChangeRequest", getMessageRegistry());
+		Message stateChangeRequest = getMessageRegistry().createMessage("StateChangeRequest");
 		stateChangeRequest.setArgument("relativeAngle", moveState.relativeAngle);
 		stateChangeRequest.setArgument("absoluteAngle", moveState.absoluteAngle);
 		stateChangeRequest.setArgument("timeOfChange", moveState.timeOfChange);
@@ -41,7 +41,7 @@ public class WorldClientMessageFactory extends ClientMessageFactory
 	 * @return The LoginRequest message.
 	 */
 	public Message generateLoginRequest(String username, String password) {
-		Message loginRequest = new Message("WorldLoginRequest", getMessageRegistry());
+		Message loginRequest = getMessageRegistry().createMessage("WorldLoginRequest");
 		loginRequest.setArgument("username", username);
 		loginRequest.setArgument("password", password);
 		return loginRequest;
@@ -51,17 +51,17 @@ public class WorldClientMessageFactory extends ClientMessageFactory
 	 * Generate a world logout request.
 	 * @return The world logout request.
 	 */
-	public Message generateWorldLogoutRequest() {return new Message("WorldLogoutRequest", getMessageRegistry());}
+	public Message generateWorldLogoutRequest() {return getMessageRegistry().createMessage("WorldLogoutRequest");}
 
 	/**
 	 * Generate a world file request.
 	 * @return The file request.
 	 */
-	public Message generateWorldFileRequest() {return new Message("WorldFileRequest", getMessageRegistry());}
+	public Message generateWorldFileRequest() {return getMessageRegistry().createMessage("WorldFileRequest");}
 
 	/**
 	 * Generate a request for the checksum of the world file.
 	 * @return The request for the checksum.
 	 */
-	public Message generateWorldChecksumRequest() {return new Message("WorldChecksumRequest", getMessageRegistry());}
+	public Message generateWorldChecksumRequest() {return getMessageRegistry().createMessage("WorldChecksumRequest");}
 }
