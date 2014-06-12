@@ -40,7 +40,7 @@ public abstract class Connection extends Thread
 	/** The AES key of this client. */
 	private byte[] aesKey;
 	/** The message registry for this class. */
-	private MessageRegistry messageRegistry;
+	private final MessageRegistry messageRegistry;
 
 	/** Construct a new Connection. */
 	protected Connection(MessageRegistry messageRegistry) {
@@ -83,9 +83,7 @@ public abstract class Connection extends Thread
 	 * Add a ping time to the list.
 	 * @param pingTime The time of the ping, in nanoseconds.
 	 */
-	public void addPingTime(long pingTime) {
-		pingTimes.add(pingTime);
-	}
+	public void addPingTime(long pingTime) { pingTimes.add(pingTime); }
 
 	/**
 	 * Get the average ping time, in nanoseconds.
@@ -106,17 +104,13 @@ public abstract class Connection extends Thread
 	 * Flags whether this communicator is connected.
 	 * @return true if this communicator is currently connected to a server.
 	 */
-	protected boolean isConnected() {
-		return connected;
-	}
+	protected boolean isConnected() { return connected; }
 
 	/**
 	 * Set whether this communicator is connected.  Should only be called from subclass.
 	 * @param connected Whether this communicator is connected.
 	 */
-	protected void setConnected(boolean connected) {
-		this.connected = connected;
-	}
+	protected void setConnected(boolean connected) { this.connected = connected; }
 
 	/**
 	 * Get the MessageRegistry for this Connection.
@@ -139,7 +133,7 @@ public abstract class Connection extends Thread
 	 * Send the specified message to the client.
 	 * @param o The message to send to the client.
 	 */
-	protected void writeMessage(Message o) {
+	void writeMessage(Message o) {
 		try
 		{
 			LOGGER.log(Level.FINEST, "Connection {0} writing message {1}", new Object[]{getName(), o});
@@ -155,30 +149,22 @@ public abstract class Connection extends Thread
 	 * Get the output stream used by this communicator.
 	 * @return The output stream used by this communicator.
 	 */
-	protected MessageOutputStream getOutputStream() {
-		return outputStream;
-	}
+	protected MessageOutputStream getOutputStream() { return outputStream; }
 
 	/**
 	 * Set the output stream.
 	 * @param outputStream The output stream.
 	 */
-	private void setOutputStream(MessageOutputStream outputStream) {
-		this.outputStream = outputStream;
-	}
+	private void setOutputStream(MessageOutputStream outputStream) { this.outputStream = outputStream; }
 
 	/** Shutdown this communicator. */
-	protected void shutdown() {
-		running = false;
-	}
+	protected void shutdown() { running = false; }
 
 	/**
 	 * Get the AES key used by this client.
 	 * @return The byte form of the AES key used by this client.
 	 */
-	protected byte[] getAesKey() {
-		return aesKey;
-	}
+	protected byte[] getAesKey() { return aesKey; }
 
 	/**
 	 * Set the AES key used by this client.
@@ -194,17 +180,13 @@ public abstract class Connection extends Thread
 	 * Get the input stream used.
 	 * @return The input stream.
 	 */
-	protected MessageInputStream getInputStream() {
-		return inputStream;
-	}
+	protected MessageInputStream getInputStream() { return inputStream; }
 
 	/**
 	 * Set the input stream used.
 	 * @param inputStream The input stream.
 	 */
-	private void setInputStream(MessageInputStream inputStream) {
-		this.inputStream = inputStream;
-	}
+	private void setInputStream(MessageInputStream inputStream) { this.inputStream = inputStream; }
 
 	public void run() {
 		running = true;
@@ -226,9 +208,7 @@ public abstract class Connection extends Thread
 	 * Flags whether the client threads should be running.
 	 * @return true if this client thread is still running.
 	 */
-	public boolean isRunning() {
-		return running;
-	}
+	public boolean isRunning() { return running; }
 
 	/**
 	 * The "one-shot" tasks to be executed in the current client loop.
@@ -278,7 +258,7 @@ public abstract class Connection extends Thread
 	 * functionality necessary to communicate with a DownloadServer or a ChatServer.
 	 * @param message The message to be processed.
 	 */
-	protected void processMessage(Message message) {
+	private void processMessage(Message message) {
 		ExecutableMessage exec = getExecutableMessage(message);
 		if (exec != null)
 		{

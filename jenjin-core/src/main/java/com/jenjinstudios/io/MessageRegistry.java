@@ -143,7 +143,7 @@ public class MessageRegistry
 	 * Disable the ExecutableMessage invoked by the message with the given name.
 	 * @param messageName The name of the message.
 	 */
-	public void disableExecutableMessage(String messageName) {
+	void disableExecutableMessage(String messageName) {
 		LOGGER.log(Level.FINE, "Disabling message: {0}", messageName);
 		MessageType type = messageTypesByName.get(messageName);
 		short id = type.id;

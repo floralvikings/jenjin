@@ -18,7 +18,7 @@ import java.util.List;
  * Used to parse Messages.xml files.
  * @author Caleb Brinkman
  */
-public class MessageXmlReader
+class MessageXmlReader
 {
 	/** The XML document storing the NPC data. */
 	private final Document messageDoc;

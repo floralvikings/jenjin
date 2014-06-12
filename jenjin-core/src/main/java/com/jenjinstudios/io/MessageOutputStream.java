@@ -82,7 +82,7 @@ public class MessageOutputStream
 	 * @param encrypt Whether the string should be encrypted.
 	 * @throws IOException If there is an IO error.
 	 */
-	public void writeString(String s, boolean encrypt) throws IOException {
+	void writeString(String s, boolean encrypt) throws IOException {
 		if (encrypt)
 		{
 			if (aesKey == null)
