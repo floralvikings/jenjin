@@ -22,8 +22,8 @@ public class DataInputStreamMock
 	}
 
 	public void mockReadShort(short s) throws IOException {
-		int b1 = s & 0xFF;
-		int b2 = s >> 8 & 0xFF;
+		int b2 = s & 0xFF;
+		int b1 = s >> 8 & 0xFF;
 		when = when.thenReturn(b1).thenReturn(b2);
 	}
 
@@ -44,5 +44,5 @@ public class DataInputStreamMock
 		}
 	}
 
-	public OngoingStubbing<Integer> getWhen() { return when; }
+	public InputStream getIn() { return in; }
 }

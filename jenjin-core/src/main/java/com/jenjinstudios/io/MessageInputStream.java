@@ -185,7 +185,7 @@ public class MessageInputStream
 		{
 			if (aesKey == null)
 			{
-				LOGGER.log(Level.WARNING, "AES key not properly set, unable to decrypt messages.");
+				LOGGER.log(Level.SEVERE, "AES key not properly set, unable to decrypt messages.");
 			} else
 			{
 				try
