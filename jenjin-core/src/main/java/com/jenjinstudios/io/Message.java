@@ -50,7 +50,7 @@ public class Message
 	 *  @param name The name of the MessageType being filled by this message.
 	 * @param messageRegistry The message registry creating this message.
 	 */
-	public Message(String name, MessageRegistry messageRegistry)
+	Message(String name, MessageRegistry messageRegistry)
 	{
 		messageType = messageRegistry.getMessageType(name);
 		this.name = messageType.name;
