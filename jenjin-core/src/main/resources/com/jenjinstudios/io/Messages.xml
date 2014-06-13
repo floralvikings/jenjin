@@ -1,0 +1,32 @@
+<?xml version="1.0" ?>
+
+<base_messages xmlns="" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation=" ">
+    <message name="TestAllTypesMessage" id="-4">
+        <argument type="String" name="testString" />
+        <argument type="int" name="testInt" />
+        <argument type="long" name="testLong" />
+        <argument type="double" name="testDouble" />
+        <argument type="float" name="testFloat" />
+        <argument type="short" name="testShort" />
+        <argument type="boolean" name="testBoolean" />
+        <argument type="byte" name="testByte" />
+        <argument type="byte[]" name="testByteArray" />
+        <argument type="String[]" name="testStringArray" />
+    </message>
+
+    <message name="TestEncryptedMessage" id="-3">
+        <argument type="String" encrypted="true" name="encryptedString" />
+    </message>
+
+    <message name="DisabledMessage" id="-2">
+        <executable language="java" side="server">com.jenjinstudios.message.DisabledExecutableMessage</executable>
+    </message>
+
+    <message name="InvalidMessage" id="-1">
+        <argument type="String" name="messageName" />
+        <argument type="short" name="messageID" />
+        <executable language="java" side="client">com.jenjinstudios.io.InvalidExecutableMessage</executable>
+        <executable language="java" side="server">com.jenjinstudios.io.InvalidExecutableMessage</executable>
+    </message>
+
+</base_messages>

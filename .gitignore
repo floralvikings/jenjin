@@ -3,5 +3,5 @@
 jenjin.log*
 .idea/
 .gradle/
-resources/
+./resources/
 out/
