@@ -3,10 +3,11 @@ package com.jenjinstudios.io;
 import org.mockito.Mockito;
 import org.mockito.stubbing.OngoingStubbing;
 
-import static org.mockito.Mockito.*;
-
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.ByteBuffer;
+
+import static org.mockito.Mockito.*;
 
 /**
  * @author Caleb Brinkman
@@ -22,9 +23,8 @@ public class DataInputStreamMock
 	}
 
 	public void mockReadShort(short s) throws IOException {
-		int b2 = s & 0xFF;
-		int b1 = s >> 8 & 0xFF;
-		when = when.thenReturn(b1).thenReturn(b2);
+		byte[] bytes = ByteBuffer.allocate(2).putShort(s).array();
+		when = when.thenReturn(bytes[0] & 0xff).thenReturn(bytes[1] & 0xff);
 	}
 
 	public void mockReadBoolean(boolean b) throws IOException {
@@ -32,16 +32,47 @@ public class DataInputStreamMock
 	}
 
 	public void mockReadUtf(String s) throws IOException {
-		// Mock length of string
-		char l = (char) s.length();
-		int b1 = l >> 8 & 0xFF;
-		int b2 = l & 0xFF;
-		when = when.thenReturn(b1).thenReturn(b2);
-		byte[] bytes = s.getBytes("UTF-8");
+		byte[] bytes = ByteBuffer.allocate(2).putShort((short) s.length()).array();
+		when = when.thenReturn(bytes[0] & 0xff).thenReturn(bytes[1] & 0xff);
+		bytes = s.getBytes("UTF-8");
 		for (byte b : bytes)
 		{
 			when = when.thenReturn((int) b);
 		}
+	}
+
+	public void mockReadInt(int i) {
+		byte[] bytes = ByteBuffer.allocate(4).putInt(i).array();
+
+		when = when.thenReturn(bytes[0] & 0xff).thenReturn(bytes[1] & 0xff).
+				thenReturn(bytes[2] & 0xff).thenReturn(bytes[3] & 0xff);
+	}
+
+	public void mockReadLong(long l) {
+		byte[] bytes = ByteBuffer.allocate(8).putLong(l).array();
+		when = when.thenReturn(bytes[0] & 0xff).thenReturn(bytes[1] & 0xff).
+				thenReturn(bytes[2] & 0xff).thenReturn(bytes[3] & 0xff).
+				thenReturn(bytes[4] & 0xff).thenReturn(bytes[5] & 0xff).
+				thenReturn(bytes[6] & 0xff).thenReturn(bytes[7] & 0xff);
+	}
+
+	public void mockReadDouble(double d) {
+		byte[] bytes = ByteBuffer.allocate(8).putDouble(d).array();
+		when = when.thenReturn(bytes[0] & 0xff).thenReturn(bytes[1] & 0xff).
+				thenReturn(bytes[2] & 0xff).thenReturn(bytes[3] & 0xff).
+				thenReturn(bytes[4] & 0xff).thenReturn(bytes[5] & 0xff).
+				thenReturn(bytes[6] & 0xff).thenReturn(bytes[7] & 0xff);
+	}
+
+	public void mockReadFloat(float f) {
+		byte[] bytes = ByteBuffer.allocate(4).putFloat(f).array();
+
+		when = when.thenReturn(bytes[0] & 0xff).thenReturn(bytes[1] & 0xff).
+				thenReturn(bytes[2] & 0xff).thenReturn(bytes[3] & 0xff);
+	}
+
+	public void mockReadByte(byte b) {
+		when = when.thenReturn(b & 0xff);
 	}
 
 	public InputStream getIn() { return in; }

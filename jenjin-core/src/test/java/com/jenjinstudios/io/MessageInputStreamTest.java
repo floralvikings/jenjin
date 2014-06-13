@@ -99,4 +99,40 @@ public class MessageInputStreamTest
 
 		Assert.assertEquals(msg.getArgument("encryptedString"), "FooBar");
 	}
+
+	@Test
+	public void testAllTypesMessage() throws Exception {
+		DataInputStreamMock mock = new DataInputStreamMock();
+		mock.mockReadShort((short) -4);
+		mock.mockReadBoolean(false);
+		mock.mockReadUtf("FooBar");
+		mock.mockReadInt(123);
+		mock.mockReadLong(456);
+		mock.mockReadDouble(7.89);
+		mock.mockReadFloat(0.123f);
+		mock.mockReadShort((short) 246);
+		mock.mockReadBoolean(true);
+		mock.mockReadByte((byte) 867);
+		// Mock a byte array
+		mock.mockReadInt(3);
+		mock.mockReadByte((byte) 8);
+		mock.mockReadByte((byte) 16);
+		mock.mockReadByte((byte) 32);
+		// Mock a String array
+		mock.mockReadInt(3);
+		mock.mockReadBoolean(false);
+		mock.mockReadUtf("I'm");
+		mock.mockReadBoolean(false);
+		mock.mockReadUtf("A");
+		mock.mockReadBoolean(false);
+		mock.mockReadUtf("Lumberjack");
+
+		InputStream in = mock.getIn();
+		MessageRegistry mr = new MessageRegistry(false);
+		MessageInputStream mis = new MessageInputStream(mr, in);
+		Message msg = mis.readMessage();
+		mis.close();
+
+		Assert.assertEquals(((String[]) msg.getArgument("testStringArray"))[1], "A");
+	}
 }

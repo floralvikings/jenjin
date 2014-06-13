@@ -102,14 +102,7 @@ public class MessageRegistry
 	 * @param id The id.
 	 * @return The MessageType with the given ID.
 	 */
-	public MessageType getMessageType(short id) {
-		if (!messagesRegistered)
-		{
-			LOGGER.log(Level.SEVERE, "Messages not registered!  Please remember to call MessageRegistry.registerXmlMessages()");
-		}
-
-		return messageTypesByID.get(id);
-	}
+	public MessageType getMessageType(short id) { return messageTypesByID.get(id); }
 
 	/**
 	 * Get the class names of argumentTypes for the class with the given registration ID.

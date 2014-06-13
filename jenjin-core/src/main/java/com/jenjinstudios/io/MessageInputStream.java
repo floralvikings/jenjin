@@ -181,24 +181,24 @@ public class MessageInputStream
 	private String readString(DataInputStream inputStream) throws IOException {
 		boolean encrypted = inputStream.readBoolean();
 		String received = inputStream.readUTF();
-		if (encrypted)
+		if (!encrypted) { return received; }
+
+		if (aesKey == null)
 		{
-			if (aesKey == null)
-			{
-				LOGGER.log(Level.SEVERE, "AES key not properly set, unable to decrypt messages.");
-			} else
-			{
-				try
-				{
-					byte[] encBytes = DatatypeConverter.parseHexBinary(received);
-					byte[] decBytes = aesDecryptCipher.doFinal(encBytes);
-					received = new String(decBytes, "UTF-8");
-				} catch (IllegalBlockSizeException | BadPaddingException e)
-				{
-					LOGGER.log(Level.WARNING, "Unable to decrypt message!", e);
-				}
-			}
+
+			LOGGER.log(Level.SEVERE, "AES key not properly set, unable to decrypt messages.");
+			return received;
 		}
+		try
+		{
+			byte[] encBytes = DatatypeConverter.parseHexBinary(received);
+			byte[] decBytes = aesDecryptCipher.doFinal(encBytes);
+			received = new String(decBytes, "UTF-8");
+		} catch (IllegalBlockSizeException | BadPaddingException e)
+		{
+			LOGGER.log(Level.WARNING, "Unable to decrypt message: ", e);
+		}
+
 		return received;
 	}
 
