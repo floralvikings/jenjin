@@ -1,7 +1,6 @@
 package com.jenjinstudios.io;
 
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 /**
  * This class is used to define the ID, name, and Argument Types for each type of message contained in the XML files.
@@ -15,10 +14,8 @@ public class MessageType
 	public final String name;
 	/** The argumentTypes for this message type. */
 	public final ArgumentType[] argumentTypes;
-	/** The class of the client executable message associated with this type. */
-	public final Class<? extends ExecutableMessage> clientExecutableMessageClass;
-	/** The class of the server executable message associated with this type. */
-	public final Class<? extends ExecutableMessage> serverExecutableMessageClass;
+	/** The ExecutableMessage classes used by this MessageType. */
+	private final List<Class<? extends ExecutableMessage>> executableMessageClasses;
 	/** The argument types for this message, sorted by name. */
 	private final Map<String, ArgumentType> argumentTypeTreeMap;
 
@@ -27,20 +24,20 @@ public class MessageType
 	 * @param id The ID of the message type.
 	 * @param name The name of the message type.
 	 * @param argumentTypes The argumentTypes of the message type.
-	 * @param clientExec The class of the ExecutableMessage to be invoked by clients.
-	 * @param serverExec The class of the ExecutableMessage to be invoked by servers.
+	 * @param classes The ExecutableMessage classes that can be invoked by this message type.
 	 */
-	public MessageType(short id, String name, ArgumentType[] argumentTypes,
-					   Class<? extends ExecutableMessage> clientExec, Class<? extends ExecutableMessage> serverExec)
-	{
+	public MessageType(short id, String name, ArgumentType[] argumentTypes, List<Class<? extends ExecutableMessage>> classes) {
+		executableMessageClasses = new LinkedList<>(classes);
 		this.id = id;
 		this.name = name;
 		this.argumentTypes = argumentTypes;
-		this.clientExecutableMessageClass = clientExec;
-		this.serverExecutableMessageClass = serverExec;
 		argumentTypeTreeMap = new TreeMap<>();
 
 		for (ArgumentType argumentType : argumentTypes) { argumentTypeTreeMap.put(argumentType.name, argumentType); }
+	}
+
+	public MessageType(short id, String messageName, ArgumentType[] argumentTypes) {
+		this(id, messageName, argumentTypes, new LinkedList<Class<? extends ExecutableMessage>>());
 	}
 
 	/**
@@ -50,4 +47,9 @@ public class MessageType
 	 */
 	public ArgumentType getArgumentType(String name) { return argumentTypeTreeMap.get(name); }
 
+	/**
+	 * Get the executable messages associated with this message type.
+	 * @return The executable messages associated with this message type.
+	 */
+	public List<Class<? extends ExecutableMessage>> getExecutableMessageClasses() { return executableMessageClasses; }
 }

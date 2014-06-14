@@ -2,14 +2,7 @@ package com.jenjinstudios.message;
 
 import com.jenjinstudios.io.ExecutableMessage;
 import com.jenjinstudios.io.Message;
-import com.jenjinstudios.io.MessageType;
 import com.jenjinstudios.net.ClientHandler;
-import com.jenjinstudios.net.Connection;
-
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * The ServerExecutableMessage class is invoked to respond to messages server-side.
@@ -17,8 +10,6 @@ import java.util.logging.Logger;
  */
 public abstract class ServerExecutableMessage extends ExecutableMessage
 {
-	/** The Logger for this class. */
-	private static final Logger LOGGER = Logger.getLogger(ServerExecutableMessage.class.getName());
 	/** The ClientHandler for this object. */
 	private final ClientHandler clientHandler;
 
@@ -30,52 +21,6 @@ public abstract class ServerExecutableMessage extends ExecutableMessage
 	protected ServerExecutableMessage(ClientHandler handler, Message message) {
 		super(message);
 		clientHandler = handler;
-	}
-
-	/**
-	 * Get the class of the ExecutableMessage that handles the given Message.
-	 * @param handler The client handler to use the ExecutableMessage.
-	 * @param message The message.
-	 * @return The class of the ExecutableMessage that handles the given Message.
-	 */
-	@SuppressWarnings("unchecked")
-	public static ExecutableMessage getServerExecutableMessageFor(ClientHandler handler, Message message) {
-		ExecutableMessage r = null;
-		MessageType messageType = handler.getMessageRegistry().getMessageType(message.getID());
-		// Get the executable message classes registered.
-		Class<? extends ExecutableMessage> execClass = messageType.serverExecutableMessageClass;
-		try
-		{
-			// Get and parse the Constructors for the ExecutableMessage class retrieved.
-			Constructor<? extends ExecutableMessage>[] execConstructors;
-			Constructor<? extends ExecutableMessage> execConstructor = null;
-			execConstructors = (Constructor<? extends ExecutableMessage>[]) execClass.getConstructors();
-			for (Constructor<? extends ExecutableMessage> constructor : execConstructors)
-			{
-				Class<?> p1 = constructor.getParameterTypes()[0];
-				// Check to see if the first argument is a ClientHandler
-				// Allow standard "Connection" class - for ExecutableMessages applicable to both client and server.
-				if (ClientHandler.class.isAssignableFrom(p1) ||
-						p1.getName().equals(Connection.class.getName()))
-					execConstructor = constructor;
-			}
-			if (execConstructor != null)
-			{
-				r = execConstructor.newInstance(handler, message);
-			} else
-			{
-				LOGGER.log(Level.SEVERE, "No public constructor containing ClientHandler as first argument type found for {0}",
-						execClass.getName());
-			}
-		} catch (InvocationTargetException | InstantiationException | IllegalAccessException e)
-		{
-			LOGGER.log(Level.SEVERE, "Constructor not correct for: " + execClass.getName(), e);
-		} catch (NullPointerException e)
-		{
-			LOGGER.log(Level.SEVERE, "No server-side executable message found for: " + message + " " + messageType, e);
-		}
-
-		return r;
 	}
 
 	/**

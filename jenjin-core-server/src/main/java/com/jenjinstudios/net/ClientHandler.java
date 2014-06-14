@@ -3,7 +3,6 @@ package com.jenjinstudios.net;
 import com.jenjinstudios.io.ExecutableMessage;
 import com.jenjinstudios.io.Message;
 import com.jenjinstudios.io.MessageRegistry;
-import com.jenjinstudios.message.ServerExecutableMessage;
 import com.jenjinstudios.message.ServerMessageFactory;
 
 import java.io.IOException;
@@ -97,7 +96,7 @@ public class ClientHandler extends Connection
 	 */
 	@Override
 	protected ExecutableMessage getExecutableMessage(Message message) {
-		return ServerExecutableMessage.getServerExecutableMessageFor(this, message);
+		return ExecutableMessage.getExecutableMessageFor(this, message);
 	}
 
 	/**

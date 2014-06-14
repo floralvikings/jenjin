@@ -1,5 +1,6 @@
 package com.jenjinstudios.net;
 
+import com.jenjinstudios.io.ExecutableMessage;
 import com.jenjinstudios.io.Message;
 import com.jenjinstudios.io.MessageRegistry;
 import com.jenjinstudios.message.ClientExecutableMessage;
@@ -179,7 +180,7 @@ public class Client extends Connection
 	 */
 	@Override
 	protected ClientExecutableMessage getExecutableMessage(Message message) {
-		return (ClientExecutableMessage) ClientExecutableMessage.getClientExecutableMessageFor(this, message);
+		return (ClientExecutableMessage) ExecutableMessage.getExecutableMessageFor(this, message);
 	}
 
 	/** Run the repeated synchronized tasks. */

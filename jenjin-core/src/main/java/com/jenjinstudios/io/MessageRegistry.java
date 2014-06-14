@@ -141,16 +141,7 @@ public class MessageRegistry
 		MessageType type = messageTypesByName.get(messageName);
 		short id = type.id;
 		ArgumentType[] argumentTypes = type.argumentTypes;
-		Class<? extends ExecutableMessage> clientExecutableMessageClass = type.clientExecutableMessageClass;
-		Class<? extends ExecutableMessage> serverExecutableMessageClass = type.serverExecutableMessageClass;
-		MessageType newMessageType;
-		if (isServer)
-		{
-			newMessageType = new MessageType(id, messageName, argumentTypes, clientExecutableMessageClass, null);
-		} else
-		{
-			newMessageType = new MessageType(id, messageName, argumentTypes, null, serverExecutableMessageClass);
-		}
+		MessageType newMessageType = new MessageType(id, messageName, argumentTypes);
 		messageTypesByName.put(messageName, newMessageType);
 		messageTypesByID.put(id, newMessageType);
 

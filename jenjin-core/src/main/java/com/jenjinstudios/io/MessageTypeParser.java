@@ -4,6 +4,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -26,21 +28,20 @@ class MessageTypeParser
 		short id;
 		String name;
 		ArgumentType[] argumentTypes;
-		Class<? extends ExecutableMessage> clientExec;
-		Class<? extends ExecutableMessage> serverExec = null;
+		List<Class<? extends ExecutableMessage>> classes = new LinkedList<>();
 		id = Short.parseShort(messageElement.getAttribute("id"));
 		name = messageElement.getAttribute("name");
 		argumentTypes = parseArgumentNodes(messageElement);
-		clientExec = getClientExecutableMessageClass(messageElement);
+		classes.add(getClientExecutableMessageClass(messageElement));
 		if (server)
 		{
-			serverExec = getServerExecutableMessageClass(messageElement);
+			classes.add(getServerExecutableMessageClass(messageElement));
 		}
 
 		MessageType messageType = null;
 
 		if (argumentTypes != null)
-			messageType = new MessageType(id, name, argumentTypes, clientExec, serverExec);
+			messageType = new MessageType(id, name, argumentTypes, classes);
 
 		return messageType;
 	}
