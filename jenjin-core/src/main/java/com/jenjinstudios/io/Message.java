@@ -33,10 +33,17 @@ public class Message
 		name = messageType.name;
 		argumentsByName = new TreeMap<>();
 		for (int i = 0; i < messageType.argumentTypes.length; i++)
-			setArgument(messageType.argumentTypes[i].name, args[i]);
-		if (isInvalid())
-			throw new IllegalStateException("Attempting to retrieve arguments while message is invalid. (Not all " +
-					"arguments have been set.)");
+		{
+			try
+			{
+				setArgument(messageType.argumentTypes[i].name, args[i]);
+			} catch (ArrayIndexOutOfBoundsException ex)
+			{
+				throw new IllegalStateException(
+						"Not enough arguments provided for Message", ex);
+			}
+
+		}
 	}
 
 	/**

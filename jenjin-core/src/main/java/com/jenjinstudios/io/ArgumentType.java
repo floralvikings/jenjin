@@ -14,8 +14,8 @@ public class ArgumentType
 	public final boolean encrypt;
 
 	/**
-	 * Create a new {@code ArgumentType} with the given name and type, and whether the argument should be encrypted before
-	 * being sent over socket.  Only Strings and String arrays can be encrypted.
+	 * Create a new {@code ArgumentType} with the given name and type, and whether the argument should be encrypted
+	 * before being sent over socket.  Only Strings and String arrays can be encrypted.
 	 * @param name The name of the argument.
 	 * @param type The type of the argument.
 	 * @param encrypt If type is String or String[], whether the argument should be encrypted.
@@ -27,5 +27,5 @@ public class ArgumentType
 	}
 
 	@Override
-	public String toString() { return name + ", " + type; }
+	public String toString() { return name + ", " + type + ", encrypt: " + encrypt; }
 }
