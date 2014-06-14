@@ -87,9 +87,9 @@ public class MessageOutputStream
 		{
 			if (aesKey == null)
 			{
-				LOGGER.log(Level.WARNING, "AES key not set, message will not be encrypted: " + s);
-				outputStream.writeBoolean(false);
-				outputStream.writeUTF(s);
+				LOGGER.log(Level.SEVERE, "AES key not set, message will not be encrypted: " + s);
+				// TODO Wrap with better exception.
+				throw new IOException("Unable to encrypt sensitive data.");
 			} else
 			{
 				try
@@ -101,8 +101,8 @@ public class MessageOutputStream
 				} catch (IllegalBlockSizeException | BadPaddingException | IllegalStateException e)
 				{
 					LOGGER.log(Level.SEVERE, "Error encrypting string, will use unencrypted.", e);
-					outputStream.writeBoolean(false);
-					outputStream.writeUTF(s);
+					// TODO Wrap this in a better exception.
+					throw new IOException("Unable to encrypt sensitive data.");
 				}
 			}
 		} else
