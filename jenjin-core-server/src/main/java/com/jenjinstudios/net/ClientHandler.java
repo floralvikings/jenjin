@@ -1,6 +1,5 @@
 package com.jenjinstudios.net;
 
-import com.jenjinstudios.io.ExecutableMessage;
 import com.jenjinstudios.io.Message;
 import com.jenjinstudios.io.MessageRegistry;
 import com.jenjinstudios.message.ServerMessageFactory;
@@ -87,16 +86,6 @@ public class ClientHandler extends Connection
 			loggedIn = !server.getSqlHandler().logOutUser(username);
 		closeLink();
 		getServer().removeClient(this);
-	}
-
-	/**
-	 * Get an executable message for a given message.
-	 * @param message The message to be used.
-	 * @return The ExecutableMessage.
-	 */
-	@Override
-	protected ExecutableMessage getExecutableMessage(Message message) {
-		return ExecutableMessage.getExecutableMessageFor(this, message);
 	}
 
 	/**

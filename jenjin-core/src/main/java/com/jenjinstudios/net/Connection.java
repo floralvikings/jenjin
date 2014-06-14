@@ -251,7 +251,9 @@ public abstract class Connection extends Thread
 	 * @param message The message to be used.
 	 * @return The ExecutableMessage.
 	 */
-	protected abstract ExecutableMessage getExecutableMessage(Message message);
+	protected ExecutableMessage getExecutableMessage(Message message) {
+		return ExecutableMessage.getExecutableMessageFor(this, message);
+	}
 
 	/**
 	 * Process the specified message.  This method should be overridden by any implementing classes, but it does contain

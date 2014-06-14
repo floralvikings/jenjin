@@ -1,9 +1,7 @@
 package com.jenjinstudios.net;
 
-import com.jenjinstudios.io.ExecutableMessage;
 import com.jenjinstudios.io.Message;
 import com.jenjinstudios.io.MessageRegistry;
-import com.jenjinstudios.message.ClientExecutableMessage;
 import com.jenjinstudios.message.ClientMessageFactory;
 
 import java.io.IOException;
@@ -171,16 +169,6 @@ public class Client extends Connection
 		// Finally, send a ping request to establish latency.
 		sendPing();
 		return true;
-	}
-
-	/**
-	 * Get an executable message for a given message.
-	 * @param message The message to be used.
-	 * @return The ExecutableMessage.
-	 */
-	@Override
-	protected ClientExecutableMessage getExecutableMessage(Message message) {
-		return (ClientExecutableMessage) ExecutableMessage.getExecutableMessageFor(this, message);
 	}
 
 	/** Run the repeated synchronized tasks. */
