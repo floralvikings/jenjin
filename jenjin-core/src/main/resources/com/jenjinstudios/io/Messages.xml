@@ -15,7 +15,7 @@
     </message>
 
     <message name="TestEncryptedMessage" id="-3">
-        <argument type="String" encrypted="true" name="encryptedString" />
+        <argument type="String" encrypt="true" name="encryptedString" />
     </message>
 
     <message name="DisabledMessage" id="-2">

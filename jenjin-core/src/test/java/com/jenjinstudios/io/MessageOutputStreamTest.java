@@ -3,9 +3,11 @@ package com.jenjinstudios.io;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import javax.crypto.KeyGenerator;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
+import java.io.IOException;
 
 /**
  * @author Caleb Brinkman
@@ -15,15 +17,15 @@ public class MessageOutputStreamTest
 	@Test
 	public void testWriteMessage() throws Exception {
 		MessageRegistry mr = new MessageRegistry(false);
-		ByteArrayOutputStream os = new ByteArrayOutputStream();
-		MessageOutputStream mos = new MessageOutputStream(mr, os);
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		MessageOutputStream mos = new MessageOutputStream(mr, bos);
 
 		Message msg = mr.createMessage("InvalidMessage");
 		msg.setArgument("messageID", (short) -255);
 		msg.setArgument("messageName", "FooBar");
 
 		mos.writeMessage(msg);
-		byte[] bytes = os.toByteArray();
+		byte[] bytes = bos.toByteArray();
 
 		mos.close();
 
@@ -40,8 +42,43 @@ public class MessageOutputStreamTest
 		Assert.assertEquals(msgName, msg.getArgument("messageName"));
 	}
 
-	@Test
+	@Test(expectedExceptions = {IOException.class})
 	public void testEncryptedMessageNoAESKey() throws Exception {
+		MessageRegistry mr = new MessageRegistry(false);
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		MessageOutputStream mos = new MessageOutputStream(mr, bos);
 
+		Message msg = mr.createMessage("TestEncryptedMessage");
+		msg.setArgument("encryptedString", "FooBar");
+
+		mos.writeMessage(msg);
+	}
+
+	@Test
+	public void testEncryptedMessage() throws Exception {
+		KeyGenerator keyGenerator = KeyGenerator.getInstance("AES");
+		keyGenerator.init(128);
+		byte[] key = keyGenerator.generateKey().getEncoded();
+
+		MessageRegistry mr = new MessageRegistry(false);
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		MessageOutputStream mos = new MessageOutputStream(mr, bos);
+		mos.setAesKey(key);
+
+		Message msg = mr.createMessage("TestEncryptedMessage");
+		msg.setArgument("encryptedString", "FooBar");
+
+		mos.writeMessage(msg);
+		byte[] bytes = bos.toByteArray();
+		mos.close();
+
+		DataInputStream dis = new DataInputStream(new ByteArrayInputStream(bytes));
+		short id = dis.readShort();
+		boolean encrypted = dis.readBoolean();
+		String encStr = dis.readUTF();
+
+		Assert.assertEquals(id, msg.getID());
+		Assert.assertTrue(encrypted);
+		Assert.assertNotEquals(encStr, msg.getArgument("encryptedString"));
 	}
 }
