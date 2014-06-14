@@ -47,6 +47,4 @@
         <executable language="java" side="client">com.jenjinstudios.message.ExecutablePingResponse</executable>
     </message>
 
-    <disabled_message name="DisabledMessage" />
-
 </base_messages>

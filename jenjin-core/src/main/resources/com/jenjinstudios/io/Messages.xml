@@ -29,4 +29,6 @@
         <executable language="java" side="server">com.jenjinstudios.io.InvalidExecutableMessage</executable>
     </message>
 
+    <disabled_message name="DisabledMessage" />
+
 </base_messages>
