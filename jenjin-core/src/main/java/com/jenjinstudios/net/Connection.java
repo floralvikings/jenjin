@@ -15,7 +15,7 @@ import java.util.logging.Logger;
  * The communicator class is the superclass for any classes that communicate over socket.
  * @author Caleb Brinkman
  */
-public abstract class Connection extends Thread
+public class Connection extends Thread
 {
 	/** The logger used for this class. */
 	private static final Logger LOGGER = Logger.getLogger(Connection.class.getName());
@@ -41,6 +41,7 @@ public abstract class Connection extends Thread
 	private byte[] aesKey;
 	/** The message registry for this class. */
 	private final MessageRegistry messageRegistry;
+	private int invalidMsgCount;
 
 	/** Construct a new Connection. */
 	protected Connection(MessageRegistry messageRegistry) {
@@ -190,18 +191,29 @@ public abstract class Connection extends Thread
 
 	public void run() {
 		running = true;
-		try
+		Message currentMessage;
+		// FIXME Magic constant
+		while (invalidMsgCount < 10)
 		{
-			Message currentMessage;
-			while ((currentMessage = getInputStream().readMessage()) != null)
+			try
 			{
-				LOGGER.log(Level.FINEST, "Connection {0} reading message {1}", new Object[]{getName(), currentMessage});
+				currentMessage = getInputStream().readMessage();
+				if (currentMessage == null)
+				{
+					LOGGER.log(Level.SEVERE, "Received null message from input stream, exiting read loop");
+					break;
+				}
 				processMessage(currentMessage);
+			} catch (MessageTypeException e)
+			{
+				LOGGER.log(Level.WARNING, "Input stream reported invalid message receipt.");
+				Message unknown = messageFactory.generateInvalidMessage(e.getId(), "Unknown");
+				queueMessage(unknown);
+				invalidMsgCount++;
 			}
-		} finally
-		{
-			shutdown();
 		}
+
+		shutdown();
 	}
 
 	/**
@@ -271,7 +283,7 @@ public abstract class Connection extends Thread
 			}
 		} else
 		{
-			Message invalid = messageFactory.generateInvalidMessage(message);
+			Message invalid = messageFactory.generateInvalidMessage(message.getID(), message.name);
 			queueMessage(invalid);
 		}
 	}
@@ -281,5 +293,7 @@ public abstract class Connection extends Thread
 	 * message factory (and they all should).
 	 * @return The MessageFactory working for this connection.
 	 */
-	public abstract MessageFactory getMessageFactory();
+	public MessageFactory getMessageFactory() {
+		return messageFactory;
+	}
 }

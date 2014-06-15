@@ -29,13 +29,12 @@ public class MessageFactory
 
 	/**
 	 * Generate an "InvalidMessage" message.
-	 * @param message The invalid message that was received.
 	 * @return The "InvalidMessage" message.
 	 */
-	public Message generateInvalidMessage(Message message) {
+	public Message generateInvalidMessage(short id, String name) {
 		Message invalid = messageRegistry.createMessage("InvalidMessage");
-		invalid.setArgument("messageName", message.name);
-		invalid.setArgument("messageID", message.getID());
+		invalid.setArgument("messageName", name);
+		invalid.setArgument("messageID", id);
 		return invalid;
 	}
 

@@ -35,7 +35,7 @@ public class MessageInputStreamTest
 		Assert.assertEquals((String) message.getArgument("messageName"), "FooBar");
 	}
 
-	@Test
+	@Test(expectedExceptions = MessageTypeException.class)
 	public void testReadInvalidMessage() throws IOException {
 		DataInputStreamMock mock = new DataInputStreamMock();
 		mock.mockReadShort((short) -256); // Invalid message number
@@ -48,10 +48,7 @@ public class MessageInputStreamTest
 		MessageRegistry mr = new MessageRegistry(false);
 
 		MessageInputStream mis = new MessageInputStream(mr, is);
-		Message message = mis.readMessage();
-		mis.close();
-
-		Assert.assertNull(message);
+		mis.readMessage();
 	}
 
 	@Test

@@ -45,7 +45,7 @@ public class MessageInputStream
 	 * Read a Message or subclass from the DataStream.
 	 * @return The Message constructed form the data stream.
 	 */
-	public Message readMessage() {
+	public Message readMessage() throws MessageTypeException {
 		try
 		{
 			short id = inputStream.readShort();
@@ -54,7 +54,10 @@ public class MessageInputStream
 			classes.toArray(classArray);
 			Object[] args = readMessageArgs(classes);
 			return new Message(messageRegistry, id, args);
-		} catch (Exception e)
+		} catch (MessageTypeException e)
+		{
+			throw e;
+		} catch (IOException e)
 		{
 			// TODO Improve this error handling
 			LOGGER.log(Level.SEVERE, "Unable to parse message from stream: {0}", e.getMessage());

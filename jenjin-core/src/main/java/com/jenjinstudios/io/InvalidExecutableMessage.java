@@ -16,7 +16,7 @@ public class InvalidExecutableMessage extends ExecutableMessage
 	 * Construct an ExecutableMessage with the given Message.
 	 * @param message The Message.
 	 */
-	protected InvalidExecutableMessage(Connection connection, Message message) {
+	public InvalidExecutableMessage(Connection connection, Message message) {
 		super(message);
 		LOGGER.log(Level.INFO, "InvalidExecutableMessage created for connection {0}", connection);
 	}

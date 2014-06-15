@@ -109,7 +109,7 @@ public class MessageRegistry
 	 * @param id The ID to lookup.
 	 * @return A LinkedList of class names.
 	 */
-	public LinkedList<Class> getArgumentClasses(short id) {
+	public LinkedList<Class> getArgumentClasses(short id) throws MessageTypeException {
 		if (!messagesRegistered)
 		{
 			LOGGER.log(Level.SEVERE, "Messages not registered!  Please remember to call MessageRegistry.registerXmlMessages()");
@@ -120,9 +120,7 @@ public class MessageRegistry
 		MessageType type = messageTypesByID.get(id);
 		if (type == null)
 		{
-			String message = "Message " + id + " not registered.";
-			LOGGER.log(Level.SEVERE, message);
-			throw new RuntimeException(message);
+			throw new MessageTypeException(id);
 		} else
 		{
 			for (int i = 0; i < type.argumentTypes.length; i++)
