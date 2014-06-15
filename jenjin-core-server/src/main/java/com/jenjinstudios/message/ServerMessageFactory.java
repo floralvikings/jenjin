@@ -104,17 +104,6 @@ public class ServerMessageFactory extends MessageFactory
 	}
 
 	/**
-	 * Generate a response to a PingRequest.
-	 * @param requestTimeNanos The time at which the ping request was made.
-	 * @return The PingResponse message.
-	 */
-	public Message generatePingResponse(long requestTimeNanos) {
-		Message pingResponse = getMessageRegistry().createMessage("PingResponse");
-		pingResponse.setArgument("requestTimeNanos", requestTimeNanos);
-		return pingResponse;
-	}
-
-	/**
 	 * Generate a response to a login attempt.
 	 * @param success Whether the login attempt was successful.
 	 * @param loggedInTime The time of the successful login.

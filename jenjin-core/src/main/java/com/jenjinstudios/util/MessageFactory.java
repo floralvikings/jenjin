@@ -38,6 +38,17 @@ public class MessageFactory
 		return invalid;
 	}
 
+	/**
+	 * Generate a response to a PingRequest.
+	 * @param requestTimeNanos The time at which the ping request was made.
+	 * @return The PingResponse message.
+	 */
+	public Message generatePingResponse(long requestTimeNanos) {
+		Message pingResponse = getMessageRegistry().createMessage("PingResponse");
+		pingResponse.setArgument("requestTimeNanos", requestTimeNanos);
+		return pingResponse;
+	}
+
 	public MessageRegistry getMessageRegistry() { return messageRegistry; }
 
 }

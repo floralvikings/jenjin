@@ -22,11 +22,24 @@
         <executable language="java" side="server">com.jenjinstudios.io.DisabledExecutableMessage</executable>
     </message>
 
+    <message name="FirstConnectResponse" id="0">
+        <argument type="int" name="ups" />
+    </message>
+
     <message name="InvalidMessage" id="-1">
         <argument type="String" name="messageName" />
         <argument type="short" name="messageID" />
-        <executable language="java" side="client">com.jenjinstudios.io.InvalidExecutableMessage</executable>
-        <executable language="java" side="server">com.jenjinstudios.io.InvalidExecutableMessage</executable>
+        <executable language="java">com.jenjinstudios.io.InvalidExecutableMessage</executable>
+    </message>
+
+    <message name="PingRequest" id="1">
+        <argument type="long" name="requestTimeNanos" />
+        <executable language="java" side="server">com.jenjinstudios.io.ExecutablePingRequest</executable>
+    </message>
+
+    <message name="PingResponse" id="2">
+        <argument type="long" name="requestTimeNanos" />
+        <executable language="java" side="client">com.jenjinstudios.io.ExecutablePingResponse</executable>
     </message>
 
     <disabled_message name="DisabledMessage" />
