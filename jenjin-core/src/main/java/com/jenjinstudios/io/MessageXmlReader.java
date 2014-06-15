@@ -30,7 +30,7 @@ class MessageXmlReader
 	 * @throws javax.xml.parsers.ParserConfigurationException If there is an error configuring the XML parser.
 	 * @throws org.xml.sax.SAXException If there is an error parsing the XML.
 	 */
-	public MessageXmlReader(InputStream	inputStream) throws ParserConfigurationException, IOException, SAXException {
+	public MessageXmlReader(InputStream inputStream) throws ParserConfigurationException, IOException, SAXException {
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder builder = factory.newDocumentBuilder();
 		messageDoc = builder.parse(inputStream);
@@ -39,18 +39,16 @@ class MessageXmlReader
 
 	/**
 	 * Read the generated XML document and return a list of message types.
-	 * @param isServer Whether the parser should look for server-side executable messages.
 	 * @return The list of parsed message types.
 	 */
-	public List<MessageType> readMessageTypes(boolean isServer)
-	{
+	public List<MessageType> readMessageTypes() {
 		LinkedList<MessageType> messageTypes = new LinkedList<>();
 		NodeList messageElements = messageDoc.getElementsByTagName("message");
 
 		for (int i = 0; i < messageElements.getLength(); i++)
 		{
 			Element currentMessageElement = (Element) messageElements.item(i);
-			MessageType messageType = MessageTypeParser.parseMessageElement(currentMessageElement, isServer);
+			MessageType messageType = MessageTypeParser.parseMessageElement(currentMessageElement);
 			messageTypes.add(messageType);
 		}
 

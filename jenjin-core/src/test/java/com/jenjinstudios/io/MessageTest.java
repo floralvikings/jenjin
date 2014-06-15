@@ -10,14 +10,14 @@ public class MessageTest
 {
 	@Test(expectedExceptions = IllegalArgumentException.class)
 	public void testInvalidName() {
-		MessageRegistry mr = new MessageRegistry(false);
+		MessageRegistry mr = new MessageRegistry();
 		Message msg = mr.createMessage("InvalidMessage");
 		msg.setArgument("FooBar", 1337); // Expect exception
 	}
 
 	@Test(expectedExceptions = IllegalArgumentException.class)
 	public void testInvalidArgumentType() {
-		MessageRegistry mr = new MessageRegistry(false);
+		MessageRegistry mr = new MessageRegistry();
 		Message msg = mr.createMessage("InvalidMessage");
 		msg.setArgument("messageName", "FooBar");
 		msg.setArgument("messageID", "I'm totally a short, you guys."); // Expect exception
@@ -25,7 +25,7 @@ public class MessageTest
 
 	@Test(expectedExceptions = IllegalStateException.class)
 	public void testUnsetArgs() {
-		MessageRegistry mr = new MessageRegistry(false);
+		MessageRegistry mr = new MessageRegistry();
 		Message msg = mr.createMessage("InvalidMessage");
 		msg.setArgument("messageName", "FooBar");
 		msg.getArgs(); // Expect exception
@@ -33,7 +33,7 @@ public class MessageTest
 
 	@Test
 	public void testToString() {
-		MessageRegistry mr = new MessageRegistry(false);
+		MessageRegistry mr = new MessageRegistry();
 		Message msg = mr.createMessage("InvalidMessage");
 		msg.setArgument("messageName", "FooBar");
 		msg.setArgument("messageID", (short) -255);
@@ -46,7 +46,7 @@ public class MessageTest
 
 	@Test(expectedExceptions = IllegalStateException.class)
 	public void testStreamConstructor() {
-		MessageRegistry mr = new MessageRegistry(false);
+		MessageRegistry mr = new MessageRegistry();
 		new Message(mr, (short) -1, "Bob"); // Expect Exception
 	}
 }

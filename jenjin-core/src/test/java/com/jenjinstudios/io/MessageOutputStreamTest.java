@@ -16,7 +16,7 @@ public class MessageOutputStreamTest
 {
 	@Test
 	public void testWriteMessage() throws Exception {
-		MessageRegistry mr = new MessageRegistry(false);
+		MessageRegistry mr = new MessageRegistry();
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		MessageOutputStream mos = new MessageOutputStream(mr, bos);
 
@@ -36,7 +36,7 @@ public class MessageOutputStreamTest
 
 	@Test(expectedExceptions = {IOException.class})
 	public void testEncryptedMessageNoAESKey() throws Exception {
-		MessageRegistry mr = new MessageRegistry(false);
+		MessageRegistry mr = new MessageRegistry();
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		MessageOutputStream mos = new MessageOutputStream(mr, bos);
 
@@ -52,7 +52,7 @@ public class MessageOutputStreamTest
 		keyGenerator.init(128);
 		byte[] key = keyGenerator.generateKey().getEncoded();
 
-		MessageRegistry mr = new MessageRegistry(false);
+		MessageRegistry mr = new MessageRegistry();
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		MessageOutputStream mos = new MessageOutputStream(mr, bos);
 		mos.setAesKey(key);
@@ -76,7 +76,7 @@ public class MessageOutputStreamTest
 
 	@Test
 	public void testAllTypesMessage() throws Exception {
-		MessageRegistry mr = new MessageRegistry(false);
+		MessageRegistry mr = new MessageRegistry();
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		MessageOutputStream mos = new MessageOutputStream(mr, bos);
 

@@ -20,7 +20,7 @@ public class ConnectionTest
 {
 	@Test
 	public void testProcessMessage() throws Exception {
-		MessageRegistry mr = new MessageRegistry(false);
+		MessageRegistry mr = new MessageRegistry();
 		// Spoof an invalid message
 		DataInputStreamMock dataInputStreamMock = new DataInputStreamMock();
 		dataInputStreamMock.mockReadShort((short) -255);

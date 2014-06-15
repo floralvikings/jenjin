@@ -27,17 +27,13 @@ public class MessageRegistry
 	private final Map<Short, MessageType> messageTypesByID = new TreeMap<>();
 	/** A map that stores message types sorted by name. */
 	private final Map<String, MessageType> messageTypesByName = new TreeMap<>();
-	/** Whether this registry is for a server or not. */
-	private final boolean isServer;
 	/** Flags whether messages have been registered. */
 	private boolean messagesRegistered;
 
 	/**
 	 * Construct a new MessageRegistry.
-	 * @param isServer Whether or not this registry is for a server.
 	 */
-	public MessageRegistry(boolean isServer) {
-		this.isServer = isServer;
+	public MessageRegistry() {
 		registerXmlMessages();
 	}
 
@@ -165,7 +161,7 @@ public class MessageRegistry
 			try
 			{
 				MessageXmlReader reader = new MessageXmlReader(inputStream);
-				addAllMessages(reader.readMessageTypes(isServer));
+				addAllMessages(reader.readMessageTypes());
 				disabled.addAll(reader.readDisabledMessages());
 			} catch (Exception ex)
 			{

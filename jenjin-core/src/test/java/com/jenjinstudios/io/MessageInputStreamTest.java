@@ -26,7 +26,7 @@ public class MessageInputStreamTest
 
 		InputStream inputStream = dataInputStreamMock.getIn();
 
-		MessageRegistry messageRegistry = new MessageRegistry(false);
+		MessageRegistry messageRegistry = new MessageRegistry();
 
 		MessageInputStream messageInputStream = new MessageInputStream(messageRegistry, inputStream);
 		Message message = messageInputStream.readMessage();
@@ -45,7 +45,7 @@ public class MessageInputStreamTest
 
 		InputStream is = mock.getIn();
 
-		MessageRegistry mr = new MessageRegistry(false);
+		MessageRegistry mr = new MessageRegistry();
 
 		MessageInputStream mis = new MessageInputStream(mr, is);
 		mis.readMessage();
@@ -59,7 +59,7 @@ public class MessageInputStreamTest
 		mock.mockReadUtf("FooBar");
 
 		InputStream is = mock.getIn();
-		MessageRegistry mr = new MessageRegistry(false);
+		MessageRegistry mr = new MessageRegistry();
 		MessageInputStream mis = new MessageInputStream(mr, is);
 		Message msg = mis.readMessage();
 		mis.close();
@@ -88,7 +88,7 @@ public class MessageInputStreamTest
 		mock.mockReadUtf(encryptedString);
 
 		InputStream is = mock.getIn();
-		MessageRegistry mr = new MessageRegistry(false);
+		MessageRegistry mr = new MessageRegistry();
 		MessageInputStream mis = new MessageInputStream(mr, is);
 		mis.setAESKey(key);
 		Message msg = mis.readMessage();
@@ -125,7 +125,7 @@ public class MessageInputStreamTest
 		mock.mockReadUtf("Lumberjack");
 
 		InputStream in = mock.getIn();
-		MessageRegistry mr = new MessageRegistry(false);
+		MessageRegistry mr = new MessageRegistry();
 		MessageInputStream mis = new MessageInputStream(mr, in);
 		Message msg = mis.readMessage();
 		mis.close();

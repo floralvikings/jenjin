@@ -21,10 +21,9 @@ class MessageTypeParser
 	/**
 	 * Get a message type by parsing the XML element specified.  Returns null if the element could not be properly parsed.
 	 * @param messageElement The XML Element.
-	 * @param server Whether the program registering message is server or client side.
 	 * @return A MessageType retrieved from the XML element.
 	 */
-	public static MessageType parseMessageElement(Element messageElement, boolean server) {
+	public static MessageType parseMessageElement(Element messageElement) {
 		short id;
 		String name;
 		ArgumentType[] argumentTypes;
@@ -32,11 +31,7 @@ class MessageTypeParser
 		id = Short.parseShort(messageElement.getAttribute("id"));
 		name = messageElement.getAttribute("name");
 		argumentTypes = parseArgumentNodes(messageElement);
-		classes.add(getClientExecutableMessageClass(messageElement));
-		if (server)
-		{
-			classes.add(getServerExecutableMessageClass(messageElement));
-		}
+		classes.addAll(getExecutableMessageClasses(messageElement));
 
 		MessageType messageType = null;
 
@@ -53,68 +48,30 @@ class MessageTypeParser
 	 * @return The class derived from the XML element.
 	 */
 	@SuppressWarnings("unchecked")
-	private static Class<? extends ExecutableMessage> getClientExecutableMessageClass(Element messageElement) {
+	private static List<Class<? extends ExecutableMessage>> getExecutableMessageClasses(Element messageElement) {
 		NodeList executableNodes = messageElement.getElementsByTagName("executable");
-		String executableMessageClassName = null;
-		Class<? extends ExecutableMessage> executableMessageClass = null;
+		String executableMessageClassName;
+		List<Class<? extends ExecutableMessage>> executableMessageClasses = new LinkedList<>();
 		// Parse executable tags for those containing language="java"
 		for (int i = 0; i < executableNodes.getLength(); i++)
 		{
 			Node currentExecutableNode = executableNodes.item(i);
 			Element currentExecutableElement = (Element) currentExecutableNode;
 			String languageAttribute = currentExecutableElement.getAttribute("language");
-			String sideAttribute = currentExecutableElement.getAttribute("side");
 			// If it's in java, set the executable message class name.
-			if ("java".equalsIgnoreCase(languageAttribute) && "client".equalsIgnoreCase(sideAttribute))
+			if ("java".equalsIgnoreCase(languageAttribute))
+			{
 				executableMessageClassName = currentExecutableElement.getTextContent();
-		}
-		if (executableMessageClassName != null)
-		{
-			try
-			{
-				executableMessageClass = (Class<? extends ExecutableMessage>) Class.forName(executableMessageClassName);
-			} catch (ClassNotFoundException | ClassCastException e)
-			{
-				LOGGER.log(Level.WARNING, "Incorrect Executable Message specified: ", e);
+				try
+				{
+					executableMessageClasses.add((Class<? extends ExecutableMessage>) Class.forName(executableMessageClassName));
+				} catch (ClassNotFoundException e)
+				{
+					LOGGER.log(Level.WARNING, "Incorrect Executable Message specified: ", e);
+				}
 			}
 		}
-		return executableMessageClass;
-	}
-
-	/**
-	 * Parse the supplied XML element looking for an executable tag with the attribute language="java".  If multiple
-	 * executable tags with the language="java" attribute exist, the last one found is used.
-	 * @param messageElement The message XML element.
-	 * @return The class derived from the XML element.
-	 */
-	@SuppressWarnings("unchecked")
-	private static Class<? extends ExecutableMessage> getServerExecutableMessageClass(Element messageElement) {
-		NodeList executableNodes = messageElement.getElementsByTagName("executable");
-		String executableMessageClassName = null;
-		Class<? extends ExecutableMessage> executableMessageClass = null;
-		// Parse executable tags for those containing language="java"
-		for (int i = 0; i < executableNodes.getLength(); i++)
-		{
-			Node currentExecutableNode = executableNodes.item(i);
-			Element currentExecutableElement = (Element) currentExecutableNode;
-			String languageAttribute = currentExecutableElement.getAttribute("language");
-			String sideAttribute = currentExecutableElement.getAttribute("side");
-			// If it's in java, set the executable message class name.
-			if ("java".equalsIgnoreCase(languageAttribute) && "server".equalsIgnoreCase(sideAttribute))
-				executableMessageClassName = currentExecutableElement.getTextContent();
-		}
-		if (executableMessageClassName != null)
-		{
-			try
-			{
-				executableMessageClass = (Class<? extends ExecutableMessage>) Class.forName(executableMessageClassName);
-			} catch (ClassNotFoundException | ClassCastException e)
-			{
-				LOGGER.log(Level.WARNING, "Incorrect Executable Message specified: ", e);
-				executableMessageClass = null;
-			}
-		}
-		return executableMessageClass;
+		return executableMessageClasses;
 	}
 
 	/**

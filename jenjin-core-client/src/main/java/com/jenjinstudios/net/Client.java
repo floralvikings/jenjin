@@ -2,6 +2,7 @@ package com.jenjinstudios.net;
 
 import com.jenjinstudios.io.Message;
 import com.jenjinstudios.io.MessageRegistry;
+import com.jenjinstudios.io.MessageTypeException;
 import com.jenjinstudios.message.ClientMessageFactory;
 
 import java.io.IOException;
@@ -46,7 +47,7 @@ public class Client extends Connection
 	 * @param port The port over which to connect to the server.
 	 */
 	protected Client(String address, int port) {
-		super(new MessageRegistry(false));
+		super(new MessageRegistry());
 		ADDRESS = address;
 		PORT = port;
 		repeatedSyncedTasks = new LinkedList<>();
@@ -154,7 +155,15 @@ public class Client extends Connection
 	 */
 	private boolean doPostConnectInit() {
 		// First, get and process the required FirstConnectResponse message from the server.
-		Message firstConnectResponse = getInputStream().readMessage();
+		Message firstConnectResponse;
+		try
+		{
+			firstConnectResponse = getInputStream().readMessage();
+		} catch (MessageTypeException e)
+		{
+			LOGGER.log(Level.SEVERE, "Unable to read first connection response", e);
+			return false;
+		}
 		if (firstConnectResponse == null)
 		{
 			return false;
