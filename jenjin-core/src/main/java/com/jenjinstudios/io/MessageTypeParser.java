@@ -17,21 +17,27 @@ class MessageTypeParser
 {
 	/** The Logger for this class. */
 	private static final Logger LOGGER = Logger.getLogger(MessageTypeParser.class.getName());
+	/** The XML element of the message being parsed. */
+	private Element messageElement;
+
+	public MessageTypeParser(Element messageElement) {
+
+		this.messageElement = messageElement;
+	}
 
 	/**
 	 * Get a message type by parsing the XML element specified.  Returns null if the element could not be properly parsed.
-	 * @param messageElement The XML Element.
 	 * @return A MessageType retrieved from the XML element.
 	 */
-	public static MessageType parseMessageElement(Element messageElement) {
+	public MessageType parseMessage() {
 		short id;
 		String name;
 		ArgumentType[] argumentTypes;
 		List<Class<? extends ExecutableMessage>> classes = new LinkedList<>();
 		id = Short.parseShort(messageElement.getAttribute("id"));
 		name = messageElement.getAttribute("name");
-		argumentTypes = parseArgumentNodes(messageElement);
-		classes.addAll(getExecutableMessageClasses(messageElement));
+		argumentTypes = parseArgumentNodes();
+		classes.addAll(getExecutableMessageClasses());
 
 		MessageType messageType = null;
 
@@ -44,11 +50,10 @@ class MessageTypeParser
 	/**
 	 * Parse the supplied XML element looking for an executable tag with the attribute language="java".  If multiple
 	 * executable tags with the language="java" attribute exist, the last one found is used.
-	 * @param messageElement The message XML element.
 	 * @return The class derived from the XML element.
 	 */
 	@SuppressWarnings("unchecked")
-	private static List<Class<? extends ExecutableMessage>> getExecutableMessageClasses(Element messageElement) {
+	private List<Class<? extends ExecutableMessage>> getExecutableMessageClasses() {
 		NodeList executableNodes = messageElement.getElementsByTagName("executable");
 		String executableMessageClassName;
 		List<Class<? extends ExecutableMessage>> executableMessageClasses = new LinkedList<>();
@@ -79,10 +84,9 @@ class MessageTypeParser
 
 	/**
 	 * Parse the given XML element for argument elements.
-	 * @param messageElement The XML element.
 	 * @return An array of discovered ArgumentTypes.
 	 */
-	private static ArgumentType[] parseArgumentNodes(Element messageElement) {
+	private ArgumentType[] parseArgumentNodes() {
 		ArgumentType[] argumentTypes;
 		NodeList argumentNodes = messageElement.getElementsByTagName("argument");
 		argumentTypes = new ArgumentType[argumentNodes.getLength()];

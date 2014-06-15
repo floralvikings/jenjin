@@ -48,7 +48,8 @@ class MessageXmlReader
 		for (int i = 0; i < messageElements.getLength(); i++)
 		{
 			Element currentMessageElement = (Element) messageElements.item(i);
-			MessageType messageType = MessageTypeParser.parseMessageElement(currentMessageElement);
+			MessageTypeParser mtp = new MessageTypeParser(currentMessageElement);
+			MessageType messageType = mtp.parseMessage();
 			messageTypes.add(messageType);
 		}
 
