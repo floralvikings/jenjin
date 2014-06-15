@@ -129,4 +129,32 @@ public class ConnectionTest
 		Message msg = mis.readMessage();
 		Assert.assertEquals(msg.name, "PingResponse");
 	}
+
+	@Test
+	public void testPingResponse() throws Exception {
+		MessageRegistry mr = new MessageRegistry();
+		// Spoof an invalid message
+		DataInputStreamMock dataInputStreamMock = new DataInputStreamMock();
+		dataInputStreamMock.mockReadShort((short) 2);
+		dataInputStreamMock.mockReadLong(System.nanoTime());
+		InputStream in = dataInputStreamMock.getIn();
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+
+		// Spoof the socket's input and output stream to ones that we control
+		Socket sock = Mockito.mock(Socket.class);
+		Mockito.when(sock.getInputStream()).thenReturn(in);
+		Mockito.when(sock.getOutputStream()).thenReturn(bos);
+
+		// Create and run the connection.  Normally, we would use connection.start() to spawn a new thread
+		// but for testing purposes we want the connection to run in the current thread.
+		Connection connection = new Connection(mr);
+		connection.setSocket(sock);
+		connection.run();
+		// Again, normally an implementation would schedule this, but that's excessive for testing purposes
+		connection.runSyncedTasks();
+		connection.sendAllMessages();
+
+		// Ping time should be extremely close to 0.
+		Assert.assertEquals(connection.getAveragePingTime(), 0, 100);
+	}
 }
