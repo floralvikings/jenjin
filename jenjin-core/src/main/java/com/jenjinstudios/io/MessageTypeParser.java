@@ -64,10 +64,13 @@ class MessageTypeParser
 				executableMessageClassName = currentExecutableElement.getTextContent();
 				try
 				{
-					executableMessageClasses.add((Class<? extends ExecutableMessage>) Class.forName(executableMessageClassName));
+					executableMessageClasses.add((Class<? extends ExecutableMessage>)
+							Class.forName(executableMessageClassName));
 				} catch (ClassNotFoundException e)
 				{
-					LOGGER.log(Level.WARNING, "Incorrect Executable Message specified: ", e);
+					LOGGER.log(Level.INFO,
+							"Unable to locate Executable Message specified: " +
+									executableMessageClassName, e);
 				}
 			}
 		}
@@ -118,9 +121,6 @@ class MessageTypeParser
 				break;
 			case "short":
 				type = Short.class;
-				break;
-			case "char":
-				type = Character.class;
 				break;
 			case "int":
 				type = Integer.class;

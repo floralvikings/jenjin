@@ -27,6 +27,7 @@ public class MessageOutputStream
 	private SecretKey aesKey;
 	/** The AES cipher. */
 	private Cipher aesEncryptCipher;
+	private boolean closed;
 
 	/**
 	 * Creates a new message output stream to write data to the specified underlying output stream. The counter {@code
@@ -46,6 +47,10 @@ public class MessageOutputStream
 	 * @throws IOException If there is an IO error.
 	 */
 	public void writeMessage(Message message) throws IOException {
+		if (closed)
+		{
+			throw new IOException("Cannot write message: stream closed");
+		}
 		Object[] args = message.getArgs();
 		MessageType messageType = messageRegistry.getMessageType(message.getID());
 		ArgumentType[] argumentTypes = messageType.argumentTypes;
@@ -142,6 +147,7 @@ public class MessageOutputStream
 	 */
 	public void close() throws IOException {
 		outputStream.close();
+		closed = true;
 	}
 
 	/**

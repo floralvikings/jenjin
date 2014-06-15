@@ -27,8 +27,6 @@ public class MessageRegistry
 	private final Map<Short, MessageType> messageTypesByID = new TreeMap<>();
 	/** A map that stores message types sorted by name. */
 	private final Map<String, MessageType> messageTypesByName = new TreeMap<>();
-	/** Flags whether messages have been registered. */
-	private boolean messagesRegistered;
 
 	/**
 	 * Construct a new MessageRegistry.
@@ -84,14 +82,7 @@ public class MessageRegistry
 	 * @param name The name of the message type.
 	 * @return The MessageType with the given name.
 	 */
-	public MessageType getMessageType(String name) {
-		if (!messagesRegistered)
-		{
-			LOGGER.log(Level.SEVERE, "Messages not registered!  Please remember to call MessageRegistry.registerXmlMessages()");
-		}
-
-		return messageTypesByName.get(name);
-	}
+	public MessageType getMessageType(String name) { return messageTypesByName.get(name); }
 
 	/**
 	 * Get the MessageType with the given ID.
@@ -106,11 +97,6 @@ public class MessageRegistry
 	 * @return A LinkedList of class names.
 	 */
 	public LinkedList<Class> getArgumentClasses(short id) throws MessageTypeException {
-		if (!messagesRegistered)
-		{
-			LOGGER.log(Level.SEVERE, "Messages not registered!  Please remember to call MessageRegistry.registerXmlMessages()");
-		}
-
 		LinkedList<Class> temp = new LinkedList<>();
 
 		MessageType type = messageTypesByID.get(id);
@@ -131,7 +117,7 @@ public class MessageRegistry
 	 * @param messageName The name of the message.
 	 */
 	void disableExecutableMessage(String messageName) {
-		LOGGER.log(Level.FINE, "Disabling message: {0}", messageName);
+		LOGGER.log(Level.INFO, "Disabling message: {0}", messageName);
 		MessageType type = messageTypesByName.get(messageName);
 		short id = type.id;
 		ArgumentType[] argumentTypes = type.argumentTypes;
@@ -147,7 +133,6 @@ public class MessageRegistry
 		addJarMessageEntries(streamsToRead);
 		addMessageFiles(streamsToRead);
 		readXmlStreams(streamsToRead);
-		messagesRegistered = true;
 	}
 
 	/**

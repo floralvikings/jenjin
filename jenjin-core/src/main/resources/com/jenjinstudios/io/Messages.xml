@@ -19,7 +19,7 @@
     </message>
 
     <message name="DisabledMessage" id="-2">
-        <executable language="java" side="server">com.jenjinstudios.message.DisabledExecutableMessage</executable>
+        <executable language="java" side="server">com.jenjinstudios.io.DisabledExecutableMessage</executable>
     </message>
 
     <message name="InvalidMessage" id="-1">

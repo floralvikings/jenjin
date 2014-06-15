@@ -30,6 +30,7 @@ public class MessageInputStream
 	private SecretKey aesKey;
 	/** The cipher used to decrypt messages. */
 	private Cipher aesDecryptCipher;
+	private boolean closed;
 
 	/**
 	 * Construct a new {@code MessageInputStream} from the given InputStream.
@@ -46,6 +47,11 @@ public class MessageInputStream
 	 * @return The Message constructed form the data stream.
 	 */
 	public Message readMessage() throws MessageTypeException {
+		if (closed)
+		{
+			LOGGER.log(Level.WARNING, "Message Stream attempting to read message while closed");
+			return null;
+		}
 		try
 		{
 			short id = inputStream.readShort();
@@ -70,7 +76,10 @@ public class MessageInputStream
 	 * Close the input stream.
 	 * @throws java.io.IOException If there is an IO error.
 	 */
-	public void close() throws IOException { inputStream.close(); }
+	public void close() throws IOException {
+		inputStream.close();
+		closed = true;
+	}
 
 	/**
 	 * Set the AES key used to decrypt messages.

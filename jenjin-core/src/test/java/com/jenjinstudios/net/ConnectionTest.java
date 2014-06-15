@@ -1,15 +1,13 @@
 package com.jenjinstudios.net;
 
-import com.jenjinstudios.io.DataInputStreamMock;
-import com.jenjinstudios.io.Message;
-import com.jenjinstudios.io.MessageInputStream;
-import com.jenjinstudios.io.MessageRegistry;
+import com.jenjinstudios.io.*;
 import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
 
@@ -50,5 +48,29 @@ public class ConnectionTest
 		MessageInputStream mis = new MessageInputStream(mr, new ByteArrayInputStream(bytes));
 		Message msg = mis.readMessage();
 		Assert.assertEquals(msg.getArgument("messageName"), "Unknown");
+	}
+
+	@Test(expectedExceptions = IOException.class)
+	public void testCloseLink() throws Exception {
+		MessageRegistry mr = new MessageRegistry();
+
+		DataInputStreamMock dataInputStreamMock = new DataInputStreamMock();
+		InputStream in = dataInputStreamMock.getIn();
+		dataInputStreamMock.mockReadShort((short) -255);
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+
+		// Spoof the socket's input and output stream to ones that we control
+		Socket sock = Mockito.mock(Socket.class);
+		Mockito.when(sock.getInputStream()).thenReturn(in);
+		Mockito.when(sock.getOutputStream()).thenReturn(bos);
+
+		Connection connection = new Connection(mr);
+		connection.setSocket(sock);
+		connection.closeLink();
+
+		Message msg = mr.createMessage("InvalidMessage");
+		msg.setArgument("messageName", "FooBar");
+		msg.setArgument("messageID", (short) -255);
+		connection.getOutputStream().writeMessage(msg);
 	}
 }

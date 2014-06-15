@@ -247,15 +247,25 @@ public class Connection extends Thread
 		try
 		{
 			inputStream.close();
-			outputStream.close();
-			socket.close();
-		} catch (IOException ignored)
+		} catch (IOException e)
 		{
-			// Link closing, possible _because_ of an IOException; will be shutting down.
-		} finally
-		{
-			connected = false;
+			LOGGER.log(Level.INFO, "Issue closing input stream.", e);
 		}
+		try
+		{
+			outputStream.close();
+		} catch (IOException e)
+		{
+			LOGGER.log(Level.INFO, "Issue closing output stream.", e);
+		}
+		try
+		{
+			socket.close();
+		} catch (IOException e)
+		{
+			LOGGER.log(Level.INFO, "Issue closing socked.", e);
+		}
+		connected = false;
 	}
 
 	/**
