@@ -67,8 +67,6 @@ public class ServerTest
 	 */
 	@Test
 	public void testLoginLogout() throws Exception {
-		assertEquals(0, server.getNumClients());
-
 		goodClient01 = new AuthClient("localhost", 51019, "TestAccount1", "testPassword");
 		goodClient01.blockingStart();
 
