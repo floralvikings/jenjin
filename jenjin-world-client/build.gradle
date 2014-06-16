@@ -4,3 +4,15 @@ dependencies {
     compile project(':jenjin-core-client')
     compile project(':jenjin-world-core')
 }
+
+test {
+    useTestNG()
+    maxParallelForks = 1;
+    workingDir = project.rootDir
+    beforeTest { descriptor ->
+        logger.lifecycle("Running test: " + descriptor)
+    }
+    afterTest { descriptor ->
+        logger.lifecycle("Completed test: " + descriptor)
+    }
+}

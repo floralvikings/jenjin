@@ -1,19 +1,12 @@
 allprojects {
-
     apply plugin: 'maven'
-    apply plugin: 'idea'
-
 
     group = 'com.jenjinstudios'
     version = '0.5.0-alpha'
-
 }
 
 subprojects {
     apply plugin: 'java'
-    apply plugin: 'idea'
-    sourceCompatibility = 7
-    targetCompatibility = 7
 
     repositories {
         mavenLocal()
@@ -24,18 +17,6 @@ subprojects {
     dependencies {
         testCompile 'org.testng:testng:6.8.7'
         testCompile 'org.mockito:mockito-all:1.9.5'
-    }
-
-    test {
-        useTestNG()
-        maxParallelForks = 1;
-        workingDir = project.rootDir
-        beforeTest { descriptor ->
-            logger.lifecycle("Running test: " + descriptor)
-        }
-        afterTest { descriptor ->
-            logger.lifecycle("Completed test: " + descriptor)
-        }
     }
 
     tasks.withType(Compile) {

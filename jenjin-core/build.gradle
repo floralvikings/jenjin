@@ -1,4 +1,13 @@
 description = 'Jenjin Core I/O Classes'
 
-dependencies {
+test {
+    useTestNG()
+    maxParallelForks = 8;
+    workingDir = project.rootDir
+    beforeTest { descriptor ->
+        logger.lifecycle("Running test: " + descriptor)
+    }
+    afterTest { descriptor ->
+        logger.lifecycle("Completed test: " + descriptor)
+    }
 }
