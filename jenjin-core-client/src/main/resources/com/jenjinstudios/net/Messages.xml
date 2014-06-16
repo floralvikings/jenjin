@@ -2,6 +2,11 @@
 
 <base_messages xmlns="" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation=" ">
 
+    <message name="FirstConnectResponse" id="100">
+        <argument type="int" name="ups" />
+        <executable language="java">com.jenjinstudios.message.ExecutableFirstConnectResponse</executable>
+    </message>
+
     <message name="LoginRequest" id="101">
         <argument type="String" name="username" encrypt="true" />
         <argument type="String" name="password" encrypt="true" />

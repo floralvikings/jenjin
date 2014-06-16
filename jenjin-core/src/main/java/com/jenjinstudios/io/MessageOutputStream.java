@@ -60,6 +60,10 @@ public class MessageOutputStream
 			writeArgument(args[i], argumentTypes[i].encrypt);
 	}
 
+	public boolean isClosed() {
+		return closed;
+	}
+
 	/**
 	 * Write an argument to the data stream, properly cast.
 	 * @param arg The argument to be written.

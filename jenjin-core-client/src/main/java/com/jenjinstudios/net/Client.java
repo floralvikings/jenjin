@@ -2,7 +2,6 @@ package com.jenjinstudios.net;
 
 import com.jenjinstudios.io.Message;
 import com.jenjinstudios.io.MessageRegistry;
-import com.jenjinstudios.io.MessageTypeException;
 import com.jenjinstudios.message.ClientMessageFactory;
 
 import java.io.IOException;
@@ -98,13 +97,7 @@ public class Client extends Connection
 
 	@Override
 	public final void run() {
-		if (!isConnected()) connect();
-		if (!isConnected())
-			return;
-		// The ClientLoop is used to send messages in the outgoing queue and do synchronized actions.
-		sendMessagesTimer = new Timer("Client Update Loop", false);
-		sendMessagesTimer.scheduleAtFixedRate(new ClientLoop(this), 0, period);
-
+		connect();
 		super.run();
 	}
 
@@ -127,21 +120,16 @@ public class Client extends Connection
 	 * Get the update period of this client.
 	 * @return The update period of this client.
 	 */
-	public int getPeriod() {
-		return period;
-	}
+	public int getPeriod() { return period; }
 
 	/**
 	 * Attempt to connect to the server at {@code ADDRESS} over {@code PORT}  This method must be called <i>before</i>
 	 * the client thread is started.
 	 */
 	private void connect() {
-		if (isConnected()) // No need to connect if we're already connected.
-			return;
 		try
 		{
 			super.setSocket(new Socket(ADDRESS, PORT));
-			super.setConnected(doPostConnectInit());
 		} catch (IOException ex)
 		{
 			LOGGER.log(Level.SEVERE, "Unable to connect to server.", ex);
@@ -151,22 +139,11 @@ public class Client extends Connection
 	/**
 	 * Take care of all the necessary initialization messages between client and server.  These include things like RSA
 	 * key exchanges and latency checks.
-	 * @return Whether the init was successful.
 	 */
-	private boolean doPostConnectInit() {
-		// First, get and process the required FirstConnectResponse message from the server.
-		Message firstConnectResponse;
-		try
+	public void doPostConnectInit(Message firstConnectResponse) {
+		if (isConnected())
 		{
-			firstConnectResponse = getInputStream().readMessage();
-		} catch (MessageTypeException e)
-		{
-			LOGGER.log(Level.SEVERE, "Unable to read first connection response", e);
-			return false;
-		}
-		if (firstConnectResponse == null)
-		{
-			return false;
+			throw new IllegalStateException("Trying to perform connection init when already connected.");
 		}
 		int ups = (int) firstConnectResponse.getArgument("ups");
 		period = 1000 / ups;
@@ -177,7 +154,11 @@ public class Client extends Connection
 
 		// Finally, send a ping request to establish latency.
 		sendPing();
-		return true;
+
+		super.setConnected(true);
+
+		sendMessagesTimer = new Timer("Client Update Loop", false);
+		sendMessagesTimer.scheduleAtFixedRate(new ClientLoop(this), 0, period);
 	}
 
 	/** Run the repeated synchronized tasks. */

@@ -1,13 +1,15 @@
 package com.jenjinstudios.net;
 
-import com.jenjinstudios.io.*;
+import com.jenjinstudios.io.DataInputStreamMock;
+import com.jenjinstudios.io.Message;
+import com.jenjinstudios.io.MessageInputStream;
+import com.jenjinstudios.io.MessageRegistry;
 import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.Socket;
 
@@ -50,7 +52,7 @@ public class ConnectionTest
 		Assert.assertEquals(msg.getArgument("messageName"), "Unknown");
 	}
 
-	@Test(expectedExceptions = IOException.class)
+	@Test(expectedExceptions = MessageQueueException.class)
 	public void testCloseLink() throws Exception {
 		MessageRegistry mr = new MessageRegistry();
 
@@ -71,7 +73,8 @@ public class ConnectionTest
 		Message msg = mr.createMessage("InvalidMessage");
 		msg.setArgument("messageName", "FooBar");
 		msg.setArgument("messageID", (short) -255);
-		connection.getOutputStream().writeMessage(msg);
+		connection.queueMessage(msg);
+		connection.sendAllMessages();
 	}
 
 	@Test

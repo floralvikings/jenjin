@@ -59,8 +59,8 @@ public class Connection extends Thread
 	 */
 	protected void setSocket(Socket socket) throws IOException {
 		this.socket = socket;
-		setOutputStream(new MessageOutputStream(messageRegistry, socket.getOutputStream()));
-		setInputStream(new MessageInputStream(messageRegistry, socket.getInputStream()));
+		outputStream = new MessageOutputStream(messageRegistry, socket.getOutputStream());
+		inputStream = new MessageInputStream(messageRegistry, socket.getInputStream());
 	}
 
 	/** Send a ping request. */
@@ -74,6 +74,10 @@ public class Connection extends Thread
 	 * @param message The message to add to the outgoing queue.
 	 */
 	public void queueMessage(Message message) {
+		if (outputStream.isClosed())
+		{
+			throw new MessageQueueException(message);
+		}
 		synchronized (outgoingMessages)
 		{
 			outgoingMessages.add(message);
@@ -138,25 +142,13 @@ public class Connection extends Thread
 		try
 		{
 			LOGGER.log(Level.FINEST, "Connection {0} writing message {1}", new Object[]{getName(), o});
-			getOutputStream().writeMessage(o);
+			outputStream.writeMessage(o);
 		} catch (IOException e)
 		{
 			LOGGER.log(Level.SEVERE, "Unable to write message " + o + " to socket, shutting down.", e);
 			shutdown();
 		}
 	}
-
-	/**
-	 * Get the output stream used by this communicator.
-	 * @return The output stream used by this communicator.
-	 */
-	protected MessageOutputStream getOutputStream() { return outputStream; }
-
-	/**
-	 * Set the output stream.
-	 * @param outputStream The output stream.
-	 */
-	private void setOutputStream(MessageOutputStream outputStream) { this.outputStream = outputStream; }
 
 	/** Shutdown this communicator. */
 	protected void shutdown() { running = false; }
@@ -173,21 +165,9 @@ public class Connection extends Thread
 	 */
 	public void setAESKey(byte[] key) {
 		aesKey = key;
-		getInputStream().setAESKey(key);
-		getOutputStream().setAesKey(key);
+		inputStream.setAESKey(key);
+		outputStream.setAesKey(key);
 	}
-
-	/**
-	 * Get the input stream used.
-	 * @return The input stream.
-	 */
-	protected MessageInputStream getInputStream() { return inputStream; }
-
-	/**
-	 * Set the input stream used.
-	 * @param inputStream The input stream.
-	 */
-	private void setInputStream(MessageInputStream inputStream) { this.inputStream = inputStream; }
 
 	public void run() {
 		running = true;
@@ -197,7 +177,7 @@ public class Connection extends Thread
 		{
 			try
 			{
-				currentMessage = getInputStream().readMessage();
+				currentMessage = inputStream.readMessage();
 				if (currentMessage == null)
 				{
 					LOGGER.log(Level.SEVERE, "Received null message from input stream, exiting read loop");
@@ -269,21 +249,12 @@ public class Connection extends Thread
 	}
 
 	/**
-	 * Get an executable message for a given message.
-	 * @param message The message to be used.
-	 * @return The ExecutableMessage.
-	 */
-	protected ExecutableMessage getExecutableMessage(Message message) {
-		return ExecutableMessage.getExecutableMessageFor(this, message);
-	}
-
-	/**
 	 * Process the specified message.  This method should be overridden by any implementing classes, but it does contain
 	 * functionality necessary to communicate with a DownloadServer or a ChatServer.
 	 * @param message The message to be processed.
 	 */
 	private void processMessage(Message message) {
-		ExecutableMessage exec = getExecutableMessage(message);
+		ExecutableMessage exec = ExecutableMessage.getExecutableMessageFor(this, message);
 		if (exec != null)
 		{
 			exec.runASync();

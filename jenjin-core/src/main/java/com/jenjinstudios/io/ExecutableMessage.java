@@ -80,8 +80,8 @@ public abstract class ExecutableMessage implements Runnable
 				executableMessage = execConstructor.newInstance(connection, message);
 			} else
 			{
-				LOGGER.log(Level.SEVERE, "No constructor containing Connection or {0} as first argument type found",
-						connection.getClass().getName());
+				LOGGER.log(Level.SEVERE, "No constructor containing Connection or {0} as first argument type found for {1}",
+						new Object[]{connection.getClass().getName(), message.name});
 			}
 		} catch (InvocationTargetException | InstantiationException | IllegalAccessException e)
 		{

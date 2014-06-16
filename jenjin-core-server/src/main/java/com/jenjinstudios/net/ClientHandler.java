@@ -75,8 +75,7 @@ public class ClientHandler extends Connection
 
 	/** Reset anything that needs to be taken care of after sendAllMessages. */
 	@SuppressWarnings("EmptyMethod")
-	public void refresh() {
-	}
+	public void refresh() { }
 
 	/** Shut down the client handler. */
 	public void shutdown() {
@@ -155,17 +154,6 @@ public class ClientHandler extends Connection
 	 */
 	public int getHandlerId() {
 		return handlerId;
-	}
-
-	/**
-	 * Immediately force send a message. This method should only be used if a message is <i>extremely</i> time
-	 * dependent, otherwise messages should be queued using the {@code queueMessage} method, because this method may
-	 * cause synchronization issues.
-	 * @param message The message to send.
-	 * @throws IOException If there is an IOException.
-	 */
-	public void forceMessage(Message message) throws IOException {
-		getOutputStream().writeMessage(message);
 	}
 
 	@Override
