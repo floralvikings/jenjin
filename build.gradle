@@ -27,9 +27,3 @@ subprojects {
 task wrapper(type: Wrapper) {
     gradleVersion = '1.12'
 }
-
-idea {
-    project {
-        languageLevel = 'JDK_1_7'
-    }
-}
