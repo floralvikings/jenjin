@@ -96,7 +96,14 @@ public class Client extends Connection
 
 	@Override
 	public final void run() {
-		connect();
+		try
+		{
+			super.openStreams();
+		} catch (IOException ex)
+		{
+			LOGGER.log(Level.SEVERE, "Unable to connect to server.", ex);
+			return;
+		}
 		super.run();
 	}
 
@@ -118,20 +125,6 @@ public class Client extends Connection
 	 * @return The update period of this client.
 	 */
 	public int getPeriod() { return period; }
-
-	/**
-	 * Attempt to connect to the server at {@code ADDRESS} over {@code PORT}  This method must be called <i>before</i>
-	 * the client thread is started.
-	 */
-	private void connect() {
-		try
-		{
-			super.openStreams();
-		} catch (IOException ex)
-		{
-			LOGGER.log(Level.SEVERE, "Unable to connect to server.", ex);
-		}
-	}
 
 	/**
 	 * Take care of all the necessary initialization messages between client and server.  These include things like RSA
