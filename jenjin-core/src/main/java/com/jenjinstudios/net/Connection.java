@@ -44,8 +44,9 @@ public class Connection extends Thread
 	private int invalidMsgCount;
 
 	/** Construct a new Connection. */
-	protected Connection(MessageRegistry messageRegistry) {
+	protected Connection(MessageRegistry messageRegistry, Socket sock) {
 		this.messageRegistry = messageRegistry;
+		this.socket = sock;
 		outgoingMessages = new LinkedList<>();
 		pingTimes = new ArrayList<>();
 		syncedTasks = new LinkedList<>();
@@ -54,11 +55,9 @@ public class Connection extends Thread
 
 	/**
 	 * Set the socket used by this communicator.  Should only be called from subclass.
-	 * @param socket The socket to be used by this communicator.
 	 * @throws IOException If there is an exception creating message streams.
 	 */
-	protected void setSocket(Socket socket) throws IOException {
-		this.socket = socket;
+	protected void openStreams() throws IOException {
 		outputStream = new MessageOutputStream(messageRegistry, socket.getOutputStream());
 		inputStream = new MessageInputStream(messageRegistry, socket.getInputStream());
 	}

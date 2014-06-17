@@ -35,15 +35,13 @@ public class Client extends Connection
 	private PublicKey publicKey;
 	/** The private key sent to the server. */
 	private PrivateKey privateKey;
-	private Socket socket;
 
 	/**
 	 * Construct a new client and attempt to connect to the server over the specified port.
 	 * @param socket The Socket over which this client will communicate with the server.
 	 */
 	protected Client(Socket socket) {
-		super(new MessageRegistry());
-		this.socket = socket;
+		super(new MessageRegistry(), socket);
 		repeatedTasks = new LinkedList<>();
 		generateKeys();
 		this.messageFactory = new ClientMessageFactory(getMessageRegistry());
@@ -129,7 +127,7 @@ public class Client extends Connection
 	private void connect() {
 		try
 		{
-			super.setSocket(socket);
+			super.openStreams();
 		} catch (IOException ex)
 		{
 			LOGGER.log(Level.SEVERE, "Unable to connect to server.", ex);
