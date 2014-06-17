@@ -63,8 +63,18 @@ public class WorldServerTest
 	 * @param vector1 The vector.
 	 */
 	public static void assertClientAtVector(WorldClient client, Vector2D vector1) {
+		assertClientAtVector(client, vector1, vectorTolerance);
+	}
+
+	/**
+	 * Assert that the player for the given client is at the given vector.
+	 * @param client The client.
+	 * @param vector1 The vector.
+	 * @param tolerance The tolerable difference between the client's vector and the expected vector.
+	 */
+	public static void assertClientAtVector(WorldClient client, Vector2D vector1, double tolerance) {
 		double distance = vector1.getDistanceToVector(client.getPlayer().getVector2D());
-		Assert.assertEquals(distance, 0, vectorTolerance,
+		Assert.assertEquals(distance, 0, tolerance,
 				"V: " + client.getPlayer().getVector2D() + " " + "V1: " + vector1);
 	}
 

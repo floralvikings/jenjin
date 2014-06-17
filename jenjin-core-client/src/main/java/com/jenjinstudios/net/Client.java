@@ -1,7 +1,6 @@
 package com.jenjinstudios.net;
 
 import com.jenjinstudios.io.Message;
-import com.jenjinstudios.io.MessageRegistry;
 import com.jenjinstudios.message.ClientMessageFactory;
 
 import java.io.IOException;
@@ -41,7 +40,7 @@ public class Client extends Connection
 	 * @param socket The Socket over which this client will communicate with the server.
 	 */
 	protected Client(Socket socket) {
-		super(new MessageRegistry(), socket);
+		super(socket);
 		repeatedTasks = new LinkedList<>();
 		generateKeys();
 		this.messageFactory = new ClientMessageFactory(getMessageRegistry());

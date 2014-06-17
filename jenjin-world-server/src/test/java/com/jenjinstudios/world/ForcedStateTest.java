@@ -77,7 +77,8 @@ public class ForcedStateTest extends WorldServerTest
 		WorldServerTest.assertClientAtVector(client, actualVector6);
 
 		WorldServerTest.movePlayerToVector(client, server, attemptedVector7);
-		WorldServerTest.assertClientAtVector(client, actualVector7);
+		// Going to be a _little_ more lenient to avoid spurious failures
+		WorldServerTest.assertClientAtVector(client, actualVector7, 3);
 		WorldServerTest.tearDown(client, server);
 	}
 

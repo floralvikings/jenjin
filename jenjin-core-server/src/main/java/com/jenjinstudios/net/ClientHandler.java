@@ -1,7 +1,6 @@
 package com.jenjinstudios.net;
 
 import com.jenjinstudios.io.Message;
-import com.jenjinstudios.io.MessageRegistry;
 import com.jenjinstudios.message.ServerMessageFactory;
 
 import java.io.IOException;
@@ -34,11 +33,10 @@ public class ClientHandler extends Connection
 	 * send the client a FirstConnectResponse message with the server's UPS
 	 * @param s The server for which this handler works.
 	 * @param sk The socket used to communicate with the client.
-	 * @param messageRegistry The MessageRegistry for this ClientHandler.
 	 * @throws IOException If the socket is unable to connect.
 	 */
-	public ClientHandler(AuthServer<? extends ClientHandler> s, Socket sk, MessageRegistry messageRegistry) throws IOException {
-		super(messageRegistry, sk);
+	public ClientHandler(AuthServer<? extends ClientHandler> s, Socket sk) throws IOException {
+		super(sk);
 		setName("ClientHandler: " + sk.getInetAddress());
 		server = s;
 		super.openStreams();

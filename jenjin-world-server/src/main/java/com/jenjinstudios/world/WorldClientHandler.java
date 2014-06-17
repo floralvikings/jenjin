@@ -1,7 +1,6 @@
 package com.jenjinstudios.world;
 
 import com.jenjinstudios.io.Message;
-import com.jenjinstudios.io.MessageRegistry;
 import com.jenjinstudios.net.ClientHandler;
 import com.jenjinstudios.world.state.MoveState;
 import com.jenjinstudios.world.message.WorldServerMessageFactory;
@@ -32,11 +31,10 @@ public class WorldClientHandler extends ClientHandler
 	 * send the client a FirstConnectResponse message with the server's UPS
 	 * @param s The server for which this handler works.
 	 * @param sk The socket used to communicate with the client.
-	 * @param messageRegistry The MessageRegistry for this ClientHandler.
 	 * @throws java.io.IOException If the socket is unable to connect.
 	 */
-	public WorldClientHandler(WorldServer s, Socket sk, MessageRegistry messageRegistry) throws IOException {
-		super(s, sk, messageRegistry);
+	public WorldClientHandler(WorldServer s, Socket sk) throws IOException {
+		super(s, sk);
 		server = s;
 		this.messageFactory = new WorldServerMessageFactory(this, getMessageRegistry());
 	}

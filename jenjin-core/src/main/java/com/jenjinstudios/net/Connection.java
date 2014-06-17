@@ -44,13 +44,13 @@ public class Connection extends Thread
 	private int invalidMsgCount;
 
 	/** Construct a new Connection. */
-	protected Connection(MessageRegistry messageRegistry, Socket sock) {
-		this.messageRegistry = messageRegistry;
+	protected Connection(Socket sock) {
+		this.messageRegistry = new MessageRegistry();
 		this.socket = sock;
 		outgoingMessages = new LinkedList<>();
 		pingTimes = new ArrayList<>();
 		syncedTasks = new LinkedList<>();
-		messageFactory = new MessageFactory(messageRegistry);
+		messageFactory = new MessageFactory(this.messageRegistry);
 	}
 
 	/**
