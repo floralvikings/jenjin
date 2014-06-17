@@ -23,10 +23,6 @@ public class Client extends Connection
 	public static final Logger LOGGER = Logger.getLogger(Client.class.getName());
 	/** The number of milliseconds before a blocking method should time out. */
 	private static final long TIMEOUT_MILLIS = 30000;
-	/** The port over which the client communicates with the server. */
-	private final int PORT;
-	/** The address of the server to which this client will connect. */
-	private final String ADDRESS;
 	/** The list of tasks that this client will execute each update cycle. */
 	private final List<Runnable> repeatedTasks;
 	/** The message factory used by this client. */
@@ -39,17 +35,24 @@ public class Client extends Connection
 	private PublicKey publicKey;
 	/** The private key sent to the server. */
 	private PrivateKey privateKey;
+	private Socket socket;
 
 	/**
 	 * Construct a new client and attempt to connect to the server over the specified port.
-	 * @param address The address of the server to which to connect
-	 * @param port The port over which to connect to the server.
+	 * @param socket The Socket over which this client will communicate with the server.
 	 */
-	protected Client(String address, int port) {
+	protected Client(Socket socket) {
 		super(new MessageRegistry());
-		ADDRESS = address;
-		PORT = port;
+		this.socket = socket;
 		repeatedTasks = new LinkedList<>();
+		generateKeys();
+		this.messageFactory = new ClientMessageFactory(getMessageRegistry());
+	}
+
+	/**
+	 * Generate the public and private key used by this client.
+	 */
+	private void generateKeys() {
 		try
 		{
 			KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
@@ -61,7 +64,6 @@ public class Client extends Connection
 		{
 			LOGGER.log(Level.SEVERE, "Unable to create RSA key pair!", e);
 		}
-		this.messageFactory = new ClientMessageFactory(getMessageRegistry());
 	}
 
 	/**
@@ -127,7 +129,7 @@ public class Client extends Connection
 	private void connect() {
 		try
 		{
-			super.setSocket(new Socket(ADDRESS, PORT));
+			super.setSocket(socket);
 		} catch (IOException ex)
 		{
 			LOGGER.log(Level.SEVERE, "Unable to connect to server.", ex);

@@ -12,6 +12,7 @@ import org.testng.annotations.BeforeMethod;
 
 import java.io.File;
 import java.io.InputStream;
+import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
@@ -76,7 +77,8 @@ public class WorldServerTest
 	public static WorldClient initWorldClient(int port) throws Exception {
 		String user = "TestAccount" + testAccountNumber;
 		LOGGER.log(Level.INFO, "Logging into account {0}", user);
-		WorldClient worldClient = new WorldClient(new File("resources/WorldTestFile.xml"), "localhost", port, user, "testPassword");
+		Socket sock = new Socket("localhost", port);
+		WorldClient worldClient = new WorldClient(new File("resources/WorldTestFile.xml"), sock, user, "testPassword");
 		worldClient.blockingStart();
 		worldClient.sendBlockingWorldFileRequest();
 		worldClient.sendBlockingLoginRequest();

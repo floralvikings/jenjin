@@ -13,6 +13,7 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.Socket;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.logging.Level;
@@ -54,8 +55,7 @@ public class WorldClient extends AuthClient
 	 * Construct a client connecting to the given address over the given port.  This client <i>must</i> have a username
 	 * and password.
 	 * @param worldFile The file containing the world information.
-	 * @param address The address to which this client will attempt to connect.
-	 * @param port The port over which this client will attempt to connect.
+	 * @param sock The socket over which the client will communicate with the server.
 	 * @param username The username that will be used by this client.
 	 * @param password The password that will be used by this client.
 	 * @throws java.security.NoSuchAlgorithmException If there is an error generating encryption keys.
@@ -64,10 +64,11 @@ public class WorldClient extends AuthClient
 	 * @throws javax.xml.transform.TransformerException If there's an error transforming the xml file.
 	 * @throws org.xml.sax.SAXException If there's an error in the XML syntax.
 	 */
-	public WorldClient(File worldFile, String address, int port, String username, String password)
+	// TODO Wrap these exceptions
+	public WorldClient(File worldFile, Socket sock, String username, String password)
 			throws NoSuchAlgorithmException, SAXException, TransformerException, ParserConfigurationException, IOException
 	{
-		super(address, port, username, password);
+		super(sock, username, password);
 		this.password = password;
 		this.worldFile = worldFile;
 		if (worldFile.exists())
