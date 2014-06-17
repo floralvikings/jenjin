@@ -26,7 +26,8 @@ class MessageTypeParser
 	}
 
 	/**
-	 * Get a message type by parsing the XML element specified.  Returns null if the element could not be properly parsed.
+	 * Get a message type by parsing the XML element specified.  Returns null if the element could not be properly
+	 * parsed.
 	 * @return A MessageType retrieved from the XML element.
 	 */
 	public MessageType parseMessage() {
@@ -74,8 +75,8 @@ class MessageTypeParser
 				} catch (ClassNotFoundException e)
 				{
 					LOGGER.log(Level.INFO,
-							"Unable to locate Executable Message specified: " +
-									executableMessageClassName, e);
+							"Unable to locate Executable Message class {0} ", executableMessageClassName);
+					LOGGER.log(Level.FINE, "Exception: ", e);
 				}
 			}
 		}

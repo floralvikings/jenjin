@@ -28,7 +28,7 @@ public class Client extends Connection
 	/** The address of the server to which this client will connect. */
 	private final String ADDRESS;
 	/** The list of tasks that this client will execute each update cycle. */
-	private final List<Runnable> repeatedSyncedTasks;
+	private final List<Runnable> repeatedTasks;
 	/** The message factory used by this client. */
 	private final ClientMessageFactory messageFactory;
 	/** The period of the update in milliseconds. */
@@ -49,7 +49,7 @@ public class Client extends Connection
 		super(new MessageRegistry());
 		ADDRESS = address;
 		PORT = port;
-		repeatedSyncedTasks = new LinkedList<>();
+		repeatedTasks = new LinkedList<>();
 		try
 		{
 			KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
@@ -69,9 +69,9 @@ public class Client extends Connection
 	 * @param r The task to be performed.
 	 */
 	public void addRepeatedTask(Runnable r) {
-		synchronized (repeatedSyncedTasks)
+		synchronized (repeatedTasks)
 		{
-			repeatedSyncedTasks.add(r);
+			repeatedTasks.add(r);
 		}
 	}
 
@@ -112,9 +112,7 @@ public class Client extends Connection
 	 * Get the private key.
 	 * @return The private key.
 	 */
-	public PrivateKey getPrivateKey() {
-		return privateKey;
-	}
+	public PrivateKey getPrivateKey() { return privateKey; }
 
 	/**
 	 * Get the update period of this client.
@@ -162,10 +160,10 @@ public class Client extends Connection
 	}
 
 	/** Run the repeated synchronized tasks. */
-	void runRepeatedSyncedTasks() {
-		synchronized (repeatedSyncedTasks)
+	void runRepeatedTasks() {
+		synchronized (repeatedTasks)
 		{
-			for (Runnable r : repeatedSyncedTasks)
+			for (Runnable r : repeatedTasks)
 				r.run();
 		}
 	}
