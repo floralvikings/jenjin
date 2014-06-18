@@ -45,7 +45,11 @@ public class Connection extends Thread
 
 	/** Construct a new Connection. */
 	protected Connection(Socket sock) {
-		this.messageRegistry = new MessageRegistry();
+		this(sock, new MessageRegistry());
+	}
+
+	protected Connection(Socket sock, MessageRegistry mr) {
+		this.messageRegistry = mr;
 		this.socket = sock;
 		outgoingMessages = new LinkedList<>();
 		pingTimes = new ArrayList<>();

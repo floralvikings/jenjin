@@ -15,12 +15,10 @@ import java.util.logging.Logger;
  * Handles the sending and reception of messages registered in the MessageRegistry class.
  * @author Caleb Brinkman
  */
-public class MessageOutputStream
+public class MessageOutputStream extends DataOutputStream
 {
 	/** The Logger for this class. */
 	private static final Logger LOGGER = Logger.getLogger(MessageOutputStream.class.getName());
-	/** The output stream used by this message stream. */
-	private final DataOutputStream outputStream;
 	/** The messageRegistry using this stream. */
 	private final MessageRegistry messageRegistry;
 	/** The AES key used to encrypt messages from this client handler. */
@@ -37,8 +35,8 @@ public class MessageOutputStream
 	 * @see java.io.FilterOutputStream#out
 	 */
 	public MessageOutputStream(MessageRegistry messageRegistry, OutputStream out) {
+		super(out);
 		this.messageRegistry = messageRegistry;
-		outputStream = new DataOutputStream(out);
 	}
 
 	/**
@@ -55,7 +53,7 @@ public class MessageOutputStream
 		MessageType messageType = messageRegistry.getMessageType(message.getID());
 		ArgumentType[] argumentTypes = messageType.argumentTypes;
 		int id = message.getID();
-		outputStream.writeShort(id);
+		writeShort(id);
 		for (int i = 0; i < args.length; i++)
 			writeArgument(args[i], argumentTypes[i].encrypt);
 	}
@@ -72,13 +70,13 @@ public class MessageOutputStream
 	 */
 	private void writeArgument(Object arg, boolean encryptStrings) throws IOException {
 		if (arg instanceof String) writeString((String) arg, encryptStrings);
-		else if (arg instanceof Integer) outputStream.writeInt((int) arg);
-		else if (arg instanceof Short) outputStream.writeShort((short) arg);
-		else if (arg instanceof Long) outputStream.writeLong((long) arg);
-		else if (arg instanceof Float) outputStream.writeFloat((float) arg);
-		else if (arg instanceof Double) outputStream.writeDouble((double) arg);
-		else if (arg instanceof Boolean) outputStream.writeBoolean((boolean) arg);
-		else if (arg instanceof Byte) outputStream.writeByte((byte) arg);
+		else if (arg instanceof Integer) writeInt((int) arg);
+		else if (arg instanceof Short) writeShort((short) arg);
+		else if (arg instanceof Long) writeLong((long) arg);
+		else if (arg instanceof Float) writeFloat((float) arg);
+		else if (arg instanceof Double) writeDouble((double) arg);
+		else if (arg instanceof Boolean) writeBoolean((boolean) arg);
+		else if (arg instanceof Byte) writeByte((byte) arg);
 		else if (arg instanceof byte[]) writeByteArray((byte[]) arg);
 		else if (arg instanceof String[]) writeStringArray((String[]) arg, encryptStrings);
 		else throw new IOException("Invalid argument type passed to MessageOutputStream: " + arg.getClass().getName());
@@ -105,8 +103,8 @@ public class MessageOutputStream
 				{
 					byte[] sBytes = s.getBytes("UTF-8");
 					String encryptedString = DatatypeConverter.printHexBinary(aesEncryptCipher.doFinal(sBytes));
-					outputStream.writeBoolean(true);
-					outputStream.writeUTF(encryptedString);
+					writeBoolean(true);
+					writeUTF(encryptedString);
 				} catch (IllegalBlockSizeException | BadPaddingException | IllegalStateException e)
 				{
 					LOGGER.log(Level.SEVERE, "Error encrypting string, will use unencrypted.", e);
@@ -116,8 +114,8 @@ public class MessageOutputStream
 			}
 		} else
 		{
-			outputStream.writeBoolean(false);
-			outputStream.writeUTF(s);
+			writeBoolean(false);
+			writeUTF(s);
 		}
 
 	}
@@ -130,7 +128,7 @@ public class MessageOutputStream
 	 */
 	private void writeStringArray(String[] strings, boolean encryptStrings) throws IOException {
 		int stringsLength = strings.length;
-		outputStream.writeInt(stringsLength);
+		writeInt(stringsLength);
 		for (String string : strings) writeString(string, encryptStrings);
 	}
 
@@ -141,8 +139,8 @@ public class MessageOutputStream
 	 */
 	private void writeByteArray(byte[] bytes) throws IOException {
 		int bytesLength = bytes.length;
-		outputStream.writeInt(bytesLength);
-		outputStream.write(bytes);
+		writeInt(bytesLength);
+		write(bytes);
 	}
 
 	/**
@@ -150,7 +148,7 @@ public class MessageOutputStream
 	 * @throws IOException If there is an IO error.
 	 */
 	public void close() throws IOException {
-		outputStream.close();
+		super.close();
 		closed = true;
 	}
 

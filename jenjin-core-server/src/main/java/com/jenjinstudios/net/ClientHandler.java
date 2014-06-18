@@ -41,7 +41,7 @@ public class ClientHandler extends Connection
 		server = s;
 		super.openStreams();
 
-		this.messageFactory = new ServerMessageFactory(this, getMessageRegistry());
+		this.messageFactory = new ServerMessageFactory(this, server.getMessageRegistry());
 	}
 
 	/**

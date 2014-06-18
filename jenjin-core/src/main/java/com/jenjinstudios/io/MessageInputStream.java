@@ -16,14 +16,12 @@ import java.util.logging.Logger;
  * Reads messages registered with the MessageRegistry class from stream.
  * @author Caleb Brinkman
  */
-public class MessageInputStream
+public class MessageInputStream extends DataInputStream
 {
 	/** The default value used when no AES key can be used. */
 	public static final byte[] NO_KEY = new byte[1];
 	/** The Logger for this class. */
 	private static final Logger LOGGER = Logger.getLogger(MessageInputStream.class.getName());
-	/** The output stream used by this message stream. */
-	private final DataInputStream inputStream;
 	/** The Connection using this stream. */
 	private final MessageRegistry messageRegistry;
 	/** The AES key used to encrypt outgoing messages. */
@@ -38,8 +36,8 @@ public class MessageInputStream
 	 * @param inputStream The InputStream from which messages will be read.
 	 */
 	public MessageInputStream(MessageRegistry messageRegistry, InputStream inputStream) {
+		super(inputStream);
 		this.messageRegistry = messageRegistry;
-		this.inputStream = new DataInputStream(inputStream);
 	}
 
 	/**
@@ -54,7 +52,7 @@ public class MessageInputStream
 		}
 		try
 		{
-			short id = inputStream.readShort();
+			short id = readShort();
 			LinkedList<Class> classes = messageRegistry.getArgumentClasses(id);
 			Class<?>[] classArray = new Class[classes.size()];
 			classes.toArray(classArray);
@@ -77,7 +75,7 @@ public class MessageInputStream
 	 * @throws java.io.IOException If there is an IO error.
 	 */
 	public void close() throws IOException {
-		inputStream.close();
+		super.close();
 		closed = true;
 	}
 
@@ -113,35 +111,35 @@ public class MessageInputStream
 			switch (currentClass)
 			{
 				case "java.lang.String":
-					args[i] = readString(inputStream);
+					args[i] = readString();
 					break;
 				case "int":
 				case "java.lang.Integer":
-					args[i] = inputStream.readInt();
+					args[i] = readInt();
 					break;
 				case "java.lang.Long":
 				case "long":
-					args[i] = inputStream.readLong();
+					args[i] = readLong();
 					break;
 				case "double":
 				case "java.lang.Double":
-					args[i] = inputStream.readDouble();
+					args[i] = readDouble();
 					break;
 				case "float":
 				case "java.lang.Float":
-					args[i] = inputStream.readFloat();
+					args[i] = readFloat();
 					break;
 				case "short":
 				case "java.lang.Short":
-					args[i] = inputStream.readShort();
+					args[i] = readShort();
 					break;
 				case "boolean":
 				case "java.lang.Boolean":
-					args[i] = inputStream.readBoolean();
+					args[i] = readBoolean();
 					break;
 				case "byte":
 				case "java.lang.Byte":
-					args[i] = inputStream.readByte();
+					args[i] = readByte();
 					break;
 				case "[Ljava.lang.Byte;":
 				case "[B":
@@ -163,10 +161,10 @@ public class MessageInputStream
 	 */
 	private String[] readStringArray() throws IOException {
 		String[] strings;
-		int size = inputStream.readInt();
+		int size = readInt();
 		strings = new String[size];
 		for (int i = 0; i < strings.length; i++)
-			strings[i] = readString(inputStream);
+			strings[i] = readString();
 		return strings;
 	}
 
@@ -177,22 +175,21 @@ public class MessageInputStream
 	 */
 	private byte[] readByteArray() throws IOException {
 		byte[] bytes;
-		int size = inputStream.readInt();
+		int size = readInt();
 		bytes = new byte[size];
-		int read = inputStream.read(bytes, 0, size);
+		int read = read(bytes, 0, size);
 		if (read != size) throw new IOException("Incorrect number of bytes read for byte array.");
 		return bytes;
 	}
 
 	/**
 	 * Read a string from the input stream, determining if it is encrypted and decrypting it if necessary.
-	 * @param inputStream The input stream used to read.
 	 * @return The read, decrypted string.
 	 * @throws IOException If there is an IO error.
 	 */
-	private String readString(DataInputStream inputStream) throws IOException {
-		boolean encrypted = inputStream.readBoolean();
-		String received = inputStream.readUTF();
+	private String readString() throws IOException {
+		boolean encrypted = readBoolean();
+		String received = readUTF();
 		if (!encrypted) { return received; }
 
 		if (aesKey == null)

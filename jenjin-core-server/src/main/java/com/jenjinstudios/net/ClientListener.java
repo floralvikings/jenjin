@@ -1,7 +1,5 @@
 package com.jenjinstudios.net;
 
-import com.jenjinstudios.io.MessageRegistry;
-
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -39,14 +37,15 @@ class ClientListener<T extends ClientHandler> implements Runnable
 	 * @param p The port on which to listen.
 	 * @param handlerClass The class of the ClientHandler to be used by this server.
 	 * @throws IOException If there is an error listening on the port.
-	 * @throws NoSuchMethodException If there is no appropriate constructor for the specified ClientHandler constructor.
+	 * @throws NoSuchMethodException If there is no appropriate constructor for the specified ClientHandler
+	 * constructor.
 	 */
 	public ClientListener(Class<? extends Server> serverClass, int p, Class<T> handlerClass) throws IOException, NoSuchMethodException {
 		PORT = p;
 		/* The class of client handlers created by this listener. */
 		try
 		{
-			handlerConstructor = handlerClass.getConstructor(serverClass, Socket.class, MessageRegistry.class);
+			handlerConstructor = handlerClass.getConstructor(serverClass, Socket.class);
 		} catch (NoSuchMethodException e)
 		{
 			LOGGER.log(Level.SEVERE, "Unable to find appropriate ClientHandler constructor: " + handlerClass.getName(), e);
@@ -84,8 +83,10 @@ class ClientListener<T extends ClientHandler> implements Runnable
 		serverSock.close();
 	}
 
-	/** Listen for clients in a new thread. If already listening this method does nothing.
-	 * @param tServer The server */
+	/**
+	 * Listen for clients in a new thread. If already listening this method does nothing.
+	 * @param tServer The server
+	 */
 	public void startListening(Server<T> tServer) {
 		if (listening)
 			return;
@@ -112,7 +113,7 @@ class ClientListener<T extends ClientHandler> implements Runnable
 	private void addNewClient(Socket sock) {
 		try
 		{
-			T newHandler = handlerConstructor.newInstance(server, sock, server.getMessageRegistry());
+			T newHandler = handlerConstructor.newInstance(server, sock);
 			newHandler.sendFirstConnectResponse();
 			addNewClient(newHandler);
 		} catch (InstantiationException | IllegalAccessException e)
