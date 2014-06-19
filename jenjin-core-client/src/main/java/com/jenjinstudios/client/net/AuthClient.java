@@ -68,9 +68,7 @@ public class AuthClient extends Client
 	 * Get whether this client is logged in.
 	 * @return true if this client has received a successful LoginResponse
 	 */
-	public boolean isLoggedIn() {
-		return loggedIn;
-	}
+	public boolean isLoggedIn() { return loggedIn; }
 
 	/**
 	 * Set whether this client is logged in.
