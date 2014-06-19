@@ -1,6 +1,6 @@
 package com.jenjinstudios.world.message;
 
-import com.jenjinstudios.io.Message;
+import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.WorldClientHandler;
 import com.jenjinstudios.world.sql.WorldSQLHandler;
@@ -29,7 +29,7 @@ public class ExecutableWorldLogoutRequest extends WorldExecutableMessage
 	public void runSynced() {
 		Actor clientActor = getClientHandler().getPlayer();
 		// Multiple logout requests can cause Player to be null; have to check first.
-		if(clientActor != null)
+		if (clientActor != null)
 		{
 			clientActor.getWorld().removeObject(clientActor);
 		}

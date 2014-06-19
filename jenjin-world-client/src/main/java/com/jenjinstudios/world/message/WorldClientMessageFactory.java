@@ -1,7 +1,7 @@
 package com.jenjinstudios.world.message;
 
-import com.jenjinstudios.io.Message;
-import com.jenjinstudios.io.MessageRegistry;
+import com.jenjinstudios.core.io.Message;
+import com.jenjinstudios.core.io.MessageRegistry;
 import com.jenjinstudios.message.ClientMessageFactory;
 import com.jenjinstudios.world.state.MoveState;
 

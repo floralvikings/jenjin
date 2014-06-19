@@ -1,6 +1,6 @@
 package com.jenjinstudios.sql;
 
-import com.jenjinstudios.util.Hash;
+import com.jenjinstudios.core.util.Hash;
 
 import java.sql.*;
 import java.util.logging.Level;
@@ -57,21 +57,21 @@ public class SQLHandler
 	}
 
 	/**
-	 * Attempt to log the given user with the given password into the database.  This method does not perform any sort of
-	 * hashing or encryption on the password.  If the user is already logged in this method will return false.
+	 * Attempt to log the given user with the given password into the database.  This method does not perform any sort
+	 * of hashing or encryption on the password.  If the user is already logged in this method will return false.
 	 * <p/>
-	 * This method should be overwritten by implementations, or called from super if they still wish to use the "loggedIn"
-	 * column.
+	 * This method should be overwritten by implementations, or called from super if they still wish to use the
+	 * "loggedIn" column.
 	 * @param username The username of the user to be logged in.
 	 * @param password The password of the user to be logged in.
 	 * @return true if the user was logged in successfully, false if the user was already logged in or the update to the
-	 *         database failed.
+	 * database failed.
 	 */
 	public boolean logInUser(String username, String password) {
 		boolean success;
 		if (!connected)
 			return false;
-		try(ResultSet results = makeUserQuery(username))
+		try (ResultSet results = makeUserQuery(username))
 		{
 			results.next();
 			// Determine if the user is logged in.  If yes, end of method.
@@ -96,17 +96,17 @@ public class SQLHandler
 	}
 
 	/**
-	 * Attempt to log out the given user with the given password into the database.  This method does not perform any sort
-	 * of hashing or encryption on the password.  If the user is already logged in this method will return false.
+	 * Attempt to log out the given user with the given password into the database.  This method does not perform any
+	 * sort of hashing or encryption on the password.  If the user is already logged in this method will return false.
 	 * @param username The username of the user to be logged out.
-	 * @return true if the user was logged out successfully, false if the user was already logged out or the update to the
-	 *         database failed.
+	 * @return true if the user was logged out successfully, false if the user was already logged out or the update to
+	 * the database failed.
 	 */
 	public boolean logOutUser(String username) {
 		boolean success;
 		if (!connected)
 			return false;
-		try(ResultSet results = makeUserQuery(username))
+		try (ResultSet results = makeUserQuery(username))
 		{
 			results.next();
 			// Determine if the user is logged in.  If no, end of method.
@@ -142,7 +142,7 @@ public class SQLHandler
 		synchronized (dbConnection)
 		{
 			@SuppressWarnings("resource") // Need to suppress warning, result set must be closed by calling method.
-			PreparedStatement statement = dbConnection.prepareStatement(USER_QUERY, TYPE_SCROLL_SENSITIVE, CONCUR_UPDATABLE);
+					PreparedStatement statement = dbConnection.prepareStatement(USER_QUERY, TYPE_SCROLL_SENSITIVE, CONCUR_UPDATABLE);
 			statement.setString(1, username);
 			return statement.executeQuery();
 		}
@@ -160,7 +160,7 @@ public class SQLHandler
 				"username = ?";
 		synchronized (dbConnection)
 		{
-			try(PreparedStatement updateLoggedIn = dbConnection.prepareStatement(updateLoggedInQuery))
+			try (PreparedStatement updateLoggedIn = dbConnection.prepareStatement(updateLoggedInQuery))
 			{
 				updateLoggedIn.setString(1, username);
 				updateLoggedIn.executeUpdate();

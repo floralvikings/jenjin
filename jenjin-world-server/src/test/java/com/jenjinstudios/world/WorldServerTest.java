@@ -1,6 +1,6 @@
 package com.jenjinstudios.world;
 
-import com.jenjinstudios.util.Files;
+import com.jenjinstudios.core.util.Files;
 import com.jenjinstudios.world.io.WorldFileReader;
 import com.jenjinstudios.world.math.Vector2D;
 import com.jenjinstudios.world.sql.WorldSQLHandler;

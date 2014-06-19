@@ -1,8 +1,8 @@
 package com.jenjinstudios.net;
 
-import com.jenjinstudios.io.Message;
-import com.jenjinstudios.io.MessageOutputStream;
-import com.jenjinstudios.io.MessageRegistry;
+import com.jenjinstudios.core.io.Message;
+import com.jenjinstudios.core.io.MessageOutputStream;
+import com.jenjinstudios.core.io.MessageRegistry;
 import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;

@@ -1,7 +1,7 @@
 package com.jenjinstudios.message;
 
-import com.jenjinstudios.io.ExecutableMessage;
-import com.jenjinstudios.io.Message;
+import com.jenjinstudios.core.io.ExecutableMessage;
+import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.net.Client;
 
 /**

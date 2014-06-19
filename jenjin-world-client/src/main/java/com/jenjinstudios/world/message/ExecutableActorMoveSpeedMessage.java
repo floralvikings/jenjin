@@ -1,6 +1,6 @@
 package com.jenjinstudios.world.message;
 
-import com.jenjinstudios.io.Message;
+import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.world.ClientActor;
 import com.jenjinstudios.world.WorldClient;
 

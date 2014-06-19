@@ -1,6 +1,6 @@
 package com.jenjinstudios.message;
 
-import com.jenjinstudios.io.Message;
+import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.net.AuthClient;
 
 /**

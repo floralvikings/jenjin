@@ -3,7 +3,7 @@ package com.jenjinstudios.world.message;
 import com.jenjinstudios.world.ClientActor;
 import com.jenjinstudios.world.math.MathUtil;
 import com.jenjinstudios.world.math.Vector2D;
-import com.jenjinstudios.io.Message;
+import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.world.ClientPlayer;
 import com.jenjinstudios.world.WorldClient;
 
@@ -47,10 +47,10 @@ public class ExecutableForceStateMessage extends WorldClientExecutableMessage
 		relativeAngle = (double) getMessage().getArgument("relativeAngle");
 		absoluteAngle = (double) getMessage().getArgument("absoluteAngle");
 		long timeOfForce = (long) getMessage().getArgument("timeOfForce");
-		double angle = MathUtil.calcStepAngle(absoluteAngle,relativeAngle);
+		double angle = MathUtil.calcStepAngle(absoluteAngle, relativeAngle);
 		Vector2D oldPos = new Vector2D(x, y);
 		long timeOfStep = System.nanoTime();
-		double dist = ClientActor.MOVE_SPEED * ((double)(timeOfStep - timeOfForce) / 100000000d);
-		vector2D = oldPos.getVectorInDirection(dist,angle);
+		double dist = ClientActor.MOVE_SPEED * ((double) (timeOfStep - timeOfForce) / 100000000d);
+		vector2D = oldPos.getVectorInDirection(dist, angle);
 	}
 }

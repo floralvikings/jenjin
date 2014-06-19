@@ -1,10 +1,10 @@
 package com.jenjinstudios.message;
 
-import com.jenjinstudios.io.Message;
-import com.jenjinstudios.io.MessageInputStream;
-import com.jenjinstudios.io.MessageRegistry;
+import com.jenjinstudios.core.io.Message;
+import com.jenjinstudios.core.io.MessageInputStream;
+import com.jenjinstudios.core.io.MessageRegistry;
 import com.jenjinstudios.net.ClientHandler;
-import com.jenjinstudios.util.MessageFactory;
+import com.jenjinstudios.core.util.MessageFactory;
 
 import javax.crypto.*;
 import java.security.InvalidKeyException;

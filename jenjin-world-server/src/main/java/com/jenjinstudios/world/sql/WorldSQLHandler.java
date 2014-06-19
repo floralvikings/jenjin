@@ -1,7 +1,7 @@
 package com.jenjinstudios.world.sql;
 
 import com.jenjinstudios.sql.SQLHandler;
-import com.jenjinstudios.util.Hash;
+import com.jenjinstudios.core.util.Hash;
 import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.Player;
 import com.jenjinstudios.world.math.Vector2D;
@@ -90,7 +90,7 @@ public class WorldSQLHandler extends SQLHandler
 		if (!isConnected())
 			return false;
 		String username = actor.getName();
-		try(ResultSet results = makeUserQuery(username))
+		try (ResultSet results = makeUserQuery(username))
 		{
 			results.next();
 			// Determine if the user is logged in.  If no, end of method.
@@ -124,7 +124,7 @@ public class WorldSQLHandler extends SQLHandler
 				"=" + yCoord + " WHERE " + "username = ?";
 		synchronized (dbConnection)
 		{
-			try(PreparedStatement updatePlayerStatement = super.dbConnection.prepareStatement(updateLoggedInQuery))
+			try (PreparedStatement updatePlayerStatement = super.dbConnection.prepareStatement(updateLoggedInQuery))
 			{
 				updatePlayerStatement.setString(1, username);
 				updatePlayerStatement.executeUpdate();

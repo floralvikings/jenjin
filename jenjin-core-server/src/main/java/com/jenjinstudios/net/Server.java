@@ -1,6 +1,6 @@
 package com.jenjinstudios.net;
 
-import com.jenjinstudios.io.MessageRegistry;
+import com.jenjinstudios.core.io.MessageRegistry;
 
 import java.io.IOException;
 import java.util.*;

@@ -1,6 +1,7 @@
 package com.jenjinstudios.net;
 
-import com.jenjinstudios.io.Message;
+import com.jenjinstudios.core.Connection;
+import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.message.ServerMessageFactory;
 
 import java.io.IOException;

@@ -1,6 +1,6 @@
 package com.jenjinstudios.net;
 
-import com.jenjinstudios.io.Message;
+import com.jenjinstudios.core.io.Message;
 
 import java.net.Socket;
 import java.util.logging.Level;
@@ -50,10 +50,13 @@ public class AuthClient extends Client
 		sendLoginRequest();
 		long startTime = System.currentTimeMillis();
 		long timePast = System.currentTimeMillis() - startTime;
-		while (isWaitingForLoginResponse() && (timePast < TIMEOUT_MILLIS)) {
-			try {
+		while (isWaitingForLoginResponse() && (timePast < TIMEOUT_MILLIS))
+		{
+			try
+			{
 				Thread.sleep(10);
-			} catch (InterruptedException e) {
+			} catch (InterruptedException e)
+			{
 				LOGGER.log(Level.WARNING, "Interrupted while waiting for login response.", e);
 			}
 			timePast = System.currentTimeMillis() - startTime;
@@ -79,7 +82,8 @@ public class AuthClient extends Client
 
 	/** Send a login request to the server. */
 	private void sendLoginRequest() {
-		if (username == null || password == null) {
+		if (username == null || password == null)
+		{
 			throw new IllegalStateException("Attempted to login without username or password");
 		}
 		Message loginRequest = getMessageFactory().generateLoginRequest(username, password);
@@ -113,10 +117,13 @@ public class AuthClient extends Client
 		sendLogoutRequest();
 		long startTime = System.currentTimeMillis();
 		long timePast = System.currentTimeMillis() - startTime;
-		while (isWaitingForLogoutResponse() && (timePast < TIMEOUT_MILLIS)) {
-			try {
+		while (isWaitingForLogoutResponse() && (timePast < TIMEOUT_MILLIS))
+		{
+			try
+			{
 				Thread.sleep(10);
-			} catch (InterruptedException e) {
+			} catch (InterruptedException e)
+			{
 				LOGGER.log(Level.WARNING, "Interrupted while waiting for login response.", e);
 			}
 			timePast = System.currentTimeMillis() - startTime;

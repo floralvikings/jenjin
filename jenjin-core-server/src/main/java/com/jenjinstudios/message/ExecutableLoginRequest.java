@@ -1,6 +1,6 @@
 package com.jenjinstudios.message;
 
-import com.jenjinstudios.io.Message;
+import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.net.ClientHandler;
 import com.jenjinstudios.sql.SQLHandler;
 
@@ -31,7 +31,8 @@ public class ExecutableLoginRequest extends ServerExecutableMessage
 	@Override
 	public void runASync() {
 		boolean success;
-		if (sqlHandler == null || getClientHandler().isLoggedIn()) {
+		if (sqlHandler == null || getClientHandler().isLoggedIn())
+		{
 			long loggedInTime = getClientHandler().getLoggedInTime();
 			Message loginResponse = getClientHandler().getMessageFactory().generateLoginResponse(false, loggedInTime);
 			getClientHandler().queueMessage(loginResponse);
