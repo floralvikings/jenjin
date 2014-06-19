@@ -128,4 +128,28 @@ public class ClientTest
 
 		Assert.assertTrue(client.blockingStart());
 	}
+
+	@Test(expectedExceptions = IllegalStateException.class)
+	public void testInvalidDoPostConnectInit() throws Exception {
+		int ups = 100;
+		// Build a FirstConnectResponse message
+		MessageRegistry mr = new MessageRegistry();
+		Message fcr = mr.createMessage("FirstConnectResponse");
+		fcr.setArgument("ups", ups);
+
+		// Mock a stream containing a FirstConnectResponse
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		MessageOutputStream mos = new MessageOutputStream(mr, bos);
+		mos.writeMessage(fcr);
+		mos.writeMessage(fcr);
+		ByteArrayInputStream bis = new ByteArrayInputStream(bos.toByteArray());
+		// Mock a socket which returns the mocked stream.
+		Socket sock = Mockito.mock(Socket.class);
+		Mockito.when(sock.getInputStream()).thenReturn(bis);
+		// Doesn't really matter, just has to have a valid stream
+		Mockito.when(sock.getOutputStream()).thenReturn(bos);
+
+		Client client = new Client(sock);
+		client.run();
+	}
 }
