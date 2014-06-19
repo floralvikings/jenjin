@@ -7,10 +7,15 @@ import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import javax.crypto.Cipher;
+import javax.crypto.KeyGenerator;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.security.KeyFactory;
+import java.security.PublicKey;
+import java.security.spec.X509EncodedKeySpec;
 
 /**
  * @author Caleb Brinkman
@@ -81,6 +86,7 @@ public class ClientTest
 		Assert.assertEquals(client.getPeriod(), 0);
 	}
 
+	@Test
 	public void testBlockingStart() throws Exception {
 		int ups = 100;
 		MessageRegistry mr = new MessageRegistry();
@@ -101,6 +107,25 @@ public class ClientTest
 		Mockito.when(sock.getOutputStream()).thenReturn(clientOut);
 
 		Client client = new Client(sock);
-		client.run();
+
+		// Nastiness.
+		byte[] clientKey = client.getPublicKey().getEncoded();
+		KeyGenerator keyGenerator = KeyGenerator.getInstance("AES");
+		keyGenerator.init(128);
+		byte[] aesKeyBytes = keyGenerator.generateKey().getEncoded();
+		PublicKey publicKey = KeyFactory.getInstance("RSA").generatePublic(new X509EncodedKeySpec(clientKey));
+		Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
+		cipher.init(Cipher.ENCRYPT_MODE, publicKey);
+		byte[] encryptedAESKey = cipher.doFinal(aesKeyBytes);
+		Message aesMessage = mr.createMessage("AESKeyMessage");
+		// Construct the AESKeyMessage
+		aesMessage.setArgument("key", encryptedAESKey);
+		bos = new ByteArrayOutputStream();
+		mos = new MessageOutputStream(mr, bos);
+		mos.writeMessage(aesMessage);
+		bis = new ByteArrayInputStream(bos.toByteArray());
+		Mockito.when(sock.getInputStream()).thenReturn(bis);
+
+		Assert.assertTrue(client.blockingStart());
 	}
 }
