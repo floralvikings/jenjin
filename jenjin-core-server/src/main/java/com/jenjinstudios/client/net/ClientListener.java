@@ -1,4 +1,4 @@
-package com.jenjinstudios.net;
+package com.jenjinstudios.client.net;
 
 import java.io.IOException;
 import java.lang.reflect.Constructor;

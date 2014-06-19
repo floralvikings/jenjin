@@ -4,7 +4,7 @@
 
     <message name="FirstConnectResponse" id="100">
         <argument type="int" name="ups" />
-        <executable language="java">com.jenjinstudios.message.ExecutableFirstConnectResponse</executable>
+        <executable language="java">com.jenjinstudios.client.message.ExecutableFirstConnectResponse</executable>
     </message>
 
     <message name="LoginRequest" id="101">
@@ -16,7 +16,7 @@
     <message name="LoginResponse" id="102">
         <argument type="boolean" name="success" />
         <argument type="long" name="loginTime" />
-        <executable language="java" side="client">com.jenjinstudios.message.ExecutableLoginResponse</executable>
+        <executable language="java" side="client">com.jenjinstudios.client.message.ExecutableLoginResponse</executable>
     </message>
 
     <message name="LogoutRequest" id="103">
@@ -25,7 +25,7 @@
 
     <message name="LogoutResponse" id="104">
         <argument type="boolean" name="success" />
-        <executable language="java" side="client">com.jenjinstudios.message.ExecutableLogoutResponse</executable>
+        <executable language="java" side="client">com.jenjinstudios.client.message.ExecutableLogoutResponse</executable>
     </message>
 
     <message name="PublicKeyMessage" id="105">
@@ -34,7 +34,7 @@
     </message>
 
     <message name="AESKeyMessage" id="106">
-        <executable language="java" side="client">com.jenjinstudios.message.ExecutableAESKeyMessage</executable>
+        <executable language="java" side="client">com.jenjinstudios.client.message.ExecutableAESKeyMessage</executable>
         <argument type="byte[]" name="key" />
     </message>
 

@@ -1,4 +1,4 @@
-package com.jenjinstudios.net;
+package com.jenjinstudios.client.net;
 
 import java.util.Deque;
 import java.util.TimerTask;

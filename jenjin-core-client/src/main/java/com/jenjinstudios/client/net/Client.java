@@ -1,8 +1,8 @@
-package com.jenjinstudios.net;
+package com.jenjinstudios.client.net;
 
 import com.jenjinstudios.core.Connection;
 import com.jenjinstudios.core.io.Message;
-import com.jenjinstudios.message.ClientMessageFactory;
+import com.jenjinstudios.client.message.ClientMessageFactory;
 
 import java.io.IOException;
 import java.net.Socket;

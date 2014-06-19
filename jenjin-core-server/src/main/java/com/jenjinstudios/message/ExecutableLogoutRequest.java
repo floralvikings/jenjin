@@ -1,7 +1,7 @@
 package com.jenjinstudios.message;
 
 import com.jenjinstudios.core.io.Message;
-import com.jenjinstudios.net.ClientHandler;
+import com.jenjinstudios.client.net.ClientHandler;
 import com.jenjinstudios.sql.SQLHandler;
 
 /**

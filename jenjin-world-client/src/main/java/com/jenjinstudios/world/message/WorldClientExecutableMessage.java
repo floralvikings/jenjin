@@ -1,6 +1,6 @@
 package com.jenjinstudios.world.message;
 
-import com.jenjinstudios.message.AuthClientExecutableMessage;
+import com.jenjinstudios.client.message.AuthClientExecutableMessage;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.world.WorldClient;
 

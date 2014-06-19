@@ -1,7 +1,7 @@
-package com.jenjinstudios.message;
+package com.jenjinstudios.client.message;
 
 import com.jenjinstudios.core.io.Message;
-import com.jenjinstudios.net.AuthClient;
+import com.jenjinstudios.client.net.AuthClient;
 
 /**
  * This class responds to a LogoutResponse message.
