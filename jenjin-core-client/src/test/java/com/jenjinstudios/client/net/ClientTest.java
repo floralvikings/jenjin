@@ -80,4 +80,27 @@ public class ClientTest
 		// not abort early, the period will be equal to 1000 / ups, as above.
 		Assert.assertEquals(client.getPeriod(), 0);
 	}
+
+	public void testBlockingStart() throws Exception {
+		int ups = 100;
+		MessageRegistry mr = new MessageRegistry();
+
+		// Build a FirstConnectResponse message
+		Message fcr = mr.createMessage("FirstConnectResponse");
+		fcr.setArgument("ups", ups);
+
+		// Mock a stream containing a FirstConnectResponse
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		MessageOutputStream mos = new MessageOutputStream(mr, bos);
+		mos.writeMessage(fcr);
+
+		ByteArrayInputStream bis = new ByteArrayInputStream(bos.toByteArray());
+		ByteArrayOutputStream clientOut = new ByteArrayOutputStream();
+		Socket sock = Mockito.mock(Socket.class);
+		Mockito.when(sock.getInputStream()).thenReturn(bis);
+		Mockito.when(sock.getOutputStream()).thenReturn(clientOut);
+
+		Client client = new Client(sock);
+		client.run();
+	}
 }

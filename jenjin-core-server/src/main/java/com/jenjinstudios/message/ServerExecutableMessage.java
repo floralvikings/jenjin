@@ -2,7 +2,7 @@ package com.jenjinstudios.message;
 
 import com.jenjinstudios.core.io.ExecutableMessage;
 import com.jenjinstudios.core.io.Message;
-import com.jenjinstudios.client.net.ClientHandler;
+import com.jenjinstudios.server.net.ClientHandler;
 
 /**
  * The ServerExecutableMessage class is invoked to respond to messages server-side.

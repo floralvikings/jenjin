@@ -1,4 +1,4 @@
-package com.jenjinstudios.client.net;
+package com.jenjinstudios.server.net;
 
 import java.io.IOException;
 import java.util.Deque;

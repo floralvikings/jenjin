@@ -1,6 +1,6 @@
 package com.jenjinstudios.world;
 
-import com.jenjinstudios.client.net.AuthServer;
+import com.jenjinstudios.server.net.AuthServer;
 import com.jenjinstudios.world.io.WorldFileReader;
 import com.jenjinstudios.world.sql.WorldSQLHandler;
 

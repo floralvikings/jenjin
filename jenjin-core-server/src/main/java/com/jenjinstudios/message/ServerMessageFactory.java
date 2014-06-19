@@ -3,7 +3,7 @@ package com.jenjinstudios.message;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageInputStream;
 import com.jenjinstudios.core.io.MessageRegistry;
-import com.jenjinstudios.client.net.ClientHandler;
+import com.jenjinstudios.server.net.ClientHandler;
 import com.jenjinstudios.core.util.MessageFactory;
 
 import javax.crypto.*;

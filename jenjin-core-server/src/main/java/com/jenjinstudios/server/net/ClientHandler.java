@@ -1,4 +1,4 @@
-package com.jenjinstudios.client.net;
+package com.jenjinstudios.server.net;
 
 import com.jenjinstudios.core.Connection;
 import com.jenjinstudios.core.io.Message;
