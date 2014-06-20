@@ -28,6 +28,10 @@
         <executable language="java">com.jenjinstudios.core.io.InvalidExecutableMessage</executable>
     </message>
 
+    <message name="BlankMessage" id="0">
+        <executable language="java">com.jenjinstudios.core.io.ExecutableBlankMessage</executable>
+    </message>
+
     <message name="PingRequest" id="1">
         <argument type="long" name="requestTimeNanos" />
         <executable language="java" side="server">com.jenjinstudios.core.io.ExecutablePingRequest</executable>

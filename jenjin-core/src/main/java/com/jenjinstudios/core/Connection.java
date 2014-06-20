@@ -178,6 +178,7 @@ public class Connection extends Thread
 				LOGGER.log(Level.SEVERE, "IOException when attempting to read from stream.", e);
 				break;
 			}
+			Thread.yield();
 		}
 
 		shutdown();
