@@ -1,8 +1,10 @@
 package com.jenjinstudios.client.net;
 
 import com.jenjinstudios.core.io.Message;
+import com.jenjinstudios.core.io.MessageInputStream;
+import com.jenjinstudios.core.io.MessageOutputStream;
+import com.jenjinstudios.core.io.MessageRegistry;
 
-import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -32,12 +34,11 @@ public class AuthClient extends Client
 
 	/**
 	 * Construct a client connecting to the given address over the given port.
-	 * @param socket The socket over which the client should communicate with the server.
 	 * @param username The username that will be used by this client.
 	 * @param password The password that will be used by this client.
 	 */
-	public AuthClient(Socket socket, String username, String password) {
-		super(socket);
+	public AuthClient(MessageInputStream in, MessageOutputStream out, MessageRegistry mr, String username, String password) {
+		super(in, out, mr);
 		this.username = username;
 		this.password = password;
 	}

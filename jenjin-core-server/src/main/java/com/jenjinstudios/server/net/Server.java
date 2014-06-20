@@ -47,8 +47,8 @@ public class Server<T extends ClientHandler> extends Thread
 	 * @throws NoSuchMethodException If there is no appropriate constructor for the specified ClientHandler
 	 * constructor.
 	 */
-	public Server(int ups, int port, Class<? extends T> handlerClass) throws IOException, NoSuchMethodException {
-		this(ups, port, handlerClass, DEFAULT_MAX_CLIENTS);
+	public Server(MessageRegistry mr, int ups, int port, Class<? extends T> handlerClass) throws IOException, NoSuchMethodException {
+		this(mr, ups, port, handlerClass, DEFAULT_MAX_CLIENTS);
 	}
 
 	/**
@@ -62,9 +62,9 @@ public class Server<T extends ClientHandler> extends Thread
 	 * constructor.
 	 */
 	@SuppressWarnings("unchecked")
-	public Server(int ups, int port, Class<? extends T> handlerClass, int maxClients) throws IOException, NoSuchMethodException {
+	public Server(MessageRegistry mr, int ups, int port, Class<? extends T> handlerClass, int maxClients) throws IOException, NoSuchMethodException {
 		super("Server");
-		messageRegistry = new MessageRegistry();
+		messageRegistry = mr;
 		LOGGER.log(Level.FINE, "Initializing Server.");
 		UPS = ups;
 		PERIOD = 1000 / ups;

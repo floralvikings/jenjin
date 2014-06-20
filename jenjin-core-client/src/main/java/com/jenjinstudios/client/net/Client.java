@@ -1,12 +1,12 @@
 package com.jenjinstudios.client.net;
 
+import com.jenjinstudios.client.message.ClientMessageFactory;
 import com.jenjinstudios.core.Connection;
 import com.jenjinstudios.core.io.Message;
-import com.jenjinstudios.client.message.ClientMessageFactory;
+import com.jenjinstudios.core.io.MessageInputStream;
+import com.jenjinstudios.core.io.MessageOutputStream;
 import com.jenjinstudios.core.io.MessageRegistry;
 
-import java.io.IOException;
-import java.net.Socket;
 import java.security.*;
 import java.util.LinkedList;
 import java.util.List;
@@ -39,10 +39,9 @@ public class Client extends Connection
 
 	/**
 	 * Construct a new client and attempt to connect to the server over the specified port.
-	 * @param socket The Socket over which this client will communicate with the server.
 	 */
-	protected Client(Socket socket) {
-		super(socket, new MessageRegistry());
+	protected Client(MessageInputStream in, MessageOutputStream out, MessageRegistry mr) {
+		super(in, out, mr);
 		repeatedTasks = new LinkedList<>();
 		generateKeys();
 		this.messageFactory = new ClientMessageFactory(getMessageRegistry());
@@ -83,40 +82,35 @@ public class Client extends Connection
 	/**
 	 * Start the client, blocking until the client has successfully initialized.
 	 * @return The success of the client start.
-	 * @throws InterruptedException If an InterruptedException is thrown while waiting for the client to finish
 	 * initializing.
 	 */
-	public boolean blockingStart() throws InterruptedException {
+	public boolean blockingStart() {
 		long startTime = System.currentTimeMillis();
 		long timePast = System.currentTimeMillis() - startTime;
 		start();
 
 		while ((!isRunning() || (getAesKey() == null)) && (timePast < TIMEOUT_MILLIS))
 		{
-			Thread.sleep(10);
+			try
+			{
+				Thread.sleep(10);
+			} catch (InterruptedException e)
+			{
+				LOGGER.log(Level.FINE, "Unable to sleep during blocking start.", e);
+			}
 			timePast = System.currentTimeMillis() - startTime;
 		}
 
 		return isRunning() && (getAesKey() != null);
 	}
 
-	@Override
-	public final void run() {
-		try
-		{
-			super.openStreams();
-		} catch (IOException ex)
-		{
-			LOGGER.log(Level.SEVERE, "Unable to connect to server.", ex);
-			return;
-		}
-		super.run();
-	}
-
 	/** Tell the client threads to stop running. */
 	public void shutdown() {
 		super.shutdown();
-		sendMessagesTimer.cancel();
+		if (sendMessagesTimer != null)
+		{
+			sendMessagesTimer.cancel();
+		}
 		closeLink();
 	}
 

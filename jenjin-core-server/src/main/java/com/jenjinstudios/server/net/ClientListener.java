@@ -1,5 +1,8 @@
 package com.jenjinstudios.server.net;
 
+import com.jenjinstudios.core.io.MessageInputStream;
+import com.jenjinstudios.core.io.MessageOutputStream;
+
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -45,7 +48,7 @@ class ClientListener<T extends ClientHandler> implements Runnable
 		/* The class of client handlers created by this listener. */
 		try
 		{
-			handlerConstructor = handlerClass.getConstructor(serverClass, Socket.class);
+			handlerConstructor = handlerClass.getConstructor(serverClass, MessageInputStream.class, MessageOutputStream.class);
 		} catch (NoSuchMethodException e)
 		{
 			LOGGER.log(Level.SEVERE, "Unable to find appropriate ClientHandler constructor: " + handlerClass.getName(), e);
@@ -108,12 +111,11 @@ class ClientListener<T extends ClientHandler> implements Runnable
 
 	/**
 	 * Add a new Client using the specified socket as a connection.
-	 * @param sock The connection to the new client.
 	 */
-	private void addNewClient(Socket sock) {
+	private void addNewClient(MessageInputStream in, MessageOutputStream out) {
 		try
 		{
-			T newHandler = handlerConstructor.newInstance(server, sock);
+			T newHandler = handlerConstructor.newInstance(server, in, out);
 			newHandler.sendFirstConnectResponse();
 			addNewClient(newHandler);
 		} catch (InstantiationException | IllegalAccessException e)
@@ -132,7 +134,9 @@ class ClientListener<T extends ClientHandler> implements Runnable
 			try
 			{
 				Socket sock = serverSock.accept();
-				addNewClient(sock);
+				MessageInputStream in = new MessageInputStream(server.getMessageRegistry(), sock.getInputStream());
+				MessageOutputStream out = new MessageOutputStream(server.getMessageRegistry(), sock.getOutputStream());
+				addNewClient(in, out);
 			} catch (SocketException ignored)
 			{
 			} catch (IOException e)

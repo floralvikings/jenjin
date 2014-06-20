@@ -1,10 +1,13 @@
 package com.jenjinstudios.world;
 
-import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.client.net.AuthClient;
+import com.jenjinstudios.core.io.Message;
+import com.jenjinstudios.core.io.MessageInputStream;
+import com.jenjinstudios.core.io.MessageOutputStream;
+import com.jenjinstudios.core.io.MessageRegistry;
 import com.jenjinstudios.world.io.WorldFileReader;
-import com.jenjinstudios.world.state.MoveState;
 import com.jenjinstudios.world.message.WorldClientMessageFactory;
+import com.jenjinstudios.world.state.MoveState;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -13,7 +16,6 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.Socket;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.logging.Level;
@@ -54,10 +56,9 @@ public class WorldClient extends AuthClient
 	/**
 	 * Construct a client connecting to the given address over the given port.  This client <i>must</i> have a username
 	 * and password.
-	 * @param worldFile The file containing the world information.
-	 * @param sock The socket over which the client will communicate with the server.
 	 * @param username The username that will be used by this client.
 	 * @param password The password that will be used by this client.
+	 * @param worldFile The file containing the world information.
 	 * @throws java.security.NoSuchAlgorithmException If there is an error generating encryption keys.
 	 * @throws java.io.IOException If there's an error reading the world file.
 	 * @throws javax.xml.parsers.ParserConfigurationException If there's an error configuring the xml parser.
@@ -65,10 +66,10 @@ public class WorldClient extends AuthClient
 	 * @throws org.xml.sax.SAXException If there's an error in the XML syntax.
 	 */
 	// TODO Wrap these exceptions
-	public WorldClient(File worldFile, Socket sock, String username, String password)
+	public WorldClient(MessageInputStream in, MessageOutputStream out, MessageRegistry mr, String username, String password, File worldFile)
 			throws NoSuchAlgorithmException, SAXException, TransformerException, ParserConfigurationException, IOException
 	{
-		super(sock, username, password);
+		super(in, out, mr, username, password);
 		this.password = password;
 		this.worldFile = worldFile;
 		if (worldFile.exists())

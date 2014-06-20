@@ -44,30 +44,18 @@ public class MessageInputStream extends DataInputStream
 	 * Read a Message or subclass from the DataStream.
 	 * @return The Message constructed form the data stream.
 	 */
-	public Message readMessage() throws MessageTypeException {
+	public Message readMessage() throws IOException {
 		if (closed)
 		{
-			LOGGER.log(Level.WARNING, "Message Stream attempting to read message while closed");
-			return null;
+			throw new IOException("Stream closed");
 		}
-		try
-		{
-			short id = readShort();
-			LinkedList<Class> classes = messageRegistry.getArgumentClasses(id);
-			Class<?>[] classArray = new Class[classes.size()];
-			classes.toArray(classArray);
-			Object[] args = readMessageArgs(classes);
-			return new Message(messageRegistry, id, args);
-		} catch (MessageTypeException e)
-		{
-			throw e;
-		} catch (IOException e)
-		{
-			// TODO Improve this error handling
-			LOGGER.log(Level.SEVERE, "Unable to parse message from stream: {0}", e.getMessage());
-			return null;
-			// This means the stream has closed, or the an invalid message was found.
-		}
+		short id = readShort();
+		LinkedList<Class> classes = messageRegistry.getArgumentClasses(id);
+		Class<?>[] classArray = new Class[classes.size()];
+		classes.toArray(classArray);
+		Object[] args = readMessageArgs(classes);
+		return new Message(messageRegistry, id, args);
+
 	}
 
 	/**

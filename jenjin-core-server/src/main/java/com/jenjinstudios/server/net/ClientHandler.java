@@ -2,10 +2,11 @@ package com.jenjinstudios.server.net;
 
 import com.jenjinstudios.core.Connection;
 import com.jenjinstudios.core.io.Message;
+import com.jenjinstudios.core.io.MessageInputStream;
+import com.jenjinstudios.core.io.MessageOutputStream;
 import com.jenjinstudios.message.ServerMessageFactory;
 
 import java.io.IOException;
-import java.net.Socket;
 
 /**
  * The {@code ClientHandler} class is used to communicate with an individual client.
@@ -33,14 +34,12 @@ public class ClientHandler extends Connection
 	 * Construct a new Client Handler using the given socket.  When constructing a new ClientHandler, it is necessary to
 	 * send the client a FirstConnectResponse message with the server's UPS
 	 * @param s The server for which this handler works.
-	 * @param sk The socket used to communicate with the client.
 	 * @throws IOException If the socket is unable to connect.
 	 */
-	public ClientHandler(AuthServer<? extends ClientHandler> s, Socket sk) throws IOException {
-		super(sk, s.getMessageRegistry());
-		setName("ClientHandler: " + sk.getInetAddress());
+	public ClientHandler(AuthServer<? extends ClientHandler> s, MessageInputStream in, MessageOutputStream out) throws IOException {
+		super(in, out, s.getMessageRegistry());
+		setName("ClientHandler"); // TODO Better name here?
 		server = s;
-		super.openStreams();
 
 		this.messageFactory = new ServerMessageFactory(this, server.getMessageRegistry());
 	}

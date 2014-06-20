@@ -1,5 +1,8 @@
 package com.jenjinstudios.world;
 
+import com.jenjinstudios.core.io.MessageInputStream;
+import com.jenjinstudios.core.io.MessageOutputStream;
+import com.jenjinstudios.core.io.MessageRegistry;
 import com.jenjinstudios.core.util.Files;
 import com.jenjinstudios.world.io.WorldFileReader;
 import com.jenjinstudios.world.math.Vector2D;
@@ -36,6 +39,7 @@ public class WorldServerTest
 	 * avoid spurious test failures that could be caused by unforeseen lag on one of the threads.
 	 */
 	public static final double vectorTolerance = (Actor.MOVE_SPEED / (double) WorldServer.DEFAULT_UPS) * 1.1;
+	private static MessageRegistry mr = new MessageRegistry();
 
 	/**
 	 * Construct the test.
@@ -88,7 +92,9 @@ public class WorldServerTest
 		String user = "TestAccount" + testAccountNumber;
 		LOGGER.log(Level.INFO, "Logging into account {0}", user);
 		Socket sock = new Socket("localhost", port);
-		WorldClient worldClient = new WorldClient(new File("resources/WorldTestFile.xml"), sock, user, "testPassword");
+		MessageInputStream in = new MessageInputStream(mr, sock.getInputStream());
+		MessageOutputStream out = new MessageOutputStream(mr, sock.getOutputStream());
+		WorldClient worldClient = new WorldClient(in, out, mr, user, "testPassword", new File("resources/WorldTestFile.xml"));
 		worldClient.blockingStart();
 		worldClient.sendBlockingWorldFileRequest();
 		worldClient.sendBlockingLoginRequest();
@@ -104,10 +110,10 @@ public class WorldServerTest
 	public static WorldServer initWorldServer(int port) throws Exception {
 		/* The world SQL handler used to test. */
 		WorldSQLHandler worldSQLHandler = new WorldSQLHandler("localhost", "jenjin_test", "jenjin_user", "jenjin_password");
-		WorldServer worldServer = new WorldServer(
-				new WorldFileReader(
-						WorldServerTest.class.getResourceAsStream("/com/jenjinstudios/world/WorldFile01.xml")),
-				WorldServer.DEFAULT_UPS, port, WorldClientHandler.class, worldSQLHandler);
+		WorldServer worldServer = new WorldServer(mr,
+				WorldServer.DEFAULT_UPS, port, WorldClientHandler.class, worldSQLHandler, new WorldFileReader(
+				WorldServerTest.class.getResourceAsStream("/com/jenjinstudios/world/WorldFile01.xml"))
+		);
 		worldServer.blockingStart();
 		return worldServer;
 	}

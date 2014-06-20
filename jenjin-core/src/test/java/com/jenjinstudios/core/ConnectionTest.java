@@ -1,17 +1,12 @@
 package com.jenjinstudios.core;
 
-import com.jenjinstudios.core.io.DataInputStreamMock;
-import com.jenjinstudios.core.io.Message;
-import com.jenjinstudios.core.io.MessageInputStream;
-import com.jenjinstudios.core.io.MessageRegistry;
-import org.mockito.Mockito;
+import com.jenjinstudios.core.io.*;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
-import java.net.Socket;
 
 /**
  * @author Caleb Brinkman
@@ -31,15 +26,10 @@ public class ConnectionTest
 		InputStream in = dataInputStreamMock.getIn();
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 
-		// Spoof the socket's input and output stream to ones that we control
-		Socket sock = Mockito.mock(Socket.class);
-		Mockito.when(sock.getInputStream()).thenReturn(in);
-		Mockito.when(sock.getOutputStream()).thenReturn(bos);
+		MessageInputStream messageInputStream = new MessageInputStream(mr, in);
+		MessageOutputStream messageOutputStream = new MessageOutputStream(mr, bos);
 
-		// Create and run the connection.  Normally, we would use connection.start() to spawn a new thread
-		// but for testing purposes we want the connection to run in the current thread.
-		Connection connection = new Connection(sock, mr);
-		connection.openStreams();
+		Connection connection = new Connection(messageInputStream, messageOutputStream, mr);
 		connection.run();
 		// Again, normally an implementation would schedule this, but that's excessive for testing purposes
 		connection.runSyncedTasks();
@@ -61,13 +51,10 @@ public class ConnectionTest
 		dataInputStreamMock.mockReadShort((short) -255);
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 
-		// Spoof the socket's input and output stream to ones that we control
-		Socket sock = Mockito.mock(Socket.class);
-		Mockito.when(sock.getInputStream()).thenReturn(in);
-		Mockito.when(sock.getOutputStream()).thenReturn(bos);
+		MessageInputStream messageInputStream = new MessageInputStream(mr, in);
+		MessageOutputStream messageOutputStream = new MessageOutputStream(mr, bos);
 
-		Connection connection = new Connection(sock, mr);
-		connection.openStreams();
+		Connection connection = new Connection(messageInputStream, messageOutputStream, mr);
 		connection.closeLink();
 
 		Message msg = mr.createMessage("InvalidMessage");
@@ -85,13 +72,10 @@ public class ConnectionTest
 		InputStream in = dataInputStreamMock.getIn();
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 
-		// Spoof the socket's input and output stream to ones that we control
-		Socket sock = Mockito.mock(Socket.class);
-		Mockito.when(sock.getInputStream()).thenReturn(in);
-		Mockito.when(sock.getOutputStream()).thenReturn(bos);
+		MessageInputStream messageInputStream = new MessageInputStream(mr, in);
+		MessageOutputStream messageOutputStream = new MessageOutputStream(mr, bos);
 
-		Connection connection = new Connection(sock, mr);
-		connection.openStreams();
+		Connection connection = new Connection(messageInputStream, messageOutputStream, mr);
 		connection.sendPing();
 		connection.sendAllMessages();
 		connection.closeLink();
@@ -112,15 +96,10 @@ public class ConnectionTest
 		InputStream in = dataInputStreamMock.getIn();
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 
-		// Spoof the socket's input and output stream to ones that we control
-		Socket sock = Mockito.mock(Socket.class);
-		Mockito.when(sock.getInputStream()).thenReturn(in);
-		Mockito.when(sock.getOutputStream()).thenReturn(bos);
+		MessageInputStream messageInputStream = new MessageInputStream(mr, in);
+		MessageOutputStream messageOutputStream = new MessageOutputStream(mr, bos);
 
-		// Create and run the connection.  Normally, we would use connection.start() to spawn a new thread
-		// but for testing purposes we want the connection to run in the current thread.
-		Connection connection = new Connection(sock, mr);
-		connection.openStreams();
+		Connection connection = new Connection(messageInputStream, messageOutputStream, mr);
 		connection.run();
 		// Again, normally an implementation would schedule this, but that's excessive for testing purposes
 		connection.runSyncedTasks();
@@ -136,22 +115,20 @@ public class ConnectionTest
 	@Test
 	public void testPingResponse() throws Exception {
 		// Spoof an invalid message
+		MessageRegistry mr = new MessageRegistry();
 		DataInputStreamMock dataInputStreamMock = new DataInputStreamMock();
 		dataInputStreamMock.mockReadShort((short) 2);
 		dataInputStreamMock.mockReadLong(System.nanoTime());
 		InputStream in = dataInputStreamMock.getIn();
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 
-		// Spoof the socket's input and output stream to ones that we control
-		Socket sock = Mockito.mock(Socket.class);
-		Mockito.when(sock.getInputStream()).thenReturn(in);
-		Mockito.when(sock.getOutputStream()).thenReturn(bos);
+		MessageInputStream messageInputStream = new MessageInputStream(mr, in);
+		MessageOutputStream messageOutputStream = new MessageOutputStream(mr, bos);
+
+		Connection connection = new Connection(messageInputStream, messageOutputStream, mr);
 
 		// Create and run the connection.  Normally, we would use connection.start() to spawn a new thread
 		// but for testing purposes we want the connection to run in the current thread.
-		MessageRegistry mr = new MessageRegistry();
-		Connection connection = new Connection(sock, mr);
-		connection.openStreams();
 		connection.run();
 		// Again, normally an implementation would schedule this, but that's excessive for testing purposes
 		connection.runSyncedTasks();

@@ -82,14 +82,24 @@ public class MessageRegistry
 	 * @param name The name of the message type.
 	 * @return The MessageType with the given name.
 	 */
-	public MessageType getMessageType(String name) { return messageTypesByName.get(name); }
+	public MessageType getMessageType(String name) {
+		synchronized (messageTypesByName)
+		{
+			return messageTypesByName.get(name);
+		}
+	}
 
 	/**
 	 * Get the MessageType with the given ID.
 	 * @param id The id.
 	 * @return The MessageType with the given ID.
 	 */
-	public MessageType getMessageType(short id) { return messageTypesByID.get(id); }
+	public MessageType getMessageType(short id) {
+		synchronized (messageTypesByID)
+		{
+			return messageTypesByID.get(id);
+		}
+	}
 
 	/**
 	 * Get the class names of argumentTypes for the class with the given registration ID.
@@ -98,8 +108,11 @@ public class MessageRegistry
 	 */
 	public LinkedList<Class> getArgumentClasses(short id) throws MessageTypeException {
 		LinkedList<Class> temp = new LinkedList<>();
-
-		MessageType type = messageTypesByID.get(id);
+		MessageType type;
+		synchronized (messageTypesByID)
+		{
+			type = messageTypesByID.get(id);
+		}
 		if (type == null)
 		{
 			throw new MessageTypeException(id);
@@ -118,7 +131,11 @@ public class MessageRegistry
 	 */
 	void disableExecutableMessage(String messageName) {
 		LOGGER.log(Level.INFO, "Disabling message: {0}", messageName);
-		MessageType type = messageTypesByName.get(messageName);
+		MessageType type;
+		synchronized (messageTypesByName)
+		{
+			type = messageTypesByName.get(messageName);
+		}
 		short id = type.id;
 		ArgumentType[] argumentTypes = type.argumentTypes;
 		MessageType newMessageType = new MessageType(id, messageName, argumentTypes);

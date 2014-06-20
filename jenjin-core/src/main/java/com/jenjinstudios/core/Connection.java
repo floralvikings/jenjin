@@ -4,7 +4,6 @@ import com.jenjinstudios.core.io.*;
 import com.jenjinstudios.core.util.MessageFactory;
 
 import java.io.IOException;
-import java.net.Socket;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -17,6 +16,8 @@ import java.util.logging.Logger;
  */
 public class Connection extends Thread
 {
+	/** The maximum number of permitted invalid messages before this connection shuts down. */
+	public static final int MAX_INVALID_MESSAGES = 10;
 	/** The logger used for this class. */
 	private static final Logger LOGGER = Logger.getLogger(Connection.class.getName());
 	/** The list of collected ping times. */
@@ -33,8 +34,6 @@ public class Connection extends Thread
 	private MessageInputStream inputStream;
 	/** The output stream used to write messages. */
 	private MessageOutputStream outputStream;
-	/** The socket used to connect. */
-	private Socket socket;
 	/** Flags whether this client is connected. */
 	private volatile boolean connected;
 	/** The AES key of this client. */
@@ -43,22 +42,14 @@ public class Connection extends Thread
 	private final MessageRegistry messageRegistry;
 	private int invalidMsgCount;
 
-	protected Connection(Socket sock, MessageRegistry mr) {
+	protected Connection(MessageInputStream in, MessageOutputStream out, MessageRegistry mr) {
 		this.messageRegistry = mr;
-		this.socket = sock;
+		this.inputStream = in;
+		this.outputStream = out;
 		outgoingMessages = new LinkedList<>();
 		pingTimes = new ArrayList<>();
 		syncedTasks = new LinkedList<>();
 		messageFactory = new MessageFactory(this.messageRegistry);
-	}
-
-	/**
-	 * Set the socket used by this communicator.  Should only be called from subclass.
-	 * @throws IOException If there is an exception creating message streams.
-	 */
-	protected void openStreams() throws IOException {
-		outputStream = new MessageOutputStream(messageRegistry, socket.getOutputStream());
-		inputStream = new MessageInputStream(messageRegistry, socket.getInputStream());
 	}
 
 	/** Send a ping request. */
@@ -170,17 +161,11 @@ public class Connection extends Thread
 	public void run() {
 		running = true;
 		Message currentMessage;
-		// FIXME Magic constant
-		while (invalidMsgCount < 10)
+		while (invalidMsgCount < MAX_INVALID_MESSAGES)
 		{
 			try
 			{
 				currentMessage = inputStream.readMessage();
-				if (currentMessage == null)
-				{
-					LOGGER.log(Level.SEVERE, "Received null message from input stream, exiting read loop");
-					break;
-				}
 				processMessage(currentMessage);
 			} catch (MessageTypeException e)
 			{
@@ -188,6 +173,10 @@ public class Connection extends Thread
 				Message unknown = messageFactory.generateInvalidMessage(e.getId(), "Unknown");
 				queueMessage(unknown);
 				invalidMsgCount++;
+			} catch (IOException e)
+			{
+				LOGGER.log(Level.SEVERE, "IOException when attempting to read from stream.", e);
+				break;
 			}
 		}
 
@@ -235,13 +224,6 @@ public class Connection extends Thread
 		} catch (IOException e)
 		{
 			LOGGER.log(Level.INFO, "Issue closing output stream.", e);
-		}
-		try
-		{
-			socket.close();
-		} catch (IOException e)
-		{
-			LOGGER.log(Level.INFO, "Issue closing socked.", e);
 		}
 		connected = false;
 	}

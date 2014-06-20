@@ -1,5 +1,6 @@
 package com.jenjinstudios.server.net;
 
+import com.jenjinstudios.core.io.MessageRegistry;
 import com.jenjinstudios.sql.SQLHandler;
 
 import java.io.IOException;
@@ -23,8 +24,8 @@ public class AuthServer<T extends ClientHandler> extends TaskedServer<T>
 	 * @throws NoSuchMethodException If there is no appropriate constructor for the specified ClientHandler
 	 * constructor.
 	 */
-	public AuthServer(int ups, int port, Class<? extends T> handlerClass, SQLHandler sqlHandler) throws IOException, NoSuchMethodException {
-		super(ups, port, handlerClass);
+	public AuthServer(MessageRegistry mr, int ups, int port, Class<? extends T> handlerClass, SQLHandler sqlHandler) throws IOException, NoSuchMethodException {
+		super(mr, ups, port, handlerClass);
 		this.sqlHandler = sqlHandler;
 	}
 

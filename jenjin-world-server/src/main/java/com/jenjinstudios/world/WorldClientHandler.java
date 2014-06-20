@@ -1,12 +1,13 @@
 package com.jenjinstudios.world;
 
 import com.jenjinstudios.core.io.Message;
+import com.jenjinstudios.core.io.MessageInputStream;
+import com.jenjinstudios.core.io.MessageOutputStream;
 import com.jenjinstudios.server.net.ClientHandler;
-import com.jenjinstudios.world.state.MoveState;
 import com.jenjinstudios.world.message.WorldServerMessageFactory;
+import com.jenjinstudios.world.state.MoveState;
 
 import java.io.IOException;
-import java.net.Socket;
 import java.util.List;
 
 /**
@@ -30,11 +31,10 @@ public class WorldClientHandler extends ClientHandler
 	 * Construct a new Client Handler using the given socket.  When constructing a new ClientHandler, it is necessary to
 	 * send the client a FirstConnectResponse message with the server's UPS
 	 * @param s The server for which this handler works.
-	 * @param sk The socket used to communicate with the client.
 	 * @throws java.io.IOException If the socket is unable to connect.
 	 */
-	public WorldClientHandler(WorldServer s, Socket sk) throws IOException {
-		super(s, sk);
+	public WorldClientHandler(WorldServer s, MessageInputStream in, MessageOutputStream out) throws IOException {
+		super(s, in, out);
 		server = s;
 		this.messageFactory = new WorldServerMessageFactory(this, server.getMessageRegistry());
 	}
