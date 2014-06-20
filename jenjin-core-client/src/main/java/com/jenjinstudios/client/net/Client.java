@@ -3,6 +3,7 @@ package com.jenjinstudios.client.net;
 import com.jenjinstudios.core.Connection;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.client.message.ClientMessageFactory;
+import com.jenjinstudios.core.io.MessageRegistry;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -41,7 +42,7 @@ public class Client extends Connection
 	 * @param socket The Socket over which this client will communicate with the server.
 	 */
 	protected Client(Socket socket) {
-		super(socket);
+		super(socket, new MessageRegistry());
 		repeatedTasks = new LinkedList<>();
 		generateKeys();
 		this.messageFactory = new ClientMessageFactory(getMessageRegistry());

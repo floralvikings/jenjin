@@ -43,11 +43,6 @@ public class Connection extends Thread
 	private final MessageRegistry messageRegistry;
 	private int invalidMsgCount;
 
-	/** Construct a new Connection. */
-	protected Connection(Socket sock) {
-		this(sock, new MessageRegistry());
-	}
-
 	protected Connection(Socket sock, MessageRegistry mr) {
 		this.messageRegistry = mr;
 		this.socket = sock;

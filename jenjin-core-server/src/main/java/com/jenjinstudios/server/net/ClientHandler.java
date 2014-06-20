@@ -37,7 +37,7 @@ public class ClientHandler extends Connection
 	 * @throws IOException If the socket is unable to connect.
 	 */
 	public ClientHandler(AuthServer<? extends ClientHandler> s, Socket sk) throws IOException {
-		super(sk);
+		super(sk, s.getMessageRegistry());
 		setName("ClientHandler: " + sk.getInetAddress());
 		server = s;
 		super.openStreams();
