@@ -1,7 +1,7 @@
 package com.jenjinstudios.server.net;
 
 import com.jenjinstudios.core.io.MessageRegistry;
-import com.jenjinstudios.sql.SQLHandler;
+import com.jenjinstudios.server.sql.SQLHandler;
 
 import java.io.IOException;
 

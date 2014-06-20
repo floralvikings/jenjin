@@ -1,4 +1,4 @@
-package com.jenjinstudios.sql;
+package com.jenjinstudios.server.sql;
 
 import com.jenjinstudios.core.util.Hash;
 

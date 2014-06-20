@@ -10,7 +10,7 @@
     <message name="LoginRequest" id="101">
         <argument type="String" name="username" encrypt="true" />
         <argument type="String" name="password" encrypt="true" />
-        <executable language="java" side="server">com.jenjinstudios.message.ExecutableLoginRequest</executable>
+        <executable language="java" side="server">com.jenjinstudios.server.message.ExecutableLoginRequest</executable>
     </message>
 
     <message name="LoginResponse" id="102">
@@ -20,7 +20,7 @@
     </message>
 
     <message name="LogoutRequest" id="103">
-        <executable language="java" side="server">com.jenjinstudios.message.ExecutableLogoutRequest</executable>
+        <executable language="java" side="server">com.jenjinstudios.server.message.ExecutableLogoutRequest</executable>
     </message>
 
     <message name="LogoutResponse" id="104">
@@ -29,7 +29,7 @@
     </message>
 
     <message name="PublicKeyMessage" id="105">
-        <executable language="java" side="server">com.jenjinstudios.message.ExecutablePublicKeyMessage</executable>
+        <executable language="java" side="server">com.jenjinstudios.server.message.ExecutablePublicKeyMessage</executable>
         <argument type="byte[]" name="key" />
     </message>
 

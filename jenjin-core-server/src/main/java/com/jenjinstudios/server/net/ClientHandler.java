@@ -4,7 +4,7 @@ import com.jenjinstudios.core.Connection;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageInputStream;
 import com.jenjinstudios.core.io.MessageOutputStream;
-import com.jenjinstudios.message.ServerMessageFactory;
+import com.jenjinstudios.server.message.ServerMessageFactory;
 
 import java.io.IOException;
 

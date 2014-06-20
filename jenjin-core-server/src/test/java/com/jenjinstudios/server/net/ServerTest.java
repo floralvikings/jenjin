@@ -4,7 +4,7 @@ import com.jenjinstudios.client.net.AuthClient;
 import com.jenjinstudios.core.io.MessageInputStream;
 import com.jenjinstudios.core.io.MessageOutputStream;
 import com.jenjinstudios.core.io.MessageRegistry;
-import com.jenjinstudios.sql.SQLHandler;
+import com.jenjinstudios.server.sql.SQLHandler;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;

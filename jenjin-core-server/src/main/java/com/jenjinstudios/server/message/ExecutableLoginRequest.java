@@ -1,8 +1,8 @@
-package com.jenjinstudios.message;
+package com.jenjinstudios.server.message;
 
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.server.net.ClientHandler;
-import com.jenjinstudios.sql.SQLHandler;
+import com.jenjinstudios.server.sql.SQLHandler;
 
 /**
  * Executes the necessary actions to deal with a login response.

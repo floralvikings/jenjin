@@ -1,4 +1,4 @@
-package com.jenjinstudios.message;
+package com.jenjinstudios.server.message;
 
 import com.jenjinstudios.core.io.ExecutableMessage;
 import com.jenjinstudios.core.io.Message;

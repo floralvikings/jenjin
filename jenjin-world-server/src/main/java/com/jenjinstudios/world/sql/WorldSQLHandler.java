@@ -1,6 +1,6 @@
 package com.jenjinstudios.world.sql;
 
-import com.jenjinstudios.sql.SQLHandler;
+import com.jenjinstudios.server.sql.SQLHandler;
 import com.jenjinstudios.core.util.Hash;
 import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.Player;
