@@ -31,9 +31,9 @@ public class Connection extends Thread
 	/** Flags whether the client threads should be running. */
 	private volatile boolean running;
 	/** The input stream used to read messages. */
-	private MessageInputStream inputStream;
+	private final MessageInputStream inputStream;
 	/** The output stream used to write messages. */
-	private MessageOutputStream outputStream;
+	private final MessageOutputStream outputStream;
 	/** Flags whether this client is connected. */
 	private volatile boolean connected;
 	/** The AES key of this client. */

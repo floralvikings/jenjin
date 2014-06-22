@@ -18,7 +18,7 @@ class MessageTypeParser
 	/** The Logger for this class. */
 	private static final Logger LOGGER = Logger.getLogger(MessageTypeParser.class.getName());
 	/** The XML element of the message being parsed. */
-	private Element messageElement;
+	private final Element messageElement;
 
 	public MessageTypeParser(Element messageElement) {
 

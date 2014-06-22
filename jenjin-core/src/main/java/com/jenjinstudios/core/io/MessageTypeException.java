@@ -7,7 +7,7 @@ import java.io.IOException;
  */
 public class MessageTypeException extends IOException
 {
-	private short id;
+	private final short id;
 
 	public MessageTypeException(short id) {
 		super("Message " + id + " not registered.");

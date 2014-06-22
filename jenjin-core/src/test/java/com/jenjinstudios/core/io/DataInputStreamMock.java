@@ -14,7 +14,7 @@ import static org.mockito.Mockito.*;
  */
 public class DataInputStreamMock
 {
-	private InputStream in = Mockito.mock(InputStream.class);
+	private final InputStream in = Mockito.mock(InputStream.class);
 	private OngoingStubbing<Integer> when;
 
 	public DataInputStreamMock() throws IOException {

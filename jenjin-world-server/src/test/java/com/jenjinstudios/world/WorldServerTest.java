@@ -39,7 +39,7 @@ public class WorldServerTest
 	 * avoid spurious test failures that could be caused by unforeseen lag on one of the threads.
 	 */
 	public static final double vectorTolerance = (Actor.MOVE_SPEED / (double) WorldServer.DEFAULT_UPS) * 1.1;
-	private static MessageRegistry mr = new MessageRegistry();
+	private static final MessageRegistry mr = new MessageRegistry();
 
 	/**
 	 * Construct the test.
