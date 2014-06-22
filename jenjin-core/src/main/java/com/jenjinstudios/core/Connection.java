@@ -175,7 +175,8 @@ public class Connection extends Thread
 				invalidMsgCount++;
 			} catch (IOException e)
 			{
-				LOGGER.log(Level.SEVERE, "IOException when attempting to read from stream.", e);
+				// This is probably a closed stream, nothing to be worried about.
+				LOGGER.log(Level.FINE, "IOException when attempting to read from stream.", e);
 				break;
 			}
 			Thread.yield();

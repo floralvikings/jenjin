@@ -45,7 +45,6 @@ public class WorldClientHandler extends ClientHandler
 	 */
 	public void setPlayer(Player player) {
 		this.player = player;
-		setUsername(player.getName());
 		setPlayerID(player.getId());
 	}
 

@@ -210,8 +210,12 @@ public class Server<T extends ClientHandler> extends Thread
 	 * @param handler The client handler to be removed.
 	 */
 	void removeClient(ClientHandler handler) {
-		String username = handler.getUsername();
-		if (username != null) { clientsByUsername.remove(username); }
+		User user = handler.getUser();
+
+		if (user != null && user.getUsername() != null)
+		{
+			clientsByUsername.remove(user.getUsername());
+		}
 		synchronized (clientHandlers)
 		{
 			clientHandlers.set(handler.getHandlerId(), null);
@@ -225,7 +229,7 @@ public class Server<T extends ClientHandler> extends Thread
 	 * @param handler The ClientHandler that has had a username set.
 	 */
 	@SuppressWarnings("unchecked")
-	void clientUsernameSet(String username, ClientHandler handler) {
+	public void clientUsernameSet(String username, ClientHandler handler) {
 		synchronized (clientsByUsername)
 		{
 			clientsByUsername.put(username, (T) handler);

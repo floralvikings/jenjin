@@ -2,6 +2,7 @@ package com.jenjinstudios.server.message;
 
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.server.net.ClientHandler;
+import com.jenjinstudios.server.net.User;
 import com.jenjinstudios.server.sql.SQLHandler;
 
 /**
@@ -30,9 +31,18 @@ public class ExecutableLogoutRequest extends ServerExecutableMessage
 
 	@Override
 	public void runASync() {
-		if (sqlHandler == null || !getClientHandler().isLoggedIn())
+		ClientHandler handler = getClientHandler();
+		User user = handler.getUser();
+		if (sqlHandler == null || user == null)
 			return;
-		getClientHandler().sendLogoutStatus(sqlHandler.logOutUser(getClientHandler().getUsername()));
+		String username = user.getUsername();
+		boolean loggedOut = sqlHandler.logOutUser(username);
+		handler.sendLogoutStatus(loggedOut);
+		if (loggedOut)
+		{
+			handler.getServer().clientUsernameSet(username, null);
+			handler.setUser(null);
+		}
 	}
 
 }

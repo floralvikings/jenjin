@@ -20,15 +20,11 @@ public class ClientHandler extends Connection
 	private final ServerMessageFactory messageFactory;
 	/** The id of the client handler. */
 	private int handlerId = -1;
-	/** Flags whether the user is logged in. */
-	private boolean loggedIn;
-	/** The username of this client. */
-	private String username;
 	/** The time at which this client was successfully logged in. */
 	private long loggedInTime;
 	/** Flags whether the connection acknowledgement response has been sent. */
 	private boolean firstConnectResponseSent;
-
+	private User user;
 
 	/**
 	 * Construct a new Client Handler using the given socket.  When constructing a new ClientHandler, it is necessary to
@@ -79,8 +75,11 @@ public class ClientHandler extends Connection
 	public void shutdown() {
 		// Try and log out if not already.  This is an "emergency" logout because the connection closed without a
 		// proper logout, so we handle the query directly instead of in an executable message.
-		if (isLoggedIn())
-			loggedIn = !server.getSqlHandler().logOutUser(username);
+		if (getUser() != null)
+		{
+			getServer().clientUsernameSet(getUser().getUsername(), null);
+			server.getSqlHandler().logOutUser(user.getUsername());
+		}
 		closeLink();
 		getServer().removeClient(this);
 	}
@@ -89,26 +88,17 @@ public class ClientHandler extends Connection
 	 * The server.
 	 * @return The server for which this client handler works.
 	 */
-	public AuthServer<? extends ClientHandler> getServer() {
-		return server;
-	}
-
-	/**
-	 * Flags whether the user is logged in.
-	 * @return true if the user is logged in.
-	 */
-	public boolean isLoggedIn() {
-		return loggedIn;
-	}
+	public AuthServer<? extends ClientHandler> getServer() { return server; }
 
 	/**
 	 * Queue a message indicating the success or failure of a login attempt.
 	 * @param success Whether the attempt was successful.
 	 */
 	public void setLoginStatus(boolean success) {
-		loggedIn = success;
-		loggedInTime = server.getCycleStartTime();
-
+		if (success)
+		{
+			loggedInTime = server.getCycleStartTime();
+		}
 	}
 
 	/**
@@ -116,44 +106,26 @@ public class ClientHandler extends Connection
 	 * @param success Whether the attempt was successful.
 	 */
 	public void sendLogoutStatus(boolean success) {
-		loggedIn = !success;
 		Message logoutResponse = getMessageFactory().generateLogoutResponse(success);
 		queueMessage(logoutResponse);
-	}
-
-	/**
-	 * The username of this client.
-	 * @return The username of this client.
-	 */
-	public String getUsername() {
-		return username;
-	}
-
-	/**
-	 * Set the username of this client handler.
-	 * @param username The client handler's username.
-	 */
-	public void setUsername(String username) {
-		this.username = username;
-		server.clientUsernameSet(username, this);
 	}
 
 	/**
 	 * Get the time at which this client was successfully logged in.
 	 * @return The time at which this client was successfully logged in.
 	 */
-	public long getLoggedInTime() {
-		return loggedInTime;
-	}
+	public long getLoggedInTime() { return loggedInTime; }
 
 	/**
 	 * Get the ClientHandler ID for this client handler.
 	 * @return The ID of this client handler.
 	 */
-	public int getHandlerId() {
-		return handlerId;
-	}
+	public int getHandlerId() { return handlerId; }
 
 	@Override
 	public ServerMessageFactory getMessageFactory() { return messageFactory; }
+
+	public User getUser() { return user; }
+
+	public void setUser(User user) { this.user = user; }
 }

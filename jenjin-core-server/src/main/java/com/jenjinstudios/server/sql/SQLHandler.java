@@ -1,6 +1,7 @@
 package com.jenjinstudios.server.sql;
 
 import com.jenjinstudios.core.util.Hash;
+import com.jenjinstudios.server.net.User;
 
 import java.sql.*;
 import java.util.logging.Level;
@@ -62,12 +63,12 @@ public class SQLHandler
 	 * <p/>
 	 * This method should be overwritten by implementations, or called from super if they still wish to use the
 	 * "loggedIn" column.
-	 * @param username The username of the user to be logged in.
-	 * @param password The password of the user to be logged in.
 	 * @return true if the user was logged in successfully, false if the user was already logged in or the update to the
 	 * database failed.
 	 */
-	public boolean logInUser(String username, String password) {
+	public boolean logInUser(User user) {
+		String username = user.getUsername();
+		String password = user.getPassword();
 		boolean success;
 		if (!connected)
 			return false;

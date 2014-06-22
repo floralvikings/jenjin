@@ -1,5 +1,6 @@
 package com.jenjinstudios.world.sql;
 
+import com.jenjinstudios.server.net.User;
 import com.jenjinstudios.server.sql.SQLHandler;
 import com.jenjinstudios.core.util.Hash;
 import com.jenjinstudios.world.Actor;
@@ -42,11 +43,11 @@ public class WorldSQLHandler extends SQLHandler
 
 	/**
 	 * Log the player into the world.
-	 * @param username The player's username.
-	 * @param password The player's password.
 	 * @return An actor pre-filled with the players information.
 	 */
-	public Player logInPlayer(String username, String password) {
+	public Player logInPlayer(User user) {
+		String username = user.getUsername();
+		String password = user.getPassword();
 		Player player;
 		if (!isConnected())
 			return null;

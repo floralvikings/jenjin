@@ -1,5 +1,6 @@
 package com.jenjinstudios.world;
 
+import com.jenjinstudios.server.net.User;
 import com.jenjinstudios.world.math.MathUtil;
 import com.jenjinstudios.world.math.Vector2D;
 import com.jenjinstudios.world.sql.WorldSQLHandler;
@@ -69,7 +70,10 @@ public class PlayerTest extends WorldServerTest
 
 		Assert.assertTrue(worldSQLHandler.isConnected());
 
-		Actor player = worldSQLHandler.logInPlayer("TestAccount" + WorldServerTest.testAccountNumber, "testPassword");
+		User user = new User();
+		user.setUsername("TestAccount" + WorldServerTest.testAccountNumber);
+		user.setPassword("testPassword");
+		Actor player = worldSQLHandler.logInPlayer(user);
 		Vector2D origin = player.getVector2D();
 		Vector2D secondVector = new Vector2D(50, 50);
 
@@ -78,13 +82,13 @@ public class PlayerTest extends WorldServerTest
 		player.setVector2D(secondVector);
 		Assert.assertTrue(worldSQLHandler.logOutPlayer(player));
 
-		player = worldSQLHandler.logInPlayer("TestAccount" + WorldServerTest.testAccountNumber, "testPassword");
+		player = worldSQLHandler.logInPlayer(user);
 		Assert.assertEquals(secondVector, player.getVector2D());
 
 		player.setVector2D(origin);
 		Assert.assertTrue(worldSQLHandler.logOutPlayer(player));
 
-		player = worldSQLHandler.logInPlayer("TestAccount" + WorldServerTest.testAccountNumber, "testPassword");
+		player = worldSQLHandler.logInPlayer(user);
 		Assert.assertEquals(origin, player.getVector2D());
 
 		Assert.assertTrue(worldSQLHandler.logOutPlayer(player));

@@ -148,7 +148,8 @@ public class WorldServerTest
 	 */
 	public static void movePlayerToVector(WorldClient client, WorldServer server, Vector2D target) throws InterruptedException {
 		ClientPlayer clientPlayer = client.getPlayer();
-		Player serverPlayer = server.getClientHandlerByUsername(client.getUsername()).getPlayer();
+		String username = client.getUsername();
+		Player serverPlayer = server.getClientHandlerByUsername(username).getPlayer();
 		double angle = clientPlayer.getVector2D().getAngleToVector(target);
 		double dist = clientPlayer.getVector2D().getDistanceToVector(target);
 		if (dist <= vectorTolerance) return;

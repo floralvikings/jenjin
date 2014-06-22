@@ -1,7 +1,9 @@
 package com.jenjinstudios.server.message;
 
 import com.jenjinstudios.core.io.Message;
+import com.jenjinstudios.server.net.AuthServer;
 import com.jenjinstudios.server.net.ClientHandler;
+import com.jenjinstudios.server.net.User;
 import com.jenjinstudios.server.sql.SQLHandler;
 
 /**
@@ -31,24 +33,31 @@ public class ExecutableLoginRequest extends ServerExecutableMessage
 	@Override
 	public void runASync() {
 		boolean success;
-		if (sqlHandler == null || getClientHandler().isLoggedIn())
+		ClientHandler handler = getClientHandler();
+		AuthServer<? extends ClientHandler> server = handler.getServer();
+		Message message = getMessage();
+		if (sqlHandler == null || handler.getUser() != null)
 		{
-			long loggedInTime = getClientHandler().getLoggedInTime();
-			Message loginResponse = getClientHandler().getMessageFactory().generateLoginResponse(false, loggedInTime);
-			getClientHandler().queueMessage(loginResponse);
+			long loggedInTime = handler.getLoggedInTime();
+			Message loginResponse = handler.getMessageFactory().generateLoginResponse(false, loggedInTime);
+			handler.queueMessage(loginResponse);
 			return;
 		}
-		String username = (String) getMessage().getArgument("username");
-		String password = (String) getMessage().getArgument("password");
-		success = sqlHandler.logInUser(username, password);
+		String username = (String) message.getArgument("username");
+		String password = (String) message.getArgument("password");
+		User user = new User();
+		user.setUsername(username);
+		user.setPassword(password);
+		success = sqlHandler.logInUser(user);
 
-		getClientHandler().setLoginStatus(success);
-		long loggedInTime = getClientHandler().getLoggedInTime();
-		Message loginResponse = getClientHandler().getMessageFactory().generateLoginResponse(success, loggedInTime);
-		getClientHandler().queueMessage(loginResponse);
+		handler.setLoginStatus(success);
+		long loggedInTime = handler.getLoggedInTime();
+		Message loginResponse = handler.getMessageFactory().generateLoginResponse(success, loggedInTime);
+		handler.queueMessage(loginResponse);
 
 		if (success)
-			getClientHandler().setUsername(username);
+			handler.setUser(user);
+		server.clientUsernameSet(username, handler);
 	}
 
 }

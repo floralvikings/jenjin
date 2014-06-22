@@ -1,6 +1,7 @@
 package com.jenjinstudios.world.message;
 
 import com.jenjinstudios.core.io.Message;
+import com.jenjinstudios.server.net.User;
 import com.jenjinstudios.world.Player;
 import com.jenjinstudios.world.WorldClientHandler;
 import com.jenjinstudios.world.sql.WorldSQLHandler;
@@ -42,31 +43,37 @@ public class ExecutableWorldLoginRequest extends WorldExecutableMessage
 	@Override
 	public void runASync() {
 		boolean success;
-		if (sqlHandler != null && !getClientHandler().isLoggedIn())
+		User user = new User();
+		WorldClientHandler handler = getClientHandler();
+		if (sqlHandler != null && handler.getUser() == null)
 		{
 			String username = (String) getMessage().getArgument("username");
 			String password = (String) getMessage().getArgument("password");
+			user.setUsername(username);
+			user.setPassword(password);
 			/* The map used to create the player. */
-			player = sqlHandler.logInPlayer(username, password);
+			player = sqlHandler.logInPlayer(user);
 		}
 
 		success = player != null;
-		getClientHandler().setLoginStatus(success);
+		handler.setLoginStatus(success);
 
-		loginResponse = getClientHandler().getMessageFactory().generateWorldLoginResponse();
+		loginResponse = handler.getMessageFactory().generateWorldLoginResponse();
 		loginResponse.setArgument("success", success);
 
 		if (success)
 		{
-			getClientHandler().setPlayer(player);
-			loginResponse.setArgument("loginTime", getClientHandler().getLoggedInTime());
+			handler.setPlayer(player);
+			handler.setUser(user);
+			handler.getServer().clientUsernameSet(user.getUsername(), handler);
+			loginResponse.setArgument("loginTime", handler.getLoggedInTime());
 			loginResponse.setArgument("xCoordinate", player.getVector2D().getXCoordinate());
 			loginResponse.setArgument("yCoordinate", player.getVector2D().getYCoordinate());
 			loginResponse.setArgument("zoneNumber", player.getZoneID());
 		} else
 		{
 			loginResponse.setArgument("id", -1);
-			loginResponse.setArgument("loginTime", getClientHandler().getLoggedInTime());
+			loginResponse.setArgument("loginTime", handler.getLoggedInTime());
 			loginResponse.setArgument("xCoordinate", 0d);
 			loginResponse.setArgument("yCoordinate", 0d);
 			loginResponse.setArgument("zoneNumber", -1);
