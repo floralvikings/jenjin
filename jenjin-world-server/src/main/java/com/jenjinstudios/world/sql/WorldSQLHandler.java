@@ -7,6 +7,7 @@ import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.Player;
 import com.jenjinstudios.world.math.Vector2D;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -31,14 +32,9 @@ public class WorldSQLHandler extends SQLHandler
 
 	/**
 	 * Create a new SQLHandler with the given database information, and connect to the database.
-	 * @param dbAddress The URL of the database, in the format www.example.place
-	 * @param dbName The name of the database.
-	 * @param dbUsername The username used to access the database.
-	 * @param dbPassword The password used to access the database
-	 * @throws java.sql.SQLException If there is an issue connecting to the database.
 	 */
-	public WorldSQLHandler(String dbAddress, String dbName, String dbUsername, String dbPassword) throws SQLException {
-		super(dbAddress, dbName, dbUsername, dbPassword);
+	public WorldSQLHandler(Connection connection) {
+		super(connection);
 	}
 
 	/**
@@ -49,8 +45,6 @@ public class WorldSQLHandler extends SQLHandler
 		String username = user.getUsername();
 		String password = user.getPassword();
 		Player player;
-		if (!isConnected())
-			return null;
 		try (ResultSet results = makeUserQuery(username))
 		{
 			results.next();
@@ -88,8 +82,6 @@ public class WorldSQLHandler extends SQLHandler
 	 */
 	public boolean logOutPlayer(Actor actor) {
 		boolean success;
-		if (!isConnected())
-			return false;
 		String username = actor.getName();
 		try (ResultSet results = makeUserQuery(username))
 		{
@@ -121,7 +113,7 @@ public class WorldSQLHandler extends SQLHandler
 		double xCoord = player.getVector2D().getXCoordinate();
 		double yCoord = player.getVector2D().getYCoordinate();
 
-		String updateLoggedInQuery = "UPDATE " + dbName + ".users SET " + X_COORD + "=" + xCoord + ", " + Y_COORD +
+		String updateLoggedInQuery = "UPDATE users SET " + X_COORD + "=" + xCoord + ", " + Y_COORD +
 				"=" + yCoord + " WHERE " + "username = ?";
 		synchronized (dbConnection)
 		{

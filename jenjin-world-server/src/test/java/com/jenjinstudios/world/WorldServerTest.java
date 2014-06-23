@@ -16,6 +16,9 @@ import org.testng.annotations.BeforeMethod;
 import java.io.File;
 import java.io.InputStream;
 import java.net.Socket;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
@@ -32,6 +35,14 @@ public class WorldServerTest
 	public static int testAccountNumber = 0;
 	/** The port used to listen and connect. */
 	public static int port = WorldServer.DEFAULT_PORT;
+	/** The String used in connection protocol. */
+	public static final String CONNECTION_STRING_PROTOCOL = "jdbc:mysql:thin://";
+	private static final String dbAddress = "localhost";
+	private static final String dbName = "jenjin_test";
+	private static final String dbUsername = "jenjin_user";
+	private static final String dbPassword = "jenjin_password";
+	private static final String dbUrl = CONNECTION_STRING_PROTOCOL + dbAddress + "/" + dbName;
+
 	/**
 	 * The tolerance for distance between a the client and server positions of an actor. This is roughly how much an
 	 * actor should move during an update (assuming default UPS, which these tests do).  This means that the client and
@@ -109,7 +120,7 @@ public class WorldServerTest
 	 */
 	public static WorldServer initWorldServer(int port) throws Exception {
 		/* The world SQL handler used to test. */
-		WorldSQLHandler worldSQLHandler = new WorldSQLHandler("localhost", "jenjin_test", "jenjin_user", "jenjin_password");
+		WorldSQLHandler worldSQLHandler = getSqlHandler();
 		WorldServer worldServer = new WorldServer(mr,
 				WorldServer.DEFAULT_UPS, port, WorldClientHandler.class, worldSQLHandler, new WorldFileReader(
 				WorldServerTest.class.getResourceAsStream("/com/jenjinstudios/world/WorldFile01.xml"))
@@ -207,11 +218,23 @@ public class WorldServerTest
 	 */
 	@AfterClass
 	public static void resetDB() throws Exception {
-		WorldSQLHandler worldSQLHandler = new WorldSQLHandler("localhost", "jenjin_test", "jenjin_user", "jenjin_password");
+		WorldSQLHandler worldSQLHandler = getSqlHandler();
 		for (int i = 1; i <= testAccountNumber; i++)
 		{
 			String user = "TestAccount" + i;
 			worldSQLHandler.logOutPlayer(new Actor(user));
 		}
+	}
+
+	public static WorldSQLHandler getSqlHandler() throws SQLException {
+		try
+		{
+			Class.forName("org.drizzle.jdbc.DrizzleDriver").newInstance();
+		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e)
+		{
+			LOGGER.log(Level.SEVERE, "Unable to register Drizzle driver; is the Drizzle dependency present?");
+		}
+		Connection dbConnection = DriverManager.getConnection(dbUrl, dbUsername, dbPassword);
+		return new WorldSQLHandler(dbConnection);
 	}
 }

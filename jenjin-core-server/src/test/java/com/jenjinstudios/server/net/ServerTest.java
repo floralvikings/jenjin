@@ -11,6 +11,9 @@ import org.testng.annotations.Test;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -31,6 +34,9 @@ public class ServerTest
 	private static AuthClient sameClient;
 	/** The time this test suite started. */
 	private static long startTime;
+	/** The String used in connection protocol. */
+	public static final String CONNECTION_STRING_PROTOCOL = "jdbc:mysql:thin://";
+	/** The MessageRegistry used for this test. */
 	private static MessageRegistry mr;
 
 	/**
@@ -39,17 +45,33 @@ public class ServerTest
 	 */
 	@BeforeClass
 	public static void construct() throws Exception {
-		/* The SQLHandler used for testing. */
 		mr = new MessageRegistry();
-		SQLHandler sqlHandler = new SQLHandler("localhost", "jenjin_test", "jenjin_user",
-				"jenjin_password");
-		assertTrue(sqlHandler.isConnected());
+		// TODO Move these assertions.
+		SQLHandler sqlHandler = getSqlHandler();
+
 		server = new AuthServer<>(mr, 50, 51019, ClientHandler.class, sqlHandler);
 		assertTrue(server.blockingStart());
 
 		startTime = System.currentTimeMillis();
 
 		assertTrue(server.isInitialized());
+	}
+
+	private static SQLHandler getSqlHandler() throws SQLException {
+		String dbAddress = "localhost";
+		String dbName = "jenjin_test";
+		String dbUsername = "jenjin_user";
+		String dbPassword = "jenjin_password";
+		String dbUrl = CONNECTION_STRING_PROTOCOL + dbAddress + "/" + dbName;
+		try
+		{
+			Class.forName("org.drizzle.jdbc.DrizzleDriver").newInstance();
+		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e)
+		{
+			LOGGER.log(Level.SEVERE, "Unable to register Drizzle driver; is the Drizzle dependency present?");
+		}
+		Connection dbConnection = DriverManager.getConnection(dbUrl, dbUsername, dbPassword);
+		return new SQLHandler(dbConnection);
 	}
 
 	/**

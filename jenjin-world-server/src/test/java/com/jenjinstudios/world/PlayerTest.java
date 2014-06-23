@@ -13,6 +13,7 @@ import org.testng.annotations.Test;
  */
 public class PlayerTest extends WorldServerTest
 {
+
 	/**
 	 * Test movement synchronization between client and server-side players.
 	 * @throws Exception If there's an exception.
@@ -65,10 +66,7 @@ public class PlayerTest extends WorldServerTest
 	@Test(timeOut = 10000)
 	public static void testLoginLogout() throws Exception {
 		WorldServerTest.testAccountNumber++;
-		WorldSQLHandler worldSQLHandler = new WorldSQLHandler("localhost", "jenjin_test", "jenjin_user",
-				"jenjin_password");
-
-		Assert.assertTrue(worldSQLHandler.isConnected());
+		WorldSQLHandler worldSQLHandler = getSqlHandler();
 
 		User user = new User();
 		user.setUsername("TestAccount" + WorldServerTest.testAccountNumber);
