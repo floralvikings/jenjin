@@ -1,6 +1,6 @@
 package com.jenjinstudios.server.net;
 
-import com.jenjinstudios.client.net.AuthClient;
+import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageInputStream;
 import com.jenjinstudios.core.io.MessageOutputStream;
 import com.jenjinstudios.core.io.MessageRegistry;
@@ -9,8 +9,11 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+import javax.crypto.Cipher;
 import java.io.IOException;
 import java.net.Socket;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -27,13 +30,7 @@ public class ServerTest
 {
 	private static final Logger LOGGER = Logger.getLogger(ServerTest.class.getName());
 	/** The chat server used for testing. */
-	private static AuthServer<ClientHandler> server;
-	/** This client should login successfully. */
-	private static AuthClient goodClient01;
-	/** This client will have the same credentials as goodClient01. */
-	private static AuthClient sameClient;
-	/** The time this test suite started. */
-	private static long startTime;
+	private AuthServer<ClientHandler> server;
 	/** The String used in connection protocol. */
 	public static final String CONNECTION_STRING_PROTOCOL = "jdbc:mysql:thin://";
 	/** The MessageRegistry used for this test. */
@@ -44,17 +41,11 @@ public class ServerTest
 	 * @throws Exception If there is an error connecting to the MySql database.
 	 */
 	@BeforeClass
-	public static void construct() throws Exception {
+	public void construct() throws Exception {
 		mr = new MessageRegistry();
-		// TODO Move these assertions.
 		SQLHandler sqlHandler = getSqlHandler();
-
 		server = new AuthServer<>(mr, 50, 51019, ClientHandler.class, sqlHandler);
-		assertTrue(server.blockingStart());
-
-		startTime = System.currentTimeMillis();
-
-		assertTrue(server.isInitialized());
+		server.blockingStart();
 	}
 
 	private static SQLHandler getSqlHandler() throws SQLException {
@@ -80,16 +71,26 @@ public class ServerTest
 	 * @throws InterruptedException If there is interrupt.
 	 */
 	@AfterClass
-	public static void destroy() throws IOException, InterruptedException {
-		if (goodClient01 != null)
-		{
-			if (goodClient01.isLoggedIn())
-				assertTrue(goodClient01.sendBlockingLogoutRequest());
-			goodClient01.shutdown();
-		}
+	public void destroy() throws IOException, InterruptedException {
+		server.shutdown();
+	}
 
-		while ((System.currentTimeMillis() - startTime) < 1500)
-			Thread.sleep(1);
+	@Test
+	public void testBlockingStart() throws Exception {
+		SQLHandler sqlHandler = getSqlHandler();
+
+		Server server = new AuthServer<>(mr, 50, 51020, ClientHandler.class, sqlHandler);
+		assertTrue(server.blockingStart());
+		server.shutdown();
+	}
+
+	@Test
+	public void testIsInitialized() throws Exception {
+		SQLHandler sqlHandler = getSqlHandler();
+
+		Server server = new AuthServer<>(mr, 50, 51020, ClientHandler.class, sqlHandler);
+		server.blockingStart();
+		assertTrue(server.isInitialized());
 		server.shutdown();
 	}
 
@@ -102,18 +103,41 @@ public class ServerTest
 		Socket sock = new Socket("localhost", 51019);
 		MessageInputStream in = new MessageInputStream(mr, sock.getInputStream());
 		MessageOutputStream out = new MessageOutputStream(mr, sock.getOutputStream());
-		goodClient01 = new AuthClient(in, out, mr, "TestAccount1", "testPassword");
-		goodClient01.blockingStart();
+		prepareForLoginRequest(in, out);
 
-		assertTrue(goodClient01.sendBlockingLoginRequest());
-		assertTrue(goodClient01.isLoggedIn());
+		Message loginRequest = mr.createMessage("LoginRequest");
+		loginRequest.setArgument("username", "TestAccount1");
+		loginRequest.setArgument("password", "testPassword");
+		out.writeMessage(loginRequest);
 
-		assertEquals(1, server.getNumClients());
+		Message loginResponse = in.readMessage();
+		assertTrue((boolean) loginResponse.getArgument("success"));
 
-		assertTrue(goodClient01.sendBlockingLogoutRequest());
-		assertFalse(goodClient01.isLoggedIn());
+		Message logoutRequest = mr.createMessage("LogoutRequest");
+		out.writeMessage(logoutRequest);
 
-		goodClient01.shutdown();
+		Message logoutResponse = in.readMessage();
+		assertTrue((boolean) logoutResponse.getArgument("success"));
+		sock.close();
+	}
+
+	private void prepareForLoginRequest(MessageInputStream in, MessageOutputStream out) throws Exception {
+		KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
+		keyPairGenerator.initialize(512);
+		KeyPair keyPair = keyPairGenerator.generateKeyPair();
+		byte[] clientKey = keyPair.getPublic().getEncoded();
+
+		Message publicKeyMessage = mr.createMessage("PublicKeyMessage");
+		publicKeyMessage.setArgument("key", clientKey);
+		out.writeMessage(publicKeyMessage);
+
+		in.readMessage();
+		Message aes = in.readMessage();
+		Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
+		cipher.init(Cipher.DECRYPT_MODE, keyPair.getPrivate());
+		byte[] decKey = cipher.doFinal((byte[]) aes.getArgument("key"));
+		in.setAESKey(decKey);
+		out.setAesKey(decKey);
 	}
 
 	/**
@@ -126,13 +150,16 @@ public class ServerTest
 		Socket sock = new Socket("127.0.0.1", 51019);
 		MessageInputStream in = new MessageInputStream(mr, sock.getInputStream());
 		MessageOutputStream out = new MessageOutputStream(mr, sock.getOutputStream());
-		AuthClient badClient = new AuthClient(in, out, mr, "TestAccount2", "This is an incorrect password.");
-		badClient.blockingStart();
+		prepareForLoginRequest(in, out);
 
-		assertFalse(badClient.sendBlockingLoginRequest());
-		assertFalse(badClient.isLoggedIn());
+		Message loginRequest = mr.createMessage("LoginRequest");
+		loginRequest.setArgument("username", "TestAccount2");
+		loginRequest.setArgument("password", "This is an incorrect password.");
+		out.writeMessage(loginRequest);
 
-		badClient.shutdown();
+		Message loginResponse = in.readMessage();
+		assertFalse((boolean) loginResponse.getArgument("success"));
+		sock.close();
 	}
 
 	/**
@@ -144,17 +171,22 @@ public class ServerTest
 		Socket sock = new Socket("localhost", 51019);
 		MessageInputStream in = new MessageInputStream(mr, sock.getInputStream());
 		MessageOutputStream out = new MessageOutputStream(mr, sock.getOutputStream());
-		goodClient01 = new AuthClient(in, out, mr, "TestAccount1", "testPassword");
-		goodClient01.blockingStart();
+		prepareForLoginRequest(in, out);
 
-		assertTrue(goodClient01.isRunning());
+		Message loginRequest = mr.createMessage("LoginRequest");
+		loginRequest.setArgument("username", "TestAccount1");
+		loginRequest.setArgument("password", "testPassword");
+		out.writeMessage(loginRequest);
 
-		assertTrue(goodClient01.sendBlockingLoginRequest());
+		Message loginResponse = in.readMessage();
+		long loggedIn = (long) loginResponse.getArgument("loginTime");
+
 		ClientHandler handler = server.getClientHandlerByUsername("TestAccount1");
-		assertEquals(handler.getLoggedInTime(), goodClient01.getLoggedInTime());
-		assertTrue(goodClient01.sendBlockingLogoutRequest());
+		assertEquals(handler.getLoggedInTime(), loggedIn);
 
-		goodClient01.shutdown();
+		Message logoutRequest = mr.createMessage("LogoutRequest");
+		out.writeMessage(logoutRequest);
+		sock.close();
 	}
 
 	/**
@@ -166,26 +198,26 @@ public class ServerTest
 		Socket sock = new Socket("localhost", 51019);
 		MessageInputStream in = new MessageInputStream(mr, sock.getInputStream());
 		MessageOutputStream out = new MessageOutputStream(mr, sock.getOutputStream());
-		goodClient01 = new AuthClient(in, out, mr, "TestAccount1", "testPassword");
-		assertTrue(goodClient01.blockingStart());
+		prepareForLoginRequest(in, out);
 
-		sock = new Socket("127.0.0.1", 51019);
-		MessageInputStream in2 = new MessageInputStream(mr, sock.getInputStream());
-		MessageOutputStream out2 = new MessageOutputStream(mr, sock.getOutputStream());
-		sameClient = new AuthClient(in2, out2, mr, "TestAccount1", "testPassword");
-		sameClient.blockingStart();
+		Message loginRequest = mr.createMessage("LoginRequest");
+		loginRequest.setArgument("username", "TestAccount1");
+		loginRequest.setArgument("password", "testPassword");
+		out.writeMessage(loginRequest);
 
-		assertTrue(goodClient01.sendBlockingLoginRequest());
-		assertTrue(goodClient01.isLoggedIn());
+		Message loginResponse = in.readMessage();
+		assertTrue((boolean) loginResponse.getArgument("success"));
 
-		assertFalse(sameClient.sendBlockingLoginRequest());
-		assertFalse(sameClient.isLoggedIn());
+		Socket sock2 = new Socket("127.0.0.1", 51019);
+		MessageInputStream in2 = new MessageInputStream(mr, sock2.getInputStream());
+		MessageOutputStream out2 = new MessageOutputStream(mr, sock2.getOutputStream());
+		prepareForLoginRequest(in2, out2);
+		out2.writeMessage(loginRequest);
 
-		assertTrue(goodClient01.sendBlockingLogoutRequest());
-		assertFalse(sameClient.isLoggedIn());
-
-		goodClient01.shutdown();
-		sameClient.shutdown();
+		loginResponse = in2.readMessage();
+		assertFalse((boolean) loginResponse.getArgument("success"));
+		sock.close();
+		sock2.close();
 	}
 
 	/**
@@ -197,38 +229,32 @@ public class ServerTest
 		Socket sock = new Socket("localhost", 51019);
 		MessageInputStream in = new MessageInputStream(mr, sock.getInputStream());
 		MessageOutputStream out = new MessageOutputStream(mr, sock.getOutputStream());
-		goodClient01 = new AuthClient(in, out, mr, "TestAccount1", "testPassword");
-		LOGGER.log(Level.INFO, "Starting goodClient01");
-		goodClient01.blockingStart();
+		prepareForLoginRequest(in, out);
 
-		sock = new Socket("127.0.0.1", 51019);
-		MessageInputStream in2 = new MessageInputStream(mr, sock.getInputStream());
-		MessageOutputStream out2 = new MessageOutputStream(mr, sock.getOutputStream());
-		sameClient = new AuthClient(in2, out2, mr, "TestAccount1", "testPassword");
-		LOGGER.log(Level.INFO, "Starting sameClient");
-		sameClient.blockingStart();
+		Message loginRequest = mr.createMessage("LoginRequest");
+		loginRequest.setArgument("username", "TestAccount1");
+		loginRequest.setArgument("password", "testPassword");
+		out.writeMessage(loginRequest);
 
-		// This client logs in and shuts down before sending a proper logout request.
-		// The server should auto logout the client
-		LOGGER.log(Level.INFO, "goodClient01 Logging in");
-		assertTrue(goodClient01.sendBlockingLoginRequest());
-		assertTrue(goodClient01.isLoggedIn());
-		LOGGER.log(Level.INFO, "goodClient01 Logged in successfully, forcing shutdown");
-		goodClient01.shutdown();
-		// Have to sleep.  It's HIGHLY unlikely that a client will try logging in less than the minimum sleep resolution
-		// after a broken connection.
-		Thread.sleep(server.PERIOD);
-		// sameClient logs in, and should be able to successfully since the server auto logged out the failed connection.
-		LOGGER.log(Level.INFO, "sameClient Logging in");
-		assertTrue(sameClient.sendBlockingLoginRequest());
-		assertTrue(sameClient.isLoggedIn());
-		LOGGER.log(Level.INFO, "sameClient Logged in successfully");
-		assertTrue(sameClient.sendBlockingLogoutRequest());
-		assertFalse(sameClient.isLoggedIn());
-		// It is important to note that if the server dies the entire database will be corrupted.  Recommend using an
-		// hourly auto-backup in case of server failure.
+		Message loginResponse = in.readMessage();
+		assertTrue((boolean) loginResponse.getArgument("success"));
+		sock.close();
 
-		goodClient01.shutdown();
-		sameClient.shutdown();
+		Thread.sleep(server.PERIOD * 2);
+
+		Socket sock2 = new Socket("127.0.0.1", 51019);
+		MessageInputStream in2 = new MessageInputStream(mr, sock2.getInputStream());
+		MessageOutputStream out2 = new MessageOutputStream(mr, sock2.getOutputStream());
+		prepareForLoginRequest(in2, out2);
+
+		out2.writeMessage(loginRequest);
+		loginResponse = in2.readMessage();
+		assertTrue((boolean) loginResponse.getArgument("success"));
+
+		Message logoutRequest = mr.createMessage("LogoutRequest");
+		out2.writeMessage(logoutRequest);
+		Message logoutResponse = in2.readMessage();
+		assertTrue((boolean) logoutResponse.getArgument("success"));
+		sock2.close();
 	}
 }
