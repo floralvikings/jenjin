@@ -5,21 +5,14 @@ package com.jenjinstudios.server.net;
  */
 public class User
 {
-	/** The name of this user. */
+	private String salt;
+	private boolean loggedIn;
 	private String username;
 	/** The hashed, salted password of this user. */
 	private String password;
 
-	/**
-	 * Get the name of this user.
-	 * @return The name of this user.
-	 */
 	public String getUsername() { return username; }
 
-	/**
-	 * Set the name of this user.
-	 * @param username The new name.
-	 */
 	public void setUsername(String username) { this.username = username; }
 
 	/**
@@ -33,4 +26,12 @@ public class User
 	 * @param password The hashed, salted password of this user.
 	 */
 	public void setPassword(String password) { this.password = password; }
+
+	public String getSalt() { return salt; }
+
+	public void setSalt(String salt) { this.salt = salt; }
+
+	public boolean isLoggedIn() { return loggedIn; }
+
+	public void setLoggedIn(boolean loggedIn) { this.loggedIn = loggedIn; }
 }

@@ -3,7 +3,10 @@ package com.jenjinstudios.server.sql;
 import com.jenjinstudios.core.util.Hash;
 import com.jenjinstudios.server.net.User;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -15,13 +18,13 @@ import static java.sql.ResultSet.TYPE_SCROLL_SENSITIVE;
  * @author Caleb Brinkman
  */
 @SuppressWarnings("SameParameterValue")
-public class SQLHandler
+public class SQLConnector
 {
 
 	/** The name of the column in the user table specifying whether the user is currently logged in. */
 	public static final String LOGGED_IN_COLUMN = "loggedin";
 	/** The Logger used for this class. */
-	private static final Logger LOGGER = Logger.getLogger(SQLHandler.class.getName());
+	private static final Logger LOGGER = Logger.getLogger(SQLConnector.class.getName());
 	/** The connection used to communicate with the SQL database. */
 	protected final Connection dbConnection;
 	/** The string used to get all information about the user. */
@@ -30,7 +33,7 @@ public class SQLHandler
 	/**
 	 * Create a new SQLHandler with the given database information, and connect to the database.
 	 */
-	public SQLHandler(Connection dbConnection) {
+	public SQLConnector(Connection dbConnection) {
 		USER_QUERY = "SELECT * FROM users WHERE username = ?";
 		this.dbConnection = dbConnection;
 	}
@@ -44,32 +47,48 @@ public class SQLHandler
 	 * @return true if the user was logged in successfully, false if the user was already logged in or the update to the
 	 * database failed.
 	 */
-	public boolean logInUser(User user) {
-		String username = user.getUsername();
-		String password = user.getPassword();
-		boolean success;
+	public User logInUser(String username, String password) throws LoginException {
+		User user = getUserWithValidPassword(username, password);
+		updateLoggedinColumn(username, true);
+		user.setLoggedIn(true);
+		return user;
+	}
+
+	private User getUserWithValidPassword(String username, String password) throws LoginException {
+		User user = getUser(username);
+		if (user.isLoggedIn())
+			throw new LoginException("User " + username + " is already logged in.");
+		String hashedPassword = Hash.getHashedString(password, user.getSalt());
+		boolean passwordCorrect = hashedPassword != null && hashedPassword.equalsIgnoreCase(user.getPassword());
+		if (!passwordCorrect)
+			throw new LoginException("User " + username + " provided incorrect password.");
+		return user;
+	}
+
+	public User getUser(String username) throws LoginException {
+		boolean loggedIn;
+		String salt;
+		String dbPass;
+		User user;
 		try (ResultSet results = makeUserQuery(username))
 		{
-			results.next();
-			// Determine if the user is logged in.  If yes, end of method.
-			boolean loggedIn = results.getBoolean(LOGGED_IN_COLUMN);
-			if (loggedIn)
-				return false;
-			// Hash the user-supplied password with the salt in the database.
-			String hashedPassword = Hash.getHashedString(password, results.getString("salt"));
-			// Determine if the correct password was supplied.
-			boolean passwordCorrect = hashedPassword != null && hashedPassword.equalsIgnoreCase(results.getString("password"));
-			if (!passwordCorrect)
-				return false;
-
-			updateLoggedinColumn(username, true);
-			success = true;
-		} catch (SQLException | IndexOutOfBoundsException e)
+			if (!results.next())
+			{
+				throw new LoginException("User " + username + " does not exist.");
+			}
+			loggedIn = results.getBoolean(LOGGED_IN_COLUMN);
+			salt = results.getString("salt");
+			dbPass = results.getString("password");
+			user = new User();
+			user.setUsername(username);
+			user.setPassword(dbPass);
+			user.setSalt(salt);
+			user.setLoggedIn(loggedIn);
+		} catch (SQLException e)
 		{
-			LOGGER.log(Level.FINE, "Failed to log in user: {0}", username);
-			success = false;
+			throw new LoginException("Unable to retrieve user " + username + " because of SQL Exception.");
 		}
-		return success;
+		return user;
 	}
 
 	/**
@@ -91,7 +110,7 @@ public class SQLHandler
 
 			updateLoggedinColumn(username, false);
 			success = true;
-		} catch (SQLException | IndexOutOfBoundsException e)
+		} catch (SQLException | IndexOutOfBoundsException | LoginException e)
 		{
 			LOGGER.log(Level.FINE, "Failed to log out user: {0}", username);
 			success = false;
@@ -109,7 +128,8 @@ public class SQLHandler
 		synchronized (dbConnection)
 		{
 			@SuppressWarnings("resource") // Need to suppress warning, result set must be closed by calling method.
-					PreparedStatement statement = dbConnection.prepareStatement(USER_QUERY, TYPE_SCROLL_SENSITIVE, CONCUR_UPDATABLE);
+					PreparedStatement statement = dbConnection.prepareStatement(USER_QUERY,
+					TYPE_SCROLL_SENSITIVE, CONCUR_UPDATABLE);
 			statement.setString(1, username);
 			return statement.executeQuery();
 		}
@@ -119,9 +139,9 @@ public class SQLHandler
 	 * Update the loggedin column to reflect the supplied boolean.
 	 * @param username The user being queried.
 	 * @param status The new status of the loggedin column.
-	 * @throws SQLException If there is a SQL error.
+	 * @throws com.jenjinstudios.server.sql.LoginException If there is a SQL error.
 	 */
-	protected void updateLoggedinColumn(String username, boolean status) throws SQLException {
+	protected void updateLoggedinColumn(String username, boolean status) throws LoginException {
 		String newValue = status ? "1" : "0";
 		String updateLoggedInQuery = "UPDATE users SET " + LOGGED_IN_COLUMN + "=" + newValue + " WHERE " +
 				"username = ?";
@@ -132,6 +152,9 @@ public class SQLHandler
 				updateLoggedIn.setString(1, username);
 				updateLoggedIn.executeUpdate();
 				updateLoggedIn.close();
+			} catch (SQLException e)
+			{
+				throw new LoginException("Unable to log in " + username + "; SQLException when updating loggedin column.");
 			}
 		}
 	}

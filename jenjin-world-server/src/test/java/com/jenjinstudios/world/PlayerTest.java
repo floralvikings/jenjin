@@ -3,7 +3,7 @@ package com.jenjinstudios.world;
 import com.jenjinstudios.server.net.User;
 import com.jenjinstudios.world.math.MathUtil;
 import com.jenjinstudios.world.math.Vector2D;
-import com.jenjinstudios.world.sql.WorldSQLHandler;
+import com.jenjinstudios.world.sql.WorldSQLConnector;
 import com.jenjinstudios.world.state.MoveState;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -66,7 +66,7 @@ public class PlayerTest extends WorldServerTest
 	@Test(timeOut = 10000)
 	public static void testLoginLogout() throws Exception {
 		WorldServerTest.testAccountNumber++;
-		WorldSQLHandler worldSQLHandler = getSqlHandler();
+		WorldSQLConnector worldSQLHandler = getSqlHandler();
 
 		User user = new User();
 		user.setUsername("TestAccount" + WorldServerTest.testAccountNumber);

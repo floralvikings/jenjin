@@ -77,8 +77,8 @@ public class ClientHandler extends Connection
 		// proper logout, so we handle the query directly instead of in an executable message.
 		if (getUser() != null)
 		{
-			getServer().clientUsernameSet(getUser().getUsername(), null);
-			server.getSqlHandler().logOutUser(user.getUsername());
+			getServer().associateUsernameWithClientHandler(getUser().getUsername(), null);
+			server.getSqlConnector().logOutUser(user.getUsername());
 		}
 		closeLink();
 		getServer().removeClient(this);
@@ -92,14 +92,8 @@ public class ClientHandler extends Connection
 
 	/**
 	 * Queue a message indicating the success or failure of a login attempt.
-	 * @param success Whether the attempt was successful.
 	 */
-	public void setLoginStatus(boolean success) {
-		if (success)
-		{
-			loggedInTime = server.getCycleStartTime();
-		}
-	}
+	public void setLoggedInTime(long loggedInTime) { this.loggedInTime = loggedInTime; }
 
 	/**
 	 * Queue a message indicating the success or failure of a logout attempt.

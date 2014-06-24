@@ -1,7 +1,8 @@
 package com.jenjinstudios.world.sql;
 
 import com.jenjinstudios.server.net.User;
-import com.jenjinstudios.server.sql.SQLHandler;
+import com.jenjinstudios.server.sql.LoginException;
+import com.jenjinstudios.server.sql.SQLConnector;
 import com.jenjinstudios.core.util.Hash;
 import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.Player;
@@ -19,7 +20,7 @@ import java.util.logging.Logger;
  * @author Caleb Brinkman
  */
 @SuppressWarnings("SpellCheckingInspection")
-public class WorldSQLHandler extends SQLHandler
+public class WorldSQLConnector extends SQLConnector
 {
 	/** The column name of the X coordinate. */
 	public static final String X_COORD = "xCoord";
@@ -28,12 +29,12 @@ public class WorldSQLHandler extends SQLHandler
 	/** The column name of the zone ID. */
 	public static final String ZONE_ID = "zoneID";
 	/** The Logger used for this class. */
-	private static final Logger LOGGER = Logger.getLogger(WorldSQLHandler.class.getName());
+	private static final Logger LOGGER = Logger.getLogger(WorldSQLConnector.class.getName());
 
 	/**
 	 * Create a new SQLHandler with the given database information, and connect to the database.
 	 */
-	public WorldSQLHandler(Connection connection) {
+	public WorldSQLConnector(Connection connection) {
 		super(connection);
 	}
 
@@ -67,7 +68,7 @@ public class WorldSQLHandler extends SQLHandler
 			player.setVector2D(coordinates);
 			player.setZoneID(zoneID);
 
-		} catch (SQLException | IndexOutOfBoundsException e)
+		} catch (SQLException | IndexOutOfBoundsException | LoginException e)
 		{
 			LOGGER.log(Level.FINE, "Failed to log in user: " + username, e);
 			player = null;
@@ -94,7 +95,7 @@ public class WorldSQLHandler extends SQLHandler
 			updateLoggedinColumn(username, false);
 			updatePlayer(actor);
 			success = true;
-		} catch (SQLException e)
+		} catch (SQLException | LoginException e)
 		{
 			LOGGER.log(Level.WARNING, "Failed to log out user: {0}", username);
 			success = false;

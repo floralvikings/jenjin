@@ -229,7 +229,7 @@ public class Server<T extends ClientHandler> extends Thread
 	 * @param handler The ClientHandler that has had a username set.
 	 */
 	@SuppressWarnings("unchecked")
-	public void clientUsernameSet(String username, ClientHandler handler) {
+	public void associateUsernameWithClientHandler(String username, ClientHandler handler) {
 		synchronized (clientsByUsername)
 		{
 			clientsByUsername.put(username, (T) handler);

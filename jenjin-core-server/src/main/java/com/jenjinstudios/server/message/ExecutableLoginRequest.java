@@ -1,10 +1,13 @@
 package com.jenjinstudios.server.message;
 
 import com.jenjinstudios.core.io.Message;
-import com.jenjinstudios.server.net.AuthServer;
 import com.jenjinstudios.server.net.ClientHandler;
 import com.jenjinstudios.server.net.User;
-import com.jenjinstudios.server.sql.SQLHandler;
+import com.jenjinstudios.server.sql.LoginException;
+import com.jenjinstudios.server.sql.SQLConnector;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Executes the necessary actions to deal with a login response.
@@ -13,8 +16,9 @@ import com.jenjinstudios.server.sql.SQLHandler;
 @SuppressWarnings("unused")
 public class ExecutableLoginRequest extends ServerExecutableMessage
 {
+	private static final Logger LOGGER = Logger.getLogger(ExecutableLoginRequest.class.getName());
 	/** The SQL handler used by this executable message. */
-	private final SQLHandler sqlHandler;
+	private final SQLConnector sqlConnector;
 
 	/**
 	 * Construct a new ExecutableLoginRequest.
@@ -23,7 +27,7 @@ public class ExecutableLoginRequest extends ServerExecutableMessage
 	 */
 	public ExecutableLoginRequest(ClientHandler clientHandler, Message loginRequest) {
 		super(clientHandler, loginRequest);
-		sqlHandler = clientHandler.getServer().getSqlHandler();
+		sqlConnector = clientHandler.getServer().getSqlConnector();
 	}
 
 	@Override
@@ -32,32 +36,32 @@ public class ExecutableLoginRequest extends ServerExecutableMessage
 
 	@Override
 	public void runASync() {
-		boolean success;
 		ClientHandler handler = getClientHandler();
-		AuthServer<? extends ClientHandler> server = handler.getServer();
-		Message message = getMessage();
-		if (sqlHandler == null || handler.getUser() != null)
+		String username = (String) getMessage().getArgument("username");
+		String password = (String) getMessage().getArgument("password");
+		try
 		{
-			long loggedInTime = handler.getLoggedInTime();
-			Message loginResponse = handler.getMessageFactory().generateLoginResponse(false, loggedInTime);
-			handler.queueMessage(loginResponse);
-			return;
-		}
-		String username = (String) message.getArgument("username");
-		String password = (String) message.getArgument("password");
-		User user = new User();
-		user.setUsername(username);
-		user.setPassword(password);
-		success = sqlHandler.logInUser(user);
-
-		handler.setLoginStatus(success);
-		long loggedInTime = handler.getLoggedInTime();
-		Message loginResponse = handler.getMessageFactory().generateLoginResponse(success, loggedInTime);
-		handler.queueMessage(loginResponse);
-
-		if (success)
+			User user = sqlConnector.logInUser(username, password);
+			long loggedInTime = handler.getServer().getCycleStartTime();
+			handler.setLoggedInTime(loggedInTime);
+			queueLoginSuccessResponse(loggedInTime);
 			handler.setUser(user);
-		server.clientUsernameSet(username, handler);
+			handler.getServer().associateUsernameWithClientHandler(username, handler);
+		} catch (LoginException | NullPointerException e)
+		{
+			LOGGER.log(Level.FINEST, "User login failure: ", e);
+			queueLoginFailureResponse();
+		}
+	}
+
+	private void queueLoginSuccessResponse(long loggedInTime) {
+		Message loginResponse = getClientHandler().getMessageFactory().generateLoginResponse(true, loggedInTime);
+		getClientHandler().queueMessage(loginResponse);
+	}
+
+	private void queueLoginFailureResponse() {
+		Message loginResponse = getClientHandler().getMessageFactory().generateLoginResponse(false, 0);
+		getClientHandler().queueMessage(loginResponse);
 	}
 
 }

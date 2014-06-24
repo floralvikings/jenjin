@@ -6,10 +6,9 @@ import com.jenjinstudios.core.io.MessageRegistry;
 import com.jenjinstudios.core.util.Files;
 import com.jenjinstudios.world.io.WorldFileReader;
 import com.jenjinstudios.world.math.Vector2D;
-import com.jenjinstudios.world.sql.WorldSQLHandler;
+import com.jenjinstudios.world.sql.WorldSQLConnector;
 import com.jenjinstudios.world.state.MoveState;
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 
@@ -18,7 +17,7 @@ import java.io.InputStream;
 import java.net.Socket;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
@@ -35,13 +34,7 @@ public class WorldServerTest
 	public static int testAccountNumber = 0;
 	/** The port used to listen and connect. */
 	public static int port = WorldServer.DEFAULT_PORT;
-	/** The String used in connection protocol. */
-	public static final String CONNECTION_STRING_PROTOCOL = "jdbc:mysql:thin://";
-	private static final String dbAddress = "localhost";
-	private static final String dbName = "jenjin_test";
-	private static final String dbUsername = "jenjin_user";
-	private static final String dbPassword = "jenjin_password";
-	private static final String dbUrl = CONNECTION_STRING_PROTOCOL + dbAddress + "/" + dbName;
+	private static int connectionNumber = 0;
 
 	/**
 	 * The tolerance for distance between a the client and server positions of an actor. This is roughly how much an
@@ -120,7 +113,7 @@ public class WorldServerTest
 	 */
 	public static WorldServer initWorldServer(int port) throws Exception {
 		/* The world SQL handler used to test. */
-		WorldSQLHandler worldSQLHandler = getSqlHandler();
+		WorldSQLConnector worldSQLHandler = getSqlHandler();
 		WorldServer worldServer = new WorldServer(mr,
 				WorldServer.DEFAULT_UPS, port, WorldClientHandler.class, worldSQLHandler, new WorldFileReader(
 				WorldServerTest.class.getResourceAsStream("/com/jenjinstudios/world/WorldFile01.xml"))
@@ -213,28 +206,42 @@ public class WorldServerTest
 	}
 
 	/**
-	 * Reset the database in the even of a test failure.
-	 * @throws Exception If there's an exception.
+	 * Create a unique connection with some dummy data that we can test on.
+	 * @return The dummy connection.
+	 * @throws Exception If something goes wrong creating the connection.
 	 */
-	@AfterClass
-	public static void resetDB() throws Exception {
-		WorldSQLHandler worldSQLHandler = getSqlHandler();
-		for (int i = 1; i <= testAccountNumber; i++)
+	public static Connection createTestConnection() throws Exception {
+		Class.forName("org.h2.Driver");
+		String connectionUrl = "jdbc:h2:mem:jenjin_test" + connectionNumber;
+		Connection testConnection = DriverManager.getConnection(connectionUrl, "sa", "");
+		Statement statement = testConnection.createStatement();
+		statement.executeUpdate("CREATE TABLE users (" +
+				"  `username` VARCHAR(16) NOT NULL," +
+				"  `password` CHAR(64) NOT NULL," +
+				"  `salt` CHAR(48) NOT NULL," +
+				"  `loggedin` TINYINT NOT NULL DEFAULT '0'," +
+				"  `xcoord` DOUBLE NOT NULL DEFAULT '0'," +
+				"  `ycoord` DOUBLE NOT NULL DEFAULT '0'," +
+				"  `zoneid` INT(11) NOT NULL DEFAULT '0'," +
+				"  PRIMARY KEY (username)" +
+				")");
+		for (int i = 1; i < 100; i++)
 		{
-			String user = "TestAccount" + i;
-			worldSQLHandler.logOutPlayer(new Actor(user));
+			statement.executeUpdate(
+					"INSERT INTO users " +
+							"(`username`, `password`, `salt`, `loggedin`, `xcoord`, `ycoord`, `zoneid`)" +
+							" VALUES " +
+							"('TestAccount" + i + "', " +
+							"'650f00f552d4df0147d236e240ccfc490444f4b358c4ff1d79f5fd90f57243bd', " +
+							"'e3c42b85a183d3f654a3d2bb3bc5ea607d0fb529d9b890d3', " +
+							"'0', '0', '0', '0')");
 		}
+		connectionNumber++;
+		return testConnection;
 	}
 
-	public static WorldSQLHandler getSqlHandler() throws SQLException {
-		try
-		{
-			Class.forName("org.drizzle.jdbc.DrizzleDriver").newInstance();
-		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e)
-		{
-			LOGGER.log(Level.SEVERE, "Unable to register Drizzle driver; is the Drizzle dependency present?");
-		}
-		Connection dbConnection = DriverManager.getConnection(dbUrl, dbUsername, dbPassword);
-		return new WorldSQLHandler(dbConnection);
+	public static WorldSQLConnector getSqlHandler() throws Exception {
+		Connection dbConnection = createTestConnection();
+		return new WorldSQLConnector(dbConnection);
 	}
 }

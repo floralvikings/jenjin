@@ -3,7 +3,7 @@ package com.jenjinstudios.world.message;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.WorldClientHandler;
-import com.jenjinstudios.world.sql.WorldSQLHandler;
+import com.jenjinstudios.world.sql.WorldSQLConnector;
 
 /**
  * Handles requests to log out of the world.
@@ -12,7 +12,7 @@ import com.jenjinstudios.world.sql.WorldSQLHandler;
 public class ExecutableWorldLogoutRequest extends WorldExecutableMessage
 {
 	/** The SQLHandler used to log out the client. */
-	private final WorldSQLHandler sqlHandler;
+	private final WorldSQLConnector sqlHandler;
 
 	/**
 	 * Construct a new ExecutableMessage.  Must be implemented by subclasses.
@@ -21,7 +21,7 @@ public class ExecutableWorldLogoutRequest extends WorldExecutableMessage
 	 */
 	public ExecutableWorldLogoutRequest(WorldClientHandler handler, Message message) {
 		super(handler, message);
-		sqlHandler = handler.getServer().getSqlHandler();
+		sqlHandler = handler.getServer().getSqlConnector();
 
 	}
 

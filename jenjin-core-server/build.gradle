@@ -2,7 +2,7 @@ description = ''
 
 
 dependencies {
-    compile group: 'org.drizzle.jdbc', name: 'drizzle-jdbc', version: '1.2'
+    compile 'com.h2database:h2:1.4.178'
     compile project(':jenjin-core')
     compile project(':jenjin-core-client')
 }

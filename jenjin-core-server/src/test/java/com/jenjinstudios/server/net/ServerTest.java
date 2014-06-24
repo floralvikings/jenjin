@@ -4,7 +4,9 @@ import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageInputStream;
 import com.jenjinstudios.core.io.MessageOutputStream;
 import com.jenjinstudios.core.io.MessageRegistry;
-import com.jenjinstudios.server.sql.SQLHandler;
+import com.jenjinstudios.server.sql.SQLConnector;
+import com.jenjinstudios.server.sql.SQLConnectorTest;
+import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -14,11 +16,6 @@ import java.io.IOException;
 import java.net.Socket;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import static org.junit.Assert.*;
 
@@ -28,11 +25,8 @@ import static org.junit.Assert.*;
  */
 public class ServerTest
 {
-	private static final Logger LOGGER = Logger.getLogger(ServerTest.class.getName());
 	/** The chat server used for testing. */
 	private AuthServer<ClientHandler> server;
-	/** The String used in connection protocol. */
-	public static final String CONNECTION_STRING_PROTOCOL = "jdbc:mysql:thin://";
 	/** The MessageRegistry used for this test. */
 	private static MessageRegistry mr;
 
@@ -43,26 +37,9 @@ public class ServerTest
 	@BeforeClass
 	public void construct() throws Exception {
 		mr = new MessageRegistry();
-		SQLHandler sqlHandler = getSqlHandler();
-		server = new AuthServer<>(mr, 50, 51019, ClientHandler.class, sqlHandler);
+		SQLConnector sqlConnector = new SQLConnector(SQLConnectorTest.createTestConnection());
+		server = new AuthServer<>(mr, 50, 51019, ClientHandler.class, sqlConnector);
 		server.blockingStart();
-	}
-
-	private static SQLHandler getSqlHandler() throws SQLException {
-		String dbAddress = "localhost";
-		String dbName = "jenjin_test";
-		String dbUsername = "jenjin_user";
-		String dbPassword = "jenjin_password";
-		String dbUrl = CONNECTION_STRING_PROTOCOL + dbAddress + "/" + dbName;
-		try
-		{
-			Class.forName("org.drizzle.jdbc.DrizzleDriver").newInstance();
-		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e)
-		{
-			LOGGER.log(Level.SEVERE, "Unable to register Drizzle driver; is the Drizzle dependency present?");
-		}
-		Connection dbConnection = DriverManager.getConnection(dbUrl, dbUsername, dbPassword);
-		return new SQLHandler(dbConnection);
 	}
 
 	/**
@@ -77,18 +54,18 @@ public class ServerTest
 
 	@Test
 	public void testBlockingStart() throws Exception {
-		SQLHandler sqlHandler = getSqlHandler();
+		SQLConnector sqlConnector = new SQLConnector(SQLConnectorTest.createTestConnection());
 
-		Server server = new AuthServer<>(mr, 50, 51020, ClientHandler.class, sqlHandler);
+		Server server = new AuthServer<>(mr, 50, 51020, ClientHandler.class, sqlConnector);
 		assertTrue(server.blockingStart());
 		server.shutdown();
 	}
 
 	@Test
 	public void testIsInitialized() throws Exception {
-		SQLHandler sqlHandler = getSqlHandler();
+		SQLConnector sqlConnector = new SQLConnector(SQLConnectorTest.createTestConnection());
 
-		Server server = new AuthServer<>(mr, 50, 51020, ClientHandler.class, sqlHandler);
+		Server server = new AuthServer<>(mr, 50, 51020, ClientHandler.class, sqlConnector);
 		server.blockingStart();
 		assertTrue(server.isInitialized());
 		server.shutdown();
@@ -256,5 +233,32 @@ public class ServerTest
 		Message logoutResponse = in2.readMessage();
 		assertTrue((boolean) logoutResponse.getArgument("success"));
 		sock2.close();
+	}
+
+	@Test
+	public void testFakeUser() throws Exception {
+		/* This client should fail to login. */
+		Socket sock = new Socket("127.0.0.1", 51019);
+		MessageInputStream in = new MessageInputStream(mr, sock.getInputStream());
+		MessageOutputStream out = new MessageOutputStream(mr, sock.getOutputStream());
+		prepareForLoginRequest(in, out);
+
+		Message loginRequest = mr.createMessage("LoginRequest");
+		loginRequest.setArgument("username", "This is definitely not a real user.");
+		loginRequest.setArgument("password", "This is an incorrect password.");
+		out.writeMessage(loginRequest);
+
+		Message loginResponse = in.readMessage();
+		assertFalse((boolean) loginResponse.getArgument("success"));
+		sock.close();
+	}
+
+	@Test
+	public void testGetNumClients() throws Exception {
+		Socket sock = new Socket("127.0.0.1", 51019);
+		// Have to give the server time to add the client.
+		Thread.sleep(server.PERIOD);
+		Assert.assertEquals(server.getNumClients(), 1);
+		sock.close();
 	}
 }

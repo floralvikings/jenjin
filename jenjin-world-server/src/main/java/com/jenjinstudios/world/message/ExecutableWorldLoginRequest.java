@@ -4,7 +4,7 @@ import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.server.net.User;
 import com.jenjinstudios.world.Player;
 import com.jenjinstudios.world.WorldClientHandler;
-import com.jenjinstudios.world.sql.WorldSQLHandler;
+import com.jenjinstudios.world.sql.WorldSQLConnector;
 
 /**
  * Handles requests to login to the world.
@@ -13,7 +13,7 @@ import com.jenjinstudios.world.sql.WorldSQLHandler;
 public class ExecutableWorldLoginRequest extends WorldExecutableMessage
 {
 	/** The SQL handler used by this executable message. */
-	private final WorldSQLHandler sqlHandler;
+	private final WorldSQLConnector sqlHandler;
 	/** The player added to the world. */
 	private Player player;
 	/** The LoginResponse to send to the client. */
@@ -26,7 +26,7 @@ public class ExecutableWorldLoginRequest extends WorldExecutableMessage
 	 */
 	public ExecutableWorldLoginRequest(WorldClientHandler handler, Message message) {
 		super(handler, message);
-		sqlHandler = handler.getServer().getSqlHandler();
+		sqlHandler = handler.getServer().getSqlConnector();
 	}
 
 	@Override
@@ -56,7 +56,7 @@ public class ExecutableWorldLoginRequest extends WorldExecutableMessage
 		}
 
 		success = player != null;
-		handler.setLoginStatus(success);
+		handler.setLoggedInTime(handler.getServer().getCycleStartTime());
 
 		loginResponse = handler.getMessageFactory().generateWorldLoginResponse();
 		loginResponse.setArgument("success", success);
@@ -65,7 +65,7 @@ public class ExecutableWorldLoginRequest extends WorldExecutableMessage
 		{
 			handler.setPlayer(player);
 			handler.setUser(user);
-			handler.getServer().clientUsernameSet(user.getUsername(), handler);
+			handler.getServer().associateUsernameWithClientHandler(user.getUsername(), handler);
 			loginResponse.setArgument("loginTime", handler.getLoggedInTime());
 			loginResponse.setArgument("xCoordinate", player.getVector2D().getXCoordinate());
 			loginResponse.setArgument("yCoordinate", player.getVector2D().getYCoordinate());
