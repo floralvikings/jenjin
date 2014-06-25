@@ -92,9 +92,9 @@ public class TaskedServer<T extends ClientHandler> extends Server<T>
 	 * The actual average UPS of this server.
 	 * @return The average UPS of this server
 	 */
-	public double getAverageUPS() {
-		return serverLoop.getAverageUPS();
-	}
+	public double getAverageUPS() { return serverLoop.getAverageUPS(); }
+
+	public int getUps() { return UPS; }
 
 	/**
 	 * Tasks to be repeated in the main loop.

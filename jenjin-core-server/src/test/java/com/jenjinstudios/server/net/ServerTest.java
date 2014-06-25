@@ -261,4 +261,10 @@ public class ServerTest
 		Assert.assertEquals(server.getNumClients(), 1);
 		sock.close();
 	}
+
+	@Test
+	public void testGetAverageUPS() throws Exception {
+		Thread.sleep(1000);
+		Assert.assertEquals(server.getAverageUPS(), server.getUps(), 0.1);
+	}
 }

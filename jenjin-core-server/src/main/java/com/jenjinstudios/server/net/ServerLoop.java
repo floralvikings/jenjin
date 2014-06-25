@@ -37,7 +37,7 @@ class ServerLoop extends TimerTask
 		this.server = server;
 		syncedTasks = this.server.getSyncedTasks();
 		repeatedTasks = this.server.getRepeatedTasks();
-		lastCycles = new long[server.UPS];
+		lastCycles = new long[server.getUps()];
 		cycleNum = 0;
 	}
 
