@@ -11,7 +11,7 @@ import java.sql.Statement;
 /**
  * @author Caleb Brinkman
  */
-public class SQLConnectorTest
+public class AuthenticatorTest
 {
 	private static int connectionNumber = 0;
 
@@ -53,7 +53,7 @@ public class SQLConnectorTest
 	@Test
 	public void testLookUpUser() throws Exception {
 		Connection connection = createTestConnection();
-		SQLConnector connector = new SQLConnector(connection);
+		Authenticator connector = new Authenticator(connection);
 		User testAccount1 = connector.lookUpUser("TestAccount1");
 		Assert.assertEquals(testAccount1.getUsername(), "TestAccount1");
 		connection.close();
@@ -62,13 +62,13 @@ public class SQLConnectorTest
 	@Test(expectedExceptions = LoginException.class)
 	public void testLookUpFakeUser() throws Exception {
 		Connection connection = createTestConnection();
-		SQLConnector connector = new SQLConnector(connection);
+		Authenticator connector = new Authenticator(connection);
 		connector.lookUpUser("This User Doesn't Exist.");
 	}
 
 	@Test
 	public void testLogInUser() throws Exception {
-		SQLConnector connector = new SQLConnector(createTestConnection());
+		Authenticator connector = new Authenticator(createTestConnection());
 		String username = "TestAccount1";
 		String password = "testPassword";
 		connector.logInUser(username, password);
@@ -78,7 +78,7 @@ public class SQLConnectorTest
 
 	@Test(expectedExceptions = LoginException.class)
 	public void testConcurrentLogins() throws Exception {
-		SQLConnector connector = new SQLConnector(createTestConnection());
+		Authenticator connector = new Authenticator(createTestConnection());
 		String username = "TestAccount1";
 		String password = "testPassword";
 		connector.logInUser(username, password);
@@ -88,7 +88,7 @@ public class SQLConnectorTest
 
 	@Test
 	public void testLogOutUser() throws Exception {
-		SQLConnector connector = new SQLConnector(createTestConnection());
+		Authenticator connector = new Authenticator(createTestConnection());
 		String username = "TestAccount1";
 		String password = "testPassword";
 		connector.logInUser(username, password);
@@ -99,7 +99,7 @@ public class SQLConnectorTest
 
 	@Test(expectedExceptions = LoginException.class)
 	public void testInvalidPassword() throws Exception {
-		SQLConnector connector = new SQLConnector(createTestConnection());
+		Authenticator connector = new Authenticator(createTestConnection());
 		String username = "TestAccount1";
 		String password = "incorrectPassword";
 		connector.logInUser(username, password);

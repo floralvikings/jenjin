@@ -2,7 +2,7 @@ package com.jenjinstudios.world.sql;
 
 import com.jenjinstudios.server.net.User;
 import com.jenjinstudios.server.sql.LoginException;
-import com.jenjinstudios.server.sql.SQLConnector;
+import com.jenjinstudios.server.sql.Authenticator;
 import com.jenjinstudios.core.util.Hash;
 import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.Player;
@@ -20,7 +20,7 @@ import java.util.logging.Logger;
  * @author Caleb Brinkman
  */
 @SuppressWarnings("SpellCheckingInspection")
-public class WorldSQLConnector extends SQLConnector
+public class WorldAuthenticator extends Authenticator
 {
 	/** The column name of the X coordinate. */
 	public static final String X_COORD = "xCoord";
@@ -29,12 +29,12 @@ public class WorldSQLConnector extends SQLConnector
 	/** The column name of the zone ID. */
 	public static final String ZONE_ID = "zoneID";
 	/** The Logger used for this class. */
-	private static final Logger LOGGER = Logger.getLogger(WorldSQLConnector.class.getName());
+	private static final Logger LOGGER = Logger.getLogger(WorldAuthenticator.class.getName());
 
 	/**
 	 * Create a new SQLHandler with the given database information, and connect to the database.
 	 */
-	public WorldSQLConnector(Connection connection) {
+	public WorldAuthenticator(Connection connection) {
 		super(connection);
 	}
 

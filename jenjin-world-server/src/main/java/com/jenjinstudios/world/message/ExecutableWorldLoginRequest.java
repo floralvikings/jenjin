@@ -4,7 +4,7 @@ import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.server.net.User;
 import com.jenjinstudios.world.Player;
 import com.jenjinstudios.world.WorldClientHandler;
-import com.jenjinstudios.world.sql.WorldSQLConnector;
+import com.jenjinstudios.world.sql.WorldAuthenticator;
 
 /**
  * Handles requests to login to the world.
@@ -13,7 +13,7 @@ import com.jenjinstudios.world.sql.WorldSQLConnector;
 public class ExecutableWorldLoginRequest extends WorldExecutableMessage
 {
 	/** The SQL handler used by this executable message. */
-	private final WorldSQLConnector sqlHandler;
+	private final WorldAuthenticator sqlHandler;
 	/** The player added to the world. */
 	private Player player;
 	/** The LoginResponse to send to the client. */
@@ -26,7 +26,7 @@ public class ExecutableWorldLoginRequest extends WorldExecutableMessage
 	 */
 	public ExecutableWorldLoginRequest(WorldClientHandler handler, Message message) {
 		super(handler, message);
-		sqlHandler = handler.getServer().getSqlConnector();
+		sqlHandler = handler.getServer().getAuthenticator();
 	}
 
 	@Override

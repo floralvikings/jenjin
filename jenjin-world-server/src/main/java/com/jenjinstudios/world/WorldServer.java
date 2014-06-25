@@ -3,7 +3,7 @@ package com.jenjinstudios.world;
 import com.jenjinstudios.core.io.MessageRegistry;
 import com.jenjinstudios.server.net.AuthServer;
 import com.jenjinstudios.world.io.WorldFileReader;
-import com.jenjinstudios.world.sql.WorldSQLConnector;
+import com.jenjinstudios.world.sql.WorldAuthenticator;
 
 import java.io.IOException;
 
@@ -35,7 +35,7 @@ public class WorldServer extends AuthServer<WorldClientHandler>
 	 * @throws NoSuchMethodException If there is no appropriate constructor for the specified ClientHandler
 	 * constructor.
 	 */
-	public WorldServer(MessageRegistry mr, int ups, int port, Class<? extends WorldClientHandler> wchClass, WorldSQLConnector sqlHandler, WorldFileReader worldFileReader) throws IOException, NoSuchMethodException {
+	public WorldServer(MessageRegistry mr, int ups, int port, Class<? extends WorldClientHandler> wchClass, WorldAuthenticator sqlHandler, WorldFileReader worldFileReader) throws IOException, NoSuchMethodException {
 		super(mr, ups, port, wchClass, sqlHandler);
 		this.world = worldFileReader.read();
 		worldFileBytes = worldFileReader.getWorldFileBytes();
@@ -56,7 +56,7 @@ public class WorldServer extends AuthServer<WorldClientHandler>
 	public World getWorld() { return world; }
 
 	@Override
-	public WorldSQLConnector getSqlConnector() { return (WorldSQLConnector) super.getSqlConnector(); }
+	public WorldAuthenticator getAuthenticator() { return (WorldAuthenticator) super.getAuthenticator(); }
 
 	/**
 	 * Get the world file checksum.

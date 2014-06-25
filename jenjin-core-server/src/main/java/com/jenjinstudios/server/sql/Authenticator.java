@@ -16,7 +16,7 @@ import static java.sql.ResultSet.TYPE_SCROLL_SENSITIVE;
  * @author Caleb Brinkman
  */
 @SuppressWarnings("SameParameterValue")
-public class SQLConnector
+public class Authenticator
 {
 
 	/** The name of the column in the user table specifying whether the user is currently logged in. */
@@ -29,7 +29,7 @@ public class SQLConnector
 	/**
 	 * Create a new SQLHandler with the given database information, and connect to the database.
 	 */
-	public SQLConnector(Connection dbConnection) {
+	public Authenticator(Connection dbConnection) {
 		USER_QUERY = "SELECT * FROM users WHERE username = ?";
 		this.dbConnection = dbConnection;
 	}

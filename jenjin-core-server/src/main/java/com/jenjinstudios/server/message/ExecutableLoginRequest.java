@@ -4,7 +4,7 @@ import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.server.net.ClientHandler;
 import com.jenjinstudios.server.net.User;
 import com.jenjinstudios.server.sql.LoginException;
-import com.jenjinstudios.server.sql.SQLConnector;
+import com.jenjinstudios.server.sql.Authenticator;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -18,7 +18,7 @@ public class ExecutableLoginRequest extends ServerExecutableMessage
 {
 	private static final Logger LOGGER = Logger.getLogger(ExecutableLoginRequest.class.getName());
 	/** The SQL handler used by this executable message. */
-	private final SQLConnector sqlConnector;
+	private final Authenticator authenticator;
 
 	/**
 	 * Construct a new ExecutableLoginRequest.
@@ -27,7 +27,7 @@ public class ExecutableLoginRequest extends ServerExecutableMessage
 	 */
 	public ExecutableLoginRequest(ClientHandler clientHandler, Message loginRequest) {
 		super(clientHandler, loginRequest);
-		sqlConnector = clientHandler.getServer().getSqlConnector();
+		authenticator = clientHandler.getServer().getAuthenticator();
 	}
 
 	@Override
@@ -41,7 +41,7 @@ public class ExecutableLoginRequest extends ServerExecutableMessage
 		String password = (String) getMessage().getArgument("password");
 		try
 		{
-			User user = sqlConnector.logInUser(username, password);
+			User user = authenticator.logInUser(username, password);
 			long loggedInTime = handler.getServer().getCycleStartTime();
 			handler.setLoggedInTime(loggedInTime);
 			queueLoginSuccessResponse(loggedInTime);

@@ -84,7 +84,7 @@ public class ClientHandler extends Connection
 			getServer().associateUsernameWithClientHandler(getUser().getUsername(), null);
 			try
 			{
-				server.getSqlConnector().logOutUser(user.getUsername());
+				server.getAuthenticator().logOutUser(user.getUsername());
 			} catch (LoginException e)
 			{
 				LOGGER.log(Level.WARNING, "Unable to perform emergency logout.", e);

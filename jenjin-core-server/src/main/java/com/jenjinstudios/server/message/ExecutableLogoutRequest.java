@@ -4,7 +4,7 @@ import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.server.net.ClientHandler;
 import com.jenjinstudios.server.net.User;
 import com.jenjinstudios.server.sql.LoginException;
-import com.jenjinstudios.server.sql.SQLConnector;
+import com.jenjinstudios.server.sql.Authenticator;
 
 /**
  * Executable message to handle client logging out.
@@ -14,7 +14,7 @@ import com.jenjinstudios.server.sql.SQLConnector;
 public class ExecutableLogoutRequest extends ServerExecutableMessage
 {
 	/** The SQLHandler used to log out the client. */
-	private final SQLConnector sqlConnector;
+	private final Authenticator authenticator;
 
 	/**
 	 * Construct a new ExecutableLogoutRequest.
@@ -23,7 +23,7 @@ public class ExecutableLogoutRequest extends ServerExecutableMessage
 	 */
 	public ExecutableLogoutRequest(ClientHandler clientHandler, Message message) {
 		super(clientHandler, message);
-		sqlConnector = clientHandler.getServer().getSqlConnector();
+		authenticator = clientHandler.getServer().getAuthenticator();
 	}
 
 	@Override
@@ -34,12 +34,12 @@ public class ExecutableLogoutRequest extends ServerExecutableMessage
 	public void runASync() {
 		ClientHandler handler = getClientHandler();
 		User user = handler.getUser();
-		if (sqlConnector == null || user == null)
+		if (authenticator == null || user == null)
 			return;
 		String username = user.getUsername();
 		try
 		{
-			sqlConnector.logOutUser(username);
+			authenticator.logOutUser(username);
 			handler.sendLogoutStatus(true);
 			handler.getServer().associateUsernameWithClientHandler(username, null);
 			handler.setUser(null);

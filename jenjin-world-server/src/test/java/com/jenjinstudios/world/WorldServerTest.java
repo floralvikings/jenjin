@@ -6,7 +6,7 @@ import com.jenjinstudios.core.io.MessageRegistry;
 import com.jenjinstudios.core.util.Files;
 import com.jenjinstudios.world.io.WorldFileReader;
 import com.jenjinstudios.world.math.Vector2D;
-import com.jenjinstudios.world.sql.WorldSQLConnector;
+import com.jenjinstudios.world.sql.WorldAuthenticator;
 import com.jenjinstudios.world.state.MoveState;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
@@ -112,7 +112,7 @@ public class WorldServerTest
 	public static WorldServer initWorldServer() throws Exception {
 		port++;
 		/* The world SQL handler used to test. */
-		WorldSQLConnector worldSQLHandler = getSqlHandler();
+		WorldAuthenticator worldSQLHandler = getSqlHandler();
 		try
 		{
 			WorldServer worldServer = new WorldServer(mr,
@@ -245,8 +245,8 @@ public class WorldServerTest
 		return testConnection;
 	}
 
-	public static WorldSQLConnector getSqlHandler() throws Exception {
+	public static WorldAuthenticator getSqlHandler() throws Exception {
 		Connection dbConnection = createTestConnection();
-		return new WorldSQLConnector(dbConnection);
+		return new WorldAuthenticator(dbConnection);
 	}
 }

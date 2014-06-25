@@ -4,8 +4,8 @@ import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageInputStream;
 import com.jenjinstudios.core.io.MessageOutputStream;
 import com.jenjinstudios.core.io.MessageRegistry;
-import com.jenjinstudios.server.sql.SQLConnector;
-import com.jenjinstudios.server.sql.SQLConnectorTest;
+import com.jenjinstudios.server.sql.Authenticator;
+import com.jenjinstudios.server.sql.AuthenticatorTest;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -37,8 +37,8 @@ public class ServerTest
 	@BeforeClass
 	public void construct() throws Exception {
 		mr = new MessageRegistry();
-		SQLConnector sqlConnector = new SQLConnector(SQLConnectorTest.createTestConnection());
-		server = new AuthServer<>(mr, 50, 51019, ClientHandler.class, sqlConnector);
+		Authenticator authenticator = new Authenticator(AuthenticatorTest.createTestConnection());
+		server = new AuthServer<>(mr, 50, 51019, ClientHandler.class, authenticator);
 		server.blockingStart();
 	}
 
@@ -54,18 +54,18 @@ public class ServerTest
 
 	@Test
 	public void testBlockingStart() throws Exception {
-		SQLConnector sqlConnector = new SQLConnector(SQLConnectorTest.createTestConnection());
+		Authenticator authenticator = new Authenticator(AuthenticatorTest.createTestConnection());
 
-		Server server = new AuthServer<>(mr, 50, 51020, ClientHandler.class, sqlConnector);
+		Server server = new AuthServer<>(mr, 50, 51020, ClientHandler.class, authenticator);
 		assertTrue(server.blockingStart());
 		server.shutdown();
 	}
 
 	@Test
 	public void testIsInitialized() throws Exception {
-		SQLConnector sqlConnector = new SQLConnector(SQLConnectorTest.createTestConnection());
+		Authenticator authenticator = new Authenticator(AuthenticatorTest.createTestConnection());
 
-		Server server = new AuthServer<>(mr, 50, 51020, ClientHandler.class, sqlConnector);
+		Server server = new AuthServer<>(mr, 50, 51020, ClientHandler.class, authenticator);
 		server.blockingStart();
 		assertTrue(server.isInitialized());
 		server.shutdown();
