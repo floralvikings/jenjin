@@ -9,10 +9,10 @@ import java.util.logging.Logger;
  * Implements the update loop in the form of a TimerTask.
  * @author Caleb Brinkman
  */
-class ServerLoop extends TimerTask
+class ServerUpdateTask extends TimerTask
 {
 	/** The logger for this class. */
-	private static final Logger LOGGER = Logger.getLogger(ServerLoop.class.getName());
+	private static final Logger LOGGER = Logger.getLogger(ServerUpdateTask.class.getName());
 	/** The time in nanoseconds of the last 50 update cycles. */
 	private final long[] lastCycles;
 	/** The server for which this loop runs. */
@@ -33,7 +33,7 @@ class ServerLoop extends TimerTask
 	 * @param server The server for which this server loop works.
 	 */
 	@SuppressWarnings("unchecked")
-	public ServerLoop(TaskedServer server) {
+	public ServerUpdateTask(TaskedServer server) {
 		this.server = server;
 		syncedTasks = this.server.getSyncedTasks();
 		repeatedTasks = this.server.getRepeatedTasks();
@@ -81,15 +81,7 @@ class ServerLoop extends TimerTask
 		averageUPS = 1000000000 / averageLength;
 	}
 
-	/**
-	 * The actual average UPS of this server.  Blocks until at least 50 server cycles have been completed.
-	 * @return The average UPS for the past 50 updates.
-	 */
 	double getAverageUPS() { return averageUPS; }
 
-	/**
-	 * The start time, in nanoseconds, of the current cycle.
-	 * @return The start time of the current cycle.
-	 */
-	long getCycleStart() { return cycleStart; }
+	long getCycleStartTime() { return cycleStart; }
 }

@@ -21,7 +21,7 @@ public class TaskedServer<T extends ClientHandler> extends Server<T>
 	/** The timer that controls the server loop. */
 	private Timer loopTimer;
 	/** The server loop. */
-	private ServerLoop serverLoop;
+	private ServerUpdateTask serverUpdateTask;
 
 	/**
 	 * Construct a new Server without a SQLHandler.
@@ -43,7 +43,7 @@ public class TaskedServer<T extends ClientHandler> extends Server<T>
 	 * @return The cycle start time.
 	 */
 	public long getCycleStartTime() {
-		return serverLoop != null ? serverLoop.getCycleStart() : -1;
+		return serverUpdateTask != null ? serverUpdateTask.getCycleStartTime() : -1;
 	}
 
 	/**
@@ -61,12 +61,12 @@ public class TaskedServer<T extends ClientHandler> extends Server<T>
 	public void run() {
 		super.run();
 
-		serverLoop = new ServerLoop(this);
+		serverUpdateTask = new ServerUpdateTask(this);
 
 		/* The name of the timer that is looping the server thread. */
 		String timerName = "Server Update Loop";
 		loopTimer = new Timer(timerName, false);
-		loopTimer.scheduleAtFixedRate(serverLoop, 0, PERIOD);
+		loopTimer.scheduleAtFixedRate(serverUpdateTask, 0, PERIOD);
 	}
 
 	@Override
@@ -77,13 +77,7 @@ public class TaskedServer<T extends ClientHandler> extends Server<T>
 			loopTimer.cancel();
 	}
 
-	/**
-	 * The actual average UPS of this server.
-	 * @return The average UPS of this server
-	 */
-	public double getAverageUPS() {
-		return serverLoop.getAverageUPS();
-	}
+	public double getAverageUPS() { return serverUpdateTask.getAverageUPS(); }
 
 	public int getUps() { return UPS; }
 
@@ -91,15 +85,11 @@ public class TaskedServer<T extends ClientHandler> extends Server<T>
 	 * Tasks to be repeated in the main loop.
 	 * @return The list of repeated tasks to be executed by this server.
 	 */
-	Iterable<Runnable> getRepeatedTasks() {
-		return repeatedTasks;
-	}
+	Iterable<Runnable> getRepeatedTasks() { return repeatedTasks; }
 
 	/**
 	 * Synced tasks scheduled by client handlers.
 	 * @return The list of synchronized tasks scheduled by ClientHandlers.
 	 */
-	Deque<Runnable> getSyncedTasks() {
-		return syncedTasks;
-	}
+	Deque<Runnable> getSyncedTasks() { return syncedTasks; }
 }

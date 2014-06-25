@@ -10,7 +10,7 @@ import java.util.Timer;
 /**
  * @author Caleb Brinkman
  */
-public class ServerLoopTest
+public class ServerUpdateTaskTest
 {
 	@Test
 	public void testGetAverageUPS() throws Exception {
@@ -18,10 +18,10 @@ public class ServerLoopTest
 		Mockito.when(authServer.getUps()).thenReturn(10);
 		Mockito.when(authServer.getSyncedTasks()).thenReturn(new LinkedList());
 		Mockito.when(authServer.getRepeatedTasks()).thenReturn(new LinkedList());
-		ServerLoop serverLoop = new ServerLoop(authServer);
+		ServerUpdateTask serverUpdateTask = new ServerUpdateTask(authServer);
 		Timer loopTimer = new Timer("Foo", false);
-		loopTimer.scheduleAtFixedRate(serverLoop, 0, 100);
+		loopTimer.scheduleAtFixedRate(serverUpdateTask, 0, 100);
 		Thread.sleep(1500);
-		Assert.assertEquals(serverLoop.getAverageUPS(), 10, 0.1);
+		Assert.assertEquals(serverUpdateTask.getAverageUPS(), 10, 0.1);
 	}
 }
