@@ -14,12 +14,12 @@ public class DisabledExecutableMessage extends ExecutableMessage
 	}
 
 	@Override
-	public void runSynced() {
+	public void runDelayed() {
 		throw new IllegalStateException("This message should be disabled.");
 	}
 
 	@Override
-	public void runASync() {
+	public void runImmediate() {
 		throw new IllegalStateException("This message should be disabled.");
 	}
 }

@@ -63,7 +63,7 @@ public class WorldClientHandler extends ClientHandler
 
 		if (!hasSentActorStepMessage)
 		{
-			queueMessage(getMessageFactory().generateActorMoveSpeedMessage());
+			queueOutgoingMessage(getMessageFactory().generateActorMoveSpeedMessage());
 			hasSentActorStepMessage = true;
 		}
 
@@ -91,7 +91,7 @@ public class WorldClientHandler extends ClientHandler
 		{
 			Message newlyVisibleMessage;
 			newlyVisibleMessage = getMessageFactory().generateNewlyVisibleMessage(object);
-			queueMessage(newlyVisibleMessage);
+			queueOutgoingMessage(newlyVisibleMessage);
 		}
 	}
 
@@ -100,7 +100,7 @@ public class WorldClientHandler extends ClientHandler
 		for (WorldObject object : player.getNewlyInvisibleObjects())
 		{
 			Message newlyInvisibleMessage = getMessageFactory().generateNewlyInvisibleMessage(object);
-			queueMessage(newlyInvisibleMessage);
+			queueOutgoingMessage(newlyInvisibleMessage);
 		}
 	}
 
@@ -113,7 +113,7 @@ public class WorldClientHandler extends ClientHandler
 			{
 				changedActor = (Actor) object;
 				List<Message> newState = getMessageFactory().generateChangeStateMessage(changedActor);
-				for (Message m : newState) { queueMessage(m);}
+				for (Message m : newState) { queueOutgoingMessage(m);}
 			}
 		}
 	}
@@ -122,7 +122,7 @@ public class WorldClientHandler extends ClientHandler
 	private void queueForcesStateMessage() {
 		MoveState forcedState = player.getForcedState();
 		if (forcedState != null)
-			queueMessage(getMessageFactory().generateForcedStateMessage(forcedState, server));
+			queueOutgoingMessage(getMessageFactory().generateForcedStateMessage(forcedState, server));
 	}
 
 	public WorldServerMessageFactory getMessageFactory() { return messageFactory; }

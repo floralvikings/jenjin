@@ -32,7 +32,7 @@ public class ExecutableStateChangeMessage extends WorldClientExecutableMessage
 	}
 
 	@Override
-	public void runSynced() {
+	public void runDelayed() {
 		WorldObject obj = getClient().getWorld().getObject(actorID);
 		if (obj != null && obj instanceof ClientActor)
 		{
@@ -45,7 +45,7 @@ public class ExecutableStateChangeMessage extends WorldClientExecutableMessage
 	}
 
 	@Override
-	public void runASync() {
+	public void runImmediate() {
 		actorID = (int) getMessage().getArgument("id");
 		relativeAngle = (double) getMessage().getArgument("relativeAngle");
 		absoluteAngle = (double) getMessage().getArgument("absoluteAngle");

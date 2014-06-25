@@ -35,16 +35,16 @@ public class ExecutableAESKeyMessage extends ClientExecutableMessage
 	}
 
 	@Override
-	public void runSynced() {
+	public void runDelayed() {
 	}
 
 	@Override
-	public void runASync() {
+	public void runImmediate() {
 		byte[] encryptedAESKey = (byte[]) getMessage().getArgument("key");
 		byte[] decryptedAESKey = MessageInputStream.NO_KEY;
 		if (Arrays.equals(encryptedAESKey, MessageInputStream.NO_KEY))
 			return;
-		PrivateKey privateKey = getClient().getPrivateKey();
+		PrivateKey privateKey = getClient().getClientPrivateKey();
 		try
 		{
 			Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");

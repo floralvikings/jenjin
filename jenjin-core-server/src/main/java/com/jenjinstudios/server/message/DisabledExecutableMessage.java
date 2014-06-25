@@ -27,12 +27,12 @@ public class DisabledExecutableMessage extends ServerExecutableMessage
 
 	/** Run the synced portion of this message. */
 	@Override
-	public void runSynced() {
+	public void runDelayed() {
 	}
 
 	/** Run asynchronous portion of this message. */
 	@Override
-	public void runASync() {
+	public void runImmediate() {
 		LOGGER.log(Level.SEVERE, "You should never see this, this message is disabled.");
 	}
 }

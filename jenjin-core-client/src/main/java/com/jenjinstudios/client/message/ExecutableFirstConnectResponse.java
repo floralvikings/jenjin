@@ -19,12 +19,12 @@ public class ExecutableFirstConnectResponse extends ClientExecutableMessage
 
 	/** Run the synced portion of this message. */
 	@Override
-	public void runSynced() {
+	public void runDelayed() {
 	}
 
 	/** Run asynchronous portion of this message. */
 	@Override
-	public void runASync() {
+	public void runImmediate() {
 		getClient().doPostConnectInit(getMessage());
 	}
 }

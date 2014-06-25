@@ -89,7 +89,7 @@ public class AuthClient extends Client
 
 		// Send the request, continue when the response is received.
 		setWaitingForLoginResponse(true);
-		queueMessage(loginRequest);
+		queueOutgoingMessage(loginRequest);
 	}
 
 	/**
@@ -136,7 +136,7 @@ public class AuthClient extends Client
 
 		// Send the request, continue when response is received.
 		setWaitingForLogoutResponse(true);
-		queueMessage(logoutRequest);
+		queueOutgoingMessage(logoutRequest);
 	}
 
 	/**

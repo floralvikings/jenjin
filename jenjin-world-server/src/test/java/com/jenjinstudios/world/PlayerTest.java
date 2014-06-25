@@ -65,11 +65,10 @@ public class PlayerTest extends WorldServerTest
 	 */
 	@Test(timeOut = 10000)
 	public static void testLoginLogout() throws Exception {
-		WorldServerTest.testAccountNumber++;
 		WorldAuthenticator worldSQLHandler = getSqlHandler();
 
 		User user = new User();
-		user.setUsername("TestAccount" + WorldServerTest.testAccountNumber);
+		user.setUsername("TestAccount2");
 		user.setPassword("testPassword");
 		Actor player = worldSQLHandler.logInPlayer(user);
 		Vector2D origin = player.getVector2D();

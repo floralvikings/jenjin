@@ -28,14 +28,14 @@ public class ExecutableObjectInvisibleMessage extends WorldClientExecutableMessa
 	}
 
 	@Override
-	public void runSynced() {
+	public void runDelayed() {
 		LOGGER.log(Level.FINEST, "Before processing ObjectInvisibleMessage, world contains: {0}", getClient().getWorld().getObjectCount());
 		getClient().getWorld().removeObject(id);
 		LOGGER.log(Level.FINEST, "After processing ObjectInvisibleMessage, world contains: {0}", getClient().getWorld().getObjectCount());
 	}
 
 	@Override
-	public void runASync() {
+	public void runImmediate() {
 		id = (int) getMessage().getArgument("id");
 	}
 }

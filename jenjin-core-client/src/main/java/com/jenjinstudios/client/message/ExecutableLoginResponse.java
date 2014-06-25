@@ -20,7 +20,7 @@ public class ExecutableLoginResponse extends AuthClientExecutableMessage
 	}
 
 	@Override
-	public void runSynced() {
+	public void runDelayed() {
 		AuthClient client = getClient();
 		client.setWaitingForLoginResponse(false);
 		client.setLoggedIn((boolean) getMessage().getArgument("success"));
@@ -31,7 +31,7 @@ public class ExecutableLoginResponse extends AuthClientExecutableMessage
 	}
 
 	@Override
-	public void runASync() {
+	public void runImmediate() {
 	}
 
 }

@@ -13,7 +13,7 @@ import java.util.logging.Logger;
  * @author Caleb Brinkman
  */
 @SuppressWarnings("unused")
-public abstract class ExecutableMessage implements Runnable
+public abstract class ExecutableMessage
 {
 	/** The logger for this class. */
 	private static final Logger LOGGER = Logger.getLogger(ExecutableMessage.class.getName());
@@ -29,15 +29,10 @@ public abstract class ExecutableMessage implements Runnable
 	}
 
 	/** Run the synced portion of this message. */
-	public abstract void runSynced();
+	public abstract void runDelayed();
 
 	/** Run asynchronous portion of this message. */
-	public abstract void runASync();
-
-	/** Calls the {@code runSynced} method. */
-	public final void run() {
-		runSynced();
-	}
+	public abstract void runImmediate();
 
 	/**
 	 * The Message for this ExecutableMessage.

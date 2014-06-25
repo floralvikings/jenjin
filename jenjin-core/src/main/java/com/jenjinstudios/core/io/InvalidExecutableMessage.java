@@ -23,12 +23,12 @@ public class InvalidExecutableMessage extends ExecutableMessage
 
 	/** Run the synced portion of this message. */
 	@Override
-	public void runSynced() {
+	public void runDelayed() {
 	}
 
 	/** Run asynchronous portion of this message. */
 	@Override
-	public void runASync() {
+	public void runImmediate() {
 		String messageName = (String) getMessage().getArgument("messageName");
 		short messageID = (short) getMessage().getArgument("messageID");
 		String reportMessage = "Connection reported invalid sent message: " + messageName + " (ID:  " + messageID + ")";

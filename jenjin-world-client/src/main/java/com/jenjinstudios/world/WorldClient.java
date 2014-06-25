@@ -170,7 +170,7 @@ public class WorldClient extends AuthClient
 	 */
 	public void sendBlockingWorldFileRequest() throws InterruptedException, NoSuchAlgorithmException, SAXException, TransformerException, ParserConfigurationException, IOException {
 		Message worldFileChecksumRequest = getMessageFactory().generateWorldChecksumRequest();
-		queueMessage(worldFileChecksumRequest);
+		queueOutgoingMessage(worldFileChecksumRequest);
 
 		while (!hasReceivedWorldFileChecksum)
 		{
@@ -179,7 +179,7 @@ public class WorldClient extends AuthClient
 
 		if (worldFileReader == null || !Arrays.equals(serverWorldFileChecksum, worldFileReader.getWorldFileChecksum()))
 		{
-			queueMessage(getMessageFactory().generateWorldFileRequest());
+			queueOutgoingMessage(getMessageFactory().generateWorldFileRequest());
 			while (!hasReceivedWorldFile)
 			{
 				Thread.sleep(10);
@@ -204,7 +204,7 @@ public class WorldClient extends AuthClient
 	private void sendLoginRequest() {
 		Message loginRequest = getMessageFactory().generateLoginRequest(getUsername(), password);
 		setWaitingForLoginResponse(true);
-		queueMessage(loginRequest);
+		queueOutgoingMessage(loginRequest);
 	}
 
 	/**
@@ -213,7 +213,7 @@ public class WorldClient extends AuthClient
 	 */
 	protected void sendStateChangeRequest(MoveState moveState) {
 		Message stateChangeRequest = getMessageFactory().generateStateChangeRequest(moveState);
-		queueMessage(stateChangeRequest);
+		queueOutgoingMessage(stateChangeRequest);
 	}
 
 	@Override
@@ -222,7 +222,7 @@ public class WorldClient extends AuthClient
 
 		// Send the request, continue when response is received.
 		setWaitingForLogoutResponse(true);
-		queueMessage(logoutRequest);
+		queueOutgoingMessage(logoutRequest);
 	}
 
 	public WorldClientMessageFactory getMessageFactory() {return messageFactory; }

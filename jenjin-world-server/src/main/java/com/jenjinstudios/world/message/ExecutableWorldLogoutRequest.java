@@ -26,7 +26,7 @@ public class ExecutableWorldLogoutRequest extends WorldExecutableMessage
 	}
 
 	@Override
-	public void runSynced() {
+	public void runDelayed() {
 		Actor clientActor = getClientHandler().getPlayer();
 		// Multiple logout requests can cause Player to be null; have to check first.
 		if (clientActor != null)
@@ -36,7 +36,7 @@ public class ExecutableWorldLogoutRequest extends WorldExecutableMessage
 	}
 
 	@Override
-	public void runASync() {
+	public void runImmediate() {
 		WorldClientHandler handler = getClientHandler();
 		if (sqlHandler != null && handler.getUser() != null)
 		{

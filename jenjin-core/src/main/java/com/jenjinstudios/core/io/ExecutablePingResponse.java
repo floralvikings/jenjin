@@ -24,14 +24,14 @@ public class ExecutablePingResponse extends ExecutableMessage
 
 	/** Run the synced portion of this message. */
 	@Override
-	public void runSynced() {
+	public void runDelayed() {
 		long requestTime = (long) getMessage().getArgument("requestTimeNanos");
-		connection.addPingTime((System.nanoTime() - requestTime) / 1000000);
+		connection.getPingTracker().addPingTime((System.nanoTime() - requestTime) / 1000000);
 	}
 
 	/** Run asynchronous portion of this message. */
 	@Override
-	public void runASync() {
+	public void runImmediate() {
 
 	}
 }

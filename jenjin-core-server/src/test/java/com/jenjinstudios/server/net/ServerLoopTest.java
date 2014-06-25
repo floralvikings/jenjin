@@ -22,6 +22,6 @@ public class ServerLoopTest
 		Timer loopTimer = new Timer("Foo", false);
 		loopTimer.scheduleAtFixedRate(serverLoop, 0, 100);
 		Thread.sleep(1500);
-		Assert.assertEquals(serverLoop.getAverageUPS(), 10, 0.01);
+		Assert.assertEquals(serverLoop.getAverageUPS(), 10, 0.1);
 	}
 }

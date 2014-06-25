@@ -31,11 +31,11 @@ public class ExecutableLoginRequest extends ServerExecutableMessage
 	}
 
 	@Override
-	public void runSynced() {
+	public void runDelayed() {
 	}
 
 	@Override
-	public void runASync() {
+	public void runImmediate() {
 		ClientHandler handler = getClientHandler();
 		String username = (String) getMessage().getArgument("username");
 		String password = (String) getMessage().getArgument("password");
@@ -56,12 +56,12 @@ public class ExecutableLoginRequest extends ServerExecutableMessage
 
 	private void queueLoginSuccessResponse(long loggedInTime) {
 		Message loginResponse = getClientHandler().getMessageFactory().generateLoginResponse(true, loggedInTime);
-		getClientHandler().queueMessage(loginResponse);
+		getClientHandler().queueOutgoingMessage(loginResponse);
 	}
 
 	private void queueLoginFailureResponse() {
 		Message loginResponse = getClientHandler().getMessageFactory().generateLoginResponse(false, 0);
-		getClientHandler().queueMessage(loginResponse);
+		getClientHandler().queueOutgoingMessage(loginResponse);
 	}
 
 }

@@ -47,6 +47,7 @@ class ServerLoop extends TimerTask
 		if (clientsAdded) LOGGER.log(Level.FINE, "New Clients Added");
 		runSynchronizedTasks();
 		runRepeatedTasks();
+		server.runClientHandlerQueuedMessages();
 		server.update();
 		server.broadcast();
 		server.refresh();

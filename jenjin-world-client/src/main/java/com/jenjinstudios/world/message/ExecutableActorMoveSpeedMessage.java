@@ -21,12 +21,12 @@ public class ExecutableActorMoveSpeedMessage extends WorldClientExecutableMessag
 
 	/** Run the synced portion of this message. */
 	@Override
-	public void runSynced() {
+	public void runDelayed() {
 	}
 
 	/** Run asynchronous portion of this message. */
 	@Override
-	public void runASync() {
+	public void runImmediate() {
 		ClientActor.MOVE_SPEED = (double) getMessage().getArgument("moveSpeed");
 	}
 }

@@ -19,16 +19,14 @@ public class ExecutablePublicKeyMessage extends ServerExecutableMessage
 	}
 
 	@Override
-	public void runSynced() {
+	public void runDelayed() {
 	}
 
 	@Override
-	public void runASync() {
-		Message aesMessage = getClientHandler().getMessageFactory()
-				.generateAESKeyMessage((byte[]) getMessage().getArgument("key"));
-
-		// Send the AESKeyMessage
-		getClientHandler().queueMessage(aesMessage);
+	public void runImmediate() {
+		byte[] publicKeyBytes = (byte[]) getMessage().getArgument("key");
+		Message aesMessage = getClientHandler().getMessageFactory().generateAESKeyMessage(publicKeyBytes);
+		getClientHandler().queueOutgoingMessage(aesMessage);
 	}
 
 }

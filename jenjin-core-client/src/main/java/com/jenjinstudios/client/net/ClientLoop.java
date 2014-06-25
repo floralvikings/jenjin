@@ -23,8 +23,8 @@ class ClientLoop extends TimerTask
 	@Override
 	public void run() {
 		client.runRepeatedTasks();
-		client.runSyncedTasks();
-		client.sendAllMessages();
+		client.runQueuedExecutableMessages();
+		client.writeAllMessages();
 	}
 
 }

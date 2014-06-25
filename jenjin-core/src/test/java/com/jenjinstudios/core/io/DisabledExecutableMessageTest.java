@@ -10,12 +10,12 @@ public class DisabledExecutableMessageTest
 	@Test(expectedExceptions = IllegalStateException.class)
 	public void testRunAsync() {
 		DisabledExecutableMessage dex = new DisabledExecutableMessage(null);
-		dex.runASync();
+		dex.runImmediate();
 	}
 
 	@Test(expectedExceptions = IllegalStateException.class)
 	public void testRunSynced() {
 		DisabledExecutableMessage dex = new DisabledExecutableMessage(null);
-		dex.runSynced();
+		dex.runDelayed();
 	}
 }

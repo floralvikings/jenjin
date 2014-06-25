@@ -35,7 +35,7 @@ public class AuthClientTest
 		AuthClient client = new AuthClient(mis, mos, mr, "foo", "bar");
 
 		// Get client key and make a message for it
-		byte[] clientKey = client.getPublicKey().getEncoded();
+		byte[] clientKey = client.getClientPublicKey().getEncoded();
 		KeyGenerator keyGenerator = KeyGenerator.getInstance("AES");
 		keyGenerator.init(128);
 		byte[] aesKeyBytes = keyGenerator.generateKey().getEncoded();
@@ -75,7 +75,7 @@ public class AuthClientTest
 		AuthClient client = new AuthClient(mis, mos, mr, "foo", "bar");
 
 		// Get client key and make a message for it
-		byte[] clientKey = client.getPublicKey().getEncoded();
+		byte[] clientKey = client.getClientPublicKey().getEncoded();
 		KeyGenerator keyGenerator = KeyGenerator.getInstance("AES");
 		keyGenerator.init(128);
 		byte[] aesKeyBytes = keyGenerator.generateKey().getEncoded();

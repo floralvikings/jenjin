@@ -19,13 +19,13 @@ public class ExecutableWorldFileRequest extends WorldExecutableMessage
 	}
 
 	@Override
-	public void runSynced() {
+	public void runDelayed() {
 	}
 
 	@Override
-	public void runASync() {
+	public void runImmediate() {
 		byte[] worldFileBytes = getClientHandler().getServer().getWorldFileBytes();
 		Message response = getClientHandler().getMessageFactory().generateWorldFileResponse(worldFileBytes);
-		getClientHandler().queueMessage(response);
+		getClientHandler().queueOutgoingMessage(response);
 	}
 }

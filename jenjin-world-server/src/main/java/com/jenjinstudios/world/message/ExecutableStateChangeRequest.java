@@ -38,7 +38,7 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage
 	}
 
 	@Override
-	public void runSynced() {
+	public void runDelayed() {
 		Actor player = getClientHandler().getPlayer();
 		double originDistance = player.getVector2D().getDistanceToVector(uncorrectedPosition);
 		if (originDistance > MAX_CORRECT_DISTANCE || distance > MAX_CORRECT_DISTANCE)
@@ -58,7 +58,7 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage
 	}
 
 	@Override
-	public void runASync() {
+	public void runImmediate() {
 		relativeAngle = (double) getMessage().getArgument("relativeAngle");
 		absoluteAngle = (double) getMessage().getArgument("absoluteAngle");
 		long time = (long) getMessage().getArgument("timeOfChange");

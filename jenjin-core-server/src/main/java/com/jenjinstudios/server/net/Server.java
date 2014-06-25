@@ -96,13 +96,26 @@ public class Server<T extends ClientHandler> extends Thread
 		return clientsAdded;
 	}
 
+	public void runClientHandlerQueuedMessages() {
+		synchronized (clientHandlers)
+		{
+			for (ClientHandler current : clientHandlers)
+			{
+				if (current != null)
+				{
+					current.runQueuedExecutableMessages();
+				}
+			}
+		}
+	}
+
 	/** Broadcast all outgoing messages to clients. */
 	public void broadcast() {
 		synchronized (clientHandlers)
 		{
 			for (ClientHandler current : clientHandlers)
 			{
-				if (current != null) { current.sendAllMessages(); }
+				if (current != null) { current.writeAllMessages(); }
 			}
 		}
 	}

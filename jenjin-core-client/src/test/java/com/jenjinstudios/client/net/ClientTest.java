@@ -75,7 +75,7 @@ public class ClientTest
 		Client client = new Client(in, out, mr);
 
 		// Nastiness.
-		byte[] clientKey = client.getPublicKey().getEncoded();
+		byte[] clientKey = client.getClientPublicKey().getEncoded();
 		KeyGenerator keyGenerator = KeyGenerator.getInstance("AES");
 		keyGenerator.init(128);
 		byte[] aesKeyBytes = keyGenerator.generateKey().getEncoded();

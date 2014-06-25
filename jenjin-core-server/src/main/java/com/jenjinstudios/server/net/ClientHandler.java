@@ -50,7 +50,7 @@ public class ClientHandler extends Connection
 	public void sendFirstConnectResponse() {
 		if (firstConnectResponseSent) return;
 		Message firstConnectResponse = getMessageFactory().generateFirstConnectResponse(getServer().UPS);
-		queueMessage(firstConnectResponse);
+		queueOutgoingMessage(firstConnectResponse);
 		firstConnectResponseSent = true;
 	}
 
@@ -65,10 +65,6 @@ public class ClientHandler extends Connection
 
 	/** Update anything that needs to be taken care of before sendAllMessages. */
 	public void update() {
-		for (Runnable r : getSyncedTasks())
-		{
-			server.addSyncedTask(r);
-		}
 	}
 
 	/** Reset anything that needs to be taken care of after sendAllMessages. */
@@ -90,7 +86,6 @@ public class ClientHandler extends Connection
 				LOGGER.log(Level.WARNING, "Unable to perform emergency logout.", e);
 			}
 		}
-		closeLink();
 		getServer().removeClient(this);
 	}
 
@@ -111,7 +106,7 @@ public class ClientHandler extends Connection
 	 */
 	public void sendLogoutStatus(boolean success) {
 		Message logoutResponse = getMessageFactory().generateLogoutResponse(success);
-		queueMessage(logoutResponse);
+		queueOutgoingMessage(logoutResponse);
 	}
 
 	/**

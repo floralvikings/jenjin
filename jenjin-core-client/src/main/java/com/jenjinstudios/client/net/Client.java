@@ -33,9 +33,10 @@ public class Client extends Connection
 	/** The timer that manages the update loop. */
 	private Timer sendMessagesTimer;
 	/** The public key sent to the server. */
-	private PublicKey publicKey;
+	private PublicKey clientPublicKey;
 	/** The private key sent to the server. */
-	private PrivateKey privateKey;
+	private PrivateKey clientPrivateKey;
+	private volatile boolean initialized;
 
 	/**
 	 * Construct a new client and attempt to connect to the server over the specified port.
@@ -47,8 +48,8 @@ public class Client extends Connection
 		this.messageFactory = new ClientMessageFactory(getMessageRegistry());
 	}
 
-	public PublicKey getPublicKey() {
-		return publicKey;
+	public PublicKey getClientPublicKey() {
+		return clientPublicKey;
 	}
 
 	/**
@@ -60,8 +61,8 @@ public class Client extends Connection
 			KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
 			keyPairGenerator.initialize(512);
 			KeyPair keyPair = keyPairGenerator.generateKeyPair();
-			privateKey = keyPair.getPrivate();
-			publicKey = keyPair.getPublic();
+			clientPrivateKey = keyPair.getPrivate();
+			clientPublicKey = keyPair.getPublic();
 		} catch (NoSuchAlgorithmException e)
 		{
 			LOGGER.log(Level.SEVERE, "Unable to create RSA key pair!", e);
@@ -89,7 +90,7 @@ public class Client extends Connection
 		long timePast = System.currentTimeMillis() - startTime;
 		start();
 
-		while ((!isRunning() || (getAesKey() == null)) && (timePast < TIMEOUT_MILLIS))
+		while (!isAesKeySet() && (timePast < TIMEOUT_MILLIS))
 		{
 			try
 			{
@@ -101,7 +102,7 @@ public class Client extends Connection
 			timePast = System.currentTimeMillis() - startTime;
 		}
 
-		return isRunning() && (getAesKey() != null);
+		return isAesKeySet();
 	}
 
 	/** Tell the client threads to stop running. */
@@ -111,14 +112,13 @@ public class Client extends Connection
 		{
 			sendMessagesTimer.cancel();
 		}
-		closeLink();
 	}
 
 	/**
 	 * Get the private key.
 	 * @return The private key.
 	 */
-	public PrivateKey getPrivateKey() { return privateKey; }
+	public PrivateKey getClientPrivateKey() { return clientPrivateKey; }
 
 	/**
 	 * Get the update period of this client.
@@ -131,21 +131,21 @@ public class Client extends Connection
 	 * key exchanges and latency checks.
 	 */
 	public void doPostConnectInit(Message firstConnectResponse) {
-		if (isConnected())
+		if (initialized)
 		{
-			throw new IllegalStateException("Trying to perform connection init when already connected.");
+			throw new IllegalStateException("Trying to perform connection init when already initialized.");
 		}
 		int ups = (int) firstConnectResponse.getArgument("ups");
 		period = 1000 / ups;
 
 		// Next, queue up the PublicKeyMessage used to exchange the encrypted AES key used for encryption.
-		Message publicKeyMessage = getMessageFactory().generatePublicKeyMessage(publicKey);
-		queueMessage(publicKeyMessage);
+		Message publicKeyMessage = getMessageFactory().generatePublicKeyMessage(clientPublicKey);
+		queueOutgoingMessage(publicKeyMessage);
 
 		// Finally, send a ping request to establish latency.
-		sendPing();
+		queueOutgoingMessage(messageFactory.generatePingRequest());
 
-		super.setConnected(true);
+		initialized = true;
 
 		sendMessagesTimer = new Timer("Client Update Loop", false);
 		sendMessagesTimer.scheduleAtFixedRate(new ClientLoop(this), 0, period);

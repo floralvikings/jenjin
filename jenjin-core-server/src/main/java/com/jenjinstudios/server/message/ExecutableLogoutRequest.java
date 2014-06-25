@@ -27,11 +27,11 @@ public class ExecutableLogoutRequest extends ServerExecutableMessage
 	}
 
 	@Override
-	public void runSynced() {
+	public void runDelayed() {
 	}
 
 	@Override
-	public void runASync() {
+	public void runImmediate() {
 		ClientHandler handler = getClientHandler();
 		User user = handler.getUser();
 		if (authenticator == null || user == null)

@@ -24,7 +24,7 @@ public class ExecutableWorldLoginResponse extends WorldClientExecutableMessage
 	}
 
 	@Override
-	public void runSynced() {
+	public void runDelayed() {
 		WorldClient client = getClient();
 		client.setWaitingForLoginResponse(false);
 		client.setLoggedIn((boolean) getMessage().getArgument("success"));
@@ -41,7 +41,7 @@ public class ExecutableWorldLoginResponse extends WorldClientExecutableMessage
 	}
 
 	@Override
-	public void runASync() {
+	public void runImmediate() {
 		int id = (int) getMessage().getArgument("id");
 		double xCoordinate = (double) getMessage().getArgument("xCoordinate");
 		double yCoordinate = (double) getMessage().getArgument("yCoordinate");

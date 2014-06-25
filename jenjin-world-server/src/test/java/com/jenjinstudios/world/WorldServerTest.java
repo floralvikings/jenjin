@@ -10,7 +10,6 @@ import com.jenjinstudios.world.sql.WorldAuthenticator;
 import com.jenjinstudios.world.state.MoveState;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
 
 import java.io.File;
 import java.io.InputStream;
@@ -31,8 +30,6 @@ public class WorldServerTest
 {
 	/** The Logger for this class. */
 	private static final Logger LOGGER = Logger.getLogger(WorldServerTest.class.getName());
-	/** The current test account being used. */
-	public static int testAccountNumber = 0;
 	/** The port used to listen and connect. */
 	public static int port = WorldServer.DEFAULT_PORT;
 	private static int connectionNumber = 0;
@@ -54,15 +51,6 @@ public class WorldServerTest
 	public static void construct() throws Exception {
 		InputStream configFile = WorldServerTest.class.getResourceAsStream("/com/jenjinstudios/logger.properties");
 		LogManager.getLogManager().readConfiguration(configFile);
-	}
-
-	/**
-	 * Set up the client and server.
-	 * @throws Exception If there's an exception.
-	 */
-	@BeforeMethod
-	public static void setUp() throws Exception {
-		testAccountNumber++;
 	}
 
 	/**
@@ -92,7 +80,7 @@ public class WorldServerTest
 	 * @throws Exception If there's an exception.
 	 */
 	public static WorldClient initWorldClient() throws Exception {
-		String user = "TestAccount" + testAccountNumber;
+		String user = "TestAccount1";
 		LOGGER.log(Level.INFO, "Logging into account {0}", user);
 		Socket sock = new Socket("localhost", port);
 		MessageInputStream in = new MessageInputStream(mr, sock.getInputStream());
@@ -202,7 +190,7 @@ public class WorldServerTest
 		Player serverPlayer = server.getClientHandlerByUsername(client.getUsername()).getPlayer();
 		serverPlayer.setVector2D(new Vector2D(0, 0));
 		client.sendBlockingLogoutRequest();
-		LOGGER.log(Level.INFO, "Shutting down WorldClient. Avg. ping was {0}", client.getAveragePingTime());
+		LOGGER.log(Level.INFO, "Shutting down WorldClient. Avg. ping was {0}", client.getPingTracker().getAveragePingTime());
 		client.shutdown();
 		server.shutdown();
 

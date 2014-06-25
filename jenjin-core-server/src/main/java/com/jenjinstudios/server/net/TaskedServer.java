@@ -57,17 +57,6 @@ public class TaskedServer<T extends ClientHandler> extends Server<T>
 		}
 	}
 
-	/**
-	 * Add an ExecutableMessage to the synced tasks list.
-	 * @param r The {@code ExecutableMessage} to add.
-	 */
-	public void addSyncedTask(Runnable r) {
-		synchronized (syncedTasks)
-		{
-			syncedTasks.add(r);
-		}
-	}
-
 	@Override
 	public void run() {
 		super.run();
@@ -92,7 +81,9 @@ public class TaskedServer<T extends ClientHandler> extends Server<T>
 	 * The actual average UPS of this server.
 	 * @return The average UPS of this server
 	 */
-	public double getAverageUPS() { return serverLoop.getAverageUPS(); }
+	public double getAverageUPS() {
+		return serverLoop.getAverageUPS();
+	}
 
 	public int getUps() { return UPS; }
 

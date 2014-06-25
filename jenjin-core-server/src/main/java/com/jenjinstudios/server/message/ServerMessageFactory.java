@@ -69,15 +69,11 @@ public class ServerMessageFactory extends MessageFactory
 		byte[] encryptedAESKey = MessageInputStream.NO_KEY;
 		try
 		{
-			// Generate an AES key.
 			KeyGenerator keyGenerator = KeyGenerator.getInstance("AES");
 			keyGenerator.init(128);
 			byte[] aesKeyBytes = keyGenerator.generateKey().getEncoded();
-			// Set the output stream and input stream aes key for the client handler.
 			clientHandler.setAESKey(aesKeyBytes);
-			// Get the public key from the message.
 			PublicKey publicKey = KeyFactory.getInstance("RSA").generatePublic(new X509EncodedKeySpec(publicKeyBytes));
-			// Create a cipher using the public key, and encrypt the AES key.
 			Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
 			cipher.init(Cipher.ENCRYPT_MODE, publicKey);
 			encryptedAESKey = cipher.doFinal(aesKeyBytes);

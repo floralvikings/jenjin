@@ -25,12 +25,12 @@ public class ExecutableActorVisibleMessage extends WorldClientExecutableMessage
 	}
 
 	@Override
-	public void runSynced() {
+	public void runDelayed() {
 		getClient().getWorld().addObject(newlyVisible, newlyVisible.getId());
 	}
 
 	@Override
-	public void runASync() {
+	public void runImmediate() {
 		Message message = getMessage();
 		String name = (String) message.getArgument("name");
 		int id = (int) message.getArgument("id");

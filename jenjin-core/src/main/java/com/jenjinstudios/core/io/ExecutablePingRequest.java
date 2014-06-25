@@ -23,17 +23,17 @@ public class ExecutablePingRequest extends ExecutableMessage
 
 	/** Run the synced portion of this message. */
 	@Override
-	public void runSynced() {
+	public void runDelayed() {
 	}
 
 	/** Run asynchronous portion of this message. */
 	@Override
-	public void runASync() {
+	public void runImmediate() {
 		long requestTimeNanos = (long) getMessage().getArgument("requestTimeNanos");
 
 		Message pingResponse = connection.getMessageFactory()
 				.generatePingResponse(requestTimeNanos);
-		connection.queueMessage(pingResponse);
+		connection.queueOutgoingMessage(pingResponse);
 
 	}
 

@@ -1,6 +1,7 @@
 package com.jenjinstudios.core;
 
 import com.jenjinstudios.core.io.*;
+import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -30,10 +31,11 @@ public class ConnectionTest
 		MessageOutputStream messageOutputStream = new MessageOutputStream(mr, bos);
 
 		Connection connection = new Connection(messageInputStream, messageOutputStream, mr);
-		connection.run();
-		// Again, normally an implementation would schedule this, but that's excessive for testing purposes
-		connection.runSyncedTasks();
-		connection.sendAllMessages();
+		connection.start();
+		Thread.sleep(100);
+		connection.runQueuedExecutableMessages();
+		connection.writeAllMessages();
+		connection.shutdown();
 
 		// The connection should execute the InvalidExecutableMessage,
 		byte[] bytes = bos.toByteArray();
@@ -60,50 +62,29 @@ public class ConnectionTest
 		Message msg = mr.createMessage("InvalidMessage");
 		msg.setArgument("messageName", "FooBar");
 		msg.setArgument("messageID", (short) -255);
-		connection.queueMessage(msg);
-		connection.sendAllMessages();
-	}
-
-	@Test
-	public void testSendPing() throws Exception {
-		MessageRegistry mr = new MessageRegistry();
-		DataInputStreamMock dataInputStreamMock = new DataInputStreamMock();
-		dataInputStreamMock.mockReadBoolean(true);
-		InputStream in = dataInputStreamMock.getIn();
-		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-
-		MessageInputStream messageInputStream = new MessageInputStream(mr, in);
-		MessageOutputStream messageOutputStream = new MessageOutputStream(mr, bos);
-
-		Connection connection = new Connection(messageInputStream, messageOutputStream, mr);
-		connection.sendPing();
-		connection.sendAllMessages();
-		connection.closeLink();
-
-		byte[] bytes = bos.toByteArray();
-		MessageInputStream mis = new MessageInputStream(mr, new ByteArrayInputStream(bytes));
-		Message msg = mis.readMessage();
-		Assert.assertEquals(msg.name, "PingRequest");
+		connection.queueOutgoingMessage(msg);
+		connection.writeAllMessages();
 	}
 
 	@Test
 	public void testPingRequest() throws Exception {
 		MessageRegistry mr = new MessageRegistry();
-		// Spoof an invalid message
-		DataInputStreamMock dataInputStreamMock = new DataInputStreamMock();
-		dataInputStreamMock.mockReadShort((short) 1);
-		dataInputStreamMock.mockReadLong(123456789);
-		InputStream in = dataInputStreamMock.getIn();
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 
-		MessageInputStream messageInputStream = new MessageInputStream(mr, in);
+		MessageInputStream messageInputStream = Mockito.mock(MessageInputStream.class);
 		MessageOutputStream messageOutputStream = new MessageOutputStream(mr, bos);
 
+		Message pingRequest = mr.createMessage("PingRequest");
+		pingRequest.setArgument("requestTimeNanos", 123456789l);
+
+		Mockito.when(messageInputStream.readMessage()).thenReturn(pingRequest).thenReturn(mr.createMessage("BlankMessage"));
+
 		Connection connection = new Connection(messageInputStream, messageOutputStream, mr);
-		connection.run();
-		// Again, normally an implementation would schedule this, but that's excessive for testing purposes
-		connection.runSyncedTasks();
-		connection.sendAllMessages();
+		connection.start();
+		Thread.sleep(100);
+		connection.runQueuedExecutableMessages();
+		connection.writeAllMessages();
+		connection.shutdown();
 
 		// The connection should execute the InvalidExecutableMessage,
 		byte[] bytes = bos.toByteArray();
@@ -129,13 +110,15 @@ public class ConnectionTest
 
 		// Create and run the connection.  Normally, we would use connection.start() to spawn a new thread
 		// but for testing purposes we want the connection to run in the current thread.
-		connection.run();
+		connection.start();
+		Thread.sleep(100);
 		// Again, normally an implementation would schedule this, but that's excessive for testing purposes
-		connection.runSyncedTasks();
-		connection.sendAllMessages();
+		connection.runQueuedExecutableMessages();
+		connection.writeAllMessages();
+		connection.shutdown();
 
 		// Ping time should be extremely close to 0, but taking into account wonkiness with tests, I'll allow
 		// up to 1000
-		Assert.assertEquals(connection.getAveragePingTime(), 0, 1000);
+		Assert.assertEquals(connection.getPingTracker().getAveragePingTime(), 0, 1000);
 	}
 }

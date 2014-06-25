@@ -19,11 +19,11 @@ public class ExecutableWorldChecksumResponse extends WorldClientExecutableMessag
 	}
 
 	@Override
-	public void runSynced() {
+	public void runDelayed() {
 	}
 
 	@Override
-	public void runASync() {
+	public void runImmediate() {
 		getClient().setServerWorldFileChecksum((byte[]) getMessage().getArgument("checksum"));
 		getClient().setHasReceivedWorldFileChecksum(true);
 	}

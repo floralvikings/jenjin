@@ -19,11 +19,11 @@ public class ExecutableWorldFileResponse extends WorldClientExecutableMessage
 	}
 
 	@Override
-	public void runSynced() {
+	public void runDelayed() {
 	}
 
 	@Override
-	public void runASync() {
+	public void runImmediate() {
 		getClient().setServerWorldFileBytes((byte[]) getMessage().getArgument("fileBytes"));
 		getClient().setHasReceivedWorldFile(true);
 	}

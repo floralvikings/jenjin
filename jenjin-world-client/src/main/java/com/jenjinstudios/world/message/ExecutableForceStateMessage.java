@@ -30,7 +30,7 @@ public class ExecutableForceStateMessage extends WorldClientExecutableMessage
 	}
 
 	@Override
-	public void runSynced() {
+	public void runDelayed() {
 		ClientPlayer player = getClient().getPlayer();
 		player.setAbsoluteAngle(absoluteAngle);
 		player.setRelativeAngle(relativeAngle);
@@ -41,7 +41,7 @@ public class ExecutableForceStateMessage extends WorldClientExecutableMessage
 	}
 
 	@Override
-	public void runASync() {
+	public void runImmediate() {
 		double x = (double) getMessage().getArgument("xCoordinate");
 		double y = (double) getMessage().getArgument("yCoordinate");
 		relativeAngle = (double) getMessage().getArgument("relativeAngle");

@@ -30,18 +30,18 @@ public class ExecutableWorldLoginRequest extends WorldExecutableMessage
 	}
 
 	@Override
-	public void runSynced() {
+	public void runDelayed() {
 		if (player != null)
 		{
 			getClientHandler().getServer().getWorld().addObject(player);
 			loginResponse.setArgument("id", player.getId());
 		}
-		getClientHandler().queueMessage(loginResponse);
+		getClientHandler().queueOutgoingMessage(loginResponse);
 
 	}
 
 	@Override
-	public void runASync() {
+	public void runImmediate() {
 		boolean success;
 		User user = new User();
 		WorldClientHandler handler = getClientHandler();
