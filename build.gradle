@@ -22,6 +22,17 @@ subprojects {
     tasks.withType(Compile) {
         options.compilerArgs << "-Xlint:unchecked"
     }
+
+    test {
+        useTestNG()
+        beforeTest { descriptor ->
+            logger.lifecycle("Running test:\t" + descriptor)
+        }
+        afterTest { descriptor ->
+            logger.lifecycle("Completed test:\t" + descriptor)
+        }
+        workingDir = project.rootDir
+    }
 }
 
 task wrapper(type: Wrapper) {

@@ -51,11 +51,57 @@ public class SQLConnectorTest
 	}
 
 	@Test
-	public void testGetUser() throws Exception {
+	public void testLookUpUser() throws Exception {
 		Connection connection = createTestConnection();
 		SQLConnector connector = new SQLConnector(connection);
-		User testAccount1 = connector.getUser("TestAccount1");
+		User testAccount1 = connector.lookUpUser("TestAccount1");
 		Assert.assertEquals(testAccount1.getUsername(), "TestAccount1");
 		connection.close();
+	}
+
+	@Test(expectedExceptions = LoginException.class)
+	public void testLookUpFakeUser() throws Exception {
+		Connection connection = createTestConnection();
+		SQLConnector connector = new SQLConnector(connection);
+		connector.lookUpUser("This User Doesn't Exist.");
+	}
+
+	@Test
+	public void testLogInUser() throws Exception {
+		SQLConnector connector = new SQLConnector(createTestConnection());
+		String username = "TestAccount1";
+		String password = "testPassword";
+		connector.logInUser(username, password);
+		User user = connector.lookUpUser(username);
+		Assert.assertTrue(user.isLoggedIn());
+	}
+
+	@Test(expectedExceptions = LoginException.class)
+	public void testConcurrentLogins() throws Exception {
+		SQLConnector connector = new SQLConnector(createTestConnection());
+		String username = "TestAccount1";
+		String password = "testPassword";
+		connector.logInUser(username, password);
+		// Concurrent login isn't aren't allowed.
+		connector.logInUser(username, password);
+	}
+
+	@Test
+	public void testLogOutUser() throws Exception {
+		SQLConnector connector = new SQLConnector(createTestConnection());
+		String username = "TestAccount1";
+		String password = "testPassword";
+		connector.logInUser(username, password);
+		connector.logOutUser(username);
+		User user = connector.lookUpUser(username);
+		Assert.assertFalse(user.isLoggedIn());
+	}
+
+	@Test(expectedExceptions = LoginException.class)
+	public void testInvalidPassword() throws Exception {
+		SQLConnector connector = new SQLConnector(createTestConnection());
+		String username = "TestAccount1";
+		String password = "incorrectPassword";
+		connector.logInUser(username, password);
 	}
 }

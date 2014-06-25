@@ -5,8 +5,11 @@ import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageInputStream;
 import com.jenjinstudios.core.io.MessageOutputStream;
 import com.jenjinstudios.server.message.ServerMessageFactory;
+import com.jenjinstudios.server.sql.LoginException;
 
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * The {@code ClientHandler} class is used to communicate with an individual client.
@@ -14,6 +17,7 @@ import java.io.IOException;
  */
 public class ClientHandler extends Connection
 {
+	private static final Logger LOGGER = Logger.getLogger(ClientHandler.class.getName());
 	/** The server. */
 	private final AuthServer<? extends ClientHandler> server;
 	/** The message factory used by this ClientHandler. */
@@ -78,7 +82,13 @@ public class ClientHandler extends Connection
 		if (getUser() != null)
 		{
 			getServer().associateUsernameWithClientHandler(getUser().getUsername(), null);
-			server.getSqlConnector().logOutUser(user.getUsername());
+			try
+			{
+				server.getSqlConnector().logOutUser(user.getUsername());
+			} catch (LoginException e)
+			{
+				LOGGER.log(Level.WARNING, "Unable to perform emergency logout.", e);
+			}
 		}
 		closeLink();
 		getServer().removeClient(this);

@@ -20,8 +20,8 @@ public class VisibilityTest extends WorldServerTest
 	 */
 	@Test(timeOut = 10000)
 	public static void testActorVisibility() throws Exception {
-		WorldServer server = WorldServerTest.initWorldServer(WorldServerTest.port);
-		WorldClient client = WorldServerTest.initWorldClient(WorldServerTest.port);
+		WorldServer server = WorldServerTest.initWorldServer();
+		WorldClient client = WorldServerTest.initWorldClient();
 
 		double edge = Location.SIZE * (SightedObject.VIEW_RADIUS + 1);
 		Vector2D startPos = new Vector2D(0, edge + 1);

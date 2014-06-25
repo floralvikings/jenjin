@@ -14,6 +14,7 @@ import org.testng.annotations.BeforeMethod;
 
 import java.io.File;
 import java.io.InputStream;
+import java.net.BindException;
 import java.net.Socket;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -62,7 +63,6 @@ public class WorldServerTest
 	@BeforeMethod
 	public static void setUp() throws Exception {
 		testAccountNumber++;
-		port++;
 	}
 
 	/**
@@ -88,11 +88,10 @@ public class WorldServerTest
 
 	/**
 	 * Initialize and log the client in.
-	 * @param port The port number on which to start the client.
 	 * @return The initialized, logged in client.
 	 * @throws Exception If there's an exception.
 	 */
-	public static WorldClient initWorldClient(int port) throws Exception {
+	public static WorldClient initWorldClient() throws Exception {
 		String user = "TestAccount" + testAccountNumber;
 		LOGGER.log(Level.INFO, "Logging into account {0}", user);
 		Socket sock = new Socket("localhost", port);
@@ -107,19 +106,25 @@ public class WorldServerTest
 
 	/**
 	 * Initialize the world and world server.
-	 * @param port The port on which to initialize the server.
 	 * @return The initialized server.
 	 * @throws Exception If there's an exception.
 	 */
-	public static WorldServer initWorldServer(int port) throws Exception {
+	public static WorldServer initWorldServer() throws Exception {
+		port++;
 		/* The world SQL handler used to test. */
 		WorldSQLConnector worldSQLHandler = getSqlHandler();
-		WorldServer worldServer = new WorldServer(mr,
-				WorldServer.DEFAULT_UPS, port, WorldClientHandler.class, worldSQLHandler, new WorldFileReader(
-				WorldServerTest.class.getResourceAsStream("/com/jenjinstudios/world/WorldFile01.xml"))
-		);
-		worldServer.blockingStart();
-		return worldServer;
+		try
+		{
+			WorldServer worldServer = new WorldServer(mr,
+					WorldServer.DEFAULT_UPS, port, WorldClientHandler.class, worldSQLHandler, new WorldFileReader(
+					WorldServerTest.class.getResourceAsStream("/com/jenjinstudios/world/WorldFile01.xml"))
+			);
+			worldServer.blockingStart();
+			return worldServer;
+		} catch (BindException e)
+		{
+			return initWorldServer();
+		}
 	}
 
 	/**

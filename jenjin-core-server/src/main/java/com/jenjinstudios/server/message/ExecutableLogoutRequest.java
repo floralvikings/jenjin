@@ -3,6 +3,7 @@ package com.jenjinstudios.server.message;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.server.net.ClientHandler;
 import com.jenjinstudios.server.net.User;
+import com.jenjinstudios.server.sql.LoginException;
 import com.jenjinstudios.server.sql.SQLConnector;
 
 /**
@@ -36,12 +37,15 @@ public class ExecutableLogoutRequest extends ServerExecutableMessage
 		if (sqlConnector == null || user == null)
 			return;
 		String username = user.getUsername();
-		boolean loggedOut = sqlConnector.logOutUser(username);
-		handler.sendLogoutStatus(loggedOut);
-		if (loggedOut)
+		try
 		{
+			sqlConnector.logOutUser(username);
+			handler.sendLogoutStatus(true);
 			handler.getServer().associateUsernameWithClientHandler(username, null);
 			handler.setUser(null);
+		} catch (LoginException e)
+		{
+			handler.sendLogoutStatus(false);
 		}
 	}
 

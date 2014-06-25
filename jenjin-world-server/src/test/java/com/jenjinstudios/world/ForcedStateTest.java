@@ -21,8 +21,8 @@ public class ForcedStateTest extends WorldServerTest
 	 */
 	@Test(timeOut = 10000)
 	public static void testForcedState() throws Exception {
-		WorldServer server = WorldServerTest.initWorldServer(WorldServerTest.port);
-		WorldClient client = WorldServerTest.initWorldClient(WorldServerTest.port);
+		WorldServer server = WorldServerTest.initWorldServer();
+		WorldClient client = WorldServerTest.initWorldClient();
 		Player serverPlayer = server.getClientHandlerByUsername(client.getUsername()).getPlayer();
 		WorldServerTest.movePlayerToVector(client, server, new Vector2D(0.0, 1.0));
 		WorldServerTest.movePlayerToVector(client, server, new Vector2D(0.0, -0.4));
@@ -39,8 +39,8 @@ public class ForcedStateTest extends WorldServerTest
 	 */
 	@Test(timeOut = 10000)
 	public static void testAttemptBlockedLocation() throws Exception {
-		WorldServer server = WorldServerTest.initWorldServer(WorldServerTest.port);
-		WorldClient client = WorldServerTest.initWorldClient(WorldServerTest.port);
+		WorldServer server = WorldServerTest.initWorldServer();
+		WorldClient client = WorldServerTest.initWorldClient();
 		Vector2D vector1 = new Vector2D(15, 0);
 		Vector2D attemptedVector2 = new Vector2D(15, 15);
 		Vector2D actualVector2 = new Vector2D(15, 10);
@@ -88,8 +88,8 @@ public class ForcedStateTest extends WorldServerTest
 	 */
 	@Test(timeOut = 10000)
 	public static void testRepeatedForcedState() throws Exception {
-		WorldServer server = WorldServerTest.initWorldServer(WorldServerTest.port);
-		WorldClient client = WorldServerTest.initWorldClient(WorldServerTest.port);
+		WorldServer server = WorldServerTest.initWorldServer();
+		WorldClient client = WorldServerTest.initWorldClient();
 		ClientPlayer clientPlayer = client.getPlayer();
 		Player serverPlayer = server.getClientHandlerByUsername(client.getUsername()).getPlayer();
 		WorldServerTest.movePlayerToVector(client, server, new Vector2D(.5, .5));
@@ -125,8 +125,8 @@ public class ForcedStateTest extends WorldServerTest
 	 */
 	@Test(timeOut = 10000)
 	public static void testForcedStateFromEdge() throws Exception {
-		WorldServer server = WorldServerTest.initWorldServer(WorldServerTest.port);
-		WorldClient client = WorldServerTest.initWorldClient(WorldServerTest.port);
+		WorldServer server = WorldServerTest.initWorldServer();
+		WorldClient client = WorldServerTest.initWorldClient();
 		ClientPlayer clientPlayer = client.getPlayer();
 		Player serverPlayer = server.getClientHandlerByUsername(client.getUsername()).getPlayer();
 		LOGGER.log(Level.INFO, "Attempting to move clientPlayer off edge of world.");

@@ -18,8 +18,8 @@ public class NPCTest extends WorldServerTest
 	 */
 	@Test(timeOut = 10000)
 	public static void testNPCMovement() throws Exception {
-		WorldServer server = WorldServerTest.initWorldServer(WorldServerTest.port);
-		WorldClient client = WorldServerTest.initWorldClient(WorldServerTest.port);
+		WorldServer server = WorldServerTest.initWorldServer();
+		WorldClient client = WorldServerTest.initWorldClient();
 		ClientPlayer clientPlayer = client.getPlayer();
 		NPC testNPC = new NPC("TestNPC");
 		Location target = server.getWorld().getZone(0).getLocationOnGrid(0, 0);

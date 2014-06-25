@@ -7,8 +7,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import static java.sql.ResultSet.CONCUR_UPDATABLE;
 import static java.sql.ResultSet.TYPE_SCROLL_SENSITIVE;
@@ -23,8 +21,6 @@ public class SQLConnector
 
 	/** The name of the column in the user table specifying whether the user is currently logged in. */
 	public static final String LOGGED_IN_COLUMN = "loggedin";
-	/** The Logger used for this class. */
-	private static final Logger LOGGER = Logger.getLogger(SQLConnector.class.getName());
 	/** The connection used to communicate with the SQL database. */
 	protected final Connection dbConnection;
 	/** The string used to get all information about the user. */
@@ -55,7 +51,7 @@ public class SQLConnector
 	}
 
 	private User getUserWithValidPassword(String username, String password) throws LoginException {
-		User user = getUser(username);
+		User user = lookUpUser(username);
 		if (user.isLoggedIn())
 			throw new LoginException("User " + username + " is already logged in.");
 		String hashedPassword = Hash.getHashedString(password, user.getSalt());
@@ -65,7 +61,7 @@ public class SQLConnector
 		return user;
 	}
 
-	public User getUser(String username) throws LoginException {
+	public User lookUpUser(String username) throws LoginException {
 		boolean loggedIn;
 		String salt;
 		String dbPass;
@@ -92,30 +88,19 @@ public class SQLConnector
 	}
 
 	/**
-	 * Attempt to log out the given user with the given password into the database.  This method does not perform any
-	 * sort of hashing or encryption on the password.  If the user is already logged in this method will return false.
+	 * Attempt to log out the user with the given username.  Note that if a user is already logged out, this method will
+	 * have no affect.
 	 * @param username The username of the user to be logged out.
-	 * @return true if the user was logged out successfully, false if the user was already logged out or the update to
-	 * the database failed.
+	 * @return The user that was logged out.
 	 */
-	public boolean logOutUser(String username) {
-		boolean success;
-		try (ResultSet results = makeUserQuery(username))
+	public User logOutUser(String username) throws LoginException {
+		User user = lookUpUser(username);
+		if (user.isLoggedIn())
 		{
-			results.next();
-			// Determine if the user is logged in.  If no, end of method.
-			boolean loggedIn = results.getBoolean(LOGGED_IN_COLUMN);
-			if (!loggedIn)
-				return false;
-
+			user.setLoggedIn(false);
 			updateLoggedinColumn(username, false);
-			success = true;
-		} catch (SQLException | IndexOutOfBoundsException | LoginException e)
-		{
-			LOGGER.log(Level.FINE, "Failed to log out user: {0}", username);
-			success = false;
 		}
-		return success;
+		return user;
 	}
 
 	/**
@@ -125,14 +110,15 @@ public class SQLConnector
 	 * @throws SQLException If there is a SQL error.
 	 */
 	protected ResultSet makeUserQuery(String username) throws SQLException {
+		PreparedStatement statement;
 		synchronized (dbConnection)
 		{
-			@SuppressWarnings("resource") // Need to suppress warning, result set must be closed by calling method.
-					PreparedStatement statement = dbConnection.prepareStatement(USER_QUERY,
+			statement = dbConnection.prepareStatement(USER_QUERY,
 					TYPE_SCROLL_SENSITIVE, CONCUR_UPDATABLE);
 			statement.setString(1, username);
-			return statement.executeQuery();
+
 		}
+		return statement.executeQuery();
 	}
 
 	/**
@@ -154,7 +140,7 @@ public class SQLConnector
 				updateLoggedIn.close();
 			} catch (SQLException e)
 			{
-				throw new LoginException("Unable to log in " + username + "; SQLException when updating loggedin column.");
+				throw new LoginException("Unable to update " + username + "; SQLException when updating loggedin column.");
 			}
 		}
 	}

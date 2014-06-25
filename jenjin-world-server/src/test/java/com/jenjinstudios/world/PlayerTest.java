@@ -20,8 +20,8 @@ public class PlayerTest extends WorldServerTest
 	 */
 	@Test(timeOut = 10000)
 	public static void testSynchronizedPlayerMovement() throws Exception {
-		WorldServer server = WorldServerTest.initWorldServer(WorldServerTest.port);
-		WorldClient client = WorldServerTest.initWorldClient(WorldServerTest.port);
+		WorldServer server = WorldServerTest.initWorldServer();
+		WorldClient client = WorldServerTest.initWorldClient();
 		ClientPlayer clientPlayer = client.getPlayer();
 		Player serverPlayer = server.getClientHandlerByUsername(client.getUsername()).getPlayer();
 		// Start and stop the player a few times to make sure the server is keeping up.
@@ -39,8 +39,8 @@ public class PlayerTest extends WorldServerTest
 	 */
 	@Test(timeOut = 10000)
 	public static void testRandomMovement() throws Exception {
-		WorldServer server = WorldServerTest.initWorldServer(WorldServerTest.port);
-		WorldClient client = WorldServerTest.initWorldClient(WorldServerTest.port);
+		WorldServer server = WorldServerTest.initWorldServer();
+		WorldClient client = WorldServerTest.initWorldClient();
 		ClientPlayer clientPlayer = client.getPlayer();
 		Player serverPlayer = server.getClientHandlerByUsername(client.getUsername()).getPlayer();
 		clientPlayer.setRelativeAngle(MoveState.IDLE);
@@ -98,8 +98,8 @@ public class PlayerTest extends WorldServerTest
 	 */
 	@Test(timeOut = 10000)
 	public void testClientPlayerMovement() throws Exception {
-		WorldServer server = WorldServerTest.initWorldServer(WorldServerTest.port);
-		WorldClient client = WorldServerTest.initWorldClient(WorldServerTest.port);
+		WorldServer server = WorldServerTest.initWorldServer();
+		WorldClient client = WorldServerTest.initWorldClient();
 		ClientPlayer clientPlayer = client.getPlayer();
 		Vector2D target = new Vector2D(10, 0);
 		WorldServerTest.movePlayerToVector(client, server, target);
