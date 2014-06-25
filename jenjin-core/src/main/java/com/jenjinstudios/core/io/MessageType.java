@@ -1,5 +1,7 @@
 package com.jenjinstudios.core.io;
 
+import com.jenjinstudios.core.message.ExecutableMessage;
+
 import java.util.*;
 
 /**

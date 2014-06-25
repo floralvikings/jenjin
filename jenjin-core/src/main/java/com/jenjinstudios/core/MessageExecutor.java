@@ -1,6 +1,7 @@
 package com.jenjinstudios.core;
 
 import com.jenjinstudios.core.io.*;
+import com.jenjinstudios.core.message.ExecutableMessage;
 
 import java.io.IOException;
 import java.util.logging.Level;

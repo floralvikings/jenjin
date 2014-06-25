@@ -1,6 +1,7 @@
-package com.jenjinstudios.core.io;
+package com.jenjinstudios.core.message;
 
 import com.jenjinstudios.core.Connection;
+import com.jenjinstudios.core.io.Message;
 
 /**
  * Used to process a ping response message.

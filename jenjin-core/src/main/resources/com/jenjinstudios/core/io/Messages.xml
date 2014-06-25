@@ -19,27 +19,27 @@
     </message>
 
     <message name="DisabledMessage" id="-2">
-        <executable language="java" side="server">com.jenjinstudios.core.io.DisabledExecutableMessage</executable>
+        <executable language="java" side="server">com.jenjinstudios.core.message.DisabledExecutableMessage</executable>
     </message>
 
     <message name="InvalidMessage" id="-1">
         <argument type="String" name="messageName" />
         <argument type="short" name="messageID" />
-        <executable language="java">com.jenjinstudios.core.io.InvalidExecutableMessage</executable>
+        <executable language="java">com.jenjinstudios.core.message.InvalidExecutableMessage</executable>
     </message>
 
     <message name="BlankMessage" id="0">
-        <executable language="java">com.jenjinstudios.core.io.ExecutableBlankMessage</executable>
+        <executable language="java">com.jenjinstudios.core.message.ExecutableBlankMessage</executable>
     </message>
 
     <message name="PingRequest" id="1">
         <argument type="long" name="requestTimeNanos" />
-        <executable language="java" side="server">com.jenjinstudios.core.io.ExecutablePingRequest</executable>
+        <executable language="java" side="server">com.jenjinstudios.core.message.ExecutablePingRequest</executable>
     </message>
 
     <message name="PingResponse" id="2">
         <argument type="long" name="requestTimeNanos" />
-        <executable language="java" side="client">com.jenjinstudios.core.io.ExecutablePingResponse</executable>
+        <executable language="java" side="client">com.jenjinstudios.core.message.ExecutablePingResponse</executable>
     </message>
 
     <disabled_message name="DisabledMessage" />

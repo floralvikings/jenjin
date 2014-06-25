@@ -1,6 +1,6 @@
 package com.jenjinstudios.core;
 
-import com.jenjinstudios.core.io.ExecutableMessage;
+import com.jenjinstudios.core.message.ExecutableMessage;
 
 import java.util.LinkedList;
 import java.util.List;
