@@ -16,7 +16,7 @@ import java.io.File;
  * Used to write world objects to file.
  * @author Caleb Brinkman
  */
-public class WorldFileWriter
+public class WorldDocumentWriter
 {
 	/** The world to be written to file. */
 	private final World world;
@@ -25,7 +25,7 @@ public class WorldFileWriter
 	 * Construct a new WorldFileWriter.
 	 * @param world The world to be written to file.
 	 */
-	public WorldFileWriter(World world) { this.world = world; }
+	public WorldDocumentWriter(World world) { this.world = world; }
 
 	/**
 	 * Construct an XML document for the world and write it to the specified file.

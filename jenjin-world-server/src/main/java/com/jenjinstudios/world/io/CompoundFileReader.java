@@ -6,7 +6,9 @@ import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
@@ -22,19 +24,6 @@ public class CompoundFileReader
 	private NpcFileReader npcFileReader;
 
 	/**
-	 * Construct a new NPCFileReader for the given file.
-	 * @param npcFile The file containing the NPC info.
-	 * @throws java.io.IOException If there's an error reading the file.
-	 * @throws javax.xml.parsers.ParserConfigurationException If there's an error parsing the XML.
-	 * @throws org.xml.sax.SAXException If there's an error validating the XML.
-	 * @throws java.security.NoSuchAlgorithmException If transform algorithms cannot be found.
-	 * @throws javax.xml.transform.TransformerException If there is a Transformer Exception.
-	 */
-	public CompoundFileReader(File npcFile) throws IOException, ParserConfigurationException, SAXException, TransformerException, NoSuchAlgorithmException {
-		this(new FileInputStream(npcFile));
-	}
-
-	/**
 	 * Construct a new NPCFileReader for the given input stream.
 	 * @param inputStream The stream containing the NPC XML.
 	 * @throws javax.xml.parsers.ParserConfigurationException If there's an error parsing the XML.
@@ -43,11 +32,11 @@ public class CompoundFileReader
 	 * @throws java.security.NoSuchAlgorithmException If transform algorithms cannot be found.
 	 * @throws javax.xml.transform.TransformerException If there is a Transformer Exception.
 	 */
-	public CompoundFileReader(InputStream inputStream) throws ParserConfigurationException, IOException, SAXException, TransformerException, NoSuchAlgorithmException {
+	public CompoundFileReader(InputStream inputStream) throws ParserConfigurationException, WorldDocumentException, IOException, SAXException, TransformerException, NoSuchAlgorithmException {
 		InputStream worldFileStream = new NonClosableBufferedInputStream(inputStream);
 		worldFileStream.mark(Integer.MAX_VALUE);
-		WorldFileReader worldFileReader = new WorldFileReader(worldFileStream);
-		world = worldFileReader.read();
+		WorldDocumentReader worldDocumentReader = new WorldDocumentReader(worldFileStream);
+		world = worldDocumentReader.read();
 		worldFileStream.reset();
 		npcFileReader = new NpcFileReader(world, worldFileStream);
 	}
@@ -78,8 +67,6 @@ public class CompoundFileReader
 		}
 
 		@Override
-		public void close() throws IOException {
-			super.reset();
-		}
+		public void close() throws IOException { super.reset(); }
 	}
 }

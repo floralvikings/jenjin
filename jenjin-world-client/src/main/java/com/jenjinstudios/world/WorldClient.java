@@ -5,18 +5,15 @@ import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageInputStream;
 import com.jenjinstudios.core.io.MessageOutputStream;
 import com.jenjinstudios.core.io.MessageRegistry;
-import com.jenjinstudios.world.io.WorldFileReader;
+import com.jenjinstudios.world.io.WorldDocumentException;
+import com.jenjinstudios.world.io.WorldDocumentReader;
 import com.jenjinstudios.world.message.WorldClientMessageFactory;
 import com.jenjinstudios.world.state.MoveState;
-import org.xml.sax.SAXException;
 
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -47,7 +44,7 @@ public class WorldClient extends AuthClient
 	/** The world file. */
 	private final File worldFile;
 	/** The world file reader for this client. */
-	private WorldFileReader worldFileReader;
+	private WorldDocumentReader worldDocumentReader;
 	/** Whether this client has received the world file. */
 	private boolean hasReceivedWorldFile;
 	/** The bytes in the world server file. */
@@ -59,23 +56,18 @@ public class WorldClient extends AuthClient
 	 * @param username The username that will be used by this client.
 	 * @param password The password that will be used by this client.
 	 * @param worldFile The file containing the world information.
-	 * @throws java.security.NoSuchAlgorithmException If there is an error generating encryption keys.
-	 * @throws java.io.IOException If there's an error reading the world file.
-	 * @throws javax.xml.parsers.ParserConfigurationException If there's an error configuring the xml parser.
-	 * @throws javax.xml.transform.TransformerException If there's an error transforming the xml file.
-	 * @throws org.xml.sax.SAXException If there's an error in the XML syntax.
 	 */
 	// TODO Wrap these exceptions
 	public WorldClient(MessageInputStream in, MessageOutputStream out, MessageRegistry mr, String username, String password, File worldFile)
-			throws NoSuchAlgorithmException, SAXException, TransformerException, ParserConfigurationException, IOException
+			throws WorldDocumentException
 	{
 		super(in, out, mr, username, password);
 		this.password = password;
 		this.worldFile = worldFile;
 		if (worldFile.exists())
 		{
-			this.worldFileReader = new WorldFileReader(worldFile);
-			this.world = worldFileReader.read();
+			this.worldDocumentReader = new WorldDocumentReader(worldFile);
+			this.world = worldDocumentReader.read();
 		}
 		this.messageFactory = new WorldClientMessageFactory(getMessageRegistry());
 	}
@@ -163,12 +155,8 @@ public class WorldClient extends AuthClient
 	 * Send a request for the world file, and wait for the response to return.
 	 * @throws InterruptedException If the thread is interrupted while waiting for responses.
 	 * @throws java.io.IOException If there's an error writing the world file.
-	 * @throws java.security.NoSuchAlgorithmException If the MD5 algorithm can't be found.
-	 * @throws javax.xml.parsers.ParserConfigurationException If there's an error configuring the XML parser.
-	 * @throws javax.xml.transform.TransformerException If there's an error with the XML transformer.
-	 * @throws org.xml.sax.SAXException If there's an error with the XML.
 	 */
-	public void sendBlockingWorldFileRequest() throws InterruptedException, NoSuchAlgorithmException, SAXException, TransformerException, ParserConfigurationException, IOException {
+	public void sendBlockingWorldFileRequest() throws InterruptedException, WorldDocumentException, IOException {
 		Message worldFileChecksumRequest = getMessageFactory().generateWorldChecksumRequest();
 		queueOutgoingMessage(worldFileChecksumRequest);
 
@@ -177,7 +165,7 @@ public class WorldClient extends AuthClient
 			Thread.sleep(10);
 		}
 
-		if (worldFileReader == null || !Arrays.equals(serverWorldFileChecksum, worldFileReader.getWorldFileChecksum()))
+		if (worldDocumentReader == null || !Arrays.equals(serverWorldFileChecksum, worldDocumentReader.getWorldFileChecksum()))
 		{
 			queueOutgoingMessage(getMessageFactory().generateWorldFileRequest());
 			while (!hasReceivedWorldFile)
@@ -193,8 +181,8 @@ public class WorldClient extends AuthClient
 				worldOut.write(serverWorldFileBytes);
 				worldOut.close();
 			}
-			worldFileReader = new WorldFileReader(new ByteArrayInputStream(serverWorldFileBytes));
-			world = worldFileReader.read();
+			worldDocumentReader = new WorldDocumentReader(new ByteArrayInputStream(serverWorldFileBytes));
+			world = worldDocumentReader.read();
 		}
 
 

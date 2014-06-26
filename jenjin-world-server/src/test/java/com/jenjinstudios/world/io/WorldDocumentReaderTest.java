@@ -11,8 +11,9 @@ import java.io.InputStream;
 
 /**
  * Used to test the WorldFileReader class.
- * @author Caleb Brinkman */
-public class WorldFileReaderTest
+ * @author Caleb Brinkman
+ */
+public class WorldDocumentReaderTest
 {
 	/**
 	 * Test the read function.
@@ -21,7 +22,7 @@ public class WorldFileReaderTest
 	@Test
 	public void testRead() throws Exception {
 		InputStream resourceAsStream = getClass().getResourceAsStream("/com/jenjinstudios/world/WorldFile01.xml");
-		WorldFileReader testReader = new WorldFileReader(resourceAsStream);
+		WorldDocumentReader testReader = new WorldDocumentReader(resourceAsStream);
 		World world = testReader.read();
 		Location testLocation = world.getLocationForCoordinates(0, new Vector2D(Location.SIZE, Location.SIZE));
 		LocationProperties testProperties = testLocation.getLocationProperties();

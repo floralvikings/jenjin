@@ -17,10 +17,10 @@ import java.util.logging.Logger;
  * Test the WorldFileWriter class.
  * @author Caleb Brinkman
  */
-public class WorldFileWriterTest
+public class WorldDocumentWriterTest
 {
 	/** The Logged for this test. */
-	private static final Logger LOGGER = Logger.getLogger(WorldFileWriterTest.class.getName());
+	private static final Logger LOGGER = Logger.getLogger(WorldDocumentWriterTest.class.getName());
 	/** The file to be written to for testing purposes. */
 	File worldFile;
 
@@ -63,11 +63,11 @@ public class WorldFileWriterTest
 		Location[] locArray = {testLocation};
 		World writeWorld = new World(new Zone[]{new Zone(0, 5, 5, locArray)});
 
-		WorldFileWriter worldFileWriter = new WorldFileWriter(writeWorld);
-		worldFileWriter.write(worldFile);
+		WorldDocumentWriter worldDocumentWriter = new WorldDocumentWriter(writeWorld);
+		worldDocumentWriter.write(worldFile);
 
-		WorldFileReader worldFileReader = new WorldFileReader(worldFile);
-		World readWorld = worldFileReader.read();
+		WorldDocumentReader worldDocumentReader = new WorldDocumentReader(worldFile);
+		World readWorld = worldDocumentReader.read();
 
 
 		testLocation = readWorld.getLocationForCoordinates(0, new Vector2D(Location.SIZE, Location.SIZE));

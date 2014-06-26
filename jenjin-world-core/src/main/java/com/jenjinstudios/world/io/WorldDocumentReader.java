@@ -23,7 +23,7 @@ import java.util.TreeMap;
  * This class handles the reading of and construction from world xml files.
  * @author Caleb Brinkman
  */
-public class WorldFileReader
+public class WorldDocumentReader
 {
 	/** The tag name for the root "zone" tags. */
 	private static final String ZONE_TAG_NAME = "zone";
@@ -39,33 +39,76 @@ public class WorldFileReader
 	/**
 	 * Construct a new WorldFileReader pointing to the specified file.
 	 * @param worldFile The file containing the world information.
-	 * @throws java.io.IOException If there is an error reading the file.
-	 * @throws org.xml.sax.SAXException If there is an error parsing the world xml file.
-	 * @throws javax.xml.parsers.ParserConfigurationException If there is an error configuring the XML parser.
-	 * @throws java.security.NoSuchAlgorithmException If there is an error getting the checksum.
-	 * @throws javax.xml.transform.TransformerException If there's an error configuring the world file.
 	 */
-	public WorldFileReader(File worldFile) throws IOException, SAXException, ParserConfigurationException, NoSuchAlgorithmException, TransformerException {
-		this(new FileInputStream(worldFile));
+	public WorldDocumentReader(File worldFile) throws WorldDocumentException {
+		this(getFileInputStream(worldFile));
+	}
 
+	private static FileInputStream getFileInputStream(File worldFile) throws WorldDocumentException {
+		FileInputStream inputStream;
+		try
+		{
+			inputStream = new FileInputStream(worldFile);
+		} catch (FileNotFoundException e)
+		{
+			throw new WorldDocumentException("Unable to find world file.");
+		}
+		return inputStream;
 	}
 
 	/**
 	 * Construct a new WorldFileReader pointing to the specified file.
 	 * @param inputStream The input stream containing the world information.
-	 * @throws java.io.IOException If there is an error reading the file.
-	 * @throws org.xml.sax.SAXException If there is an error parsing the world xml file.
-	 * @throws javax.xml.parsers.ParserConfigurationException If there is an error configuring the XML parser.
-	 * @throws java.security.NoSuchAlgorithmException If there is an error getting the MD5 algorithm.
-	 * @throws javax.xml.transform.TransformerException If there's an error configuring the world file.
 	 */
-	public WorldFileReader(InputStream inputStream) throws IOException, SAXException, ParserConfigurationException, NoSuchAlgorithmException, TransformerException {
+	public WorldDocumentReader(InputStream inputStream) throws WorldDocumentException {
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-		DocumentBuilder builder = factory.newDocumentBuilder();
-		worldDocument = builder.parse(inputStream);
+		DocumentBuilder builder = getDocumentBuilder(factory);
+		worldDocument = parseWoldDocument(inputStream, builder);
 		worldDocument.getDocumentElement().normalize();
-		worldFileBytes = readBytes();
-		worldFileChecksum = ChecksumUtil.getMD5Checksum(readBytes());
+		worldFileBytes = readDocumentBytes(worldDocument);
+		worldFileChecksum = createDocumentChecksum();
+	}
+
+	private byte[] createDocumentChecksum() throws WorldDocumentException {
+		try
+		{
+			return ChecksumUtil.getMD5Checksum(worldFileBytes);
+		} catch (NoSuchAlgorithmException e)
+		{
+			throw new WorldDocumentException("Unable to create world file checksum.", e);
+		}
+	}
+
+	private byte[] readDocumentBytes(Document doc) throws WorldDocumentException {
+		try
+		{
+			return readBytes(doc);
+		} catch (TransformerException e)
+		{
+			throw new WorldDocumentException("Unable to read bytes of World Document.", e);
+		}
+	}
+
+	private Document parseWoldDocument(InputStream inputStream, DocumentBuilder builder) throws WorldDocumentException {
+		try
+		{
+			return builder.parse(inputStream);
+		} catch (SAXException | IOException e)
+		{
+			throw new WorldDocumentException("Unable to parse WorldDocument from input stream");
+		}
+	}
+
+	private static DocumentBuilder getDocumentBuilder(DocumentBuilderFactory factory) throws WorldDocumentException {
+		DocumentBuilder builder;
+		try
+		{
+			builder = factory.newDocumentBuilder();
+		} catch (ParserConfigurationException e)
+		{
+			throw new WorldDocumentException("Unable to configure document builder.", e);
+		}
+		return builder;
 	}
 
 	/**
@@ -86,13 +129,13 @@ public class WorldFileReader
 	 * @return An array of bytes containing the world file.
 	 * @throws TransformerException If there's an error parsing the world file.
 	 */
-	protected byte[] readBytes() throws TransformerException {
+	protected byte[] readBytes(Document doc) throws TransformerException {
 		byte[] fileBytes;
 		TransformerFactory transformerFactory = TransformerFactory.newInstance();
 		Transformer transformer = transformerFactory.newTransformer();
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		StreamResult result = new StreamResult(bos);
-		transformer.transform(new DOMSource(worldDocument), result);
+		transformer.transform(new DOMSource(doc), result);
 		fileBytes = bos.toByteArray();
 		return fileBytes;
 	}

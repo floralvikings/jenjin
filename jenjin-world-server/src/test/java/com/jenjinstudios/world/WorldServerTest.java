@@ -4,7 +4,7 @@ import com.jenjinstudios.core.io.MessageInputStream;
 import com.jenjinstudios.core.io.MessageOutputStream;
 import com.jenjinstudios.core.io.MessageRegistry;
 import com.jenjinstudios.core.util.Files;
-import com.jenjinstudios.world.io.WorldFileReader;
+import com.jenjinstudios.world.io.WorldDocumentReader;
 import com.jenjinstudios.world.math.Vector2D;
 import com.jenjinstudios.world.sql.WorldAuthenticator;
 import com.jenjinstudios.world.state.MoveState;
@@ -104,7 +104,7 @@ public class WorldServerTest
 		try
 		{
 			WorldServer worldServer = new WorldServer(mr,
-					WorldServer.DEFAULT_UPS, port, WorldClientHandler.class, worldSQLHandler, new WorldFileReader(
+					WorldServer.DEFAULT_UPS, port, WorldClientHandler.class, worldSQLHandler, new WorldDocumentReader(
 					WorldServerTest.class.getResourceAsStream("/com/jenjinstudios/world/WorldFile01.xml"))
 			);
 			worldServer.blockingStart();
