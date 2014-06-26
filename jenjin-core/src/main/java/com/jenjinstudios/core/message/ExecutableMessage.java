@@ -65,12 +65,7 @@ public abstract class ExecutableMessage
 				if (execClass == null) continue;
 				Constructor<? extends ExecutableMessage>[] execConstructors;
 				execConstructors = (Constructor<? extends ExecutableMessage>[]) execClass.getConstructors();
-				for (Constructor<? extends ExecutableMessage> constructor : execConstructors)
-				{
-					Class<?> firstParam = constructor.getParameterTypes()[0];
-					if (firstParam.isAssignableFrom(connection.getClass()))
-						execConstructor = constructor;
-				}
+				execConstructor = getAppropriateConstructor(connection, execConstructors);
 			}
 			if (execConstructor != null)
 			{
@@ -89,5 +84,16 @@ public abstract class ExecutableMessage
 		}
 
 		return executableMessage;
+	}
+
+	private static Constructor getAppropriateConstructor(Connection connection, Constructor[] execConstructors) {
+		Constructor correctConstructor = null;
+		for (Constructor constructor : execConstructors)
+		{
+			Class<?> firstParam = constructor.getParameterTypes()[0];
+			if (firstParam.isAssignableFrom(connection.getClass()))
+				correctConstructor = constructor;
+		}
+		return correctConstructor;
 	}
 }
