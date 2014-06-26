@@ -140,24 +140,15 @@ public class Location
 			throw new IllegalStateException("Cannot set adjacent locations after they have already been set!");
 		}
 		hasLocationsSet = true;
+		setCardinals(zone);
+		setOrdinals(zone);
+	}
 
-		adjNorth = zone.getLocationOnGrid(X_COORDINATE, Y_COORDINATE + 1);
-		adjSouth = zone.getLocationOnGrid(X_COORDINATE, Y_COORDINATE - 1);
-		adjEast = zone.getLocationOnGrid(X_COORDINATE + 1, Y_COORDINATE);
-		adjWest = zone.getLocationOnGrid(X_COORDINATE - 1, Y_COORDINATE);
+	private void setOrdinals(Zone zone) {
 		adjNorthEast = zone.getLocationOnGrid(X_COORDINATE + 1, Y_COORDINATE + 1);
 		adjNorthWest = zone.getLocationOnGrid(X_COORDINATE - 1, Y_COORDINATE + 1);
 		adjSouthEast = zone.getLocationOnGrid(X_COORDINATE + 1, Y_COORDINATE - 1);
 		adjSouthWest = zone.getLocationOnGrid(X_COORDINATE - 1, Y_COORDINATE - 1);
-
-		if (adjNorth != null)
-			adjacentLocations.add(adjNorth);
-		if (adjSouth != null)
-			adjacentLocations.add(adjSouth);
-		if (adjEast != null)
-			adjacentLocations.add(adjEast);
-		if (adjWest != null)
-			adjacentLocations.add(adjWest);
 		if (adjNorthEast != null)
 		{
 			adjacentLocations.add(adjNorthEast);
@@ -178,6 +169,21 @@ public class Location
 			adjacentLocations.add(adjSouthWest);
 			diagonals.add(adjSouthWest);
 		}
+	}
+
+	private void setCardinals(Zone zone) {
+		adjNorth = zone.getLocationOnGrid(X_COORDINATE, Y_COORDINATE + 1);
+		adjSouth = zone.getLocationOnGrid(X_COORDINATE, Y_COORDINATE - 1);
+		adjEast = zone.getLocationOnGrid(X_COORDINATE + 1, Y_COORDINATE);
+		adjWest = zone.getLocationOnGrid(X_COORDINATE - 1, Y_COORDINATE);
+		if (adjNorth != null)
+			adjacentLocations.add(adjNorth);
+		if (adjSouth != null)
+			adjacentLocations.add(adjSouth);
+		if (adjEast != null)
+			adjacentLocations.add(adjEast);
+		if (adjWest != null)
+			adjacentLocations.add(adjWest);
 	}
 
 	/**

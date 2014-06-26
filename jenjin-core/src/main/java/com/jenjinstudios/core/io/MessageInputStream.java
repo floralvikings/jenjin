@@ -62,6 +62,7 @@ public class MessageInputStream extends DataInputStream
 	 * Close the input stream.
 	 * @throws java.io.IOException If there is an IO error.
 	 */
+	@Override
 	public void close() throws IOException {
 		super.close();
 		closed = true;

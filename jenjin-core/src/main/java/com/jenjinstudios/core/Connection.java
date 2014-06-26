@@ -78,6 +78,7 @@ public class Connection extends Thread
 		outputStream.setAesKey(key);
 	}
 
+	@Override
 	public void run() {
 		running = true;
 		while (running && invalidMsgCount < MAX_INVALID_MESSAGES && messageExecutor.processNextIncomingMessage())

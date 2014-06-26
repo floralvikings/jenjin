@@ -65,16 +65,16 @@ public class Pathfinder
 			}
 		}
 
-		if(selectedNode.location == end)
+		if (selectedNode.location == end)
 		{
 			Stack<Location> reversePath = new Stack<>();
-			while(selectedNode.location != start)
+			while (selectedNode.location != start)
 			{
 				reversePath.push(selectedNode.location);
 				selectedNode = selectedNode.parent;
 			}
 			reversePath.push(selectedNode.location);
-			while(!reversePath.isEmpty())
+			while (!reversePath.isEmpty())
 			{
 				path.add(reversePath.pop());
 			}
@@ -128,6 +128,13 @@ public class Pathfinder
 
 		public boolean equals(Object o) {
 			return o != null && o instanceof Node && ((Node) o).location == location;
+		}
+
+		@Override
+		public int hashCode() {
+			int hash = 5;
+			hash = 89 * hash + location.hashCode();
+			return hash;
 		}
 	}
 }

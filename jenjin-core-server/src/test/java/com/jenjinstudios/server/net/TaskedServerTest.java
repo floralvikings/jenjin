@@ -18,7 +18,9 @@ public class TaskedServerTest
 		MessageRegistry mr = new MessageRegistry();
 		Connection testConnection = AuthenticatorTest.createTestConnection();
 		Authenticator a = new Authenticator(testConnection);
-		TaskedServer<ClientHandler> taskedServer = new AuthServer<>(mr, 10, 51015, ClientHandler.class, a);
+		ClientListenerInit<ClientHandler> listenerInit = new ClientListenerInit<>(ClientHandler.class, 51021);
+		ServerInit<ClientHandler> serverInit = new ServerInit<>(mr, 50, listenerInit);
+		TaskedServer<ClientHandler> taskedServer = new AuthServer<>(serverInit, a);
 		Runnable r = Mockito.mock(Runnable.class);
 		taskedServer.addRepeatedTask(r);
 		taskedServer.start();

@@ -103,6 +103,7 @@ public class Client extends Connection
 	}
 
 	/** Tell the client threads to stop running. */
+	@Override
 	public void shutdown() {
 		super.shutdown();
 		if (sendMessagesTimer != null)
@@ -157,5 +158,6 @@ public class Client extends Connection
 		}
 	}
 
+	@Override
 	public ClientMessageFactory getMessageFactory() { return messageFactory; }
 }

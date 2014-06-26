@@ -211,5 +211,6 @@ public class WorldClient extends AuthClient
 		queueOutgoingMessage(logoutRequest);
 	}
 
+	@Override
 	public WorldClientMessageFactory getMessageFactory() {return messageFactory; }
 }

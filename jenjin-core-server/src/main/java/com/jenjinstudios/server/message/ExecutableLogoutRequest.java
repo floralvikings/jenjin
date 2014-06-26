@@ -39,8 +39,8 @@ public class ExecutableLogoutRequest extends ServerExecutableMessage
 		String username = user.getUsername();
 		try
 		{
-			authenticator.logOutUser(username);
-			handler.sendLogoutStatus(true);
+			user = authenticator.logOutUser(username);
+			handler.sendLogoutStatus(!user.isLoggedIn());
 			handler.getServer().associateUsernameWithClientHandler(username, null);
 			handler.setUser(null);
 		} catch (LoginException e)

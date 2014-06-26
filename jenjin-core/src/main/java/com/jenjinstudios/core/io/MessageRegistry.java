@@ -138,7 +138,8 @@ public class MessageRegistry
 		}
 		short id = type.id;
 		ArgumentType[] argumentTypes = type.argumentTypes;
-		MessageType newMessageType = new MessageType(id, messageName, argumentTypes);
+		MessageInfo info = new MessageInfo(id, messageName, argumentTypes);
+		MessageType newMessageType = new MessageType(info);
 		messageTypesByName.put(messageName, newMessageType);
 		messageTypesByID.put(id, newMessageType);
 
@@ -170,6 +171,10 @@ public class MessageRegistry
 				LOGGER.log(Level.INFO, "Unable to parse XML file", ex);
 			}
 		}
+		disableExecutableMessages(disabled);
+	}
+
+	private void disableExecutableMessages(LinkedList<String> disabled) {
 		for (String disabledMessageName : disabled)
 		{
 			disableExecutableMessage(disabledMessageName);

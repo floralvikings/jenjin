@@ -4,7 +4,6 @@ description = ''
 dependencies {
     compile 'com.h2database:h2:1.4.178'
     compile project(':jenjin-core')
-    compile project(':jenjin-core-client')
 }
 
 test {

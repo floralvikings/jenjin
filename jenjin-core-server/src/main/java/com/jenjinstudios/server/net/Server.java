@@ -40,38 +40,22 @@ public class Server<T extends ClientHandler> extends Thread
 
 	/**
 	 * Construct a new Server without a SQLHandler.
-	 * @param ups The cycles per second at which this server will run.
-	 * @param port The port number on which this server will listen.
-	 * @param handlerClass The class of ClientHandler used by this Server.
-	 * @throws java.io.IOException If there is an IO Error initializing the server.
-	 * @throws NoSuchMethodException If there is no appropriate constructor for the specified ClientHandler
-	 * constructor.
-	 */
-	public Server(MessageRegistry mr, int ups, int port, Class<? extends T> handlerClass) throws IOException, NoSuchMethodException {
-		this(mr, ups, port, handlerClass, DEFAULT_MAX_CLIENTS);
-	}
-
-	/**
-	 * Construct a new Server without a SQLHandler.
-	 * @param ups The cycles per second at which this server will run.
-	 * @param port The port number on which this server will listen.
-	 * @param handlerClass The class of ClientHandler used by this Server.
-	 * @param maxClients The maximum number of clients.
 	 * @throws java.io.IOException If there is an IO Error initializing the server.
 	 * @throws NoSuchMethodException If there is no appropriate constructor for the specified ClientHandler
 	 * constructor.
 	 */
 	@SuppressWarnings("unchecked")
-	public Server(MessageRegistry mr, int ups, int port, Class<? extends T> handlerClass, int maxClients) throws IOException, NoSuchMethodException {
+	public Server(ServerInit<T> initInfo) throws IOException, NoSuchMethodException {
 		super("Server");
-		messageRegistry = mr;
+		ClientListenerInit<T> listenerInit = initInfo.getClientListenerInit();
+		messageRegistry = initInfo.getMessageRegistry();
 		LOGGER.log(Level.FINE, "Initializing Server.");
-		UPS = ups;
-		PERIOD = 1000 / ups;
+		UPS = initInfo.getUps();
+		PERIOD = 1000 / UPS;
 		clientsByUsername = new TreeMap<>();
-		clientListener = (ClientListener<T>) new ClientListener<>(getClass(), port, handlerClass);
+		clientListener = new ClientListener<>(getClass(), listenerInit);
 		clientHandlers = new ArrayList<>();
-		for (int i = 0; i < maxClients; i++)
+		for (int i = 0; i < DEFAULT_MAX_CLIENTS; i++)
 			clientHandlers.add(null);
 		numClients = 0;
 	}

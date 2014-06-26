@@ -23,23 +23,20 @@ public class MessageType
 
 	/**
 	 * Construct a new MessageType with the given information.
-	 * @param id The ID of the message type.
-	 * @param name The name of the message type.
-	 * @param argumentTypes The argumentTypes of the message type.
 	 * @param classes The ExecutableMessage classes that can be invoked by this message type.
 	 */
-	public MessageType(short id, String name, ArgumentType[] argumentTypes, List<Class<? extends ExecutableMessage>> classes) {
+	public MessageType(MessageInfo info, List<Class<? extends ExecutableMessage>> classes) {
 		executableMessageClasses = new LinkedList<>(classes);
-		this.id = id;
-		this.name = name;
-		this.argumentTypes = argumentTypes;
+		this.id = info.getId();
+		this.name = info.getName();
+		this.argumentTypes = info.getArgumentTypes();
 		argumentTypeTreeMap = new TreeMap<>();
 
 		for (ArgumentType argumentType : argumentTypes) { argumentTypeTreeMap.put(argumentType.name, argumentType); }
 	}
 
-	public MessageType(short id, String messageName, ArgumentType[] argumentTypes) {
-		this(id, messageName, argumentTypes, new LinkedList<Class<? extends ExecutableMessage>>());
+	public MessageType(MessageInfo info) {
+		this(info, new LinkedList<Class<? extends ExecutableMessage>>());
 	}
 
 	/**

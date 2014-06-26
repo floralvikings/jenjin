@@ -40,6 +40,7 @@ public class WorldClientMessageFactory extends ClientMessageFactory
 	 * @param password The password.
 	 * @return The LoginRequest message.
 	 */
+	@Override
 	public Message generateLoginRequest(String username, String password) {
 		Message loginRequest = getMessageRegistry().createMessage("WorldLoginRequest");
 		loginRequest.setArgument("username", username);

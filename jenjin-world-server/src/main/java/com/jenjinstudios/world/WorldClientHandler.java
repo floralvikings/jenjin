@@ -124,5 +124,6 @@ public class WorldClientHandler extends ClientHandler
 			queueOutgoingMessage(getMessageFactory().generateForcedStateMessage(forcedState, server));
 	}
 
+	@Override
 	public WorldServerMessageFactory getMessageFactory() { return messageFactory; }
 }

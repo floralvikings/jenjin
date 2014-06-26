@@ -147,6 +147,7 @@ public class MessageOutputStream extends DataOutputStream
 	 * Close the output stream.
 	 * @throws IOException If there is an IO error.
 	 */
+	@Override
 	public void close() throws IOException {
 		super.close();
 		closed = true;

@@ -1,7 +1,5 @@
 package com.jenjinstudios.server.net;
 
-import com.jenjinstudios.core.io.MessageRegistry;
-
 import java.io.IOException;
 import java.util.Deque;
 import java.util.LinkedList;
@@ -25,15 +23,12 @@ public class TaskedServer<T extends ClientHandler> extends Server<T>
 
 	/**
 	 * Construct a new Server without a SQLHandler.
-	 * @param ups The cycles per second at which this server will run.
-	 * @param port The port number on which this server will listen.
-	 * @param handlerClass The class of ClientHandler used by this Server.
 	 * @throws java.io.IOException If there is an IO Error initializing the server.
 	 * @throws NoSuchMethodException If there is no appropriate constructor for the specified ClientHandler
 	 * constructor.
 	 */
-	public TaskedServer(MessageRegistry mr, int ups, int port, Class<? extends T> handlerClass) throws IOException, NoSuchMethodException {
-		super(mr, ups, port, handlerClass);
+	public TaskedServer(ServerInit<T> initInfo) throws IOException, NoSuchMethodException {
+		super(initInfo);
 		repeatedTasks = new LinkedList<>();
 		syncedTasks = new LinkedList<>();
 	}

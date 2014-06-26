@@ -1,7 +1,7 @@
 package com.jenjinstudios.world;
 
-import com.jenjinstudios.core.io.MessageRegistry;
 import com.jenjinstudios.server.net.AuthServer;
+import com.jenjinstudios.server.net.ServerInit;
 import com.jenjinstudios.world.io.WorldDocumentReader;
 import com.jenjinstudios.world.sql.WorldAuthenticator;
 
@@ -26,17 +26,14 @@ public class WorldServer extends AuthServer<WorldClientHandler>
 
 	/**
 	 * Construct a new Server without a SQLHandler.
-	 * @param ups The cycles per second at which this server will run.
-	 * @param port The port number on which this server will listen.
-	 * @param wchClass The class of WorldClientHandler to use.
 	 * @param sqlHandler The WorldSqlHandler used to communicate with the MySql Database.
 	 * @param worldDocumentReader The WorldFileReader used to read the world from a file.
 	 * @throws java.io.IOException If there is an IO Error when initializing the server.
 	 * @throws NoSuchMethodException If there is no appropriate constructor for the specified ClientHandler
 	 * constructor.
 	 */
-	public WorldServer(MessageRegistry mr, int ups, int port, Class<? extends WorldClientHandler> wchClass, WorldAuthenticator sqlHandler, WorldDocumentReader worldDocumentReader) throws IOException, NoSuchMethodException {
-		super(mr, ups, port, wchClass, sqlHandler);
+	public WorldServer(ServerInit<WorldClientHandler> initInfo, WorldAuthenticator sqlHandler, WorldDocumentReader worldDocumentReader) throws IOException, NoSuchMethodException {
+		super(initInfo, sqlHandler);
 		this.world = worldDocumentReader.read();
 		worldFileBytes = worldDocumentReader.getWorldFileBytes();
 		worldFileChecksum = worldDocumentReader.getWorldFileChecksum();

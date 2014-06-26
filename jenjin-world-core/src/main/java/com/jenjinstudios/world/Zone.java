@@ -141,7 +141,8 @@ public class Zone
 
 		List<Vector2D> circle = MathUtil.castCircle(centerX, centerY, radius);
 
-		for(Vector2D vector2D : circle) {
+		for (Vector2D vector2D : circle)
+		{
 			int x = (int) vector2D.getXCoordinate();
 			int y = (int) vector2D.getYCoordinate();
 			visibleLocations.addAll(castVisibilityRay(centerX, centerY, x, y));
@@ -163,6 +164,7 @@ public class Zone
 	 */
 	@SuppressWarnings("SuspiciousNameCombination")
 	protected Collection<Location> castVisibilityRay(int x1, int y1, int x2, int y2) {
+		// FIXME This algorithm is ugly, complex, and breaks lots of clean code practices.  Needs to be fixed.
 		LinkedList<Location> visibleRay = new LinkedList<>();
 		int i;               // loop counter
 		int yStep, xStep;    // the step on y and x axis

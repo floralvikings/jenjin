@@ -5,6 +5,8 @@ import com.jenjinstudios.core.io.MessageInputStream;
 import com.jenjinstudios.core.io.MessageOutputStream;
 import com.jenjinstudios.core.io.MessageRegistry;
 import com.jenjinstudios.core.util.Files;
+import com.jenjinstudios.server.net.ClientListenerInit;
+import com.jenjinstudios.server.net.ServerInit;
 import com.jenjinstudios.world.io.WorldDocumentReader;
 import com.jenjinstudios.world.math.Vector2D;
 import com.jenjinstudios.world.sql.WorldAuthenticator;
@@ -103,18 +105,20 @@ public class WorldServerTest
 		port++;
 		/* The world SQL handler used to test. */
 		WorldAuthenticator worldSQLHandler = getSqlHandler();
+		WorldServer worldServer;
 		try
 		{
-			WorldServer worldServer = new WorldServer(mr,
-					WorldServer.DEFAULT_UPS, port, WorldClientHandler.class, worldSQLHandler, new WorldDocumentReader(
-					WorldServerTest.class.getResourceAsStream("/com/jenjinstudios/world/WorldFile01.xml"))
-			);
+			ClientListenerInit<WorldClientHandler> li = new ClientListenerInit<>(WorldClientHandler.class, port);
+			ServerInit<WorldClientHandler> si = new ServerInit<>(mr, WorldServer.DEFAULT_UPS, li);
+			InputStream stream = WorldServerTest.class.getResourceAsStream("/com/jenjinstudios/world/WorldFile01.xml");
+			WorldDocumentReader wdr = new WorldDocumentReader(stream);
+			worldServer = new WorldServer(si, worldSQLHandler, wdr);
 			worldServer.blockingStart();
-			return worldServer;
 		} catch (BindException e)
 		{
-			return initWorldServer();
+			worldServer = initWorldServer();
 		}
+		return worldServer;
 	}
 
 	/**

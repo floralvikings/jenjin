@@ -44,7 +44,10 @@ class MessageTypeParser
 		MessageType messageType = null;
 
 		if (argumentTypes != null)
-			messageType = new MessageType(id, name, argumentTypes, classes);
+		{
+			MessageInfo info = new MessageInfo(id, name, argumentTypes);
+			messageType = new MessageType(info, classes);
+		}
 
 		return messageType;
 	}

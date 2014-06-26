@@ -38,7 +38,9 @@ public class ServerTest
 	public void construct() throws Exception {
 		mr = new MessageRegistry();
 		Authenticator authenticator = new Authenticator(AuthenticatorTest.createTestConnection());
-		server = new AuthServer<>(mr, 50, 51019, ClientHandler.class, authenticator);
+		ClientListenerInit<ClientHandler> listenerInit = new ClientListenerInit<>(ClientHandler.class, 51019);
+		ServerInit<ClientHandler> serverInit = new ServerInit<>(mr, 50, listenerInit);
+		server = new AuthServer<>(serverInit, authenticator);
 		server.blockingStart();
 	}
 
@@ -48,15 +50,15 @@ public class ServerTest
 	 * @throws InterruptedException If there is interrupt.
 	 */
 	@AfterClass
-	public void destroy() throws IOException, InterruptedException {
-		server.shutdown();
-	}
+	public void destroy() throws IOException, InterruptedException { server.shutdown(); }
 
 	@Test
 	public void testBlockingStart() throws Exception {
 		Authenticator authenticator = new Authenticator(AuthenticatorTest.createTestConnection());
 
-		Server server = new AuthServer<>(mr, 50, 51020, ClientHandler.class, authenticator);
+		ClientListenerInit<ClientHandler> listenerInit = new ClientListenerInit<>(ClientHandler.class, 51020);
+		ServerInit<ClientHandler> serverInit = new ServerInit<>(mr, 50, listenerInit);
+		Server server = new AuthServer<>(serverInit, authenticator);
 		assertTrue(server.blockingStart());
 		server.shutdown();
 	}
@@ -65,7 +67,9 @@ public class ServerTest
 	public void testIsInitialized() throws Exception {
 		Authenticator authenticator = new Authenticator(AuthenticatorTest.createTestConnection());
 
-		Server server = new AuthServer<>(mr, 50, 51020, ClientHandler.class, authenticator);
+		ClientListenerInit<ClientHandler> listenerInit = new ClientListenerInit<>(ClientHandler.class, 51020);
+		ServerInit<ClientHandler> serverInit = new ServerInit<>(mr, 50, listenerInit);
+		Server server = new AuthServer<>(serverInit, authenticator);
 		server.blockingStart();
 		assertTrue(server.isInitialized());
 		server.shutdown();

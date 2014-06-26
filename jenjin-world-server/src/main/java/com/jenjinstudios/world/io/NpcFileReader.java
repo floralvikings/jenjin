@@ -12,8 +12,6 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.LinkedList;
@@ -34,21 +32,10 @@ public class NpcFileReader
 	private final World world;
 
 	/**
-	 * Construct a new NPCFileReader for the given file.
-	 * @param world The world which will be used to retrieve location references; this object is not modified, only read.
-	 * @param npcFile The file containing the NPC info.
-	 * @throws IOException If there's an error reading the file.
-	 * @throws ParserConfigurationException If there's an error parsing the XML.
-	 * @throws SAXException If there's an error validating the XML.
-	 */
-	public NpcFileReader(World world, File npcFile) throws IOException, ParserConfigurationException, SAXException {
-		this(world, new FileInputStream(npcFile));
-	}
-
-	/**
 	 * Construct a new NPCFileReader for the given input stream.
 	 * @param inputStream The stream containing the NPC XML.
-	 * @param world The world which will be used to retrieve location references; this object is not modified, only read.
+	 * @param world The world which will be used to retrieve location references; this object is not modified, only
+	 * read.
 	 * @throws ParserConfigurationException If there's an error parsing the XML.
 	 * @throws IOException If there's an error reading the stream.
 	 * @throws SAXException If there's an error validating the XML.
@@ -68,7 +55,7 @@ public class NpcFileReader
 	public List<NPC> read() {
 		LinkedList<NPC> r = new LinkedList<>();
 		NodeList npcNodes = npcDocument.getElementsByTagName(NPC_TAG_NAME);
-		for(int i=0; i<npcNodes.getLength(); i++)
+		for (int i = 0; i < npcNodes.getLength(); i++)
 		{
 			Element npcElement = (Element) npcNodes.item(i);
 			String name = npcElement.getAttribute("name");
@@ -82,7 +69,7 @@ public class NpcFileReader
 			currentNPC.setZoneID(zoneID);
 
 			List<Location> wanderTargets = parseWanderTargets(zoneID, npcElement.getElementsByTagName("wander_targets"));
-			for(Location location : wanderTargets)
+			for (Location location : wanderTargets)
 			{
 				currentNPC.addWanderTarget(location);
 			}
@@ -100,11 +87,11 @@ public class NpcFileReader
 	private List<Location> parseWanderTargets(int zoneID, NodeList wanderTargetsLists) {
 		LinkedList<Location> targetList = new LinkedList<>();
 		Zone targetZone = world.getZone(zoneID);
-		for(int i=0; i<wanderTargetsLists.getLength(); i++)
+		for (int i = 0; i < wanderTargetsLists.getLength(); i++)
 		{
-			Element wanderTargetsList = (Element)wanderTargetsLists.item(i);
+			Element wanderTargetsList = (Element) wanderTargetsLists.item(i);
 			NodeList wanderTargets = wanderTargetsList.getElementsByTagName("wander_target");
-			for(int j=0; j<wanderTargets.getLength(); j++)
+			for (int j = 0; j < wanderTargets.getLength(); j++)
 			{
 				Element wanderTarget = (Element) wanderTargets.item(j);
 				int xLoc = Integer.parseInt(wanderTarget.getAttribute("xLoc"));
@@ -122,11 +109,11 @@ public class NpcFileReader
 	 */
 	private TreeMap<String, Boolean> parseBehaviorElements(NodeList behaviorsElements) {
 		TreeMap<String, Boolean> behaviors = new TreeMap<>();
-		for(int i=0; i<behaviorsElements.getLength(); i++)
+		for (int i = 0; i < behaviorsElements.getLength(); i++)
 		{
 			Element behaviorsElement = (Element) behaviorsElements.item(i);
 			NodeList behaviorElements = behaviorsElement.getElementsByTagName("behavior");
-			for(int j=0; j<behaviorElements.getLength(); j++)
+			for (int j = 0; j < behaviorElements.getLength(); j++)
 			{
 				Element behaviorElement = (Element) behaviorElements.item(i);
 				String name = behaviorElement.getAttribute("name");

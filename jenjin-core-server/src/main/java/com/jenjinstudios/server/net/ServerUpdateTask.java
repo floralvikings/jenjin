@@ -41,6 +41,7 @@ class ServerUpdateTask extends TimerTask
 		cycleNum = 0;
 	}
 
+	@Override
 	public void run() {
 		newCycle();
 		boolean clientsAdded = server.getNewClients();

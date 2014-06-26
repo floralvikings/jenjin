@@ -26,6 +26,7 @@ public class ClientPlayer extends Actor
 	 * Set the absolute angle of this player.
 	 * @param absoluteAngle The new absolute angle of this player.
 	 */
+	@Override
 	public void setAbsoluteAngle(double absoluteAngle) {
 		// Helps reduce repetitive messages trying to force walking through a wall.
 		if (forcedMoveState != null && absoluteAngle == forcedMoveState.absoluteAngle)
@@ -36,6 +37,7 @@ public class ClientPlayer extends Actor
 		super.setAbsoluteAngle(absoluteAngle);
 	}
 
+	@Override
 	public void setRelativeAngle(double relativeAngle) {
 		// TODO Better way of handling this check?
 		// Helps reduce repetitive messages trying to force walking through a wall.
@@ -58,6 +60,7 @@ public class ClientPlayer extends Actor
 	 * Calculate the step length at the current time.
 	 * @return The current step length.
 	 */
+	@Override
 	protected double calcStepLength() {
 		return ((System.nanoTime() - (double) getLastStepTime()) / 1000000000)
 				* ClientActor.MOVE_SPEED;

@@ -26,6 +26,7 @@ public abstract class AuthClientExecutableMessage extends ClientExecutableMessag
 	 * Get the client invoking this ExecutableMessage.
 	 * @return The client invoking this ExecutableMessage.
 	 */
+	@Override
 	protected AuthClient getClient() {
 		return client;
 	}
