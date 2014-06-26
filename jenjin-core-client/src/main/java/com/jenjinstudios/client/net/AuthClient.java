@@ -1,9 +1,7 @@
 package com.jenjinstudios.client.net;
 
+import com.jenjinstudios.core.MessageIO;
 import com.jenjinstudios.core.io.Message;
-import com.jenjinstudios.core.io.MessageInputStream;
-import com.jenjinstudios.core.io.MessageOutputStream;
-import com.jenjinstudios.core.io.MessageRegistry;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -37,8 +35,8 @@ public class AuthClient extends Client
 	 * @param username The username that will be used by this client.
 	 * @param password The password that will be used by this client.
 	 */
-	public AuthClient(MessageInputStream in, MessageOutputStream out, MessageRegistry mr, String username, String password) {
-		super(in, out, mr);
+	public AuthClient(MessageIO messageIO, String username, String password) {
+		super(messageIO);
 		this.username = username;
 		this.password = password;
 	}

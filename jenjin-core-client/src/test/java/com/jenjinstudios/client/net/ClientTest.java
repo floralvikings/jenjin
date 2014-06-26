@@ -1,5 +1,6 @@
 package com.jenjinstudios.client.net;
 
+import com.jenjinstudios.core.MessageIO;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageInputStream;
 import com.jenjinstudios.core.io.MessageOutputStream;
@@ -28,7 +29,8 @@ public class ClientTest
 		MessageInputStream in = Mockito.mock(MessageInputStream.class);
 		MessageOutputStream out = Mockito.mock(MessageOutputStream.class);
 		MessageRegistry mr = Mockito.mock(MessageRegistry.class);
-		Client client = new Client(in, out, mr);
+		MessageIO messageIO = new MessageIO(in, out, mr);
+		Client client = new Client(messageIO);
 		client.addRepeatedTask(r);
 		client.runRepeatedTasks();
 		Mockito.verify(r).run();
@@ -51,8 +53,8 @@ public class ClientTest
 
 		MessageInputStream in = new MessageInputStream(mr, bis);
 		MessageOutputStream out = new MessageOutputStream(mr, bos);
-
-		Client client = new Client(in, out, mr);
+		MessageIO messageIO = new MessageIO(in, out, mr);
+		Client client = new Client(messageIO);
 		client.run();
 
 		Assert.assertEquals(client.getPeriod(), period);
@@ -71,8 +73,8 @@ public class ClientTest
 		MessageOutputStream out = Mockito.mock(MessageOutputStream.class);
 
 		OngoingStubbing<Message> inReturn = Mockito.when(in.readMessage()).thenReturn(fcr);
-
-		Client client = new Client(in, out, mr);
+		MessageIO messageIO = new MessageIO(in, out, mr);
+		Client client = new Client(messageIO);
 
 		// Nastiness.
 		byte[] clientKey = client.getClientPublicKey().getEncoded();
@@ -109,8 +111,8 @@ public class ClientTest
 		// Mock a socket which returns the mocked stream.
 		MessageInputStream in = new MessageInputStream(mr, bis);
 		MessageOutputStream out = new MessageOutputStream(mr, bos);
-
-		Client client = new Client(in, out, mr);
+		MessageIO messageIO = new MessageIO(in, out, mr);
+		Client client = new Client(messageIO);
 		client.run();
 	}
 }

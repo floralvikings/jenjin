@@ -1,5 +1,6 @@
 package com.jenjinstudios.client.net;
 
+import com.jenjinstudios.core.MessageIO;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageInputStream;
 import com.jenjinstudios.core.io.MessageOutputStream;
@@ -31,8 +32,8 @@ public class AuthClientTest
 
 		OngoingStubbing<Message> isWhen = Mockito.when(mis.readMessage()).
 				thenReturn(firstConnectResponse).thenReturn(blankMessage);
-
-		AuthClient client = new AuthClient(mis, mos, mr, "foo", "bar");
+		MessageIO messageIO = new MessageIO(mis, mos, mr);
+		AuthClient client = new AuthClient(messageIO, "foo", "bar");
 
 		// Get client key and make a message for it
 		byte[] clientKey = client.getClientPublicKey().getEncoded();
@@ -71,8 +72,8 @@ public class AuthClientTest
 
 		OngoingStubbing<Message> isWhen = Mockito.when(mis.readMessage()).
 				thenReturn(firstConnectResponse).thenReturn(blankMessage);
-
-		AuthClient client = new AuthClient(mis, mos, mr, "foo", "bar");
+		MessageIO messageIO = new MessageIO(mis, mos, mr);
+		AuthClient client = new AuthClient(messageIO, "foo", "bar");
 
 		// Get client key and make a message for it
 		byte[] clientKey = client.getClientPublicKey().getEncoded();

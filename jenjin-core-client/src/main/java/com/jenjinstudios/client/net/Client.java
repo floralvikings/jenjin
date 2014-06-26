@@ -2,10 +2,8 @@ package com.jenjinstudios.client.net;
 
 import com.jenjinstudios.client.message.ClientMessageFactory;
 import com.jenjinstudios.core.Connection;
+import com.jenjinstudios.core.MessageIO;
 import com.jenjinstudios.core.io.Message;
-import com.jenjinstudios.core.io.MessageInputStream;
-import com.jenjinstudios.core.io.MessageOutputStream;
-import com.jenjinstudios.core.io.MessageRegistry;
 
 import java.security.*;
 import java.util.LinkedList;
@@ -41,8 +39,8 @@ public class Client extends Connection
 	/**
 	 * Construct a new client and attempt to connect to the server over the specified port.
 	 */
-	protected Client(MessageInputStream in, MessageOutputStream out, MessageRegistry mr) {
-		super(in, out, mr);
+	protected Client(MessageIO messageIO) {
+		super(messageIO);
 		repeatedTasks = new LinkedList<>();
 		generateKeys();
 		this.messageFactory = new ClientMessageFactory(getMessageRegistry());
@@ -82,8 +80,7 @@ public class Client extends Connection
 
 	/**
 	 * Start the client, blocking until the client has successfully initialized.
-	 * @return The success of the client start.
-	 * initializing.
+	 * @return The success of the client start. initializing.
 	 */
 	public boolean blockingStart() {
 		long startTime = System.currentTimeMillis();

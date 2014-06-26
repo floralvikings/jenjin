@@ -1,5 +1,6 @@
 package com.jenjinstudios.server.net;
 
+import com.jenjinstudios.core.MessageIO;
 import com.jenjinstudios.core.io.MessageInputStream;
 import com.jenjinstudios.core.io.MessageOutputStream;
 
@@ -48,7 +49,7 @@ class ClientListener<T extends ClientHandler> implements Runnable
 		/* The class of client handlers created by this listener. */
 		try
 		{
-			handlerConstructor = handlerClass.getConstructor(serverClass, MessageInputStream.class, MessageOutputStream.class);
+			handlerConstructor = handlerClass.getConstructor(serverClass, MessageIO.class);
 		} catch (NoSuchMethodException e)
 		{
 			LOGGER.log(Level.SEVERE, "Unable to find appropriate ClientHandler constructor: " + handlerClass.getName(), e);
@@ -115,7 +116,8 @@ class ClientListener<T extends ClientHandler> implements Runnable
 	private void addNewClient(MessageInputStream in, MessageOutputStream out) {
 		try
 		{
-			T newHandler = handlerConstructor.newInstance(server, in, out);
+			MessageIO messageIO = new MessageIO(in, out, server.getMessageRegistry());
+			T newHandler = handlerConstructor.newInstance(server, messageIO);
 			newHandler.sendFirstConnectResponse();
 			addNewClient(newHandler);
 		} catch (InstantiationException | IllegalAccessException e)

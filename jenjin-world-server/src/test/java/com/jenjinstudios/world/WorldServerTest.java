@@ -1,5 +1,6 @@
 package com.jenjinstudios.world;
 
+import com.jenjinstudios.core.MessageIO;
 import com.jenjinstudios.core.io.MessageInputStream;
 import com.jenjinstudios.core.io.MessageOutputStream;
 import com.jenjinstudios.core.io.MessageRegistry;
@@ -80,12 +81,13 @@ public class WorldServerTest
 	 * @throws Exception If there's an exception.
 	 */
 	public static WorldClient initWorldClient() throws Exception {
-		String user = "TestAccount1";
-		LOGGER.log(Level.INFO, "Logging into account {0}", user);
+		String username = "TestAccount1";
+		LOGGER.log(Level.INFO, "Logging into account {0}", username);
 		Socket sock = new Socket("localhost", port);
 		MessageInputStream in = new MessageInputStream(mr, sock.getInputStream());
 		MessageOutputStream out = new MessageOutputStream(mr, sock.getOutputStream());
-		WorldClient worldClient = new WorldClient(in, out, mr, user, "testPassword", new File("resources/WorldTestFile.xml"));
+		MessageIO messageIO = new MessageIO(in, out, mr);
+		WorldClient worldClient = new WorldClient(messageIO, username, "testPassword", new File("resources/WorldTestFile.xml"));
 		worldClient.blockingStart();
 		worldClient.sendBlockingWorldFileRequest();
 		worldClient.sendBlockingLoginRequest();

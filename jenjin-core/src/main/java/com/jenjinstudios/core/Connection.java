@@ -28,14 +28,14 @@ public class Connection extends Thread
 	private boolean aesKeySet;
 	private boolean running;
 
-	protected Connection(MessageInputStream in, MessageOutputStream out, MessageRegistry mr) {
-		this.messageRegistry = mr;
-		this.inputStream = in;
-		this.outputStream = out;
+	protected Connection(MessageIO streams) {
+		this.messageRegistry = streams.getMr();
+		this.inputStream = streams.getIn();
+		this.outputStream = streams.getOut();
 		outgoingMessages = new LinkedList<>();
 		pingTracker = new PingTracker();
 		executableMessageQueue = new ExecutableMessageQueue();
-		messageFactory = new MessageFactory(mr);
+		messageFactory = new MessageFactory(messageRegistry);
 		messageExecutor = new MessageExecutor(this, inputStream);
 	}
 

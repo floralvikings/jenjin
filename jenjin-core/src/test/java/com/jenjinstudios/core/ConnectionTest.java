@@ -29,8 +29,8 @@ public class ConnectionTest
 
 		MessageInputStream messageInputStream = new MessageInputStream(mr, in);
 		MessageOutputStream messageOutputStream = new MessageOutputStream(mr, bos);
-
-		Connection connection = new Connection(messageInputStream, messageOutputStream, mr);
+		MessageIO messageIO = new MessageIO(messageInputStream, messageOutputStream, mr);
+		Connection connection = new Connection(messageIO);
 		connection.start();
 		Thread.sleep(100);
 		connection.runQueuedExecutableMessages();
@@ -55,8 +55,8 @@ public class ConnectionTest
 
 		MessageInputStream messageInputStream = new MessageInputStream(mr, in);
 		MessageOutputStream messageOutputStream = new MessageOutputStream(mr, bos);
-
-		Connection connection = new Connection(messageInputStream, messageOutputStream, mr);
+		MessageIO messageIO = new MessageIO(messageInputStream, messageOutputStream, mr);
+		Connection connection = new Connection(messageIO);
 		connection.closeLink();
 
 		Message msg = mr.createMessage("InvalidMessage");
@@ -78,8 +78,8 @@ public class ConnectionTest
 		pingRequest.setArgument("requestTimeNanos", 123456789l);
 
 		Mockito.when(messageInputStream.readMessage()).thenReturn(pingRequest).thenReturn(mr.createMessage("BlankMessage"));
-
-		Connection connection = new Connection(messageInputStream, messageOutputStream, mr);
+		MessageIO messageIO = new MessageIO(messageInputStream, messageOutputStream, mr);
+		Connection connection = new Connection(messageIO);
 		connection.start();
 		Thread.sleep(100);
 		connection.runQueuedExecutableMessages();
@@ -105,8 +105,8 @@ public class ConnectionTest
 
 		MessageInputStream messageInputStream = new MessageInputStream(mr, in);
 		MessageOutputStream messageOutputStream = new MessageOutputStream(mr, bos);
-
-		Connection connection = new Connection(messageInputStream, messageOutputStream, mr);
+		MessageIO messageIO = new MessageIO(messageInputStream, messageOutputStream, mr);
+		Connection connection = new Connection(messageIO);
 
 		// Create and run the connection.  Normally, we would use connection.start() to spawn a new thread
 		// but for testing purposes we want the connection to run in the current thread.

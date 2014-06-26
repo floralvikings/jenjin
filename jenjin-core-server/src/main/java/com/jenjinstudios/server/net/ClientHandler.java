@@ -1,9 +1,8 @@
 package com.jenjinstudios.server.net;
 
 import com.jenjinstudios.core.Connection;
+import com.jenjinstudios.core.MessageIO;
 import com.jenjinstudios.core.io.Message;
-import com.jenjinstudios.core.io.MessageInputStream;
-import com.jenjinstudios.core.io.MessageOutputStream;
 import com.jenjinstudios.server.message.ServerMessageFactory;
 import com.jenjinstudios.server.sql.LoginException;
 
@@ -36,8 +35,8 @@ public class ClientHandler extends Connection
 	 * @param s The server for which this handler works.
 	 * @throws IOException If the socket is unable to connect.
 	 */
-	public ClientHandler(AuthServer<? extends ClientHandler> s, MessageInputStream in, MessageOutputStream out) throws IOException {
-		super(in, out, s.getMessageRegistry());
+	public ClientHandler(AuthServer<? extends ClientHandler> s, MessageIO messageIO) throws IOException {
+		super(messageIO);
 		setName("ClientHandler"); // TODO Better name here?
 		server = s;
 

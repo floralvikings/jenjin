@@ -1,8 +1,7 @@
 package com.jenjinstudios.world;
 
+import com.jenjinstudios.core.MessageIO;
 import com.jenjinstudios.core.io.Message;
-import com.jenjinstudios.core.io.MessageInputStream;
-import com.jenjinstudios.core.io.MessageOutputStream;
 import com.jenjinstudios.server.net.ClientHandler;
 import com.jenjinstudios.world.message.WorldServerMessageFactory;
 import com.jenjinstudios.world.state.MoveState;
@@ -33,8 +32,8 @@ public class WorldClientHandler extends ClientHandler
 	 * @param s The server for which this handler works.
 	 * @throws java.io.IOException If the socket is unable to connect.
 	 */
-	public WorldClientHandler(WorldServer s, MessageInputStream in, MessageOutputStream out) throws IOException {
-		super(s, in, out);
+	public WorldClientHandler(WorldServer s, MessageIO messageIO) throws IOException {
+		super(s, messageIO);
 		server = s;
 		this.messageFactory = new WorldServerMessageFactory(this, server.getMessageRegistry());
 	}

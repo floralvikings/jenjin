@@ -1,10 +1,8 @@
 package com.jenjinstudios.world;
 
 import com.jenjinstudios.client.net.AuthClient;
+import com.jenjinstudios.core.MessageIO;
 import com.jenjinstudios.core.io.Message;
-import com.jenjinstudios.core.io.MessageInputStream;
-import com.jenjinstudios.core.io.MessageOutputStream;
-import com.jenjinstudios.core.io.MessageRegistry;
 import com.jenjinstudios.world.io.WorldDocumentException;
 import com.jenjinstudios.world.io.WorldDocumentReader;
 import com.jenjinstudios.world.message.WorldClientMessageFactory;
@@ -58,10 +56,10 @@ public class WorldClient extends AuthClient
 	 * @param worldFile The file containing the world information.
 	 */
 	// TODO Wrap these exceptions
-	public WorldClient(MessageInputStream in, MessageOutputStream out, MessageRegistry mr, String username, String password, File worldFile)
+	public WorldClient(MessageIO messageIO, String username, String password, File worldFile)
 			throws WorldDocumentException
 	{
-		super(in, out, mr, username, password);
+		super(messageIO, username, password);
 		this.password = password;
 		this.worldFile = worldFile;
 		if (worldFile.exists())
