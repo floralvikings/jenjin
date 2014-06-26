@@ -9,6 +9,7 @@ import org.testng.annotations.*;
 import org.testng.Assert;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -66,7 +67,8 @@ public class WorldDocumentWriterTest
 		WorldDocumentWriter worldDocumentWriter = new WorldDocumentWriter(writeWorld);
 		worldDocumentWriter.write(worldFile);
 
-		WorldDocumentReader worldDocumentReader = new WorldDocumentReader(worldFile);
+		FileInputStream inputStream = new FileInputStream(worldFile);
+		WorldDocumentReader worldDocumentReader = new WorldDocumentReader(inputStream);
 		World readWorld = worldDocumentReader.read();
 
 

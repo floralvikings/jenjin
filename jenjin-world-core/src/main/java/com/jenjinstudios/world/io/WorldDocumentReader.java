@@ -38,26 +38,6 @@ public class WorldDocumentReader
 
 	/**
 	 * Construct a new WorldFileReader pointing to the specified file.
-	 * @param worldFile The file containing the world information.
-	 */
-	public WorldDocumentReader(File worldFile) throws WorldDocumentException {
-		this(getFileInputStream(worldFile));
-	}
-
-	private static FileInputStream getFileInputStream(File worldFile) throws WorldDocumentException {
-		FileInputStream inputStream;
-		try
-		{
-			inputStream = new FileInputStream(worldFile);
-		} catch (FileNotFoundException e)
-		{
-			throw new WorldDocumentException("Unable to find world file.");
-		}
-		return inputStream;
-	}
-
-	/**
-	 * Construct a new WorldFileReader pointing to the specified file.
 	 * @param inputStream The input stream containing the world information.
 	 */
 	public WorldDocumentReader(InputStream inputStream) throws WorldDocumentException {
@@ -191,21 +171,26 @@ public class WorldDocumentReader
 			NamedNodeMap attributes = currentLocationNode.getAttributes();
 			int x = Integer.parseInt(attributes.getNamedItem("x").getTextContent());
 			int y = Integer.parseInt(attributes.getNamedItem("y").getTextContent());
-			TreeMap<String, String> properties = new TreeMap<>();
-			for (int j = 0; j < attributes.getLength(); j++)
-			{
-				Attr item = (Attr) attributes.item(j);
-				if (item != null && !"x".equals(item.getName()) && !"y".equals(item.getName()))
-				{
-					String name = item.getName();
-					String value = item.getValue();
-					properties.put(name, value);
-				}
-			}
+			TreeMap<String, String> properties = getLocationProperties(attributes);
 			LocationProperties locationProperties = new LocationProperties(properties);
 			locations[i] = new Location(x, y, locationProperties);
 		}
 		return locations;
+	}
+
+	private TreeMap<String, String> getLocationProperties(NamedNodeMap attributes) {
+		TreeMap<String, String> properties = new TreeMap<>();
+		for (int j = 0; j < attributes.getLength(); j++)
+		{
+			Attr item = (Attr) attributes.item(j);
+			if (item != null && !"x".equals(item.getName()) && !"y".equals(item.getName()))
+			{
+				String name = item.getName();
+				String value = item.getValue();
+				properties.put(name, value);
+			}
+		}
+		return properties;
 	}
 
 }

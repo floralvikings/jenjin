@@ -8,10 +8,7 @@ import com.jenjinstudios.world.io.WorldDocumentReader;
 import com.jenjinstudios.world.message.WorldClientMessageFactory;
 import com.jenjinstudios.world.state.MoveState;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -64,10 +61,23 @@ public class WorldClient extends AuthClient
 		this.worldFile = worldFile;
 		if (worldFile.exists())
 		{
-			this.worldDocumentReader = new WorldDocumentReader(worldFile);
+			FileInputStream fileInputStream = getWorldFileInputStream(worldFile);
+			this.worldDocumentReader = new WorldDocumentReader(fileInputStream);
 			this.world = worldDocumentReader.read();
 		}
 		this.messageFactory = new WorldClientMessageFactory(getMessageRegistry());
+	}
+
+	private FileInputStream getWorldFileInputStream(File worldFile) throws WorldDocumentException {
+		FileInputStream fileInputStream;
+		try
+		{
+			fileInputStream = new FileInputStream(worldFile);
+		} catch (FileNotFoundException e)
+		{
+			throw new WorldDocumentException("Unable to find world file.", e);
+		}
+		return fileInputStream;
 	}
 
 	@Override
