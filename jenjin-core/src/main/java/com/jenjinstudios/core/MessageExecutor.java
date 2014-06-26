@@ -13,7 +13,7 @@ import java.util.logging.Logger;
 public class MessageExecutor
 {
 	private static final Logger LOGGER = Logger.getLogger(MessageExecutor.class.getName());
-	private Connection connection;
+	private final Connection connection;
 	private final MessageInputStream inputStream;
 
 

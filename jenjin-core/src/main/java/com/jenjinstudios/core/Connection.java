@@ -20,27 +20,23 @@ public class Connection extends Thread
 	private final LinkedList<Message> outgoingMessages;
 	private final ExecutableMessageQueue executableMessageQueue;
 	private final MessageFactory messageFactory;
-	private final MessageInputStream inputStream;
-	private final MessageOutputStream outputStream;
-	private final MessageRegistry messageRegistry;
+	private final MessageIO messageIO;
 	private final MessageExecutor messageExecutor;
 	private int invalidMsgCount;
 	private boolean aesKeySet;
 	private boolean running;
 
 	protected Connection(MessageIO streams) {
-		this.messageRegistry = streams.getMr();
-		this.inputStream = streams.getIn();
-		this.outputStream = streams.getOut();
+		this.messageIO = streams;
 		outgoingMessages = new LinkedList<>();
 		pingTracker = new PingTracker();
 		executableMessageQueue = new ExecutableMessageQueue();
-		messageFactory = new MessageFactory(messageRegistry);
-		messageExecutor = new MessageExecutor(this, inputStream);
+		messageFactory = new MessageFactory(messageIO.getMr());
+		messageExecutor = new MessageExecutor(this, messageIO.getIn());
 	}
 
 	public void queueOutgoingMessage(Message message) {
-		if (outputStream.isClosed())
+		if (messageIO.getOut().isClosed())
 		{
 			throw new MessageQueueException(message);
 		}
@@ -64,7 +60,7 @@ public class Connection extends Thread
 		try
 		{
 			LOGGER.log(Level.FINEST, "Connection {0} writing message {1}", new Object[]{getName(), o});
-			outputStream.writeMessage(o);
+			messageIO.getOut().writeMessage(o);
 		} catch (IOException e)
 		{
 			LOGGER.log(Level.SEVERE, "Unable to write message " + o + " to socket, shutting down.", e);
@@ -74,8 +70,8 @@ public class Connection extends Thread
 
 	public void setAESKey(byte[] key) {
 		aesKeySet = true;
-		inputStream.setAESKey(key);
-		outputStream.setAesKey(key);
+		messageIO.getIn().setAESKey(key);
+		messageIO.getOut().setAesKey(key);
 	}
 
 	@Override
@@ -111,7 +107,7 @@ public class Connection extends Thread
 	private void closeOutputStream() {
 		try
 		{
-			outputStream.close();
+			messageIO.getOut().close();
 		} catch (IOException e)
 		{
 			LOGGER.log(Level.INFO, "Issue closing output stream.", e);
@@ -121,7 +117,7 @@ public class Connection extends Thread
 	private void closeInputStream() {
 		try
 		{
-			inputStream.close();
+			messageIO.getIn().close();
 		} catch (IOException e)
 		{
 			LOGGER.log(Level.INFO, "Issue closing input stream.", e);
@@ -138,5 +134,5 @@ public class Connection extends Thread
 
 	protected boolean isAesKeySet() { return aesKeySet;}
 
-	public MessageRegistry getMessageRegistry() { return messageRegistry; }
+	public MessageRegistry getMessageRegistry() { return messageIO.getMr(); }
 }

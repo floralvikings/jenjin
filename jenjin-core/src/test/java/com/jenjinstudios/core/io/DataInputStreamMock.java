@@ -22,12 +22,12 @@ public class DataInputStreamMock
 		when = when(in.read());
 	}
 
-	public void mockReadShort(short s) throws IOException {
+	public void mockReadShort(short s) {
 		byte[] bytes = ByteBuffer.allocate(2).putShort(s).array();
 		when = when.thenReturn(bytes[0] & 0xff).thenReturn(bytes[1] & 0xff);
 	}
 
-	public void mockReadBoolean(boolean b) throws IOException {
+	public void mockReadBoolean(boolean b) {
 		when = when.thenReturn(b ? 1 : 0);
 	}
 

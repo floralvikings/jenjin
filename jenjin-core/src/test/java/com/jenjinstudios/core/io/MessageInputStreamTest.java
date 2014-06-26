@@ -105,8 +105,8 @@ public class MessageInputStreamTest
 		mock.mockReadUtf("FooBar");
 		mock.mockReadInt(123);
 		mock.mockReadLong(456);
-		mock.mockReadDouble(7.89);
-		mock.mockReadFloat(0.123f);
+		mock.mockReadDouble(Math.random());
+		mock.mockReadFloat((float) Math.random());
 		mock.mockReadShort((short) 246);
 		mock.mockReadBoolean(true);
 		mock.mockReadByte((byte) 867);
