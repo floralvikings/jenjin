@@ -2,6 +2,7 @@ package com.jenjinstudios.world;
 
 import com.jenjinstudios.server.net.AuthServer;
 import com.jenjinstudios.server.net.ServerInit;
+import com.jenjinstudios.world.io.WorldDocumentException;
 import com.jenjinstudios.world.io.WorldDocumentReader;
 import com.jenjinstudios.world.sql.WorldAuthenticator;
 
@@ -32,7 +33,11 @@ public class WorldServer extends AuthServer<WorldClientHandler>
 	 * @throws NoSuchMethodException If there is no appropriate constructor for the specified ClientHandler
 	 * constructor.
 	 */
-	public WorldServer(ServerInit<WorldClientHandler> initInfo, WorldAuthenticator sqlHandler, WorldDocumentReader worldDocumentReader) throws IOException, NoSuchMethodException {
+	public WorldServer(ServerInit<WorldClientHandler> initInfo,
+					   WorldAuthenticator sqlHandler,
+					   WorldDocumentReader worldDocumentReader)
+			throws IOException, WorldDocumentException, NoSuchMethodException
+	{
 		super(initInfo, sqlHandler);
 		this.world = worldDocumentReader.read();
 		worldFileBytes = worldDocumentReader.getWorldFileBytes();
