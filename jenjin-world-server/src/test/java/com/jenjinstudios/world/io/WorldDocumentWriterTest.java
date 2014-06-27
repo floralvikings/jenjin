@@ -10,6 +10,8 @@ import org.testng.Assert;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -64,8 +66,9 @@ public class WorldDocumentWriterTest
 		Location[] locArray = {testLocation};
 		World writeWorld = new World(new Zone[]{new Zone(0, 5, 5, locArray)});
 
+		OutputStream out = new FileOutputStream(worldFile);
 		WorldDocumentWriter worldDocumentWriter = new WorldDocumentWriter(writeWorld);
-		worldDocumentWriter.write(worldFile);
+		worldDocumentWriter.write(out);
 
 		FileInputStream inputStream = new FileInputStream(worldFile);
 		WorldDocumentReader worldDocumentReader = new WorldDocumentReader(inputStream);

@@ -10,7 +10,7 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import java.io.File;
+import java.io.OutputStream;
 
 /**
  * Used to write world objects to file.
@@ -27,13 +27,7 @@ public class WorldDocumentWriter
 	 */
 	public WorldDocumentWriter(World world) { this.world = world; }
 
-	/**
-	 * Construct an XML document for the world and write it to the specified file.
-	 * @param file The file to which to write the world.
-	 * @throws javax.xml.parsers.ParserConfigurationException If there's an error configuring the XML parser
-	 * @throws javax.xml.transform.TransformerException If there's an error configuring the xml transformer.
-	 */
-	public void write(File file) throws ParserConfigurationException, TransformerException {
+	public void write(OutputStream outputStream) throws ParserConfigurationException, TransformerException {
 		Document worldDoc = WorldXmlBuilder.createWorldDocument(world);
 
 		TransformerFactory transformerFactory = TransformerFactory.newInstance();
@@ -42,7 +36,7 @@ public class WorldDocumentWriter
 		transformer.setOutputProperty(OutputKeys.INDENT, "yes");
 		transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
 		DOMSource source = new DOMSource(worldDoc);
-		StreamResult result = new StreamResult(file);
+		StreamResult result = new StreamResult(outputStream);
 		transformer.transform(source, result);
 	}
 
