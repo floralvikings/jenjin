@@ -5,10 +5,6 @@ package com.jenjinstudios.world.io;
  */
 public class WorldDocumentException extends Exception
 {
-	public WorldDocumentException(String message) {
-		super(message);
-	}
-
 	public WorldDocumentException(String message, Throwable cause) {
 		super(message, cause);
 	}

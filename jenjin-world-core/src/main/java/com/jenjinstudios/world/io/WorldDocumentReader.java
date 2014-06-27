@@ -83,7 +83,7 @@ public class WorldDocumentReader
 			return worldDocument;
 		} catch (SAXException | IOException e)
 		{
-			throw new WorldDocumentException("Unable to parse WorldDocument from input stream");
+			throw new WorldDocumentException("Unable to parse WorldDocument from input stream", e);
 		}
 	}
 
