@@ -4,10 +4,7 @@ import com.jenjinstudios.world.World;
 import org.w3c.dom.Document;
 
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.OutputStream;
@@ -27,17 +24,51 @@ public class WorldDocumentWriter
 	 */
 	public WorldDocumentWriter(World world) { this.world = world; }
 
-	public void write(OutputStream outputStream) throws ParserConfigurationException, TransformerException {
-		Document worldDoc = WorldXmlBuilder.createWorldDocument(world);
-
-		TransformerFactory transformerFactory = TransformerFactory.newInstance();
-		Transformer transformer = transformerFactory.newTransformer();
-		transformer.setOutputProperty("{http://xml.apache.org/xalan}line-separator", "\n\n");
-		transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-		transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
-		DOMSource source = new DOMSource(worldDoc);
+	public void write(OutputStream outputStream) throws WorldDocumentException {
+		DOMSource source = createWorldDomSource();
 		StreamResult result = new StreamResult(outputStream);
-		transformer.transform(source, result);
+		transformSourceIntoStream(source, result);
+	}
+
+	private DOMSource createWorldDomSource() throws WorldDocumentException {
+		Document worldDoc = createWorldDocument();
+		return new DOMSource(worldDoc);
+	}
+
+	private Transformer createTransformer() throws WorldDocumentException {
+		try
+		{
+			TransformerFactory transformerFactory = TransformerFactory.newInstance();
+			Transformer transformer = transformerFactory.newTransformer();
+			transformer.setOutputProperty("{http://xml.apache.org/xalan}line-separator", "\n\n");
+			transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+			transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
+			return transformer;
+		} catch (TransformerConfigurationException e)
+		{
+			throw new WorldDocumentException("Couldn't create transformer.", e);
+		}
+	}
+
+	private Document createWorldDocument() throws WorldDocumentException {
+		try
+		{
+			return WorldXmlBuilder.createWorldDocument(world);
+		} catch (ParserConfigurationException e)
+		{
+			throw new WorldDocumentException("Couldn't create world document.", e);
+		}
+	}
+
+	private void transformSourceIntoStream(DOMSource source, StreamResult result) throws WorldDocumentException {
+		try
+		{
+			Transformer transformer = createTransformer();
+			transformer.transform(source, result);
+		} catch (TransformerException e)
+		{
+			throw new WorldDocumentException("Couldn't transform data to stream.", e);
+		}
 	}
 
 }
