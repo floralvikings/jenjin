@@ -56,4 +56,14 @@ public class WorldDocumentReaderTest
 		WorldDocumentReader worldDocumentReader = new WorldDocumentReader(inputStream);
 		worldDocumentReader.read();
 	}
+
+	@Test
+	public void testGetWorldFileBytes() throws Exception {
+		byte[] worldStringBytes = validWorldString.getBytes(StandardCharsets.UTF_8);
+		InputStream inputStream = new ByteArrayInputStream(worldStringBytes);
+		WorldDocumentReader worldDocumentReader = new WorldDocumentReader(inputStream);
+		worldDocumentReader.read();
+
+		Assert.assertEquals(worldDocumentReader.getWorldFileBytes(), worldStringBytes);
+	}
 }
