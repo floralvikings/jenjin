@@ -189,8 +189,6 @@ public class ServerTest
 		Message loginResponse = in.readMessage();
 		assertTrue((boolean) loginResponse.getArgument("success"));
 
-		System.out.println("Here");
-
 		Socket sock2 = new Socket("127.0.0.1", 51019);
 		MessageInputStream in2 = new MessageInputStream(mr, sock2.getInputStream());
 		MessageOutputStream out2 = new MessageOutputStream(mr, sock2.getOutputStream());

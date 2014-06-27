@@ -43,28 +43,42 @@ public class MessageRegistry
 		LinkedList<String> jarMessageEntries = new LinkedList<>();
 		String classPath = System.getProperty("java.class.path");
 		String[] pathElements = classPath.split(System.getProperty("path.separator"));
-
 		for (String fileName : pathElements)
 		{
-			File file = new File(fileName);
-			if (file.isDirectory() || !file.exists()) { continue; }
-			try (
-					FileInputStream inputStream = new FileInputStream(file);
-					ZipInputStream zip = new ZipInputStream(inputStream))
+			if (isCoreJar(fileName))
 			{
-				ZipEntry ze;
-				while ((ze = zip.getNextEntry()) != null)
-				{
-					String entryName = ze.getName();
-					if (entryName.endsWith("Messages.xml")) { jarMessageEntries.add(entryName); }
-				}
-			} catch (IOException ex)
-			{
-				LOGGER.log(Level.WARNING, "Unable to read JAR entry " + fileName, ex);
+				continue;
 			}
-
+			seachJarFile(jarMessageEntries, fileName);
 		}
 		return jarMessageEntries;
+	}
+
+	private static boolean isCoreJar(String fileName) {
+		String javaHome = System.getProperty("java.home");
+		return fileName.contains(javaHome);
+	}
+
+	private static void seachJarFile(LinkedList<String> jarMessageEntries, String fileName) {
+		File file = new File(fileName);
+		if (file.isDirectory() || !file.exists()) { return; }
+		try (FileInputStream inputStream = new FileInputStream(file);
+			 ZipInputStream zip = new ZipInputStream(inputStream))
+		{
+			searchZipEntries(jarMessageEntries, zip);
+		} catch (IOException ex)
+		{
+			LOGGER.log(Level.WARNING, "Unable to read JAR entry " + fileName, ex);
+		}
+	}
+
+	private static void searchZipEntries(LinkedList<String> jarMessageEntries, ZipInputStream zip) throws IOException {
+		ZipEntry ze;
+		while ((ze = zip.getNextEntry()) != null)
+		{
+			String entryName = ze.getName();
+			if (entryName.endsWith("Messages.xml")) { jarMessageEntries.add(entryName); }
+		}
 	}
 
 	/**
