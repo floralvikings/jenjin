@@ -113,4 +113,15 @@ public class Vector2DTest
 		Assert.assertEquals(distance, expectedDistance);
 	}
 
+	@Test
+	public void testHashCode() {
+		Vector2D vector1 = new Vector2D(10, 10);
+		Vector2D vector2 = new Vector2D(vector1);
+
+		int hash1 = vector1.hashCode();
+		int hash2 = vector2.hashCode();
+
+		Assert.assertEquals(hash2, hash1);
+	}
+
 }
