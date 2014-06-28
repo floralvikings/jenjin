@@ -32,7 +32,7 @@ public class Zone
 	 * @param ySize The y length of zone.
 	 * @param specialLocations Any special locations that should be set on zone creation.
 	 */
-	public Zone(int id, int xSize, int ySize, Location[] specialLocations) {
+	public Zone(int id, int xSize, int ySize, Location... specialLocations) {
 		this.id = id;
 		this.xSize = xSize;
 		this.ySize = ySize;
@@ -266,7 +266,7 @@ public class Zone
 	@SuppressWarnings("BooleanMethodIsAlwaysInverted")
 	private boolean addLocationToVisibilityRay(int x, int y, List<Location> ray) {
 		Location location = getLocationOnGrid(x, y);
-		if (location == null || "true".equals(location.getLocationProperties().getProperty("blocksVision")))
+		if (location == null || "true".equals(location.getProperties().getProperty("blocksVision")))
 		{
 			return false;
 		}

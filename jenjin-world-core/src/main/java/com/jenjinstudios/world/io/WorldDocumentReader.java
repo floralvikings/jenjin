@@ -1,7 +1,6 @@
 package com.jenjinstudios.world.io;
 
 import com.jenjinstudios.world.Location;
-import com.jenjinstudios.world.LocationProperties;
 import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.Zone;
 import org.w3c.dom.*;
@@ -15,7 +14,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.NoSuchAlgorithmException;
-import java.util.TreeMap;
+import java.util.Properties;
 
 /**
  * This class handles the reading of and construction from world xml files.
@@ -128,15 +127,14 @@ public class WorldDocumentReader
 			NamedNodeMap attributes = currentLocationNode.getAttributes();
 			int x = Integer.parseInt(attributes.getNamedItem("x").getTextContent());
 			int y = Integer.parseInt(attributes.getNamedItem("y").getTextContent());
-			TreeMap<String, String> properties = getLocationProperties(attributes);
-			LocationProperties locationProperties = new LocationProperties(properties);
-			locations[i] = new Location(x, y, locationProperties);
+			Properties properties = getLocationProperties(attributes);
+			locations[i] = new Location(x, y, properties);
 		}
 		return locations;
 	}
 
-	private TreeMap<String, String> getLocationProperties(NamedNodeMap attributes) {
-		TreeMap<String, String> properties = new TreeMap<>();
+	private Properties getLocationProperties(NamedNodeMap attributes) {
+		Properties properties = new Properties();
 		for (int j = 0; j < attributes.getLength(); j++)
 		{
 			Attr item = (Attr) attributes.item(j);
@@ -144,7 +142,7 @@ public class WorldDocumentReader
 			{
 				String name = item.getName();
 				String value = item.getValue();
-				properties.put(name, value);
+				properties.setProperty(name, value);
 			}
 		}
 		return properties;

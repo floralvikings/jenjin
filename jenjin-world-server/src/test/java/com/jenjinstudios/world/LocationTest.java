@@ -5,6 +5,7 @@ import org.testng.Assert;
 import org.testng.annotations.*;
 
 import java.util.LinkedList;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -112,12 +113,12 @@ public class LocationTest
 	public void testFindPath() {
 		int xSize = 100;
 		int ySize = 100;
-		LocationProperties blocked = new LocationProperties();
-		blocked.getProperties().put("walkable", "false");
+		Properties blocked = new Properties();
+		blocked.setProperty("walkable", "false");
 		Location blockedLocation01 = new Location(5, 2, blocked);
 		Location blockedLocation02 = new Location(5, 3, blocked);
 		Location blockedLocation03 = new Location(5, 4, blocked);
-		Zone testZone = new Zone(0, xSize, ySize, new Location[]{blockedLocation01, blockedLocation02, blockedLocation03});
+		Zone testZone = new Zone(0, xSize, ySize, blockedLocation01, blockedLocation02, blockedLocation03);
 
 		Location start = testZone.getLocationOnGrid(3, 3);
 		Location end = testZone.getLocationOnGrid(7, 3);

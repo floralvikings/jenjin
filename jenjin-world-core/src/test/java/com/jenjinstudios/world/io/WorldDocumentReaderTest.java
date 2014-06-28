@@ -33,7 +33,7 @@ public class WorldDocumentReaderTest
 		InputStream inputStream = new ByteArrayInputStream(worldStringBytes);
 		WorldDocumentReader worldDocumentReader = new WorldDocumentReader(inputStream);
 		World world = worldDocumentReader.read();
-		String walkable = world.getZone(0).getLocationOnGrid(1, 1).getLocationProperties().getProperty("walkable");
+		String walkable = world.getZone(0).getLocationOnGrid(1, 1).getProperties().getProperty("walkable");
 		Assert.assertEquals(walkable, "false");
 	}
 

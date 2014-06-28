@@ -60,14 +60,16 @@ public class Actor extends SightedObject
 	@Override
 	public void setUp() {
 		vectorBeforeStep = getVector2D();
-		synchronized (stateChanges) {
+		synchronized (stateChanges)
+		{
 			stateChanges.clear();
 		}
 	}
 
 	@Override
 	public void update() {
-		if (getLastStepTime() == 0) {
+		if (getLastStepTime() == 0)
+		{
 			setLastStepTime(getWorld().getLastUpdateCompleted());
 		}
 		step();
@@ -82,10 +84,12 @@ public class Actor extends SightedObject
 			resetVisibleLocations();
 		// Reset the array of visible actors.
 		resetVisibleObjects();
-		if (newState) {
-            newState = false;
+		if (newState)
+		{
+			newState = false;
 			resetAngles();
-			synchronized (stateChanges) {
+			synchronized (stateChanges)
+			{
 				stateChanges.add(new MoveState(getRelativeAngle(), getAbsoluteAngle(), getVector2D(), getLastStepTime()));
 			}
 		}
@@ -94,7 +98,8 @@ public class Actor extends SightedObject
 	/** Take a step, changing state and correcting steps if necessary. */
 	void step() {
 		double stepLength = calcStepLength();
-		if (!stepForward(stepLength)) {
+		if (!stepForward(stepLength))
+		{
 			setForcedState(new MoveState(MoveState.IDLE, getAbsoluteAngle(), getVector2D(), lastStepTime));
 			setRelativeAngle(MoveState.IDLE);
 		}
@@ -118,7 +123,7 @@ public class Actor extends SightedObject
 		Vector2D newVector = getVector2D().getVectorInDirection(stepLength, stepAngle);
 		Location newLocation = getWorld().getLocationForCoordinates(getZoneID(), newVector);
 		if (newLocation == null) { return false; }
-		boolean walkable = !"false".equals(newLocation.getLocationProperties().getProperty("walkable"));
+		boolean walkable = !"false".equals(newLocation.getProperties().getProperty("walkable"));
 		if (walkable) { setVector2D(newVector); }
 		return walkable;
 	}
@@ -148,8 +153,8 @@ public class Actor extends SightedObject
 	long getLastStepTime() { return lastStepTime; }
 
 	/**
-	 * Set the time at which this actor finished it's last step.  This method should only be used when the actor's step has
-	 * to be modified outside of the normal step cycle.
+	 * Set the time at which this actor finished it's last step.  This method should only be used when the actor's step
+	 * has to be modified outside of the normal step cycle.
 	 * @param lastStepTime The new time to use for this actors last completed step.
 	 */
 	public void setLastStepTime(long lastStepTime) { this.lastStepTime = lastStepTime; }

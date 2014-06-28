@@ -10,8 +10,7 @@ import org.w3c.dom.Element;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import java.util.List;
-import java.util.TreeMap;
+import java.util.*;
 
 /**
  * Used to create XML representations of World objects.
@@ -89,7 +88,7 @@ public class WorldXmlBuilder
 			for (int y = 0; y < zone.ySize; y++)
 			{
 				Location location = zone.getLocationOnGrid(x, y);
-				TreeMap<String, String> locationProperties = location.getLocationProperties().getProperties();
+				Properties locationProperties = location.getProperties();
 				if (locationProperties.size() > 0)
 				{
 					Element locationElement = createLocationElement(doc, location);
@@ -109,12 +108,15 @@ public class WorldXmlBuilder
 		Element locationElement = doc.createElement(LOC_TAG_NAME);
 		locationElement.setAttribute(LOC_X_ATTR, String.valueOf(location.X_COORDINATE));
 		locationElement.setAttribute(LOC_Y_ATTR, String.valueOf(location.Y_COORDINATE));
-		TreeMap<String, String> locationProperties = location.getLocationProperties().getProperties();
+		Properties locationProperties = location.getProperties();
 		if (locationProperties.size() > 0)
 		{
-			for (String name : locationProperties.keySet())
+			Enumeration<?> propertyNames = locationProperties.propertyNames();
+			ArrayList<?> list = Collections.list(propertyNames);
+			for (Object property : list)
 			{
-				String value = locationProperties.get(name);
+				String name = property.toString();
+				String value = locationProperties.getProperty(name);
 				Attr locAttr = doc.createAttribute(name);
 				locAttr.setValue(value);
 				locationElement.setAttributeNode(locAttr);

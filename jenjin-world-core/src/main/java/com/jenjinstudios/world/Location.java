@@ -19,7 +19,7 @@ public class Location
 	/** The objects residing in this location. */
 	private final HashSet<WorldObject> objects;
 	/** The locationProperties of this location. */
-	private final LocationProperties locationProperties;
+	private final Properties locationProperties;
 	/** Flags whether the adjacent locations are set. */
 	private boolean hasLocationsSet;
 	/** The location adjacent to the North. */
@@ -53,23 +53,22 @@ public class Location
 	 * @param y The y coordinate of the zone grid.
 	 */
 	public Location(int x, int y) {
-		this(x, y, new LocationProperties());
+		this(x, y, new Properties());
 	}
 
 	/**
 	 * Construct a location with the given position and locationProperties.
 	 * @param x The x coordinate.
 	 * @param y The y coordinate.
-	 * @param locationProperties1 The locationProperties.
 	 */
-	public Location(int x, int y, LocationProperties locationProperties1) {
+	public Location(int x, int y, Properties properties) {
 		diagonals = new LinkedList<>();
 		adjacentLocations = new LinkedList<>();
 		adjacentWalkableLocations = new LinkedList<>();
 		X_COORDINATE = x;
 		Y_COORDINATE = y;
 		center = new Vector2D(X_COORDINATE * SIZE + SIZE / 2, Y_COORDINATE * SIZE + SIZE / 2);
-		this.locationProperties = locationProperties1;
+		this.locationProperties = properties;
 		objects = new HashSet<>();
 	}
 
@@ -77,7 +76,7 @@ public class Location
 	 * Get the locationProperties of this location.
 	 * @return The locationProperties of this location.
 	 */
-	public LocationProperties getLocationProperties() { return locationProperties; }
+	public Properties getProperties() { return locationProperties; }
 
 	/**
 	 * Get the objects residing in this location, as an array.
@@ -231,7 +230,7 @@ public class Location
 		adjacentWalkableLocations.addAll(adjacentLocations);
 		for (Location walkable : adjacentLocations)
 		{
-			if ("false".equals(walkable.getLocationProperties().getProperty("walkable")))
+			if ("false".equals(walkable.getProperties().getProperty("walkable")))
 			{
 				adjacentWalkableLocations.remove(walkable);
 				for (Location blocked : walkable.getAdjacentLocations())
