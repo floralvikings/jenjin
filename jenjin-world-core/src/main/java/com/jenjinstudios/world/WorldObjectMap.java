@@ -17,13 +17,4 @@ public class WorldObjectMap extends HashMap<Integer, WorldObject>
 		}
 		return r;
 	}
-
-	@Override
-	public void clear() {
-		Object[] set = keySet().toArray();
-		for (Object i : set)
-		{
-			remove(i);
-		}
-	}
 }
