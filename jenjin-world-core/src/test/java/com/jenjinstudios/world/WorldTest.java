@@ -75,4 +75,13 @@ public class WorldTest
 		WorldObject retrieved = world.getObject(0);
 		Assert.assertEquals(retrieved, obj0);
 	}
+
+	@Test
+	public void testUpdateTimes() {
+		World world = new World();
+		world.update();
+		long startTime = world.getLastUpdateStarted();
+		long completeTime = world.getLastUpdateCompleted();
+		Assert.assertNotEquals(startTime, completeTime);
+	}
 }
