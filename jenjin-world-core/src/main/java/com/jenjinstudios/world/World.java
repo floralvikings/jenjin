@@ -2,7 +2,6 @@ package com.jenjinstudios.world;
 
 import com.jenjinstudios.world.math.Vector2D;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -21,8 +20,6 @@ public class World
 	private long lastUpdateCompleted;
 	/** The start time of the most recent update. */
 	private long lastUpdateStarted;
-	/** The time taken by the most recent update. */
-	private long lastUpdateTime;
 
 	/** Construct a new World. */
 	public World() {
@@ -64,7 +61,8 @@ public class World
 
 		object.setWorld(this);
 		object.setVector2D(object.getVector2D());
-		synchronized (worldObjects) {
+		synchronized (worldObjects)
+		{
 			object.setId(id);
 			worldObjects.put(id, object);
 		}
@@ -83,7 +81,8 @@ public class World
 	 * @param id The id.
 	 */
 	public void removeObject(int id) {
-		synchronized (worldObjects) {
+		synchronized (worldObjects)
+		{
 			worldObjects.remove(id);
 		}
 	}
@@ -114,7 +113,8 @@ public class World
 	/** Update all objects in the world. */
 	public void update() {
 		lastUpdateStarted = System.nanoTime();
-		synchronized (worldObjects) {
+		synchronized (worldObjects)
+		{
 			Collection<WorldObject> values = worldObjects.values();
 			for (WorldObject o : values)
 				if (o != null)
@@ -129,20 +129,6 @@ public class World
 					o.reset();
 		}
 		lastUpdateCompleted = System.nanoTime();
-		lastUpdateTime = lastUpdateCompleted - lastUpdateStarted;
-	}
-
-	/**
-	 * Get an area of location objects.
-	 * @param zoneID The ID of the zone in which to get the location area.
-	 * @param center The center of the area to return.
-	 * @param radius The radius of the area.
-	 * @return An ArrayList containing all valid locations in the specified area.
-	 */
-	public ArrayList<Location> getLocationArea(int zoneID, Vector2D center, int radius) {
-		Zone z = zones[zoneID];
-		if (z == null) { return null; }
-		return z.getLocationArea(center, radius);
 	}
 
 	/**
@@ -164,8 +150,10 @@ public class World
 	 */
 	public List<Integer> getZoneIDs() {
 		LinkedList<Integer> r = new LinkedList<>();
-		synchronized (zones) {
-			for (Zone z : zones) {
+		synchronized (zones)
+		{
+			for (Zone z : zones)
+			{
 				r.add(z.id);
 			}
 		}
@@ -179,8 +167,10 @@ public class World
 	 */
 	public Zone getZone(int id) {
 		Zone r = null;
-		synchronized (zones) {
-			for (Zone z : zones) {
+		synchronized (zones)
+		{
+			for (Zone z : zones)
+			{
 				if (z.id == id)
 					r = z;
 			}
@@ -188,26 +178,11 @@ public class World
 		return r;
 	}
 
-	/** Reset the world to it's original state. */
-	public void purgeObjects() {
-		synchronized (worldObjects) {
-			worldObjects.clear();
-		}
-	}
-
 	/**
 	 * Get the time at which the most recent update completed.
 	 * @return The time at which the most recent update completed.
 	 */
-	public long getLastUpdateCompleted() {
-		return lastUpdateCompleted;
-	}
-
-	/**
-	 * Get the time taken by the previous update.
-	 * @return The time taken by the previous update.
-	 */
-	public long getLastUpdateTime() { return lastUpdateTime; }
+	public long getLastUpdateCompleted() { return lastUpdateCompleted; }
 
 	/**
 	 * Get the time at which the most recent update started.
