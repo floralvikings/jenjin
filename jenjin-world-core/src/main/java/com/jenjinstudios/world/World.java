@@ -29,7 +29,7 @@ public class World
 		zones = new Zone[1];
 		/* The default size of the world's location grid. */
 		int DEFAULT_SIZE = 50;
-		zones[0] = new Zone(0, DEFAULT_SIZE, DEFAULT_SIZE, new Location[]{});
+		zones[0] = new Zone(0, DEFAULT_SIZE, DEFAULT_SIZE);
 		worldObjects = new WorldObjectMap();
 	}
 
