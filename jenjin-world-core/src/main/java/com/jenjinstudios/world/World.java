@@ -44,7 +44,8 @@ public class World
 	 * @param object The object to add.
 	 */
 	public void addObject(WorldObject object) {
-		this.addObject(object, worldObjects.size());
+		int id = worldObjects.getAvailableId();
+		this.addObject(object, id);
 	}
 
 	/**
@@ -145,11 +146,6 @@ public class World
 	 */
 	public int getObjectCount() { return worldObjects.size(); }
 
-	/**
-	 * Get an object by its id.
-	 * @param id The id.
-	 * @return The object with the specified id.
-	 */
 	public WorldObject getObject(int id) { return worldObjects.get(id); }
 
 	/**
