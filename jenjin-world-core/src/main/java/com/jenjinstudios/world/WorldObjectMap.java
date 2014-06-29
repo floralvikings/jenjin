@@ -19,6 +19,7 @@ public class WorldObjectMap extends TreeMap<Integer, WorldObject>
 	}
 
 	public int getAvailableId() {
+		// FIXME This really could be a O(log(n)) method.  Someone should get on that.
 		int currentKey = 0;
 		while (containsKey(currentKey))
 		{
