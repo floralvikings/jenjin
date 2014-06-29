@@ -94,9 +94,7 @@ public class World
 	 * @return The location that contains the specified vector2D.
 	 */
 	public Location getLocationForCoordinates(int zoneID, Vector2D vector2D) {
-		if (!isValidLocation(zoneID, vector2D))
-			return null;
-		return zones[zoneID].getLocationForCoordinates(vector2D);
+		return isValidLocation(zoneID, vector2D) ? zones[zoneID].getLocationForCoordinates(vector2D) : null;
 	}
 
 	/**
@@ -116,19 +114,29 @@ public class World
 		synchronized (worldObjects)
 		{
 			Collection<WorldObject> values = worldObjects.values();
-			for (WorldObject o : values)
-				if (o != null)
-					o.setUp();
-
-			for (WorldObject o : values)
-				if (o != null)
-					o.update();
-
-			for (WorldObject o : values)
-				if (o != null)
-					o.reset();
+			setUpObjects(values);
+			updateObjects(values);
+			resetObjects(values);
 		}
 		lastUpdateCompleted = System.nanoTime();
+	}
+
+	private void resetObjects(Collection<WorldObject> values) {
+		for (WorldObject o : values)
+			if (o != null)
+				o.reset();
+	}
+
+	private void updateObjects(Collection<WorldObject> values) {
+		for (WorldObject o : values)
+			if (o != null)
+				o.update();
+	}
+
+	private void setUpObjects(Collection<WorldObject> values) {
+		for (WorldObject o : values)
+			if (o != null)
+				o.setUp();
 	}
 
 	/**
