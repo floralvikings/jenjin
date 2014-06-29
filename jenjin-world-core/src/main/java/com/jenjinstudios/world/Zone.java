@@ -72,28 +72,6 @@ public class Zone
 	}
 
 	/**
-	 * Get an area of location objects.
-	 * @param centerCoordinates The center of the area to return.
-	 * @param radius The radius of the area.
-	 * @return An ArrayList containing all valid locations in the specified area.
-	 */
-	public ArrayList<Location> getLocationArea(Vector2D centerCoordinates, int radius) {
-		ArrayList<Location> areaGrid = new ArrayList<>();
-		Location center = getLocationForCoordinates(centerCoordinates);
-		int xStart = Math.max(center.X_COORDINATE - (radius - 1), 0);
-		int yStart = Math.max(center.Y_COORDINATE - (radius - 1), 0);
-		int xEnd = Math.min(center.X_COORDINATE + (radius - 1), locationGrid.length - 1);
-		int yEnd = Math.min(center.Y_COORDINATE + (radius - 1), locationGrid.length - 1);
-
-		for (int x = xStart; x <= xEnd; x++)
-		{
-			areaGrid.addAll(Arrays.asList(locationGrid[x]).subList(yStart, yEnd + 1));
-		}
-
-		return areaGrid;
-	}
-
-	/**
 	 * Get the location at the specified coordinates.
 	 * @param centerCoordinates The coordinates.
 	 * @return The location at the specified coordinates.
