@@ -43,25 +43,25 @@ public class MathUtil
 
 	/**
 	 * Use Bresenham's circle algorithm to find a circle of locations with the given center coordinates and radius.
-	 * @param x0 The center x coordinate.
-	 * @param y0 The center y coordinate.
+	 * @param centerX The center x coordinate.
+	 * @param centerY The center y coordinate.
 	 * @param radius The radius of the circle.
 	 * @return A list of locations containing the perimeter of the circle.
 	 */
-	public static List<Vector2D> castCircle(int x0, int y0, int radius) {
+	public static List<Vector2D> castCircle(int centerX, int centerY, int radius) {
 		int x = radius, y = 0;
 		int radiusError = 1 - x;
 		LinkedList<Vector2D> circle = new LinkedList<>();
 		while (x >= y)
 		{
-			circle.add(new Vector2D(x + x0, y + y0));
-			circle.add(new Vector2D(y + x0, x + y0));
-			circle.add(new Vector2D(-x + x0, y + y0));
-			circle.add(new Vector2D(-y + x0, x + y0));
-			circle.add(new Vector2D(-x + x0, -y + y0));
-			circle.add(new Vector2D(-y + x0, -x + y0));
-			circle.add(new Vector2D(x + x0, -y + y0));
-			circle.add(new Vector2D(y + x0, -x + y0));
+			circle.add(new Vector2D(x + centerX, y + centerY));
+			circle.add(new Vector2D(y + centerX, x + centerY));
+			circle.add(new Vector2D(-x + centerX, y + centerY));
+			circle.add(new Vector2D(-y + centerX, x + centerY));
+			circle.add(new Vector2D(-x + centerX, -y + centerY));
+			circle.add(new Vector2D(-y + centerX, -x + centerY));
+			circle.add(new Vector2D(x + centerX, -y + centerY));
+			circle.add(new Vector2D(y + centerX, -x + centerY));
 			y++;
 			if (radiusError < 0)
 			{
