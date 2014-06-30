@@ -1,9 +1,13 @@
 package com.jenjinstudios.world;
 
+import com.jenjinstudios.world.math.Dimension2D;
 import com.jenjinstudios.world.math.MathUtil;
 import com.jenjinstudios.world.math.Vector2D;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -28,16 +32,14 @@ public class Zone
 	/**
 	 * Construct a new zone with the given ID and size.
 	 * @param id The id number of the zone.
-	 * @param xSize The x length of the zone.
-	 * @param ySize The y length of zone.
 	 * @param specialLocations Any special locations that should be set on zone creation.
 	 */
-	public Zone(int id, int xSize, int ySize, Location... specialLocations) {
+	public Zone(int id, Dimension2D size, Location... specialLocations) {
 		this.id = id;
-		this.xSize = xSize;
-		this.ySize = ySize;
+		this.xSize = size.getXSize();
+		this.ySize = size.getYSize();
 
-		locationGrid = new Location[xSize][ySize];
+		locationGrid = new Location[size.getXSize()][size.getYSize()];
 		LOGGER.log(Level.FINEST, "Constructing Locations.");
 		constructLocations();
 		LOGGER.log(Level.FINEST, "Adding Special Locations.");
@@ -51,12 +53,9 @@ public class Zone
 	 * @param specialLocations The locations to be placed in the grid.
 	 */
 	private void addSpecialLocations(Location[] specialLocations) {
-		if (specialLocations != null)
+		for (Location l : specialLocations)
 		{
-			for (Location l : specialLocations)
-			{
-				locationGrid[l.X_COORDINATE][l.Y_COORDINATE] = l;
-			}
+			locationGrid[l.X_COORDINATE][l.Y_COORDINATE] = l;
 		}
 	}
 

@@ -3,6 +3,7 @@ package com.jenjinstudios.world.io;
 import com.jenjinstudios.world.Location;
 import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.Zone;
+import com.jenjinstudios.world.math.Dimension2D;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -46,7 +47,7 @@ public class WorldDocumentWriterTest
 		Properties locationProperties = new Properties();
 		locationProperties.setProperty("walkable", "false");
 		Location location = new Location(1, 1, locationProperties);
-		Zone[] zones = {new Zone(0, 15, 15, location)};
+		Zone[] zones = {new Zone(0, new Dimension2D(15, 15), location)};
 		return new World(zones);
 	}
 }

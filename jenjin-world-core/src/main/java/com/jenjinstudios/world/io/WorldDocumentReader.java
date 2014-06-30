@@ -3,6 +3,7 @@ package com.jenjinstudios.world.io;
 import com.jenjinstudios.world.Location;
 import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.Zone;
+import com.jenjinstudios.world.math.Dimension2D;
 import org.w3c.dom.*;
 import org.xml.sax.SAXException;
 
@@ -113,7 +114,7 @@ public class WorldDocumentReader
 			int xSize = Integer.parseInt(zoneNodes.item(i).getAttributes().getNamedItem("xSize").getTextContent());
 			int ySize = Integer.parseInt(zoneNodes.item(i).getAttributes().getNamedItem("ySize").getTextContent());
 
-			zones[i] = new Zone(id, xSize, ySize, parseLocationNodes(locationNodes));
+			zones[i] = new Zone(id, new Dimension2D(xSize, ySize), parseLocationNodes(locationNodes));
 		}
 
 		return zones;

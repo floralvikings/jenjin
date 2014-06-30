@@ -1,5 +1,6 @@
 package com.jenjinstudios.world;
 
+import com.jenjinstudios.world.math.Dimension2D;
 import com.jenjinstudios.world.math.Vector2D;
 
 import java.util.Collection;
@@ -26,7 +27,7 @@ public class World
 		zones = new Zone[1];
 		/* The default size of the world's location grid. */
 		int DEFAULT_SIZE = 50;
-		zones[0] = new Zone(0, DEFAULT_SIZE, DEFAULT_SIZE);
+		zones[0] = new Zone(0, new Dimension2D(DEFAULT_SIZE, DEFAULT_SIZE));
 		worldObjects = new WorldObjectMap();
 	}
 

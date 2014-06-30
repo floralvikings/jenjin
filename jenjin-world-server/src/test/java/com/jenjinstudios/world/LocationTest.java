@@ -1,6 +1,7 @@
 package com.jenjinstudios.world;
 
 import com.jenjinstudios.world.ai.Pathfinder;
+import com.jenjinstudios.world.math.Dimension2D;
 import org.testng.Assert;
 import org.testng.annotations.*;
 
@@ -33,7 +34,7 @@ public class LocationTest
 	public void testAdjacency() {
 		int xSize = 100;
 		int ySize = 100;
-		Zone testZone = new Zone(0, xSize, ySize, new Location[]{});
+		Zone testZone = new Zone(0, new Dimension2D(xSize, ySize), new Location[]{});
 
 		for (int i = 0; i < 100; i++)
 		{
@@ -118,7 +119,7 @@ public class LocationTest
 		Location blockedLocation01 = new Location(5, 2, blocked);
 		Location blockedLocation02 = new Location(5, 3, blocked);
 		Location blockedLocation03 = new Location(5, 4, blocked);
-		Zone testZone = new Zone(0, xSize, ySize, blockedLocation01, blockedLocation02, blockedLocation03);
+		Zone testZone = new Zone(0, new Dimension2D(xSize, ySize), blockedLocation01, blockedLocation02, blockedLocation03);
 
 		Location start = testZone.getLocationOnGrid(3, 3);
 		Location end = testZone.getLocationOnGrid(7, 3);
