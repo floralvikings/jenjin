@@ -45,13 +45,9 @@ public class Zone
 		LOGGER.log(Level.FINEST, "Adding Special Locations.");
 		addSpecialLocations(specialLocations);
 		LOGGER.log(Level.FINEST, "Calculating Location Adjacency.");
-		setAdjacentLocations();
+		initializeLocationAdjacency();
 	}
 
-	/**
-	 * Replace empty locations with the specified locations.
-	 * @param specialLocations The locations to be placed in the grid.
-	 */
 	private void addSpecialLocations(Location[] specialLocations) {
 		for (Location l : specialLocations)
 		{
@@ -70,35 +66,23 @@ public class Zone
 		return !(x < 0 || y < 0 || x / Location.SIZE >= xSize || y / Location.SIZE >= ySize);
 	}
 
-	/**
-	 * Get the location at the specified coordinates.
-	 * @param centerCoordinates The coordinates.
-	 * @return The location at the specified coordinates.
-	 */
 	public Location getLocationForCoordinates(Vector2D centerCoordinates) {
 		return getLocationForCoordinates(centerCoordinates.getXCoordinate(), centerCoordinates.getYCoordinate());
 	}
 
-	/**
-	 * Get the location at the specified coordinates.
-	 * @param x The x coordinate.
-	 * @param y The y coordinate.
-	 * @return The location at the specified coordinates.
-	 */
 	protected Location getLocationForCoordinates(double x, double y) {
-		return locationGrid[(int) x / Location.SIZE][(int) y / Location.SIZE];
+		int gridX = (int) x / Location.SIZE;
+		int gridY = (int) y / Location.SIZE;
+		return getLocationOnGrid(gridX, gridY);
 	}
 
-	/**
-	 * Get the location at the specified location in the array.
-	 * @param x The x value of the location.
-	 * @param y The y value of the location.
-	 * @return The location at the specified spot in the array.
-	 */
 	public Location getLocationOnGrid(int x, int y) {
+		Location loc;
 		if (x < 0 || x >= xSize || y < 0 || y >= ySize)
-			return null;
-		return locationGrid[x][y];
+			loc = null;
+		else
+			loc = locationGrid[x][y];
+		return loc;
 	}
 
 	/**
@@ -254,19 +238,36 @@ public class Zone
 	/** Initialize the locations in the zone. */
 	private void constructLocations() {
 		for (int x = 0; x < xSize; x++)
-			for (int y = 0; y < ySize; y++)
-				locationGrid[x][y] = new Location(x, y);
+			constructColumn(x);
 	}
 
-	/**
-	 * Establish the locations adjacent to one another.
-	 */
+	private void constructColumn(int x) {
+		for (int y = 0; y < ySize; y++)
+			locationGrid[x][y] = new Location(x, y);
+	}
+
+	private void initializeLocationAdjacency() {
+		setAdjacentLocations();
+		setAdjacentWalkableLocations();
+	}
+
+	private void setAdjacentWalkableLocations() {
+		for (int x = 0; x < xSize; x++)
+			setAdjacentWalkableColumn(x);
+	}
+
+	private void setAdjacentWalkableColumn(int x) {
+		for (int y = 0; y < ySize; y++)
+			locationGrid[x][y].setAdjacentWalkableLocations();
+	}
+
 	private void setAdjacentLocations() {
 		for (int x = 0; x < xSize; x++)
-			for (int y = 0; y < ySize; y++)
-				locationGrid[x][y].setAdjacentLocations(this);
-		for (int x = 0; x < xSize; x++)
-			for (int y = 0; y < ySize; y++)
-				locationGrid[x][y].setAdjacentWalkableLocations();
+			setAdjacentColumn(x);
+	}
+
+	private void setAdjacentColumn(int x) {
+		for (int y = 0; y < ySize; y++)
+			locationGrid[x][y].setAdjacentLocations(this);
 	}
 }
