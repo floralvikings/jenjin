@@ -48,6 +48,10 @@ public class Zone
 		initializeLocationAdjacency();
 	}
 
+	public int getXSize() { return xSize; }
+
+	public int getYSize() { return ySize; }
+
 	private void addSpecialLocations(Location[] specialLocations) {
 		for (Location l : specialLocations)
 		{
