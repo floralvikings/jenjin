@@ -21,23 +21,7 @@ public class Location
 	/** The locationProperties of this location. */
 	private final Properties locationProperties;
 	/** Flags whether the adjacent locations are set. */
-	private boolean hasLocationsSet;
-	/** The location adjacent to the North. */
-	private Location adjNorth;
-	/** The location adjacent to the South. */
-	private Location adjSouth;
-	/** The location adjacent to the East. */
-	private Location adjEast;
-	/** The location adjacent to the West. */
-	private Location adjWest;
-	/** The location adjacent to the NorthEast. */
-	private Location adjNorthEast;
-	/** The location adjacent to the NorthWest. */
-	private Location adjNorthWest;
-	/** The location adjacent to the SouthEast. */
-	private Location adjSouthEast;
-	/** The location adjacent to the SouthWest. */
-	private Location adjSouthWest;
+	private boolean adjacentsSet;
 	/** The locations adjacent to this one. */
 	private final LinkedList<Location> adjacentLocations;
 	/** The locations adjacent to this one through which a path may be plotted. */
@@ -46,6 +30,10 @@ public class Location
 	private final List<Location> diagonals;
 	/** The center of this Location. */
 	private final Vector2D center;
+	private final Vector2D northEastCorner;
+	private final Vector2D northWestCorner;
+	private final Vector2D southEastCorner;
+	private final Vector2D southWestCorner;
 
 	/**
 	 * Construct a new location at the given position in a zone grid.
@@ -68,8 +56,13 @@ public class Location
 		X_COORDINATE = x;
 		Y_COORDINATE = y;
 		center = new Vector2D(X_COORDINATE * SIZE + SIZE / 2, Y_COORDINATE * SIZE + SIZE / 2);
+		northEastCorner = new Vector2D((X_COORDINATE + 1) * SIZE - 1, (Y_COORDINATE + 1) * SIZE - 1);
+		northWestCorner = new Vector2D(X_COORDINATE * SIZE, (Y_COORDINATE + 1) * SIZE - 1);
+		southEastCorner = new Vector2D((X_COORDINATE + 1) * SIZE - 1, Y_COORDINATE * SIZE);
+		southWestCorner = new Vector2D(X_COORDINATE * SIZE, Y_COORDINATE * SIZE);
 		this.locationProperties = properties;
 		objects = new HashSet<>();
+
 	}
 
 	/**
@@ -100,54 +93,46 @@ public class Location
 	public String toString() { return "(" + X_COORDINATE + ", " + Y_COORDINATE + ")"; }
 
 	/**
-	 * The location adjacent to the North.
-	 * @return The location adjacent to the north.
-	 */
-	public Location getAdjNorth() { return adjNorth; }
-
-	/**
-	 * The location adjacent to the South.
-	 * @return The location adjacent to the South.
-	 */
-	public Location getAdjSouth() { return adjSouth; }
-
-	/**
-	 * The location adjacent to the East.
-	 * @return The location adjacent to the East.
-	 */
-	public Location getAdjEast() { return adjEast; }
-
-	/**
-	 * The location adjacent to the West.
-	 * @return The data adjacent to the west.
-	 */
-	public Location getAdjWest() { return adjWest; }
-
-	/**
 	 * Get a list of all adjacent locations.
 	 * @return The list of adjacent locations.
 	 */
 	public List<Location> getAdjacentLocations() { return new LinkedList<>(adjacentLocations); }
+
+	public Vector2D getNorthEastCorner() {
+		return northEastCorner;
+	}
+
+	public Vector2D getNorthWestCorner() {
+		return northWestCorner;
+	}
+
+	public Vector2D getSouthEastCorner() {
+		return southEastCorner;
+	}
+
+	public Vector2D getSouthWestCorner() {
+		return southWestCorner;
+	}
 
 	/**
 	 * Set the locations adjacent to this one.
 	 * @param zone The zone in which this location (or rather, the "adjacent" locations) lie.
 	 */
 	protected void setAdjacentLocations(Zone zone) {
-		if (hasLocationsSet)
+		if (adjacentsSet)
 		{
 			throw new IllegalStateException("Cannot set adjacent locations after they have already been set!");
 		}
-		hasLocationsSet = true;
+		adjacentsSet = true;
 		setCardinals(zone);
 		setOrdinals(zone);
 	}
 
 	private void setOrdinals(Zone zone) {
-		adjNorthEast = zone.getLocationOnGrid(X_COORDINATE + 1, Y_COORDINATE + 1);
-		adjNorthWest = zone.getLocationOnGrid(X_COORDINATE - 1, Y_COORDINATE + 1);
-		adjSouthEast = zone.getLocationOnGrid(X_COORDINATE + 1, Y_COORDINATE - 1);
-		adjSouthWest = zone.getLocationOnGrid(X_COORDINATE - 1, Y_COORDINATE - 1);
+		Location adjNorthEast = zone.getLocationOnGrid(X_COORDINATE + 1, Y_COORDINATE + 1);
+		Location adjNorthWest = zone.getLocationOnGrid(X_COORDINATE - 1, Y_COORDINATE + 1);
+		Location adjSouthEast = zone.getLocationOnGrid(X_COORDINATE + 1, Y_COORDINATE - 1);
+		Location adjSouthWest = zone.getLocationOnGrid(X_COORDINATE - 1, Y_COORDINATE - 1);
 		if (adjNorthEast != null)
 		{
 			adjacentLocations.add(adjNorthEast);
@@ -171,10 +156,10 @@ public class Location
 	}
 
 	private void setCardinals(Zone zone) {
-		adjNorth = zone.getLocationOnGrid(X_COORDINATE, Y_COORDINATE + 1);
-		adjSouth = zone.getLocationOnGrid(X_COORDINATE, Y_COORDINATE - 1);
-		adjEast = zone.getLocationOnGrid(X_COORDINATE + 1, Y_COORDINATE);
-		adjWest = zone.getLocationOnGrid(X_COORDINATE - 1, Y_COORDINATE);
+		Location adjNorth = zone.getLocationOnGrid(X_COORDINATE, Y_COORDINATE + 1);
+		Location adjSouth = zone.getLocationOnGrid(X_COORDINATE, Y_COORDINATE - 1);
+		Location adjEast = zone.getLocationOnGrid(X_COORDINATE + 1, Y_COORDINATE);
+		Location adjWest = zone.getLocationOnGrid(X_COORDINATE - 1, Y_COORDINATE);
 		if (adjNorth != null)
 			adjacentLocations.add(adjNorth);
 		if (adjSouth != null)
@@ -184,30 +169,6 @@ public class Location
 		if (adjWest != null)
 			adjacentLocations.add(adjWest);
 	}
-
-	/**
-	 * The location adjacent to the NorthEast.
-	 * @return The location adjacent to the NorthEast.
-	 */
-	public Location getAdjNorthEast() { return adjNorthEast; }
-
-	/**
-	 * The location adjacent to the NorthWest.
-	 * @return The location adjacent to the NorthWest.
-	 */
-	public Location getAdjNorthWest() { return adjNorthWest; }
-
-	/**
-	 * The location adjacent to the SouthEast.
-	 * @return The location adjacent to the SouthEast.
-	 */
-	public Location getAdjSouthEast() { return adjSouthEast; }
-
-	/**
-	 * The location adjacent to the SouthWest.
-	 * @return The location adjacent to the SouthWest.
-	 */
-	public Location getAdjSouthWest() { return adjSouthWest; }
 
 	/**
 	 * Get a list of locations adjacent to this one, all of which can be walked to.

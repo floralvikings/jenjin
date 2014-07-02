@@ -36,18 +36,18 @@ public class VisibilityTest extends WorldServerTest
 
 		LOGGER.log(Level.INFO, "Asserting that clientPlayer can see serverPlayer");
 		WorldObject clientActor = client.getPlayer().getVisibleObjects().get(serverActor.getId());
-		Assert.assertEquals(1, client.getPlayer().getVisibleObjects().size());
+		Assert.assertEquals(client.getPlayer().getVisibleObjects().size(), 1);
 		Assert.assertNotNull(clientActor);
 		Thread.sleep(500);
 		WorldServerTest.assertClientAndServerInSamePosition(serverActor, clientActor);
 
 		LOGGER.log(Level.INFO, "Moving serverActor out of visible range.");
 		WorldServerTest.moveServerActorToVector(serverActor, startPos);
-		Assert.assertEquals(0, client.getPlayer().getVisibleObjects().size());
+		Assert.assertEquals(client.getPlayer().getVisibleObjects().size(), 0);
 
 		LOGGER.log(Level.INFO, "Moving clientPlayer into visible range.");
 		WorldServerTest.movePlayerToVector(client, server, new Vector2D(0, Location.SIZE + 1));
-		Assert.assertEquals(1, client.getPlayer().getVisibleObjects().size());
+		Assert.assertEquals(client.getPlayer().getVisibleObjects().size(), 1);
 		clientActor = client.getPlayer().getVisibleObjects().get(serverActor.getId());
 		WorldServerTest.assertClientAndServerInSamePosition(serverActor, clientActor);
 
