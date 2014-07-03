@@ -39,37 +39,41 @@ public class FieldOfVisionCalculator
 	}
 
 	private void scanOctant(int octant, int row, SlopePair slopePair) {
-		if (slopePair.getStartSlope() < slopePair.getEndSlope())
+		if (slopePair.getStartSlope() >= slopePair.getEndSlope())
 		{
-			return;
-		}
-		ScanState scanState = new ScanState();
-		scanState.newStartSlope = 0.0f;
-		scanState.previouslyBlocked = false;
-		scanState.octant = octant;
-		scanState.radius = radius;
-		for (scanState.distance = row; scanState.shouldContinue(); scanState.distance++)
-		{
-			scanState.deltaY = -scanState.distance;
-			for (scanState.deltaX = -scanState.distance; scanState.deltaX <= 0; scanState.deltaX++)
+			ScanState scanState = new ScanState();
+			scanState.newStartSlope = 0.0f;
+			scanState.previouslyBlocked = false;
+			scanState.octant = octant;
+			scanState.radius = radius;
+			scanState.slopePair = slopePair;
+			for (scanState.distance = row; scanState.shouldContinue(); scanState.distance++)
 			{
-				scanState.currentX = calcCurrentX(scanState.deltaX, scanState.deltaY, octant);
-				scanState.currentY = calcCurrentY(scanState.deltaX, scanState.deltaY, octant);
-
-				if (!inRange(scanState.currentX, scanState.currentY)) { continue; }
-
-				float centerSlope = calcCenterSlope(scanState.currentX, scanState.currentY, octant);
-
-				if (slopePair.getStartSlope() < centerSlope)
-				{
-					continue;
-				} else if (slopePair.getEndSlope() > centerSlope)
-				{
-					break;
-				}
-
-				checkLocation(slopePair, scanState);
+				scanState.deltaY = -scanState.distance;
+				scanColumn(scanState);
 			}
+		}
+	}
+
+	private void scanColumn(ScanState scanState) {
+		for (scanState.deltaX = -scanState.distance; scanState.deltaX <= 0; scanState.deltaX++)
+		{
+			scanState.currentX = calcCurrentX(scanState.deltaX, scanState.deltaY, scanState.octant);
+			scanState.currentY = calcCurrentY(scanState.deltaX, scanState.deltaY, scanState.octant);
+
+			if (!inRange(scanState.currentX, scanState.currentY)) { continue; }
+
+			float centerSlope = calcCenterSlope(scanState.currentX, scanState.currentY, scanState.octant);
+
+			if (scanState.slopePair.getStartSlope() < centerSlope)
+			{
+				continue;
+			} else if (scanState.slopePair.getEndSlope() > centerSlope)
+			{
+				break;
+			}
+
+			checkLocation(scanState.slopePair, scanState);
 		}
 	}
 
@@ -300,6 +304,7 @@ public class FieldOfVisionCalculator
 		public float radius;
 		public int deltaX, deltaY;
 		public int currentX, currentY;
+		public SlopePair slopePair;
 
 		public boolean shouldContinue() { return distance <= radius && !previouslyBlocked; }
 	}
