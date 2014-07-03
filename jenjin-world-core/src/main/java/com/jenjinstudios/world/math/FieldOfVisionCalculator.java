@@ -33,24 +33,18 @@ public class FieldOfVisionCalculator
 	}
 
 	public List<Location> scan() {
-		scanOctant(1, 1, new SlopePair(1.0f, 0.0f));
-		scanOctant(2, 1, new SlopePair(1.0f, 0.0f));
-		scanOctant(3, 1, new SlopePair(1.0f, 0.0f));
-		scanOctant(4, 1, new SlopePair(1.0f, 0.0f));
-		scanOctant(5, 1, new SlopePair(1.0f, 0.0f));
-		scanOctant(6, 1, new SlopePair(1.0f, 0.0f));
-		scanOctant(7, 1, new SlopePair(1.0f, 0.0f));
-		scanOctant(8, 1, new SlopePair(1.0f, 0.0f));
+		for (int i = 1; i <= 8; i++)
+			scanOctant(i, 1, new SlopePair(1.0f, 0.0f));
 		return visibleLocations;
 	}
 
 	private void scanOctant(int octant, int row, SlopePair slopePair) {
-		float newStartSlope = 0.0f;
-		boolean previouslyBlocked = false;
 		if (slopePair.getStartSlope() < slopePair.getEndSlope())
 		{
 			return;
 		}
+		float newStartSlope = 0.0f;
+		boolean previouslyBlocked = false;
 		for (int distance = row; distance <= radius && !previouslyBlocked; distance++)
 		{
 			int deltaY = -distance;
@@ -71,8 +65,8 @@ public class FieldOfVisionCalculator
 					break;
 				}
 
-				double rad = calcRadius(deltaX, deltaY);
-				addIfInRange(currentX, currentY, rad);
+				double currentRadius = calcRadius(deltaX, deltaY);
+				addIfInRange(currentX, currentY, currentRadius);
 
 				boolean currentBlocked = blocksVision(currentX, currentY);
 				if (previouslyBlocked)
@@ -83,7 +77,7 @@ public class FieldOfVisionCalculator
 					} else
 					{
 						previouslyBlocked = false;
-						slopePair = new SlopePair(newStartSlope, slopePair.endSlope);
+						slopePair.setStartSlope(newStartSlope);
 					}
 				} else
 				{
@@ -274,7 +268,7 @@ public class FieldOfVisionCalculator
 	private static class SlopePair
 	{
 		private float startSlope;
-		private final float endSlope;
+		private float endSlope;
 
 		private SlopePair(float startSlope, float endSlope) {
 			this.startSlope = startSlope;
@@ -285,5 +279,6 @@ public class FieldOfVisionCalculator
 
 		public float getEndSlope() { return endSlope; }
 
+		public void setStartSlope(float startSlope) { this.startSlope = startSlope; }
 	}
 }
