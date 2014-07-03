@@ -10,13 +10,9 @@ import com.jenjinstudios.world.math.Vector2D;
  */
 public class Zone
 {
-	/** The number assigned to this Zone by the world on initialization. */
 	public final int id;
-	/** The number of {@code Location} objects in the x-axis. */
 	public final int xSize;
-	/** The number of {@code Location} objects in the y-axis. */
 	public final int ySize;
-	/** The grid of {@code Location} objects. */
 	private final Location[][] locationGrid;
 
 	/**
@@ -34,10 +30,6 @@ public class Zone
 		addSpecialLocations(specialLocations);
 		initializeLocationAdjacency();
 	}
-
-	public int getXSize() { return xSize; }
-
-	public int getYSize() { return ySize; }
 
 	private void addSpecialLocations(Location[] specialLocations) {
 		for (Location l : specialLocations)

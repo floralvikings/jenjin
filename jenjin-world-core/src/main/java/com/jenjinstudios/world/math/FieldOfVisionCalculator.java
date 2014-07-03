@@ -26,8 +26,8 @@ public class FieldOfVisionCalculator
 		this.center = center;
 		this.centerX = center.X_COORDINATE;
 		this.centerY = center.Y_COORDINATE;
-		width = (radius + centerX) < zone.getXSize() ? (radius + centerX) : zone.getXSize();
-		height = (radius + centerY) < zone.getYSize() ? (radius + centerY) : zone.getYSize();
+		width = (radius + centerX) < zone.xSize ? (radius + centerX) : zone.xSize;
+		height = (radius + centerY) < zone.ySize ? (radius + centerY) : zone.ySize;
 		visibleLocations = new LinkedList<>();
 		visibleLocations.add(center);
 	}
