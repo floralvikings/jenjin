@@ -97,6 +97,24 @@ public class WorldObject
 	 */
 	public Location getLocation() { return location; }
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof WorldObject)) return false;
+
+		WorldObject that = (WorldObject) o;
+
+		return id == that.id && name.equals(that.name);
+
+	}
+
+	@Override
+	public int hashCode() {
+		int result = name.hashCode();
+		result = 31 * result + id;
+		return result;
+	}
+
 	/**
 	 * Set this objects new location.
 	 * @param newLocation The new location.
