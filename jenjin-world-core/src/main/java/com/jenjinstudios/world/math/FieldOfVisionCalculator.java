@@ -58,12 +58,12 @@ public class FieldOfVisionCalculator
 	private void scanColumn(ScanState scanState) {
 		for (scanState.deltaX = -scanState.distance; scanState.deltaX <= 0; scanState.deltaX++)
 		{
-			scanState.currentX = calcCurrentX(scanState.deltaX, scanState.deltaY, scanState.octant);
-			scanState.currentY = calcCurrentY(scanState.deltaX, scanState.deltaY, scanState.octant);
+			scanState.currentX = calcCurrentX(scanState);
+			scanState.currentY = calcCurrentY(scanState);
 
-			if (!inRange(scanState.currentX, scanState.currentY)) { continue; }
+			if (!inRange(scanState)) { continue; }
 
-			float centerSlope = calcCenterSlope(scanState.currentX, scanState.currentY, scanState.octant);
+			float centerSlope = calcCenterSlope(scanState);
 
 			if (scanState.slopePair.getStartSlope() < centerSlope)
 			{
@@ -78,15 +78,15 @@ public class FieldOfVisionCalculator
 	}
 
 	private void checkLocation(SlopePair slopePair, ScanState scanState) {
-		double currentRadius = calcRadius(scanState.deltaX, scanState.deltaY);
-		addIfInRange(scanState.currentX, scanState.currentY, currentRadius);
+		double currentRadius = calcRadius(scanState);
+		addIfInRange(scanState, currentRadius);
 
-		boolean currentBlocked = blocksVision(scanState.currentX, scanState.currentY);
+		boolean currentBlocked = blocksVision(scanState);
 		if (scanState.previouslyBlocked)
 		{
 			if (currentBlocked)
 			{
-				scanState.newStartSlope = calcRightSlope(scanState.currentX, scanState.currentY, scanState.octant);
+				scanState.newStartSlope = calcRightSlope(scanState);
 			} else
 			{
 				scanState.previouslyBlocked = false;
@@ -97,81 +97,83 @@ public class FieldOfVisionCalculator
 			if (currentBlocked && scanState.distance < radius)
 			{
 				scanState.previouslyBlocked = true;
-				float newLeftSlope = calcLeftSlope(scanState.currentX, scanState.currentY, scanState.octant);
+				float newLeftSlope = calcLeftSlope(scanState);
 				SlopePair newSlopePair = new SlopePair(slopePair.startSlope, newLeftSlope);
 				scanOctant(scanState.octant, scanState.distance + 1, newSlopePair);
-				scanState.newStartSlope = calcRightSlope(scanState.currentX, scanState.currentY, scanState.octant);
+				scanState.newStartSlope = calcRightSlope(scanState);
 			}
 		}
 	}
 
-	private int calcCurrentX(int deltaX, int deltaY, int octant) {
+	private int calcCurrentX(ScanState scanState) {
+
 		int offset = 0;
-		switch (octant)
+		switch (scanState.octant)
 		{
 			case 1:
 			case 6:
-				offset = deltaX;
+				offset = scanState.deltaX;
 				break;
 			case 2:
 			case 5:
-				offset = -deltaX;
+				offset = -scanState.deltaX;
 				break;
 			case 7:
 			case 8:
-				offset = deltaY;
+				offset = scanState.deltaY;
 				break;
 			case 3:
 			case 4:
-				offset = -deltaY;
+				offset = -scanState.deltaY;
 				break;
 		}
 		return centerX + offset;
 	}
 
-	private int calcCurrentY(int deltaX, int deltaY, int octant) {
+	private int calcCurrentY(ScanState scanState) {
 		int offset = 0;
-		switch (octant)
+		switch (scanState.octant)
 		{
 			case 1:
 			case 2:
-				offset = deltaY;
+				offset = scanState.deltaY;
 				break;
 			case 6:
 			case 5:
-				offset = -deltaY;
+				offset = -scanState.deltaY;
 				break;
 			case 3:
 			case 8:
-				offset = deltaX;
+				offset = scanState.deltaX;
 				break;
 			case 7:
 			case 4:
-				offset = -deltaX;
+				offset = -scanState.deltaX;
 				break;
 		}
 		return centerY + offset;
 	}
 
-	private boolean inRange(int currentX, int currentY) {
-		Location loc = zone.getLocationOnGrid(currentX, currentY);
-		return loc != null && currentX >= 0 && currentY >= 0 && currentX <= this.width && currentY <= this.height;
+	private boolean inRange(ScanState scanState) {
+		Location loc = zone.getLocationOnGrid(scanState.currentX, scanState.currentY);
+		return loc != null && scanState.currentX >= 0 && scanState.currentY >= 0 &&
+				scanState.currentX <= this.width && scanState.currentY <= this.height;
 	}
 
-	private void addIfInRange(int currentX, int currentY, double rad) {
+	private void addIfInRange(ScanState scanState, double rad) {
 		if (rad <= radius)
 		{
-			Location loc = zone.getLocationOnGrid(currentX, currentY);
+			Location loc = zone.getLocationOnGrid(scanState.currentX, scanState.currentY);
 			visibleLocations.add(loc);
 		}
 	}
 
-	private float calcCenterSlope(int x, int y, int octant) {
-		Location loc = zone.getLocationOnGrid(x, y);
+	private float calcCenterSlope(ScanState scanState) {
+		Location loc = zone.getLocationOnGrid(scanState.currentX, scanState.currentY);
 		double dx = Math.abs(centerX - loc.X_COORDINATE);
 		double dy = Math.abs(centerY - loc.Y_COORDINATE);
 		float slope = 0.0f;
-		switch (octant)
+		switch (scanState.octant)
 		{
 			case 1:
 			case 2:
@@ -186,15 +188,14 @@ public class FieldOfVisionCalculator
 				slope = (float) (dy / dx);
 				break;
 		}
-
 		return slope;
 	}
 
-	private float calcRightSlope(int x, int y, int octant) {
-		Location loc = zone.getLocationOnGrid(x, y);
+	private float calcRightSlope(ScanState scanState) {
+		Location loc = zone.getLocationOnGrid(scanState.currentX, scanState.currentY);
 		Vector2D centerVector = center.getCenter();
 		Vector2D brushCorner = loc.getCenter();
-		switch (octant)
+		switch (scanState.octant)
 		{
 			case 1:
 			case 4:
@@ -213,14 +214,14 @@ public class FieldOfVisionCalculator
 				brushCorner = loc.getNorthWestCorner();
 				break;
 		}
-		return calcSlopeInOctant(octant, centerVector, brushCorner);
+		return calcSlopeInOctant(scanState.octant, centerVector, brushCorner);
 	}
 
-	private float calcLeftSlope(int x, int y, int octant) {
-		Location loc = zone.getLocationOnGrid(x, y);
+	private float calcLeftSlope(ScanState scanState) {
+		Location loc = zone.getLocationOnGrid(scanState.currentX, scanState.currentY);
 		Vector2D centerVector = center.getCenter();
 		Vector2D brushCorner = loc.getCenter();
-		switch (octant)
+		switch (scanState.octant)
 		{
 			case 1:
 			case 4:
@@ -239,7 +240,19 @@ public class FieldOfVisionCalculator
 				brushCorner = loc.getSouthEastCorner();
 				break;
 		}
-		return calcSlopeInOctant(octant, centerVector, brushCorner);
+		return calcSlopeInOctant(scanState.octant, centerVector, brushCorner);
+	}
+
+	public float calcRadius(ScanState scanState) {
+		double dx2 = scanState.deltaX * scanState.deltaX;
+		double dy2 = scanState.deltaY * scanState.deltaY;
+		double sum = dx2 + dy2;
+		return (float) Math.sqrt(sum);
+	}
+
+	public boolean blocksVision(ScanState scanState) {
+		Location loc = zone.getLocationOnGrid(scanState.currentX, scanState.currentY);
+		return loc == null || "true".equals(loc.getProperties().getProperty("blocksVision"));
 	}
 
 	private float calcSlopeInOctant(int octant, Vector2D origin, Vector2D endpoint) {
@@ -264,18 +277,6 @@ public class FieldOfVisionCalculator
 				break;
 		}
 		return slope;
-	}
-
-	public float calcRadius(float dx, float dy) {
-		double dx2 = dx * dx;
-		double dy2 = dy * dy;
-		double sum = dx2 + dy2;
-		return (float) Math.sqrt(sum);
-	}
-
-	public boolean blocksVision(int x, int y) {
-		Location loc = zone.getLocationOnGrid(x, y);
-		return loc == null || "true".equals(loc.getProperties().getProperty("blocksVision"));
 	}
 
 	private static class SlopePair
