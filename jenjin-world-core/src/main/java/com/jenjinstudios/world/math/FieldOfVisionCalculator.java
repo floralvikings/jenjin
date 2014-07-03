@@ -43,19 +43,22 @@ public class FieldOfVisionCalculator
 		{
 			return;
 		}
-		float newStartSlope = 0.0f;
-		boolean previouslyBlocked = false;
-		for (int distance = row; distance <= radius && !previouslyBlocked; distance++)
+		ScanState scanState = new ScanState();
+		scanState.newStartSlope = 0.0f;
+		scanState.previouslyBlocked = false;
+		scanState.octant = octant;
+		scanState.radius = radius;
+		for (scanState.distance = row; scanState.shouldContinue(); scanState.distance++)
 		{
-			int deltaY = -distance;
-			for (int deltaX = -distance; deltaX <= 0; deltaX++)
+			scanState.deltaY = -scanState.distance;
+			for (scanState.deltaX = -scanState.distance; scanState.deltaX <= 0; scanState.deltaX++)
 			{
-				int currentX = calcCurrentX(deltaX, deltaY, octant);
-				int currentY = calcCurrentY(deltaX, deltaY, octant);
+				scanState.currentX = calcCurrentX(scanState.deltaX, scanState.deltaY, octant);
+				scanState.currentY = calcCurrentY(scanState.deltaX, scanState.deltaY, octant);
 
-				if (!inRange(currentX, currentY)) { continue; }
+				if (!inRange(scanState.currentX, scanState.currentY)) { continue; }
 
-				float centerSlope = calcCenterSlope(currentX, currentY, octant);
+				float centerSlope = calcCenterSlope(scanState.currentX, scanState.currentY, octant);
 
 				if (slopePair.getStartSlope() < centerSlope)
 				{
@@ -65,29 +68,35 @@ public class FieldOfVisionCalculator
 					break;
 				}
 
-				double currentRadius = calcRadius(deltaX, deltaY);
-				addIfInRange(currentX, currentY, currentRadius);
+				checkLocation(slopePair, scanState);
+			}
+		}
+	}
 
-				boolean currentBlocked = blocksVision(currentX, currentY);
-				if (previouslyBlocked)
-				{
-					if (currentBlocked)
-					{
-						newStartSlope = calcRightSlope(currentX, currentY, octant);
-					} else
-					{
-						previouslyBlocked = false;
-						slopePair.setStartSlope(newStartSlope);
-					}
-				} else
-				{
-					if (currentBlocked && distance < radius)
-					{
-						previouslyBlocked = true;
-						scanOctant(octant, distance + 1, new SlopePair(slopePair.startSlope, calcLeftSlope(currentX, currentY, octant)));
-						newStartSlope = calcRightSlope(currentX, currentY, octant);
-					}
-				}
+	private void checkLocation(SlopePair slopePair, ScanState scanState) {
+		double currentRadius = calcRadius(scanState.deltaX, scanState.deltaY);
+		addIfInRange(scanState.currentX, scanState.currentY, currentRadius);
+
+		boolean currentBlocked = blocksVision(scanState.currentX, scanState.currentY);
+		if (scanState.previouslyBlocked)
+		{
+			if (currentBlocked)
+			{
+				scanState.newStartSlope = calcRightSlope(scanState.currentX, scanState.currentY, scanState.octant);
+			} else
+			{
+				scanState.previouslyBlocked = false;
+				slopePair.setStartSlope(scanState.newStartSlope);
+			}
+		} else
+		{
+			if (currentBlocked && scanState.distance < radius)
+			{
+				scanState.previouslyBlocked = true;
+				float newLeftSlope = calcLeftSlope(scanState.currentX, scanState.currentY, scanState.octant);
+				SlopePair newSlopePair = new SlopePair(slopePair.startSlope, newLeftSlope);
+				scanOctant(scanState.octant, scanState.distance + 1, newSlopePair);
+				scanState.newStartSlope = calcRightSlope(scanState.currentX, scanState.currentY, scanState.octant);
 			}
 		}
 	}
@@ -280,5 +289,18 @@ public class FieldOfVisionCalculator
 		public float getEndSlope() { return endSlope; }
 
 		public void setStartSlope(float startSlope) { this.startSlope = startSlope; }
+	}
+
+	private static class ScanState
+	{
+		public boolean previouslyBlocked;
+		public float newStartSlope;
+		public int octant;
+		public int distance;
+		public float radius;
+		public int deltaX, deltaY;
+		public int currentX, currentY;
+
+		public boolean shouldContinue() { return distance <= radius && !previouslyBlocked; }
 	}
 }
