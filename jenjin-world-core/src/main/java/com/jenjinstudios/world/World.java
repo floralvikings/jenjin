@@ -59,7 +59,8 @@ public class World
 			throw new IllegalArgumentException("addObject(WorldObject obj) argument 0 not allowed to be null!");
 
 		if (worldObjects.get(id) != null)
-			throw new IllegalArgumentException("addObject(WorldObject obj) argument 1 not allowed to be an occupied id: " + id);
+			throw new IllegalArgumentException("addObject(WorldObject obj) not allowed to be an occupied id: "
+					+ id + ".  Existing object: " + worldObjects.get(id));
 
 		object.setWorld(this);
 		object.setVector2D(object.getVector2D());
