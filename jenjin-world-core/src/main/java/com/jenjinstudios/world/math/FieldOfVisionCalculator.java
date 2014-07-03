@@ -187,7 +187,6 @@ public class FieldOfVisionCalculator
 		Location loc = zone.getLocationOnGrid(x, y);
 		Vector2D centerVector = center.getCenter();
 		Vector2D brushCorner = loc.getCenter();
-		double dx, dy;
 		switch (octant)
 		{
 			case 1:
@@ -214,7 +213,6 @@ public class FieldOfVisionCalculator
 		Location loc = zone.getLocationOnGrid(x, y);
 		Vector2D centerVector = center.getCenter();
 		Vector2D brushCorner = loc.getCenter();
-		double dx, dy;
 		switch (octant)
 		{
 			case 1:
