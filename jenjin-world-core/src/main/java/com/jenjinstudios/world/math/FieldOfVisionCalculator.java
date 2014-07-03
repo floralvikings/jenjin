@@ -188,7 +188,6 @@ public class FieldOfVisionCalculator
 		Vector2D centerVector = center.getCenter();
 		Vector2D brushCorner = loc.getCenter();
 		double dx, dy;
-		float slope = 0.0f;
 		switch (octant)
 		{
 			case 1:
@@ -208,31 +207,13 @@ public class FieldOfVisionCalculator
 				brushCorner = loc.getNorthWestCorner();
 				break;
 		}
-		dx = Math.abs(centerVector.getXCoordinate() - brushCorner.getXCoordinate());
-		dy = Math.abs(centerVector.getYCoordinate() - brushCorner.getYCoordinate());
-		switch (octant)
-		{
-			case 1:
-			case 2:
-			case 5:
-			case 6:
-				slope = (float) (dx / dy);
-				break;
-			case 3:
-			case 4:
-			case 7:
-			case 8:
-				slope = (float) (dy / dx);
-				break;
-		}
-		return slope;
+		return calcSlopeInOctant(octant, centerVector, brushCorner);
 	}
 
 	private float calcLeftSlope(int x, int y, int octant) {
 		Location loc = zone.getLocationOnGrid(x, y);
 		Vector2D centerVector = center.getCenter();
 		Vector2D brushCorner = loc.getCenter();
-		float slope = 0.0f;
 		double dx, dy;
 		switch (octant)
 		{
@@ -253,10 +234,15 @@ public class FieldOfVisionCalculator
 				brushCorner = loc.getSouthEastCorner();
 				break;
 		}
+		return calcSlopeInOctant(octant, centerVector, brushCorner);
+	}
 
-		dx = Math.abs(centerVector.getXCoordinate() - brushCorner.getXCoordinate());
-		dy = Math.abs(centerVector.getYCoordinate() - brushCorner.getYCoordinate());
-
+	private float calcSlopeInOctant(int octant, Vector2D origin, Vector2D endpoint) {
+		double dx;
+		double dy;
+		dx = Math.abs(origin.getXCoordinate() - endpoint.getXCoordinate());
+		dy = Math.abs(origin.getYCoordinate() - endpoint.getYCoordinate());
+		float slope = 0.0f;
 		switch (octant)
 		{
 			case 1:
@@ -272,7 +258,6 @@ public class FieldOfVisionCalculator
 				slope = (float) (dy / dx);
 				break;
 		}
-
 		return slope;
 	}
 
