@@ -43,6 +43,7 @@ public class FieldOfVisionCalculatorTest
 	public void testScan() {
 		Properties props = new Properties();
 		props.setProperty("blocksVision", "true");
+		// Test a blocker in each octant
 		Location[] locations = new Location[]{
 			new Location(24, 23, props),
 			new Location(24, 27, props),
@@ -52,7 +53,7 @@ public class FieldOfVisionCalculatorTest
 			new Location(26, 27, props),
 			new Location(27, 24, props),
 			new Location(27, 26, props),
-			new Location(27, 27, props)
+			new Location(27, 27, props) // And one that's adjacent to another
 		};
 		Zone zone = new Zone(0, new Dimension2D(50, 50), locations);
 
