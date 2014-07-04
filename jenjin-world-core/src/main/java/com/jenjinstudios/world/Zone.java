@@ -56,20 +56,15 @@ public class Zone
 	}
 
 	private void addSpecialLocations(Location[] specialLocations) {
-		for (Location l : specialLocations)
-		{
-			locationGrid[l.X_COORDINATE][l.Y_COORDINATE] = l;
-		}
+		for (Location l : specialLocations) { locationGrid[l.X_COORDINATE][l.Y_COORDINATE] = l; }
 	}
 
 	private void constructLocations() {
-		for (int x = 0; x < xSize; x++)
-			constructColumn(x);
+		for (int x = 0; x < xSize; x++) { constructColumn(x); }
 	}
 
 	private void constructColumn(int x) {
-		for (int y = 0; y < ySize; y++)
-			locationGrid[x][y] = new Location(x, y);
+		for (int y = 0; y < ySize; y++) { locationGrid[x][y] = new Location(x, y); }
 	}
 
 	private void initializeLocationAdjacency() {
@@ -78,23 +73,19 @@ public class Zone
 	}
 
 	private void setAdjacentWalkableLocations() {
-		for (int x = 0; x < xSize; x++)
-			setAdjacentWalkableColumn(x);
+		for (int x = 0; x < xSize; x++) { setAdjacentWalkableColumn(x); }
 	}
 
 	private void setAdjacentWalkableColumn(int x) {
-		for (int y = 0; y < ySize; y++)
-			locationGrid[x][y].setAdjacentWalkableLocations();
+		for (int y = 0; y < ySize; y++) { locationGrid[x][y].setAdjacentWalkableLocations(); }
 	}
 
 	private void setAdjacentLocations() {
-		for (int x = 0; x < xSize; x++)
-			setAdjacentColumn(x);
+		for (int x = 0; x < xSize; x++) { setAdjacentColumn(x); }
 	}
 
 	private void setAdjacentColumn(int x) {
-		for (int y = 0; y < ySize; y++)
-			locationGrid[x][y].setAdjacentLocations(this);
+		for (int y = 0; y < ySize; y++) { locationGrid[x][y].setAdjacentLocations(this);}
 	}
 
 	protected Location getLocationForCoordinates(double x, double y) {
