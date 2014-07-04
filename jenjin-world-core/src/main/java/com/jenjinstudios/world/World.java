@@ -97,18 +97,7 @@ public class World
 	 * @return The location that contains the specified vector2D.
 	 */
 	public Location getLocationForCoordinates(int zoneID, Vector2D vector2D) {
-		return isValidLocation(zoneID, vector2D) ? zones[zoneID].getLocationForCoordinates(vector2D) : null;
-	}
-
-	/**
-	 * Determine whether the given vector lies within a valid location.
-	 * @param zoneID The ID of the zone in which to look for the location.
-	 * @param vector2D The vector.
-	 * @return Whether the vector lies within a valid location.
-	 */
-	public boolean isValidLocation(int zoneID, Vector2D vector2D) {
-		Zone zone = zones[zoneID];
-		return zone == null || zone.isInvalidLocation(vector2D);
+		return zones[zoneID].getLocationForCoordinates(vector2D);
 	}
 
 	/** Update all objects in the world. */

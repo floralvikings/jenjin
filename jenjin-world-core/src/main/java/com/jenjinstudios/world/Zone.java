@@ -31,17 +31,6 @@ public class Zone
 		initializeLocationAdjacency();
 	}
 
-	/**
-	 * Determine if the coordinates of the vector are within this Zones boundaries.
-	 * @param vector2D The coordinates to check.
-	 * @return Whether the coordinates of the vector are within this Zones boundaries.
-	 */
-	public boolean isInvalidLocation(Vector2D vector2D) {
-		double x = vector2D.getXCoordinate();
-		double y = vector2D.getYCoordinate();
-		return !(x < 0 || y < 0 || x / Location.SIZE >= xSize || y / Location.SIZE >= ySize);
-	}
-
 	public Location getLocationForCoordinates(Vector2D centerCoordinates) {
 		return getLocationForCoordinates(centerCoordinates.getXCoordinate(), centerCoordinates.getYCoordinate());
 	}
@@ -89,8 +78,10 @@ public class Zone
 	}
 
 	protected Location getLocationForCoordinates(double x, double y) {
-		int gridX = (int) x / Location.SIZE;
-		int gridY = (int) y / Location.SIZE;
-		return getLocationOnGrid(gridX, gridY);
+		double gridX = x / Location.SIZE;
+		double gridY = y / Location.SIZE;
+		gridX = gridX < 0 ? -1 : gridX;
+		gridY = gridY < 0 ? -1 : gridY;
+		return getLocationOnGrid((int) gridX, (int) gridY);
 	}
 }
