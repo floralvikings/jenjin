@@ -31,13 +31,6 @@ public class Zone
 		initializeLocationAdjacency();
 	}
 
-	private void addSpecialLocations(Location[] specialLocations) {
-		for (Location l : specialLocations)
-		{
-			locationGrid[l.X_COORDINATE][l.Y_COORDINATE] = l;
-		}
-	}
-
 	/**
 	 * Determine if the coordinates of the vector are within this Zones boundaries.
 	 * @param vector2D The coordinates to check.
@@ -53,12 +46,6 @@ public class Zone
 		return getLocationForCoordinates(centerCoordinates.getXCoordinate(), centerCoordinates.getYCoordinate());
 	}
 
-	protected Location getLocationForCoordinates(double x, double y) {
-		int gridX = (int) x / Location.SIZE;
-		int gridY = (int) y / Location.SIZE;
-		return getLocationOnGrid(gridX, gridY);
-	}
-
 	public Location getLocationOnGrid(int x, int y) {
 		Location loc;
 		if (x < 0 || x >= xSize || y < 0 || y >= ySize)
@@ -66,6 +53,13 @@ public class Zone
 		else
 			loc = locationGrid[x][y];
 		return loc;
+	}
+
+	private void addSpecialLocations(Location[] specialLocations) {
+		for (Location l : specialLocations)
+		{
+			locationGrid[l.X_COORDINATE][l.Y_COORDINATE] = l;
+		}
 	}
 
 	private void constructLocations() {
@@ -101,5 +95,11 @@ public class Zone
 	private void setAdjacentColumn(int x) {
 		for (int y = 0; y < ySize; y++)
 			locationGrid[x][y].setAdjacentLocations(this);
+	}
+
+	protected Location getLocationForCoordinates(double x, double y) {
+		int gridX = (int) x / Location.SIZE;
+		int gridY = (int) y / Location.SIZE;
+		return getLocationOnGrid(gridX, gridY);
 	}
 }
