@@ -33,6 +33,27 @@ public class Location
 	private final Vector2D northEastCorner;
 	private final Vector2D northWestCorner;
 	private final Vector2D southEastCorner;
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof Location)) return false;
+
+		Location location = (Location) o;
+
+		if (X_COORDINATE != location.X_COORDINATE) return false;
+		if (Y_COORDINATE != location.Y_COORDINATE) return false;
+
+		return true;
+	}
+
+	@Override
+	public int hashCode() {
+		int result = X_COORDINATE;
+		result = 31 * result + Y_COORDINATE;
+		return result;
+	}
+
 	private final Vector2D southWestCorner;
 
 	/**
