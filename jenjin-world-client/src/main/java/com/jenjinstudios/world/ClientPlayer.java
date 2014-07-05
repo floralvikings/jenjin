@@ -23,14 +23,13 @@ public class ClientPlayer extends Actor
 		setVector2D(0, 0);
 	}
 
+	@Override
 	public void setAngle(Angle angle) {
-		if (forcedMoveState != null &&
-			  angle.equals(new Angle(forcedMoveState.absoluteAngle, forcedMoveState.relativeAngle)))
+		if (forcedMoveState == null || !angle.equals(forcedMoveState.angle))
 		{
-			return;
+			forcedMoveState = null;
+			super.setAngle(angle);
 		}
-		forcedMoveState = null;
-		super.setAngle(angle);
 	}
 
 	/** Mark that the actor has been forced to its current position. */
@@ -46,6 +45,6 @@ public class ClientPlayer extends Actor
 	@Override
 	protected double calcStepLength() {
 		return ((System.nanoTime() - (double) getLastStepTime()) / 1000000000)
-				* ClientActor.MOVE_SPEED;
+			  * ClientActor.MOVE_SPEED;
 	}
 }

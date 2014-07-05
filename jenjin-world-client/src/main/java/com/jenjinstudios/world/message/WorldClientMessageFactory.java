@@ -26,8 +26,8 @@ public class WorldClientMessageFactory extends ClientMessageFactory
 	 */
 	public Message generateStateChangeRequest(MoveState moveState) {
 		Message stateChangeRequest = getMessageRegistry().createMessage("StateChangeRequest");
-		stateChangeRequest.setArgument("relativeAngle", moveState.relativeAngle);
-		stateChangeRequest.setArgument("absoluteAngle", moveState.absoluteAngle);
+		stateChangeRequest.setArgument("relativeAngle", moveState.angle.getRelativeAngle());
+		stateChangeRequest.setArgument("absoluteAngle", moveState.angle.getAbsoluteAngle());
 		stateChangeRequest.setArgument("timeOfChange", moveState.timeOfChange);
 		stateChangeRequest.setArgument("xCoordinate", moveState.position.getXCoordinate());
 		stateChangeRequest.setArgument("yCoordinate", moveState.position.getYCoordinate());

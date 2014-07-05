@@ -90,8 +90,8 @@ public class WorldServerMessageFactory extends ServerMessageFactory
 		{
 			Message newState = getMessageRegistry().createMessage("StateChangeMessage");
 			newState.setArgument("id", changedActor.getId());
-			newState.setArgument("relativeAngle", m.relativeAngle);
-			newState.setArgument("absoluteAngle", m.absoluteAngle);
+			newState.setArgument("relativeAngle", m.angle.getRelativeAngle());
+			newState.setArgument("absoluteAngle", m.angle.getAbsoluteAngle());
 			newState.setArgument("timeOfChange", m.timeOfChange);
 			newState.setArgument("xCoordinate", m.position.getXCoordinate());
 			newState.setArgument("yCoordinate", m.position.getYCoordinate());
@@ -108,8 +108,8 @@ public class WorldServerMessageFactory extends ServerMessageFactory
 	 */
 	public Message generateForcedStateMessage(MoveState forcedState, WorldServer server) {
 		Message forcedStateMessage = getMessageRegistry().createMessage("ForceStateMessage");
-		forcedStateMessage.setArgument("relativeAngle", forcedState.relativeAngle);
-		forcedStateMessage.setArgument("absoluteAngle", forcedState.absoluteAngle);
+		forcedStateMessage.setArgument("relativeAngle", forcedState.angle.getRelativeAngle());
+		forcedStateMessage.setArgument("absoluteAngle", forcedState.angle.getAbsoluteAngle());
 		forcedStateMessage.setArgument("xCoordinate", forcedState.position.getXCoordinate());
 		forcedStateMessage.setArgument("yCoordinate", forcedState.position.getYCoordinate());
 		forcedStateMessage.setArgument("timeOfForce", server.getCycleStartTime());
