@@ -97,6 +97,23 @@ public class WorldObject
 	 */
 	public Location getLocation() { return location; }
 
+	/**
+	 * Set this objects new location.
+	 * @param newLocation The new location.
+	 */
+	protected void setLocation(Location newLocation) {
+		Location oldLocation = location;
+		location = newLocation;
+		if (oldLocation != location && oldLocation != null)
+		{
+			oldLocation.removeObject(this);
+		}
+		if (location != null)
+		{
+			location.addObject(this);
+		}
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
@@ -113,23 +130,6 @@ public class WorldObject
 		int result = name.hashCode();
 		result = 31 * result + id;
 		return result;
-	}
-
-	/**
-	 * Set this objects new location.
-	 * @param newLocation The new location.
-	 */
-	protected void setLocation(Location newLocation) {
-		Location oldLocation = location;
-		location = newLocation;
-		if (oldLocation != location && oldLocation != null)
-		{
-			oldLocation.removeObject(this);
-		}
-		if (location != null)
-		{
-			location.addObject(this);
-		}
 	}
 
 	/**
