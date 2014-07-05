@@ -141,6 +141,39 @@ public class Location
 		return center;
 	}
 
+	/**
+	 * Get a list of all adjacent locations.
+	 * @return The list of adjacent locations.
+	 */
+	protected List<Location> getAdjacentLocations() { return new LinkedList<>(adjacentLocations); }
+
+	/**
+	 * Set the locations adjacent to this one.
+	 * @param zone The zone in which this location (or rather, the "adjacent" locations) lie.
+	 */
+	protected void setAdjacentLocations(Zone zone) {
+		if (adjacentsSet)
+		{
+			throw new IllegalStateException("Cannot set adjacent locations after they have already been set!");
+		}
+		adjacentsSet = true;
+		setCardinals(zone);
+		setOrdinals(zone);
+	}
+
+	/** Set the locations adjacent to this one which can be moved to while finding a path. */
+	protected void setAdjacentWalkableLocations() {
+		adjacentWalkableLocations.addAll(adjacentLocations);
+		for (Location walkable : adjacentLocations)
+		{
+			if ("false".equals(walkable.getProperties().getProperty("walkable")))
+			{
+				adjacentWalkableLocations.remove(walkable);
+				removeDiagonalsWithAdjacentUnwalkables(walkable);
+			}
+		}
+	}
+
 	private void setOrdinals(Zone zone) {
 		Location adjNorthEast = zone.getLocationOnGrid(X_COORDINATE + 1, Y_COORDINATE + 1);
 		Location adjNorthWest = zone.getLocationOnGrid(X_COORDINATE - 1, Y_COORDINATE + 1);
@@ -174,39 +207,6 @@ public class Location
 	private void addCardinalAdjacentLocation(Location adjacent) {
 		if (adjacent != null)
 			adjacentLocations.add(adjacent);
-	}
-
-	/**
-	 * Get a list of all adjacent locations.
-	 * @return The list of adjacent locations.
-	 */
-	protected List<Location> getAdjacentLocations() { return new LinkedList<>(adjacentLocations); }
-
-	/**
-	 * Set the locations adjacent to this one.
-	 * @param zone The zone in which this location (or rather, the "adjacent" locations) lie.
-	 */
-	protected void setAdjacentLocations(Zone zone) {
-		if (adjacentsSet)
-		{
-			throw new IllegalStateException("Cannot set adjacent locations after they have already been set!");
-		}
-		adjacentsSet = true;
-		setCardinals(zone);
-		setOrdinals(zone);
-	}
-
-	/** Set the locations adjacent to this one which can be moved to while finding a path. */
-	protected void setAdjacentWalkableLocations() {
-		adjacentWalkableLocations.addAll(adjacentLocations);
-		for (Location walkable : adjacentLocations)
-		{
-			if ("false".equals(walkable.getProperties().getProperty("walkable")))
-			{
-				adjacentWalkableLocations.remove(walkable);
-				removeDiagonalsWithAdjacentUnwalkables(walkable);
-			}
-		}
 	}
 
 	private void removeDiagonalsWithAdjacentUnwalkables(Location walkable) {
