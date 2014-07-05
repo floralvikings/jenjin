@@ -20,8 +20,6 @@ public class Location
 	private final HashSet<WorldObject> objects;
 	/** The locationProperties of this location. */
 	private final Properties locationProperties;
-	/** Flags whether the adjacent locations are set. */
-	private boolean adjacentsSet;
 	/** The locations adjacent to this one. */
 	private final LinkedList<Location> adjacentLocations;
 	/** The locations adjacent to this one through which a path may be plotted. */
@@ -33,8 +31,9 @@ public class Location
 	private final Vector2D northEastCorner;
 	private final Vector2D northWestCorner;
 	private final Vector2D southEastCorner;
-
 	private final Vector2D southWestCorner;
+	/** Flags whether the adjacent locations are set. */
+	private boolean adjacentsSet;
 
 	/**
 	 * Construct a new location at the given position in a zone grid.
@@ -76,7 +75,10 @@ public class Location
 	 * Get the objects residing in this location, as an array.
 	 * @return An array containing all objects residing in this location.
 	 */
-	public Collection<WorldObject> getObjects() { return Collections.unmodifiableCollection(new ArrayList<>(objects)); }
+	public Collection<WorldObject> getObjects() {
+		return Collections.unmodifiableCollection(new ArrayList<>(objects)
+		);
+	}
 
 	/**
 	 * Add the object to this location's object map.
@@ -99,6 +101,20 @@ public class Location
 	 */
 	public List<Location> getAdjacentLocations() { return new LinkedList<>(adjacentLocations); }
 
+	/**
+	 * Set the locations adjacent to this one.
+	 * @param zone The zone in which this location (or rather, the "adjacent" locations) lie.
+	 */
+	protected void setAdjacentLocations(Zone zone) {
+		if (adjacentsSet)
+		{
+			throw new IllegalStateException("Cannot set adjacent locations after they have already been set!");
+		}
+		adjacentsSet = true;
+		setCardinals(zone);
+		setOrdinals(zone);
+	}
+
 	public Vector2D getNorthEastCorner() {
 		return northEastCorner;
 	}
@@ -111,9 +127,7 @@ public class Location
 		return southEastCorner;
 	}
 
-	public Vector2D getSouthWestCorner() {
-		return southWestCorner;
-	}
+	public Vector2D getSouthWestCorner() { return southWestCorner; }
 
 	@Override
 	public boolean equals(Object o) {
@@ -138,17 +152,19 @@ public class Location
 	}
 
 	/**
-	 * Set the locations adjacent to this one.
-	 * @param zone The zone in which this location (or rather, the "adjacent" locations) lie.
+	 * Get a list of locations adjacent to this one, all of which can be walked to.
+	 * @return A list of adjacent, walkable locations.
 	 */
-	protected void setAdjacentLocations(Zone zone) {
-		if (adjacentsSet)
-		{
-			throw new IllegalStateException("Cannot set adjacent locations after they have already been set!");
-		}
-		adjacentsSet = true;
-		setCardinals(zone);
-		setOrdinals(zone);
+	public List<Location> getAdjacentWalkableLocations() {
+		return new LinkedList<>(adjacentWalkableLocations);
+	}
+
+	/**
+	 * Get the Vector2D at the center of this location.
+	 * @return The Vector2D at the center of this location.
+	 */
+	public Vector2D getCenter() {
+		return center;
 	}
 
 	private void setOrdinals(Zone zone) {
@@ -183,22 +199,6 @@ public class Location
 			adjacentLocations.add(adjEast);
 		if (adjWest != null)
 			adjacentLocations.add(adjWest);
-	}
-
-	/**
-	 * Get a list of locations adjacent to this one, all of which can be walked to.
-	 * @return A list of adjacent, walkable locations.
-	 */
-	public List<Location> getAdjacentWalkableLocations() {
-		return new LinkedList<>(adjacentWalkableLocations);
-	}
-
-	/**
-	 * Get the Vector2D at the center of this location.
-	 * @return The Vector2D at the center of this location.
-	 */
-	public Vector2D getCenter() {
-		return center;
 	}
 
 	/** Set the locations adjacent to this one which can be moved to while finding a path. */
