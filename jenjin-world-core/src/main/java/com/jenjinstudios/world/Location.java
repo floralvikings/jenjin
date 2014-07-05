@@ -28,10 +28,6 @@ public class Location
 	private final List<Location> diagonals;
 	/** The center of this Location. */
 	private final Vector2D center;
-	private final Vector2D northEastCorner;
-	private final Vector2D northWestCorner;
-	private final Vector2D southEastCorner;
-	private final Vector2D southWestCorner;
 	/** Flags whether the adjacent locations are set. */
 	private boolean adjacentsSet;
 
@@ -56,10 +52,6 @@ public class Location
 		X_COORDINATE = x;
 		Y_COORDINATE = y;
 		center = new Vector2D(X_COORDINATE * SIZE + SIZE / 2, Y_COORDINATE * SIZE + SIZE / 2);
-		northEastCorner = new Vector2D((X_COORDINATE + 1) * SIZE - 1, (Y_COORDINATE + 1) * SIZE - 1);
-		northWestCorner = new Vector2D(X_COORDINATE * SIZE, (Y_COORDINATE + 1) * SIZE - 1);
-		southEastCorner = new Vector2D((X_COORDINATE + 1) * SIZE - 1, Y_COORDINATE * SIZE);
-		southWestCorner = new Vector2D(X_COORDINATE * SIZE, Y_COORDINATE * SIZE);
 		this.locationProperties = properties;
 		objects = new HashSet<>();
 
@@ -94,17 +86,18 @@ public class Location
 	@Override
 	public String toString() { return "(" + X_COORDINATE + ", " + Y_COORDINATE + ")"; }
 
-	public Vector2D getNorthEastCorner() { return northEastCorner; }
+	public Vector2D getNorthEastCorner() { return new Vector2D((X_COORDINATE + 1) * SIZE - 1,
+		(Y_COORDINATE + 1) * SIZE - 1); }
 
 	public Vector2D getNorthWestCorner() {
-		return northWestCorner;
+		return new Vector2D(X_COORDINATE * SIZE, (Y_COORDINATE + 1) * SIZE - 1);
 	}
 
 	public Vector2D getSouthEastCorner() {
-		return southEastCorner;
+		return new Vector2D((X_COORDINATE + 1) * SIZE - 1, Y_COORDINATE * SIZE);
 	}
 
-	public Vector2D getSouthWestCorner() { return southWestCorner; }
+	public Vector2D getSouthWestCorner() { return new Vector2D(X_COORDINATE * SIZE, Y_COORDINATE * SIZE); }
 
 	@Override
 	public boolean equals(Object o) {
