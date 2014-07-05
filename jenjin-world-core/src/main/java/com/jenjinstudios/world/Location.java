@@ -86,19 +86,6 @@ public class Location
 	@Override
 	public String toString() { return "(" + X_COORDINATE + ", " + Y_COORDINATE + ")"; }
 
-	public Vector2D getNorthEastCorner() { return new Vector2D((X_COORDINATE + 1) * SIZE - 1,
-		(Y_COORDINATE + 1) * SIZE - 1); }
-
-	public Vector2D getNorthWestCorner() {
-		return new Vector2D(X_COORDINATE * SIZE, (Y_COORDINATE + 1) * SIZE - 1);
-	}
-
-	public Vector2D getSouthEastCorner() {
-		return new Vector2D((X_COORDINATE + 1) * SIZE - 1, Y_COORDINATE * SIZE);
-	}
-
-	public Vector2D getSouthWestCorner() { return new Vector2D(X_COORDINATE * SIZE, Y_COORDINATE * SIZE); }
-
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;

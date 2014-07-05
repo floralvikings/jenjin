@@ -1,6 +1,7 @@
 package com.jenjinstudios.world.math;
 
 import com.jenjinstudios.world.Location;
+import com.jenjinstudios.world.LocationUtil;
 import com.jenjinstudios.world.Zone;
 
 import java.util.LinkedList;
@@ -157,7 +158,7 @@ public class FieldOfVisionCalculator
 	private boolean inRange(ScanState scanState) {
 		Location loc = zone.getLocationOnGrid(scanState.currentX, scanState.currentY);
 		return loc != null && scanState.currentX >= 0 && scanState.currentY >= 0 &&
-				scanState.currentX <= this.width && scanState.currentY <= this.height;
+			scanState.currentX <= this.width && scanState.currentY <= this.height;
 	}
 
 	private void addIfInRange(ScanState scanState, double rad) {
@@ -199,19 +200,19 @@ public class FieldOfVisionCalculator
 		{
 			case 1:
 			case 4:
-				brushCorner = loc.getSouthEastCorner();
+				brushCorner = LocationUtil.getSouthEastCorner(loc);
 				break;
 			case 2:
 			case 7:
-				brushCorner = loc.getSouthWestCorner();
+				brushCorner = LocationUtil.getSouthWestCorner(loc);
 				break;
 			case 3:
 			case 6:
-				brushCorner = loc.getNorthEastCorner();
+				brushCorner = LocationUtil.getNorthEastCorner(loc);
 				break;
 			case 5:
 			case 8:
-				brushCorner = loc.getNorthWestCorner();
+				brushCorner = LocationUtil.getNorthWestCorner(loc);
 				break;
 		}
 		return calcSlopeInOctant(scanState.octant, centerVector, brushCorner);
@@ -225,19 +226,19 @@ public class FieldOfVisionCalculator
 		{
 			case 1:
 			case 4:
-				brushCorner = loc.getNorthWestCorner();
+				brushCorner = LocationUtil.getNorthWestCorner(loc);
 				break;
 			case 2:
 			case 7:
-				brushCorner = loc.getNorthEastCorner();
+				brushCorner = LocationUtil.getNorthEastCorner(loc);
 				break;
 			case 3:
 			case 6:
-				brushCorner = loc.getSouthWestCorner();
+				brushCorner = LocationUtil.getSouthWestCorner(loc);
 				break;
 			case 5:
 			case 8:
-				brushCorner = loc.getSouthEastCorner();
+				brushCorner = LocationUtil.getSouthEastCorner(loc);
 				break;
 		}
 		return calcSlopeInOctant(scanState.octant, centerVector, brushCorner);
