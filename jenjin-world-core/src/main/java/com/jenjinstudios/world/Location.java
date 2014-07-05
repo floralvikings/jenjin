@@ -156,25 +156,17 @@ public class Location
 		Location adjNorthWest = zone.getLocationOnGrid(X_COORDINATE - 1, Y_COORDINATE + 1);
 		Location adjSouthEast = zone.getLocationOnGrid(X_COORDINATE + 1, Y_COORDINATE - 1);
 		Location adjSouthWest = zone.getLocationOnGrid(X_COORDINATE - 1, Y_COORDINATE - 1);
-		if (adjNorthEast != null)
+		addAdjacentOrdinalLocation(adjNorthEast);
+		addAdjacentOrdinalLocation(adjNorthWest);
+		addAdjacentOrdinalLocation(adjSouthEast);
+		addAdjacentOrdinalLocation(adjSouthWest);
+	}
+
+	private void addAdjacentOrdinalLocation(Location adjacnt) {
+		if (adjacnt != null)
 		{
-			adjacentLocations.add(adjNorthEast);
-			diagonals.add(adjNorthEast);
-		}
-		if (adjNorthWest != null)
-		{
-			adjacentLocations.add(adjNorthWest);
-			diagonals.add(adjNorthWest);
-		}
-		if (adjSouthEast != null)
-		{
-			adjacentLocations.add(adjSouthEast);
-			diagonals.add(adjSouthEast);
-		}
-		if (adjSouthWest != null)
-		{
-			adjacentLocations.add(adjSouthWest);
-			diagonals.add(adjSouthWest);
+			adjacentLocations.add(adjacnt);
+			diagonals.add(adjacnt);
 		}
 	}
 
