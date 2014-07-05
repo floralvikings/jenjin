@@ -99,7 +99,7 @@ public class Location
 	 * Get a list of all adjacent locations.
 	 * @return The list of adjacent locations.
 	 */
-	public List<Location> getAdjacentLocations() { return new LinkedList<>(adjacentLocations); }
+	protected List<Location> getAdjacentLocations() { return new LinkedList<>(adjacentLocations); }
 
 	/**
 	 * Set the locations adjacent to this one.
