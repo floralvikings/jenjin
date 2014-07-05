@@ -1,5 +1,6 @@
 package com.jenjinstudios.world;
 
+import com.jenjinstudios.world.math.Angle;
 import com.jenjinstudios.world.math.MathUtil;
 import com.jenjinstudios.world.math.Vector2D;
 import com.jenjinstudios.world.state.MoveState;
@@ -54,7 +55,7 @@ public class Actor extends SightedObject
 	public Actor(String name) {
 		super(name);
 		stateChanges = new LinkedList<>();
-		relativeAngle = MoveState.IDLE;
+		relativeAngle = Angle.IDLE;
 	}
 
 	@Override
@@ -101,8 +102,8 @@ public class Actor extends SightedObject
 		double stepLength = calcStepLength();
 		if (!stepForward(stepLength))
 		{
-			setForcedState(new MoveState(MoveState.IDLE, getAbsoluteAngle(), getVector2D(), lastStepTime));
-			setRelativeAngle(MoveState.IDLE);
+			setForcedState(new MoveState(Angle.IDLE, getAbsoluteAngle(), getVector2D(), lastStepTime));
+			setRelativeAngle(Angle.IDLE);
 		}
 	}
 
