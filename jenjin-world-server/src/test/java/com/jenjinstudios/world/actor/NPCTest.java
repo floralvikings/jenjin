@@ -26,10 +26,10 @@ public class NPCTest extends WorldServerTest
 		testNPC.setVector2D(20, 5);
 		server.getWorld().addObject(testNPC);
 		testNPC.plotPath(target);
-		double distance = testNPC.getVector2D().getDistanceToVector(target.getCenter());
+		double distance = testNPC.getVector2D().getDistanceToVector(LocationUtil.getCenter(target));
 		while (distance >= WorldServerTest.vectorTolerance)
 		{
-			distance = testNPC.getVector2D().getDistanceToVector(target.getCenter());
+			distance = testNPC.getVector2D().getDistanceToVector(LocationUtil.getCenter(target));
 			Thread.sleep(10);
 		}
 		WorldObject clientNPC = clientPlayer.getVisibleObjects().get(testNPC.getId());
@@ -52,7 +52,7 @@ public class NPCTest extends WorldServerTest
 		NPC npc = new NPC("Nearly Passable Cormorant");
 		Location startLocation = world.getZone(0).getLocationOnGrid(3, 3);
 		Location targetLocation = world.getZone(0).getLocationOnGrid(5, 7);
-		npc.setVector2D(startLocation.getCenter());
+		npc.setVector2D(LocationUtil.getCenter(startLocation));
 
 		world.addObject(npc);
 		npc.plotPath(targetLocation);

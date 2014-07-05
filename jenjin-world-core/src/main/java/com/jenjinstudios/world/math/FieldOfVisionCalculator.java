@@ -194,8 +194,8 @@ public class FieldOfVisionCalculator
 
 	private float calcRightSlope(ScanState scanState) {
 		Location loc = zone.getLocationOnGrid(scanState.currentX, scanState.currentY);
-		Vector2D centerVector = center.getCenter();
-		Vector2D brushCorner = loc.getCenter();
+		Vector2D centerVector = LocationUtil.getCenter(center);
+		Vector2D brushCorner = LocationUtil.getCenter(loc);
 		switch (scanState.octant)
 		{
 			case 1:
@@ -220,8 +220,8 @@ public class FieldOfVisionCalculator
 
 	private float calcLeftSlope(ScanState scanState) {
 		Location loc = zone.getLocationOnGrid(scanState.currentX, scanState.currentY);
-		Vector2D centerVector = center.getCenter();
-		Vector2D brushCorner = loc.getCenter();
+		Vector2D centerVector = LocationUtil.getCenter(center);
+		Vector2D brushCorner = LocationUtil.getCenter(loc);
 		switch (scanState.octant)
 		{
 			case 1:

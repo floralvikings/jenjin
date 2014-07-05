@@ -24,4 +24,13 @@ public class LocationUtil
 		return new Vector2D(location.X_COORDINATE *
 			Location.SIZE, location.Y_COORDINATE * Location.SIZE);
 	}
+
+	/**
+	 * Get the Vector2D at the center of this location.
+	 * @return The Vector2D at the center of this location.
+	 */
+	public static Vector2D getCenter(Location location) {
+		return new Vector2D(location.X_COORDINATE * Location.SIZE + Location.SIZE / 2,
+			location.Y_COORDINATE * Location.SIZE + Location.SIZE / 2);
+	}
 }

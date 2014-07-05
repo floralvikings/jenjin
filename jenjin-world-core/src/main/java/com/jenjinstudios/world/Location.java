@@ -1,7 +1,5 @@
 package com.jenjinstudios.world;
 
-import com.jenjinstudios.world.math.Vector2D;
-
 import java.util.*;
 
 /**
@@ -26,8 +24,6 @@ public class Location
 	private final LinkedList<Location> adjacentWalkableLocations;
 	/** The locations adjacent diagonally. */
 	private final List<Location> diagonals;
-	/** The center of this Location. */
-	private final Vector2D center;
 	/** Flags whether the adjacent locations are set. */
 	private boolean adjacentsSet;
 
@@ -51,7 +47,6 @@ public class Location
 		adjacentWalkableLocations = new LinkedList<>();
 		X_COORDINATE = x;
 		Y_COORDINATE = y;
-		center = new Vector2D(X_COORDINATE * SIZE + SIZE / 2, Y_COORDINATE * SIZE + SIZE / 2);
 		this.locationProperties = properties;
 		objects = new HashSet<>();
 
@@ -111,14 +106,6 @@ public class Location
 	 */
 	public List<Location> getAdjacentWalkableLocations() {
 		return new LinkedList<>(adjacentWalkableLocations);
-	}
-
-	/**
-	 * Get the Vector2D at the center of this location.
-	 * @return The Vector2D at the center of this location.
-	 */
-	public Vector2D getCenter() {
-		return center;
 	}
 
 	/**
