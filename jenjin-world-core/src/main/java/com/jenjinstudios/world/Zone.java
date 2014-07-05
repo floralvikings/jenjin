@@ -31,8 +31,12 @@ public class Zone
 		initializeLocationAdjacency();
 	}
 
-	public Location getLocationForCoordinates(Vector2D centerCoordinates) {
-		return getLocationForCoordinates(centerCoordinates.getXCoordinate(), centerCoordinates.getYCoordinate());
+	public Location getLocationForCoordinates(Vector2D coordinates) {
+		double gridX = coordinates.getXCoordinate() / Location.SIZE;
+		double gridY = coordinates.getYCoordinate() / Location.SIZE;
+		gridX = gridX < 0 ? -1 : gridX;
+		gridY = gridY < 0 ? -1 : gridY;
+		return getLocationOnGrid((int) gridX, (int) gridY);
 	}
 
 	public Location getLocationOnGrid(int x, int y) {
@@ -75,13 +79,5 @@ public class Zone
 
 	private void setAdjacentColumn(int x) {
 		for (int y = 0; y < ySize; y++) { locationGrid[x][y].setAdjacentLocations(this);}
-	}
-
-	protected Location getLocationForCoordinates(double x, double y) {
-		double gridX = x / Location.SIZE;
-		double gridY = y / Location.SIZE;
-		gridX = gridX < 0 ? -1 : gridX;
-		gridY = gridY < 0 ? -1 : gridY;
-		return getLocationOnGrid((int) gridX, (int) gridY);
 	}
 }
