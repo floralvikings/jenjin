@@ -76,8 +76,7 @@ public class Location
 	 * @return An array containing all objects residing in this location.
 	 */
 	public Collection<WorldObject> getObjects() {
-		return Collections.unmodifiableCollection(new ArrayList<>(objects)
-		);
+		return Collections.unmodifiableCollection(new ArrayList<>(objects));
 	}
 
 	/**
@@ -95,29 +94,7 @@ public class Location
 	@Override
 	public String toString() { return "(" + X_COORDINATE + ", " + Y_COORDINATE + ")"; }
 
-	/**
-	 * Get a list of all adjacent locations.
-	 * @return The list of adjacent locations.
-	 */
-	protected List<Location> getAdjacentLocations() { return new LinkedList<>(adjacentLocations); }
-
-	/**
-	 * Set the locations adjacent to this one.
-	 * @param zone The zone in which this location (or rather, the "adjacent" locations) lie.
-	 */
-	protected void setAdjacentLocations(Zone zone) {
-		if (adjacentsSet)
-		{
-			throw new IllegalStateException("Cannot set adjacent locations after they have already been set!");
-		}
-		adjacentsSet = true;
-		setCardinals(zone);
-		setOrdinals(zone);
-	}
-
-	public Vector2D getNorthEastCorner() {
-		return northEastCorner;
-	}
+	public Vector2D getNorthEastCorner() { return northEastCorner; }
 
 	public Vector2D getNorthWestCorner() {
 		return northWestCorner;
@@ -196,6 +173,26 @@ public class Location
 			adjacentLocations.add(adjEast);
 		if (adjWest != null)
 			adjacentLocations.add(adjWest);
+	}
+
+	/**
+	 * Get a list of all adjacent locations.
+	 * @return The list of adjacent locations.
+	 */
+	protected List<Location> getAdjacentLocations() { return new LinkedList<>(adjacentLocations); }
+
+	/**
+	 * Set the locations adjacent to this one.
+	 * @param zone The zone in which this location (or rather, the "adjacent" locations) lie.
+	 */
+	protected void setAdjacentLocations(Zone zone) {
+		if (adjacentsSet)
+		{
+			throw new IllegalStateException("Cannot set adjacent locations after they have already been set!");
+		}
+		adjacentsSet = true;
+		setCardinals(zone);
+		setOrdinals(zone);
 	}
 
 	/** Set the locations adjacent to this one which can be moved to while finding a path. */
