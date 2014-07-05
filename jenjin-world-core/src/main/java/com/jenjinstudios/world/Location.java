@@ -136,11 +136,8 @@ public class Location
 
 		Location location = (Location) o;
 
-		if (X_COORDINATE != location.X_COORDINATE) return false;
-		if (Y_COORDINATE != location.Y_COORDINATE) return false;
-		if (!locationProperties.equals(location.locationProperties)) return false;
-
-		return true;
+		return X_COORDINATE == location.X_COORDINATE && Y_COORDINATE == location.Y_COORDINATE &&
+			locationProperties.equals(location.locationProperties);
 	}
 
 	@Override
