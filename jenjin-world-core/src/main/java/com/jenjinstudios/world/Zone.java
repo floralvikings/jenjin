@@ -52,9 +52,7 @@ public class Zone
 		for (Location l : specialLocations) { locationGrid[l.X_COORDINATE][l.Y_COORDINATE] = l; }
 	}
 
-	private void constructLocations() {
-		for (int x = 0; x < xSize; x++) { constructColumn(x); }
-	}
+	private void constructLocations() { for (int x = 0; x < xSize; x++) { constructColumn(x); } }
 
 	private void constructColumn(int x) {
 		for (int y = 0; y < ySize; y++) { locationGrid[x][y] = new Location(x, y); }
@@ -65,17 +63,13 @@ public class Zone
 		setAdjacentWalkableLocations();
 	}
 
-	private void setAdjacentWalkableLocations() {
-		for (int x = 0; x < xSize; x++) { setAdjacentWalkableColumn(x); }
-	}
+	private void setAdjacentWalkableLocations() { for (int x = 0; x < xSize; x++) { setAdjacentWalkableColumn(x); } }
 
 	private void setAdjacentWalkableColumn(int x) {
 		for (int y = 0; y < ySize; y++) { locationGrid[x][y].setAdjacentWalkableLocations(); }
 	}
 
-	private void setAdjacentLocations() {
-		for (int x = 0; x < xSize; x++) { setAdjacentColumn(x); }
-	}
+	private void setAdjacentLocations() { for (int x = 0; x < xSize; x++) { setAdjacentColumn(x); } }
 
 	private void setAdjacentColumn(int x) {
 		for (int y = 0; y < ySize; y++) { locationGrid[x][y].setAdjacentLocations(this);}
