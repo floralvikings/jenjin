@@ -17,7 +17,6 @@ public class LocationTest
 		Zone zone = new Zone(0, new Dimension2D(10, 10));
 		Location loc = zone.getLocationOnGrid(5, 5);
 		List<Location> adjacentLocations = loc.getAdjacentLocations();
-		System.out.println(adjacentLocations);
 		Location[] expectedLocationArray = {
 			new Location(5, 6),
 			new Location(5, 4),
@@ -30,5 +29,10 @@ public class LocationTest
 		};
 		List<Location> expectedLocations = Arrays.asList(expectedLocationArray);
 		Assert.assertEquals(adjacentLocations, expectedLocations);
+	}
+
+	@Test
+	public void testGetAdjacentWalkableLocations() {
+
 	}
 }
