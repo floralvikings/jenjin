@@ -20,14 +20,12 @@ public class MoveState
 
 	/**
 	 * Construct a new MoveState.
-	 * @param relativeAngle The relativeAngle of movement.
-	 * @param absoluteAngle The angle of movement.
 	 * @param position The position at which the state change took place.
 	 * @param timeOfChange The time in nanoseconds at which the state change took place.
 	 */
-	public MoveState(double relativeAngle, double absoluteAngle, Vector2D position, long timeOfChange) {
-		this.relativeAngle = relativeAngle;
-		this.absoluteAngle = absoluteAngle;
+	public MoveState(Angle angle, Vector2D position, long timeOfChange) {
+		this.relativeAngle = angle.getRelativeAngle();
+		this.absoluteAngle = angle.getAbsoluteAngle();
 		this.position = position;
 		this.timeOfChange = timeOfChange;
 
@@ -42,8 +40,7 @@ public class MoveState
 	 * Get a string representation of the relative angle.  Used to report cardinal directions instead of numbers.
 	 * @return The string representation of the relative angle.
 	 */
-	private String relativeAngleString()
-	{
+	private String relativeAngleString() {
 		String cheese = String.valueOf(relativeAngle);
 		if (relativeAngle == Angle.FRONT)
 		{

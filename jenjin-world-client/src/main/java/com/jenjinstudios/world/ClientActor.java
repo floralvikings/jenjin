@@ -1,9 +1,5 @@
 package com.jenjinstudios.world;
 
-import com.jenjinstudios.world.math.MathUtil;
-
-import static com.jenjinstudios.world.math.Angle.IDLE;
-
 /**
  * The {@code ClientActor} class is used to represent a server-side {@code Actor} object on the client side.  It is an
  * object capable of movement.
@@ -60,9 +56,8 @@ public class ClientActor extends WorldObject
 	 * @param stepLength The length of the step to take.
 	 */
 	void stepForward(double stepLength) {
-		if (relativeAngle == IDLE) return;
-		setVector2D(getVector2D().getVectorInDirection(stepLength, MathUtil.calcStepAngle(getAbsoluteAngle(),
-			getRelativeAngle())));
+		if (getAngle().isIdle()) return;
+		setVector2D(getVector2D().getVectorInDirection(stepLength, getAngle().getStepAngle()));
 	}
 
 	/**
@@ -70,8 +65,7 @@ public class ClientActor extends WorldObject
 	 * @return The current step length.
 	 */
 	double calcStepLength() {
-		return ((System.nanoTime() - (double) getLastStepTime()) / 1000000000)
-			* MOVE_SPEED;
+		return ((System.nanoTime() - (double) getLastStepTime()) / 1000000000) * MOVE_SPEED;
 	}
 
 	/**

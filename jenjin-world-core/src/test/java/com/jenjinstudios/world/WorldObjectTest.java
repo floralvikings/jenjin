@@ -1,5 +1,6 @@
 package com.jenjinstudios.world;
 
+import com.jenjinstudios.world.math.Angle;
 import com.jenjinstudios.world.math.Vector2D;
 import org.testng.Assert;
 import org.testng.annotations.*;
@@ -49,8 +50,8 @@ public class WorldObjectTest
 	 */
 	@Test
 	public void testSetDirection() throws Exception {
-		worldObject.setAbsoluteAngle(direction);
-		Assert.assertEquals(direction, worldObject.getAbsoluteAngle(), 0);
+		worldObject.setAngle(new Angle(direction));
+		Assert.assertEquals(direction, worldObject.getAngle().getAbsoluteAngle(), 0);
 	}
 
 	/**

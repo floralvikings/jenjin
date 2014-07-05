@@ -3,6 +3,7 @@ package com.jenjinstudios.world.message;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.world.ClientActor;
 import com.jenjinstudios.world.WorldClient;
+import com.jenjinstudios.world.math.Angle;
 import com.jenjinstudios.world.math.MathUtil;
 import com.jenjinstudios.world.math.Vector2D;
 
@@ -49,7 +50,6 @@ public class ExecutableActorVisibleMessage extends WorldClientExecutableMessage
 		Vector2D oldVector = new Vector2D(xCoordinate, yCoordinate);
 		Vector2D newVector = oldVector.getVectorInDirection(dist, angle);
 		newlyVisible.setVector2D(newVector);
-		newlyVisible.setAbsoluteAngle(absoluteAngle);
-		newlyVisible.setRelativeAngle(relativeAngle);
+		newlyVisible.setAngle(new Angle(absoluteAngle, relativeAngle));
 	}
 }

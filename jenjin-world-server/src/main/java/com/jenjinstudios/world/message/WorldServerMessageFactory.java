@@ -57,8 +57,8 @@ public class WorldServerMessageFactory extends ServerMessageFactory
 		newlyVisibleMessage.setArgument("resourceID", newlyVisible.getResourceID());
 		newlyVisibleMessage.setArgument("xCoordinate", newlyVisible.getVector2D().getXCoordinate());
 		newlyVisibleMessage.setArgument("yCoordinate", newlyVisible.getVector2D().getYCoordinate());
-		newlyVisibleMessage.setArgument("relativeAngle", newlyVisible.getRelativeAngle());
-		newlyVisibleMessage.setArgument("absoluteAngle", newlyVisible.getAbsoluteAngle());
+		newlyVisibleMessage.setArgument("relativeAngle", newlyVisible.getAngle().getRelativeAngle());
+		newlyVisibleMessage.setArgument("absoluteAngle", newlyVisible.getAngle().getAbsoluteAngle());
 		newlyVisibleMessage.setArgument("timeOfVisibility", newlyVisible.getWorld().getLastUpdateStarted());
 		return newlyVisibleMessage;
 	}

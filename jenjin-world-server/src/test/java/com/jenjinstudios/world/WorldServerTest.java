@@ -130,14 +130,14 @@ public class WorldServerTest
 	 */
 	public static void moveServerActorToVector(Actor serverActor, Vector2D newVector) throws InterruptedException {
 		double newAngle = serverActor.getVector2D().getAngleToVector(newVector);
-		serverActor.setRelativeAngle(newAngle);
+		serverActor.setAngle(new Angle(serverActor.getAngle().getAbsoluteAngle(), newAngle));
 		double distanceToNewVector = serverActor.getVector2D().getDistanceToVector(newVector);
 		while (distanceToNewVector > vectorTolerance && (serverActor.getForcedState() == null))
 		{
 			Thread.sleep(10);
 			distanceToNewVector = serverActor.getVector2D().getDistanceToVector(newVector);
 		}
-		serverActor.setRelativeAngle(Angle.IDLE);
+		serverActor.setAngle(serverActor.getAngle().asIdle());
 		// Give client time to "catch up".
 		Thread.sleep(100);
 	}
@@ -158,7 +158,7 @@ public class WorldServerTest
 		double angle = clientPlayer.getVector2D().getAngleToVector(target);
 		double dist = clientPlayer.getVector2D().getDistanceToVector(target);
 		if (dist <= vectorTolerance) return;
-		clientPlayer.setRelativeAngle(angle);
+		clientPlayer.setAngle(clientPlayer.getAngle().withRelativeAngle(angle));
 		long timeToSleep = (long) (1000 * (dist / ClientActor.MOVE_SPEED));
 		// Have to wait for the new angle to be set
 		for (int i = 0; i < timeToSleep; i += 10)
@@ -169,9 +169,9 @@ public class WorldServerTest
 				break;
 			}
 		}
-		clientPlayer.setRelativeAngle(Angle.IDLE);
+		clientPlayer.setAngle(clientPlayer.getAngle().asIdle());
 		Thread.sleep(100);
-		while (serverPlayer.getRelativeAngle() != Angle.IDLE)
+		while (!serverPlayer.getAngle().isIdle())
 		{
 			Thread.sleep(2);
 		}

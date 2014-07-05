@@ -4,6 +4,7 @@ import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.world.ClientActor;
 import com.jenjinstudios.world.WorldClient;
 import com.jenjinstudios.world.WorldObject;
+import com.jenjinstudios.world.math.Angle;
 import com.jenjinstudios.world.math.MathUtil;
 import com.jenjinstudios.world.math.Vector2D;
 
@@ -37,8 +38,7 @@ public class ExecutableStateChangeMessage extends WorldClientExecutableMessage
 		if (obj != null && obj instanceof ClientActor)
 		{
 			ClientActor actor = (ClientActor) obj;
-			actor.setAbsoluteAngle(absoluteAngle);
-			actor.setRelativeAngle(relativeAngle);
+			actor.setAngle(new Angle(absoluteAngle, relativeAngle));
 			actor.setLastStepTime(System.nanoTime());
 			actor.setVector2D(position);
 		}

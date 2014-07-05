@@ -1,13 +1,10 @@
 package com.jenjinstudios.world;
 
 import com.jenjinstudios.world.math.Angle;
-import com.jenjinstudios.world.math.MathUtil;
 import com.jenjinstudios.world.math.Vector2D;
 import com.jenjinstudios.world.state.MoveState;
 
 import java.util.LinkedList;
-
-import static com.jenjinstudios.world.math.Angle.IDLE;
 
 
 /**
@@ -39,14 +36,7 @@ public class Actor extends SightedObject
 	private Vector2D vectorBeforeStep;
 	/** The time at which this actor finished it's last step. */
 	private long lastStepTime;
-	/** The total angle needed to take a step in the appropriate direction. */
-	private double stepAngle;
-	/** The angle of movement relative to the absolute angle. */
-	private double relativeAngle;
-	/** The relative angle to which this actor will be switching on its next state change. */
-	private double newRelAngle;
-	/** The absolute angle to which this actor will be switching on its next state change. */
-	private double newAbsAngle;
+	private Angle newAngle;
 
 	/**
 	 * Construct an Actor with the given name.
@@ -55,7 +45,6 @@ public class Actor extends SightedObject
 	public Actor(String name) {
 		super(name);
 		stateChanges = new LinkedList<>();
-		relativeAngle = Angle.IDLE;
 	}
 
 	@Override
@@ -91,43 +80,10 @@ public class Actor extends SightedObject
 			resetAngles();
 			synchronized (stateChanges)
 			{
-				stateChanges.add(new MoveState(getRelativeAngle(), getAbsoluteAngle(), getVector2D(),
-					getLastStepTime()));
+				stateChanges.add(new MoveState(getAngle(), getVector2D(),
+					  getLastStepTime()));
 			}
 		}
-	}
-
-	/** Take a step, changing state and correcting steps if necessary. */
-	void step() {
-		double stepLength = calcStepLength();
-		if (!stepForward(stepLength))
-		{
-			setForcedState(new MoveState(Angle.IDLE, getAbsoluteAngle(), getVector2D(), lastStepTime));
-			setRelativeAngle(Angle.IDLE);
-		}
-	}
-
-	/**
-	 * Calculate the step length at the current time.
-	 * @return The current step length.
-	 */
-	double calcStepLength() {
-		return ((System.nanoTime() - (double) getLastStepTime()) / 1000000000) * Actor.MOVE_SPEED;
-	}
-
-	/**
-	 * Take a step according to the current move state.
-	 * @param stepLength The amount to step forward.
-	 * @return Whether the step forward was successful.
-	 */
-	boolean stepForward(double stepLength) {
-		if (getRelativeAngle() == IDLE) { return true; }
-		Vector2D newVector = getVector2D().getVectorInDirection(stepLength, stepAngle);
-		Location newLocation = getWorld().getLocationForCoordinates(getZoneID(), newVector);
-		if (newLocation == null) { return false; }
-		boolean walkable = !"false".equals(newLocation.getProperties().getProperty("walkable"));
-		if (walkable) { setVector2D(newVector); }
-		return walkable;
 	}
 
 	/**
@@ -149,6 +105,59 @@ public class Actor extends SightedObject
 	}
 
 	/**
+	 * Set the forced state of this actor to the given state.
+	 * @param forcedState The state to which this actor will be forced.
+	 */
+	public void setForcedState(MoveState forcedState) { this.forcedState = forcedState; }
+
+	@Override
+	public void setAngle(Angle angle) {
+		if (getAngle().equals(angle)) { return; }
+		newState = true;
+		this.newAngle = angle;
+	}
+
+	public Angle getNewAngle() { return newAngle; }
+
+	/**
+	 * Set the absolute and relative angles to their new-state counterparts.
+	 */
+	private void resetAngles() { super.setAngle(newAngle); }
+
+	/** Take a step, changing state and correcting steps if necessary. */
+	void step() {
+		double stepLength = calcStepLength();
+		if (!stepForward(stepLength))
+		{
+			setForcedState(new MoveState(getAngle().asIdle(), getVector2D(), lastStepTime));
+			setAngle(getAngle().asIdle());
+		}
+	}
+
+	/**
+	 * Calculate the step length at the current time.
+	 * @return The current step length.
+	 */
+	double calcStepLength() {
+		return ((System.nanoTime() - (double) getLastStepTime()) / 1000000000) * Actor.MOVE_SPEED;
+	}
+
+	/**
+	 * Take a step according to the current move state.
+	 * @param stepLength The amount to step forward.
+	 * @return Whether the step forward was successful.
+	 */
+	boolean stepForward(double stepLength) {
+		if (getAngle().isIdle()) { return true; }
+		Vector2D newVector = getVector2D().getVectorInDirection(stepLength, getAngle().getStepAngle());
+		Location newLocation = getWorld().getLocationForCoordinates(getZoneID(), newVector);
+		if (newLocation == null) { return false; }
+		boolean walkable = !"false".equals(newLocation.getProperties().getProperty("walkable"));
+		if (walkable) { setVector2D(newVector); }
+		return walkable;
+	}
+
+	/**
 	 * Get the time at which this actor finished it's last step.
 	 * @return The time at which this actor finished it's last step.
 	 */
@@ -160,54 +169,4 @@ public class Actor extends SightedObject
 	 * @param lastStepTime The new time to use for this actors last completed step.
 	 */
 	public void setLastStepTime(long lastStepTime) { this.lastStepTime = lastStepTime; }
-
-	/**
-	 * Get the relative angle of this actor.
-	 * @return The relative angle of this actor.
-	 */
-	public double getRelativeAngle() { return relativeAngle; }
-
-	/**
-	 * Set the relative angle of this actor.
-	 * @param relativeAngle The new relative angle.
-	 */
-	public void setRelativeAngle(double relativeAngle) {
-		if (getRelativeAngle() == relativeAngle) { return; }
-		newState = true;
-		this.newRelAngle = relativeAngle;
-	}
-
-	@Override
-	public void setAbsoluteAngle(double absoluteAngle) {
-		if (getAbsoluteAngle() == absoluteAngle) { return; }
-		newState = true;
-		this.newAbsAngle = absoluteAngle;
-	}
-
-	/**
-	 * Set the absolute and relative angles to their new-state counterparts.
-	 */
-	private void resetAngles() {
-		this.relativeAngle = newRelAngle;
-		super.setAbsoluteAngle(newAbsAngle);
-		stepAngle = MathUtil.calcStepAngle(getAbsoluteAngle(), getRelativeAngle());
-	}
-
-	/**
-	 * Get the relative angle to which this Actor will be switching on its next state change.
-	 * @return The relative angle to which this Actor will be switching on its next state change.
-	 */
-	double getNewRelAngle() { return newRelAngle; }
-
-	/**
-	 * Get the absolute angle to which this Actor will be switching on its next state change.
-	 * @return The absolute angle to which this Actor will be switching on its next state change.
-	 */
-	double getNewAbsAngle() { return newAbsAngle; }
-
-	/**
-	 * Set the forced state of this actor to the given state.
-	 * @param forcedState The state to which this actor will be forced.
-	 */
-	public void setForcedState(MoveState forcedState) { this.forcedState = forcedState; }
 }

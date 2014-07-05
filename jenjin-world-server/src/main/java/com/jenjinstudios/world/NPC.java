@@ -74,11 +74,11 @@ public class NPC extends Actor
 		Vector2D target = currentPath.peek();
 		if (target != null)
 		{
-			if (getRelativeAngle() == Angle.IDLE)
+			if (getAngle().isIdle())
 			{
 				double angle = getVector2D().getAngleToVector(target);
-				setAbsoluteAngle(angle);
-				setRelativeAngle(Angle.FRONT);
+				Angle newAngle = new Angle(angle, Angle.FRONT);
+				setAngle(newAngle);
 				return;
 			}
 			double distance = getVector2D().getDistanceToVector(target);
@@ -89,11 +89,11 @@ public class NPC extends Actor
 				if (newTarget != null)
 				{
 					double angle = getVector2D().getAngleToVector(newTarget);
-					setAbsoluteAngle(angle);
-					setRelativeAngle(Angle.FRONT);
+					Angle newAngle = new Angle(angle, Angle.FRONT);
+					setAngle(newAngle);
 				} else
 				{
-					setRelativeAngle(Angle.IDLE);
+					setAngle(getAngle().asIdle());
 				}
 			}
 		}

@@ -1,5 +1,6 @@
 package com.jenjinstudios.world;
 
+import com.jenjinstudios.world.math.Angle;
 import com.jenjinstudios.world.math.Vector2D;
 
 /**
@@ -15,7 +16,7 @@ public class WorldObject
 	/** The vector2D in the world at which the object is located. */
 	private Vector2D vector2D;
 	/** The relativeAngle in which this object is facing. */
-	private double absoluteAngle;
+	private Angle angle;
 	/** The ID number of this object. */
 	private int id = Integer.MIN_VALUE;
 	/** The world in which this object exists. */
@@ -33,19 +34,16 @@ public class WorldObject
 	public WorldObject(String name) {
 		vector2D = new Vector2D(0, 0);
 		this.name = name;
+		angle = new Angle();
 	}
 
-	/**
-	 * Get the relativeAngle in which this object is facing, in radians.
-	 * @return The relativeAngle in which this object is facing.
-	 */
-	public double getAbsoluteAngle() { return absoluteAngle; }
+	public Angle getAngle() {
+		return angle;
+	}
 
-	/**
-	 * Set the relativeAngle in which this object is facing.
-	 * @param absoluteAngle The new relativeAngle for this object to face.
-	 */
-	public void setAbsoluteAngle(double absoluteAngle) { this.absoluteAngle = absoluteAngle; }
+	public void setAngle(Angle angle) {
+		this.angle = angle;
+	}
 
 	/**
 	 * Get this object's current position.

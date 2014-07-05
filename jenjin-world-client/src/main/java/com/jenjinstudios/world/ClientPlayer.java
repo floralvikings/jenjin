@@ -1,5 +1,6 @@
 package com.jenjinstudios.world;
 
+import com.jenjinstudios.world.math.Angle;
 import com.jenjinstudios.world.state.MoveState;
 
 /**
@@ -22,37 +23,19 @@ public class ClientPlayer extends Actor
 		setVector2D(0, 0);
 	}
 
-	/**
-	 * Set the absolute angle of this player.
-	 * @param absoluteAngle The new absolute angle of this player.
-	 */
-	@Override
-	public void setAbsoluteAngle(double absoluteAngle) {
-		// Helps reduce repetitive messages trying to force walking through a wall.
-		if (forcedMoveState != null && absoluteAngle == forcedMoveState.absoluteAngle)
+	public void setAngle(Angle angle) {
+		if (forcedMoveState != null &&
+			  angle.equals(new Angle(forcedMoveState.absoluteAngle, forcedMoveState.relativeAngle)))
 		{
 			return;
 		}
 		forcedMoveState = null;
-		super.setAbsoluteAngle(absoluteAngle);
-	}
-
-	@Override
-	public void setRelativeAngle(double relativeAngle) {
-		// TODO Better way of handling this check?
-		// Helps reduce repetitive messages trying to force walking through a wall.
-		if (forcedMoveState != null && relativeAngle == forcedMoveState.relativeAngle)
-		{
-			return;
-		}
-		forcedMoveState = null;
-		super.setRelativeAngle(relativeAngle);
+		super.setAngle(angle);
 	}
 
 	/** Mark that the actor has been forced to its current position. */
 	public void forcePosition() {
-		forcedMoveState = new MoveState(getNewRelAngle(), getNewAbsAngle(),
-				getVector2D(), getWorld().getLastUpdateStarted());
+		forcedMoveState = new MoveState(getAngle(), getVector2D(), getWorld().getLastUpdateStarted());
 		setForcedState(forcedMoveState);
 	}
 

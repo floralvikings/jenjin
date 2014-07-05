@@ -94,28 +94,34 @@ public class ForcedStateTest extends WorldServerTest
 		Player serverPlayer = server.getClientHandlerByUsername(client.getUsername()).getPlayer();
 		WorldServerTest.movePlayerToVector(client, server, new Vector2D(.5, .5));
 		double distance = clientPlayer.getVector2D().getDistanceToVector(serverPlayer.getVector2D());
-		Assert.assertEquals(0, distance, WorldServerTest.vectorTolerance, " Server Vector: " + serverPlayer.getVector2D() +
-				serverPlayer.getRelativeAngle() +
-				" Client Vector: " + clientPlayer.getVector2D());
+		Assert.assertEquals(0, distance, WorldServerTest.vectorTolerance, " Server Vector: " + serverPlayer
+			  .getVector2D() +
+			  serverPlayer.getAngle().getRelativeAngle() +
+			  " Client Vector: " + clientPlayer.getVector2D());
 		WorldServerTest.movePlayerToVector(client, server, new Vector2D(-1, -1));
 		distance = clientPlayer.getVector2D().getDistanceToVector(serverPlayer.getVector2D());
-		Assert.assertEquals(0, distance, WorldServerTest.vectorTolerance, " Server Vector: " + serverPlayer.getVector2D() +
-				serverPlayer.getRelativeAngle() +
-				" Client Vector: " + clientPlayer.getVector2D());
+		Assert.assertEquals(0, distance, WorldServerTest.vectorTolerance, " Server Vector: " + serverPlayer
+			  .getVector2D() +
+
+			  serverPlayer.getAngle().getRelativeAngle() +
+			  " Client Vector: " + clientPlayer.getVector2D());
 		WorldServerTest.movePlayerToVector(client, server, new Vector2D(.5, .5));
 		distance = clientPlayer.getVector2D().getDistanceToVector(serverPlayer.getVector2D());
-		Assert.assertEquals(0, distance, WorldServerTest.vectorTolerance, " Server Vector: " + serverPlayer.getVector2D() +
-				serverPlayer.getRelativeAngle() +
-				" Client Vector: " + clientPlayer.getVector2D());
+		Assert.assertEquals(0, distance, WorldServerTest.vectorTolerance, " Server Vector: " + serverPlayer
+			  .getVector2D() +
+			  serverPlayer.getAngle().getRelativeAngle() +
+			  " Client Vector: " + clientPlayer.getVector2D());
 		WorldServerTest.movePlayerToVector(client, server, new Vector2D(-1, -1));
-		Assert.assertEquals(0, distance, WorldServerTest.vectorTolerance, " Server Vector: " + serverPlayer.getVector2D() +
-				serverPlayer.getRelativeAngle() +
-				" Client Vector: " + clientPlayer.getVector2D());
+		Assert.assertEquals(0, distance, WorldServerTest.vectorTolerance, " Server Vector: " + serverPlayer
+			  .getVector2D() +
+			  serverPlayer.getAngle().getRelativeAngle() +
+			  " Client Vector: " + clientPlayer.getVector2D());
 		WorldServerTest.movePlayerToVector(client, server, new Vector2D(.5, .5));
 		distance = clientPlayer.getVector2D().getDistanceToVector(serverPlayer.getVector2D());
-		Assert.assertEquals(0, distance, WorldServerTest.vectorTolerance, " Server Vector: " + serverPlayer.getVector2D() +
-				serverPlayer.getRelativeAngle() +
-				" Client Vector: " + clientPlayer.getVector2D());
+		Assert.assertEquals(0, distance, WorldServerTest.vectorTolerance, " Server Vector: " + serverPlayer
+			  .getVector2D() +
+			  serverPlayer.getAngle().getRelativeAngle() +
+			  " Client Vector: " + clientPlayer.getVector2D());
 		WorldServerTest.tearDown(client, server);
 	}
 
