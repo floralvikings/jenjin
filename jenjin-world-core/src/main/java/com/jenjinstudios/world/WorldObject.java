@@ -26,7 +26,6 @@ public class WorldObject
 	/** The resource ID number for this object. */
 	private int resourceID;
 
-
 	/**
 	 * Construct a new WorldObject.
 	 * @param name The name of this object.
@@ -176,12 +175,4 @@ public class WorldObject
 	 */
 	public void setZoneID(int zoneID) { this.zoneID = zoneID; }
 
-	/**
-	 * Set the object's vector based on coordinates.
-	 * @param xCoordinate The x coordinate.
-	 * @param yCoordinate The y coordinate.
-	 */
-	public void setVector2D(double xCoordinate, double yCoordinate) {
-		this.setVector2D(new Vector2D(xCoordinate, yCoordinate));
-	}
 }

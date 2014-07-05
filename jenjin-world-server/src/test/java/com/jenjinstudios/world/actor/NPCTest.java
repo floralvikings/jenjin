@@ -23,7 +23,7 @@ public class NPCTest extends WorldServerTest
 		ClientPlayer clientPlayer = client.getPlayer();
 		NPC testNPC = new NPC("TestNPC");
 		Location target = server.getWorld().getZone(0).getLocationOnGrid(0, 0);
-		testNPC.setVector2D(20, 5);
+		testNPC.setVector2D(new Vector2D(20, 5));
 		server.getWorld().addObject(testNPC);
 		testNPC.plotPath(target);
 		double distance = testNPC.getVector2D().getDistanceToVector(LocationUtil.getCenter(target));

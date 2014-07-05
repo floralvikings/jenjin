@@ -3,6 +3,7 @@ package com.jenjinstudios.world.message;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.world.WorldClient;
 import com.jenjinstudios.world.WorldObject;
+import com.jenjinstudios.world.math.Vector2D;
 
 /**
  * Process an ActorVisibleMessage.
@@ -36,10 +37,11 @@ public class ExecutableObjectVisibleMessage extends WorldClientExecutableMessage
 		int resourceID = (int) message.getArgument("resourceID");
 		double xCoordinate = (double) message.getArgument("xCoordinate");
 		double yCoordinate = (double) message.getArgument("yCoordinate");
+		Vector2D vector2D = new Vector2D(xCoordinate, yCoordinate);
 
 		newlyVisible = new WorldObject(name);
 		newlyVisible.setId(id);
 		newlyVisible.setResourceID(resourceID);
-		newlyVisible.setVector2D(xCoordinate, yCoordinate);
+		newlyVisible.setVector2D(vector2D);
 	}
 }

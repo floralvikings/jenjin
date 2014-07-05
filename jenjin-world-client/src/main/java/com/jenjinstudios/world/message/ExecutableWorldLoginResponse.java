@@ -4,6 +4,7 @@ import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.world.ClientPlayer;
 import com.jenjinstudios.world.WorldClient;
 import com.jenjinstudios.world.WorldClientUpdater;
+import com.jenjinstudios.world.math.Vector2D;
 
 /**
  * Handles login responses from the server.
@@ -46,6 +47,7 @@ public class ExecutableWorldLoginResponse extends WorldClientExecutableMessage
 		double xCoordinate = (double) getMessage().getArgument("xCoordinate");
 		double yCoordinate = (double) getMessage().getArgument("yCoordinate");
 		player = new ClientPlayer(id, getClient().getUsername());
-		player.setVector2D(xCoordinate, yCoordinate);
+		Vector2D vector2D = new Vector2D(xCoordinate, yCoordinate);
+		player.setVector2D(vector2D);
 	}
 }

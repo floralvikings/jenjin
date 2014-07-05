@@ -4,6 +4,7 @@ import com.jenjinstudios.world.Location;
 import com.jenjinstudios.world.NPC;
 import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.Zone;
+import com.jenjinstudios.world.math.Vector2D;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -62,10 +63,11 @@ public class NpcFileReader
 			int zoneID = Integer.parseInt(npcElement.getAttribute("zoneID"));
 			double xCoordinate = Double.parseDouble(npcElement.getAttribute("xCoordinate"));
 			double yCoordinate = Double.parseDouble(npcElement.getAttribute("yCoordinate"));
+			Vector2D vector2D = new Vector2D(xCoordinate, yCoordinate);
 			TreeMap<String, Boolean> behaviors = parseBehaviorElements(npcElement.getElementsByTagName("behaviors"));
 
 			NPC currentNPC = new NPC(name, behaviors);
-			currentNPC.setVector2D(xCoordinate, yCoordinate);
+			currentNPC.setVector2D(vector2D);
 			currentNPC.setZoneID(zoneID);
 
 			List<Location> wanderTargets = parseWanderTargets(zoneID, npcElement.getElementsByTagName("wander_targets"));

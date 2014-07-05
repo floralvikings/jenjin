@@ -1,6 +1,7 @@
 package com.jenjinstudios.world;
 
 import com.jenjinstudios.world.math.Angle;
+import com.jenjinstudios.world.math.Vector2D;
 import com.jenjinstudios.world.state.MoveState;
 
 /**
@@ -20,7 +21,7 @@ public class ClientPlayer extends Actor
 	public ClientPlayer(int id, String name) {
 		super(name);
 		super.setId(id);
-		setVector2D(0, 0);
+		setVector2D(Vector2D.ORIGIN);
 	}
 
 	@Override
