@@ -13,7 +13,7 @@ import java.util.List;
 public class LocationTest
 {
 	@Test
-	public void testAdjacency() {
+	public void testGetAdjacentLocations() {
 		Zone zone = new Zone(0, new Dimension2D(10, 10));
 		Location loc = zone.getLocationOnGrid(5, 5);
 		List<Location> adjacentLocations = loc.getAdjacentLocations();
