@@ -1,10 +1,10 @@
 package com.jenjinstudios.world;
 
 import com.jenjinstudios.server.net.User;
+import com.jenjinstudios.world.math.Angle;
 import com.jenjinstudios.world.math.MathUtil;
 import com.jenjinstudios.world.math.Vector2D;
 import com.jenjinstudios.world.sql.WorldAuthenticator;
-import com.jenjinstudios.world.state.MoveState;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -30,7 +30,7 @@ public class PlayerTest extends WorldServerTest
 		WorldServerTest.movePlayerToVector(client, server, new Vector2D(10, 0));
 		double dist = serverPlayer.getVector2D().getDistanceToVector(clientPlayer.getVector2D());
 		Assert.assertEquals(dist, 0, WorldServerTest.vectorTolerance, "Server Vector: " +
-				serverPlayer.getVector2D() + " Client Vector: " + clientPlayer.getVector2D());
+			serverPlayer.getVector2D() + " Client Vector: " + clientPlayer.getVector2D());
 	}
 
 	/**
@@ -43,7 +43,7 @@ public class PlayerTest extends WorldServerTest
 		WorldClient client = WorldServerTest.initWorldClient();
 		ClientPlayer clientPlayer = client.getPlayer();
 		Player serverPlayer = server.getClientHandlerByUsername(client.getUsername()).getPlayer();
-		clientPlayer.setRelativeAngle(MoveState.IDLE);
+		clientPlayer.setRelativeAngle(Angle.IDLE);
 		Thread.sleep(100);
 		int maxCoordinate = 3;
 		for (int i = 0; i < 3; i++)
@@ -53,8 +53,9 @@ public class PlayerTest extends WorldServerTest
 			Vector2D target = new Vector2D(randomX, randomY);
 			WorldServerTest.movePlayerToVector(client, server, target);
 			double distance = clientPlayer.getVector2D().getDistanceToVector(serverPlayer.getVector2D());
-			Assert.assertEquals(0, distance, WorldServerTest.vectorTolerance, "Server Vector: " + serverPlayer.getVector2D() +
-					" Client Vector: " + clientPlayer.getVector2D() + " Target Vector: " + target);
+			Assert.assertEquals(0, distance, WorldServerTest.vectorTolerance, "Server Vector: " + serverPlayer
+				.getVector2D() +
+				" Client Vector: " + clientPlayer.getVector2D() + " Target Vector: " + target);
 		}
 		WorldServerTest.tearDown(client, server);
 	}

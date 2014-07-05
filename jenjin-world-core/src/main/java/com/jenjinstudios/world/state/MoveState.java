@@ -1,5 +1,6 @@
 package com.jenjinstudios.world.state;
 
+import com.jenjinstudios.world.math.Angle;
 import com.jenjinstudios.world.math.Vector2D;
 
 /**
@@ -8,24 +9,6 @@ import com.jenjinstudios.world.math.Vector2D;
  */
 public class MoveState
 {
-	/** The constant used for an "idle" move state. */
-	public static final double IDLE = Double.NEGATIVE_INFINITY;
-	/** The forward state. */
-	public static final double FRONT = Math.PI * 0;
-	/** The forward-right state. */
-	public static final double FRONT_RIGHT = Math.PI * -0.25;
-	/** The right state. */
-	public static final double RIGHT = Math.PI * -0.5;
-	/** The back-right state. */
-	public static final double BACK_RIGHT = Math.PI * -0.75;
-	/** The backward state. */
-	public static final double BACK = Math.PI;
-	/** The back-left state. */
-	public static final double BACK_LEFT = Math.PI * 0.75;
-	/** The left state. */
-	public static final double LEFT = Math.PI * 0.5;
-	/** The front-left state. */
-	public static final double FRONT_LEFT = Math.PI * 0.25;
 	/** The relativeAngle of movement. */
 	public final double relativeAngle;
 	/** The angle of movement. */
@@ -62,21 +45,29 @@ public class MoveState
 	private String relativeAngleString()
 	{
 		String cheese = String.valueOf(relativeAngle);
-		if(relativeAngle == FRONT) {
+		if (relativeAngle == Angle.FRONT)
+		{
 			cheese = "FRONT";
-		}else if(relativeAngle == FRONT_RIGHT) {
+		} else if (relativeAngle == Angle.FRONT_RIGHT)
+		{
 			cheese = "FRONT_RIGHT";
-		}else if (relativeAngle == FRONT_LEFT) {
+		} else if (relativeAngle == Angle.FRONT_LEFT)
+		{
 			cheese = "FRONT_LEFT";
-		}else if (relativeAngle == BACK) {
+		} else if (relativeAngle == Angle.BACK)
+		{
 			cheese = "BACK";
-		}else if(relativeAngle == BACK_LEFT) {
+		} else if (relativeAngle == Angle.BACK_LEFT)
+		{
 			cheese = "BACK_LEFT";
-		}else if(relativeAngle == BACK_RIGHT) {
+		} else if (relativeAngle == Angle.BACK_RIGHT)
+		{
 			cheese = "BACK_RIGHT";
-		}else if(relativeAngle == LEFT) {
+		} else if (relativeAngle == Angle.LEFT)
+		{
 			cheese = "LEFT";
-		}else if(relativeAngle == RIGHT) {
+		} else if (relativeAngle == Angle.RIGHT)
+		{
 			cheese = "RIGHT";
 		}
 		return cheese;

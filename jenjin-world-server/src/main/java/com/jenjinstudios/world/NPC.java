@@ -1,8 +1,8 @@
 package com.jenjinstudios.world;
 
 import com.jenjinstudios.world.ai.Pathfinder;
+import com.jenjinstudios.world.math.Angle;
 import com.jenjinstudios.world.math.Vector2D;
-import com.jenjinstudios.world.state.MoveState;
 
 import java.util.*;
 
@@ -74,11 +74,11 @@ public class NPC extends Actor
 		Vector2D target = currentPath.peek();
 		if (target != null)
 		{
-			if (getRelativeAngle() == MoveState.IDLE)
+			if (getRelativeAngle() == Angle.IDLE)
 			{
 				double angle = getVector2D().getAngleToVector(target);
 				setAbsoluteAngle(angle);
-				setRelativeAngle(MoveState.FRONT);
+				setRelativeAngle(Angle.FRONT);
 				return;
 			}
 			double distance = getVector2D().getDistanceToVector(target);
@@ -90,10 +90,10 @@ public class NPC extends Actor
 				{
 					double angle = getVector2D().getAngleToVector(newTarget);
 					setAbsoluteAngle(angle);
-					setRelativeAngle(MoveState.FRONT);
+					setRelativeAngle(Angle.FRONT);
 				} else
 				{
-					setRelativeAngle(MoveState.IDLE);
+					setRelativeAngle(Angle.IDLE);
 				}
 			}
 		}

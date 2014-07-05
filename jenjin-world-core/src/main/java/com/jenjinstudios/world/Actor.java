@@ -6,7 +6,7 @@ import com.jenjinstudios.world.state.MoveState;
 
 import java.util.LinkedList;
 
-import static com.jenjinstudios.world.state.MoveState.IDLE;
+import static com.jenjinstudios.world.math.Angle.IDLE;
 
 
 /**
@@ -90,7 +90,8 @@ public class Actor extends SightedObject
 			resetAngles();
 			synchronized (stateChanges)
 			{
-				stateChanges.add(new MoveState(getRelativeAngle(), getAbsoluteAngle(), getVector2D(), getLastStepTime()));
+				stateChanges.add(new MoveState(getRelativeAngle(), getAbsoluteAngle(), getVector2D(),
+					getLastStepTime()));
 			}
 		}
 	}

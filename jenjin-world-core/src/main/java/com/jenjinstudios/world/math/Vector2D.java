@@ -1,7 +1,5 @@
 package com.jenjinstudios.world.math;
 
-import com.jenjinstudios.world.state.MoveState;
-
 /**
  * Stores a set of x and y coordinates.
  * @author Caleb Brinkman
@@ -41,7 +39,7 @@ public class Vector2D
 		Vector2D vector2D = (Vector2D) o;
 
 		return Double.compare(vector2D.xCoordinate, xCoordinate) == 0 &&
-				Double.compare(vector2D.yCoordinate, yCoordinate) == 0;
+			Double.compare(vector2D.yCoordinate, yCoordinate) == 0;
 	}
 
 	@Override
@@ -84,7 +82,7 @@ public class Vector2D
 	 * @return The new Vector2D;
 	 */
 	public Vector2D getVectorInDirection(double distance, double angle) {
-		if (angle == MoveState.IDLE) return new Vector2D(this);
+		if (angle == Angle.IDLE) return new Vector2D(this);
 		double cos = java.lang.Math.cos(angle);
 		double sin = java.lang.Math.sin(angle);
 		double newX = MathUtil.round(xCoordinate + (distance * cos), 4);

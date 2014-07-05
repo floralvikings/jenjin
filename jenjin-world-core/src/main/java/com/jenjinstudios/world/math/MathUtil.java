@@ -3,7 +3,7 @@ package com.jenjinstudios.world.math;
 import java.util.LinkedList;
 import java.util.List;
 
-import static com.jenjinstudios.world.state.MoveState.IDLE;
+import static com.jenjinstudios.world.math.Angle.IDLE;
 
 /**
  * This class is used to simplify rounding.

@@ -8,9 +8,9 @@ import com.jenjinstudios.core.util.Files;
 import com.jenjinstudios.server.net.ClientListenerInit;
 import com.jenjinstudios.server.net.ServerInit;
 import com.jenjinstudios.world.io.WorldDocumentReader;
+import com.jenjinstudios.world.math.Angle;
 import com.jenjinstudios.world.math.Vector2D;
 import com.jenjinstudios.world.sql.WorldAuthenticator;
-import com.jenjinstudios.world.state.MoveState;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 
@@ -74,7 +74,7 @@ public class WorldServerTest
 	public static void assertClientAtVector(WorldClient client, Vector2D vector1, double tolerance) {
 		double distance = vector1.getDistanceToVector(client.getPlayer().getVector2D());
 		Assert.assertEquals(distance, 0, tolerance,
-				"V: " + client.getPlayer().getVector2D() + " " + "V1: " + vector1);
+			"V: " + client.getPlayer().getVector2D() + " " + "V1: " + vector1);
 	}
 
 	/**
@@ -89,7 +89,8 @@ public class WorldServerTest
 		MessageInputStream in = new MessageInputStream(mr, sock.getInputStream());
 		MessageOutputStream out = new MessageOutputStream(mr, sock.getOutputStream());
 		MessageIO messageIO = new MessageIO(in, out, mr);
-		WorldClient worldClient = new WorldClient(messageIO, username, "testPassword", new File("resources/WorldTestFile.xml"));
+		WorldClient worldClient = new WorldClient(messageIO, username, "testPassword",
+			new File("resources/WorldTestFile.xml"));
 		worldClient.blockingStart();
 		worldClient.sendBlockingWorldFileRequest();
 		worldClient.sendBlockingLoginRequest();
@@ -136,7 +137,7 @@ public class WorldServerTest
 			Thread.sleep(10);
 			distanceToNewVector = serverActor.getVector2D().getDistanceToVector(newVector);
 		}
-		serverActor.setRelativeAngle(MoveState.IDLE);
+		serverActor.setRelativeAngle(Angle.IDLE);
 		// Give client time to "catch up".
 		Thread.sleep(100);
 	}
@@ -149,7 +150,8 @@ public class WorldServerTest
 	 * @param target The vector to which to move.
 	 * @throws InterruptedException If there's an exception.
 	 */
-	public static void movePlayerToVector(WorldClient client, WorldServer server, Vector2D target) throws InterruptedException {
+	public static void movePlayerToVector(WorldClient client, WorldServer server,
+										  Vector2D target) throws InterruptedException {
 		ClientPlayer clientPlayer = client.getPlayer();
 		String username = client.getUsername();
 		Player serverPlayer = server.getClientHandlerByUsername(username).getPlayer();
@@ -167,9 +169,9 @@ public class WorldServerTest
 				break;
 			}
 		}
-		clientPlayer.setRelativeAngle(MoveState.IDLE);
+		clientPlayer.setRelativeAngle(Angle.IDLE);
 		Thread.sleep(100);
-		while (serverPlayer.getRelativeAngle() != MoveState.IDLE)
+		while (serverPlayer.getRelativeAngle() != Angle.IDLE)
 		{
 			Thread.sleep(2);
 		}
@@ -183,7 +185,7 @@ public class WorldServerTest
 	public static void assertClientAndServerInSamePosition(Actor serverActor, WorldObject clientActor) {
 		double distance = serverActor.getVector2D().getDistanceToVector(clientActor.getVector2D());
 		Assert.assertEquals(distance, 0, vectorTolerance, "Server Vector: " + serverActor.getVector2D() +
-				" Client Vector: " + clientActor.getVector2D());
+			" Client Vector: " + clientActor.getVector2D());
 	}
 
 	/**
@@ -196,7 +198,8 @@ public class WorldServerTest
 		Player serverPlayer = server.getClientHandlerByUsername(client.getUsername()).getPlayer();
 		serverPlayer.setVector2D(new Vector2D(0, 0));
 		client.sendBlockingLogoutRequest();
-		LOGGER.log(Level.INFO, "Shutting down WorldClient. Avg. ping was {0}", client.getPingTracker().getAveragePingTime());
+		LOGGER.log(Level.INFO, "Shutting down WorldClient. Avg. ping was {0}",
+			client.getPingTracker().getAveragePingTime());
 		client.shutdown();
 		server.shutdown();
 
@@ -215,25 +218,25 @@ public class WorldServerTest
 		Connection testConnection = DriverManager.getConnection(connectionUrl, "sa", "");
 		Statement statement = testConnection.createStatement();
 		statement.executeUpdate("CREATE TABLE users (" +
-				"  `username` VARCHAR(16) NOT NULL," +
-				"  `password` CHAR(64) NOT NULL," +
-				"  `salt` CHAR(48) NOT NULL," +
-				"  `loggedin` TINYINT NOT NULL DEFAULT '0'," +
-				"  `xcoord` DOUBLE NOT NULL DEFAULT '0'," +
-				"  `ycoord` DOUBLE NOT NULL DEFAULT '0'," +
-				"  `zoneid` INT(11) NOT NULL DEFAULT '0'," +
-				"  PRIMARY KEY (username)" +
-				")");
+			"  `username` VARCHAR(16) NOT NULL," +
+			"  `password` CHAR(64) NOT NULL," +
+			"  `salt` CHAR(48) NOT NULL," +
+			"  `loggedin` TINYINT NOT NULL DEFAULT '0'," +
+			"  `xcoord` DOUBLE NOT NULL DEFAULT '0'," +
+			"  `ycoord` DOUBLE NOT NULL DEFAULT '0'," +
+			"  `zoneid` INT(11) NOT NULL DEFAULT '0'," +
+			"  PRIMARY KEY (username)" +
+			")");
 		for (int i = 1; i < 100; i++)
 		{
 			statement.executeUpdate(
-					"INSERT INTO users " +
-							"(`username`, `password`, `salt`, `loggedin`, `xcoord`, `ycoord`, `zoneid`)" +
-							" VALUES " +
-							"('TestAccount" + i + "', " +
-							"'650f00f552d4df0147d236e240ccfc490444f4b358c4ff1d79f5fd90f57243bd', " +
-							"'e3c42b85a183d3f654a3d2bb3bc5ea607d0fb529d9b890d3', " +
-							"'0', '0', '0', '0')");
+				"INSERT INTO users " +
+					"(`username`, `password`, `salt`, `loggedin`, `xcoord`, `ycoord`, `zoneid`)" +
+					" VALUES " +
+					"('TestAccount" + i + "', " +
+					"'650f00f552d4df0147d236e240ccfc490444f4b358c4ff1d79f5fd90f57243bd', " +
+					"'e3c42b85a183d3f654a3d2bb3bc5ea607d0fb529d9b890d3', " +
+					"'0', '0', '0', '0')");
 		}
 		connectionNumber++;
 		return testConnection;
