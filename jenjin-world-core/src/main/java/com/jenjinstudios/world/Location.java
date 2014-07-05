@@ -62,9 +62,7 @@ public class Location
 	 * Get the objects residing in this location, as an array.
 	 * @return An array containing all objects residing in this location.
 	 */
-	public Collection<WorldObject> getObjects() {
-		return Collections.unmodifiableCollection(new ArrayList<>(objects));
-	}
+	public Collection<WorldObject> getObjects() { return new ArrayList<>(objects); }
 
 	/**
 	 * Add the object to this location's object map.
