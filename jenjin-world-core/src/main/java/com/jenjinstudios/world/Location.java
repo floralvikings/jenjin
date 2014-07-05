@@ -204,13 +204,17 @@ public class Location
 			if ("false".equals(walkable.getProperties().getProperty("walkable")))
 			{
 				adjacentWalkableLocations.remove(walkable);
-				for (Location blocked : walkable.getAdjacentLocations())
-				{
-					if (diagonals.contains(blocked))
-					{
-						adjacentWalkableLocations.remove(blocked);
-					}
-				}
+				removeDiagonalsWithAdjacentUnwalkables(walkable);
+			}
+		}
+	}
+
+	private void removeDiagonalsWithAdjacentUnwalkables(Location walkable) {
+		for (Location blocked : walkable.getAdjacentLocations())
+		{
+			if (diagonals.contains(blocked))
+			{
+				adjacentWalkableLocations.remove(blocked);
 			}
 		}
 	}
