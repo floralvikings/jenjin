@@ -56,14 +56,14 @@ public class SightedObject extends WorldObject
 		}
 	}
 
-	public Iterable<WorldObject> getNewlyVisibleObjects() {
+	public Set<WorldObject> getNewlyVisibleObjects() {
 		synchronized (newlyVisibleObjects)
 		{
 			return new HashSet<>(newlyVisibleObjects);
 		}
 	}
 
-	public Iterable<WorldObject> getNewlyInvisibleObjects() {
+	public Set<WorldObject> getNewlyInvisibleObjects() {
 		synchronized (newlyInvisibleObjects)
 		{
 			return new HashSet<>(newlyInvisibleObjects);

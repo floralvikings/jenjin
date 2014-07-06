@@ -19,7 +19,7 @@ public class WorldObject
 	private World world;
 
 	public WorldObject(String name) {
-		vector2D = new Vector2D(0, 0);
+		vector2D = Vector2D.ORIGIN;
 		this.name = name;
 		angle = new Angle();
 	}
@@ -69,7 +69,6 @@ public class WorldObject
 		if (this.world != null)
 			throw new IllegalArgumentException("The world has already been set for this object.");
 		this.world = world;
-		setLocation(world.getLocationForCoordinates(this.zoneID, this.vector2D));
 	}
 
 	public int getZoneID() { return zoneID; }

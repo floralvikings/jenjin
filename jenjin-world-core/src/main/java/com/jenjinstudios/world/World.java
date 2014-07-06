@@ -6,6 +6,7 @@ import com.jenjinstudios.world.math.Vector2D;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.TreeMap;
 
 /**
  * Contains all the Zones, Locations and GameObjects.
@@ -13,8 +14,9 @@ import java.util.List;
  */
 public class World
 {
+	private static final int DEFAULT_SIZE = 50;
 	/** The list of in-world Zones. */
-	private final Zone[] zones;
+	private final TreeMap<Integer, Zone> zones;
 	/** The GameObjects contained in the world. */
 	private final WorldObjectMap worldObjects;
 	/** The time at which the most recent update completed. */
@@ -24,19 +26,19 @@ public class World
 
 	/** Construct a new World. */
 	public World() {
-		zones = new Zone[1];
-		/* The default size of the world's location grid. */
-		int DEFAULT_SIZE = 50;
-		zones[0] = new Zone(0, new Dimension2D(DEFAULT_SIZE, DEFAULT_SIZE));
-		worldObjects = new WorldObjectMap();
+		this(new Zone(0, new Dimension2D(DEFAULT_SIZE, DEFAULT_SIZE)));
 	}
 
 	/**
 	 * Construct a new world with the specified Zone array.
 	 * @param zones The zones used to create the world.
 	 */
-	public World(Zone[] zones) {
-		this.zones = zones;
+	public World(Zone... zones) {
+		this.zones = new TreeMap<>();
+		for (Zone z : zones)
+		{
+			this.zones.put(z.id, z);
+		}
 		worldObjects = new WorldObjectMap();
 	}
 
@@ -62,11 +64,11 @@ public class World
 			throw new IllegalArgumentException("addObject(WorldObject obj) not allowed to be an occupied id: "
 					+ id + ".  Existing object: " + worldObjects.get(id));
 
+		object.setId(id);
 		object.setWorld(this);
 		object.setVector2D(object.getVector2D());
 		synchronized (worldObjects)
 		{
-			object.setId(id);
 			worldObjects.put(id, object);
 		}
 	}
@@ -97,7 +99,7 @@ public class World
 	 * @return The location that contains the specified vector2D.
 	 */
 	public Location getLocationForCoordinates(int zoneID, Vector2D vector2D) {
-		return zones[zoneID].getLocationForCoordinates(vector2D);
+		return zones.get(zoneID).getLocationForCoordinates(vector2D);
 	}
 
 	/** Update all objects in the world. */
@@ -144,15 +146,10 @@ public class World
 	 * @return A List of all IDs which are linked to a zone.
 	 */
 	public List<Integer> getZoneIDs() {
-		LinkedList<Integer> r = new LinkedList<>();
 		synchronized (zones)
 		{
-			for (Zone z : zones)
-			{
-				r.add(z.id);
-			}
+			return new LinkedList<>(zones.keySet());
 		}
-		return r;
 	}
 
 	/**
@@ -161,16 +158,10 @@ public class World
 	 * @return The zone with the given id.
 	 */
 	public Zone getZone(int id) {
-		Zone r = null;
 		synchronized (zones)
 		{
-			for (Zone z : zones)
-			{
-				if (z.id == id)
-					r = z;
-			}
+			return zones.get(id);
 		}
-		return r;
 	}
 
 	/**
