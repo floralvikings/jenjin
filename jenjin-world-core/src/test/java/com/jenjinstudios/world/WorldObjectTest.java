@@ -3,7 +3,8 @@ package com.jenjinstudios.world;
 import com.jenjinstudios.world.math.Angle;
 import com.jenjinstudios.world.math.Vector2D;
 import org.testng.Assert;
-import org.testng.annotations.*;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
 /**
  * Test WorldObject class.
@@ -93,7 +94,5 @@ public class WorldObjectTest
 	 * @throws Exception If there is an exception.
 	 */
 	@Test
-	public void testSetWorld() throws Exception {
-		Assert.assertTrue(world == worldObject.getWorld());
-	}
+	public void testSetWorld() throws Exception { Assert.assertTrue(world == worldObject.getWorld()); }
 }
