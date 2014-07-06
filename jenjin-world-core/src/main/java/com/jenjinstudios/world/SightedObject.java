@@ -43,7 +43,8 @@ public class SightedObject extends WorldObject
 	@Override
 	public void reset() {
 		// If we're in a new locations after stepping, update the visible array.
-		Location oldLoc = getWorld().getLocationForCoordinates(getZoneID(), vectorBeforeUpdate);
+		World world = getWorld();
+		Location oldLoc = world.getLocationForCoordinates(getZoneID(), vectorBeforeUpdate);
 		if (oldLoc != getLocation() || getVisibleLocations().isEmpty())
 			resetVisibleLocations();
 		resetVisibleObjects();
