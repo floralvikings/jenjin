@@ -5,7 +5,6 @@ import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.ClientActor;
 import com.jenjinstudios.world.WorldClientHandler;
 import com.jenjinstudios.world.math.Angle;
-import com.jenjinstudios.world.math.MathUtil;
 import com.jenjinstudios.world.math.Vector2D;
 import com.jenjinstudios.world.state.MoveState;
 
@@ -18,10 +17,7 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage
 {
 	/** The maximum allowable correction distance. */
 	public static final double MAX_CORRECT_DISTANCE = 2.0;
-	/** The new relative angle. */
-	private double relativeAngle;
-	/** The new absolute angle. */
-	private double absoluteAngle;
+	private Angle angle;
 	/** The new position, corrected for lag. */
 	private Vector2D position;
 	/** The distance from the received position to the new position. */
@@ -49,23 +45,24 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage
 			// increased their speed by 10x.  This requires some thought.
 			// TODO Force player state here.
 			player.setForcedState(new MoveState(player.getAngle(), player.getVector2D(), System.nanoTime()));
-			return;
+		} else
+		{
+			player.setAngle(angle);
+			player.setVector2D(position);
+			player.setLastStepTime(System.nanoTime());
 		}
-		player.setAngle(new Angle(absoluteAngle, relativeAngle));
-		player.setVector2D(position);
-		player.setLastStepTime(System.nanoTime());
 	}
 
 	@Override
 	public void runImmediate() {
-		relativeAngle = (double) getMessage().getArgument("relativeAngle");
-		absoluteAngle = (double) getMessage().getArgument("absoluteAngle");
+		double relativeAngle = (double) getMessage().getArgument("relativeAngle");
+		double absoluteAngle = (double) getMessage().getArgument("absoluteAngle");
 		long time = (long) getMessage().getArgument("timeOfChange");
 		double x = (double) getMessage().getArgument("xCoordinate");
 		double y = (double) getMessage().getArgument("yCoordinate");
 		uncorrectedPosition = new Vector2D(x, y);
-		double angle = MathUtil.calcStepAngle(absoluteAngle, relativeAngle);
+		angle = new Angle(absoluteAngle, relativeAngle);
 		distance = ClientActor.MOVE_SPEED * ((double) (System.nanoTime() - time) / 1000000000d);
-		position = uncorrectedPosition.getVectorInDirection(distance, angle);
+		position = uncorrectedPosition.getVectorInDirection(distance, angle.getStepAngle());
 	}
 }

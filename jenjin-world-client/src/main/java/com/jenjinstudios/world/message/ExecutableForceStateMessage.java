@@ -1,12 +1,11 @@
 package com.jenjinstudios.world.message;
 
-import com.jenjinstudios.world.ClientActor;
-import com.jenjinstudios.world.math.Angle;
-import com.jenjinstudios.world.math.MathUtil;
-import com.jenjinstudios.world.math.Vector2D;
 import com.jenjinstudios.core.io.Message;
+import com.jenjinstudios.world.ClientActor;
 import com.jenjinstudios.world.ClientPlayer;
 import com.jenjinstudios.world.WorldClient;
+import com.jenjinstudios.world.math.Angle;
+import com.jenjinstudios.world.math.Vector2D;
 
 /**
  * Process a ForceStateMessage.
@@ -17,9 +16,7 @@ public class ExecutableForceStateMessage extends WorldClientExecutableMessage
 	/** The position to which to force the player. */
 	private Vector2D vector2D;
 	/** The relative angle to which to force the player. */
-	private double relativeAngle;
-	/** The absolute angle to which to force the player. */
-	private double absoluteAngle;
+	private Angle angle;
 
 	/**
 	 * Construct an ExecutableMessage with the given Message.
@@ -33,7 +30,7 @@ public class ExecutableForceStateMessage extends WorldClientExecutableMessage
 	@Override
 	public void runDelayed() {
 		ClientPlayer player = getClient().getPlayer();
-		player.setAngle(new Angle(absoluteAngle, relativeAngle));
+		player.setAngle(angle);
 		player.setVector2D(vector2D);
 		player.setLastStepTime(System.nanoTime());
 
@@ -44,13 +41,13 @@ public class ExecutableForceStateMessage extends WorldClientExecutableMessage
 	public void runImmediate() {
 		double x = (double) getMessage().getArgument("xCoordinate");
 		double y = (double) getMessage().getArgument("yCoordinate");
-		relativeAngle = (double) getMessage().getArgument("relativeAngle");
-		absoluteAngle = (double) getMessage().getArgument("absoluteAngle");
+		double relativeAngle = (double) getMessage().getArgument("relativeAngle");
+		double absoluteAngle = (double) getMessage().getArgument("absoluteAngle");
 		long timeOfForce = (long) getMessage().getArgument("timeOfForce");
-		double angle = MathUtil.calcStepAngle(absoluteAngle, relativeAngle);
+		angle = new Angle(absoluteAngle, relativeAngle);
 		Vector2D oldPos = new Vector2D(x, y);
 		long timeOfStep = System.nanoTime();
 		double dist = ClientActor.MOVE_SPEED * ((double) (timeOfStep - timeOfForce) / 100000000d);
-		vector2D = oldPos.getVectorInDirection(dist, angle);
+		vector2D = oldPos.getVectorInDirection(dist, angle.getStepAngle());
 	}
 }

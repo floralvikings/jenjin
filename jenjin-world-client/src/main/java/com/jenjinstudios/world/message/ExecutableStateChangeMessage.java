@@ -5,7 +5,6 @@ import com.jenjinstudios.world.ClientActor;
 import com.jenjinstudios.world.WorldClient;
 import com.jenjinstudios.world.WorldObject;
 import com.jenjinstudios.world.math.Angle;
-import com.jenjinstudios.world.math.MathUtil;
 import com.jenjinstudios.world.math.Vector2D;
 
 /**
@@ -16,10 +15,7 @@ public class ExecutableStateChangeMessage extends WorldClientExecutableMessage
 {
 	/** The ID of the actor to which to add the state. */
 	private int actorID;
-	/** The new relative angle of the actor. */
-	private double relativeAngle;
-	/** The new absolute angle of the actor. */
-	private double absoluteAngle;
+	private Angle angle;
 	/** The new position of the actor. */
 	private Vector2D position;
 
@@ -38,7 +34,7 @@ public class ExecutableStateChangeMessage extends WorldClientExecutableMessage
 		if (obj != null && obj instanceof ClientActor)
 		{
 			ClientActor actor = (ClientActor) obj;
-			actor.setAngle(new Angle(absoluteAngle, relativeAngle));
+			actor.setAngle(angle);
 			actor.setLastStepTime(System.nanoTime());
 			actor.setVector2D(position);
 		}
@@ -47,15 +43,15 @@ public class ExecutableStateChangeMessage extends WorldClientExecutableMessage
 	@Override
 	public void runImmediate() {
 		actorID = (int) getMessage().getArgument("id");
-		relativeAngle = (double) getMessage().getArgument("relativeAngle");
-		absoluteAngle = (double) getMessage().getArgument("absoluteAngle");
+		double relativeAngle = (double) getMessage().getArgument("relativeAngle");
+		double absoluteAngle = (double) getMessage().getArgument("absoluteAngle");
 		long time = (long) getMessage().getArgument("timeOfChange");
 		double x = (double) getMessage().getArgument("xCoordinate");
 		double y = (double) getMessage().getArgument("yCoordinate");
 		Vector2D oldVector = new Vector2D(x, y);
-		double angle = MathUtil.calcStepAngle(absoluteAngle, relativeAngle);
+		angle = new Angle(absoluteAngle, relativeAngle);
 		double dist = ClientActor.MOVE_SPEED *
-				((double) (System.nanoTime() - time) / 1000000000d);
-		position = oldVector.getVectorInDirection(dist, angle);
+			  ((double) (System.nanoTime() - time) / 1000000000d);
+		position = oldVector.getVectorInDirection(dist, angle.getStepAngle());
 	}
 }

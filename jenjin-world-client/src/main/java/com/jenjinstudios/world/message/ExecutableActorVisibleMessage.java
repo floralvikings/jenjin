@@ -4,7 +4,6 @@ import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.world.ClientActor;
 import com.jenjinstudios.world.WorldClient;
 import com.jenjinstudios.world.math.Angle;
-import com.jenjinstudios.world.math.MathUtil;
 import com.jenjinstudios.world.math.Vector2D;
 
 /**
@@ -45,10 +44,10 @@ public class ExecutableActorVisibleMessage extends WorldClientExecutableMessage
 		newlyVisible = new ClientActor(id, name);
 		newlyVisible.setResourceID(resourceID);
 		double dist = ClientActor.MOVE_SPEED *
-				((double) (System.nanoTime() - timeOfVisibility) / 1000000000d);
-		double angle = MathUtil.calcStepAngle(absoluteAngle, relativeAngle);
+			  ((double) (System.nanoTime() - timeOfVisibility) / 1000000000d);
+		Angle angle = new Angle(absoluteAngle, relativeAngle);
 		Vector2D oldVector = new Vector2D(xCoordinate, yCoordinate);
-		Vector2D newVector = oldVector.getVectorInDirection(dist, angle);
+		Vector2D newVector = oldVector.getVectorInDirection(dist, angle.getStepAngle());
 		newlyVisible.setVector2D(newVector);
 		newlyVisible.setAngle(new Angle(absoluteAngle, relativeAngle));
 	}

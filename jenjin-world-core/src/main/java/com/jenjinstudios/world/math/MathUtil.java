@@ -1,19 +1,12 @@
 package com.jenjinstudios.world.math;
 
-import java.util.LinkedList;
-import java.util.List;
-
-import static com.jenjinstudios.world.math.Angle.IDLE;
-
 /**
  * This class is used to simplify rounding.
  * @author Caleb Brinkman
  */
 public class MathUtil
 {
-	public MathUtil() {
-		throw new RuntimeException("Instances of MathUtil should not be invoked.");
-	}
+	private MathUtil() { }
 
 	/**
 	 * MathUtil the given number to the given decimal place.
@@ -30,48 +23,4 @@ public class MathUtil
 		return (double) tmp / factor;
 	}
 
-	/**
-	 * Given the specified relative and absolute angles, determine the angle in which an actor should move.
-	 * @param abs The absolute angle.
-	 * @param rel The relative angle.
-	 * @return The value of the angles combined.
-	 */
-	public static double calcStepAngle(double abs, double rel) {
-		double sAngle = rel != IDLE ? abs + rel : IDLE;
-		return (sAngle < 0) ? (sAngle + (Math.PI * 2)) : (sAngle % (Math.PI * 2));
-	}
-
-	/**
-	 * Use Bresenham's circle algorithm to find a circle of locations with the given center coordinates and radius.
-	 * @param centerX The center x coordinate.
-	 * @param centerY The center y coordinate.
-	 * @param radius The radius of the circle.
-	 * @return A list of locations containing the perimeter of the circle.
-	 */
-	public static List<Vector2D> castCircle(int centerX, int centerY, int radius) {
-		int x = radius, y = 0;
-		int radiusError = 1 - x;
-		LinkedList<Vector2D> circle = new LinkedList<>();
-		while (x >= y)
-		{
-			circle.add(new Vector2D(x + centerX, y + centerY));
-			circle.add(new Vector2D(y + centerX, x + centerY));
-			circle.add(new Vector2D(-x + centerX, y + centerY));
-			circle.add(new Vector2D(-y + centerX, x + centerY));
-			circle.add(new Vector2D(-x + centerX, -y + centerY));
-			circle.add(new Vector2D(-y + centerX, -x + centerY));
-			circle.add(new Vector2D(x + centerX, -y + centerY));
-			circle.add(new Vector2D(y + centerX, -x + centerY));
-			y++;
-			if (radiusError < 0)
-			{
-				radiusError += 2 * y + 1;
-			} else
-			{
-				x--;
-				radiusError += 2 * (y - x + 1);
-			}
-		}
-		return circle;
-	}
 }

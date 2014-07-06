@@ -38,7 +38,7 @@ public class MessageTest
 		msg.setArgument("messageName", "FooBar");
 		msg.setArgument("messageID", (short) -255);
 
-		String expected = "Message -1 InvalidMessage {messageID=-255, messageName=FooBar}";
+		String expected = "Message -1 InvalidMessage";
 		String actual = msg.toString();
 
 		Assert.assertEquals(actual, expected);
