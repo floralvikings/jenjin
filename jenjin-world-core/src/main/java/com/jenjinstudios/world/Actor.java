@@ -70,14 +70,6 @@ public class Actor extends SightedObject
 		forcedState = null;
 	}
 
-	public LinkedList<MoveState> getStateChanges() {
-		synchronized (stateChanges) { return new LinkedList<>(stateChanges); }
-	}
-
-	public MoveState getForcedState() { return forcedState; }
-
-	public void setForcedState(MoveState forcedState) { this.forcedState = forcedState; }
-
 	@Override
 	public void setAngle(Angle angle) {
 		if (!getAngle().equals(angle))
@@ -96,6 +88,14 @@ public class Actor extends SightedObject
 		step();
 		setLastStepTime(System.nanoTime());
 	}
+
+	public LinkedList<MoveState> getStateChanges() {
+		synchronized (stateChanges) { return new LinkedList<>(stateChanges); }
+	}
+
+	public MoveState getForcedState() { return forcedState; }
+
+	public void setForcedState(MoveState forcedState) { this.forcedState = forcedState; }
 
 	public double calcStepLength() {
 		return ((System.nanoTime() - (double) getLastStepTime()) / 1000000000) * Actor.MOVE_SPEED;
