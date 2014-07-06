@@ -32,8 +32,6 @@ public class Actor extends SightedObject
 	private boolean newState;
 	/** Flags whether the state of this actor was forced during this update. */
 	private MoveState forcedState;
-	/** The Location before a step is taken. */
-	private Vector2D vectorBeforeStep;
 	/** The time at which this actor finished it's last step. */
 	private long lastStepTime;
 	private Angle newAngle;
@@ -49,7 +47,7 @@ public class Actor extends SightedObject
 
 	@Override
 	public void setUp() {
-		vectorBeforeStep = getVector2D();
+		super.setUp();
 		synchronized (stateChanges)
 		{
 			stateChanges.clear();
@@ -68,10 +66,7 @@ public class Actor extends SightedObject
 
 	@Override
 	public void reset() {
-		// If we're in a new locations after stepping, update the visible array.
-		Location oldLoc = getWorld().getLocationForCoordinates(getZoneID(), vectorBeforeStep);
-		if (oldLoc != getLocation() || getVisibleLocations().isEmpty())
-			resetVisibleLocations();
+		super.reset();
 		// Reset the array of visible actors.
 		resetVisibleObjects();
 		if (newState)
@@ -112,12 +107,12 @@ public class Actor extends SightedObject
 
 	@Override
 	public void setAngle(Angle angle) {
-		if (getAngle().equals(angle)) { return; }
-		newState = true;
-		this.newAngle = angle;
+		if (!getAngle().equals(angle))
+		{
+			newState = true;
+			this.newAngle = angle;
+		}
 	}
-
-	public Angle getNewAngle() { return newAngle; }
 
 	/**
 	 * Set the absolute and relative angles to their new-state counterparts.
