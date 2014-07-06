@@ -84,17 +84,34 @@ public class SightedObject extends WorldObject
 
 	private void resetVisibleObjects() {
 		ArrayList<WorldObject> currentlyVisible = getCurrentlyVisibleObjects();
+		Collection<WorldObject> visibles;
+		synchronized (visibleObjects)
+		{
+			visibles = visibleObjects.values();
+		}
 
-		newlyInvisibleObjects.clear();
-		newlyInvisibleObjects.addAll(visibleObjects.values());
-		newlyInvisibleObjects.removeAll(currentlyVisible);
+		addNewlyInvisibleObjects(currentlyVisible, visibles);
+		addNewlyVisibleObjects(currentlyVisible, visibles);
+		setCurrentlyVisibleObjects(currentlyVisible);
 
-		newlyVisibleObjects.clear();
-		newlyVisibleObjects.addAll(currentlyVisible);
-		newlyVisibleObjects.removeAll(visibleObjects.values());
+	}
 
-		visibleObjects.clear();
-		addCurrentlyVisibleObjects(currentlyVisible);
+	private void addNewlyVisibleObjects(ArrayList<WorldObject> currentlyVisible, Collection<WorldObject> visibles) {
+		synchronized (newlyVisibleObjects)
+		{
+			newlyVisibleObjects.clear();
+			newlyVisibleObjects.addAll(currentlyVisible);
+			newlyVisibleObjects.removeAll(visibles);
+		}
+	}
+
+	private void addNewlyInvisibleObjects(ArrayList<WorldObject> currentlyVisible, Collection<WorldObject> visibles) {
+		synchronized (newlyInvisibleObjects)
+		{
+			newlyInvisibleObjects.clear();
+			newlyInvisibleObjects.addAll(visibles);
+			newlyInvisibleObjects.removeAll(currentlyVisible);
+		}
 	}
 
 	private ArrayList<WorldObject> getCurrentlyVisibleObjects() {
@@ -106,6 +123,17 @@ public class SightedObject extends WorldObject
 		return currentlyVisible;
 	}
 
+	private void setCurrentlyVisibleObjects(ArrayList<WorldObject> currentlyVisible) {
+		synchronized (visibleObjects)
+		{
+			visibleObjects.clear();
+			for (WorldObject object : currentlyVisible)
+			{
+				visibleObjects.put(object.getId(), object);
+			}
+		}
+	}
+
 	private void addCurrentlyVisibleObjectsInLocation(ArrayList<WorldObject> currentlyVisible, Location loc) {
 		for (WorldObject object : loc.getObjects())
 		{
@@ -113,13 +141,6 @@ public class SightedObject extends WorldObject
 			{
 				currentlyVisible.add(object);
 			}
-		}
-	}
-
-	private void addCurrentlyVisibleObjects(ArrayList<WorldObject> currentlyVisible) {
-		for (WorldObject object : currentlyVisible)
-		{
-			visibleObjects.put(object.getId(), object);
 		}
 	}
 }
