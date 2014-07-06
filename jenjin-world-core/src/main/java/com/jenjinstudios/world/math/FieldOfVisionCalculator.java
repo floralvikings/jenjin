@@ -158,7 +158,7 @@ public class FieldOfVisionCalculator
 	private boolean inRange(ScanState scanState) {
 		Location loc = zone.getLocationOnGrid(scanState.currentX, scanState.currentY);
 		return loc != null && scanState.currentX >= 0 && scanState.currentY >= 0 &&
-			scanState.currentX <= this.width && scanState.currentY <= this.height;
+			  scanState.currentX <= this.width && scanState.currentY <= this.height;
 	}
 
 	private void addIfInRange(ScanState scanState, double rad) {
@@ -244,14 +244,14 @@ public class FieldOfVisionCalculator
 		return calcSlopeInOctant(scanState.octant, centerVector, brushCorner);
 	}
 
-	public float calcRadius(ScanState scanState) {
+	protected float calcRadius(ScanState scanState) {
 		double dx2 = scanState.deltaX * scanState.deltaX;
 		double dy2 = scanState.deltaY * scanState.deltaY;
 		double sum = dx2 + dy2;
 		return (float) Math.sqrt(sum);
 	}
 
-	public boolean blocksVision(ScanState scanState) {
+	protected boolean blocksVision(ScanState scanState) {
 		Location loc = zone.getLocationOnGrid(scanState.currentX, scanState.currentY);
 		return loc == null || "true".equals(loc.getProperties().getProperty("blocksVision"));
 	}

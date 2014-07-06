@@ -24,7 +24,7 @@ public abstract class WorldClientExecutableMessage extends AuthClientExecutableM
 	}
 
 	@Override
-	public WorldClient getClient() {
+	protected WorldClient getClient() {
 		return client;
 	}
 }

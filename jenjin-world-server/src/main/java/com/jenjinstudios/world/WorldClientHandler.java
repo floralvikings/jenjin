@@ -51,7 +51,7 @@ public class WorldClientHandler extends ClientHandler
 	 * Set the player ID, id it is not already set.
 	 * @param id The new ID.
 	 */
-	public void setPlayerID(long id) {
+	protected void setPlayerID(long id) {
 		if (playerID == -1)
 			playerID = id;
 	}

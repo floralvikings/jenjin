@@ -24,7 +24,7 @@ public abstract class WorldExecutableMessage extends ServerExecutableMessage
 	}
 
 	@Override
-	public WorldClientHandler getClientHandler() {
+	protected WorldClientHandler getClientHandler() {
 		return handler;
 	}
 }

@@ -23,11 +23,11 @@ import java.util.logging.Logger;
 public class WorldAuthenticator extends Authenticator
 {
 	/** The column name of the X coordinate. */
-	public static final String X_COORD = "xCoord";
+	private static final String X_COORD = "xCoord";
 	/** The column name of the Y coordinate. */
-	public static final String Y_COORD = "yCoord";
+	private static final String Y_COORD = "yCoord";
 	/** The column name of the zone ID. */
-	public static final String ZONE_ID = "zoneID";
+	private static final String ZONE_ID = "zoneID";
 	/** The Logger used for this class. */
 	private static final Logger LOGGER = Logger.getLogger(WorldAuthenticator.class.getName());
 

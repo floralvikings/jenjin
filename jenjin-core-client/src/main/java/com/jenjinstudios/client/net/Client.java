@@ -19,7 +19,7 @@ import java.util.logging.Logger;
 public class Client extends Connection
 {
 	/** The logger associated with this class. */
-	public static final Logger LOGGER = Logger.getLogger(Client.class.getName());
+	private static final Logger LOGGER = Logger.getLogger(Client.class.getName());
 	/** The number of milliseconds before a blocking method should time out. */
 	private static final long TIMEOUT_MILLIS = 30000;
 	/** The list of tasks that this client will execute each update cycle. */

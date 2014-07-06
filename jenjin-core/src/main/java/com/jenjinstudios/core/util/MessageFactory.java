@@ -49,6 +49,6 @@ public class MessageFactory
 		return pingResponse;
 	}
 
-	public MessageRegistry getMessageRegistry() { return messageRegistry; }
+	protected MessageRegistry getMessageRegistry() { return messageRegistry; }
 
 }

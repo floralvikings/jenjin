@@ -20,7 +20,7 @@ public class Authenticator
 {
 
 	/** The name of the column in the user table specifying whether the user is currently logged in. */
-	public static final String LOGGED_IN_COLUMN = "loggedin";
+	protected static final String LOGGED_IN_COLUMN = "loggedin";
 	/** The connection used to communicate with the SQL database. */
 	protected final Connection dbConnection;
 	/** The string used to get all information about the user. */
@@ -40,7 +40,8 @@ public class Authenticator
 	 * <p/>
 	 * This method should be overwritten by implementations, or called from super if they still wish to use the
 	 * "loggedIn" column.
-	 * @return true if the user was logged in successfully, false if the user was already logged in or the update to the
+	 * @return true if the user was logged in successfully, false if the user was already logged in or the update to
+	 * the
 	 * database failed.
 	 */
 	public User logInUser(String username, String password) throws LoginException {
@@ -88,7 +89,8 @@ public class Authenticator
 	}
 
 	/**
-	 * Attempt to log out the user with the given username.  Note that if a user is already logged out, this method will
+	 * Attempt to log out the user with the given username.  Note that if a user is already logged out,
+	 * this method will
 	 * have no affect.
 	 * @param username The username of the user to be logged out.
 	 * @return The user that was logged out.
@@ -114,7 +116,7 @@ public class Authenticator
 		synchronized (dbConnection)
 		{
 			statement = dbConnection.prepareStatement(USER_QUERY,
-					TYPE_SCROLL_SENSITIVE, CONCUR_UPDATABLE);
+				  TYPE_SCROLL_SENSITIVE, CONCUR_UPDATABLE);
 			statement.setString(1, username);
 
 		}
@@ -130,7 +132,7 @@ public class Authenticator
 	protected void updateLoggedinColumn(String username, boolean status) throws LoginException {
 		String newValue = status ? "1" : "0";
 		String updateLoggedInQuery = "UPDATE users SET " + LOGGED_IN_COLUMN + "=" + newValue + " WHERE " +
-				"username = ?";
+			  "username = ?";
 		synchronized (dbConnection)
 		{
 			try (PreparedStatement updateLoggedIn = dbConnection.prepareStatement(updateLoggedInQuery))
@@ -140,7 +142,8 @@ public class Authenticator
 				updateLoggedIn.close();
 			} catch (SQLException e)
 			{
-				throw new LoginException("Unable to update " + username + "; SQLException when updating loggedin column.");
+				throw new LoginException("Unable to update " + username + "; SQLException when updating loggedin " +
+					  "column.");
 			}
 		}
 	}
