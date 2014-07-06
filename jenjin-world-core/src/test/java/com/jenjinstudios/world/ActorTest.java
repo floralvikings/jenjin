@@ -16,8 +16,6 @@ public class ActorTest
 		world.addObject(actor);
 		Angle angle = new Angle(0.0, Angle.FRONT);
 		actor.setAngle(angle);
-		actor.setUp();
-		actor.update();
 		actor.reset();
 		Assert.assertEquals(actor.getStateChanges().get(0).angle, angle);
 	}

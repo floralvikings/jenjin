@@ -27,6 +27,7 @@ public class SightedObject extends WorldObject
 		visibleLocations = new ArrayList<>();
 		newlyVisibleObjects = new HashSet<>();
 		newlyInvisibleObjects = new HashSet<>();
+		vectorBeforeUpdate = getVector2D();
 	}
 
 	@Override
