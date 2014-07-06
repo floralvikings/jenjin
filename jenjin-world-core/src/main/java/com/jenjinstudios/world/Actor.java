@@ -39,6 +39,7 @@ public class Actor extends SightedObject
 	@Override
 	public void setUp() {
 		super.setUp();
+		forcedState = null;
 		synchronized (stateChanges)
 		{
 			stateChanges.clear();
@@ -58,7 +59,6 @@ public class Actor extends SightedObject
 					  getLastStepTime()));
 			}
 		}
-		forcedState = null;
 	}
 
 	@Override
