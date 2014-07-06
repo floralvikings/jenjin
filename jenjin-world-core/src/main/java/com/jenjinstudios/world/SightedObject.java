@@ -82,7 +82,7 @@ public class SightedObject extends WorldObject
 		}
 	}
 
-	protected void resetVisibleObjects() {
+	private void resetVisibleObjects() {
 		ArrayList<WorldObject> currentlyVisible = getCurrentlyVisibleObjects();
 
 		newlyInvisibleObjects.clear();
