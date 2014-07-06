@@ -40,6 +40,7 @@ public class World
 			this.zones.put(z.id, z);
 		}
 		worldObjects = new WorldObjectMap();
+		lastUpdateCompleted = lastUpdateStarted = System.nanoTime();
 	}
 
 	/**

@@ -18,16 +18,9 @@ package com.jenjinstudios.world;
  */
 public class ClientActor extends WorldObject
 {
-	/** The move speed of an Actor. */
 	public static double MOVE_SPEED = 10.0d;
-	/** The time at which this actor completed it's last step. */
 	private long lastStepTime;
 
-	/**
-	 * Construct an Actor with the given name.
-	 * @param id The Actor's ID.
-	 * @param name The name.
-	 */
 	public ClientActor(int id, String name) {
 		super(name);
 		setId(id);
@@ -43,42 +36,24 @@ public class ClientActor extends WorldObject
 		setLastStepTime(System.nanoTime());
 	}
 
-	/** Take a step, changing state and correcting steps if necessary. */
 	private void step() {
 		double stepLength = calcStepLength();
 		stepForward(stepLength);
 	}
 
-	/**
-	 * Take a step according to the current move state.
-	 * @param stepLength The length of the step to take.
-	 */
-	void stepForward(double stepLength) {
+	private void stepForward(double stepLength) {
 		if (!getAngle().isIdle())
 		{
 			setVector2D(getVector2D().getVectorInDirection(stepLength, getAngle().getStepAngle()));
 		}
 	}
 
-	/**
-	 * Calculate the step length at the current time.
-	 * @return The current step length.
-	 */
 	double calcStepLength() {
 		return ((System.nanoTime() - (double) getLastStepTime()) / 1000000000) * MOVE_SPEED;
 	}
 
-	/**
-	 * Get the time at which this actor completed its last step.
-	 * @return The time at which this actor completed its last step.
-	 */
 	long getLastStepTime() { return lastStepTime; }
 
-	/**
-	 * Set the time at which this actor completed its last step.  This should be called any time an actor's position is
-	 * set manually so that the following step doesn't "overshoot".
-	 * @param lastStepTime The new time at which the actor completed its last step.
-	 */
 	public void setLastStepTime(long lastStepTime) { this.lastStepTime = lastStepTime; }
 
 }
