@@ -25,6 +25,6 @@ public class ExecutableWorldFileResponse extends WorldClientExecutableMessage
 	@Override
 	public void runImmediate() {
 		getClient().setServerWorldFileBytes((byte[]) getMessage().getArgument("fileBytes"));
-		getClient().setHasReceivedWorldFile(true);
+		getClient().setHasReceivedWorldFile();
 	}
 }

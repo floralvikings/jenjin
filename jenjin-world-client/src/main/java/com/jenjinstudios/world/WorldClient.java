@@ -129,10 +129,9 @@ public class WorldClient extends AuthClient
 
 	/**
 	 * Set whether the world file checksum has been received.
-	 * @param hasReceivedWorldFileChecksum Whether the checksum has been received.
 	 */
-	public void setHasReceivedWorldFileChecksum(boolean hasReceivedWorldFileChecksum) {
-		this.hasReceivedWorldFileChecksum = hasReceivedWorldFileChecksum;
+	public void setHasReceivedWorldFileChecksum() {
+		this.hasReceivedWorldFileChecksum = true;
 	}
 
 	/**
@@ -145,10 +144,9 @@ public class WorldClient extends AuthClient
 
 	/**
 	 * Set whether the client has received the world file.
-	 * @param hasReceivedWorldFile Whether the client has received the world file.
 	 */
-	public void setHasReceivedWorldFile(boolean hasReceivedWorldFile) {
-		this.hasReceivedWorldFile = hasReceivedWorldFile;
+	public void setHasReceivedWorldFile() {
+		this.hasReceivedWorldFile = true;
 	}
 
 	/**
