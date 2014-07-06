@@ -67,8 +67,6 @@ public class Actor extends SightedObject
 	@Override
 	public void reset() {
 		super.reset();
-		// Reset the array of visible actors.
-		resetVisibleObjects();
 		if (newState)
 		{
 			newState = false;

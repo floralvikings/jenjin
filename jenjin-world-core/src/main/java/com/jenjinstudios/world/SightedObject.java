@@ -46,6 +46,7 @@ public class SightedObject extends WorldObject
 		Location oldLoc = getWorld().getLocationForCoordinates(getZoneID(), vectorBeforeUpdate);
 		if (oldLoc != getLocation() || getVisibleLocations().isEmpty())
 			resetVisibleLocations();
+		resetVisibleObjects();
 	}
 
 	public AbstractMap<Integer, WorldObject> getVisibleObjects() {
@@ -71,7 +72,7 @@ public class SightedObject extends WorldObject
 
 	public AbstractCollection<Location> getVisibleLocations() { return visibleLocations; }
 
-	protected void resetVisibleLocations() {
+	private void resetVisibleLocations() {
 		visibleLocations.clear();
 		if (getLocation() != null)
 		{
@@ -81,7 +82,6 @@ public class SightedObject extends WorldObject
 		}
 	}
 
-	/** Reset the current list of visible objects. */
 	protected void resetVisibleObjects() {
 		ArrayList<WorldObject> currentlyVisible = getCurrentlyVisibleObjects();
 
