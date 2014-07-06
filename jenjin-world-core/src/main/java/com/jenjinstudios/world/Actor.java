@@ -24,22 +24,13 @@ import java.util.LinkedList;
  */
 public class Actor extends SightedObject
 {
-	/** The speed of an Actor, in units per second. */
 	public static final double MOVE_SPEED = 10.0d;
-	/** The next move. */
 	private final LinkedList<MoveState> stateChanges;
-	/** Flags whether this actor has changed to a new state during this update. */
 	private boolean newState;
-	/** Flags whether the state of this actor was forced during this update. */
 	private MoveState forcedState;
-	/** The time at which this actor finished it's last step. */
 	private long lastStepTime;
 	private Angle newAngle;
 
-	/**
-	 * Construct an Actor with the given name.
-	 * @param name The name.
-	 */
 	public Actor(String name) {
 		super(name);
 		stateChanges = new LinkedList<>();
