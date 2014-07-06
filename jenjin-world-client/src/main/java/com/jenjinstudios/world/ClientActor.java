@@ -22,8 +22,6 @@ public class ClientActor extends WorldObject
 	public static double MOVE_SPEED = 10.0d;
 	/** The time at which this actor completed it's last step. */
 	private long lastStepTime;
-	/** The relative angle of this actor. */
-	private double relativeAngle;
 
 	/**
 	 * Construct an Actor with the given name.
@@ -56,8 +54,10 @@ public class ClientActor extends WorldObject
 	 * @param stepLength The length of the step to take.
 	 */
 	void stepForward(double stepLength) {
-		if (getAngle().isIdle()) return;
-		setVector2D(getVector2D().getVectorInDirection(stepLength, getAngle().getStepAngle()));
+		if (!getAngle().isIdle())
+		{
+			setVector2D(getVector2D().getVectorInDirection(stepLength, getAngle().getStepAngle()));
+		}
 	}
 
 	/**
@@ -80,17 +80,5 @@ public class ClientActor extends WorldObject
 	 * @param lastStepTime The new time at which the actor completed its last step.
 	 */
 	public void setLastStepTime(long lastStepTime) { this.lastStepTime = lastStepTime; }
-
-	/**
-	 * Get the relative angle of this actor.
-	 * @return The relative angle of this actor.
-	 */
-	double getRelativeAngle() { return relativeAngle; }
-
-	/**
-	 * Set the relative angle of this actor.
-	 * @param relativeAngle The new relative angle.
-	 */
-	public void setRelativeAngle(double relativeAngle) { this.relativeAngle = relativeAngle; }
 
 }
