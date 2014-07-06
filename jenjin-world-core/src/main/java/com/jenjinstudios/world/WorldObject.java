@@ -72,6 +72,10 @@ public class WorldObject
 		setLocation(world.getLocationForCoordinates(this.zoneID, this.vector2D));
 	}
 
+	public int getZoneID() { return zoneID; }
+
+	public void setZoneID(int zoneID) { this.zoneID = zoneID; }
+
 	public String getName() { return name; }
 
 	/** Set up this WorldObject before updating. */
@@ -82,10 +86,6 @@ public class WorldObject
 
 	/** Reset this WorldObject after updating. */
 	public void reset() { }
-
-	public int getZoneID() { return zoneID; }
-
-	public void setZoneID(int zoneID) { this.zoneID = zoneID; }
 
 	@Override
 	public String toString() { return name + ": " + id; }
