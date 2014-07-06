@@ -63,6 +63,33 @@ public class WorldObject
 		}
 	}
 
+	public World getWorld() { return world; }
+
+	public void setWorld(World world) {
+		if (this.world != null)
+			throw new IllegalArgumentException("The world has already been set for this object.");
+		this.world = world;
+		setLocation(world.getLocationForCoordinates(this.zoneID, this.vector2D));
+	}
+
+	public String getName() { return name; }
+
+	/** Set up this WorldObject before updating. */
+	public void setUp() { }
+
+	/** Update this WorldObject. */
+	public void update() { }
+
+	/** Reset this WorldObject after updating. */
+	public void reset() { }
+
+	public int getZoneID() { return zoneID; }
+
+	public void setZoneID(int zoneID) { this.zoneID = zoneID; }
+
+	@Override
+	public String toString() { return name + ": " + id; }
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
@@ -80,51 +107,5 @@ public class WorldObject
 		result = 31 * result + id;
 		return result;
 	}
-
-	/**
-	 * Get the world in which this object is located.
-	 * @return the world in which this object is located.
-	 */
-	public World getWorld() { return world; }
-
-	/**
-	 * Set the world in which this object is located, if it hasn't already been set.
-	 * @param world The new world.
-	 */
-	public void setWorld(World world) {
-		if (this.world != null)
-			throw new IllegalArgumentException("The world has already been set for this object.");
-		this.world = world;
-		setLocation(world.getLocationForCoordinates(this.zoneID, this.vector2D));
-	}
-
-	/**
-	 * Get the name of this actor.
-	 * @return The name of this actor.
-	 */
-	public String getName() { return name; }
-
-	/** Set up this WorldObject before updating. */
-	public void setUp() { }
-
-	/** Update this WorldObject. */
-	public void update() { }
-
-	/** Reset this WorldObject after updating. */
-	public void reset() { }
-
-	public String toString() { return name + ": " + id; }
-
-	/**
-	 * Get the id number of the zone in which this player is located.
-	 * @return The id number of the zone in which this player is located.
-	 */
-	public int getZoneID() { return zoneID; }
-
-	/**
-	 * Set the zone id in which this player is located.
-	 * @param zoneID The id of the new zone.
-	 */
-	public void setZoneID(int zoneID) { this.zoneID = zoneID; }
 
 }
