@@ -4,9 +4,9 @@ import com.jenjinstudios.client.net.AuthClient;
 import com.jenjinstudios.core.MessageIO;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.world.World;
+import com.jenjinstudios.world.client.message.WorldClientMessageFactory;
 import com.jenjinstudios.world.io.WorldDocumentException;
 import com.jenjinstudios.world.io.WorldDocumentReader;
-import com.jenjinstudios.world.client.message.WorldClientMessageFactory;
 import com.jenjinstudios.world.state.MoveState;
 
 import java.io.*;
@@ -29,6 +29,8 @@ public class WorldClient extends AuthClient
 	private final String password;
 	/** The message factory used to generate messages for this client. */
 	private final WorldClientMessageFactory messageFactory;
+	/** The world file. */
+	private final File worldFile;
 	/** The world. */
 	private World world;
 	/** The actor representing the player controlled by this client. */
@@ -37,8 +39,6 @@ public class WorldClient extends AuthClient
 	private boolean hasReceivedWorldFileChecksum;
 	/** The world file checksum received from the server. */
 	private byte[] serverWorldFileChecksum;
-	/** The world file. */
-	private final File worldFile;
 	/** The world file reader for this client. */
 	private WorldDocumentReader worldDocumentReader;
 	/** Whether this client has received the world file. */
@@ -53,7 +53,6 @@ public class WorldClient extends AuthClient
 	 * @param password The password that will be used by this client.
 	 * @param worldFile The file containing the world information.
 	 */
-	// TODO Wrap these exceptions
 	public WorldClient(MessageIO messageIO, String username, String password, File worldFile)
 		  throws WorldDocumentException
 	{
@@ -67,18 +66,6 @@ public class WorldClient extends AuthClient
 			this.world = worldDocumentReader.read();
 		}
 		this.messageFactory = new WorldClientMessageFactory(getMessageRegistry());
-	}
-
-	private FileInputStream getWorldFileInputStream(File worldFile) throws WorldDocumentException {
-		FileInputStream fileInputStream;
-		try
-		{
-			fileInputStream = new FileInputStream(worldFile);
-		} catch (FileNotFoundException e)
-		{
-			throw new WorldDocumentException("Unable to find world file.", e);
-		}
-		return fileInputStream;
 	}
 
 	@Override
@@ -98,6 +85,15 @@ public class WorldClient extends AuthClient
 			timePast = System.currentTimeMillis() - startTime;
 		}
 		return isLoggedIn();
+	}
+
+	@Override
+	protected void sendLogoutRequest() {
+		Message logoutRequest = getMessageFactory().generateWorldLogoutRequest();
+
+		// Send the request, continue when response is received.
+		setWaitingForLogoutResponse(true);
+		queueOutgoingMessage(logoutRequest);
 	}
 
 	/**
@@ -197,12 +193,8 @@ public class WorldClient extends AuthClient
 
 	}
 
-	/** Send a LoginRequest to the server. */
-	private void sendLoginRequest() {
-		Message loginRequest = getMessageFactory().generateLoginRequest(getUsername(), password);
-		setWaitingForLoginResponse(true);
-		queueOutgoingMessage(loginRequest);
-	}
+	@Override
+	public WorldClientMessageFactory getMessageFactory() {return messageFactory; }
 
 	/**
 	 * Send a state change request to the server.
@@ -213,15 +205,22 @@ public class WorldClient extends AuthClient
 		queueOutgoingMessage(stateChangeRequest);
 	}
 
-	@Override
-	protected void sendLogoutRequest() {
-		Message logoutRequest = getMessageFactory().generateWorldLogoutRequest();
-
-		// Send the request, continue when response is received.
-		setWaitingForLogoutResponse(true);
-		queueOutgoingMessage(logoutRequest);
+	private FileInputStream getWorldFileInputStream(File worldFile) throws WorldDocumentException {
+		FileInputStream fileInputStream;
+		try
+		{
+			fileInputStream = new FileInputStream(worldFile);
+		} catch (FileNotFoundException e)
+		{
+			throw new WorldDocumentException("Unable to find world file.", e);
+		}
+		return fileInputStream;
 	}
 
-	@Override
-	public WorldClientMessageFactory getMessageFactory() {return messageFactory; }
+	/** Send a LoginRequest to the server. */
+	private void sendLoginRequest() {
+		Message loginRequest = getMessageFactory().generateLoginRequest(getUsername(), password);
+		setWaitingForLoginResponse(true);
+		queueOutgoingMessage(loginRequest);
+	}
 }
