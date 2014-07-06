@@ -1,6 +1,8 @@
 package com.jenjinstudios.world.actor;
 
 import com.jenjinstudios.world.*;
+import com.jenjinstudios.world.client.ClientPlayer;
+import com.jenjinstudios.world.client.WorldClient;
 import com.jenjinstudios.world.math.Vector2D;
 import org.testng.Assert;
 import org.testng.annotations.*;

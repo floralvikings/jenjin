@@ -1,5 +1,6 @@
-package com.jenjinstudios.world;
+package com.jenjinstudios.world.client;
 
+import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.math.Angle;
 import com.jenjinstudios.world.math.Vector2D;
 import org.testng.Assert;

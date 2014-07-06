@@ -1,9 +1,9 @@
-package com.jenjinstudios.world.message;
+package com.jenjinstudios.world.client.message;
 
 import com.jenjinstudios.core.io.Message;
-import com.jenjinstudios.world.ClientPlayer;
-import com.jenjinstudios.world.WorldClient;
-import com.jenjinstudios.world.WorldClientUpdater;
+import com.jenjinstudios.world.client.ClientPlayer;
+import com.jenjinstudios.world.client.WorldClient;
+import com.jenjinstudios.world.client.WorldClientUpdater;
 import com.jenjinstudios.world.math.Vector2D;
 
 /**

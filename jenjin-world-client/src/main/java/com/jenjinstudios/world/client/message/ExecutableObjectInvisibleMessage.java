@@ -1,7 +1,7 @@
-package com.jenjinstudios.world.message;
+package com.jenjinstudios.world.client.message;
 
 import com.jenjinstudios.core.io.Message;
-import com.jenjinstudios.world.WorldClient;
+import com.jenjinstudios.world.client.WorldClient;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -29,9 +29,11 @@ public class ExecutableObjectInvisibleMessage extends WorldClientExecutableMessa
 
 	@Override
 	public void runDelayed() {
-		LOGGER.log(Level.FINEST, "Before processing ObjectInvisibleMessage, world contains: {0}", getClient().getWorld().getObjectCount());
+		LOGGER.log(Level.FINEST, "Before processing ObjectInvisibleMessage, world contains: {0}",
+			  getClient().getWorld().getObjectCount());
 		getClient().getWorld().removeObject(id);
-		LOGGER.log(Level.FINEST, "After processing ObjectInvisibleMessage, world contains: {0}", getClient().getWorld().getObjectCount());
+		LOGGER.log(Level.FINEST, "After processing ObjectInvisibleMessage, world contains: {0}",
+			  getClient().getWorld().getObjectCount());
 	}
 
 	@Override

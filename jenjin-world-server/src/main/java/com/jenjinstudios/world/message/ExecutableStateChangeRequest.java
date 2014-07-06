@@ -2,7 +2,7 @@ package com.jenjinstudios.world.message;
 
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.world.Actor;
-import com.jenjinstudios.world.ClientActor;
+import com.jenjinstudios.world.client.ClientActor;
 import com.jenjinstudios.world.WorldClientHandler;
 import com.jenjinstudios.world.math.Angle;
 import com.jenjinstudios.world.math.Vector2D;

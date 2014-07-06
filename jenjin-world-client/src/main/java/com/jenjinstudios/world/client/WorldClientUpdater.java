@@ -1,4 +1,4 @@
-package com.jenjinstudios.world;
+package com.jenjinstudios.world.client;
 
 import com.jenjinstudios.world.state.MoveState;
 

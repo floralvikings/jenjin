@@ -1,6 +1,8 @@
 package com.jenjinstudios.world;
 
 import com.jenjinstudios.server.net.User;
+import com.jenjinstudios.world.client.ClientPlayer;
+import com.jenjinstudios.world.client.WorldClient;
 import com.jenjinstudios.world.math.MathUtil;
 import com.jenjinstudios.world.math.Vector2D;
 import com.jenjinstudios.world.sql.WorldAuthenticator;

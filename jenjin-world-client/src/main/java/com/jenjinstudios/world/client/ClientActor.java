@@ -1,4 +1,6 @@
-package com.jenjinstudios.world;
+package com.jenjinstudios.world.client;
+
+import com.jenjinstudios.world.WorldObject;
 
 /**
  * The {@code ClientActor} class is used to represent a server-side {@code Actor} object on the client side.  It is an

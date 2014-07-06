@@ -1,11 +1,12 @@
-package com.jenjinstudios.world;
+package com.jenjinstudios.world.client;
 
 import com.jenjinstudios.client.net.AuthClient;
 import com.jenjinstudios.core.MessageIO;
 import com.jenjinstudios.core.io.Message;
+import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.io.WorldDocumentException;
 import com.jenjinstudios.world.io.WorldDocumentReader;
-import com.jenjinstudios.world.message.WorldClientMessageFactory;
+import com.jenjinstudios.world.client.message.WorldClientMessageFactory;
 import com.jenjinstudios.world.state.MoveState;
 
 import java.io.*;
@@ -54,7 +55,7 @@ public class WorldClient extends AuthClient
 	 */
 	// TODO Wrap these exceptions
 	public WorldClient(MessageIO messageIO, String username, String password, File worldFile)
-			throws WorldDocumentException
+		  throws WorldDocumentException
 	{
 		super(messageIO, username, password);
 		this.password = password;
@@ -171,14 +172,16 @@ public class WorldClient extends AuthClient
 			Thread.sleep(10);
 		}
 
-		if (worldDocumentReader == null || !Arrays.equals(serverWorldFileChecksum, worldDocumentReader.getWorldFileChecksum()))
+		if (worldDocumentReader == null || !Arrays.equals(serverWorldFileChecksum,
+			  worldDocumentReader.getWorldFileChecksum()))
 		{
 			queueOutgoingMessage(getMessageFactory().generateWorldFileRequest());
 			while (!hasReceivedWorldFile)
 			{
 				Thread.sleep(10);
 			}
-			if ((!worldFile.getParentFile().exists() && !worldFile.getParentFile().mkdirs()) || (!worldFile.exists() && !worldFile.createNewFile()))
+			if ((!worldFile.getParentFile().exists() && !worldFile.getParentFile().mkdirs()) || (!worldFile.exists()
+				  && !worldFile.createNewFile()))
 			{
 				throw new IOException("Unable to create new world file!");
 			}
