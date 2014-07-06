@@ -21,7 +21,8 @@ public class Message
 	/**
 	 * Construct a new Message with the given ID and arguments. This is intended <b>only</b> for use in
 	 * MessageInputStream. You should <b>not</b> use this constructor in your code.  If, for some reason, you decide to
-	 * (and you really, really shouldn't) the arguments you pass <b>must</b> fill every available argument and be passed
+	 * (and you really, really shouldn't) the arguments you pass <b>must</b> fill every available argument and be
+	 * passed
 	 * in the order in which they appear in the XML file.
 	 * @param messageRegistry The Connection creating this message.
 	 * @param id The ID of the message type for this message.
@@ -40,14 +41,15 @@ public class Message
 			} catch (ArrayIndexOutOfBoundsException ex)
 			{
 				throw new IllegalStateException(
-						"Not enough arguments provided for Message", ex);
+					  "Not enough arguments provided for Message", ex);
 			}
 
 		}
 	}
 
 	/**
-	 * Construct a new Message using the MessageType specified by the given name; every argument in this message must be
+	 * Construct a new Message using the MessageType specified by the given name; every argument in this message
+	 * must be
 	 * set using the {@code setArgument} method before it can be sent properly over socket.
 	 * @param name The name of the MessageType being filled by this message.
 	 * @param messageRegistry The message registry creating this message.
@@ -70,10 +72,10 @@ public class Message
 		ArgumentType argType = messageType.getArgumentType(argumentName);
 		if (argType == null)
 			throw new IllegalArgumentException("Invalid argument name for Message: " + argumentName +
-					" (Message type: " + messageType.name + ")");
+				  " (Message type: " + messageType.name + ")");
 		if (!argType.type.isInstance(argument))
 			throw new IllegalArgumentException("Invalid argument type for Message: " + argument +
-					" (Expected " + argType.type + ", got " + argument.getClass() + ")");
+				  " (Expected " + argType.type + ", got " + argument.getClass() + ")");
 		argumentsByName.put(argumentName, argument);
 	}
 
@@ -84,14 +86,6 @@ public class Message
 	 */
 	public Object getArgument(String argumentName) {
 		return argumentsByName.get(argumentName);
-	}
-
-	/**
-	 * Determine whether this message is valid, which is to say that all arguments have been correctly set.
-	 * @return true if all arguments have been set, and correctly.
-	 */
-	boolean isInvalid() {
-		return argumentsByName.size() != messageType.argumentTypes.length;
 	}
 
 	/**
@@ -111,7 +105,7 @@ public class Message
 	public final Object[] getArgs() {
 		if (isInvalid())
 			throw new IllegalStateException("Attempting to retrieve arguments while message is invalid. (Not all " +
-					"arguments have been set.)");
+				  "arguments have been set.)");
 		Object[] argsArray = new Object[messageType.argumentTypes.length];
 		for (int i = 0; i < messageType.argumentTypes.length; i++)
 		{
@@ -121,7 +115,13 @@ public class Message
 	}
 
 	@Override
-	public String toString() {
-		return "Message " + id + " " + name + " " + argumentsByName;
+	public String toString() { return "Message " + id + " " + name; }
+
+	/**
+	 * Determine whether this message is valid, which is to say that all arguments have been correctly set.
+	 * @return true if all arguments have been set, and correctly.
+	 */
+	boolean isInvalid() {
+		return argumentsByName.size() != messageType.argumentTypes.length;
 	}
 }
