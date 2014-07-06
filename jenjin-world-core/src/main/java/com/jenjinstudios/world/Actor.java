@@ -55,16 +55,6 @@ public class Actor extends SightedObject
 	}
 
 	@Override
-	public void update() {
-		if (getLastStepTime() == 0)
-		{
-			setLastStepTime(getWorld().getLastUpdateCompleted());
-		}
-		step();
-		setLastStepTime(System.nanoTime());
-	}
-
-	@Override
 	public void reset() {
 		super.reset();
 		if (newState)
@@ -77,30 +67,17 @@ public class Actor extends SightedObject
 					  getLastStepTime()));
 			}
 		}
+		forcedState = null;
 	}
 
-	/**
-	 * Get the list of state changes this actor has made since its last update.
-	 * @return The list of state changes.
-	 */
 	public LinkedList<MoveState> getStateChanges() {
 		synchronized (stateChanges) { return new LinkedList<>(stateChanges); }
 	}
 
-	/**
-	 * Get whether this actor was forced into a state during the most recent update.
-	 * @return Whether this actor was forced into a state during the most recent update.
-	 */
 	public MoveState getForcedState() {
-		MoveState temp = forcedState;
-		forcedState = null;
-		return temp;
+		return forcedState;
 	}
 
-	/**
-	 * Set the forced state of this actor to the given state.
-	 * @param forcedState The state to which this actor will be forced.
-	 */
 	public void setForcedState(MoveState forcedState) { this.forcedState = forcedState; }
 
 	@Override
@@ -112,12 +89,18 @@ public class Actor extends SightedObject
 		}
 	}
 
-	/**
-	 * Set the absolute and relative angles to their new-state counterparts.
-	 */
+	@Override
+	public void update() {
+		if (getLastStepTime() == 0)
+		{
+			setLastStepTime(getWorld().getLastUpdateCompleted());
+		}
+		step();
+		setLastStepTime(System.nanoTime());
+	}
+
 	private void resetAngles() { super.setAngle(newAngle); }
 
-	/** Take a step, changing state and correcting steps if necessary. */
 	void step() {
 		double stepLength = calcStepLength();
 		if (!stepForward(stepLength))
@@ -127,19 +110,10 @@ public class Actor extends SightedObject
 		}
 	}
 
-	/**
-	 * Calculate the step length at the current time.
-	 * @return The current step length.
-	 */
 	double calcStepLength() {
 		return ((System.nanoTime() - (double) getLastStepTime()) / 1000000000) * Actor.MOVE_SPEED;
 	}
 
-	/**
-	 * Take a step according to the current move state.
-	 * @param stepLength The amount to step forward.
-	 * @return Whether the step forward was successful.
-	 */
 	boolean stepForward(double stepLength) {
 		if (getAngle().isIdle()) { return true; }
 		Vector2D newVector = getVector2D().getVectorInDirection(stepLength, getAngle().getStepAngle());
@@ -150,10 +124,6 @@ public class Actor extends SightedObject
 		return walkable;
 	}
 
-	/**
-	 * Get the time at which this actor finished it's last step.
-	 * @return The time at which this actor finished it's last step.
-	 */
 	long getLastStepTime() { return lastStepTime; }
 
 	/**
