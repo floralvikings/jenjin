@@ -44,7 +44,7 @@ public class ClientPlayer extends Actor
 	 * @return The current step length.
 	 */
 	@Override
-	protected double calcStepLength() {
+	public double calcStepLength() {
 		return ((System.nanoTime() - (double) getLastStepTime()) / 1000000000)
 			  * ClientActor.MOVE_SPEED;
 	}

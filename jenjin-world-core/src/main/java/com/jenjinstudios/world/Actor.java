@@ -74,9 +74,7 @@ public class Actor extends SightedObject
 		synchronized (stateChanges) { return new LinkedList<>(stateChanges); }
 	}
 
-	public MoveState getForcedState() {
-		return forcedState;
-	}
+	public MoveState getForcedState() { return forcedState; }
 
 	public void setForcedState(MoveState forcedState) { this.forcedState = forcedState; }
 
@@ -99,6 +97,24 @@ public class Actor extends SightedObject
 		setLastStepTime(System.nanoTime());
 	}
 
+	public double calcStepLength() {
+		return ((System.nanoTime() - (double) getLastStepTime()) / 1000000000) * Actor.MOVE_SPEED;
+	}
+
+	private boolean stepForward(double stepLength) {
+		if (getAngle().isIdle()) { return true; }
+		Vector2D newVector = getVector2D().getVectorInDirection(stepLength, getAngle().getStepAngle());
+		Location newLocation = getWorld().getLocationForCoordinates(getZoneID(), newVector);
+		if (newLocation == null) { return false; }
+		boolean walkable = !"false".equals(newLocation.getProperties().getProperty("walkable"));
+		if (walkable) { setVector2D(newVector); }
+		return walkable;
+	}
+
+	public long getLastStepTime() { return lastStepTime; }
+
+	public void setLastStepTime(long lastStepTime) { this.lastStepTime = lastStepTime; }
+
 	private void resetAngles() { super.setAngle(newAngle); }
 
 	void step() {
@@ -109,27 +125,4 @@ public class Actor extends SightedObject
 			setAngle(getAngle().asIdle());
 		}
 	}
-
-	double calcStepLength() {
-		return ((System.nanoTime() - (double) getLastStepTime()) / 1000000000) * Actor.MOVE_SPEED;
-	}
-
-	boolean stepForward(double stepLength) {
-		if (getAngle().isIdle()) { return true; }
-		Vector2D newVector = getVector2D().getVectorInDirection(stepLength, getAngle().getStepAngle());
-		Location newLocation = getWorld().getLocationForCoordinates(getZoneID(), newVector);
-		if (newLocation == null) { return false; }
-		boolean walkable = !"false".equals(newLocation.getProperties().getProperty("walkable"));
-		if (walkable) { setVector2D(newVector); }
-		return walkable;
-	}
-
-	long getLastStepTime() { return lastStepTime; }
-
-	/**
-	 * Set the time at which this actor finished it's last step.  This method should only be used when the actor's step
-	 * has to be modified outside of the normal step cycle.
-	 * @param lastStepTime The new time to use for this actors last completed step.
-	 */
-	public void setLastStepTime(long lastStepTime) { this.lastStepTime = lastStepTime; }
 }
