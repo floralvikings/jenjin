@@ -101,19 +101,31 @@ public class Actor extends SightedObject
 		return ((System.nanoTime() - (double) getLastStepTime()) / 1000000000) * Actor.MOVE_SPEED;
 	}
 
-	private boolean stepForward(double stepLength) {
-		if (getAngle().isIdle()) { return true; }
-		Vector2D newVector = getVector2D().getVectorInDirection(stepLength, getAngle().getStepAngle());
-		Location newLocation = getWorld().getLocationForCoordinates(getZoneID(), newVector);
-		if (newLocation == null) { return false; }
-		boolean walkable = !"false".equals(newLocation.getProperties().getProperty("walkable"));
-		if (walkable) { setVector2D(newVector); }
-		return walkable;
-	}
-
 	public long getLastStepTime() { return lastStepTime; }
 
 	public void setLastStepTime(long lastStepTime) { this.lastStepTime = lastStepTime; }
+
+	private boolean stepForward(double stepLength) {
+		boolean didStep;
+		if (!getAngle().isIdle())
+		{
+			Vector2D newVector = getVector2D().getVectorInDirection(stepLength, getAngle().getStepAngle());
+			Location newLocation = getWorld().getLocationForCoordinates(getZoneID(), newVector);
+			if (newLocation != null)
+			{
+				boolean walkable = !"false".equals(newLocation.getProperties().getProperty("walkable"));
+				if (walkable) { setVector2D(newVector); }
+				didStep = walkable;
+			} else
+			{
+				didStep = false;
+			}
+		} else
+		{
+			didStep = true;
+		}
+		return didStep;
+	}
 
 	private void resetAngles() { super.setAngle(newAngle); }
 
