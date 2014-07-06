@@ -35,6 +35,19 @@ public class SightedObject extends WorldObject
 		resetVisibleLocations();
 	}
 
+	@Override
+	public void setUp() {
+		vectorBeforeUpdate = getVector2D();
+	}
+
+	@Override
+	public void reset() {
+		// If we're in a new locations after stepping, update the visible array.
+		Location oldLoc = getWorld().getLocationForCoordinates(getZoneID(), vectorBeforeUpdate);
+		if (oldLoc != getLocation() || getVisibleLocations().isEmpty())
+			resetVisibleLocations();
+	}
+
 	public AbstractMap<Integer, WorldObject> getVisibleObjects() {
 		synchronized (visibleObjects)
 		{
@@ -108,18 +121,5 @@ public class SightedObject extends WorldObject
 		{
 			visibleObjects.put(object.getId(), object);
 		}
-	}
-
-	@Override
-	public void setUp() {
-		vectorBeforeUpdate = getVector2D();
-	}
-
-	@Override
-	public void reset() {
-		// If we're in a new locations after stepping, update the visible array.
-		Location oldLoc = getWorld().getLocationForCoordinates(getZoneID(), vectorBeforeUpdate);
-		if (oldLoc != getLocation() || getVisibleLocations().isEmpty())
-			resetVisibleLocations();
 	}
 }
