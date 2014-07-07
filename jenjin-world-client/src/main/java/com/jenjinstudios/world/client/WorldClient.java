@@ -28,14 +28,12 @@ public class WorldClient extends AuthClient
 	private final File worldFile;
 	private World world;
 	private ClientPlayer player;
-	private boolean hasReceivedWorldFileChecksum;
-	private byte[] serverWorldFileChecksum;
 	private WorldDocumentReader worldDocumentReader;
-	private boolean hasReceivedWorldFile;
-	private byte[] serverWorldFileBytes;
+	private final ServerWorldFileTracker serverWorldFileTracker;
 
 	public WorldClient(MessageIO messageIO, ClientUser clientUser, File worldFile) throws WorldDocumentException {
 		super(messageIO, clientUser);
+		serverWorldFileTracker = new ServerWorldFileTracker();
 		this.worldFile = worldFile;
 		if (worldFile.exists())
 		{
@@ -63,6 +61,10 @@ public class WorldClient extends AuthClient
 		return isLoggedIn();
 	}
 
+	public ServerWorldFileTracker getServerWorldFileTracker() {
+		return serverWorldFileTracker;
+	}
+
 	@Override
 	protected void sendLogoutRequest() {
 		Message logoutRequest = getMessageFactory().generateWorldLogoutRequest();
@@ -82,22 +84,6 @@ public class WorldClient extends AuthClient
 	}
 
 	public World getWorld() { return world; }
-
-	public void setHasReceivedWorldFileChecksum() {
-		this.hasReceivedWorldFileChecksum = true;
-	}
-
-	public void setServerWorldFileChecksum(byte[] serverWorldFileChecksum) {
-		this.serverWorldFileChecksum = serverWorldFileChecksum;
-	}
-
-	public void setHasReceivedWorldFile() {
-		this.hasReceivedWorldFile = true;
-	}
-
-	public void setServerWorldFileBytes(byte[] serverWorldFileBytes) {
-		this.serverWorldFileBytes = serverWorldFileBytes;
-	}
 
 	public void sendBlockingWorldFileRequest() throws InterruptedException, WorldDocumentException {
 		Message worldFileChecksumRequest = getMessageFactory().generateWorldChecksumRequest();
@@ -140,14 +126,14 @@ public class WorldClient extends AuthClient
 	}
 
 	private boolean needsWorldFile() {
-		return worldDocumentReader == null || !Arrays.equals(serverWorldFileChecksum,
+		return worldDocumentReader == null || !Arrays.equals(serverWorldFileTracker.getChecksum(),
 			  worldDocumentReader.getWorldFileChecksum());
 	}
 
 	private void writeServerWorldToFile() throws WorldDocumentException {
 		try (FileOutputStream worldOut = new FileOutputStream(worldFile))
 		{
-			worldOut.write(serverWorldFileBytes);
+			worldOut.write(serverWorldFileTracker.getBytes());
 			worldOut.close();
 		} catch (IOException ex)
 		{
@@ -168,14 +154,16 @@ public class WorldClient extends AuthClient
 	}
 
 	private void waitForWorldFile() throws InterruptedException {
-		while (!hasReceivedWorldFile)
+		serverWorldFileTracker.setWaitingForFile(true);
+		while (serverWorldFileTracker.isWaitingForFile())
 		{
 			Thread.sleep(10);
 		}
 	}
 
 	private void waitForWorldFileChecksum() throws InterruptedException {
-		while (!hasReceivedWorldFileChecksum)
+		serverWorldFileTracker.setWaitingForChecksum(true);
+		while (serverWorldFileTracker.isWaitingForChecksum())
 		{
 			Thread.sleep(10);
 		}
