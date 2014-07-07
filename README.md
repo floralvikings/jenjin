@@ -1,4 +1,4 @@
-Jenjin
+Jenjin ![Build Status](https://travis-ci.org/floralvikings/jenjin.svg?branch=jenjin-184)
 =====
 
 The Jenjin is a flexible server architecture designed for use in MMORPGs.
