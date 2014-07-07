@@ -151,7 +151,7 @@ public class WorldClient extends AuthClient
 	 * @throws InterruptedException If the thread is interrupted while waiting for responses.
 	 * @throws java.io.IOException If there's an error writing the world file.
 	 */
-	public void sendBlockingWorldFileRequest() throws InterruptedException, WorldDocumentException, IOException {
+	public void sendBlockingWorldFileRequest() throws InterruptedException, WorldDocumentException {
 		Message worldFileChecksumRequest = getMessageFactory().generateWorldChecksumRequest();
 		queueOutgoingMessage(worldFileChecksumRequest);
 
@@ -161,11 +161,7 @@ public class WorldClient extends AuthClient
 		{
 			queueOutgoingMessage(getMessageFactory().generateWorldFileRequest());
 			waitForWorldFile();
-			if ((!worldFile.getParentFile().exists() && !worldFile.getParentFile().mkdirs()) || (!worldFile.exists()
-				  && !worldFile.createNewFile()))
-			{
-				throw new IOException("Unable to create new world file!");
-			}
+			createNewFileIfNecessary();
 			writeServerWorldToFile();
 			readServerWorldFromFile();
 		}
@@ -173,16 +169,52 @@ public class WorldClient extends AuthClient
 
 	}
 
+	@Override
+	public WorldClientMessageFactory getMessageFactory() {return messageFactory; }
+
+	/**
+	 * Send a state change request to the server.
+	 * @param moveState The move state used to generate the request.
+	 */
+	protected void sendStateChangeRequest(MoveState moveState) {
+		Message stateChangeRequest = getMessageFactory().generateStateChangeRequest(moveState);
+		queueOutgoingMessage(stateChangeRequest);
+	}
+
+	private void createNewFileIfNecessary() throws WorldDocumentException {
+		if (!tryCreateWorldFileDirectory() || !tryCreateWorldFile())
+		{
+			throw new WorldDocumentException("Unable to create new world file!");
+		}
+	}
+
+	private boolean tryCreateWorldFile() throws WorldDocumentException {
+		try
+		{
+			return worldFile.exists() || worldFile.createNewFile();
+		} catch (IOException e)
+		{
+			throw new WorldDocumentException("Unable to create new file.", e);
+		}
+	}
+
+	private boolean tryCreateWorldFileDirectory() {
+		return worldFile.getParentFile().exists() || worldFile.getParentFile().mkdirs();
+	}
+
 	private boolean needsWorldFile() {
 		return worldDocumentReader == null || !Arrays.equals(serverWorldFileChecksum,
 			  worldDocumentReader.getWorldFileChecksum());
 	}
 
-	private void writeServerWorldToFile() throws IOException {
+	private void writeServerWorldToFile() throws WorldDocumentException {
 		try (FileOutputStream worldOut = new FileOutputStream(worldFile))
 		{
 			worldOut.write(serverWorldFileBytes);
 			worldOut.close();
+		} catch (IOException ex)
+		{
+			throw new WorldDocumentException("Unable to write world file.", ex);
 		}
 	}
 
@@ -203,18 +235,6 @@ public class WorldClient extends AuthClient
 		{
 			Thread.sleep(10);
 		}
-	}
-
-	@Override
-	public WorldClientMessageFactory getMessageFactory() {return messageFactory; }
-
-	/**
-	 * Send a state change request to the server.
-	 * @param moveState The move state used to generate the request.
-	 */
-	protected void sendStateChangeRequest(MoveState moveState) {
-		Message stateChangeRequest = getMessageFactory().generateStateChangeRequest(moveState);
-		queueOutgoingMessage(stateChangeRequest);
 	}
 
 	private FileInputStream getWorldFileInputStream(File worldFile) throws WorldDocumentException {
