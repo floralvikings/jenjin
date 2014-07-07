@@ -172,11 +172,15 @@ public class WorldClient extends AuthClient
 				worldOut.write(serverWorldFileBytes);
 				worldOut.close();
 			}
-			worldDocumentReader = new WorldDocumentReader(new ByteArrayInputStream(serverWorldFileBytes));
-			world = worldDocumentReader.read();
+			readServerWorldFromFile();
 		}
 
 
+	}
+
+	private void readServerWorldFromFile() throws WorldDocumentException {
+		worldDocumentReader = new WorldDocumentReader(new ByteArrayInputStream(serverWorldFileBytes));
+		world = worldDocumentReader.read();
 	}
 
 	private void waitForWorldFile() throws InterruptedException {
