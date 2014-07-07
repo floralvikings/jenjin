@@ -27,7 +27,7 @@ public class ExecutableLoginResponse extends AuthClientExecutableMessage
 		if (!client.isLoggedIn())
 			return;
 		client.setLoggedInTime((long) getMessage().getArgument("loginTime"));
-		client.setName("Client: " + client.getUsername());
+		client.setName("Client: " + client.getUser().getUsername());
 	}
 
 	@Override

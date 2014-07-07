@@ -33,7 +33,7 @@ public class AuthClientTest
 		OngoingStubbing<Message> isWhen = Mockito.when(mis.readMessage()).
 				thenReturn(firstConnectResponse).thenReturn(blankMessage);
 		MessageIO messageIO = new MessageIO(mis, mos, mr);
-		AuthClient client = new AuthClient(messageIO, "foo", "bar");
+		AuthClient client = new AuthClient(messageIO, new ClientUser("foo", "bar"));
 
 		// Get client key and make a message for it
 		byte[] clientKey = client.getClientPublicKey().getEncoded();
@@ -73,7 +73,7 @@ public class AuthClientTest
 		OngoingStubbing<Message> isWhen = Mockito.when(mis.readMessage()).
 				thenReturn(firstConnectResponse).thenReturn(blankMessage);
 		MessageIO messageIO = new MessageIO(mis, mos, mr);
-		AuthClient client = new AuthClient(messageIO, "foo", "bar");
+		AuthClient client = new AuthClient(messageIO, new ClientUser("foo", "bar"));
 
 		// Get client key and make a message for it
 		byte[] clientKey = client.getClientPublicKey().getEncoded();

@@ -25,7 +25,7 @@ public class ForcedStateTest extends WorldServerTest
 	public static void testForcedState() throws Exception {
 		WorldServer server = WorldServerTest.initWorldServer();
 		WorldClient client = WorldServerTest.initWorldClient();
-		Player serverPlayer = server.getClientHandlerByUsername(client.getUsername()).getPlayer();
+		Player serverPlayer = server.getClientHandlerByUsername(client.getUser().getUsername()).getPlayer();
 		WorldServerTest.movePlayerToVector(client, server, new Vector2D(0.0, 1.0));
 		WorldServerTest.movePlayerToVector(client, server, new Vector2D(0.0, -0.4));
 
@@ -93,7 +93,7 @@ public class ForcedStateTest extends WorldServerTest
 		WorldServer server = WorldServerTest.initWorldServer();
 		WorldClient client = WorldServerTest.initWorldClient();
 		ClientPlayer clientPlayer = client.getPlayer();
-		Player serverPlayer = server.getClientHandlerByUsername(client.getUsername()).getPlayer();
+		Player serverPlayer = server.getClientHandlerByUsername(client.getUser().getUsername()).getPlayer();
 		WorldServerTest.movePlayerToVector(client, server, new Vector2D(.5, .5));
 		double distance = clientPlayer.getVector2D().getDistanceToVector(serverPlayer.getVector2D());
 		Assert.assertEquals(0, distance, WorldServerTest.vectorTolerance, " Server Vector: " + serverPlayer
@@ -136,7 +136,7 @@ public class ForcedStateTest extends WorldServerTest
 		WorldServer server = WorldServerTest.initWorldServer();
 		WorldClient client = WorldServerTest.initWorldClient();
 		ClientPlayer clientPlayer = client.getPlayer();
-		Player serverPlayer = server.getClientHandlerByUsername(client.getUsername()).getPlayer();
+		Player serverPlayer = server.getClientHandlerByUsername(client.getUser().getUsername()).getPlayer();
 		LOGGER.log(Level.INFO, "Attempting to move clientPlayer off edge of world.");
 		WorldServerTest.movePlayerToVector(client, server, new Vector2D(-1.0, 0));
 		WorldServerTest.assertClientAndServerInSamePosition(serverPlayer, clientPlayer);

@@ -1,5 +1,6 @@
 package com.jenjinstudios.world.client.message;
 
+import com.jenjinstudios.client.net.ClientUser;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageRegistry;
 import com.jenjinstudios.client.message.ClientMessageFactory;
@@ -36,15 +37,13 @@ public class WorldClientMessageFactory extends ClientMessageFactory
 
 	/**
 	 * Generate a LoginRequest message.
-	 * @param username The username.
-	 * @param password The password.
 	 * @return The LoginRequest message.
 	 */
 	@Override
-	public Message generateLoginRequest(String username, String password) {
+	public Message generateLoginRequest(ClientUser user) {
 		Message loginRequest = getMessageRegistry().createMessage("WorldLoginRequest");
-		loginRequest.setArgument("username", username);
-		loginRequest.setArgument("password", password);
+		loginRequest.setArgument("username", user.getUsername());
+		loginRequest.setArgument("password", user.getPassword());
 		return loginRequest;
 	}
 

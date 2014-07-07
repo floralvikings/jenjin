@@ -1,6 +1,7 @@
 package com.jenjinstudios.world.client;
 
 import com.jenjinstudios.client.net.AuthClient;
+import com.jenjinstudios.client.net.ClientUser;
 import com.jenjinstudios.core.MessageIO;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.world.World;
@@ -25,8 +26,6 @@ public class WorldClient extends AuthClient
 	private static final Logger LOGGER = Logger.getLogger(WorldClient.class.getName());
 	/** The number of milliseconds before a blocking method should time out. */
 	private static final long TIMEOUT_MILLIS = 30000;
-	/** The password used to login to the world. */
-	private final String password;
 	/** The message factory used to generate messages for this client. */
 	private final WorldClientMessageFactory messageFactory;
 	/** The world file. */
@@ -47,17 +46,13 @@ public class WorldClient extends AuthClient
 	private byte[] serverWorldFileBytes;
 
 	/**
-	 * Construct a client connecting to the given address over the given port.  This client <i>must</i> have a username
-	 * and password.
-	 * @param username The username that will be used by this client.
-	 * @param password The password that will be used by this client.
+	 * Construct a WorldClient.
 	 * @param worldFile The file containing the world information.
 	 */
-	public WorldClient(MessageIO messageIO, String username, String password, File worldFile)
+	public WorldClient(MessageIO messageIO, ClientUser clientUser, File worldFile)
 		  throws WorldDocumentException
 	{
-		super(messageIO, username, password);
-		this.password = password;
+		super(messageIO, clientUser);
 		this.worldFile = worldFile;
 		if (worldFile.exists())
 		{
@@ -250,7 +245,7 @@ public class WorldClient extends AuthClient
 
 	/** Send a LoginRequest to the server. */
 	private void sendLoginRequest() {
-		Message loginRequest = getMessageFactory().generateLoginRequest(getUsername(), password);
+		Message loginRequest = getMessageFactory().generateLoginRequest(getUser());
 		setWaitingForLoginResponse(true);
 		queueOutgoingMessage(loginRequest);
 	}

@@ -24,7 +24,7 @@ public class PlayerTest extends WorldServerTest
 		WorldServer server = WorldServerTest.initWorldServer();
 		WorldClient client = WorldServerTest.initWorldClient();
 		ClientPlayer clientPlayer = client.getPlayer();
-		Player serverPlayer = server.getClientHandlerByUsername(client.getUsername()).getPlayer();
+		Player serverPlayer = server.getClientHandlerByUsername(client.getUser().getUsername()).getPlayer();
 		// Start and stop the player a few times to make sure the server is keeping up.
 		WorldServerTest.movePlayerToVector(client, server, new Vector2D(4, 0));
 		WorldServerTest.movePlayerToVector(client, server, new Vector2D(8, 0));
@@ -43,7 +43,7 @@ public class PlayerTest extends WorldServerTest
 		WorldServer server = WorldServerTest.initWorldServer();
 		WorldClient client = WorldServerTest.initWorldClient();
 		ClientPlayer clientPlayer = client.getPlayer();
-		Player serverPlayer = server.getClientHandlerByUsername(client.getUsername()).getPlayer();
+		Player serverPlayer = server.getClientHandlerByUsername(client.getUser().getUsername()).getPlayer();
 		clientPlayer.setAngle(clientPlayer.getAngle().asIdle());
 		Thread.sleep(100);
 		int maxCoordinate = 3;

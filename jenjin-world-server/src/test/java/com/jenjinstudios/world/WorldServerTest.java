@@ -1,5 +1,6 @@
 package com.jenjinstudios.world;
 
+import com.jenjinstudios.client.net.ClientUser;
 import com.jenjinstudios.core.MessageIO;
 import com.jenjinstudios.core.io.MessageInputStream;
 import com.jenjinstudios.core.io.MessageOutputStream;
@@ -34,12 +35,6 @@ import java.util.logging.Logger;
  */
 public class WorldServerTest
 {
-	/** The Logger for this class. */
-	private static final Logger LOGGER = Logger.getLogger(WorldServerTest.class.getName());
-	/** The port used to listen and connect. */
-	private static int port = WorldServer.DEFAULT_PORT;
-	private static int connectionNumber = 0;
-
 	/**
 	 * The tolerance for distance between a the client and server positions of an actor. This is roughly how much an
 	 * actor should move during an update (assuming default UPS, which these tests do).  This means that the client and
@@ -47,7 +42,12 @@ public class WorldServerTest
 	 * avoid spurious test failures that could be caused by unforeseen lag on one of the threads.
 	 */
 	protected static final double vectorTolerance = (Actor.MOVE_SPEED / (double) WorldServer.DEFAULT_UPS) * 1.1;
+	/** The Logger for this class. */
+	private static final Logger LOGGER = Logger.getLogger(WorldServerTest.class.getName());
 	private static final MessageRegistry mr = new MessageRegistry();
+	/** The port used to listen and connect. */
+	private static int port = WorldServer.DEFAULT_PORT;
+	private static int connectionNumber = 0;
 
 	/**
 	 * Construct the test.
@@ -92,8 +92,9 @@ public class WorldServerTest
 		MessageInputStream in = new MessageInputStream(mr, sock.getInputStream());
 		MessageOutputStream out = new MessageOutputStream(mr, sock.getOutputStream());
 		MessageIO messageIO = new MessageIO(in, out, mr);
-		WorldClient worldClient = new WorldClient(messageIO, username, "testPassword",
-			  new File("resources/WorldTestFile.xml"));
+		ClientUser user = new ClientUser(username, "testPassword");
+		File worldFile = new File("resources/WorldTestFile.xml");
+		WorldClient worldClient = new WorldClient(messageIO, user, worldFile);
 		worldClient.blockingStart();
 		worldClient.sendBlockingWorldFileRequest();
 		worldClient.sendBlockingLoginRequest();
@@ -157,7 +158,7 @@ public class WorldServerTest
 											 Vector2D target) throws InterruptedException
 	{
 		ClientPlayer clientPlayer = client.getPlayer();
-		String username = client.getUsername();
+		String username = client.getUser().getUsername();
 		Player serverPlayer = server.getClientHandlerByUsername(username).getPlayer();
 		double angle = clientPlayer.getVector2D().getAngleToVector(target);
 		double dist = clientPlayer.getVector2D().getDistanceToVector(target);
@@ -199,7 +200,7 @@ public class WorldServerTest
 	 * @throws Exception If there's an exception.
 	 */
 	public static void tearDown(WorldClient client, WorldServer server) throws Exception {
-		Player serverPlayer = server.getClientHandlerByUsername(client.getUsername()).getPlayer();
+		Player serverPlayer = server.getClientHandlerByUsername(client.getUser().getUsername()).getPlayer();
 		serverPlayer.setVector2D(new Vector2D(0, 0));
 		client.sendBlockingLogoutRequest();
 		LOGGER.log(Level.INFO, "Shutting down WorldClient. Avg. ping was {0}",

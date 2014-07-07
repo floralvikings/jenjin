@@ -17,10 +17,7 @@ public class AuthClient extends Client
 	private static final Logger LOGGER = Logger.getLogger(AuthClient.class.getName());
 	/** The number of milliseconds before a blocking method should time out. */
 	private static final long TIMEOUT_MILLIS = 30000;
-	/** The username this client will use when logging in. */
-	private final String username;
-	/** The password this client will use when logging in. */
-	private final String password;
+	private final ClientUser user;
 	/** Whether the user is logged in. */
 	private boolean loggedIn;
 	/** The time at which this client was successfully logged in. */
@@ -30,15 +27,9 @@ public class AuthClient extends Client
 	/** flags whether the logout response has been received. */
 	private volatile boolean waitingForLogoutResponse;
 
-	/**
-	 * Construct a client connecting to the given address over the given port.
-	 * @param username The username that will be used by this client.
-	 * @param password The password that will be used by this client.
-	 */
-	public AuthClient(MessageIO messageIO, String username, String password) {
+	public AuthClient(MessageIO messageIO, ClientUser user) {
 		super(messageIO);
-		this.username = username;
-		this.password = password;
+		this.user = user;
 	}
 
 	/**
@@ -79,11 +70,7 @@ public class AuthClient extends Client
 
 	/** Send a login request to the server. */
 	private void sendLoginRequest() {
-		if (username == null || password == null)
-		{
-			throw new IllegalStateException("Attempted to login without username or password");
-		}
-		Message loginRequest = getMessageFactory().generateLoginRequest(username, password);
+		Message loginRequest = getMessageFactory().generateLoginRequest(user);
 
 		// Send the request, continue when the response is received.
 		setWaitingForLoginResponse(true);
@@ -157,8 +144,8 @@ public class AuthClient extends Client
 	 * Get the username of this client.
 	 * @return The username of this client.
 	 */
-	public String getUsername() {
-		return username;
+	public ClientUser getUser() {
+		return user;
 	}
 
 	/**

@@ -1,5 +1,6 @@
 package com.jenjinstudios.client.message;
 
+import com.jenjinstudios.client.net.ClientUser;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageRegistry;
 import com.jenjinstudios.core.util.MessageFactory;
@@ -39,14 +40,12 @@ public class ClientMessageFactory extends MessageFactory
 
 	/**
 	 * Generate a LoginRequest message.  This message will be encrypted if possible.
-	 * @param username The user's plaintext username.
-	 * @param password The user's plaintext password.
 	 * @return The LoginRequest message.
 	 */
-	public Message generateLoginRequest(String username, String password) {// Create the login request.
+	public Message generateLoginRequest(ClientUser user) {// Create the login request.
 		Message loginRequest = getMessageRegistry().createMessage("LoginRequest");
-		loginRequest.setArgument("username", username);
-		loginRequest.setArgument("password", password);
+		loginRequest.setArgument("username", user.getUsername());
+		loginRequest.setArgument("password", user.getPassword());
 		return loginRequest;
 	}
 }

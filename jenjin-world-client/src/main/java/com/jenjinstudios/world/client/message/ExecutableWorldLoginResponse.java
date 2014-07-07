@@ -34,7 +34,7 @@ public class ExecutableWorldLoginResponse extends WorldClientExecutableMessage
 			return;
 
 		client.setLoggedInTime((long) getMessage().getArgument("loginTime"));
-		client.setName(client.getUsername());
+		client.setName(client.getUser().getUsername());
 		client.setPlayer(player);
 		client.getWorld().addObject(player, player.getId());
 
@@ -46,7 +46,7 @@ public class ExecutableWorldLoginResponse extends WorldClientExecutableMessage
 		int id = (int) getMessage().getArgument("id");
 		double xCoordinate = (double) getMessage().getArgument("xCoordinate");
 		double yCoordinate = (double) getMessage().getArgument("yCoordinate");
-		player = new ClientPlayer(id, getClient().getUsername());
+		player = new ClientPlayer(id, getClient().getUser().getUsername());
 		Vector2D vector2D = new Vector2D(xCoordinate, yCoordinate);
 		player.setVector2D(vector2D);
 	}
