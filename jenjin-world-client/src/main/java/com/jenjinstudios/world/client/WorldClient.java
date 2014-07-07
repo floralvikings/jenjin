@@ -22,41 +22,24 @@ import java.util.logging.Logger;
  */
 public class WorldClient extends AuthClient
 {
-	/** The logger associated with this class. */
 	private static final Logger LOGGER = Logger.getLogger(WorldClient.class.getName());
-	/** The number of milliseconds before a blocking method should time out. */
 	private static final long TIMEOUT_MILLIS = 30000;
-	/** The message factory used to generate messages for this client. */
 	private final WorldClientMessageFactory messageFactory;
-	/** The world file. */
 	private final File worldFile;
-	/** The world. */
 	private World world;
-	/** The actor representing the player controlled by this client. */
 	private ClientPlayer player;
-	/** Whether this client has received a world file checksum from the server. */
 	private boolean hasReceivedWorldFileChecksum;
-	/** The world file checksum received from the server. */
 	private byte[] serverWorldFileChecksum;
-	/** The world file reader for this client. */
 	private WorldDocumentReader worldDocumentReader;
-	/** Whether this client has received the world file. */
 	private boolean hasReceivedWorldFile;
-	/** The bytes in the world server file. */
 	private byte[] serverWorldFileBytes;
 
-	/**
-	 * Construct a WorldClient.
-	 * @param worldFile The file containing the world information.
-	 */
 	public WorldClient(MessageIO messageIO, ClientUser clientUser, File worldFile) throws WorldDocumentException {
 		super(messageIO, clientUser);
 		this.worldFile = worldFile;
 		if (worldFile.exists())
 		{
-			FileInputStream fileInputStream = getWorldFileInputStream(worldFile);
-			this.worldDocumentReader = new WorldDocumentReader(fileInputStream);
-			this.world = worldDocumentReader.read();
+			readWorldFile();
 		}
 		this.messageFactory = new WorldClientMessageFactory(getMessageRegistry());
 	}
@@ -119,19 +102,15 @@ public class WorldClient extends AuthClient
 	public void sendBlockingWorldFileRequest() throws InterruptedException, WorldDocumentException {
 		Message worldFileChecksumRequest = getMessageFactory().generateWorldChecksumRequest();
 		queueOutgoingMessage(worldFileChecksumRequest);
-
 		waitForWorldFileChecksum();
-
 		if (needsWorldFile())
 		{
 			queueOutgoingMessage(getMessageFactory().generateWorldFileRequest());
 			waitForWorldFile();
 			createNewFileIfNecessary();
 			writeServerWorldToFile();
-			readServerWorldFromFile();
+			readWorldFile();
 		}
-
-
 	}
 
 	protected void sendStateChangeRequest(MoveState moveState) {
@@ -176,9 +155,16 @@ public class WorldClient extends AuthClient
 		}
 	}
 
-	private void readServerWorldFromFile() throws WorldDocumentException {
-		worldDocumentReader = new WorldDocumentReader(new ByteArrayInputStream(serverWorldFileBytes));
-		world = worldDocumentReader.read();
+	private void readWorldFile() throws WorldDocumentException {
+		try
+		{
+			FileInputStream inputStream = new FileInputStream(worldFile);
+			worldDocumentReader = new WorldDocumentReader(inputStream);
+			world = worldDocumentReader.read();
+		} catch (FileNotFoundException e)
+		{
+			throw new WorldDocumentException("Couldn't find world file.", e);
+		}
 	}
 
 	private void waitForWorldFile() throws InterruptedException {
@@ -193,18 +179,6 @@ public class WorldClient extends AuthClient
 		{
 			Thread.sleep(10);
 		}
-	}
-
-	private FileInputStream getWorldFileInputStream(File worldFile) throws WorldDocumentException {
-		FileInputStream fileInputStream;
-		try
-		{
-			fileInputStream = new FileInputStream(worldFile);
-		} catch (FileNotFoundException e)
-		{
-			throw new WorldDocumentException("Unable to find world file.", e);
-		}
-		return fileInputStream;
 	}
 
 	private void sendLoginRequest() {
