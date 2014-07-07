@@ -155,19 +155,13 @@ public class WorldClient extends AuthClient
 		Message worldFileChecksumRequest = getMessageFactory().generateWorldChecksumRequest();
 		queueOutgoingMessage(worldFileChecksumRequest);
 
-		while (!hasReceivedWorldFileChecksum)
-		{
-			Thread.sleep(10);
-		}
+		waitForWorldFileChecksum();
 
 		if (worldDocumentReader == null || !Arrays.equals(serverWorldFileChecksum,
 			  worldDocumentReader.getWorldFileChecksum()))
 		{
 			queueOutgoingMessage(getMessageFactory().generateWorldFileRequest());
-			while (!hasReceivedWorldFile)
-			{
-				Thread.sleep(10);
-			}
+			waitForWorldFile();
 			if ((!worldFile.getParentFile().exists() && !worldFile.getParentFile().mkdirs()) || (!worldFile.exists()
 				  && !worldFile.createNewFile()))
 			{
@@ -183,6 +177,20 @@ public class WorldClient extends AuthClient
 		}
 
 
+	}
+
+	private void waitForWorldFile() throws InterruptedException {
+		while (!hasReceivedWorldFile)
+		{
+			Thread.sleep(10);
+		}
+	}
+
+	private void waitForWorldFileChecksum() throws InterruptedException {
+		while (!hasReceivedWorldFileChecksum)
+		{
+			Thread.sleep(10);
+		}
 	}
 
 	@Override
