@@ -157,8 +157,7 @@ public class WorldClient extends AuthClient
 
 		waitForWorldFileChecksum();
 
-		if (worldDocumentReader == null || !Arrays.equals(serverWorldFileChecksum,
-			  worldDocumentReader.getWorldFileChecksum()))
+		if (needsWorldFile())
 		{
 			queueOutgoingMessage(getMessageFactory().generateWorldFileRequest());
 			waitForWorldFile();
@@ -172,6 +171,11 @@ public class WorldClient extends AuthClient
 		}
 
 
+	}
+
+	private boolean needsWorldFile() {
+		return worldDocumentReader == null || !Arrays.equals(serverWorldFileChecksum,
+			  worldDocumentReader.getWorldFileChecksum());
 	}
 
 	private void writeServerWorldToFile() throws IOException {
