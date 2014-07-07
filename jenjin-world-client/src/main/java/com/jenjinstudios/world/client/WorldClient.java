@@ -167,15 +167,19 @@ public class WorldClient extends AuthClient
 			{
 				throw new IOException("Unable to create new world file!");
 			}
-			try (FileOutputStream worldOut = new FileOutputStream(worldFile))
-			{
-				worldOut.write(serverWorldFileBytes);
-				worldOut.close();
-			}
+			writeServerWorldToFile();
 			readServerWorldFromFile();
 		}
 
 
+	}
+
+	private void writeServerWorldToFile() throws IOException {
+		try (FileOutputStream worldOut = new FileOutputStream(worldFile))
+		{
+			worldOut.write(serverWorldFileBytes);
+			worldOut.close();
+		}
 	}
 
 	private void readServerWorldFromFile() throws WorldDocumentException {
