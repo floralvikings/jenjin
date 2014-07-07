@@ -49,9 +49,7 @@ public class WorldClient extends AuthClient
 	 * Construct a WorldClient.
 	 * @param worldFile The file containing the world information.
 	 */
-	public WorldClient(MessageIO messageIO, ClientUser clientUser, File worldFile)
-		  throws WorldDocumentException
-	{
+	public WorldClient(MessageIO messageIO, ClientUser clientUser, File worldFile) throws WorldDocumentException {
 		super(messageIO, clientUser);
 		this.worldFile = worldFile;
 		if (worldFile.exists())
@@ -91,60 +89,33 @@ public class WorldClient extends AuthClient
 		queueOutgoingMessage(logoutRequest);
 	}
 
-	/**
-	 * Get the player associated with this client.
-	 * @return The player (ClientActor) associated with this client.
-	 */
+	@Override
+	public WorldClientMessageFactory getMessageFactory() {return messageFactory; }
+
 	public ClientPlayer getPlayer() { return player; }
 
-	/**
-	 * Set the player being controlled by this client.
-	 * @param player The player to be controlled by this client.
-	 */
 	public void setPlayer(ClientPlayer player) {
 		this.player = player;
 	}
 
-	/**
-	 * Get the world for this client.
-	 * @return The world being managed by this client.
-	 */
 	public World getWorld() { return world; }
 
-	/**
-	 * Set whether the world file checksum has been received.
-	 */
 	public void setHasReceivedWorldFileChecksum() {
 		this.hasReceivedWorldFileChecksum = true;
 	}
 
-	/**
-	 * Set the checksum received from the server.
-	 * @param serverWorldFileChecksum The checksum received from the server.
-	 */
 	public void setServerWorldFileChecksum(byte[] serverWorldFileChecksum) {
 		this.serverWorldFileChecksum = serverWorldFileChecksum;
 	}
 
-	/**
-	 * Set whether the client has received the world file.
-	 */
 	public void setHasReceivedWorldFile() {
 		this.hasReceivedWorldFile = true;
 	}
 
-	/**
-	 * Set the bytes of the world file stored on the server.
-	 * @param serverWorldFileBytes The bytes.
-	 */
 	public void setServerWorldFileBytes(byte[] serverWorldFileBytes) {
 		this.serverWorldFileBytes = serverWorldFileBytes;
 	}
 
-	/**
-	 * Send a request for the world file, and wait for the response to return.
-	 * @throws InterruptedException If the thread is interrupted while waiting for responses.
-	 */
 	public void sendBlockingWorldFileRequest() throws InterruptedException, WorldDocumentException {
 		Message worldFileChecksumRequest = getMessageFactory().generateWorldChecksumRequest();
 		queueOutgoingMessage(worldFileChecksumRequest);
@@ -163,13 +134,6 @@ public class WorldClient extends AuthClient
 
 	}
 
-	@Override
-	public WorldClientMessageFactory getMessageFactory() {return messageFactory; }
-
-	/**
-	 * Send a state change request to the server.
-	 * @param moveState The move state used to generate the request.
-	 */
 	protected void sendStateChangeRequest(MoveState moveState) {
 		Message stateChangeRequest = getMessageFactory().generateStateChangeRequest(moveState);
 		queueOutgoingMessage(stateChangeRequest);
@@ -243,7 +207,6 @@ public class WorldClient extends AuthClient
 		return fileInputStream;
 	}
 
-	/** Send a LoginRequest to the server. */
 	private void sendLoginRequest() {
 		Message loginRequest = getMessageFactory().generateLoginRequest(getUser());
 		setWaitingForLoginResponse(true);
