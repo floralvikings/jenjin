@@ -117,14 +117,6 @@ public class WorldClient extends AuthClient
 	public World getWorld() { return world; }
 
 	/**
-	 * Set the world managed by this client.
-	 * @param world The world managed by this client.
-	 */
-	public void setWorld(World world) {
-		this.world = world;
-	}
-
-	/**
 	 * Set whether the world file checksum has been received.
 	 */
 	public void setHasReceivedWorldFileChecksum() {
