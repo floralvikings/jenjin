@@ -149,7 +149,6 @@ public class WorldClient extends AuthClient
 	/**
 	 * Send a request for the world file, and wait for the response to return.
 	 * @throws InterruptedException If the thread is interrupted while waiting for responses.
-	 * @throws java.io.IOException If there's an error writing the world file.
 	 */
 	public void sendBlockingWorldFileRequest() throws InterruptedException, WorldDocumentException {
 		Message worldFileChecksumRequest = getMessageFactory().generateWorldChecksumRequest();
