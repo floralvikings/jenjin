@@ -73,8 +73,6 @@ public class WorldClient extends AuthClient
 	public World getWorld() { return world; }
 
 	public void sendBlockingWorldFileRequest() throws InterruptedException, WorldDocumentException {
-		Message worldFileChecksumRequest = getMessageFactory().generateWorldChecksumRequest();
-		queueOutgoingMessage(worldFileChecksumRequest);
 		serverWorldFileTracker.getServerWorldFile();
 		world = serverWorldFileTracker.readWorldFile();
 	}

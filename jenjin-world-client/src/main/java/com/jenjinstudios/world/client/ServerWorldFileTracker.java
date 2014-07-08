@@ -1,5 +1,6 @@
 package com.jenjinstudios.world.client;
 
+import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.io.WorldDocumentException;
 import com.jenjinstudios.world.io.WorldDocumentReader;
@@ -26,6 +27,7 @@ public final class ServerWorldFileTracker
 	}
 
 	public void getServerWorldFile() throws InterruptedException, WorldDocumentException {
+		requestWorldFileChecksum();
 		waitForWorldFileChecksum();
 		if (needsWorldFile())
 		{
@@ -73,6 +75,11 @@ public final class ServerWorldFileTracker
 			}
 		}
 		return world;
+	}
+
+	private void requestWorldFileChecksum() {
+		Message worldFileChecksumRequest = worldClient.getMessageFactory().generateWorldChecksumRequest();
+		worldClient.queueOutgoingMessage(worldFileChecksumRequest);
 	}
 
 	private boolean needsWorldFile() {
