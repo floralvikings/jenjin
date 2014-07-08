@@ -11,7 +11,7 @@ import org.testng.annotations.Test;
  */
 public class ClientActorTest
 {
-	@Test
+	@Test(timeOut = 5000)
 	public void testUpdate() {
 		World world = new World();
 		ClientActor actor = new ClientActor(0, "ClientActor");
@@ -20,7 +20,7 @@ public class ClientActorTest
 		Assert.assertNotEquals(actor.getLastStepTime(), 0);
 	}
 
-	@Test
+	@Test(timeOut = 5000)
 	public void testStep() throws InterruptedException {
 		World world = new World();
 		ClientActor actor = new ClientActor(0, "ClientActor");

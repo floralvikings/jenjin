@@ -11,7 +11,7 @@ import org.testng.annotations.Test;
  */
 public class ClientPlayerTest
 {
-	@Test
+	@Test(timeOut = 5000)
 	public void testSetAngleNoUpdate() {
 		World world = new World();
 		ClientPlayer player = new ClientPlayer(0, "ClientActor");
@@ -21,7 +21,7 @@ public class ClientPlayerTest
 		Assert.assertNotEquals(player.getAngle(), angle);
 	}
 
-	@Test
+	@Test(timeOut = 5000)
 	public void testSetAngle() {
 		World world = new World();
 		ClientPlayer player = new ClientPlayer(0, "ClientActor");
@@ -32,7 +32,7 @@ public class ClientPlayerTest
 		Assert.assertEquals(player.getAngle(), angle);
 	}
 
-	@Test
+	@Test(timeOut = 5000)
 	public void testSetAngleToForcedPosition() {
 		World world = new World();
 		ClientPlayer player = new ClientPlayer(0, "ClientActor");
@@ -43,7 +43,7 @@ public class ClientPlayerTest
 		Assert.assertEquals(player.getAngle(), angle);
 	}
 
-	@Test
+	@Test(timeOut = 5000)
 	public void testForcePosition() {
 		World world = new World();
 		ClientPlayer player = new ClientPlayer(0, "ClientActor");
@@ -52,7 +52,7 @@ public class ClientPlayerTest
 		Assert.assertNotNull(player.getForcedState());
 	}
 
-	@Test
+	@Test(timeOut = 5000)
 	public void testStep() throws InterruptedException {
 		World world = new World();
 		ClientPlayer player = new ClientPlayer(0, "ClientActor");

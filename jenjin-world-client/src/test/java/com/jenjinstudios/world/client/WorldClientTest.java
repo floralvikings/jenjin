@@ -6,7 +6,6 @@ import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageInputStream;
 import com.jenjinstudios.core.io.MessageOutputStream;
 import com.jenjinstudios.core.io.MessageRegistry;
-import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.io.ChecksumUtil;
 import org.mockito.Mockito;
 import org.testng.Assert;
@@ -31,7 +30,7 @@ import java.security.spec.X509EncodedKeySpec;
 /**
  * @author Caleb Brinkman
  */
-public class ServerWorldFileTrackerTest
+public class WorldClientTest
 {
 	private static final MessageRegistry messageRegistry = new MessageRegistry();
 	private static final String validWorldString =
@@ -74,93 +73,21 @@ public class ServerWorldFileTrackerTest
 	}
 
 	@Test(timeOut = 5000)
-	public void testRequestWorldServerFileChecksum() throws Exception {
-		byte[] file = validWorldString.getBytes(StandardCharsets.UTF_8);
-		byte[] checksum = ChecksumUtil.getMD5Checksum(file);
-
+	public void testSendBlockingLoginRequest() throws Exception {
 		WorldClient wc = getPreparedWorldClient();
-
 		wc.blockingStart();
-
-		ServerWorldFileTracker serverWorldFileTracker = wc.getServerWorldFileTracker();
-		serverWorldFileTracker.requestServerWorldFileChecksum(wc);
-
-		Assert.assertEquals(serverWorldFileTracker.getChecksum(), checksum);
-
+		wc.sendBlockingWorldFileRequest();
+		wc.sendBlockingLoginRequest();
+		Assert.assertNotNull(wc.getPlayer());
 		wc.shutdown();
 	}
 
 	@Test(timeOut = 5000)
-	public void testRequestServerWorldFile() throws Exception {
-		byte[] file = validWorldString.getBytes(StandardCharsets.UTF_8);
-		byte[] checksum = ChecksumUtil.getMD5Checksum(file);
-
+	public void testSendBlockingWorldFileRequest() throws Exception {
 		WorldClient wc = getPreparedWorldClient();
-
 		wc.blockingStart();
-
-		ServerWorldFileTracker serverWorldFileTracker = wc.getServerWorldFileTracker();
-		serverWorldFileTracker.requestServerWorldFileChecksum(wc);
-		serverWorldFileTracker.requestServerWorldFile(wc);
-
-		Assert.assertFalse(serverWorldFileTracker.isWaitingForChecksum());
-		Assert.assertFalse(serverWorldFileTracker.isWaitingForFile());
-		Assert.assertEquals(serverWorldFileTracker.getChecksum(), checksum);
-		Assert.assertEquals(serverWorldFileTracker.getBytes(), file);
-
-		wc.shutdown();
-	}
-
-	@Test(timeOut = 5000)
-	public void testWriteServerWorldToFile() throws Exception {
-		byte[] file = validWorldString.getBytes(StandardCharsets.UTF_8);
-
-		WorldClient wc = getPreparedWorldClient();
-
-		wc.blockingStart();
-
-		ServerWorldFileTracker serverWorldFileTracker = wc.getServerWorldFileTracker();
-		serverWorldFileTracker.requestServerWorldFileChecksum(wc);
-		serverWorldFileTracker.requestServerWorldFile(wc);
-		serverWorldFileTracker.writeReceivedWorldToFile();
-
-		Path writtenFile = new File("resources/ServerWorldFileTracker.xml").toPath();
-		byte[] readBytes = Files.readAllBytes(writtenFile);
-		Assert.assertEquals(readBytes, file);
-
-		wc.shutdown();
-	}
-
-	@Test(timeOut = 5000)
-	public void testReadWorldFromServer() throws Exception {
-		WorldClient wc = getPreparedWorldClient();
-
-		wc.blockingStart();
-
-		ServerWorldFileTracker serverWorldFileTracker = wc.getServerWorldFileTracker();
-		serverWorldFileTracker.requestServerWorldFileChecksum(wc);
-		serverWorldFileTracker.requestServerWorldFile(wc);
-
-		World world = serverWorldFileTracker.readWorldFromServer();
-		Assert.assertNotNull(world);
-
-		wc.shutdown();
-	}
-
-	@Test(timeOut = 5000)
-	public void testReadWorldFromFile() throws Exception {
-		WorldClient wc = getPreparedWorldClient();
-
-		wc.blockingStart();
-
-		ServerWorldFileTracker serverWorldFileTracker = wc.getServerWorldFileTracker();
-		serverWorldFileTracker.requestServerWorldFileChecksum(wc);
-		serverWorldFileTracker.requestServerWorldFile(wc);
-		serverWorldFileTracker.writeReceivedWorldToFile();
-
-		World world = serverWorldFileTracker.readWorldFromFile();
-		Assert.assertNotNull(world);
-
+		wc.sendBlockingWorldFileRequest();
+		Assert.assertNotNull(wc.getWorld());
 		wc.shutdown();
 	}
 
@@ -193,13 +120,29 @@ public class ServerWorldFileTrackerTest
 		Message worldFileResponse = messageRegistry.createMessage("WorldFileResponse");
 		worldFileResponse.setArgument("fileBytes", file);
 		Message aesMessage = getAesKeyMessage(messageRegistry, wc);
+		Message worldLoginResponse = getWorldLoginResponse();
+		Message worldLogoutResponse = messageRegistry.createMessage("WorldLogoutResponse");
+		worldLogoutResponse.setArgument("success", true);
+
 
 		Mockito.when(inputStream.readMessage()).
 			  thenReturn(firstConnectResponse, blankMessageSpam).
 			  thenReturn(aesMessage, blankMessageSpam).
 			  thenReturn(worldChecksumResponse, blankMessageSpam).
-			  thenReturn(worldFileResponse, blankMessage);
+			  thenReturn(worldFileResponse, blankMessageSpam).
+			  thenReturn(worldLoginResponse, blankMessageSpam);
 		return wc;
+	}
+
+	private Message getWorldLoginResponse() {
+		Message worldLoginResponse = messageRegistry.createMessage("WorldLoginResponse");
+		worldLoginResponse.setArgument("id", 0);
+		worldLoginResponse.setArgument("xCoordinate", 0.0d);
+		worldLoginResponse.setArgument("yCoordinate", 0.0d);
+		worldLoginResponse.setArgument("zoneNumber", 0);
+		worldLoginResponse.setArgument("success", true);
+		worldLoginResponse.setArgument("loginTime", 123l);
+		return worldLoginResponse;
 	}
 
 	private Message getAesKeyMessage(MessageRegistry messageRegistry, WorldClient wc) throws Exception {
