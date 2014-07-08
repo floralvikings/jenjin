@@ -1,5 +1,7 @@
 package com.jenjinstudios.world.client;
 
+import com.jenjinstudios.core.io.Message;
+import com.jenjinstudios.world.client.message.WorldClientMessageFactory;
 import com.jenjinstudios.world.state.MoveState;
 
 import java.util.LinkedList;
@@ -31,7 +33,12 @@ public class WorldClientUpdater implements Runnable
 		{
 			LinkedList<MoveState> newStates = player.getStateChanges();
 			while (!newStates.isEmpty())
-				worldClient.sendStateChangeRequest(newStates.remove());
+			{
+				MoveState moveState = newStates.remove();
+				WorldClientMessageFactory messageFactory = worldClient.getMessageFactory();
+				Message stateChangeRequest = messageFactory.generateStateChangeRequest(moveState);
+				worldClient.queueOutgoingMessage(stateChangeRequest);
+			}
 		}
 	}
 }

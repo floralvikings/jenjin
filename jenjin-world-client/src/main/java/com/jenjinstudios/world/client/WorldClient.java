@@ -99,11 +99,6 @@ public class WorldClient extends AuthClient
 		}
 	}
 
-	protected void sendStateChangeRequest(MoveState moveState) {
-		Message stateChangeRequest = getMessageFactory().generateStateChangeRequest(moveState);
-		queueOutgoingMessage(stateChangeRequest);
-	}
-
 	private boolean tryCreateWorldFile() throws WorldDocumentException {
 		try
 		{
