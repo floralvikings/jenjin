@@ -29,8 +29,8 @@ public class WorldClient extends AuthClient
 	public WorldClient(MessageIO messageIO, ClientUser clientUser, File worldFile) throws WorldDocumentException {
 		super(messageIO, clientUser);
 		this.messageFactory = new WorldClientMessageFactory(getMessageRegistry());
-		serverWorldFileTracker = new ServerWorldFileTracker(this, worldFile);
-		world = serverWorldFileTracker.readWorldFile();
+		serverWorldFileTracker = new ServerWorldFileTracker(worldFile);
+		world = serverWorldFileTracker.readWorldFromFile();
 	}
 
 	@Override
@@ -73,8 +73,10 @@ public class WorldClient extends AuthClient
 	public World getWorld() { return world; }
 
 	public void sendBlockingWorldFileRequest() throws InterruptedException, WorldDocumentException {
-		serverWorldFileTracker.getServerWorldFile();
-		world = serverWorldFileTracker.readWorldFile();
+		serverWorldFileTracker.getServerWorldFileChecksum(this);
+		serverWorldFileTracker.readServerWorldFile(this);
+		serverWorldFileTracker.writeReceivedWorldToFile();
+		world = serverWorldFileTracker.readWorldFromServer();
 	}
 
 	private void sendLoginRequest() {

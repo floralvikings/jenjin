@@ -14,28 +14,33 @@ import java.util.Arrays;
 public final class ServerWorldFileTracker
 {
 	private final File worldFile;
-	private final WorldClient worldClient;
 	private boolean waitingForChecksum;
 	private byte[] checksum;
 	private boolean waitingForFile;
 	private byte[] bytes;
 	private WorldDocumentReader worldDocumentReader;
 
-	public ServerWorldFileTracker(WorldClient worldClient, File worldFile) {
-		this.worldClient = worldClient;
+	public ServerWorldFileTracker(File worldFile) {
 		this.worldFile = worldFile;
 	}
 
-	public void getServerWorldFile() throws InterruptedException, WorldDocumentException {
-		requestWorldFileChecksum();
+	public void getServerWorldFileChecksum(WorldClient worldClient) throws InterruptedException {
+		Message worldFileChecksumRequest = worldClient.getMessageFactory().generateWorldChecksumRequest();
+		worldClient.queueOutgoingMessage(worldFileChecksumRequest);
 		waitForWorldFileChecksum();
+	}
+
+	public void readServerWorldFile(WorldClient worldClient) throws InterruptedException, WorldDocumentException {
 		if (needsWorldFile())
 		{
 			worldClient.queueOutgoingMessage(worldClient.getMessageFactory().generateWorldFileRequest());
 			waitForWorldFile();
-			createNewFileIfNecessary();
-			writeServerWorldToFile();
 		}
+	}
+
+	public void writeReceivedWorldToFile() throws WorldDocumentException {
+		createNewFileIfNecessary();
+		writeServerWorldToFile();
 	}
 
 	protected byte[] getChecksum() { return checksum; }
@@ -44,23 +49,28 @@ public final class ServerWorldFileTracker
 
 	protected byte[] getBytes() { return bytes; }
 
-	public void setBytes(byte[] bytes) {
-		this.bytes = bytes;
-	}
+	public void setBytes(byte[] bytes) { this.bytes = bytes; }
 
 	protected boolean isWaitingForChecksum() { return waitingForChecksum; }
 
-	public void setWaitingForChecksum(boolean bool) {
-		this.waitingForChecksum = bool;
-	}
+	public void setWaitingForChecksum(boolean bool) { this.waitingForChecksum = bool; }
 
 	protected boolean isWaitingForFile() { return waitingForFile; }
 
-	public void setWaitingForFile(boolean waiting) {
-		this.waitingForFile = waiting;
+	public void setWaitingForFile(boolean waiting) { this.waitingForFile = waiting; }
+
+	protected World readWorldFromServer() throws WorldDocumentException {
+		World world = null;
+		if (bytes != null)
+		{
+			ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
+			worldDocumentReader = new WorldDocumentReader(byteArrayInputStream);
+			world = worldDocumentReader.read();
+		}
+		return world;
 	}
 
-	protected World readWorldFile() throws WorldDocumentException {
+	protected World readWorldFromFile() throws WorldDocumentException {
 		World world = null;
 		if (worldFile.exists())
 		{
@@ -69,6 +79,7 @@ public final class ServerWorldFileTracker
 				FileInputStream inputStream = new FileInputStream(worldFile);
 				worldDocumentReader = new WorldDocumentReader(inputStream);
 				world = worldDocumentReader.read();
+				bytes = worldDocumentReader.getWorldFileBytes();
 			} catch (FileNotFoundException e)
 			{
 				throw new WorldDocumentException("Couldn't find world file.", e);
@@ -77,14 +88,15 @@ public final class ServerWorldFileTracker
 		return world;
 	}
 
-	private void requestWorldFileChecksum() {
-		Message worldFileChecksumRequest = worldClient.getMessageFactory().generateWorldChecksumRequest();
-		worldClient.queueOutgoingMessage(worldFileChecksumRequest);
-	}
-
 	private boolean needsWorldFile() {
-		return worldDocumentReader == null || !Arrays.equals(getChecksum(),
-			  worldDocumentReader.getWorldFileChecksum());
+		boolean checksumsMatch = false;
+		boolean readerNull = worldDocumentReader == null;
+		if (!readerNull)
+		{
+			checksumsMatch = Arrays.equals(getChecksum(),
+				  worldDocumentReader.getWorldFileChecksum());
+		}
+		return !checksumsMatch;
 	}
 
 	private void createNewFileIfNecessary() throws WorldDocumentException {
@@ -127,11 +139,14 @@ public final class ServerWorldFileTracker
 	private void writeServerWorldToFile() throws WorldDocumentException {
 		try (FileOutputStream worldOut = new FileOutputStream(worldFile))
 		{
-			worldOut.write(getBytes());
+			worldOut.write(bytes);
 			worldOut.close();
 		} catch (IOException ex)
 		{
 			throw new WorldDocumentException("Unable to write world file.", ex);
+		} catch (NullPointerException ex)
+		{
+			throw new WorldDocumentException("Can't write world to file until world data has been received.");
 		}
 	}
 }

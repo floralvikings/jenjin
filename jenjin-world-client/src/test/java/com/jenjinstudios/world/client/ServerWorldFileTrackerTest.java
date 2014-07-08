@@ -10,6 +10,8 @@ import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.io.ChecksumUtil;
 import junit.framework.Assert;
 import org.mockito.Mockito;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import javax.crypto.Cipher;
@@ -79,21 +81,18 @@ public class ServerWorldFileTrackerTest
 		wc.blockingStart();
 
 		ServerWorldFileTracker serverWorldFileTracker = wc.getServerWorldFileTracker();
-		serverWorldFileTracker.getServerWorldFile();
+		serverWorldFileTracker.getServerWorldFileChecksum(wc);
+		serverWorldFileTracker.readServerWorldFile(wc);
+		serverWorldFileTracker.writeReceivedWorldToFile();
 
 		Assert.assertFalse(serverWorldFileTracker.isWaitingForChecksum());
 		Assert.assertFalse(serverWorldFileTracker.isWaitingForFile());
 		Assert.assertEquals(serverWorldFileTracker.getChecksum(), checksum);
 		Assert.assertEquals(serverWorldFileTracker.getBytes(), file);
-
-		try
-		{
-			removeRecursive(new File("resources/").toPath());
-		} catch (IOException ignored) { }
 	}
 
 	@Test
-	public void testReadWorldFile() throws Exception {
+	public void testReadWorldFromServer() throws Exception {
 		byte[] file = validWorldString.getBytes(StandardCharsets.UTF_8);
 		byte[] checksum = ChecksumUtil.getMD5Checksum(file);
 
@@ -102,11 +101,16 @@ public class ServerWorldFileTrackerTest
 		wc.blockingStart();
 
 		ServerWorldFileTracker serverWorldFileTracker = wc.getServerWorldFileTracker();
-		serverWorldFileTracker.getServerWorldFile();
+		serverWorldFileTracker.getServerWorldFileChecksum(wc);
+		serverWorldFileTracker.readServerWorldFile(wc);
 
-		World world = serverWorldFileTracker.readWorldFile();
+		World world = serverWorldFileTracker.readWorldFromServer();
 		Assert.assertNotNull(world);
+	}
 
+	@BeforeClass
+	@AfterClass
+	public void cleanResources() {
 		try
 		{
 			removeRecursive(new File("resources/").toPath());
@@ -136,7 +140,7 @@ public class ServerWorldFileTrackerTest
 			  thenReturn(firstConnectResponse, blankMessageSpam).
 			  thenReturn(aesMessage, blankMessageSpam).
 			  thenReturn(worldChecksumResponse, blankMessageSpam).
-			  thenReturn(worldFileResponse);
+			  thenReturn(worldFileResponse, blankMessage);
 		return wc;
 	}
 
