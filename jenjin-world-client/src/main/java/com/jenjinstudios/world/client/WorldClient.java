@@ -104,13 +104,6 @@ public class WorldClient extends AuthClient
 		queueOutgoingMessage(stateChangeRequest);
 	}
 
-	private void createNewFileIfNecessary() throws WorldDocumentException {
-		if (!tryCreateWorldFileDirectory() || !tryCreateWorldFile())
-		{
-			throw new WorldDocumentException("Unable to create new world file!");
-		}
-	}
-
 	private boolean tryCreateWorldFile() throws WorldDocumentException {
 		try
 		{
@@ -128,6 +121,13 @@ public class WorldClient extends AuthClient
 	private boolean needsWorldFile() {
 		return worldDocumentReader == null || !Arrays.equals(serverWorldFileTracker.getChecksum(),
 			  worldDocumentReader.getWorldFileChecksum());
+	}
+
+	private void createNewFileIfNecessary() throws WorldDocumentException {
+		if (!tryCreateWorldFileDirectory() || !tryCreateWorldFile())
+		{
+			throw new WorldDocumentException("Unable to create new world file!");
+		}
 	}
 
 	private void writeServerWorldToFile() throws WorldDocumentException {
