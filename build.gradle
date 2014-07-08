@@ -26,10 +26,10 @@ subprojects {
     test {
         useTestNG()
         beforeTest { descriptor ->
-            logger.lifecycle("Running test:\t" + descriptor)
+            logger.lifecycle("Running:\t" + descriptor)
         }
         afterTest { descriptor ->
-            logger.lifecycle("Completed test:\t" + descriptor)
+            logger.lifecycle("Complete:\t" + descriptor)
         }
         workingDir = project.rootDir
     }
