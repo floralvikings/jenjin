@@ -61,7 +61,7 @@ public class ClientPlayerTest
 		player.setAngle(angle);
 		world.update();
 		long l = System.currentTimeMillis();
-		wait(1000);
+		wait(100);
 		l = System.currentTimeMillis() - l;
 		world.update();
 		double distance = Vector2D.ORIGIN.getDistanceToVector(player.getVector2D());

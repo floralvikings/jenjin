@@ -29,9 +29,9 @@ public class ClientActorTest
 		actor.setAngle(angle);
 		world.update();
 		long l = System.currentTimeMillis();
-		wait(1000);
-		l = System.currentTimeMillis() - l;
+		wait(100);
 		world.update();
+		l = System.currentTimeMillis() - l;
 		double distance = Vector2D.ORIGIN.getDistanceToVector(actor.getVector2D());
 		Assert.assertEquals(distance, ClientActor.MOVE_SPEED * ((double) l / 1000), 0.1);
 	}

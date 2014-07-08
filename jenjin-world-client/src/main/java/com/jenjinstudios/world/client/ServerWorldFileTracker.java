@@ -4,6 +4,7 @@ import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.io.WorldDocumentException;
 import com.jenjinstudios.world.io.WorldDocumentReader;
+import com.jenjinstudios.world.io.WorldDocumentWriter;
 
 import java.io.*;
 import java.util.Arrays;
@@ -24,13 +25,13 @@ public final class ServerWorldFileTracker
 		this.worldFile = worldFile;
 	}
 
-	public void getServerWorldFileChecksum(WorldClient worldClient) throws InterruptedException {
+	public void requestServerWorldFileChecksum(WorldClient worldClient) throws InterruptedException {
 		Message worldFileChecksumRequest = worldClient.getMessageFactory().generateWorldChecksumRequest();
 		worldClient.queueOutgoingMessage(worldFileChecksumRequest);
 		waitForWorldFileChecksum();
 	}
 
-	public void readServerWorldFile(WorldClient worldClient) throws InterruptedException, WorldDocumentException {
+	public void requestServerWorldFile(WorldClient worldClient) throws InterruptedException, WorldDocumentException {
 		if (needsWorldFile())
 		{
 			worldClient.queueOutgoingMessage(worldClient.getMessageFactory().generateWorldFileRequest());
@@ -139,8 +140,8 @@ public final class ServerWorldFileTracker
 	private void writeServerWorldToFile() throws WorldDocumentException {
 		try (FileOutputStream worldOut = new FileOutputStream(worldFile))
 		{
-			worldOut.write(bytes);
-			worldOut.close();
+			WorldDocumentWriter worldDocumentWriter = new WorldDocumentWriter(readWorldFromServer());
+			worldDocumentWriter.write(worldOut);
 		} catch (IOException ex)
 		{
 			throw new WorldDocumentException("Unable to write world file.", ex);
