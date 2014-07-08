@@ -7,11 +7,8 @@ import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.client.message.WorldClientMessageFactory;
 import com.jenjinstudios.world.io.WorldDocumentException;
-import com.jenjinstudios.world.io.WorldDocumentReader;
-import com.jenjinstudios.world.state.MoveState;
 
-import java.io.*;
-import java.util.Arrays;
+import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -25,21 +22,15 @@ public class WorldClient extends AuthClient
 	private static final Logger LOGGER = Logger.getLogger(WorldClient.class.getName());
 	private static final long TIMEOUT_MILLIS = 30000;
 	private final WorldClientMessageFactory messageFactory;
-	private final File worldFile;
+	private final ServerWorldFileTracker serverWorldFileTracker;
 	private World world;
 	private ClientPlayer player;
-	private WorldDocumentReader worldDocumentReader;
-	private final ServerWorldFileTracker serverWorldFileTracker;
 
 	public WorldClient(MessageIO messageIO, ClientUser clientUser, File worldFile) throws WorldDocumentException {
 		super(messageIO, clientUser);
-		serverWorldFileTracker = new ServerWorldFileTracker();
-		this.worldFile = worldFile;
-		if (worldFile.exists())
-		{
-			readWorldFile();
-		}
 		this.messageFactory = new WorldClientMessageFactory(getMessageRegistry());
+		serverWorldFileTracker = new ServerWorldFileTracker(this, worldFile);
+		world = serverWorldFileTracker.readWorldFile();
 	}
 
 	@Override
@@ -61,10 +52,6 @@ public class WorldClient extends AuthClient
 		return isLoggedIn();
 	}
 
-	public ServerWorldFileTracker getServerWorldFileTracker() {
-		return serverWorldFileTracker;
-	}
-
 	@Override
 	protected void sendLogoutRequest() {
 		Message logoutRequest = getMessageFactory().generateWorldLogoutRequest();
@@ -77,91 +64,19 @@ public class WorldClient extends AuthClient
 	@Override
 	public WorldClientMessageFactory getMessageFactory() {return messageFactory; }
 
+	public ServerWorldFileTracker getServerWorldFileTracker() { return serverWorldFileTracker; }
+
 	public ClientPlayer getPlayer() { return player; }
 
-	public void setPlayer(ClientPlayer player) {
-		this.player = player;
-	}
+	public void setPlayer(ClientPlayer player) { this.player = player; }
 
 	public World getWorld() { return world; }
 
 	public void sendBlockingWorldFileRequest() throws InterruptedException, WorldDocumentException {
 		Message worldFileChecksumRequest = getMessageFactory().generateWorldChecksumRequest();
 		queueOutgoingMessage(worldFileChecksumRequest);
-		waitForWorldFileChecksum();
-		if (needsWorldFile())
-		{
-			queueOutgoingMessage(getMessageFactory().generateWorldFileRequest());
-			waitForWorldFile();
-			createNewFileIfNecessary();
-			writeServerWorldToFile();
-			readWorldFile();
-		}
-	}
-
-	private boolean tryCreateWorldFile() throws WorldDocumentException {
-		try
-		{
-			return worldFile.exists() || worldFile.createNewFile();
-		} catch (IOException e)
-		{
-			throw new WorldDocumentException("Unable to create new file.", e);
-		}
-	}
-
-	private boolean tryCreateWorldFileDirectory() {
-		return worldFile.getParentFile().exists() || worldFile.getParentFile().mkdirs();
-	}
-
-	private boolean needsWorldFile() {
-		return worldDocumentReader == null || !Arrays.equals(serverWorldFileTracker.getChecksum(),
-			  worldDocumentReader.getWorldFileChecksum());
-	}
-
-	private void createNewFileIfNecessary() throws WorldDocumentException {
-		if (!tryCreateWorldFileDirectory() || !tryCreateWorldFile())
-		{
-			throw new WorldDocumentException("Unable to create new world file!");
-		}
-	}
-
-	private void writeServerWorldToFile() throws WorldDocumentException {
-		try (FileOutputStream worldOut = new FileOutputStream(worldFile))
-		{
-			worldOut.write(serverWorldFileTracker.getBytes());
-			worldOut.close();
-		} catch (IOException ex)
-		{
-			throw new WorldDocumentException("Unable to write world file.", ex);
-		}
-	}
-
-	private void readWorldFile() throws WorldDocumentException {
-		try
-		{
-			FileInputStream inputStream = new FileInputStream(worldFile);
-			worldDocumentReader = new WorldDocumentReader(inputStream);
-			world = worldDocumentReader.read();
-		} catch (FileNotFoundException e)
-		{
-			throw new WorldDocumentException("Couldn't find world file.", e);
-		}
-	}
-
-	private void waitForWorldFile() throws InterruptedException {
-		serverWorldFileTracker.setWaitingForFile(true);
-		while (serverWorldFileTracker.isWaitingForFile())
-		{
-			Thread.sleep(10);
-		}
-	}
-
-	private void waitForWorldFileChecksum() throws InterruptedException {
-		serverWorldFileTracker.setWaitingForChecksum(true);
-		while (serverWorldFileTracker.isWaitingForChecksum())
-		{
-			Thread.sleep(10);
-		}
+		serverWorldFileTracker.getServerWorldFile();
+		world = serverWorldFileTracker.readWorldFile();
 	}
 
 	private void sendLoginRequest() {
