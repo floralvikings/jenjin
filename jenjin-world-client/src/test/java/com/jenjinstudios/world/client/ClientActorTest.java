@@ -28,9 +28,16 @@ public class ClientActorTest
 		Angle angle = new Angle(0, Angle.FRONT);
 		actor.setAngle(angle);
 		world.update();
-		Thread.sleep(1000);
+		long l = System.currentTimeMillis();
+		wait(1000);
+		l = System.currentTimeMillis() - l;
 		world.update();
 		double distance = Vector2D.ORIGIN.getDistanceToVector(actor.getVector2D());
-		Assert.assertEquals(distance, ClientActor.MOVE_SPEED, 0.1);
+		Assert.assertEquals(distance, ClientActor.MOVE_SPEED * ((double) l / 1000), 0.1);
+	}
+
+	private void wait(int waitTime) throws InterruptedException {
+		long startTime = System.currentTimeMillis();
+		while (System.currentTimeMillis() - startTime < waitTime) Thread.sleep(1);
 	}
 }
