@@ -1,5 +1,7 @@
 package com.jenjinstudios.world.math;
 
+import java.math.BigDecimal;
+
 /**
  * This class is used to simplify rounding.
  * @author Caleb Brinkman
@@ -15,12 +17,9 @@ public class MathUtil
 	 * @return The rounded value.
 	 */
 	public static double round(double value, int decimalPlaces) {
-		if (decimalPlaces < 0) throw new IllegalArgumentException();
-
-		long factor = (long) java.lang.Math.pow(10, decimalPlaces);
-		value = value * factor;
-		long tmp = java.lang.Math.round(value);
-		return (double) tmp / factor;
+		BigDecimal bd = new BigDecimal(value);
+		BigDecimal rounded = bd.setScale(decimalPlaces, BigDecimal.ROUND_HALF_UP);
+		return rounded.doubleValue();
 	}
 
 }
