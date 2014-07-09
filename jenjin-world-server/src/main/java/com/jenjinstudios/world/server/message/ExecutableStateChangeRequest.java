@@ -49,7 +49,7 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage
 	private boolean isCorrectionSafe(Actor player) {
 		Vector2D proposedPlayerOrigin = getPlayerOrigin(player);
 		Vector2D proposedClientOrigin = getClientOrigin();
-		return proposedClientOrigin.equals(proposedPlayerOrigin);
+		return proposedClientOrigin.equals(proposedPlayerOrigin) && proposedPlayerOrigin.equals(position);
 	}
 
 	private Vector2D getClientOrigin() {
