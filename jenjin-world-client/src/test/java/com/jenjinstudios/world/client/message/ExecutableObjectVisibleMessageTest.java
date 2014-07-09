@@ -3,6 +3,7 @@ package com.jenjinstudios.world.client.message;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.world.WorldObject;
 import com.jenjinstudios.world.math.Vector2D;
+import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
@@ -12,6 +13,7 @@ import static org.testng.Assert.assertNotNull;
  */
 public class ExecutableObjectVisibleMessageTest extends WorldClientExecutableMessageTest
 {
+	@Test(timeOut = 5000)
 	@Override
 	public void testMessageExecution() throws Exception {
 		Message actorVisibleMessage = messageRegistry.createMessage("ObjectVisibleMessage");

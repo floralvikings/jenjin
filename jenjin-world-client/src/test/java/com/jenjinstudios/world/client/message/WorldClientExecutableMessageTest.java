@@ -102,6 +102,9 @@ public abstract class WorldClientExecutableMessageTest
 			worldClient.shutdown();
 	}
 
+	@Test
+	public abstract void testMessageExecution() throws Exception;
+
 	private void prepareWorldClient() throws Exception {
 		byte[] file = validWorldString.getBytes(StandardCharsets.UTF_8);
 		byte[] checksum = ChecksumUtil.getMD5Checksum(file);
@@ -158,7 +161,4 @@ public abstract class WorldClientExecutableMessageTest
 		aesMessage.setArgument("key", encryptedAESKey);
 		return aesMessage;
 	}
-
-	@Test//(timeOut = 5000)
-	public abstract void testMessageExecution() throws Exception;
 }

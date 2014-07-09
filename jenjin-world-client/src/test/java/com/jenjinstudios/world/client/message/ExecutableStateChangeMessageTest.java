@@ -4,6 +4,7 @@ import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.world.client.ClientActor;
 import com.jenjinstudios.world.math.Angle;
 import com.jenjinstudios.world.math.Vector2D;
+import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertEquals;
 
@@ -12,6 +13,7 @@ import static org.testng.Assert.assertEquals;
  */
 public class ExecutableStateChangeMessageTest extends WorldClientExecutableMessageTest
 {
+	@Test(timeOut = 5000)
 	@Override
 	public void testMessageExecution() throws Exception {
 		ClientActor clientActor = new ClientActor(100, "Bob");

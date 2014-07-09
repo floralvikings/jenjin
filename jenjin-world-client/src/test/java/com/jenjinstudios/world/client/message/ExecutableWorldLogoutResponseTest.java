@@ -1,6 +1,7 @@
 package com.jenjinstudios.world.client.message;
 
 import com.jenjinstudios.core.io.Message;
+import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertFalse;
 
@@ -9,6 +10,7 @@ import static org.testng.Assert.assertFalse;
  */
 public class ExecutableWorldLogoutResponseTest extends WorldClientExecutableMessageTest
 {
+	@Test(timeOut = 5000)
 	@Override
 	public void testMessageExecution() throws Exception {
 		Message worldLogoutResponse = messageRegistry.createMessage("WorldLogoutResponse");

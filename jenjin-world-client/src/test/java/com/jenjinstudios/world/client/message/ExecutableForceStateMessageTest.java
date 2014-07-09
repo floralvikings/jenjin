@@ -4,6 +4,7 @@ import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.world.client.ClientPlayer;
 import com.jenjinstudios.world.math.Angle;
 import com.jenjinstudios.world.math.Vector2D;
+import org.testng.annotations.Test;
 
 import static com.jenjinstudios.world.math.Angle.IDLE;
 import static java.lang.Math.PI;
@@ -14,6 +15,7 @@ import static org.testng.Assert.assertEquals;
  */
 public class ExecutableForceStateMessageTest extends WorldClientExecutableMessageTest
 {
+	@Test(timeOut = 5000)
 	@Override
 	public void testMessageExecution() throws Exception {
 		Message forceStateMessage = messageRegistry.createMessage("ForceStateMessage");
