@@ -15,8 +15,6 @@ import com.jenjinstudios.world.state.MoveState;
 @SuppressWarnings("WeakerAccess")
 public class ExecutableStateChangeRequest extends WorldExecutableMessage
 {
-	/** The maximum allowable correction distance. */
-	public static final double MAX_CORRECT_DISTANCE = 2.0;
 	private Angle angle;
 	/** The new position, corrected for lag. */
 	private Vector2D position;
@@ -24,7 +22,6 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage
 	private double distance;
 	/** The position before correction. */
 	private Vector2D uncorrectedPosition;
-	private long timeOfChange;
 
 	/**
 	 * Construct a new ExecutableMessage.  Must be implemented by subclasses.
@@ -72,7 +69,7 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage
 		double absoluteAngle = (double) getMessage().getArgument("absoluteAngle");
 		double x = (double) getMessage().getArgument("xCoordinate");
 		double y = (double) getMessage().getArgument("yCoordinate");
-		timeOfChange = (long) getMessage().getArgument("timeOfChange");
+		long timeOfChange = (long) getMessage().getArgument("timeOfChange");
 		uncorrectedPosition = new Vector2D(x, y);
 		angle = new Angle(absoluteAngle, relativeAngle);
 		distance = ClientActor.MOVE_SPEED * ((double) (System.nanoTime() - timeOfChange) / 1000000000d);
