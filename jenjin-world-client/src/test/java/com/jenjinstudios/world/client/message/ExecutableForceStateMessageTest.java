@@ -29,7 +29,7 @@ public class ExecutableForceStateMessageTest extends WorldClientExecutableMessag
 		worldClient.blockingStart();
 		worldClient.sendBlockingWorldFileRequest();
 		worldClient.sendBlockingLoginRequest();
-		Thread.sleep(100); // Sleep to allow client to "catch up"
+		Thread.sleep(500); // Sleep to allow client to "catch up"
 
 		ClientPlayer player = worldClient.getPlayer();
 		assertEquals(player.getAngle(), new Angle(PI, IDLE));

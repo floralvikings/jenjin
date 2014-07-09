@@ -31,7 +31,7 @@ public class ExecutableStateChangeMessageTest extends WorldClientExecutableMessa
 		stateChangeMessage.setArgument("xCoordinate", Math.PI);
 		stateChangeMessage.setArgument("yCoordinate", Math.PI);
 		inStreamReadMessage.thenReturn(stateChangeMessage, blankMessageSpam);
-		Thread.sleep(100); // Sleep to allow client to "catch up"
+		Thread.sleep(500); // Sleep to allow client to "catch up"
 
 		assertEquals(clientActor.getVector2D(), new Vector2D(Math.PI, Math.PI));
 		assertEquals(clientActor.getAngle(), new Angle(Math.PI, Angle.IDLE));
