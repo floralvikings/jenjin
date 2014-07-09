@@ -18,6 +18,7 @@ public class ExecutableWorldLogoutResponseTest extends WorldClientExecutableMess
 		worldClient.blockingStart();
 		worldClient.sendBlockingWorldFileRequest();
 		worldClient.sendBlockingLoginRequest();
+		worldClient.sendBlockingLogoutRequest();
 		Thread.sleep(500); // Sleep to allow client to "catch up"
 
 		assertFalse(worldClient.isLoggedIn());
