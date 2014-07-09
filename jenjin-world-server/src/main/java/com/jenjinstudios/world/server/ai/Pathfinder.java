@@ -14,127 +14,110 @@ public class Pathfinder
 {
 	/** The maximum number of nodes to check before giving up and assuming the path cannot be found. */
 	private static final int NODE_LIMIT = 1000;
+	private final Location start;
+	private final Location end;
+
+	public Pathfinder(Location start, Location end) {
+
+		this.start = start;
+		this.end = end;
+	}
 
 	/**
 	 * Find a path between the two locations.
-	 * @param start The start location.
-	 * @param end The end location.
 	 * @return The Locations necessary to traverse in order to travel from A to B.
 	 */
-	public static LinkedList<Location> findPath(Location start, Location end) {
-		LinkedList<Location> path = new LinkedList<>();
+	public LinkedList<Location> findPath() {
+		LinkedList<PathNode> openList = new LinkedList<>();
+		LinkedList<PathNode> closedList = new LinkedList<>();
+		PathNode selectedPathNode = new PathNode(start, end);
+		openList.add(selectedPathNode);
 
-		LinkedList<Node> openList = new LinkedList<>();
-		LinkedList<Node> closedList = new LinkedList<>();
-		Node selectedNode = new Node(start, end);
-		openList.add(selectedNode);
-
-		while (selectedNode.location != end && !openList.isEmpty() && openList.size() < NODE_LIMIT)
+		while (selectedPathNode.location != end && !openList.isEmpty() && openList.size() < NODE_LIMIT)
 		{
-			int lowestF = Integer.MAX_VALUE;
-			selectedNode = openList.peek();
-			for (Node node : openList)
-			{
-				if (node.F < lowestF)
-				{
-					lowestF = node.F;
-					selectedNode = node;
-				}
-			}
-			openList.remove(selectedNode);
-			closedList.add(selectedNode);
-			for (Location adjacentLocation : selectedNode.location.getAdjacentWalkableLocations())
-			{
-				Node adjacentNode = new Node(selectedNode, adjacentLocation, end);
-				if (closedList.contains(adjacentNode))
-				{
-					continue;
-				}
-				if (openList.contains(adjacentNode))
-				{
-					int indexOfOldNode = openList.indexOf(adjacentNode);
-					Node oldNode = openList.get(indexOfOldNode);
-					if (adjacentNode.G < oldNode.G)
-					{
-						oldNode.parent = selectedNode;
-					}
-				} else
-				{
-					openList.add(adjacentNode);
-				}
-			}
+			selectedPathNode = getLowestFNode(openList);
+			moveNodeFromOpenToClosed(openList, closedList, selectedPathNode);
+			addAdjacentToCorrectList(openList, closedList, selectedPathNode);
 		}
 
-		if (selectedNode.location == end)
+		LinkedList<Location> path = new LinkedList<>();
+		if (selectedPathNode.location == end)
 		{
-			Stack<Location> reversePath = new Stack<>();
-			while (selectedNode.location != start)
-			{
-				reversePath.push(selectedNode.location);
-				selectedNode = selectedNode.parent;
-			}
-			reversePath.push(selectedNode.location);
-			while (!reversePath.isEmpty())
-			{
-				path.add(reversePath.pop());
-			}
+			path = getReverseNodeTrace(selectedPathNode);
 		}
 
 		return path;
 	}
 
-	/** Used to represent a path finding node. */
-	private static class Node
+	private void moveNodeFromOpenToClosed(LinkedList<PathNode> openList, LinkedList<PathNode> closedList,
+										  PathNode selectedPathNode)
 	{
-		/** The x coordinate of this node. */
-		public final int x;
-		/** The y coordinate of this node. */
-		public final int y;
-		/** The location represented in this node. */
-		public final Location location;
-		/** The G-Score of this node. */
-		public final int G;
-		/** The H-Score of this node. */
-		public final int H;
-		/** The F-Score of this node. */
-		public final int F;
-		/** The parent of this node. */
-		public Node parent;
+		openList.remove(selectedPathNode);
+		closedList.add(selectedPathNode);
+	}
 
-		/**
-		 * Construct a new node with the given parent and representing the given location.
-		 * @param parent The parent node.
-		 * @param location The location.
-		 * @param target The target location.
-		 */
-		public Node(Node parent, Location location, Location target) {
-			this.parent = parent;
-			this.location = location;
-			x = location.X_COORDINATE;
-			y = location.Y_COORDINATE;
-			G = this.parent == null ? 0 : parent.G + (parent.y == y || parent.x == x ? 10 : 14);
-			H = 10 * (Math.abs(x - target.X_COORDINATE) + Math.abs(y - target.Y_COORDINATE));
-			F = G + H;
+	private PathNode getLowestFNode(LinkedList<PathNode> openList) {
+		PathNode selectedPathNode;
+		int lowestF = Integer.MAX_VALUE;
+		selectedPathNode = openList.peek();
+		for (PathNode pathNode : openList)
+		{
+			if (pathNode.F < lowestF)
+			{
+				lowestF = pathNode.F;
+				selectedPathNode = pathNode;
+			}
 		}
+		return selectedPathNode;
+	}
 
-		/**
-		 * Construct a new, parent less node.
-		 * @param location The location represented by this node.
-		 * @param target The target location.
-		 */
-		public Node(Location location, Location target) {
-			this(null, location, target);
-		}
-
-		public boolean equals(Object o) {
-			return o != null && o instanceof Node && ((Node) o).location == location;
-		}
-
-		@Override
-		public int hashCode() {
-			int hash = 5;
-			hash = 89 * hash + location.hashCode();
-			return hash;
+	private void addAdjacentToCorrectList(LinkedList<PathNode> open, LinkedList<PathNode> closed, PathNode selected) {
+		for (Location adjacentLocation : selected.location.getAdjacentWalkableLocations())
+		{
+			PathNode adjacentPathNode = new PathNode(selected, adjacentLocation, end);
+			if (closed.contains(adjacentPathNode))
+			{
+				continue;
+			}
+			if (open.contains(adjacentPathNode))
+			{
+				int indexOfOldNode = open.indexOf(adjacentPathNode);
+				PathNode oldPathNode = open.get(indexOfOldNode);
+				if (adjacentPathNode.G < oldPathNode.G)
+				{
+					oldPathNode.parent = selected;
+				}
+			} else
+			{
+				open.add(adjacentPathNode);
+			}
 		}
 	}
+
+	private LinkedList<Location> getReverseNodeTrace(PathNode selectedPathNode) {
+		Stack<Location> reversePath = getNodeStack(selectedPathNode);
+		return reverseNodeStack(reversePath);
+	}
+
+	private LinkedList<Location> reverseNodeStack(Stack<Location> reversePath) {
+		LinkedList<Location> path;
+		path = new LinkedList<>();
+		while (!reversePath.isEmpty())
+		{
+			path.add(reversePath.pop());
+		}
+		return path;
+	}
+
+	private Stack<Location> getNodeStack(PathNode selectedPathNode) {
+		Stack<Location> reversePath = new Stack<>();
+		while (selectedPathNode.location != start)
+		{
+			reversePath.push(selectedPathNode.location);
+			selectedPathNode = selectedPathNode.parent;
+		}
+		reversePath.push(selectedPathNode.location);
+		return reversePath;
+	}
+
 }

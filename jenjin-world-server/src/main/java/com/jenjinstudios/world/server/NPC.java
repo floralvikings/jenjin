@@ -113,7 +113,8 @@ public class NPC extends Actor
 			return;
 		}
 		currentPath.clear();
-		LinkedList<Location> path = Pathfinder.findPath(getLocation(), target);
+		Pathfinder pathfinder = new Pathfinder(getLocation(), target);
+		LinkedList<Location> path = pathfinder.findPath();
 		// Start will be current location.
 		if (path.isEmpty())
 		{
