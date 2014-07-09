@@ -1,4 +1,4 @@
-package com.jenjinstudios.world.server.actor;
+package com.jenjinstudios.world.server;
 
 import com.jenjinstudios.world.*;
 import com.jenjinstudios.world.client.ClientPlayer;
