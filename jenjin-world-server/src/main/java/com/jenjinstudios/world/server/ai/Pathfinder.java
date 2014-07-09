@@ -49,11 +49,9 @@ public class Pathfinder
 		return path;
 	}
 
-	private void moveNodeFromOpenToClosed(LinkedList<PathNode> openList, LinkedList<PathNode> closedList,
-										  PathNode selectedPathNode)
-	{
-		openList.remove(selectedPathNode);
-		closedList.add(selectedPathNode);
+	private void moveNodeFromOpenToClosed(LinkedList<PathNode> open, LinkedList<PathNode> closed, PathNode node) {
+		open.remove(node);
+		closed.add(node);
 	}
 
 	private PathNode getLowestFNode(LinkedList<PathNode> openList) {
