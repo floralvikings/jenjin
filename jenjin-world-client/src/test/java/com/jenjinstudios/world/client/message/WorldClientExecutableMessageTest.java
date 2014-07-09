@@ -80,7 +80,7 @@ public abstract class WorldClientExecutableMessageTest
 	@BeforeClass
 	public void createBlankMessageSpam() {
 		Message blankMessage = messageRegistry.createMessage("BlankMessage");
-		blankMessageSpam = new Message[1000];
+		blankMessageSpam = new Message[2500];
 		for (int i = 0; i < blankMessageSpam.length; i++) { blankMessageSpam[i] = blankMessage; }
 	}
 

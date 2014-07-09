@@ -19,7 +19,7 @@ public class ExecutableObjectInvisibleMessageTest extends WorldClientExecutableM
 		worldClient.sendBlockingWorldFileRequest();
 		worldClient.sendBlockingLoginRequest();
 		worldClient.getWorld().addObject(new WorldObject("Bob"), 100);
-		Thread.sleep(100); // Sleep to allow client to "catch up"
+		Thread.sleep(500); // Sleep to allow client to "catch up"
 
 		Assert.assertEquals(worldClient.getWorld().getObjectCount(), 1);
 	}
