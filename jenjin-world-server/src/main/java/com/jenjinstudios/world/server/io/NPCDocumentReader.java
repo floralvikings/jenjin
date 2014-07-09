@@ -1,10 +1,10 @@
 package com.jenjinstudios.world.server.io;
 
 import com.jenjinstudios.world.Location;
-import com.jenjinstudios.world.server.NPC;
 import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.Zone;
 import com.jenjinstudios.world.math.Vector2D;
+import com.jenjinstudios.world.server.NPC;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -23,63 +23,97 @@ import java.util.TreeMap;
  * The class responsible for reading NPCs from an xml file.
  * @author Caleb Brinkman
  */
-public class NpcFileReader
+public class NPCDocumentReader
 {
 	/** The tag name for the root "zone" tags. */
 	private static final String NPC_TAG_NAME = "npc";
-	/** The XML document storing the NPC data. */
-	private final Document npcDocument;
 	/** The world in which to look for locations. */
 	private final World world;
+	private final InputStream inputStream;
+	/** The XML document storing the NPC data. */
+	private Document npcDocument;
 
 	/**
 	 * Construct a new NPCFileReader for the given input stream.
 	 * @param inputStream The stream containing the NPC XML.
 	 * @param world The world which will be used to retrieve location references; this object is not modified, only
 	 * read.
-	 * @throws ParserConfigurationException If there's an error parsing the XML.
-	 * @throws IOException If there's an error reading the stream.
-	 * @throws SAXException If there's an error validating the XML.
 	 */
-	public NpcFileReader(World world, InputStream inputStream) throws ParserConfigurationException, IOException,
-		  SAXException {
+	public NPCDocumentReader(World world, InputStream inputStream) {
+		this.inputStream = inputStream;
 		this.world = world;
-		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-		DocumentBuilder builder = factory.newDocumentBuilder();
-		npcDocument = builder.parse(inputStream);
-		npcDocument.getDocumentElement().normalize();
 	}
 
 	/**
 	 * Consume the document and return all NPCs read from it.
 	 * @return A list of NPCs parsed from the XML input.
 	 */
-	public List<NPC> read() {
+	public List<NPC> read() throws NPCDocumentException {
+		buildNPCDocument();
+		return parseNPCNodes();
+	}
+
+	private LinkedList<NPC> parseNPCNodes() {
 		LinkedList<NPC> r = new LinkedList<>();
 		NodeList npcNodes = npcDocument.getElementsByTagName(NPC_TAG_NAME);
 		for (int i = 0; i < npcNodes.getLength(); i++)
 		{
 			Element npcElement = (Element) npcNodes.item(i);
-			String name = npcElement.getAttribute("name");
-			int zoneID = Integer.parseInt(npcElement.getAttribute("zoneID"));
-			double xCoordinate = Double.parseDouble(npcElement.getAttribute("xCoordinate"));
-			double yCoordinate = Double.parseDouble(npcElement.getAttribute("yCoordinate"));
-			Vector2D vector2D = new Vector2D(xCoordinate, yCoordinate);
-			TreeMap<String, Boolean> behaviors = parseBehaviorElements(npcElement.getElementsByTagName("behaviors"));
-
-			NPC currentNPC = new NPC(name, behaviors);
-			currentNPC.setVector2D(vector2D);
-			currentNPC.setZoneID(zoneID);
-
-			List<Location> wanderTargets = parseWanderTargets(zoneID, npcElement.getElementsByTagName
-				  ("wander_targets"));
-			for (Location location : wanderTargets)
-			{
-				currentNPC.addWanderTarget(location);
-			}
+			NPC currentNPC = parseNPCFromElement(npcElement);
 			r.add(currentNPC);
 		}
 		return r;
+	}
+
+	private NPC parseNPCFromElement(Element npcElement) {
+		String name = npcElement.getAttribute("name");
+		int zoneID = Integer.parseInt(npcElement.getAttribute("zoneID"));
+		double xCoordinate = Double.parseDouble(npcElement.getAttribute("xCoordinate"));
+		double yCoordinate = Double.parseDouble(npcElement.getAttribute("yCoordinate"));
+		Vector2D vector2D = new Vector2D(xCoordinate, yCoordinate);
+		TreeMap<String, Boolean> behaviors = parseBehaviorElements(npcElement.getElementsByTagName("behaviors"));
+		List<Location> wanderTargets = parseWanderTargets(zoneID, npcElement.getElementsByTagName("wander_targets"));
+
+		NPC currentNPC = new NPC(name, behaviors);
+		currentNPC.setVector2D(vector2D);
+		currentNPC.setZoneID(zoneID);
+
+		addWanderTargets(currentNPC, wanderTargets);
+		return currentNPC;
+	}
+
+	private void addWanderTargets(NPC currentNPC, List<Location> wanderTargets) {
+		for (Location location : wanderTargets)
+		{
+			currentNPC.addWanderTarget(location);
+		}
+	}
+
+	private void buildNPCDocument() throws NPCDocumentException {
+		DocumentBuilder builder = createDocumentBuilder();
+		parseInputStreamIntoNpcDocument(builder);
+	}
+
+	private DocumentBuilder createDocumentBuilder() throws NPCDocumentException {
+		try
+		{
+			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+			return factory.newDocumentBuilder();
+		} catch (ParserConfigurationException e)
+		{
+			throw new NPCDocumentException("Unable to create XML Document Builder", e);
+		}
+	}
+
+	private void parseInputStreamIntoNpcDocument(DocumentBuilder builder) throws NPCDocumentException {
+		try
+		{
+			npcDocument = builder.parse(inputStream);
+			npcDocument.getDocumentElement().normalize();
+		} catch (SAXException | IOException e)
+		{
+			throw new NPCDocumentException("Cannot parse InputStream into XML document.", e);
+		}
 	}
 
 	/**
