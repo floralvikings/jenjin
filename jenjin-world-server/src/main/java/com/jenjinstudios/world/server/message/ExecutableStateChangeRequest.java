@@ -24,6 +24,7 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage
 	private double distance;
 	/** The position before correction. */
 	private Vector2D uncorrectedPosition;
+	private long timeOfChange;
 
 	/**
 	 * Construct a new ExecutableMessage.  Must be implemented by subclasses.
@@ -37,13 +38,8 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage
 	@Override
 	public void runDelayed() {
 		Actor player = getClientHandler().getPlayer();
-		double originDistance = player.getVector2D().getDistanceToVector(uncorrectedPosition);
-		if (originDistance > MAX_CORRECT_DISTANCE || distance > MAX_CORRECT_DISTANCE)
+		if (!isCorrectionSafe(player))
 		{
-			// What if player hacks their jar and increases the move speed to be the max correct, then spoofs
-			// state change requests of the same direction over and over?  They've effectively just
-			// increased their speed by 10x.  This requires some thought.
-			// TODO Force player state here.
 			player.setForcedState(new MoveState(player.getAngle(), player.getVector2D(), System.nanoTime()));
 		} else
 		{
@@ -53,16 +49,33 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage
 		}
 	}
 
+	private boolean isCorrectionSafe(Actor player) {
+		Vector2D proposedPlayerOrigin = getPlayerOrigin(player);
+		Vector2D proposedClientOrigin = getClientOrigin();
+		return proposedClientOrigin.equals(proposedPlayerOrigin);
+	}
+
+	private Vector2D getClientOrigin() {
+		double clientReverseAngle = angle.reverseStepAngle();
+		return position.getVectorInDirection(distance, clientReverseAngle);
+	}
+
+	private Vector2D getPlayerOrigin(Actor player) {
+		double originDistance = player.getVector2D().getDistanceToVector(uncorrectedPosition);
+		double playerReverseAngle = player.getAngle().reverseStepAngle();
+		return player.getVector2D().getVectorInDirection(originDistance, playerReverseAngle);
+	}
+
 	@Override
 	public void runImmediate() {
 		double relativeAngle = (double) getMessage().getArgument("relativeAngle");
 		double absoluteAngle = (double) getMessage().getArgument("absoluteAngle");
-		long time = (long) getMessage().getArgument("timeOfChange");
 		double x = (double) getMessage().getArgument("xCoordinate");
 		double y = (double) getMessage().getArgument("yCoordinate");
+		timeOfChange = (long) getMessage().getArgument("timeOfChange");
 		uncorrectedPosition = new Vector2D(x, y);
 		angle = new Angle(absoluteAngle, relativeAngle);
-		distance = ClientActor.MOVE_SPEED * ((double) (System.nanoTime() - time) / 1000000000d);
+		distance = ClientActor.MOVE_SPEED * ((double) (System.nanoTime() - timeOfChange) / 1000000000d);
 		position = uncorrectedPosition.getVectorInDirection(distance, angle.getStepAngle());
 	}
 }
