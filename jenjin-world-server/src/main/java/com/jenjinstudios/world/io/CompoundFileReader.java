@@ -5,11 +5,9 @@ import com.jenjinstudios.world.World;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 /**
@@ -29,10 +27,9 @@ public class CompoundFileReader
 	 * @throws javax.xml.parsers.ParserConfigurationException If there's an error parsing the XML.
 	 * @throws java.io.IOException If there's an error reading the stream.
 	 * @throws org.xml.sax.SAXException If there's an error validating the XML.
-	 * @throws java.security.NoSuchAlgorithmException If transform algorithms cannot be found.
-	 * @throws javax.xml.transform.TransformerException If there is a Transformer Exception.
 	 */
-	public CompoundFileReader(InputStream inputStream) throws ParserConfigurationException, WorldDocumentException, IOException, SAXException, TransformerException, NoSuchAlgorithmException {
+	public CompoundFileReader(InputStream inputStream) throws ParserConfigurationException, WorldDocumentException,
+		  IOException, SAXException {
 		InputStream worldFileStream = new NonClosableBufferedInputStream(inputStream);
 		worldFileStream.mark(Integer.MAX_VALUE);
 		WorldDocumentReader worldDocumentReader = new WorldDocumentReader(worldFileStream);
