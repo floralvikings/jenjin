@@ -41,6 +41,7 @@ public class ServerWorldFileTrackerTest
 				"        <location walkable=\"false\" x=\"1\" y=\"1\"/>\n" +
 				"    </zone>\n" +
 				"</world>\n";
+	private WorldClient worldClient;
 
 	public static void removeRecursive(Path path) throws IOException {
 		Files.walkFileTree(path, new SimpleFileVisitor<Path>()
@@ -78,16 +79,14 @@ public class ServerWorldFileTrackerTest
 		byte[] file = validWorldString.getBytes(StandardCharsets.UTF_8);
 		byte[] checksum = ChecksumUtil.getMD5Checksum(file);
 
-		WorldClient wc = getPreparedWorldClient();
+		worldClient.blockingStart();
 
-		wc.blockingStart();
-
-		ServerWorldFileTracker serverWorldFileTracker = wc.getServerWorldFileTracker();
-		serverWorldFileTracker.requestServerWorldFileChecksum(wc);
+		ServerWorldFileTracker serverWorldFileTracker = worldClient.getServerWorldFileTracker();
+		serverWorldFileTracker.requestServerWorldFileChecksum(worldClient);
 
 		Assert.assertEquals(serverWorldFileTracker.getChecksum(), checksum);
 
-		wc.shutdown();
+		worldClient.shutdown();
 	}
 
 	@Test(timeOut = 5000)
@@ -95,85 +94,83 @@ public class ServerWorldFileTrackerTest
 		byte[] file = validWorldString.getBytes(StandardCharsets.UTF_8);
 		byte[] checksum = ChecksumUtil.getMD5Checksum(file);
 
-		WorldClient wc = getPreparedWorldClient();
+		worldClient.blockingStart();
 
-		wc.blockingStart();
-
-		ServerWorldFileTracker serverWorldFileTracker = wc.getServerWorldFileTracker();
-		serverWorldFileTracker.requestServerWorldFileChecksum(wc);
-		serverWorldFileTracker.requestServerWorldFile(wc);
+		ServerWorldFileTracker serverWorldFileTracker = worldClient.getServerWorldFileTracker();
+		serverWorldFileTracker.requestServerWorldFileChecksum(worldClient);
+		serverWorldFileTracker.requestServerWorldFile(worldClient);
 
 		Assert.assertFalse(serverWorldFileTracker.isWaitingForChecksum());
 		Assert.assertFalse(serverWorldFileTracker.isWaitingForFile());
 		Assert.assertEquals(serverWorldFileTracker.getChecksum(), checksum);
 		Assert.assertEquals(serverWorldFileTracker.getBytes(), file);
 
-		wc.shutdown();
+		worldClient.shutdown();
 	}
 
 	@Test(timeOut = 5000)
 	public void testWriteServerWorldToFile() throws Exception {
 		byte[] file = validWorldString.getBytes(StandardCharsets.UTF_8);
+		worldClient.blockingStart();
 
-		WorldClient wc = getPreparedWorldClient();
-
-		wc.blockingStart();
-
-		ServerWorldFileTracker serverWorldFileTracker = wc.getServerWorldFileTracker();
-		serverWorldFileTracker.requestServerWorldFileChecksum(wc);
-		serverWorldFileTracker.requestServerWorldFile(wc);
+		ServerWorldFileTracker serverWorldFileTracker = worldClient.getServerWorldFileTracker();
+		serverWorldFileTracker.requestServerWorldFileChecksum(worldClient);
+		serverWorldFileTracker.requestServerWorldFile(worldClient);
 		serverWorldFileTracker.writeReceivedWorldToFile();
 
 		Path writtenFile = new File("resources/ServerWorldFileTracker.xml").toPath();
 		byte[] readBytes = Files.readAllBytes(writtenFile);
 		Assert.assertEquals(readBytes, file);
 
-		wc.shutdown();
+		worldClient.shutdown();
 	}
 
 	@Test(timeOut = 5000)
 	public void testReadWorldFromServer() throws Exception {
-		WorldClient wc = getPreparedWorldClient();
+		worldClient.blockingStart();
 
-		wc.blockingStart();
-
-		ServerWorldFileTracker serverWorldFileTracker = wc.getServerWorldFileTracker();
-		serverWorldFileTracker.requestServerWorldFileChecksum(wc);
-		serverWorldFileTracker.requestServerWorldFile(wc);
+		ServerWorldFileTracker serverWorldFileTracker = worldClient.getServerWorldFileTracker();
+		serverWorldFileTracker.requestServerWorldFileChecksum(worldClient);
+		serverWorldFileTracker.requestServerWorldFile(worldClient);
 
 		World world = serverWorldFileTracker.readWorldFromServer();
 		Assert.assertNotNull(world);
 
-		wc.shutdown();
+		worldClient.shutdown();
 	}
 
 	@Test(timeOut = 5000)
 	public void testReadWorldFromFile() throws Exception {
-		WorldClient wc = getPreparedWorldClient();
+		worldClient.blockingStart();
 
-		wc.blockingStart();
-
-		ServerWorldFileTracker serverWorldFileTracker = wc.getServerWorldFileTracker();
-		serverWorldFileTracker.requestServerWorldFileChecksum(wc);
-		serverWorldFileTracker.requestServerWorldFile(wc);
+		ServerWorldFileTracker serverWorldFileTracker = worldClient.getServerWorldFileTracker();
+		serverWorldFileTracker.requestServerWorldFileChecksum(worldClient);
+		serverWorldFileTracker.requestServerWorldFile(worldClient);
 		serverWorldFileTracker.writeReceivedWorldToFile();
 
 		World world = serverWorldFileTracker.readWorldFromFile();
 		Assert.assertNotNull(world);
 
-		wc.shutdown();
+		worldClient.shutdown();
 	}
 
 	@BeforeMethod
+	public void setUpWorldClient() throws Exception {
+		cleanResources();
+		prepareWorldClient();
+	}
+
 	@AfterMethod
 	public void cleanResources() {
 		try
 		{
 			removeRecursive(new File("resources/").toPath());
 		} catch (IOException ignored) { }
+		if (worldClient != null)
+			worldClient.shutdown();
 	}
 
-	private WorldClient getPreparedWorldClient() throws Exception {
+	private void prepareWorldClient() throws Exception {
 		byte[] file = validWorldString.getBytes(StandardCharsets.UTF_8);
 		byte[] checksum = ChecksumUtil.getMD5Checksum(file);
 
@@ -187,7 +184,7 @@ public class ServerWorldFileTrackerTest
 		firstConnectResponse.setArgument("ups", 123);
 		Message blankMessage = messageRegistry.createMessage("BlankMessage");
 		Message worldChecksumResponse = messageRegistry.createMessage("WorldChecksumResponse");
-		Message[] blankMessageSpam = new Message[1000];
+		Message[] blankMessageSpam = new Message[1500];
 		for (int i = 0; i < blankMessageSpam.length; i++) { blankMessageSpam[i] = blankMessage; }
 		worldChecksumResponse.setArgument("checksum", checksum);
 		Message worldFileResponse = messageRegistry.createMessage("WorldFileResponse");
@@ -198,8 +195,8 @@ public class ServerWorldFileTrackerTest
 			  thenReturn(firstConnectResponse, blankMessageSpam).
 			  thenReturn(aesMessage, blankMessageSpam).
 			  thenReturn(worldChecksumResponse, blankMessageSpam).
-			  thenReturn(worldFileResponse, blankMessage);
-		return wc;
+			  thenReturn(worldFileResponse, blankMessageSpam);
+		this.worldClient = wc;
 	}
 
 	private Message getAesKeyMessage(MessageRegistry messageRegistry, WorldClient wc) throws Exception {

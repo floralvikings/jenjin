@@ -29,7 +29,7 @@ public class ExecutableActorVisibleMessageTest extends WorldClientExecutableMess
 		worldClient.blockingStart();
 		worldClient.sendBlockingWorldFileRequest();
 		worldClient.sendBlockingLoginRequest();
-		Thread.sleep(100); // Sleep to allow client to "catch up"
+		Thread.sleep(500); // Sleep to allow client to "catch up"
 
 		ClientActor clientActor = (ClientActor) worldClient.getWorld().getObject(100);
 		assertNotNull(clientActor);
