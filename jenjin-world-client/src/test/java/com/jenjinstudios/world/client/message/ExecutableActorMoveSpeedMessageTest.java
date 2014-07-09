@@ -20,7 +20,7 @@ public class ExecutableActorMoveSpeedMessageTest extends WorldClientExecutableMe
 		worldClient.blockingStart();
 		worldClient.sendBlockingWorldFileRequest();
 		worldClient.sendBlockingLoginRequest();
-		Thread.sleep(100); // Sleep to allow client to "catch up"
+		Thread.sleep(500); // Sleep to allow client to "catch up"
 
 		Assert.assertEquals(ClientActor.MOVE_SPEED, 123.45);
 	}
