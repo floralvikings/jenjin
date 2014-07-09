@@ -52,6 +52,7 @@ class PathNode
 		return hash;
 	}
 
+	@Override
 	public boolean equals(Object o) {
 		return o != null && o instanceof PathNode && ((PathNode) o).location == location;
 	}

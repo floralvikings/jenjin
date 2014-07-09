@@ -128,16 +128,20 @@ public class NPCDocumentReader
 		for (int i = 0; i < wanderTargetsLists.getLength(); i++)
 		{
 			Element wanderTargetsList = (Element) wanderTargetsLists.item(i);
-			NodeList wanderTargets = wanderTargetsList.getElementsByTagName("wander_target");
-			for (int j = 0; j < wanderTargets.getLength(); j++)
-			{
-				Element wanderTarget = (Element) wanderTargets.item(j);
-				int xLoc = Integer.parseInt(wanderTarget.getAttribute("xLoc"));
-				int yLoc = Integer.parseInt(wanderTarget.getAttribute("yLoc"));
-				targetList.add(targetZone.getLocationOnGrid(xLoc, yLoc));
-			}
+			parseWanderTargetList(targetList, targetZone, wanderTargetsList);
 		}
 		return targetList;
+	}
+
+	private void parseWanderTargetList(LinkedList<Location> targetList, Zone targetZone, Element wanderTargetsList) {
+		NodeList wanderTargets = wanderTargetsList.getElementsByTagName("wander_target");
+		for (int j = 0; j < wanderTargets.getLength(); j++)
+		{
+			Element wanderTarget = (Element) wanderTargets.item(j);
+			int xLoc = Integer.parseInt(wanderTarget.getAttribute("xLoc"));
+			int yLoc = Integer.parseInt(wanderTarget.getAttribute("yLoc"));
+			targetList.add(targetZone.getLocationOnGrid(xLoc, yLoc));
+		}
 	}
 
 	/**
@@ -150,15 +154,19 @@ public class NPCDocumentReader
 		for (int i = 0; i < behaviorsElements.getLength(); i++)
 		{
 			Element behaviorsElement = (Element) behaviorsElements.item(i);
-			NodeList behaviorElements = behaviorsElement.getElementsByTagName("behavior");
-			for (int j = 0; j < behaviorElements.getLength(); j++)
-			{
-				Element behaviorElement = (Element) behaviorElements.item(i);
-				String name = behaviorElement.getAttribute("name");
-				Boolean value = Boolean.valueOf(behaviorElement.getAttribute("value"));
-				behaviors.put(name, value);
-			}
+			parseBehaviorElements(behaviors, i, behaviorsElement);
 		}
 		return behaviors;
+	}
+
+	private void parseBehaviorElements(TreeMap<String, Boolean> behaviors, int i, Element behaviorsElement) {
+		NodeList behaviorElements = behaviorsElement.getElementsByTagName("behavior");
+		for (int j = 0; j < behaviorElements.getLength(); j++)
+		{
+			Element behaviorElement = (Element) behaviorElements.item(i);
+			String name = behaviorElement.getAttribute("name");
+			Boolean value = Boolean.valueOf(behaviorElement.getAttribute("value"));
+			behaviors.put(name, value);
+		}
 	}
 }
