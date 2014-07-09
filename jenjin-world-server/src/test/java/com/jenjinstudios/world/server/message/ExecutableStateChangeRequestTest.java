@@ -64,4 +64,28 @@ public class ExecutableStateChangeRequestTest
 
 		Assert.assertEquals(player.getAngle(), new Angle(0.0, Angle.IDLE));
 	}
+
+	@Test
+	public void testInvalidRequestTime() {
+		World world = new World();
+		Player player = new Player("FooBar");
+		world.addObject(player);
+		WorldClientHandler mock = Mockito.mock(WorldClientHandler.class);
+		Mockito.when(mock.getPlayer()).thenReturn(player);
+		Message request = messageRegistry.createMessage("StateChangeRequest");
+		request.setArgument("relativeAngle", Angle.FRONT);
+		request.setArgument("absoluteAngle", 0.0);
+		request.setArgument("xCoordinate", 1.0);
+		request.setArgument("yCoordinate", 1.0);
+		request.setArgument("timeOfChange", System.nanoTime() - 1000);
+		ExecutableStateChangeRequest executableStateChangeRequest = new ExecutableStateChangeRequest(mock, request);
+		executableStateChangeRequest.runImmediate();
+		executableStateChangeRequest.runDelayed();
+
+		player.setUp();
+		player.update();
+		player.reset();
+
+		Assert.assertEquals(player.getAngle(), new Angle(0.0, Angle.IDLE));
+	}
 }
