@@ -1,11 +1,11 @@
-package com.jenjinstudios.world.sql;
+package com.jenjinstudios.world.server.sql;
 
 import com.jenjinstudios.server.net.User;
 import com.jenjinstudios.server.sql.LoginException;
 import com.jenjinstudios.server.sql.Authenticator;
 import com.jenjinstudios.core.util.Hash;
 import com.jenjinstudios.world.Actor;
-import com.jenjinstudios.world.Player;
+import com.jenjinstudios.world.server.Player;
 import com.jenjinstudios.world.math.Vector2D;
 
 import java.sql.Connection;
@@ -56,7 +56,8 @@ public class WorldAuthenticator extends Authenticator
 			// Hash the user-supplied password with the salt in the database.
 			String hashedPassword = Hash.getHashedString(password, results.getString("salt"));
 			// Determine if the correct password was supplied.
-			boolean passwordCorrect = hashedPassword != null && hashedPassword.equalsIgnoreCase(results.getString("password"));
+			boolean passwordCorrect = hashedPassword != null && hashedPassword.equalsIgnoreCase(results.getString
+				  ("password"));
 			Vector2D coordinates = new Vector2D(results.getDouble(X_COORD), results.getDouble(Y_COORD));
 			int zoneID = results.getInt(ZONE_ID);
 			// If the password's bad, login fail.
@@ -115,7 +116,7 @@ public class WorldAuthenticator extends Authenticator
 		double yCoord = player.getVector2D().getYCoordinate();
 
 		String updateLoggedInQuery = "UPDATE users SET " + X_COORD + "=" + xCoord + ", " + Y_COORD +
-				"=" + yCoord + " WHERE " + "username = ?";
+			  "=" + yCoord + " WHERE " + "username = ?";
 		synchronized (dbConnection)
 		{
 			try (PreparedStatement updatePlayerStatement = super.dbConnection.prepareStatement(updateLoggedInQuery))

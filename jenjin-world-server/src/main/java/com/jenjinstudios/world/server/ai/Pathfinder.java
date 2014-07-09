@@ -1,4 +1,4 @@
-package com.jenjinstudios.world.ai;
+package com.jenjinstudios.world.server.ai;
 
 import com.jenjinstudios.world.Location;
 

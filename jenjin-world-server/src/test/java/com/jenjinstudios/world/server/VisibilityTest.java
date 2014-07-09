@@ -1,5 +1,9 @@
-package com.jenjinstudios.world;
+package com.jenjinstudios.world.server;
 
+import com.jenjinstudios.world.Actor;
+import com.jenjinstudios.world.Location;
+import com.jenjinstudios.world.SightedObject;
+import com.jenjinstudios.world.WorldObject;
 import com.jenjinstudios.world.client.WorldClient;
 import com.jenjinstudios.world.math.Vector2D;
 import org.testng.Assert;

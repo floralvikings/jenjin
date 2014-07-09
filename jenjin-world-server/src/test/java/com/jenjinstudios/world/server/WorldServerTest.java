@@ -1,4 +1,4 @@
-package com.jenjinstudios.world;
+package com.jenjinstudios.world.server;
 
 import com.jenjinstudios.client.net.ClientUser;
 import com.jenjinstudios.core.MessageIO;
@@ -8,13 +8,15 @@ import com.jenjinstudios.core.io.MessageRegistry;
 import com.jenjinstudios.core.util.Files;
 import com.jenjinstudios.server.net.ClientListenerInit;
 import com.jenjinstudios.server.net.ServerInit;
+import com.jenjinstudios.world.Actor;
+import com.jenjinstudios.world.WorldObject;
 import com.jenjinstudios.world.client.ClientActor;
 import com.jenjinstudios.world.client.ClientPlayer;
 import com.jenjinstudios.world.client.WorldClient;
 import com.jenjinstudios.world.io.WorldDocumentReader;
 import com.jenjinstudios.world.math.Angle;
 import com.jenjinstudios.world.math.Vector2D;
-import com.jenjinstudios.world.sql.WorldAuthenticator;
+import com.jenjinstudios.world.server.sql.WorldAuthenticator;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 

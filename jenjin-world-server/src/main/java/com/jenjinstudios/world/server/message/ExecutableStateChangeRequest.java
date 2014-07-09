@@ -1,9 +1,9 @@
-package com.jenjinstudios.world.message;
+package com.jenjinstudios.world.server.message;
 
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.client.ClientActor;
-import com.jenjinstudios.world.WorldClientHandler;
+import com.jenjinstudios.world.server.WorldClientHandler;
 import com.jenjinstudios.world.math.Angle;
 import com.jenjinstudios.world.math.Vector2D;
 import com.jenjinstudios.world.state.MoveState;

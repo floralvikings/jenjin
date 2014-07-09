@@ -1,7 +1,8 @@
-package com.jenjinstudios.world.io;
+package com.jenjinstudios.world.server.io;
 
-import com.jenjinstudios.world.NPC;
+import com.jenjinstudios.world.server.NPC;
 import com.jenjinstudios.world.World;
+import com.jenjinstudios.world.server.io.NpcFileReader;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

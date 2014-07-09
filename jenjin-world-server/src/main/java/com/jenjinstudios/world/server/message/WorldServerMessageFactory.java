@@ -1,12 +1,12 @@
-package com.jenjinstudios.world.message;
+package com.jenjinstudios.world.server.message;
 
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageRegistry;
 import com.jenjinstudios.server.message.ServerMessageFactory;
 import com.jenjinstudios.world.Actor;
-import com.jenjinstudios.world.WorldClientHandler;
+import com.jenjinstudios.world.server.WorldClientHandler;
 import com.jenjinstudios.world.WorldObject;
-import com.jenjinstudios.world.WorldServer;
+import com.jenjinstudios.world.server.WorldServer;
 import com.jenjinstudios.world.state.MoveState;
 
 import java.util.LinkedList;

@@ -1,9 +1,11 @@
-package com.jenjinstudios.world;
+package com.jenjinstudios.world.server;
 
 import com.jenjinstudios.core.MessageIO;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.server.net.ClientHandler;
-import com.jenjinstudios.world.message.WorldServerMessageFactory;
+import com.jenjinstudios.world.Actor;
+import com.jenjinstudios.world.WorldObject;
+import com.jenjinstudios.world.server.message.WorldServerMessageFactory;
 import com.jenjinstudios.world.state.MoveState;
 
 import java.io.IOException;
@@ -27,7 +29,8 @@ public class WorldClientHandler extends ClientHandler
 	private boolean hasSentActorStepMessage;
 
 	/**
-	 * Construct a new Client Handler using the given socket.  When constructing a new ClientHandler, it is necessary to
+	 * Construct a new Client Handler using the given socket.  When constructing a new ClientHandler,
+	 * it is necessary to
 	 * send the client a FirstConnectResponse message with the server's UPS
 	 * @param s The server for which this handler works.
 	 * @throws java.io.IOException If the socket is unable to connect.

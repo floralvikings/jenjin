@@ -1,4 +1,6 @@
-package com.jenjinstudios.world;
+package com.jenjinstudios.world.server;
+
+import com.jenjinstudios.world.Actor;
 
 /**
  * The player class represents a player in the server-side world.

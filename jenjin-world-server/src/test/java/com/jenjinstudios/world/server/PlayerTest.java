@@ -1,11 +1,12 @@
-package com.jenjinstudios.world;
+package com.jenjinstudios.world.server;
 
 import com.jenjinstudios.server.net.User;
+import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.client.ClientPlayer;
 import com.jenjinstudios.world.client.WorldClient;
 import com.jenjinstudios.world.math.MathUtil;
 import com.jenjinstudios.world.math.Vector2D;
-import com.jenjinstudios.world.sql.WorldAuthenticator;
+import com.jenjinstudios.world.server.sql.WorldAuthenticator;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

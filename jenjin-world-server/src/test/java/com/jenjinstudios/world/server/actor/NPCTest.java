@@ -1,12 +1,14 @@
-package com.jenjinstudios.world.actor;
+package com.jenjinstudios.world.server.actor;
 
 import com.jenjinstudios.world.*;
 import com.jenjinstudios.world.client.ClientPlayer;
 import com.jenjinstudios.world.client.WorldClient;
 import com.jenjinstudios.world.math.Vector2D;
+import com.jenjinstudios.world.server.NPC;
+import com.jenjinstudios.world.server.WorldServer;
 import org.testng.Assert;
 import org.testng.annotations.*;
-import com.jenjinstudios.world.WorldServerTest;
+import com.jenjinstudios.world.server.WorldServerTest;
 
 /**
  * Test the NPC class.

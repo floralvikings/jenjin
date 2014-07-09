@@ -1,10 +1,10 @@
-package com.jenjinstudios.world.message;
+package com.jenjinstudios.world.server.message;
 
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.server.net.User;
-import com.jenjinstudios.world.Player;
-import com.jenjinstudios.world.WorldClientHandler;
-import com.jenjinstudios.world.sql.WorldAuthenticator;
+import com.jenjinstudios.world.server.Player;
+import com.jenjinstudios.world.server.WorldClientHandler;
+import com.jenjinstudios.world.server.sql.WorldAuthenticator;
 
 /**
  * Handles requests to login to the world.

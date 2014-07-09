@@ -1,6 +1,10 @@
-package com.jenjinstudios.world;
+package com.jenjinstudios.world.server;
 
-import com.jenjinstudios.world.ai.Pathfinder;
+import com.jenjinstudios.world.Actor;
+import com.jenjinstudios.world.Location;
+import com.jenjinstudios.world.LocationUtil;
+import com.jenjinstudios.world.WorldObject;
+import com.jenjinstudios.world.server.ai.Pathfinder;
 import com.jenjinstudios.world.math.Angle;
 import com.jenjinstudios.world.math.Vector2D;
 

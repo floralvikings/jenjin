@@ -1,7 +1,7 @@
-package com.jenjinstudios.world.message;
+package com.jenjinstudios.world.server.message;
 
 import com.jenjinstudios.core.io.Message;
-import com.jenjinstudios.world.WorldClientHandler;
+import com.jenjinstudios.world.server.WorldClientHandler;
 
 /**
  * Process a WorldChecksumRequest.

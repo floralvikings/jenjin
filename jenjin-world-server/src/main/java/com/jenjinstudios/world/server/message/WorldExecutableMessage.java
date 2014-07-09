@@ -1,8 +1,8 @@
-package com.jenjinstudios.world.message;
+package com.jenjinstudios.world.server.message;
 
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.server.message.ServerExecutableMessage;
-import com.jenjinstudios.world.WorldClientHandler;
+import com.jenjinstudios.world.server.WorldClientHandler;
 
 /**
  * Handles messages from clients of the game world.

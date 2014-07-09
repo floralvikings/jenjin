@@ -1,10 +1,11 @@
-package com.jenjinstudios.world;
+package com.jenjinstudios.world.server;
 
 import com.jenjinstudios.server.net.AuthServer;
 import com.jenjinstudios.server.net.ServerInit;
+import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.io.WorldDocumentException;
 import com.jenjinstudios.world.io.WorldDocumentReader;
-import com.jenjinstudios.world.sql.WorldAuthenticator;
+import com.jenjinstudios.world.server.sql.WorldAuthenticator;
 
 import java.io.IOException;
 
@@ -36,7 +37,7 @@ public class WorldServer extends AuthServer<WorldClientHandler>
 	public WorldServer(ServerInit<WorldClientHandler> initInfo,
 					   WorldAuthenticator sqlHandler,
 					   WorldDocumentReader worldDocumentReader)
-			throws IOException, WorldDocumentException, NoSuchMethodException
+		  throws IOException, WorldDocumentException, NoSuchMethodException
 	{
 		super(initInfo, sqlHandler);
 		this.world = worldDocumentReader.read();

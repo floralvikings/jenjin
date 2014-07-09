@@ -1,6 +1,8 @@
-package com.jenjinstudios.world.io;
+package com.jenjinstudios.world.server.io;
 
-import com.jenjinstudios.world.NPC;
+import com.jenjinstudios.world.io.WorldDocumentException;
+import com.jenjinstudios.world.io.WorldDocumentReader;
+import com.jenjinstudios.world.server.NPC;
 import com.jenjinstudios.world.World;
 import org.xml.sax.SAXException;
 

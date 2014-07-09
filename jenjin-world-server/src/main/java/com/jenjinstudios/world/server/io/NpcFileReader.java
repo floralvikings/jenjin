@@ -1,7 +1,7 @@
-package com.jenjinstudios.world.io;
+package com.jenjinstudios.world.server.io;
 
 import com.jenjinstudios.world.Location;
-import com.jenjinstudios.world.NPC;
+import com.jenjinstudios.world.server.NPC;
 import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.Zone;
 import com.jenjinstudios.world.math.Vector2D;
@@ -41,7 +41,8 @@ public class NpcFileReader
 	 * @throws IOException If there's an error reading the stream.
 	 * @throws SAXException If there's an error validating the XML.
 	 */
-	public NpcFileReader(World world, InputStream inputStream) throws ParserConfigurationException, IOException, SAXException {
+	public NpcFileReader(World world, InputStream inputStream) throws ParserConfigurationException, IOException,
+		  SAXException {
 		this.world = world;
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder builder = factory.newDocumentBuilder();
@@ -70,7 +71,8 @@ public class NpcFileReader
 			currentNPC.setVector2D(vector2D);
 			currentNPC.setZoneID(zoneID);
 
-			List<Location> wanderTargets = parseWanderTargets(zoneID, npcElement.getElementsByTagName("wander_targets"));
+			List<Location> wanderTargets = parseWanderTargets(zoneID, npcElement.getElementsByTagName
+				  ("wander_targets"));
 			for (Location location : wanderTargets)
 			{
 				currentNPC.addWanderTarget(location);
