@@ -45,30 +45,31 @@ public class WorldAuthenticator extends Authenticator
 	public Player logInPlayer(User user) {
 		String username = user.getUsername();
 		String password = user.getPassword();
-		Player player;
+		Player player = null;
 		try (ResultSet results = makeUserQuery(username))
 		{
 			results.next();
 			// Determine if the user is logged in.  If yes, end of method.
 			boolean loggedIn = results.getBoolean(LOGGED_IN_COLUMN);
-			if (loggedIn)
-				return null;
-			// Hash the user-supplied password with the salt in the database.
-			String hashedPassword = Hash.getHashedString(password, results.getString("salt"));
-			// Determine if the correct password was supplied.
-			boolean passwordCorrect = hashedPassword != null && hashedPassword.equalsIgnoreCase(results.getString
-				  ("password"));
-			Vector2D coordinates = new Vector2D(results.getDouble(X_COORD), results.getDouble(Y_COORD));
-			int zoneID = results.getInt(ZONE_ID);
-			// If the password's bad, login fail.
-			if (!passwordCorrect)
-				return null;
-			// Update the logged in column.
-			updateLoggedinColumn(username, true);
-			player = new Player(username);
-			player.setVector2D(coordinates);
-			player.setZoneID(zoneID);
-
+			if (!loggedIn)
+			{
+				// Hash the user-supplied password with the salt in the database.
+				String hashedPassword = Hash.getHashedString(password, results.getString("salt"));
+				// Determine if the correct password was supplied.
+				boolean passwordCorrect = hashedPassword != null && hashedPassword.equalsIgnoreCase(results.getString
+					  ("password"));
+				Vector2D coordinates = new Vector2D(results.getDouble(X_COORD), results.getDouble(Y_COORD));
+				int zoneID = results.getInt(ZONE_ID);
+				// If the password's bad, login fail.
+				if (passwordCorrect)
+				{
+					// Update the logged in column.
+					updateLoggedinColumn(username, true);
+					player = new Player(username);
+					player.setVector2D(coordinates);
+					player.setZoneID(zoneID);
+				}
+			}
 		} catch (SQLException | IndexOutOfBoundsException | LoginException e)
 		{
 			LOGGER.log(Level.FINE, "Failed to log in user: " + username, e);
@@ -83,19 +84,19 @@ public class WorldAuthenticator extends Authenticator
 	 * @return Whether the actor was successfully logged out.
 	 */
 	public boolean logOutPlayer(Actor actor) {
-		boolean success;
+		boolean success = false;
 		String username = actor.getName();
 		try (ResultSet results = makeUserQuery(username))
 		{
 			results.next();
 			// Determine if the user is logged in.  If no, end of method.
 			boolean loggedIn = results.getBoolean(LOGGED_IN_COLUMN);
-			if (!loggedIn)
-				return false;
+			if (loggedIn)
+			{
 
-			updateLoggedinColumn(username, false);
-			updatePlayer(actor);
-			success = true;
+				updateLoggedinColumn(username, false);
+				success = true;
+			}
 		} catch (SQLException | LoginException e)
 		{
 			LOGGER.log(Level.WARNING, "Failed to log out user: {0}", username);
@@ -108,23 +109,28 @@ public class WorldAuthenticator extends Authenticator
 	/**
 	 * Update the coordinates of the given actor in the database.
 	 * @param player The player to update.
-	 * @throws SQLException If there's a SQL exception.
 	 */
-	public void updatePlayer(Actor player) throws SQLException {
+	public boolean updatePlayer(Actor player) {
+		boolean success = false;
 		String username = player.getName();
 		double xCoord = player.getVector2D().getXCoordinate();
 		double yCoord = player.getVector2D().getYCoordinate();
 
-		String updateLoggedInQuery = "UPDATE users SET " + X_COORD + "=" + xCoord + ", " + Y_COORD +
+		String updatePlayerQuery = "UPDATE users SET " + X_COORD + "=" + xCoord + ", " + Y_COORD +
 			  "=" + yCoord + " WHERE " + "username = ?";
 		synchronized (dbConnection)
 		{
-			try (PreparedStatement updatePlayerStatement = super.dbConnection.prepareStatement(updateLoggedInQuery))
+			try (PreparedStatement updatePlayerStatement = super.dbConnection.prepareStatement(updatePlayerQuery))
 			{
 				updatePlayerStatement.setString(1, username);
 				updatePlayerStatement.executeUpdate();
 				updatePlayerStatement.close();
+				success = true;
+			} catch (SQLException e)
+			{
+				LOGGER.log(Level.WARNING, "Unable to log out player.", e);
 			}
 		}
+		return success;
 	}
 }

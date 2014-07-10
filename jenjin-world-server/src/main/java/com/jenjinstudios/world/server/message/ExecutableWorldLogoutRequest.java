@@ -12,7 +12,7 @@ import com.jenjinstudios.world.server.sql.WorldAuthenticator;
 public class ExecutableWorldLogoutRequest extends WorldExecutableMessage
 {
 	/** The SQLHandler used to log out the client. */
-	private final WorldAuthenticator sqlHandler;
+	private final WorldAuthenticator authenticator;
 
 	/**
 	 * Construct a new ExecutableMessage.  Must be implemented by subclasses.
@@ -21,7 +21,7 @@ public class ExecutableWorldLogoutRequest extends WorldExecutableMessage
 	 */
 	public ExecutableWorldLogoutRequest(WorldClientHandler handler, Message message) {
 		super(handler, message);
-		sqlHandler = handler.getServer().getAuthenticator();
+		authenticator = handler.getServer().getAuthenticator();
 
 	}
 
@@ -44,9 +44,10 @@ public class ExecutableWorldLogoutRequest extends WorldExecutableMessage
 	private boolean tryLogOutUser() {
 		boolean success = false;
 		WorldClientHandler handler = getClientHandler();
-		if (sqlHandler != null && handler.getUser() != null)
+		if (authenticator != null && handler.getUser() != null)
 		{
-			success = sqlHandler.logOutPlayer(handler.getPlayer());
+			authenticator.updatePlayer(handler.getPlayer());
+			success = authenticator.logOutPlayer(handler.getPlayer());
 			if (success)
 			{
 				handler.setUser(null);
