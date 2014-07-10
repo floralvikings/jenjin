@@ -32,7 +32,7 @@ public class WorldServerMessageFactory extends ServerMessageFactory
 		return newlyVisibleMessage;
 	}
 
-	public List<Message> generateChangeStateMessage(Actor changedActor) {
+	public List<Message> generateChangeStateMessages(Actor changedActor) {
 		List<Message> messages = new LinkedList<>();
 		for (MoveState m : changedActor.getStateChanges())
 		{

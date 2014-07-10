@@ -114,7 +114,7 @@ public class WorldClientHandler extends ClientHandler
 			if (object instanceof Actor)
 			{
 				changedActor = (Actor) object;
-				List<Message> newState = getMessageFactory().generateChangeStateMessage(changedActor);
+				List<Message> newState = getMessageFactory().generateChangeStateMessages(changedActor);
 				for (Message m : newState) { queueOutgoingMessage(m);}
 			}
 		}
