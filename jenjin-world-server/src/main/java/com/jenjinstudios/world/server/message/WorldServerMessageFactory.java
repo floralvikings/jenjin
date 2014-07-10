@@ -18,9 +18,7 @@ import java.util.List;
  */
 public class WorldServerMessageFactory extends ServerMessageFactory
 {
-	public WorldServerMessageFactory(WorldClientHandler conn, MessageRegistry messageRegistry) {
-		super(conn, messageRegistry);
-	}
+	public WorldServerMessageFactory(WorldClientHandler conn, MessageRegistry reg) { super(conn, reg); }
 
 	public Message generateNewlyVisibleMessage(WorldObject object) {
 		Message newlyVisibleMessage;
