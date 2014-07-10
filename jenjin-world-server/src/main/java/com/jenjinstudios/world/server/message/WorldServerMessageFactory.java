@@ -18,20 +18,10 @@ import java.util.List;
  */
 public class WorldServerMessageFactory extends ServerMessageFactory
 {
-
-	/**
-	 * Construct a new WorldServerMessageFactory.
-	 * @param conn The WorldClientHandler for which this message factory works.
-	 */
 	public WorldServerMessageFactory(WorldClientHandler conn, MessageRegistry messageRegistry) {
 		super(conn, messageRegistry);
 	}
 
-	/**
-	 * Generate an appropriate message for a newly visible object.
-	 * @param object The object.
-	 * @return The message.
-	 */
 	public Message generateNewlyVisibleMessage(WorldObject object) {
 		Message newlyVisibleMessage;
 		if (object instanceof Actor)
@@ -44,11 +34,6 @@ public class WorldServerMessageFactory extends ServerMessageFactory
 		return newlyVisibleMessage;
 	}
 
-	/**
-	 * Generate a state change message for the given actor.
-	 * @param changedActor The actor with a new state.
-	 * @return The state change message.
-	 */
 	public List<Message> generateChangeStateMessage(Actor changedActor) {
 		List<Message> messages = new LinkedList<>();
 		for (MoveState m : changedActor.getStateChanges())
@@ -65,12 +50,6 @@ public class WorldServerMessageFactory extends ServerMessageFactory
 		return messages;
 	}
 
-	/**
-	 * Generate a forced state message.
-	 * @param forcedState The state to which the player was forced.
-	 * @param server The server in which the world is running.
-	 * @return A forced state message for the actor's state at the beginning of this server "tick".
-	 */
 	public Message generateForcedStateMessage(MoveState forcedState, WorldServer server) {
 		Message forcedStateMessage = getMessageRegistry().createMessage("ForceStateMessage");
 		forcedStateMessage.setArgument("relativeAngle", forcedState.angle.getRelativeAngle());
@@ -81,62 +60,34 @@ public class WorldServerMessageFactory extends ServerMessageFactory
 		return forcedStateMessage;
 	}
 
-	/**
-	 * Generate a step length message.
-	 * @return The message.
-	 */
 	public Message generateActorMoveSpeedMessage() {
 		Message stepLengthMessage = getMessageRegistry().createMessage("ActorMoveSpeed");
 		stepLengthMessage.setArgument("moveSpeed", Actor.MOVE_SPEED);
 		return stepLengthMessage;
 	}
 
-	/**
-	 * Generate a NewlyInvisibleObjectMessage for the given object.
-	 * @param object The {@code WorldObject} that is newly invisible.
-	 * @return A {@code Message} for the newly invisible object.
-	 */
 	public Message generateNewlyInvisibleMessage(WorldObject object) {
 		Message newlyInvisibleMessage = getMessageRegistry().createMessage("ObjectInvisibleMessage");
 		newlyInvisibleMessage.setArgument("id", object.getId());
 		return newlyInvisibleMessage;
 	}
 
-	/**
-	 * Generate a WorldLoginResponse.
-	 * @return The WorldLoginResponse.
-	 */
 	public Message generateWorldLoginResponse() {
 		return getMessageRegistry().createMessage("WorldLoginResponse");
 	}
 
-	/**
-	 * Generate a response to a WorldFileRequest.
-	 * @param worldFileBytes The bytes of the world file.
-	 * @return The WorldFileResponse.
-	 */
 	public Message generateWorldFileResponse(byte[] worldFileBytes) {
 		Message response = getMessageRegistry().createMessage("WorldFileResponse");
 		response.setArgument("fileBytes", worldFileBytes);
 		return response;
 	}
 
-	/**
-	 * Generate a response to a WorldChecksumRequest.
-	 * @param checkSum The bytes of the world file's checksum.
-	 * @return The WorldChecksumResponse.
-	 */
 	public Message generateWorldChecksumResponse(byte[] checkSum) {
 		Message response = getMessageRegistry().createMessage("WorldChecksumResponse");
 		response.setArgument("checksum", checkSum);
 		return response;
 	}
 
-	/**
-	 * Generate an ActorVisibleMessage using the given actor.
-	 * @param newlyVisible The Actor used to generate the message.
-	 * @return A {@code Message} for the newly visible actor.
-	 */
 	private Message generateActorVisibleMessage(Actor newlyVisible) {
 		Message newlyVisibleMessage;
 		newlyVisibleMessage = getMessageRegistry().createMessage("ActorVisibleMessage");
@@ -151,11 +102,6 @@ public class WorldServerMessageFactory extends ServerMessageFactory
 		return newlyVisibleMessage;
 	}
 
-	/**
-	 * Generate an ObjectVisibleMessage using the given actor.
-	 * @param object The Actor used to generate the message.
-	 * @return A {@code Message} for the newly visible object.
-	 */
 	private Message generateObjectVisibleMessage(WorldObject object) {
 		Message newlyVisibleMessage;
 		newlyVisibleMessage = getMessageRegistry().createMessage("ObjectVisibleMessage");
