@@ -15,6 +15,7 @@ import com.jenjinstudios.world.state.MoveState;
 @SuppressWarnings("WeakerAccess")
 public class ExecutableStateChangeRequest extends WorldExecutableMessage
 {
+	private static final double MAX_CORRECT = Actor.MOVE_SPEED;
 	private Angle angle;
 	/** The new position, corrected for lag. */
 	private Vector2D position;
@@ -65,12 +66,12 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage
 	private boolean isCorrectionSafe(Actor player) {
 		Vector2D proposedPlayerOrigin = getPlayerOrigin(player);
 		Vector2D proposedClientOrigin = getClientOrigin();
-		return proposedClientOrigin.equals(proposedPlayerOrigin) && proposedPlayerOrigin.equals(position);
+		return distance < MAX_CORRECT && proposedClientOrigin.equals(proposedPlayerOrigin);
 	}
 
 	private Vector2D getClientOrigin() {
 		double clientReverseAngle = angle.reverseStepAngle();
-		return position.getVectorInDirection(distance, clientReverseAngle);
+		return position.getVectorInDirection(originDistance, clientReverseAngle);
 	}
 
 	private Vector2D getPlayerOrigin(Actor player) {

@@ -18,7 +18,7 @@ public class ExecutableStateChangeRequestTest
 	private static MessageRegistry messageRegistry = new MessageRegistry();
 
 	@Test
-	public void testValidRequest() {
+	public void testValidRequest() throws InterruptedException {
 		World world = new World();
 		Player player = new Player("FooBar");
 		world.addObject(player);
@@ -75,13 +75,37 @@ public class ExecutableStateChangeRequestTest
 		Message request = messageRegistry.createMessage("StateChangeRequest");
 		request.setArgument("relativeAngle", Angle.FRONT);
 		request.setArgument("absoluteAngle", 0.0);
-		request.setArgument("xCoordinate", 1.0);
-		request.setArgument("yCoordinate", 1.0);
-		request.setArgument("timeOfChange", System.nanoTime() - 1000);
+		request.setArgument("xCoordinate", 0.0);
+		request.setArgument("yCoordinate", 0.0);
+		request.setArgument("timeOfChange", System.nanoTime() - 10000000);
 		ExecutableStateChangeRequest executableStateChangeRequest = new ExecutableStateChangeRequest(mock, request);
 		executableStateChangeRequest.runImmediate();
 		executableStateChangeRequest.runDelayed();
 
+		player.setUp();
+		player.update();
+		player.reset();
+
+		Assert.assertEquals(player.getAngle(), new Angle(0.0, Angle.IDLE));
+	}
+
+	@Test
+	public void testExcessiveDelay() throws InterruptedException {
+		World world = new World();
+		Player player = new Player("FooBar");
+		world.addObject(player);
+		WorldClientHandler mock = Mockito.mock(WorldClientHandler.class);
+		Mockito.when(mock.getPlayer()).thenReturn(player);
+		Message request = messageRegistry.createMessage("StateChangeRequest");
+		request.setArgument("relativeAngle", Angle.FRONT);
+		request.setArgument("absoluteAngle", 0.0);
+		request.setArgument("xCoordinate", 0.0);
+		request.setArgument("yCoordinate", 0.0);
+		request.setArgument("timeOfChange", System.nanoTime());
+		Thread.sleep(2000);
+		ExecutableStateChangeRequest executableStateChangeRequest = new ExecutableStateChangeRequest(mock, request);
+		executableStateChangeRequest.runImmediate();
+		executableStateChangeRequest.runDelayed();
 		player.setUp();
 		player.update();
 		player.reset();
