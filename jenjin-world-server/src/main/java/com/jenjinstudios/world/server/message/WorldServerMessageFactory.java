@@ -49,7 +49,7 @@ public class WorldServerMessageFactory extends ServerMessageFactory
 	 * @param newlyVisible The Actor used to generate the message.
 	 * @return A {@code Message} for the newly visible actor.
 	 */
-	public Message generateActorVisibleMessage(Actor newlyVisible) {
+	private Message generateActorVisibleMessage(Actor newlyVisible) {
 		Message newlyVisibleMessage;
 		newlyVisibleMessage = getMessageRegistry().createMessage("ActorVisibleMessage");
 		newlyVisibleMessage.setArgument("name", newlyVisible.getName());
@@ -68,7 +68,7 @@ public class WorldServerMessageFactory extends ServerMessageFactory
 	 * @param object The Actor used to generate the message.
 	 * @return A {@code Message} for the newly visible object.
 	 */
-	public Message generateObjectVisibleMessage(WorldObject object) {
+	private Message generateObjectVisibleMessage(WorldObject object) {
 		Message newlyVisibleMessage;
 		newlyVisibleMessage = getMessageRegistry().createMessage("ObjectVisibleMessage");
 		newlyVisibleMessage.setArgument("name", object.getName());
