@@ -95,7 +95,6 @@ public class MessageOutputStream extends DataOutputStream
 			if (aesKey == null)
 			{
 				LOGGER.log(Level.SEVERE, "AES key not set, message will not be encrypted: " + s);
-				// TODO Wrap with better exception.
 				throw new IOException("Unable to encrypt sensitive data.");
 			} else
 			{
@@ -108,7 +107,6 @@ public class MessageOutputStream extends DataOutputStream
 				} catch (IllegalBlockSizeException | BadPaddingException | IllegalStateException e)
 				{
 					LOGGER.log(Level.SEVERE, "Error encrypting string, will use unencrypted.", e);
-					// TODO Wrap this in a better exception.
 					throw new IOException("Unable to encrypt sensitive data.");
 				}
 			}
