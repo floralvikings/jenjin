@@ -4,8 +4,8 @@ import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageRegistry;
 import com.jenjinstudios.server.message.ServerMessageFactory;
 import com.jenjinstudios.world.Actor;
-import com.jenjinstudios.world.server.WorldClientHandler;
 import com.jenjinstudios.world.WorldObject;
+import com.jenjinstudios.world.server.WorldClientHandler;
 import com.jenjinstudios.world.server.WorldServer;
 import com.jenjinstudios.world.state.MoveState;
 
@@ -41,41 +41,6 @@ public class WorldServerMessageFactory extends ServerMessageFactory
 		{
 			newlyVisibleMessage = generateObjectVisibleMessage(object);
 		}
-		return newlyVisibleMessage;
-	}
-
-	/**
-	 * Generate an ActorVisibleMessage using the given actor.
-	 * @param newlyVisible The Actor used to generate the message.
-	 * @return A {@code Message} for the newly visible actor.
-	 */
-	private Message generateActorVisibleMessage(Actor newlyVisible) {
-		Message newlyVisibleMessage;
-		newlyVisibleMessage = getMessageRegistry().createMessage("ActorVisibleMessage");
-		newlyVisibleMessage.setArgument("name", newlyVisible.getName());
-		newlyVisibleMessage.setArgument("id", newlyVisible.getId());
-		newlyVisibleMessage.setArgument("resourceID", newlyVisible.getResourceID());
-		newlyVisibleMessage.setArgument("xCoordinate", newlyVisible.getVector2D().getXCoordinate());
-		newlyVisibleMessage.setArgument("yCoordinate", newlyVisible.getVector2D().getYCoordinate());
-		newlyVisibleMessage.setArgument("relativeAngle", newlyVisible.getAngle().getRelativeAngle());
-		newlyVisibleMessage.setArgument("absoluteAngle", newlyVisible.getAngle().getAbsoluteAngle());
-		newlyVisibleMessage.setArgument("timeOfVisibility", newlyVisible.getWorld().getLastUpdateStarted());
-		return newlyVisibleMessage;
-	}
-
-	/**
-	 * Generate an ObjectVisibleMessage using the given actor.
-	 * @param object The Actor used to generate the message.
-	 * @return A {@code Message} for the newly visible object.
-	 */
-	private Message generateObjectVisibleMessage(WorldObject object) {
-		Message newlyVisibleMessage;
-		newlyVisibleMessage = getMessageRegistry().createMessage("ObjectVisibleMessage");
-		newlyVisibleMessage.setArgument("name", object.getName());
-		newlyVisibleMessage.setArgument("id", object.getId());
-		newlyVisibleMessage.setArgument("resourceID", object.getResourceID());
-		newlyVisibleMessage.setArgument("xCoordinate", object.getVector2D().getXCoordinate());
-		newlyVisibleMessage.setArgument("yCoordinate", object.getVector2D().getYCoordinate());
 		return newlyVisibleMessage;
 	}
 
@@ -165,5 +130,40 @@ public class WorldServerMessageFactory extends ServerMessageFactory
 		Message response = getMessageRegistry().createMessage("WorldChecksumResponse");
 		response.setArgument("checksum", checkSum);
 		return response;
+	}
+
+	/**
+	 * Generate an ActorVisibleMessage using the given actor.
+	 * @param newlyVisible The Actor used to generate the message.
+	 * @return A {@code Message} for the newly visible actor.
+	 */
+	private Message generateActorVisibleMessage(Actor newlyVisible) {
+		Message newlyVisibleMessage;
+		newlyVisibleMessage = getMessageRegistry().createMessage("ActorVisibleMessage");
+		newlyVisibleMessage.setArgument("name", newlyVisible.getName());
+		newlyVisibleMessage.setArgument("id", newlyVisible.getId());
+		newlyVisibleMessage.setArgument("resourceID", newlyVisible.getResourceID());
+		newlyVisibleMessage.setArgument("xCoordinate", newlyVisible.getVector2D().getXCoordinate());
+		newlyVisibleMessage.setArgument("yCoordinate", newlyVisible.getVector2D().getYCoordinate());
+		newlyVisibleMessage.setArgument("relativeAngle", newlyVisible.getAngle().getRelativeAngle());
+		newlyVisibleMessage.setArgument("absoluteAngle", newlyVisible.getAngle().getAbsoluteAngle());
+		newlyVisibleMessage.setArgument("timeOfVisibility", newlyVisible.getWorld().getLastUpdateStarted());
+		return newlyVisibleMessage;
+	}
+
+	/**
+	 * Generate an ObjectVisibleMessage using the given actor.
+	 * @param object The Actor used to generate the message.
+	 * @return A {@code Message} for the newly visible object.
+	 */
+	private Message generateObjectVisibleMessage(WorldObject object) {
+		Message newlyVisibleMessage;
+		newlyVisibleMessage = getMessageRegistry().createMessage("ObjectVisibleMessage");
+		newlyVisibleMessage.setArgument("name", object.getName());
+		newlyVisibleMessage.setArgument("id", object.getId());
+		newlyVisibleMessage.setArgument("resourceID", object.getResourceID());
+		newlyVisibleMessage.setArgument("xCoordinate", object.getVector2D().getXCoordinate());
+		newlyVisibleMessage.setArgument("yCoordinate", object.getVector2D().getYCoordinate());
+		return newlyVisibleMessage;
 	}
 }
