@@ -43,6 +43,23 @@ public class ExecutableWorldLoginRequest extends WorldExecutableMessage
 	@Override
 	public void runImmediate() {
 		boolean success;
+		User user = tryLogInUser();
+
+		success = player != null;
+		getClientHandler().setLoggedInTime(getClientHandler().getServer().getCycleStartTime());
+
+		initLoginResponse(success);
+
+		if (success)
+		{
+			prepareSuccessResponse(user);
+		} else
+		{
+			prepareFailureResponse();
+		}
+	}
+
+	private User tryLogInUser() {
 		User user = new User();
 		WorldClientHandler handler = getClientHandler();
 		if (sqlHandler != null && handler.getUser() == null)
@@ -54,29 +71,32 @@ public class ExecutableWorldLoginRequest extends WorldExecutableMessage
 			/* The map used to create the player. */
 			player = sqlHandler.logInPlayer(user);
 		}
+		return user;
+	}
 
-		success = player != null;
-		handler.setLoggedInTime(handler.getServer().getCycleStartTime());
-
+	private void initLoginResponse(boolean success) {
+		WorldClientHandler handler = getClientHandler();
 		loginResponse = handler.getMessageFactory().generateWorldLoginResponse();
 		loginResponse.setArgument("success", success);
+	}
 
-		if (success)
-		{
-			handler.setPlayer(player);
-			handler.setUser(user);
-			handler.getServer().associateUsernameWithClientHandler(user.getUsername(), handler);
-			loginResponse.setArgument("loginTime", handler.getLoggedInTime());
-			loginResponse.setArgument("xCoordinate", player.getVector2D().getXCoordinate());
-			loginResponse.setArgument("yCoordinate", player.getVector2D().getYCoordinate());
-			loginResponse.setArgument("zoneNumber", player.getZoneID());
-		} else
-		{
-			loginResponse.setArgument("id", -1);
-			loginResponse.setArgument("loginTime", handler.getLoggedInTime());
-			loginResponse.setArgument("xCoordinate", 0d);
-			loginResponse.setArgument("yCoordinate", 0d);
-			loginResponse.setArgument("zoneNumber", -1);
-		}
+	private void prepareFailureResponse() {
+		WorldClientHandler handler = getClientHandler();
+		loginResponse.setArgument("id", -1);
+		loginResponse.setArgument("loginTime", handler.getLoggedInTime());
+		loginResponse.setArgument("xCoordinate", 0d);
+		loginResponse.setArgument("yCoordinate", 0d);
+		loginResponse.setArgument("zoneNumber", -1);
+	}
+
+	private void prepareSuccessResponse(User user) {
+		WorldClientHandler handler = getClientHandler();
+		handler.setPlayer(player);
+		handler.setUser(user);
+		handler.getServer().associateUsernameWithClientHandler(user.getUsername(), handler);
+		loginResponse.setArgument("loginTime", handler.getLoggedInTime());
+		loginResponse.setArgument("xCoordinate", player.getVector2D().getXCoordinate());
+		loginResponse.setArgument("yCoordinate", player.getVector2D().getYCoordinate());
+		loginResponse.setArgument("zoneNumber", player.getZoneID());
 	}
 }
