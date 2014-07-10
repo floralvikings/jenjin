@@ -60,6 +60,13 @@ public class NPC extends Actor
 		followPath();
 	}
 
+	public void addWanderTarget(Location newTarget) {
+		synchronized (wanderTargets)
+		{
+			wanderTargets.add(newTarget);
+		}
+	}
+
 	/**
 	 * Plot a path to the given Location, and begin following it immediately.
 	 * @param target The target location.
@@ -76,13 +83,6 @@ public class NPC extends Actor
 				Vector2D nextCenter = LocationUtil.getCenter(path.pop());
 				currentPath.add(nextCenter);
 			}
-		}
-	}
-
-	public void addWanderTarget(Location newTarget) {
-		synchronized (wanderTargets)
-		{
-			wanderTargets.add(newTarget);
 		}
 	}
 
@@ -174,8 +174,9 @@ public class NPC extends Actor
 
 	private boolean canSeeTargetPlayer() {return getVisibleObjects().get(currentTargetPlayer.getId()) != null;}
 
-	private boolean reachedStartLocation() {return getLocation() == startLocation && currentTargetLocation ==
-		  startLocation;}
+	private boolean reachedStartLocation() {
+		return getLocation() == startLocation && currentTargetLocation == startLocation;
+	}
 
 	private void returnToStartLocationAfterReachingPlayer() {
 		currentTargetPlayer = null;
@@ -183,11 +184,12 @@ public class NPC extends Actor
 		plotPath(currentTargetLocation);
 	}
 
-	private boolean isAtPlayersPreviousLocation() {return getLocation() == currentTargetLocation &&
-		  currentTargetPlayer != null;}
+	private boolean isAtPlayersPreviousLocation() {
+		return getLocation() == currentTargetLocation && currentTargetPlayer != null;
+	}
 
 	private void findNewTargetPlayer() {
-		currentTargetPlayer = findPlayer();
+		currentTargetPlayer = findNewPlayer();
 		currentTargetLocation = currentTargetPlayer != null ? currentTargetPlayer.getLocation() : startLocation;
 		startLocation = currentTargetLocation != null ? getLocation() : null;
 		plotPath(currentTargetLocation);
@@ -198,11 +200,7 @@ public class NPC extends Actor
 			  currentTargetLocation != startLocation);
 	}
 
-	/**
-	 * Get a player from the map of visible objects.
-	 * @return The player, or null if none is found.
-	 */
-	private Player findPlayer() {
+	private Player findNewPlayer() {
 		Player player = null;
 		for (WorldObject object : getVisibleObjects().values())
 			if (object instanceof Player) player = (Player) object;
