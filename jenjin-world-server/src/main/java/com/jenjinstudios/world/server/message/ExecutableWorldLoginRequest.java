@@ -13,7 +13,7 @@ import com.jenjinstudios.world.server.sql.WorldAuthenticator;
 public class ExecutableWorldLoginRequest extends WorldExecutableMessage
 {
 	/** The SQL handler used by this executable message. */
-	private final WorldAuthenticator sqlHandler;
+	private final WorldAuthenticator authenticator;
 	/** The player added to the world. */
 	private Player player;
 	/** The LoginResponse to send to the client. */
@@ -26,7 +26,7 @@ public class ExecutableWorldLoginRequest extends WorldExecutableMessage
 	 */
 	public ExecutableWorldLoginRequest(WorldClientHandler handler, Message message) {
 		super(handler, message);
-		sqlHandler = handler.getServer().getAuthenticator();
+		authenticator = handler.getServer().getAuthenticator();
 	}
 
 	@Override
@@ -62,14 +62,14 @@ public class ExecutableWorldLoginRequest extends WorldExecutableMessage
 	private User tryLogInUser() {
 		User user = new User();
 		WorldClientHandler handler = getClientHandler();
-		if (sqlHandler != null && handler.getUser() == null)
+		if (authenticator != null && handler.getUser() == null)
 		{
 			String username = (String) getMessage().getArgument("username");
 			String password = (String) getMessage().getArgument("password");
 			user.setUsername(username);
 			user.setPassword(password);
 			/* The map used to create the player. */
-			player = sqlHandler.logInPlayer(user);
+			player = authenticator.logInPlayer(user);
 		}
 		return user;
 	}
