@@ -102,7 +102,7 @@ public class ExecutableStateChangeRequestTest
 		request.setArgument("xCoordinate", 0.0);
 		request.setArgument("yCoordinate", 0.0);
 		request.setArgument("timeOfChange", System.nanoTime());
-		Thread.sleep(2000);
+		Thread.sleep(1100);
 		ExecutableStateChangeRequest executableStateChangeRequest = new ExecutableStateChangeRequest(mock, request);
 		executableStateChangeRequest.runImmediate();
 		executableStateChangeRequest.runDelayed();
