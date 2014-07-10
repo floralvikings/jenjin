@@ -4,11 +4,14 @@ import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.Location;
 import com.jenjinstudios.world.LocationUtil;
 import com.jenjinstudios.world.WorldObject;
-import com.jenjinstudios.world.server.ai.Pathfinder;
 import com.jenjinstudios.world.math.Angle;
 import com.jenjinstudios.world.math.Vector2D;
+import com.jenjinstudios.world.server.ai.Pathfinder;
 
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
+import java.util.TreeMap;
 
 /**
  * This class represents a Non-Player Character.
@@ -16,30 +19,14 @@ import java.util.*;
  */
 public class NPC extends Actor
 {
-	/** Dictates how close an actor must be to a target before the actor is considered to have "reached" it. */
 	private static final double TARGET_DISTANCE = 0.2;
-	/** The list of targets to which a wandering NPC will move. */
 	private final List<Location> wanderTargets;
-	/** The behavior flags associated with this NPC. */
 	private final TreeMap<String, Boolean> behaviorFlags;
-	/** The Location at which the NPC began following a player. */
-	private Location startLocation;
-	/** The location toward which this NPC is to move. */
-	private Location targetLocation;
-	/** The player currently being targeted. */
-	private Player targetPlayer;
-	/** The index of the current wander target. */
-	private int wanderTargetIndex;
-	/** The path currently being followed by this actor. */
 	private final Queue<Vector2D> currentPath;
-
-	/**
-	 * Construct an NPC with the given name.
-	 * @param name The name.
-	 */
-	public NPC(String name) {
-		this(name, new TreeMap<String, Boolean>());
-	}
+	private Location startLocation;
+	private Location currentTargetLocation;
+	private Player currentTargetPlayer;
+	private int wanderTargetIndex;
 
 	/**
 	 * Construct an NPC with the given name and behavior flags.
@@ -73,66 +60,25 @@ public class NPC extends Actor
 		followPath();
 	}
 
-	/** Continue following the current path by choosing a new target if necessary. */
-	private void followPath() {
-		Vector2D target = currentPath.peek();
-		if (target != null)
-		{
-			if (getAngle().isIdle())
-			{
-				double angle = getVector2D().getAngleToVector(target);
-				Angle newAngle = new Angle(angle, Angle.FRONT);
-				setAngle(newAngle);
-				return;
-			}
-			double distance = getVector2D().getDistanceToVector(target);
-			if (distance <= TARGET_DISTANCE)
-			{
-				currentPath.remove();
-				Vector2D newTarget = currentPath.peek();
-				if (newTarget != null)
-				{
-					double angle = getVector2D().getAngleToVector(newTarget);
-					Angle newAngle = new Angle(angle, Angle.FRONT);
-					setAngle(newAngle);
-				} else
-				{
-					setAngle(getAngle().asIdle());
-				}
-			}
-		}
-	}
-
 	/**
 	 * Plot a path to the given Location, and begin following it immediately.
 	 * @param target The target location.
 	 */
-	public void plotPath(Location target) {
-		if (target == null)
+	private void plotPath(Location target) {
+		if (target != null)
 		{
-			return;
-		}
-		currentPath.clear();
-		Pathfinder pathfinder = new Pathfinder(getLocation(), target);
-		LinkedList<Location> path = pathfinder.findPath();
-		// Start will be current location.
-		if (path.isEmpty())
-		{
-			return;
-		}
-
-		while (!path.isEmpty())
-		{
-			// TODO save angle and refrain from resetting state if angle is the same.  Save bandwidth.
-			Vector2D nextCenter = LocationUtil.getCenter(path.pop());
-			currentPath.add(nextCenter);
+			currentPath.clear();
+			Pathfinder pathfinder = new Pathfinder(getLocation(), target);
+			LinkedList<Location> path = pathfinder.findPath();
+			// Start will be current location.
+			while (!path.isEmpty())
+			{
+				Vector2D nextCenter = LocationUtil.getCenter(path.pop());
+				currentPath.add(nextCenter);
+			}
 		}
 	}
 
-	/**
-	 * Add the specified Location to the list of possible wandering targets.
-	 * @param newTarget The Location to add to the target.
-	 */
 	public void addWanderTarget(Location newTarget) {
 		synchronized (wanderTargets)
 		{
@@ -140,7 +86,42 @@ public class NPC extends Actor
 		}
 	}
 
-	/** Perform the behavior of an NPC that "wanders". */
+	private void followPath() {
+		Vector2D target = currentPath.peek();
+		if (target != null)
+		{
+			if (getAngle().isIdle())
+			{
+				startMovingToTarget(target);
+			} else
+			{
+				changeTargetIfNecessary(target);
+			}
+		}
+	}
+
+	private void changeTargetIfNecessary(Vector2D target) {
+		double distance = getVector2D().getDistanceToVector(target);
+		if (distance <= TARGET_DISTANCE)
+		{
+			currentPath.remove();
+			Vector2D newTarget = currentPath.peek();
+			if (newTarget != null)
+			{
+				startMovingToTarget(newTarget);
+			} else
+			{
+				setAngle(getAngle().asIdle());
+			}
+		}
+	}
+
+	private void startMovingToTarget(Vector2D target) {
+		double angle = getVector2D().getAngleToVector(target);
+		Angle newAngle = new Angle(angle, Angle.FRONT);
+		setAngle(newAngle);
+	}
+
 	private void doWandersBehavior() {
 		if (currentPath.isEmpty())
 		{
@@ -153,38 +134,68 @@ public class NPC extends Actor
 		}
 	}
 
-	/** Perform the behavior signature of an NPC that is "aggressive". */
 	private void doAggressiveBehavior() {
-		if (targetPlayer == null && (targetLocation == null || targetLocation != startLocation))
+		if (shouldFindNewTargetPlayer())
 		{
-			targetPlayer = findPlayer();
-			targetLocation = targetPlayer != null ? targetPlayer.getLocation() : startLocation;
-			startLocation = targetLocation != null ? getLocation() : null;
-			plotPath(targetLocation);
-		} else if (getLocation() == targetLocation && targetPlayer != null)
+			findNewTargetPlayer();
+		} else if (isAtPlayersPreviousLocation())
 		{
-			if (!targetLocation.getObjects().contains(targetPlayer))
+			if (atPlayerLocation())
 			{
-				if (getVisibleObjects().get(targetPlayer.getId()) != null)
-				{
-					targetLocation = targetPlayer.getLocation();
-					plotPath(targetLocation);
-				} else
-				{
-					targetLocation = startLocation;
-					targetPlayer = null;
-					plotPath(targetLocation);
-				}
+				returnToStartLocationAfterReachingPlayer();
 			} else
 			{
-				targetPlayer = null;
-				targetLocation = startLocation;
-				plotPath(targetLocation);
+				if (canSeeTargetPlayer())
+				{
+					targetNewPlayerLocation();
+				} else
+				{
+					targetStartLocation();
+				}
 			}
-		} else if (getLocation() == startLocation && targetLocation == startLocation)
+		} else if (reachedStartLocation())
 		{
-			targetLocation = null;
+			currentTargetLocation = null;
 		}
+	}
+
+	private boolean atPlayerLocation() {return currentTargetLocation.getObjects().contains(currentTargetPlayer);}
+
+	private void targetStartLocation() {
+		currentTargetLocation = startLocation;
+		currentTargetPlayer = null;
+		plotPath(currentTargetLocation);
+	}
+
+	private void targetNewPlayerLocation() {
+		currentTargetLocation = currentTargetPlayer.getLocation();
+		plotPath(currentTargetLocation);
+	}
+
+	private boolean canSeeTargetPlayer() {return getVisibleObjects().get(currentTargetPlayer.getId()) != null;}
+
+	private boolean reachedStartLocation() {return getLocation() == startLocation && currentTargetLocation ==
+		  startLocation;}
+
+	private void returnToStartLocationAfterReachingPlayer() {
+		currentTargetPlayer = null;
+		currentTargetLocation = startLocation;
+		plotPath(currentTargetLocation);
+	}
+
+	private boolean isAtPlayersPreviousLocation() {return getLocation() == currentTargetLocation &&
+		  currentTargetPlayer != null;}
+
+	private void findNewTargetPlayer() {
+		currentTargetPlayer = findPlayer();
+		currentTargetLocation = currentTargetPlayer != null ? currentTargetPlayer.getLocation() : startLocation;
+		startLocation = currentTargetLocation != null ? getLocation() : null;
+		plotPath(currentTargetLocation);
+	}
+
+	private boolean shouldFindNewTargetPlayer() {
+		return currentTargetPlayer == null && (currentTargetLocation == null ||
+			  currentTargetLocation != startLocation);
 	}
 
 	/**
@@ -192,8 +203,9 @@ public class NPC extends Actor
 	 * @return The player, or null if none is found.
 	 */
 	private Player findPlayer() {
+		Player player = null;
 		for (WorldObject object : getVisibleObjects().values())
-			if (object instanceof Player) return (Player) object;
-		return null;
+			if (object instanceof Player) player = (Player) object;
+		return player;
 	}
 }
