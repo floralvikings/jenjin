@@ -1,12 +1,12 @@
 package com.jenjinstudios.world.server.sql;
 
-import com.jenjinstudios.server.net.User;
-import com.jenjinstudios.server.sql.LoginException;
-import com.jenjinstudios.server.sql.Authenticator;
 import com.jenjinstudios.core.util.Hash;
+import com.jenjinstudios.server.net.User;
+import com.jenjinstudios.server.sql.Authenticator;
+import com.jenjinstudios.server.sql.LoginException;
 import com.jenjinstudios.world.Actor;
-import com.jenjinstudios.world.server.Player;
 import com.jenjinstudios.world.math.Vector2D;
+import com.jenjinstudios.world.server.Player;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -34,9 +34,7 @@ public class WorldAuthenticator extends Authenticator
 	/**
 	 * Create a new SQLHandler with the given database information, and connect to the database.
 	 */
-	public WorldAuthenticator(Connection connection) {
-		super(connection);
-	}
+	public WorldAuthenticator(Connection connection) { super(connection); }
 
 	/**
 	 * Log the player into the world.
