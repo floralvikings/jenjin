@@ -37,16 +37,21 @@ public class ExecutableWorldLogoutRequest extends WorldExecutableMessage
 
 	@Override
 	public void runImmediate() {
+		boolean success = tryLogOutUser();
+		getClientHandler().sendLogoutStatus(success);
+	}
+
+	private boolean tryLogOutUser() {
+		boolean success = false;
 		WorldClientHandler handler = getClientHandler();
 		if (sqlHandler != null && handler.getUser() != null)
 		{
-			boolean success = sqlHandler.logOutPlayer(handler.getPlayer());
-
-			handler.sendLogoutStatus(success);
+			success = sqlHandler.logOutPlayer(handler.getPlayer());
 			if (success)
 			{
 				handler.setUser(null);
 			}
 		}
+		return success;
 	}
 }
