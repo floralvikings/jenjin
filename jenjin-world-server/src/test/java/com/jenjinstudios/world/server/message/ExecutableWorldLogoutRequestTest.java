@@ -35,7 +35,9 @@ public class ExecutableWorldLogoutRequestTest
 		when(worldServer.getWorld()).thenReturn(world);
 		when(handler.getServer()).thenReturn(worldServer);
 		when(handler.getUser()).thenReturn(new User());
+		when(handler.getPlayer()).thenReturn(player);
 		when(authenticator.logOutPlayer(any(Player.class))).thenReturn(true);
+		when(player.getWorld()).thenReturn(world);
 		when(player.getId()).thenReturn(0);
 		when(player.getVector2D()).thenReturn(Vector2D.ORIGIN);
 
@@ -44,6 +46,7 @@ public class ExecutableWorldLogoutRequestTest
 		exec.runDelayed();
 
 		verify(handler).sendLogoutStatus(true);
+		verify(world).removeObject(player);
 	}
 
 	@Test
