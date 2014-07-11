@@ -13,19 +13,10 @@ import java.util.logging.Logger;
 @SuppressWarnings("WeakerAccess")
 public class ExecutableObjectInvisibleMessage extends WorldClientExecutableMessage
 {
-	/** The logger for this class. */
 	private static final Logger LOGGER = Logger.getLogger(ExecutableObjectInvisibleMessage.class.getName());
-	/** The ID of the object to be made invisible. */
 	private int id;
 
-	/**
-	 * Construct an ExecutableMessage with the given Message.
-	 * @param client The client invoking this message.
-	 * @param message The Message.
-	 */
-	public ExecutableObjectInvisibleMessage(WorldClient client, Message message) {
-		super(client, message);
-	}
+	public ExecutableObjectInvisibleMessage(WorldClient client, Message message) { super(client, message); }
 
 	@Override
 	public void runDelayed() {
@@ -37,7 +28,5 @@ public class ExecutableObjectInvisibleMessage extends WorldClientExecutableMessa
 	}
 
 	@Override
-	public void runImmediate() {
-		id = (int) getMessage().getArgument("id");
-	}
+	public void runImmediate() { id = (int) getMessage().getArgument("id"); }
 }
