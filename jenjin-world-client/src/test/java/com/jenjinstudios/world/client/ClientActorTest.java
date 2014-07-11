@@ -3,6 +3,7 @@ package com.jenjinstudios.world.client;
 import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.math.Angle;
 import com.jenjinstudios.world.math.Vector2D;
+import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -11,16 +12,16 @@ import org.testng.annotations.Test;
  */
 public class ClientActorTest
 {
-	@Test(timeOut = 5000)
+	@Test
 	public void testUpdate() {
-		World world = new World();
+		World world = Mockito.mock(World.class);
 		ClientActor actor = new ClientActor(0, "ClientActor");
-		world.addObject(actor);
+		actor.setWorld(world);
 		actor.update();
 		Assert.assertNotEquals(actor.getLastStepTime(), 0);
 	}
 
-	@Test(timeOut = 5000)
+	@Test
 	public void testStep() throws InterruptedException {
 		World world = new World();
 		ClientActor actor = new ClientActor(0, "ClientActor");
