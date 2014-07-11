@@ -48,7 +48,7 @@ public final class ServerWorldFileTracker
 
 	public void setChecksum(byte[] checksum) { this.checksum = checksum; }
 
-	protected byte[] getBytes() { return bytes; }
+	public byte[] getBytes() { return bytes; }
 
 	public void setBytes(byte[] bytes) { this.bytes = bytes; }
 
