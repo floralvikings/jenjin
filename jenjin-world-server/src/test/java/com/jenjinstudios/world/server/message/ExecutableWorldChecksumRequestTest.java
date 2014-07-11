@@ -16,7 +16,7 @@ public class ExecutableWorldChecksumRequestTest
 	@Test
 	public void testExecuteMessage() {
 		Message message = mock(Message.class);
-		Message response = new MessageRegistry().createMessage("WorldChecksumResponse");
+		Message response = MessageRegistry.getInstance().createMessage("WorldChecksumResponse");
 		byte[] checksum = {1, 2, 3, 4, 5};
 		response.setArgument("checksum", checksum);
 		WorldClientHandler clientHandler = mock(WorldClientHandler.class);

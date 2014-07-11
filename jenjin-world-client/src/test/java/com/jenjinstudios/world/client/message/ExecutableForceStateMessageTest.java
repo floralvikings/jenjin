@@ -19,7 +19,7 @@ public class ExecutableForceStateMessageTest
 {
 	@Test(timeOut = 5000)
 	public void testMessageExecution() throws Exception {
-		MessageRegistry messageRegistry = new MessageRegistry();
+		MessageRegistry messageRegistry = MessageRegistry.getInstance();
 		Message forceStateMessage = messageRegistry.createMessage("ForceStateMessage");
 		forceStateMessage.setArgument("relativeAngle", IDLE);
 		forceStateMessage.setArgument("absoluteAngle", PI);

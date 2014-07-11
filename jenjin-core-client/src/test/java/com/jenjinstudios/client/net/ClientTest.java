@@ -23,7 +23,7 @@ import java.security.spec.X509EncodedKeySpec;
  */
 public class ClientTest
 {
-	private static MessageRegistry mr = new MessageRegistry();
+	private static MessageRegistry mr = MessageRegistry.getInstance();
 
 	@Test
 	public void testAddRepeatedTask() {
@@ -96,8 +96,6 @@ public class ClientTest
 	@Test(expectedExceptions = IllegalStateException.class)
 	public void testInvalidDoPostConnectInit() throws Exception {
 		int ups = 100;
-		// Build a FirstConnectResponse message
-		MessageRegistry mr = new MessageRegistry();
 		Message fcr = mr.createMessage("FirstConnectResponse");
 		fcr.setArgument("ups", ups);
 

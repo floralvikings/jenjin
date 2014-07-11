@@ -27,11 +27,20 @@ public class MessageRegistry
 	private final Map<Short, MessageType> messageTypesByID = new TreeMap<>();
 	/** A map that stores message types sorted by name. */
 	private final Map<String, MessageType> messageTypesByName = new TreeMap<>();
+	private static MessageRegistry messageRegistry;
+
+	public static MessageRegistry getInstance() {
+		if (messageRegistry == null)
+		{
+			messageRegistry = new MessageRegistry();
+		}
+		return messageRegistry;
+	}
 
 	/**
 	 * Construct a new MessageRegistry.
 	 */
-	public MessageRegistry() {
+	private MessageRegistry() {
 		registerXmlMessages();
 	}
 
@@ -237,7 +246,8 @@ public class MessageRegistry
 	private void addAllMessages(List<MessageType> messageTypes) {
 		for (MessageType messageType : messageTypes)
 		{
-			if (messageType != null && !messageTypesByID.containsKey(messageType.id) && !messageTypesByName.containsKey(messageType.name))
+			if (messageType != null && !messageTypesByID.containsKey(messageType.id) && !messageTypesByName
+				  .containsKey(messageType.name))
 			{
 				// Add the message type to the two trees.
 				messageTypesByID.put(messageType.id, messageType);

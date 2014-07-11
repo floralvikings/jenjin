@@ -14,7 +14,7 @@ import java.io.IOException;
  */
 public class MessageOutputStreamTest
 {
-	private static final MessageRegistry mr = new MessageRegistry();
+	private static final MessageRegistry mr = MessageRegistry.getInstance();
 
 	@Test
 	public void testWriteMessage() throws Exception {

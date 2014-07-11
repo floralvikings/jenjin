@@ -18,7 +18,7 @@ import static org.mockito.Mockito.*;
  */
 public class ExecutableWorldLoginRequestTest
 {
-	private static MessageRegistry messageRegistry = new MessageRegistry();
+	private static MessageRegistry messageRegistry = MessageRegistry.getInstance();
 
 	@Test
 	public void testSuccessfulLogin() {

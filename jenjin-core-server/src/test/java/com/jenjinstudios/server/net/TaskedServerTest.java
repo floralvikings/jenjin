@@ -15,7 +15,7 @@ public class TaskedServerTest
 {
 	@Test
 	public void testAddRepeatedTask() throws Exception {
-		MessageRegistry mr = new MessageRegistry();
+		MessageRegistry mr = MessageRegistry.getInstance();
 		Connection testConnection = AuthenticatorTest.createTestConnection();
 		Authenticator a = new Authenticator(testConnection);
 		ClientListenerInit<ClientHandler> listenerInit = new ClientListenerInit<>(ClientHandler.class, 51021);

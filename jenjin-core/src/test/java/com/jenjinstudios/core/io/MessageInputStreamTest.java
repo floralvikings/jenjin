@@ -16,7 +16,7 @@ import java.io.InputStream;
  */
 public class MessageInputStreamTest
 {
-	private static MessageRegistry mr = new MessageRegistry();
+	private static MessageRegistry mr = MessageRegistry.getInstance();
 
 	@Test
 	public void testReadValidMessage() throws IOException {

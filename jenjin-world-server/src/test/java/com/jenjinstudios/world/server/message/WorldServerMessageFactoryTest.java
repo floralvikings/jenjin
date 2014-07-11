@@ -27,7 +27,7 @@ import static org.testng.Assert.assertEquals;
  */
 public class WorldServerMessageFactoryTest
 {
-	private static MessageRegistry messageRegistry = new MessageRegistry();
+	private static MessageRegistry messageRegistry = MessageRegistry.getInstance();
 	private WorldClientHandler clientHandler;
 	private WorldServerMessageFactory worldServerMessageFactory;
 

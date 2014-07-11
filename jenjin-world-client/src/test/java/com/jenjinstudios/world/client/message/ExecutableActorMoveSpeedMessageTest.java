@@ -15,7 +15,7 @@ public class ExecutableActorMoveSpeedMessageTest
 {
 	@Test
 	public void testMessageExecution() throws Exception {
-		MessageRegistry messageRegistry = new MessageRegistry();
+		MessageRegistry messageRegistry = MessageRegistry.getInstance();
 		Message actorMoveSpeedMessage = messageRegistry.createMessage("ActorMoveSpeed");
 		actorMoveSpeedMessage.setArgument("moveSpeed", 123.45);
 		WorldClient worldClient = Mockito.mock(WorldClient.class);

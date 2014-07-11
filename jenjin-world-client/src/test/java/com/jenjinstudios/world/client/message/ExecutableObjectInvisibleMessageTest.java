@@ -15,7 +15,7 @@ public class ExecutableObjectInvisibleMessageTest
 {
 	@Test
 	public void testMessageExecution() throws Exception {
-		MessageRegistry messageRegistry = new MessageRegistry();
+		MessageRegistry messageRegistry = MessageRegistry.getInstance();
 		Message objectInvisibleMessage = messageRegistry.createMessage("ObjectInvisibleMessage");
 		objectInvisibleMessage.setArgument("id", 100);
 

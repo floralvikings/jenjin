@@ -21,7 +21,7 @@ import static org.mockito.Mockito.when;
  */
 public class ExecutableWorldLogoutRequestTest
 {
-	private static MessageRegistry messageRegistry = new MessageRegistry();
+	private static MessageRegistry messageRegistry = MessageRegistry.getInstance();
 
 	@Test
 	public void testSuccessfulLogout() {

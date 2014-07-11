@@ -8,7 +8,7 @@ import org.testng.annotations.Test;
  */
 public class MessageTest
 {
-	private static MessageRegistry mr = new MessageRegistry();
+	private static MessageRegistry mr = MessageRegistry.getInstance();
 
 	@Test(expectedExceptions = IllegalArgumentException.class)
 	public void testInvalidName() {

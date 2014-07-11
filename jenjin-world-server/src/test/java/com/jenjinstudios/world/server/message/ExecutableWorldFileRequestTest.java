@@ -19,7 +19,7 @@ public class ExecutableWorldFileRequestTest
 	@Test
 	public void testExecuteMessage() {
 		Message message = mock(Message.class);
-		Message response = new MessageRegistry().createMessage("WorldFileResponse");
+		Message response = MessageRegistry.getInstance().createMessage("WorldFileResponse");
 		byte[] fileBytes = {1, 2, 3, 4, 5};
 		response.setArgument("fileBytes", fileBytes);
 		WorldClientHandler clientHandler = mock(WorldClientHandler.class);

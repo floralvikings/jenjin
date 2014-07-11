@@ -15,7 +15,7 @@ import org.testng.annotations.Test;
  */
 public class ExecutableStateChangeRequestTest
 {
-	private static MessageRegistry messageRegistry = new MessageRegistry();
+	private static MessageRegistry messageRegistry = MessageRegistry.getInstance();
 
 	@Test
 	public void testValidRequest() throws InterruptedException {

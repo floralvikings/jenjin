@@ -19,7 +19,7 @@ public class ExecutableStateChangeMessageTest
 {
 	@Test
 	public void testMessageExecution() throws Exception {
-		MessageRegistry messageRegistry = new MessageRegistry();
+		MessageRegistry messageRegistry = MessageRegistry.getInstance();
 		Message stateChangeMessage = messageRegistry.createMessage("StateChangeMessage");
 		stateChangeMessage.setArgument("id", 100);
 		stateChangeMessage.setArgument("relativeAngle", IDLE);

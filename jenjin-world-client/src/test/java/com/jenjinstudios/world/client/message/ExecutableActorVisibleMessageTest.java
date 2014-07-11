@@ -17,7 +17,7 @@ public class ExecutableActorVisibleMessageTest
 {
 	@Test
 	public void testMessageExecution() throws Exception {
-		MessageRegistry messageRegistry = new MessageRegistry();
+		MessageRegistry messageRegistry = MessageRegistry.getInstance();
 		Message actorVisibleMessage = messageRegistry.createMessage("ActorVisibleMessage");
 		actorVisibleMessage.setArgument("name", "a1b2c3d4e5f6890");
 		actorVisibleMessage.setArgument("id", 100);

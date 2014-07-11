@@ -18,7 +18,7 @@ import java.security.spec.X509EncodedKeySpec;
 
 public class AuthClientTest
 {
-	private static MessageRegistry mr = new MessageRegistry();
+	private static MessageRegistry mr = MessageRegistry.getInstance();
 
 	@Test
 	public void testSendBlockingLoginRequest() throws Exception {

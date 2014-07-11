@@ -32,7 +32,7 @@ import java.security.spec.X509EncodedKeySpec;
  */
 public class WorldClientTest
 {
-	private static final MessageRegistry messageRegistry = new MessageRegistry();
+	private static final MessageRegistry messageRegistry = MessageRegistry.getInstance();
 	private static final String validWorldString =
 		  "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n" +
 				"<world>\n" +
