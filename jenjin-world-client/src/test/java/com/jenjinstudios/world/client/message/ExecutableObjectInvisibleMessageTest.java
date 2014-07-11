@@ -1,28 +1,33 @@
 package com.jenjinstudios.world.client.message;
 
 import com.jenjinstudios.core.io.Message;
-import com.jenjinstudios.world.WorldObject;
-import org.testng.Assert;
+import com.jenjinstudios.core.io.MessageRegistry;
+import com.jenjinstudios.world.World;
+import com.jenjinstudios.world.client.WorldClient;
 import org.testng.annotations.Test;
+
+import static org.mockito.Mockito.*;
 
 /**
  * @author Caleb Brinkman
  */
-public class ExecutableObjectInvisibleMessageTest extends WorldClientExecutableMessageTest
+public class ExecutableObjectInvisibleMessageTest
 {
-	@Test(timeOut = 5000)
-	@Override
+	@Test
 	public void testMessageExecution() throws Exception {
+		MessageRegistry messageRegistry = new MessageRegistry();
 		Message objectInvisibleMessage = messageRegistry.createMessage("ObjectInvisibleMessage");
 		objectInvisibleMessage.setArgument("id", 100);
-		inStreamReadMessage.thenReturn(objectInvisibleMessage, blankMessageSpam);
 
-		worldClient.blockingStart();
-		worldClient.sendBlockingWorldFileRequest();
-		worldClient.sendBlockingLoginRequest();
-		worldClient.getWorld().addObject(new WorldObject("Bob"), 100);
-		Thread.sleep(500); // Sleep to allow client to "catch up"
+		WorldClient worldClient = mock(WorldClient.class);
+		World world = mock(World.class);
+		when(worldClient.getWorld()).thenReturn(world);
 
-		Assert.assertEquals(worldClient.getWorld().getObjectCount(), 1);
+		ExecutableObjectInvisibleMessage message =
+			  new ExecutableObjectInvisibleMessage(worldClient, objectInvisibleMessage);
+		message.runImmediate();
+		message.runDelayed();
+
+		verify(world).removeObject(100);
 	}
 }
