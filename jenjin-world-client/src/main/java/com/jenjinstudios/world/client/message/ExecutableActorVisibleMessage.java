@@ -12,22 +12,12 @@ import com.jenjinstudios.world.math.Vector2D;
  */
 public class ExecutableActorVisibleMessage extends WorldClientExecutableMessage
 {
-	/** The newly visible actor. */
 	private ClientActor newlyVisible;
 
-	/**
-	 * Construct an ExecutableMessage with the given Message.
-	 * @param client The client invoking this message.
-	 * @param message The Message.
-	 */
-	public ExecutableActorVisibleMessage(WorldClient client, Message message) {
-		super(client, message);
-	}
+	public ExecutableActorVisibleMessage(WorldClient client, Message message) { super(client, message); }
 
 	@Override
-	public void runDelayed() {
-		getClient().getWorld().addObject(newlyVisible, newlyVisible.getId());
-	}
+	public void runDelayed() { getClient().getWorld().addObject(newlyVisible, newlyVisible.getId()); }
 
 	@Override
 	public void runImmediate() {
