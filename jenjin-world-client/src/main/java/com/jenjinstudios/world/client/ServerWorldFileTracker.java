@@ -56,7 +56,7 @@ public final class ServerWorldFileTracker
 
 	public void setWaitingForChecksum(boolean bool) { this.waitingForChecksum = bool; }
 
-	protected boolean isWaitingForFile() { return waitingForFile; }
+	public boolean isWaitingForFile() { return waitingForFile; }
 
 	public void setWaitingForFile(boolean waiting) { this.waitingForFile = waiting; }
 
