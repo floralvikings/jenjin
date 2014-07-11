@@ -28,9 +28,9 @@ public class ExecutableWorldLoginResponse extends WorldClientExecutableMessage
 	public void runDelayed() {
 		WorldClient client = getClient();
 		client.setWaitingForLoginResponse(false);
-		client.setLoggedIn((boolean) getMessage().getArgument("success"));
-
-		if (client.isLoggedIn())
+		boolean success = (boolean) getMessage().getArgument("success");
+		client.setLoggedIn(success);
+		if (success)
 		{
 
 			client.setLoggedInTime((long) getMessage().getArgument("loginTime"));
