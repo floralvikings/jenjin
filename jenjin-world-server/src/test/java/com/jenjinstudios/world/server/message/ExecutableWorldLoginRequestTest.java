@@ -18,9 +18,10 @@ import static org.mockito.Mockito.*;
  */
 public class ExecutableWorldLoginRequestTest
 {
+	private static MessageRegistry messageRegistry = new MessageRegistry();
+
 	@Test
 	public void testSuccessfulLogin() {
-		MessageRegistry messageRegistry = new MessageRegistry();
 		Message loginRequest = messageRegistry.createMessage("WorldLoginRequest");
 		loginRequest.setArgument("username", "foo");
 		loginRequest.setArgument("password", "bar");
@@ -51,7 +52,6 @@ public class ExecutableWorldLoginRequestTest
 
 	@Test
 	public void testFailedLogin() {
-		MessageRegistry messageRegistry = new MessageRegistry();
 		Message loginRequest = messageRegistry.createMessage("WorldLoginRequest");
 		loginRequest.setArgument("username", "foo");
 		loginRequest.setArgument("password", "bar");

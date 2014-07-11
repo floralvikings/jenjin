@@ -23,12 +23,13 @@ import java.security.spec.X509EncodedKeySpec;
  */
 public class ClientTest
 {
+	private static MessageRegistry mr = new MessageRegistry();
+
 	@Test
 	public void testAddRepeatedTask() {
 		Runnable r = Mockito.mock(Runnable.class);
 		MessageInputStream in = Mockito.mock(MessageInputStream.class);
 		MessageOutputStream out = Mockito.mock(MessageOutputStream.class);
-		MessageRegistry mr = Mockito.mock(MessageRegistry.class);
 		MessageIO messageIO = new MessageIO(in, out, mr);
 		Client client = new Client(messageIO);
 		client.addRepeatedTask(r);
@@ -41,7 +42,6 @@ public class ClientTest
 		int ups = 100;
 		int period = 1000 / ups;
 		// Build a FirstConnectResponse message
-		MessageRegistry mr = new MessageRegistry();
 		Message fcr = mr.createMessage("FirstConnectResponse");
 		fcr.setArgument("ups", ups);
 
@@ -63,7 +63,6 @@ public class ClientTest
 	@Test
 	public void testBlockingStart() throws Exception {
 		int ups = 100;
-		MessageRegistry mr = new MessageRegistry();
 
 		// Build a FirstConnectResponse message
 		Message fcr = mr.createMessage("FirstConnectResponse");

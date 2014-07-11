@@ -21,9 +21,10 @@ import static org.mockito.Mockito.when;
  */
 public class ExecutableWorldLogoutRequestTest
 {
+	private static MessageRegistry messageRegistry = new MessageRegistry();
+
 	@Test
 	public void testSuccessfulLogout() {
-		MessageRegistry messageRegistry = new MessageRegistry();
 		Message logOutRequest = messageRegistry.createMessage("WorldLogoutRequest");
 
 		World world = mock(World.class);
@@ -51,7 +52,6 @@ public class ExecutableWorldLogoutRequestTest
 
 	@Test
 	public void testNullUser() {
-		MessageRegistry messageRegistry = new MessageRegistry();
 		Message logOutRequest = messageRegistry.createMessage("WorldLogoutRequest");
 
 		World world = mock(World.class);
@@ -76,7 +76,6 @@ public class ExecutableWorldLogoutRequestTest
 
 	@Test
 	public void testFailedLogout() {
-		MessageRegistry messageRegistry = new MessageRegistry();
 		Message logOutRequest = messageRegistry.createMessage("WorldLogoutRequest");
 
 		World world = mock(World.class);

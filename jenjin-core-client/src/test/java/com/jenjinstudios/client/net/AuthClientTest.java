@@ -18,10 +18,10 @@ import java.security.spec.X509EncodedKeySpec;
 
 public class AuthClientTest
 {
+	private static MessageRegistry mr = new MessageRegistry();
 
 	@Test
 	public void testSendBlockingLoginRequest() throws Exception {
-		MessageRegistry mr = new MessageRegistry();
 		MessageInputStream mis = Mockito.mock(MessageInputStream.class);
 		MessageOutputStream mos = Mockito.mock(MessageOutputStream.class);
 
@@ -31,7 +31,7 @@ public class AuthClientTest
 		Message blankMessage = mr.createMessage("BlankMessage");
 
 		OngoingStubbing<Message> isWhen = Mockito.when(mis.readMessage()).
-				thenReturn(firstConnectResponse).thenReturn(blankMessage);
+			  thenReturn(firstConnectResponse).thenReturn(blankMessage);
 		MessageIO messageIO = new MessageIO(mis, mos, mr);
 		AuthClient client = new AuthClient(messageIO, new ClientUser("foo", "bar"));
 
@@ -61,7 +61,6 @@ public class AuthClientTest
 
 	@Test
 	public void testSendBlockingLogoutRequest() throws Exception {
-		MessageRegistry mr = new MessageRegistry();
 		MessageInputStream mis = Mockito.mock(MessageInputStream.class);
 		MessageOutputStream mos = Mockito.mock(MessageOutputStream.class);
 
@@ -71,7 +70,7 @@ public class AuthClientTest
 		Message blankMessage = mr.createMessage("BlankMessage");
 
 		OngoingStubbing<Message> isWhen = Mockito.when(mis.readMessage()).
-				thenReturn(firstConnectResponse).thenReturn(blankMessage);
+			  thenReturn(firstConnectResponse).thenReturn(blankMessage);
 		MessageIO messageIO = new MessageIO(mis, mos, mr);
 		AuthClient client = new AuthClient(messageIO, new ClientUser("foo", "bar"));
 

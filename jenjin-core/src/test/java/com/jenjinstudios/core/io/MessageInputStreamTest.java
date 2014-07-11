@@ -16,6 +16,8 @@ import java.io.InputStream;
  */
 public class MessageInputStreamTest
 {
+	private static MessageRegistry mr = new MessageRegistry();
+
 	@Test
 	public void testReadValidMessage() throws IOException {
 		DataInputStreamMock dataInputStreamMock = new DataInputStreamMock();
@@ -26,9 +28,7 @@ public class MessageInputStreamTest
 
 		InputStream inputStream = dataInputStreamMock.getIn();
 
-		MessageRegistry messageRegistry = new MessageRegistry();
-
-		MessageInputStream messageInputStream = new MessageInputStream(messageRegistry, inputStream);
+		MessageInputStream messageInputStream = new MessageInputStream(mr, inputStream);
 		Message message = messageInputStream.readMessage();
 		messageInputStream.close();
 
@@ -45,8 +45,6 @@ public class MessageInputStreamTest
 
 		InputStream is = mock.getIn();
 
-		MessageRegistry mr = new MessageRegistry();
-
 		MessageInputStream mis = new MessageInputStream(mr, is);
 		mis.readMessage();
 	}
@@ -59,7 +57,6 @@ public class MessageInputStreamTest
 		mock.mockReadUtf("FooBar");
 
 		InputStream is = mock.getIn();
-		MessageRegistry mr = new MessageRegistry();
 		MessageInputStream mis = new MessageInputStream(mr, is);
 		Message msg = mis.readMessage();
 		mis.close();
@@ -80,7 +77,7 @@ public class MessageInputStreamTest
 		aesEncryptCipher.init(Cipher.ENCRYPT_MODE, aesKey);
 		byte[] sBytes = "FooBar".getBytes("UTF-8");
 		String encryptedString = DatatypeConverter.printHexBinary(
-				aesEncryptCipher.doFinal(sBytes));
+			  aesEncryptCipher.doFinal(sBytes));
 
 		Assert.assertNotEquals("FooBar", encryptedString);
 
@@ -88,7 +85,6 @@ public class MessageInputStreamTest
 		mock.mockReadUtf(encryptedString);
 
 		InputStream is = mock.getIn();
-		MessageRegistry mr = new MessageRegistry();
 		MessageInputStream mis = new MessageInputStream(mr, is);
 		mis.setAESKey(key);
 		Message msg = mis.readMessage();
@@ -125,7 +121,6 @@ public class MessageInputStreamTest
 		mock.mockReadUtf("Lumberjack");
 
 		InputStream in = mock.getIn();
-		MessageRegistry mr = new MessageRegistry();
 		MessageInputStream mis = new MessageInputStream(mr, in);
 		Message msg = mis.readMessage();
 		mis.close();

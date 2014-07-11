@@ -14,9 +14,10 @@ import java.io.InputStream;
  */
 public class ConnectionTest
 {
+	private static MessageRegistry mr = new MessageRegistry();
+
 	@Test
 	public void testProcessMessage() throws Exception {
-		MessageRegistry mr = new MessageRegistry();
 		// Spoof an invalid message
 		DataInputStreamMock dataInputStreamMock = new DataInputStreamMock();
 		dataInputStreamMock.mockReadShort((short) -255);
@@ -46,8 +47,6 @@ public class ConnectionTest
 
 	@Test(expectedExceptions = MessageQueueException.class)
 	public void testCloseLink() throws Exception {
-		MessageRegistry mr = new MessageRegistry();
-
 		DataInputStreamMock dataInputStreamMock = new DataInputStreamMock();
 		InputStream in = dataInputStreamMock.getIn();
 		dataInputStreamMock.mockReadShort((short) -255);
@@ -68,7 +67,6 @@ public class ConnectionTest
 
 	@Test
 	public void testPingRequest() throws Exception {
-		MessageRegistry mr = new MessageRegistry();
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 
 		MessageInputStream messageInputStream = Mockito.mock(MessageInputStream.class);
@@ -77,7 +75,8 @@ public class ConnectionTest
 		Message pingRequest = mr.createMessage("PingRequest");
 		pingRequest.setArgument("requestTimeNanos", 123456789l);
 
-		Mockito.when(messageInputStream.readMessage()).thenReturn(pingRequest).thenReturn(mr.createMessage("BlankMessage"));
+		Mockito.when(messageInputStream.readMessage()).thenReturn(pingRequest).thenReturn(mr.createMessage
+			  ("BlankMessage"));
 		MessageIO messageIO = new MessageIO(messageInputStream, messageOutputStream, mr);
 		Connection connection = new Connection(messageIO);
 		connection.start();
@@ -96,7 +95,6 @@ public class ConnectionTest
 	@Test
 	public void testPingResponse() throws Exception {
 		// Spoof an invalid message
-		MessageRegistry mr = new MessageRegistry();
 		DataInputStreamMock dataInputStreamMock = new DataInputStreamMock();
 		dataInputStreamMock.mockReadShort((short) 2);
 		dataInputStreamMock.mockReadLong(System.nanoTime());
