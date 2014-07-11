@@ -5,7 +5,6 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.util.LinkedList;
-import java.util.Timer;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -24,7 +23,7 @@ public class ServerUpdateTaskTest
 		ServerUpdateTask serverUpdateTask = new ServerUpdateTask(authServer);
 		ScheduledExecutorService loopTimer = Executors.newSingleThreadScheduledExecutor();
 		loopTimer.scheduleAtFixedRate(serverUpdateTask, 0, 100, TimeUnit.MILLISECONDS);
-		Thread.sleep(2000);
+		Thread.sleep(5000);
 		loopTimer.shutdownNow();
 		Assert.assertEquals(serverUpdateTask.getAverageUPS(), 10, 1);
 	}

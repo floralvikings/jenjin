@@ -14,7 +14,7 @@ import static org.mockito.Mockito.when;
  */
 public class WorldClientTest
 {
-	@Test(timeOut = 1000)
+	@Test//(timeOut = 2000)
 	public void testSendBlockingWorldFileRequest() throws Exception {
 		MessageIO messageIO = mock(MessageIO.class);
 		ServerWorldFileTracker serverWorldFileTracker = mock(ServerWorldFileTracker.class);
