@@ -1,37 +1,37 @@
 package com.jenjinstudios.world.client.message;
 
 import com.jenjinstudios.core.io.Message;
+import com.jenjinstudios.core.io.MessageRegistry;
+import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.WorldObject;
-import com.jenjinstudios.world.math.Vector2D;
+import com.jenjinstudios.world.client.WorldClient;
 import org.testng.annotations.Test;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
+import static org.mockito.Mockito.*;
 
 /**
  * @author Caleb Brinkman
  */
-public class ExecutableObjectVisibleMessageTest extends WorldClientExecutableMessageTest
+public class ExecutableObjectVisibleMessageTest
 {
-	@Test(timeOut = 5000)
-	@Override
+	@Test
 	public void testMessageExecution() throws Exception {
+		MessageRegistry messageRegistry = new MessageRegistry();
 		Message actorVisibleMessage = messageRegistry.createMessage("ObjectVisibleMessage");
 		actorVisibleMessage.setArgument("name", "a1b2c3d4e5f6890");
 		actorVisibleMessage.setArgument("id", 100);
 		actorVisibleMessage.setArgument("resourceID", 100);
 		actorVisibleMessage.setArgument("xCoordinate", 1.0);
 		actorVisibleMessage.setArgument("yCoordinate", 1.0);
-		inStreamReadMessage.thenReturn(actorVisibleMessage, blankMessageSpam);
 
-		worldClient.blockingStart();
-		worldClient.sendBlockingWorldFileRequest();
-		worldClient.sendBlockingLoginRequest();
-		Thread.sleep(500); // Sleep to allow client to "catch up"
+		WorldClient worldClient = mock(WorldClient.class);
+		World world = mock(World.class);
+		when(worldClient.getWorld()).thenReturn(world);
 
-		WorldObject worldObject = worldClient.getWorld().getObject(100);
-		assertNotNull(worldObject);
-		assertEquals(worldObject.getResourceID(), 100);
-		assertEquals(worldObject.getVector2D(), new Vector2D(1.0, 1.0));
+		ExecutableObjectVisibleMessage message = new ExecutableObjectVisibleMessage(worldClient, actorVisibleMessage);
+		message.runImmediate();
+		message.runDelayed();
+
+		verify(world).addObject((WorldObject) any(), eq(100));
 	}
 }
