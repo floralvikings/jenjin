@@ -22,7 +22,7 @@ public class WorldClient extends AuthClient
 	private static final Logger LOGGER = Logger.getLogger(WorldClient.class.getName());
 	private static final long TIMEOUT_MILLIS = 30000;
 	private final WorldClientMessageFactory messageFactory;
-	private final ServerWorldFileTracker serverWorldFileTracker;
+	private ServerWorldFileTracker serverWorldFileTracker;
 	private World world;
 	private ClientPlayer player;
 
@@ -63,6 +63,10 @@ public class WorldClient extends AuthClient
 
 	@Override
 	public WorldClientMessageFactory getMessageFactory() {return messageFactory; }
+
+	public void setServerWorldFileTracker(ServerWorldFileTracker serverWorldFileTracker) {
+		this.serverWorldFileTracker = serverWorldFileTracker;
+	}
 
 	public ServerWorldFileTracker getServerWorldFileTracker() { return serverWorldFileTracker; }
 

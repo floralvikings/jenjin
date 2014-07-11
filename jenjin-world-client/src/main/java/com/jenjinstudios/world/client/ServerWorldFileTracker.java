@@ -12,7 +12,7 @@ import java.util.Arrays;
 /**
  * @author Caleb Brinkman
  */
-public final class ServerWorldFileTracker
+public class ServerWorldFileTracker
 {
 	private final File worldFile;
 	private boolean waitingForChecksum;
@@ -73,7 +73,7 @@ public final class ServerWorldFileTracker
 
 	protected World readWorldFromFile() throws WorldDocumentException {
 		World world = null;
-		if (worldFile.exists())
+		if (worldFile != null && worldFile.exists())
 		{
 			try
 			{
