@@ -5,6 +5,9 @@ import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Timer;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * A server which executes runnable tasks.
@@ -17,7 +20,7 @@ public class TaskedServer<T extends ClientHandler> extends Server<T>
 	/** Synced tasks scheduled by client handlers. */
 	private final LinkedList<Runnable> syncedTasks;
 	/** The timer that controls the server loop. */
-	private Timer loopTimer;
+	private ScheduledExecutorService loopTimer;
 	/** The server loop. */
 	private ServerUpdateTask serverUpdateTask;
 
@@ -59,9 +62,8 @@ public class TaskedServer<T extends ClientHandler> extends Server<T>
 		serverUpdateTask = new ServerUpdateTask(this);
 
 		/* The name of the timer that is looping the server thread. */
-		String timerName = "Server Update Loop";
-		loopTimer = new Timer(timerName, false);
-		loopTimer.scheduleAtFixedRate(serverUpdateTask, 0, PERIOD);
+		loopTimer = Executors.newSingleThreadScheduledExecutor();
+		loopTimer.scheduleAtFixedRate(serverUpdateTask, 0, PERIOD, TimeUnit.MILLISECONDS);
 	}
 
 	@Override
@@ -69,7 +71,7 @@ public class TaskedServer<T extends ClientHandler> extends Server<T>
 		super.shutdown();
 
 		if (loopTimer != null)
-			loopTimer.cancel();
+			loopTimer.shutdown();
 	}
 
 	public double getAverageUPS() { return serverUpdateTask.getAverageUPS(); }

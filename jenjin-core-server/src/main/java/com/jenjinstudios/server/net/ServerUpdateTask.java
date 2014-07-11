@@ -1,7 +1,6 @@
 package com.jenjinstudios.server.net;
 
 import java.util.Deque;
-import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -9,12 +8,12 @@ import java.util.logging.Logger;
  * Implements the update loop in the form of a TimerTask.
  * @author Caleb Brinkman
  */
-class ServerUpdateTask extends TimerTask
+class ServerUpdateTask implements Runnable
 {
 	/** The logger for this class. */
 	private static final Logger LOGGER = Logger.getLogger(ServerUpdateTask.class.getName());
 	/** The time in nanoseconds of the last 50 update cycles. */
-	private final long[] lastCycles;
+	private final double[] lastCycles;
 	/** The server for which this loop runs. */
 	private final TaskedServer server;
 	/** The list of synchronized tasks to be executed by the loop. */
@@ -24,7 +23,7 @@ class ServerUpdateTask extends TimerTask
 	/** The start time, in nanoseconds, of the current cycle. */
 	private volatile long cycleStart = 0;
 	/** The current cycle number. */
-	private long cycleNum;
+	private int cycleNum;
 	/** The actual average UPS of this server. */
 	private double averageUPS;
 
@@ -37,7 +36,7 @@ class ServerUpdateTask extends TimerTask
 		this.server = server;
 		syncedTasks = this.server.getSyncedTasks();
 		repeatedTasks = this.server.getRepeatedTasks();
-		lastCycles = new long[server.getUps()];
+		lastCycles = new double[server.getUps() * 10];
 		cycleNum = 0;
 	}
 
@@ -72,15 +71,25 @@ class ServerUpdateTask extends TimerTask
 
 	/** Called at the beginning of a new server update cycle. */
 	private void newCycle() {
-		long oldCycleStart = cycleStart;
-		cycleStart = System.nanoTime();
+		long oldCycleStart = cycleStart == 0 ? System.currentTimeMillis() - 1000 / server.getUps() : cycleStart;
+		cycleStart = System.currentTimeMillis();
+		double cycleLength = (cycleStart - oldCycleStart) / 1000d;
+		lastCycles[getCycleArrayIndex()] = cycleLength;
 		cycleNum++;
-		lastCycles[(int) cycleNum % lastCycles.length] = cycleStart - oldCycleStart;
-		long total = 0;
-		for (long l : lastCycles) { total += l; }
-		double averageLength = (total / lastCycles.length);
-		averageUPS = 1000000000 / averageLength;
+		double total = 0;
+		for (double l : lastCycles)
+		{
+			total += l;
+		}
+		averageUPS = (ceilNumCycles() / total);
 	}
+
+	private double ceilNumCycles() {
+		return cycleNum < 1 || cycleNum > lastCycles.length ?
+			  lastCycles.length : cycleNum;
+	}
+
+	private int getCycleArrayIndex() { return Math.abs(cycleNum) % lastCycles.length; }
 
 	double getAverageUPS() { return averageUPS; }
 
