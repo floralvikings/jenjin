@@ -30,15 +30,16 @@ public class ExecutableWorldLoginResponse extends WorldClientExecutableMessage
 		client.setWaitingForLoginResponse(false);
 		client.setLoggedIn((boolean) getMessage().getArgument("success"));
 
-		if (!client.isLoggedIn())
-			return;
+		if (client.isLoggedIn())
+		{
 
-		client.setLoggedInTime((long) getMessage().getArgument("loginTime"));
-		client.setName(client.getUser().getUsername());
-		client.setPlayer(player);
-		client.getWorld().addObject(player, player.getId());
+			client.setLoggedInTime((long) getMessage().getArgument("loginTime"));
+			client.setName(client.getUser().getUsername());
+			client.setPlayer(player);
+			client.getWorld().addObject(player, player.getId());
 
-		client.addRepeatedTask(new WorldClientUpdater(client));
+			client.addRepeatedTask(new WorldClientUpdater(client));
+		}
 	}
 
 	@Override
