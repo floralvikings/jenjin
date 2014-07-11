@@ -10,9 +10,10 @@ import org.testng.annotations.Test;
  */
 public class ActorTest
 {
+	private static World world = new World();
+
 	@Test
 	public void testReset() {
-		World world = new World();
 		Actor actor = new Actor("Actor");
 		world.addObject(actor);
 		Angle angle = new Angle(0.0, Angle.FRONT);
@@ -23,7 +24,6 @@ public class ActorTest
 
 	@Test
 	public void testSetUp() {
-		World world = new World();
 		Actor actor = new Actor("Actor");
 		world.addObject(actor);
 		Angle angle = new Angle(0.0, Angle.FRONT);
@@ -35,7 +35,6 @@ public class ActorTest
 
 	@Test
 	public void testStep() throws InterruptedException {
-		World world = new World();
 		Actor actor = new Actor("Actor");
 		world.addObject(actor);
 		Angle angle = new Angle(0.0, Angle.FRONT);
@@ -51,7 +50,6 @@ public class ActorTest
 
 	@Test
 	public void testStepToNullLocation() throws InterruptedException {
-		World world = new World();
 		Actor actor = new Actor("Actor");
 		world.addObject(actor);
 		Angle angle = new Angle(0.0, Angle.BACK);
@@ -65,7 +63,6 @@ public class ActorTest
 
 	@Test
 	public void testGetForcedState() throws InterruptedException {
-		World world = new World();
 		Actor actor = new Actor("Actor");
 		world.addObject(actor);
 		Angle angle = new Angle(0.0, Angle.BACK);
