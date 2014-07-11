@@ -3,6 +3,7 @@ package com.jenjinstudios.server.sql;
 import com.jenjinstudios.server.net.User;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import java.sql.Connection;
@@ -15,7 +16,7 @@ import java.sql.Statement;
 public class AuthenticatorTest
 {
 	private static int connectionNumber = 0;
-
+	private static Connection connection;
 	/**
 	 * Create a unique connection with some dummy data that we can test on.
 	 * @return The dummy connection.
@@ -51,9 +52,18 @@ public class AuthenticatorTest
 		return testConnection;
 	}
 
+	@BeforeClass
+	public static void createConnection() throws Exception {
+		connection = createTestConnection();
+	}
+
+	@AfterClass
+	public static void closeConnection() throws Exception {
+		connection.close();
+	}
+
 	@Test
 	public void testLookUpUser() throws Exception {
-		Connection connection = createTestConnection();
 		Authenticator connector = new Authenticator(connection);
 		User testAccount1 = connector.lookUpUser("TestAccount1");
 		Assert.assertEquals(testAccount1.getUsername(), "TestAccount1");
@@ -62,7 +72,6 @@ public class AuthenticatorTest
 
 	@Test(expectedExceptions = LoginException.class)
 	public void testLookUpFakeUser() throws Exception {
-		Connection connection = createTestConnection();
 		Authenticator connector = new Authenticator(connection);
 		connector.lookUpUser("This User Doesn't Exist.");
 		connection.close();
@@ -70,9 +79,8 @@ public class AuthenticatorTest
 
 	@Test
 	public void testLogInUser() throws Exception {
-		Connection connection = createTestConnection();
 		Authenticator connector = new Authenticator(connection);
-		String username = "TestAccount1";
+		String username = "TestAccount2";
 		String password = "testPassword";
 		connector.logInUser(username, password);
 		User user = connector.lookUpUser(username);
@@ -82,9 +90,8 @@ public class AuthenticatorTest
 
 	@Test(expectedExceptions = LoginException.class)
 	public void testConcurrentLogins() throws Exception {
-		Connection connection = createTestConnection();
 		Authenticator connector = new Authenticator(connection);
-		String username = "TestAccount1";
+		String username = "TestAccount3";
 		String password = "testPassword";
 		connector.logInUser(username, password);
 		// Concurrent login isn't aren't allowed.
@@ -94,9 +101,8 @@ public class AuthenticatorTest
 
 	@Test
 	public void testLogOutUser() throws Exception {
-		Connection connection = createTestConnection();
 		Authenticator connector = new Authenticator(connection);
-		String username = "TestAccount1";
+		String username = "TestAccount4";
 		String password = "testPassword";
 		connector.logInUser(username, password);
 		connector.logOutUser(username);
@@ -107,9 +113,8 @@ public class AuthenticatorTest
 
 	@Test(expectedExceptions = LoginException.class)
 	public void testInvalidPassword() throws Exception {
-		Connection connection = createTestConnection();
 		Authenticator connector = new Authenticator(connection);
-		String username = "TestAccount1";
+		String username = "TestAccount5";
 		String password = "incorrectPassword";
 		connector.logInUser(username, password);
 		connection.close();
