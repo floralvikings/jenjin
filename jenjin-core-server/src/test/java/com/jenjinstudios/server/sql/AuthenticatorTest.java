@@ -37,7 +37,7 @@ public class AuthenticatorTest
 				"  `zoneid` INT(11) NOT NULL DEFAULT '0'," +
 				"  PRIMARY KEY (username)" +
 				")");
-		for (int i = 1; i < 100; i++)
+		for (int i = 1; i < 10; i++)
 		{
 			statement.executeUpdate(
 					"INSERT INTO users " +
@@ -67,14 +67,14 @@ public class AuthenticatorTest
 		Authenticator connector = new Authenticator(connection);
 		User testAccount1 = connector.lookUpUser("TestAccount1");
 		Assert.assertEquals(testAccount1.getUsername(), "TestAccount1");
-		connection.close();
+
 	}
 
 	@Test(expectedExceptions = LoginException.class)
 	public void testLookUpFakeUser() throws Exception {
 		Authenticator connector = new Authenticator(connection);
 		connector.lookUpUser("This User Doesn't Exist.");
-		connection.close();
+
 	}
 
 	@Test
@@ -85,7 +85,7 @@ public class AuthenticatorTest
 		connector.logInUser(username, password);
 		User user = connector.lookUpUser(username);
 		Assert.assertTrue(user.isLoggedIn());
-		connection.close();
+
 	}
 
 	@Test(expectedExceptions = LoginException.class)
@@ -96,7 +96,7 @@ public class AuthenticatorTest
 		connector.logInUser(username, password);
 		// Concurrent login isn't aren't allowed.
 		connector.logInUser(username, password);
-		connection.close();
+
 	}
 
 	@Test
@@ -108,7 +108,7 @@ public class AuthenticatorTest
 		connector.logOutUser(username);
 		User user = connector.lookUpUser(username);
 		Assert.assertFalse(user.isLoggedIn());
-		connection.close();
+
 	}
 
 	@Test(expectedExceptions = LoginException.class)
@@ -117,6 +117,6 @@ public class AuthenticatorTest
 		String username = "TestAccount5";
 		String password = "incorrectPassword";
 		connector.logInUser(username, password);
-		connection.close();
+
 	}
 }

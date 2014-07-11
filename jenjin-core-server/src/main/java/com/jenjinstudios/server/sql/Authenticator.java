@@ -83,7 +83,7 @@ public class Authenticator
 			user.setLoggedIn(loggedIn);
 		} catch (SQLException e)
 		{
-			throw new LoginException("Unable to retrieve user " + username + " because of SQL Exception.");
+			throw new LoginException("Unable to retrieve user " + username + " because of SQL Exception.", e);
 		}
 		return user;
 	}
