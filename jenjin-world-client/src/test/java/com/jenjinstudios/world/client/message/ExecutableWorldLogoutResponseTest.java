@@ -1,28 +1,31 @@
 package com.jenjinstudios.world.client.message;
 
 import com.jenjinstudios.core.io.Message;
+import com.jenjinstudios.core.io.MessageRegistry;
+import com.jenjinstudios.world.client.WorldClient;
 import org.testng.annotations.Test;
 
-import static org.testng.Assert.assertFalse;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 /**
  * @author Caleb Brinkman
  */
-public class ExecutableWorldLogoutResponseTest extends WorldClientExecutableMessageTest
+public class ExecutableWorldLogoutResponseTest
 {
-	@Test(timeOut = 5000)
-	@Override
+	@Test
 	public void testMessageExecution() throws Exception {
+		MessageRegistry messageRegistry = new MessageRegistry();
 		Message worldLogoutResponse = messageRegistry.createMessage("WorldLogoutResponse");
 		worldLogoutResponse.setArgument("success", true);
-		inStreamReadMessage.thenReturn(worldLogoutResponse, blankMessageSpam);
 
-		worldClient.blockingStart();
-		worldClient.sendBlockingWorldFileRequest();
-		worldClient.sendBlockingLoginRequest();
-		worldClient.sendBlockingLogoutRequest();
-		Thread.sleep(500); // Sleep to allow client to "catch up"
+		WorldClient worldClient = mock(WorldClient.class);
 
-		assertFalse(worldClient.isLoggedIn());
+		ExecutableWorldLogoutResponse message = new ExecutableWorldLogoutResponse(worldClient, worldLogoutResponse);
+		message.runImmediate();
+		message.runDelayed();
+
+		verify(worldClient).setWaitingForLogoutResponse(false);
+		verify(worldClient).setLoggedIn(false);
 	}
 }
