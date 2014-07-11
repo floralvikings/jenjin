@@ -23,5 +23,6 @@ public class ServerUpdateTaskTest
 		loopTimer.scheduleAtFixedRate(serverUpdateTask, 0, 10);
 		Thread.sleep(2500);
 		Assert.assertEquals(serverUpdateTask.getAverageUPS(), 100, 1);
+		loopTimer.cancel();
 	}
 }
