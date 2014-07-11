@@ -7,11 +7,11 @@ allprojects {
 
 subprojects {
     apply plugin: 'java'
+    apply plugin: 'jacoco'
 
     repositories {
         mavenLocal()
-
-        mavenRepo url: "http://repo.maven.apache.org/maven2"
+        mavenCentral()
     }
 
     dependencies {
@@ -19,22 +19,11 @@ subprojects {
         testCompile 'org.mockito:mockito-all:1.9.5'
     }
 
-    tasks.withType(Compile) {
-        options.compilerArgs << "-Xlint:unchecked"
-    }
-
     test {
         useTestNG()
-        beforeTest { descriptor ->
-            logger.lifecycle("Running:\t" + descriptor)
-        }
-        afterTest { descriptor ->
-            logger.lifecycle("Complete:\t" + descriptor)
-        }
-        workingDir = project.rootDir
     }
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '1.12'
+    gradleVersion = '2.0'
 }
