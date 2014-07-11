@@ -66,6 +66,8 @@ public class MessageRegistry
 			 ZipInputStream zip = new ZipInputStream(inputStream))
 		{
 			searchZipEntries(jarMessageEntries, zip);
+			inputStream.close();
+			zip.close();
 		} catch (IOException ex)
 		{
 			LOGGER.log(Level.WARNING, "Unable to read JAR entry " + fileName, ex);
@@ -180,6 +182,7 @@ public class MessageRegistry
 				MessageXmlReader reader = new MessageXmlReader(inputStream);
 				addAllMessages(reader.readMessageTypes());
 				disabled.addAll(reader.readDisabledMessages());
+				inputStream.close();
 			} catch (Exception ex)
 			{
 				LOGGER.log(Level.INFO, "Unable to parse XML file", ex);
