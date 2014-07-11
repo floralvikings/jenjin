@@ -2,6 +2,7 @@ package com.jenjinstudios.server.sql;
 
 import com.jenjinstudios.server.net.User;
 import org.testng.Assert;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
 
 import java.sql.Connection;
@@ -64,44 +65,53 @@ public class AuthenticatorTest
 		Connection connection = createTestConnection();
 		Authenticator connector = new Authenticator(connection);
 		connector.lookUpUser("This User Doesn't Exist.");
+		connection.close();
 	}
 
 	@Test
 	public void testLogInUser() throws Exception {
-		Authenticator connector = new Authenticator(createTestConnection());
+		Connection connection = createTestConnection();
+		Authenticator connector = new Authenticator(connection);
 		String username = "TestAccount1";
 		String password = "testPassword";
 		connector.logInUser(username, password);
 		User user = connector.lookUpUser(username);
 		Assert.assertTrue(user.isLoggedIn());
+		connection.close();
 	}
 
 	@Test(expectedExceptions = LoginException.class)
 	public void testConcurrentLogins() throws Exception {
-		Authenticator connector = new Authenticator(createTestConnection());
+		Connection connection = createTestConnection();
+		Authenticator connector = new Authenticator(connection);
 		String username = "TestAccount1";
 		String password = "testPassword";
 		connector.logInUser(username, password);
 		// Concurrent login isn't aren't allowed.
 		connector.logInUser(username, password);
+		connection.close();
 	}
 
 	@Test
 	public void testLogOutUser() throws Exception {
-		Authenticator connector = new Authenticator(createTestConnection());
+		Connection connection = createTestConnection();
+		Authenticator connector = new Authenticator(connection);
 		String username = "TestAccount1";
 		String password = "testPassword";
 		connector.logInUser(username, password);
 		connector.logOutUser(username);
 		User user = connector.lookUpUser(username);
 		Assert.assertFalse(user.isLoggedIn());
+		connection.close();
 	}
 
 	@Test(expectedExceptions = LoginException.class)
 	public void testInvalidPassword() throws Exception {
-		Authenticator connector = new Authenticator(createTestConnection());
+		Connection connection = createTestConnection();
+		Authenticator connector = new Authenticator(connection);
 		String username = "TestAccount1";
 		String password = "incorrectPassword";
 		connector.logInUser(username, password);
+		connection.close();
 	}
 }
