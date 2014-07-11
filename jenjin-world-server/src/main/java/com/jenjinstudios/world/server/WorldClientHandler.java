@@ -17,77 +17,43 @@ import java.util.List;
  */
 public class WorldClientHandler extends ClientHandler
 {
-	/** The WorldServer owning this handler. */
-	private final WorldServer server;
-	/** The MessageFactory owned by this client handler. */
 	private final WorldServerMessageFactory messageFactory;
-	/** The ID of the player controlled by this client handler. */
-	private long playerID = -1;
-	/** The Actor managed by this handler. */
 	private Player player;
-	/** Whether this handler has sent the actor step length message. */
 	private boolean hasSentActorStepMessage;
 
-	/**
-	 * Construct a new Client Handler using the given socket.  When constructing a new ClientHandler,
-	 * it is necessary to
-	 * send the client a FirstConnectResponse message with the server's UPS
-	 * @param s The server for which this handler works.
-	 * @throws java.io.IOException If the socket is unable to connect.
-	 */
 	public WorldClientHandler(WorldServer s, MessageIO messageIO) throws IOException {
 		super(s, messageIO);
-		server = s;
-		this.messageFactory = new WorldServerMessageFactory(this, server.getMessageRegistry());
-	}
-
-	/**
-	 * Set the Actor managed by this handler.
-	 * @param player The player to be managed by this handler.
-	 */
-	public void setPlayer(Player player) {
-		this.player = player;
-		setPlayerID(player.getId());
-	}
-
-	/**
-	 * Set the player ID, id it is not already set.
-	 * @param id The new ID.
-	 */
-	protected void setPlayerID(long id) {
-		if (playerID == -1)
-			playerID = id;
+		this.messageFactory = new WorldServerMessageFactory(this, getServer().getMessageRegistry());
 	}
 
 	@Override
 	public void update() {
 		super.update();
-
 		if (!hasSentActorStepMessage)
 		{
 			queueOutgoingMessage(getMessageFactory().generateActorMoveSpeedMessage());
 			hasSentActorStepMessage = true;
 		}
+		if (player != null)
+		{
 
-		if (player == null)
-			return;
-
-		queueForcesStateMessage();
-		queueNewlyVisibleMessages();
-		queueNewlyInvisibleMessages();
-		queueStateChangeMessages();
+			queueForcesStateMessage();
+			queueNewlyVisibleMessages();
+			queueNewlyInvisibleMessages();
+			queueStateChangeMessages();
+		}
 	}
 
 	@Override
-	public WorldServer getServer() { return server; }
+	public WorldServer getServer() { return (WorldServer) super.getServer(); }
 
-	/**
-	 * Get the player associated with this client handler.
-	 * @return The player associated with this client handler.
-	 */
+	@Override
+	public WorldServerMessageFactory getMessageFactory() { return messageFactory; }
+
 	public Player getPlayer() { return player; }
 
-	/** Generate and queue messages for newly visible objects. */
+	public void setPlayer(Player player) { this.player = player; }
+
 	private void queueNewlyVisibleMessages() {
 		for (WorldObject object : player.getNewlyVisibleObjects())
 		{
@@ -97,7 +63,6 @@ public class WorldClientHandler extends ClientHandler
 		}
 	}
 
-	/** Generate and queue messages for newly invisible objects. */
 	private void queueNewlyInvisibleMessages() {
 		for (WorldObject object : player.getNewlyInvisibleObjects())
 		{
@@ -106,27 +71,24 @@ public class WorldClientHandler extends ClientHandler
 		}
 	}
 
-	/** Generate and queue messages for actors with changed states. */
 	private void queueStateChangeMessages() {
 		for (WorldObject object : player.getVisibleObjects().values())
 		{
-			Actor changedActor;
 			if (object instanceof Actor)
 			{
-				changedActor = (Actor) object;
-				List<Message> newState = getMessageFactory().generateChangeStateMessages(changedActor);
-				for (Message m : newState) { queueOutgoingMessage(m);}
+				queueActorStateChangeMessages((Actor) object);
 			}
 		}
 	}
 
-	/** Generate and queue a ForcedStateMessage if necessary. */
+	private void queueActorStateChangeMessages(Actor object) {
+		List<Message> newState = getMessageFactory().generateChangeStateMessages(object);
+		for (Message m : newState) { queueOutgoingMessage(m); }
+	}
+
 	private void queueForcesStateMessage() {
 		MoveState forcedState = player.getForcedState();
 		if (forcedState != null)
-			queueOutgoingMessage(getMessageFactory().generateForcedStateMessage(forcedState, server));
+			queueOutgoingMessage(getMessageFactory().generateForcedStateMessage(forcedState, getServer()));
 	}
-
-	@Override
-	public WorldServerMessageFactory getMessageFactory() { return messageFactory; }
 }
