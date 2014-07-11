@@ -38,7 +38,7 @@ public class ExecutableAESKeyMessageTest
 		message.setArgument("key", encryptedAESKey);
 
 		Client client = mock(Client.class);
-		when(client.getClientPrivateKey()).thenReturn(clientPrivateKey);
+		when(client.getPrivateKey()).thenReturn(clientPrivateKey);
 
 		ExecutableAESKeyMessage executableAESKeyMessage = new ExecutableAESKeyMessage(client, message);
 		executableAESKeyMessage.runImmediate();

@@ -200,7 +200,7 @@ public class ServerWorldFileTrackerTest
 	}
 
 	private Message getAesKeyMessage(MessageRegistry messageRegistry, WorldClient wc) throws Exception {
-		byte[] clientKey = wc.getClientPublicKey().getEncoded();
+		byte[] clientKey = wc.getPublicKey().getEncoded();
 		KeyGenerator keyGenerator = KeyGenerator.getInstance("AES");
 		keyGenerator.init(128);
 		byte[] aesKeyBytes = keyGenerator.generateKey().getEncoded();

@@ -44,7 +44,7 @@ public class ExecutableAESKeyMessage extends ClientExecutableMessage
 		byte[] decryptedAESKey = MessageInputStream.NO_KEY;
 		if (Arrays.equals(encryptedAESKey, MessageInputStream.NO_KEY))
 			return;
-		PrivateKey privateKey = getClient().getClientPrivateKey();
+		PrivateKey privateKey = getClient().getPrivateKey();
 		try
 		{
 			Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");

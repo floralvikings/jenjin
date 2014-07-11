@@ -31,9 +31,9 @@ public class Client extends Connection
 	/** The timer that manages the update loop. */
 	private Timer sendMessagesTimer;
 	/** The public key sent to the server. */
-	private PublicKey clientPublicKey;
+	private PublicKey publicKey;
 	/** The private key sent to the server. */
-	private PrivateKey clientPrivateKey;
+	private PrivateKey privateKey;
 	private volatile boolean initialized;
 
 	/**
@@ -46,8 +46,8 @@ public class Client extends Connection
 		this.messageFactory = new ClientMessageFactory(getMessageRegistry());
 	}
 
-	public PublicKey getClientPublicKey() {
-		return clientPublicKey;
+	public PublicKey getPublicKey() {
+		return publicKey;
 	}
 
 	/**
@@ -59,8 +59,8 @@ public class Client extends Connection
 			KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
 			keyPairGenerator.initialize(512);
 			KeyPair keyPair = keyPairGenerator.generateKeyPair();
-			clientPrivateKey = keyPair.getPrivate();
-			clientPublicKey = keyPair.getPublic();
+			privateKey = keyPair.getPrivate();
+			publicKey = keyPair.getPublic();
 		} catch (NoSuchAlgorithmException e)
 		{
 			LOGGER.log(Level.SEVERE, "Unable to create RSA key pair!", e);
@@ -116,7 +116,7 @@ public class Client extends Connection
 	 * Get the private key.
 	 * @return The private key.
 	 */
-	public PrivateKey getClientPrivateKey() { return clientPrivateKey; }
+	public PrivateKey getPrivateKey() { return privateKey; }
 
 	/**
 	 * Get the update period of this client.
@@ -137,7 +137,7 @@ public class Client extends Connection
 		period = 1000 / ups;
 
 		// Next, queue up the PublicKeyMessage used to exchange the encrypted AES key used for encryption.
-		Message publicKeyMessage = getMessageFactory().generatePublicKeyMessage(clientPublicKey);
+		Message publicKeyMessage = getMessageFactory().generatePublicKeyMessage(publicKey);
 		queueOutgoingMessage(publicKeyMessage);
 
 		// Finally, send a ping request to establish latency.
