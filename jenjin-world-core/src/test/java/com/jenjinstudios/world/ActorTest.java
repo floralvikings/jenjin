@@ -41,7 +41,7 @@ public class ActorTest
 		Angle angle = new Angle(0.0, Angle.FRONT);
 		actor.setAngle(angle);
 		world.update();
-		Thread.sleep(1000); // Sleep to move one MOVE_SPEED forward
+		Thread.sleep(100); // Sleep to move one MOVE_SPEED forward
 		world.update();
 		double distance = Vector2D.ORIGIN.getDistanceToVector(actor.getVector2D());
 		Assert.assertEquals(distance, Actor.MOVE_SPEED, 0.1);
@@ -55,10 +55,12 @@ public class ActorTest
 		Angle angle = new Angle(0.0, Angle.BACK);
 		actor.setAngle(angle);
 		world.update();
-		Thread.sleep(1000); // Sleep to move one MOVE_SPEED forward
+		long l = System.currentTimeMillis();
+		wait(100);
 		world.update();
+		l = System.currentTimeMillis() - l;
 		double distance = Vector2D.ORIGIN.getDistanceToVector(actor.getVector2D());
-		Assert.assertEquals(distance, 0, 0.1);
+		Assert.assertEquals(distance, Actor.MOVE_SPEED * ((double) l / 1000), 0.1);
 	}
 
 	@Test
