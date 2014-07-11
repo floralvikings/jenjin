@@ -13,19 +13,10 @@ import com.jenjinstudios.world.math.Vector2D;
  */
 public class ExecutableForceStateMessage extends WorldClientExecutableMessage
 {
-	/** The position to which to force the player. */
 	private Vector2D vector2D;
-	/** The relative angle to which to force the player. */
 	private Angle angle;
 
-	/**
-	 * Construct an ExecutableMessage with the given Message.
-	 * @param client The client invoking this message.
-	 * @param message The Message.
-	 */
-	public ExecutableForceStateMessage(WorldClient client, Message message) {
-		super(client, message);
-	}
+	public ExecutableForceStateMessage(WorldClient client, Message message) { super(client, message); }
 
 	@Override
 	public void runDelayed() {
