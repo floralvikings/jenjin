@@ -44,7 +44,7 @@ public final class ServerWorldFileTracker
 		writeServerWorldToFile();
 	}
 
-	protected byte[] getChecksum() { return checksum; }
+	public byte[] getChecksum() { return checksum; }
 
 	public void setChecksum(byte[] checksum) { this.checksum = checksum; }
 
@@ -52,7 +52,7 @@ public final class ServerWorldFileTracker
 
 	public void setBytes(byte[] bytes) { this.bytes = bytes; }
 
-	protected boolean isWaitingForChecksum() { return waitingForChecksum; }
+	public boolean isWaitingForChecksum() { return waitingForChecksum; }
 
 	public void setWaitingForChecksum(boolean bool) { this.waitingForChecksum = bool; }
 
