@@ -30,7 +30,8 @@ public class ClientHandler extends Connection
 	private User user;
 
 	/**
-	 * Construct a new Client Handler using the given socket.  When constructing a new ClientHandler, it is necessary to
+	 * Construct a new Client Handler using the given socket.  When constructing a new ClientHandler,
+	 * it is necessary to
 	 * send the client a FirstConnectResponse message with the server's UPS
 	 * @param s The server for which this handler works.
 	 * @throws IOException If the socket is unable to connect.
@@ -90,16 +91,14 @@ public class ClientHandler extends Connection
 		getServer().removeClient(this);
 	}
 
+	@Override
+	public ServerMessageFactory getMessageFactory() { return messageFactory; }
+
 	/**
 	 * The server.
 	 * @return The server for which this client handler works.
 	 */
 	public AuthServer<? extends ClientHandler> getServer() { return server; }
-
-	/**
-	 * Queue a message indicating the success or failure of a login attempt.
-	 */
-	public void setLoggedInTime(long loggedInTime) { this.loggedInTime = loggedInTime; }
 
 	/**
 	 * Queue a message indicating the success or failure of a logout attempt.
@@ -117,13 +116,15 @@ public class ClientHandler extends Connection
 	public long getLoggedInTime() { return loggedInTime; }
 
 	/**
+	 * Queue a message indicating the success or failure of a login attempt.
+	 */
+	public void setLoggedInTime(long loggedInTime) { this.loggedInTime = loggedInTime; }
+
+	/**
 	 * Get the ClientHandler ID for this client handler.
 	 * @return The ID of this client handler.
 	 */
 	public int getHandlerId() { return handlerId; }
-
-	@Override
-	public ServerMessageFactory getMessageFactory() { return messageFactory; }
 
 	public User getUser() { return user; }
 
