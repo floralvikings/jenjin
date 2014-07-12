@@ -3,6 +3,7 @@ package com.jenjinstudios.server.net;
 import com.jenjinstudios.core.Connection;
 import com.jenjinstudios.core.MessageIO;
 import com.jenjinstudios.core.io.Message;
+import com.jenjinstudios.core.io.MessageRegistry;
 import com.jenjinstudios.server.message.ServerMessageFactory;
 import com.jenjinstudios.server.sql.LoginException;
 
@@ -39,7 +40,7 @@ public class ClientHandler extends Connection
 		setName("ClientHandler"); // TODO Better name here?
 		server = s;
 
-		this.messageFactory = new ServerMessageFactory(this, server.getMessageRegistry());
+		this.messageFactory = new ServerMessageFactory(this, MessageRegistry.getInstance());
 	}
 
 	/**
