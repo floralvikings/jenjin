@@ -4,6 +4,8 @@ import com.jenjinstudios.server.net.User;
 import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.math.Vector2D;
 import com.jenjinstudios.world.server.Player;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import java.sql.*;
@@ -20,6 +22,8 @@ import static org.testng.Assert.*;
 public class WorldAuthenticatorTest
 {
 	private static int connectionNumber = 0;
+
+	private static Connection connection;
 
 	public static Connection createTestConnection() throws Exception {
 		Class.forName("org.h2.Driver");
@@ -51,9 +55,18 @@ public class WorldAuthenticatorTest
 		return testConnection;
 	}
 
+	@BeforeClass
+	public void setUpConnection() throws Exception {
+		connection = createTestConnection();
+	}
+
+	@AfterClass
+	public void closeConnection() throws Exception {
+		connection.close();
+	}
+
 	@Test
 	public void testLogInPlayer() throws Exception {
-		Connection connection = createTestConnection();
 		WorldAuthenticator worldAuthenticator = new WorldAuthenticator(connection);
 		User user = new User();
 		user.setUsername("TestAccount1");
@@ -68,10 +81,9 @@ public class WorldAuthenticatorTest
 
 	@Test
 	public void testLogInPlayerBadPassword() throws Exception {
-		Connection connection = createTestConnection();
 		WorldAuthenticator worldAuthenticator = new WorldAuthenticator(connection);
 		User user = new User();
-		user.setUsername("TestAccount1");
+		user.setUsername("TestAccount2");
 		user.setPassword("Not a correct password");
 
 		Player player = worldAuthenticator.logInPlayer(user);
@@ -81,13 +93,12 @@ public class WorldAuthenticatorTest
 
 	@Test
 	public void testAlreadyLoggedIn() throws Exception {
-		Connection connection = createTestConnection();
-		String query = "UPDATE users SET loggedin=1 WHERE username='TestAccount1'";
+		String query = "UPDATE users SET loggedin=1 WHERE username='TestAccount3'";
 		PreparedStatement statement = connection.prepareStatement(query);
 		statement.executeUpdate();
 		WorldAuthenticator worldAuthenticator = new WorldAuthenticator(connection);
 		User user = new User();
-		user.setUsername("TestAccount1");
+		user.setUsername("TestAccount3");
 		user.setPassword("testPassword");
 
 		Player player = worldAuthenticator.logInPlayer(user);
@@ -97,7 +108,6 @@ public class WorldAuthenticatorTest
 
 	@Test
 	public void testLogOutPlayer() throws Exception {
-		Connection connection = createTestConnection();
 		String query = "UPDATE users SET loggedin=1 WHERE username='TestAccount1'";
 		PreparedStatement statement = connection.prepareStatement(query);
 		statement.executeUpdate();
@@ -110,7 +120,6 @@ public class WorldAuthenticatorTest
 
 	@Test
 	public void testAlreadLoggedOut() throws Exception {
-		Connection connection = createTestConnection();
 		WorldAuthenticator worldAuthenticator = new WorldAuthenticator(connection);
 		Actor actor = mock(Actor.class);
 		when(actor.getName()).thenReturn("TestAccount1");
@@ -120,7 +129,6 @@ public class WorldAuthenticatorTest
 
 	@Test
 	public void testUpdatePlayer() throws Exception {
-		Connection connection = createTestConnection();
 		WorldAuthenticator worldAuthenticator = new WorldAuthenticator(connection);
 		Actor actor = mock(Actor.class);
 		when(actor.getName()).thenReturn("TestAccount1");
