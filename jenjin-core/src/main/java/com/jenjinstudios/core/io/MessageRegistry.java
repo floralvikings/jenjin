@@ -70,16 +70,18 @@ public class MessageRegistry
 
 	private static void seachJarFile(LinkedList<String> jarMessageEntries, String fileName) {
 		File file = new File(fileName);
-		if (file.isDirectory() || !file.exists()) { return; }
-		try (FileInputStream inputStream = new FileInputStream(file);
-			 ZipInputStream zip = new ZipInputStream(inputStream))
+		if (!file.isDirectory() && file.exists())
 		{
-			searchZipEntries(jarMessageEntries, zip);
-			inputStream.close();
-			zip.close();
-		} catch (IOException ex)
-		{
-			LOGGER.log(Level.WARNING, "Unable to read JAR entry " + fileName, ex);
+			try (FileInputStream inputStream = new FileInputStream(file);
+				 ZipInputStream zip = new ZipInputStream(inputStream))
+			{
+				searchZipEntries(jarMessageEntries, zip);
+				inputStream.close();
+				zip.close();
+			} catch (IOException ex)
+			{
+				LOGGER.log(Level.WARNING, "Unable to read JAR entry " + fileName, ex);
+			}
 		}
 	}
 
@@ -256,5 +258,23 @@ public class MessageRegistry
 		}
 	}
 
-	public Message createMessage(String name) { return new Message(name, this); }
+	public Message createMessage(String name) {
+		Message message = null;
+		MessageType messageType = getMessageType(name);
+		if (messageType == null)
+		{
+			LOGGER.log(Level.INFO, "Requested non-existant message {0}, refreshing XML registry", name);
+			// Try again after re-registering XML files
+			registerXmlMessages();
+			messageType = getMessageType(name);
+		}
+		if (messageType != null)
+		{
+			message = new Message(messageType);
+		} else
+		{
+			LOGGER.log(Level.WARNING, "Couldn't find {0} even after refreshing XML registry.", name);
+		}
+		return message;
+	}
 }

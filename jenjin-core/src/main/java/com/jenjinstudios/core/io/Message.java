@@ -51,11 +51,9 @@ public class Message
 	 * Construct a new Message using the MessageType specified by the given name; every argument in this message
 	 * must be
 	 * set using the {@code setArgument} method before it can be sent properly over socket.
-	 * @param name The name of the MessageType being filled by this message.
-	 * @param messageRegistry The message registry creating this message.
 	 */
-	Message(String name, MessageRegistry messageRegistry) {
-		messageType = messageRegistry.getMessageType(name);
+	Message(MessageType messageType) {
+		this.messageType = messageType;
 		this.name = messageType.name;
 		id = messageType.id;
 		argumentsByName = new TreeMap<>();

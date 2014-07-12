@@ -9,9 +9,7 @@ import com.jenjinstudios.server.sql.Authenticator;
 import org.mockito.Mockito;
 import org.testng.annotations.Test;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * @author Caleb Brinkman
@@ -20,21 +18,21 @@ public class ExecutableLogoutRequestTest
 {
 	@Test
 	public void testMessageExecution() throws Exception {
-		Message logoutRequest = MessageRegistry.getInstance().createMessage("LogoutRequest");
+		MessageRegistry messageRegistry = MessageRegistry.getInstance();
+		Message logoutRequest = messageRegistry.createMessage("LogoutRequest");
 
 		User user = new User();
 		user.setUsername("foo");
 		user.setUsername("bar");
 		ClientHandler clientHandler = mock(ClientHandler.class);
 		AuthServer server = mock(AuthServer.class);
-		ServerMessageFactory serverMessageFactory = new ServerMessageFactory(clientHandler,
-			  MessageRegistry.getInstance());
+		ServerMessageFactory serverMessageFactory = new ServerMessageFactory(clientHandler, messageRegistry);
 		Authenticator authenticator = mock(Authenticator.class);
 		when(server.getAuthenticator()).thenReturn(authenticator);
 		when(server.getCycleStartTime()).thenReturn(12345l);
 		when(authenticator.logOutUser(Mockito.<String>any())).thenReturn(new User());
 		when(clientHandler.getServer()).thenReturn(server);
-		when(clientHandler.getMessageRegistry()).thenReturn(MessageRegistry.getInstance());
+		when(clientHandler.getMessageRegistry()).thenReturn(messageRegistry);
 		when(clientHandler.getMessageFactory()).thenReturn(serverMessageFactory);
 		when(clientHandler.getUser()).thenReturn(user);
 
