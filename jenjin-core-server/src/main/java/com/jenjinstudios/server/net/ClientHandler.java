@@ -37,7 +37,7 @@ public class ClientHandler extends Connection
 	 */
 	public ClientHandler(AuthServer<? extends ClientHandler> s, MessageIO messageIO) {
 		super(messageIO);
-		setName("ClientHandler"); // TODO Better name here?
+		setName("ClientHandler with unset ID");
 		server = s;
 
 		this.messageFactory = new ServerMessageFactory(this, MessageRegistry.getInstance());
