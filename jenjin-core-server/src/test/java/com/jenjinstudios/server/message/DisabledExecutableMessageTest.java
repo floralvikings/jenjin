@@ -4,11 +4,11 @@ import com.jenjinstudios.core.Connection;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageRegistry;
 import com.jenjinstudios.core.message.ExecutableMessage;
+import com.jenjinstudios.server.net.ClientHandler;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * @author Caleb Brinkman
@@ -23,5 +23,17 @@ public class DisabledExecutableMessageTest
 		ExecutableMessage message =
 			  ExecutableMessage.getExecutableMessageFor(connection, disabledMessage);
 		Assert.assertNull(message);
+	}
+
+	@Test
+	public void testMessageExecution() {
+		ClientHandler handler = mock(ClientHandler.class);
+		Message message = mock(Message.class);
+
+		DisabledExecutableMessage disabledExecutableMessage = new DisabledExecutableMessage(handler, message);
+		disabledExecutableMessage.runImmediate();
+		disabledExecutableMessage.runDelayed();
+
+		verifyZeroInteractions(handler, message);
 	}
 }

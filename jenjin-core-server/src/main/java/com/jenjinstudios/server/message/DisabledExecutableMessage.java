@@ -27,8 +27,7 @@ public class DisabledExecutableMessage extends ServerExecutableMessage
 
 	/** Run the synced portion of this message. */
 	@Override
-	public void runDelayed() {
-	}
+	public void runDelayed() { }
 
 	/** Run asynchronous portion of this message. */
 	@Override
