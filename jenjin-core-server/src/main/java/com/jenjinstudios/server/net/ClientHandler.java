@@ -65,8 +65,7 @@ public class ClientHandler extends Connection
 	}
 
 	/** Update anything that needs to be taken care of before sendAllMessages. */
-	public void update() {
-	}
+	public void update() { }
 
 	/** Reset anything that needs to be taken care of after sendAllMessages. */
 	@SuppressWarnings("EmptyMethod")
