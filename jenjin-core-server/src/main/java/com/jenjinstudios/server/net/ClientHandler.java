@@ -6,7 +6,6 @@ import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.server.message.ServerMessageFactory;
 import com.jenjinstudios.server.sql.LoginException;
 
-import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -34,9 +33,8 @@ public class ClientHandler extends Connection
 	 * it is necessary to
 	 * send the client a FirstConnectResponse message with the server's UPS
 	 * @param s The server for which this handler works.
-	 * @throws IOException If the socket is unable to connect.
 	 */
-	public ClientHandler(AuthServer<? extends ClientHandler> s, MessageIO messageIO) throws IOException {
+	public ClientHandler(AuthServer<? extends ClientHandler> s, MessageIO messageIO) {
 		super(messageIO);
 		setName("ClientHandler"); // TODO Better name here?
 		server = s;
