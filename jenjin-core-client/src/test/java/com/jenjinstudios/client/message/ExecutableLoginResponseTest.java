@@ -29,5 +29,6 @@ public class ExecutableLoginResponseTest
 		executableLoginResponse.runDelayed();
 
 		verify(authClient).setLoggedInTime(12345l);
+		verify(authClient).setWaitingForLoginResponse(false);
 	}
 }
