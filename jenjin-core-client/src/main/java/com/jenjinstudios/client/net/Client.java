@@ -26,8 +26,6 @@ public class Client extends Connection
 	private final List<Runnable> repeatedTasks;
 	/** The message factory used by this client. */
 	private final ClientMessageFactory messageFactory;
-	/** The period of the update in milliseconds. */
-	private int period;
 	/** The timer that manages the update loop. */
 	private Timer sendMessagesTimer;
 	/** The public key sent to the server. */
@@ -119,12 +117,6 @@ public class Client extends Connection
 	public PrivateKey getPrivateKey() { return privateKey; }
 
 	/**
-	 * Get the update period of this client.
-	 * @return The update period of this client.
-	 */
-	public int getPeriod() { return period; }
-
-	/**
 	 * Take care of all the necessary initialization messages between client and server.  These include things like RSA
 	 * key exchanges and latency checks.
 	 */
@@ -134,10 +126,11 @@ public class Client extends Connection
 			throw new IllegalStateException("Trying to perform connection init when already initialized.");
 		}
 		int ups = (int) firstConnectResponse.getArgument("ups");
-		period = 1000 / ups;
+		/* The period of the update in milliseconds. */
+		int period = 1000 / ups;
 
 		// Next, queue up the PublicKeyMessage used to exchange the encrypted AES key used for encryption.
-		Message publicKeyMessage = getMessageFactory().generatePublicKeyMessage(publicKey);
+		Message publicKeyMessage = messageFactory.generatePublicKeyMessage(publicKey);
 		queueOutgoingMessage(publicKeyMessage);
 
 		// Finally, send a ping request to establish latency.
@@ -150,14 +143,11 @@ public class Client extends Connection
 	}
 
 	/** Run the repeated synchronized tasks. */
-	void runRepeatedTasks() {
+	protected void runRepeatedTasks() {
 		synchronized (repeatedTasks)
 		{
 			for (Runnable r : repeatedTasks)
 				r.run();
 		}
 	}
-
-	@Override
-	public ClientMessageFactory getMessageFactory() { return messageFactory; }
 }

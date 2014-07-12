@@ -1,7 +1,5 @@
-package com.jenjinstudios.client;
+package com.jenjinstudios.client.net;
 
-import com.jenjinstudios.client.net.AuthClient;
-import com.jenjinstudios.client.net.ClientUser;
 import com.jenjinstudios.core.MessageIO;
 import org.testng.Assert;
 import org.testng.annotations.Test;
