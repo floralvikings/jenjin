@@ -47,10 +47,12 @@ public class ClientHandler extends Connection
 	 * Send a connection acknowledgement response.
 	 */
 	public void sendFirstConnectResponse() {
-		if (firstConnectResponseSent) return;
-		Message firstConnectResponse = getMessageFactory().generateFirstConnectResponse(getServer().UPS);
-		queueOutgoingMessage(firstConnectResponse);
-		firstConnectResponseSent = true;
+		if (!firstConnectResponseSent)
+		{
+			Message firstConnectResponse = getMessageFactory().generateFirstConnectResponse(getServer().UPS);
+			queueOutgoingMessage(firstConnectResponse);
+			firstConnectResponseSent = true;
+		}
 	}
 
 	/**
