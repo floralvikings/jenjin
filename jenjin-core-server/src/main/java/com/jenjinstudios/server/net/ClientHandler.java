@@ -69,7 +69,6 @@ public class ClientHandler extends Connection
 	public void update() { }
 
 	/** Reset anything that needs to be taken care of after sendAllMessages. */
-	@SuppressWarnings("EmptyMethod")
 	public void refresh() { }
 
 	/** Shut down the client handler. */
