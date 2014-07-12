@@ -22,12 +22,12 @@ public class ExecutableLoginResponse extends AuthClientExecutableMessage
 	@Override
 	public void runDelayed() {
 		AuthClient client = getClient();
-		client.setWaitingForLoginResponse(false);
 		client.setLoggedIn((boolean) getMessage().getArgument("success"));
-		if (!client.isLoggedIn())
-			return;
-		client.setLoggedInTime((long) getMessage().getArgument("loginTime"));
-		client.setName("Client: " + client.getUser().getUsername());
+		if (client.isLoggedIn())
+		{
+			client.setLoggedInTime((long) getMessage().getArgument("loginTime"));
+			client.setName("Client: " + client.getUser().getUsername());
+		}
 	}
 
 	@Override

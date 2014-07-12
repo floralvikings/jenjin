@@ -1,10 +1,6 @@
 package com.jenjinstudios.client.net;
 
 import com.jenjinstudios.core.MessageIO;
-import com.jenjinstudios.core.io.Message;
-
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * The {@code AuthClient} class is a {@code Client} with the ability to store user information and attempt to log into a
@@ -13,45 +9,15 @@ import java.util.logging.Logger;
  */
 public class AuthClient extends Client
 {
-	/** The logger associated with this class. */
-	private static final Logger LOGGER = Logger.getLogger(AuthClient.class.getName());
-	/** The number of milliseconds before a blocking method should time out. */
-	private static final long TIMEOUT_MILLIS = 30000;
 	private final ClientUser user;
 	/** Whether the user is logged in. */
 	private boolean loggedIn;
 	/** The time at which this client was successfully logged in. */
 	private long loggedInTime;
-	/** flags whether the login response has been received. */
-	private volatile boolean waitingForLoginResponse;
-	/** flags whether the logout response has been received. */
-	private volatile boolean waitingForLogoutResponse;
 
 	public AuthClient(MessageIO messageIO, ClientUser user) {
 		super(messageIO);
 		this.user = user;
-	}
-
-	/**
-	 * Queue a message to log into the server with the given username and password, and wait for the response.
-	 * @return If the login was successful.
-	 */
-	public boolean sendBlockingLoginRequest() {
-		sendLoginRequest();
-		long startTime = System.currentTimeMillis();
-		long timePast = System.currentTimeMillis() - startTime;
-		while (isWaitingForLoginResponse() && (timePast < TIMEOUT_MILLIS))
-		{
-			try
-			{
-				Thread.sleep(10);
-			} catch (InterruptedException e)
-			{
-				LOGGER.log(Level.WARNING, "Interrupted while waiting for login response.", e);
-			}
-			timePast = System.currentTimeMillis() - startTime;
-		}
-		return isLoggedIn();
 	}
 
 	/**
@@ -64,103 +30,24 @@ public class AuthClient extends Client
 	 * Set whether this client is logged in.
 	 * @param l Whether this client is logged in.
 	 */
-	public void setLoggedIn(boolean l) {
-		loggedIn = l;
-	}
-
-	/** Send a login request to the server. */
-	private void sendLoginRequest() {
-		Message loginRequest = getMessageFactory().generateLoginRequest(user);
-
-		// Send the request, continue when the response is received.
-		setWaitingForLoginResponse(true);
-		queueOutgoingMessage(loginRequest);
-	}
-
-	/**
-	 * Set whether this client has received a login response.
-	 * @param waitingForLoginResponse Whether this client has received a login response.
-	 */
-	public void setWaitingForLoginResponse(boolean waitingForLoginResponse) {
-		this.waitingForLoginResponse = waitingForLoginResponse;
-	}
-
-	/**
-	 * Get whether this client has received a login response.
-	 * @return Whether the client has received a login response.
-	 */
-	protected boolean isWaitingForLoginResponse() {
-		return waitingForLoginResponse;
-	}
-
-	/**
-	 * Queue a message to log the user out of the server.
-	 * @return Whether the logout request was successful.
-	 */
-	public boolean sendBlockingLogoutRequest() {
-		sendLogoutRequest();
-		long startTime = System.currentTimeMillis();
-		long timePast = System.currentTimeMillis() - startTime;
-		while (isWaitingForLogoutResponse() && (timePast < TIMEOUT_MILLIS))
-		{
-			try
-			{
-				Thread.sleep(10);
-			} catch (InterruptedException e)
-			{
-				LOGGER.log(Level.WARNING, "Interrupted while waiting for login response.", e);
-			}
-			timePast = System.currentTimeMillis() - startTime;
-		}
-		return !isLoggedIn();
-	}
-
-	/** Send a logout request to the server. */
-	protected void sendLogoutRequest() {
-		Message logoutRequest = getMessageFactory().generateLogoutRequest();
-
-		// Send the request, continue when response is received.
-		setWaitingForLogoutResponse(true);
-		queueOutgoingMessage(logoutRequest);
-	}
-
-	/**
-	 * Set whether this client has received a logout response.
-	 * @param waitingForLogoutResponse Whether this client has received a logout response.
-	 */
-	public void setWaitingForLogoutResponse(boolean waitingForLogoutResponse) {
-		this.waitingForLogoutResponse = waitingForLogoutResponse;
-	}
-
-	/**
-	 * Get whether this client has received a logout response.
-	 * @return Whether this client has received a logout response.
-	 */
-	boolean isWaitingForLogoutResponse() {
-		return waitingForLogoutResponse;
-	}
+	public void setLoggedIn(boolean l) { loggedIn = l; }
 
 	/**
 	 * Get the username of this client.
 	 * @return The username of this client.
 	 */
-	public ClientUser getUser() {
-		return user;
-	}
+	public ClientUser getUser() { return user; }
 
 	/**
 	 * Get the time at which this client was successfully logged in.
 	 * @return The time of the start of the server cycle during which this client was logged in.
 	 */
-	public long getLoggedInTime() {
-		return loggedInTime;
-	}
+	public long getLoggedInTime() { return loggedInTime; }
 
 	/**
 	 * Set the logged in time for this client.
 	 * @param loggedInTime The logged in time for this client.
 	 */
-	public void setLoggedInTime(long loggedInTime) {
-		this.loggedInTime = loggedInTime;
-	}
+	public void setLoggedInTime(long loggedInTime) { this.loggedInTime = loggedInTime; }
+
 }

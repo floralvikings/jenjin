@@ -25,7 +25,6 @@ public class ExecutableWorldLogoutResponseTest
 		message.runImmediate();
 		message.runDelayed();
 
-		verify(worldClient).setWaitingForLogoutResponse(false);
 		verify(worldClient).setLoggedIn(false);
 	}
 }

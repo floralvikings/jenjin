@@ -37,7 +37,6 @@ public class ExecutableWorldLoginResponseTest
 		response.runImmediate();
 		response.runDelayed();
 
-		verify(worldClient).setWaitingForLoginResponse(false);
 		verify(worldClient).setLoggedIn(true);
 		verify(worldClient).setLoggedInTime(0l);
 		verify(worldClient).setPlayer((ClientPlayer) any());

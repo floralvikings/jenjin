@@ -27,7 +27,6 @@ public class ExecutableWorldLoginResponse extends WorldClientExecutableMessage
 	@Override
 	public void runDelayed() {
 		WorldClient client = getClient();
-		client.setWaitingForLoginResponse(false);
 		boolean success = (boolean) getMessage().getArgument("success");
 		client.setLoggedIn(success);
 		if (success)

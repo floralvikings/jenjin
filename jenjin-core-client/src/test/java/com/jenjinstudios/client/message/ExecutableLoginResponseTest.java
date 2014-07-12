@@ -4,6 +4,7 @@ import com.jenjinstudios.client.net.AuthClient;
 import com.jenjinstudios.client.net.ClientUser;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageRegistry;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.*;
@@ -23,12 +24,13 @@ public class ExecutableLoginResponseTest
 		AuthClient authClient = mock(AuthClient.class);
 		when(authClient.isLoggedIn()).thenReturn(true);
 		when(authClient.getUser()).thenReturn(user);
+		when(authClient.getLoggedInTime()).thenReturn(12345l);
 
 		ExecutableLoginResponse executableLoginResponse = new ExecutableLoginResponse(authClient, loginResponse);
 		executableLoginResponse.runImmediate();
 		executableLoginResponse.runDelayed();
 
 		verify(authClient).setLoggedInTime(12345l);
-		verify(authClient).setWaitingForLoginResponse(false);
+		Assert.assertEquals(authClient.getLoggedInTime(), 12345l);
 	}
 }

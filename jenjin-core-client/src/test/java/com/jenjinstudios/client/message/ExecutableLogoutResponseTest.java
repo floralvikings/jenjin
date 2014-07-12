@@ -24,7 +24,6 @@ public class ExecutableLogoutResponseTest
 		executableLogoutResponse.runImmediate();
 		executableLogoutResponse.runDelayed();
 
-		verify(authClient).setWaitingForLogoutResponse(false);
 		verify(authClient).setLoggedIn(false);
 	}
 }
