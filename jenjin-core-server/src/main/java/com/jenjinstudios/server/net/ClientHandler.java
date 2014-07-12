@@ -73,11 +73,8 @@ public class ClientHandler extends Connection
 	/** Shut down the client handler. */
 	@Override
 	public void shutdown() {
-		// Try and log out if not already.  This is an "emergency" logout because the connection closed without a
-		// proper logout, so we handle the query directly instead of in an executable message.
 		if (getUser() != null)
 		{
-			getServer().associateUsernameWithClientHandler(getUser().getUsername(), null);
 			try
 			{
 				server.getAuthenticator().logOutUser(user.getUsername());
