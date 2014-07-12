@@ -34,19 +34,19 @@ public class ExecutableLogoutRequest extends ServerExecutableMessage
 	public void runImmediate() {
 		ClientHandler handler = getClientHandler();
 		User user = handler.getUser();
-		if (authenticator == null || user == null)
-			return;
-		String username = user.getUsername();
-		try
+		if (authenticator != null && user != null)
 		{
-			user = authenticator.logOutUser(username);
-			handler.sendLogoutStatus(!user.isLoggedIn());
-			handler.getServer().associateUsernameWithClientHandler(username, null);
-			handler.setUser(null);
-		} catch (LoginException e)
-		{
-			handler.sendLogoutStatus(false);
+			String username = user.getUsername();
+			try
+			{
+				user = authenticator.logOutUser(username);
+				handler.sendLogoutStatus(!user.isLoggedIn());
+				handler.getServer().associateUsernameWithClientHandler(username, null);
+				handler.setUser(null);
+			} catch (LoginException e)
+			{
+				handler.sendLogoutStatus(false);
+			}
 		}
 	}
-
 }
