@@ -59,7 +59,7 @@ public class ClientHandler extends Connection
 	 * Set the id for this handler.
 	 * @param id The new id number for the handler.
 	 */
-	public void setID(int id) {
+	public void setHandlerId(int id) {
 		handlerId = id;
 		super.setName("Client Handler " + handlerId);
 	}

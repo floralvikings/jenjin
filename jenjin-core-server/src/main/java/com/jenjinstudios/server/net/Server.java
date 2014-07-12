@@ -72,7 +72,7 @@ public class Server<T extends ClientHandler> extends Thread
 		{
 			int nullIndex = clientHandlers.indexOf(null);
 			clientHandlers.set(nullIndex, h);
-			h.setID(nullIndex);
+			h.setHandlerId(nullIndex);
 			h.start();
 			numClients++;
 		}
