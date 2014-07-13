@@ -68,11 +68,12 @@ class ClientListener<T extends ClientHandler> implements Runnable
 		LinkedList<T> temp = new LinkedList<>();
 		synchronized (newClientHandlers)
 		{
-			if (newClientHandlers.isEmpty())
-				return temp;
-			Server.LOGGER.log(Level.FINE, newClientHandlers.peek().toString());
-			temp = new LinkedList<>(newClientHandlers);
-			newClientHandlers.removeAll(temp);
+			if (!newClientHandlers.isEmpty())
+			{
+				Server.LOGGER.log(Level.FINE, newClientHandlers.peek().toString());
+				temp = new LinkedList<>(newClientHandlers);
+				newClientHandlers.removeAll(temp);
+			}
 		}
 		return temp;
 	}
@@ -91,11 +92,12 @@ class ClientListener<T extends ClientHandler> implements Runnable
 	 * @param tServer The server
 	 */
 	public void startListening(Server<T> tServer) {
-		if (listening)
-			return;
-		this.server = tServer;
-		listening = true;
-		new Thread(this, "Client Listener " + PORT).start();
+		if (!listening)
+		{
+			this.server = tServer;
+			listening = true;
+			new Thread(this, "Client Listener " + PORT).start();
+		}
 	}
 
 	/**
