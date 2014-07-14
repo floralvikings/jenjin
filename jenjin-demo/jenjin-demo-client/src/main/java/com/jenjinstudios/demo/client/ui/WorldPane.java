@@ -2,16 +2,21 @@ package com.jenjinstudios.demo.client.ui;
 
 import com.jenjinstudios.world.Location;
 import com.jenjinstudios.world.client.ClientPlayer;
+import com.jenjinstudios.world.math.Angle;
+import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.geometry.Dimension2D;
 import javafx.scene.Group;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 
 /**
  * @author Caleb Brinkman
  */
-public class WorldPane extends Group
+public class WorldPane extends Group implements EventHandler<KeyEvent>
 {
 	private static final double SCALE = 100;
 	private static final double OBJECT_SCALE = 25;
@@ -24,6 +29,15 @@ public class WorldPane extends Group
 		this.canvas = new Canvas(size.getWidth(), size.getHeight());
 		this.clientPlayer = clientPlayer;
 		getChildren().add(canvas);
+		setOnKeyPressed(this);
+		setOnKeyReleased(this);
+		Platform.runLater(new Runnable()
+		{
+			@Override
+			public void run() {
+				requestFocus();
+			}
+		});
 	}
 
 	public void drawWorld() {
@@ -52,12 +66,12 @@ public class WorldPane extends Group
 	public void drawLocation(Canvas canvas, Location location) {
 		Location pLoc = clientPlayer.getLocation();
 		int xDiff = location.X_COORDINATE - pLoc.X_COORDINATE;
-		int yDiff = location.Y_COORDINATE - pLoc.Y_COORDINATE;
+		int yDiff = location.Y_COORDINATE - pLoc.Y_COORDINATE + 1;
 		double xBuff = clientPlayer.getVector2D().getXCoordinate() % Location.SIZE;
 		double yBuff = clientPlayer.getVector2D().getYCoordinate() % Location.SIZE;
 
 		double x = canvas.getWidth() / 2 + (xDiff * SCALE - xBuff);
-		double y = canvas.getHeight() / 2 + (yDiff * SCALE - yBuff);
+		double y = canvas.getHeight() / 2 - (yDiff * SCALE - yBuff);
 
 		GraphicsContext graphicsContext2D = canvas.getGraphicsContext2D();
 		graphicsContext2D.setFill(Color.WHITE);
@@ -76,4 +90,22 @@ public class WorldPane extends Group
 		graphicsContext2D.fillRect(x, y, OBJECT_SCALE, OBJECT_SCALE);
 	}
 
+	@Override
+	public void handle(KeyEvent keyEvent) {
+		if (keyEvent.getCode().equals(KeyCode.UP))
+		{
+			if (keyEvent.getEventType() == KeyEvent.KEY_PRESSED)
+			{
+				Angle angle = new Angle(0.0, Angle.LEFT);
+				if (!clientPlayer.getAngle().equals(angle))
+				{
+					clientPlayer.setAngle(angle);
+					System.out.println(clientPlayer.getVector2D());
+				}
+			} else
+			{
+				clientPlayer.setAngle(new Angle(0.0, Angle.IDLE));
+			}
+		}
+	}
 }
