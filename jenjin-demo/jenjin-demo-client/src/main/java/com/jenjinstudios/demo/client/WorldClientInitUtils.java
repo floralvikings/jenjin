@@ -17,7 +17,7 @@ import java.net.Socket;
  */
 public class WorldClientInitUtils
 {
-	static boolean tryLogin(WorldClient worldClient) {
+	public static boolean tryLogin(WorldClient worldClient) {
 		boolean success = false;
 		try
 		{
@@ -30,7 +30,7 @@ public class WorldClientInitUtils
 		return success;
 	}
 
-	static boolean tryRequestWorldFile(WorldClient worldClient) {
+	public static boolean tryRequestWorldFile(WorldClient worldClient) {
 		boolean success = false;
 		try
 		{
@@ -43,11 +43,11 @@ public class WorldClientInitUtils
 		return success;
 	}
 
-	static WorldClient tryCreateWorldClient(String address, int port, String username, String password) {
+	public static WorldClient tryCreateWorldClient(String address, int port, ClientUser user) {
 		WorldClient worldClient;
 		try
 		{
-			worldClient = createWorldClient(address, port, username, password);
+			worldClient = createWorldClient(address, port, user);
 		} catch (IOException | WorldDocumentException e)
 		{
 			e.printStackTrace();
@@ -71,10 +71,9 @@ public class WorldClientInitUtils
 		worldClient.getServerWorldFileTracker().writeReceivedWorldToFile();
 	}
 
-	private static WorldClient createWorldClient(String address, int port, String username, String password)
+	private static WorldClient createWorldClient(String address, int port, ClientUser clientUser)
 		  throws IOException, WorldDocumentException
 	{
-		ClientUser clientUser = new ClientUser(username, password);
 		File worldFile = new File(System.getProperty("user.home") + "/jenjin/World.xml");
 		Socket socket = new Socket(address, port);
 		MessageInputStream messageInputStream = new MessageInputStream(socket.getInputStream());

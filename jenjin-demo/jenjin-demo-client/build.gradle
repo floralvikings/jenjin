@@ -5,7 +5,7 @@ dependencies {
 }
 
 javafx {
-    mainClass = 'com.jenjinstudios.demo.client.Main'
+    mainClass = 'com.jenjinstudios.demo.client.JenjinDemoClient'
 }
 
 jfxDeploy {
