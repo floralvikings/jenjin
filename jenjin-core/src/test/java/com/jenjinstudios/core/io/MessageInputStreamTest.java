@@ -28,7 +28,7 @@ public class MessageInputStreamTest
 
 		InputStream inputStream = dataInputStreamMock.getIn();
 
-		MessageInputStream messageInputStream = new MessageInputStream(mr, inputStream);
+		MessageInputStream messageInputStream = new MessageInputStream(inputStream);
 		Message message = messageInputStream.readMessage();
 		messageInputStream.close();
 
@@ -45,7 +45,7 @@ public class MessageInputStreamTest
 
 		InputStream is = mock.getIn();
 
-		MessageInputStream mis = new MessageInputStream(mr, is);
+		MessageInputStream mis = new MessageInputStream(is);
 		mis.readMessage();
 	}
 
@@ -57,7 +57,7 @@ public class MessageInputStreamTest
 		mock.mockReadUtf("FooBar");
 
 		InputStream is = mock.getIn();
-		MessageInputStream mis = new MessageInputStream(mr, is);
+		MessageInputStream mis = new MessageInputStream(is);
 		Message msg = mis.readMessage();
 		mis.close();
 
@@ -85,7 +85,7 @@ public class MessageInputStreamTest
 		mock.mockReadUtf(encryptedString);
 
 		InputStream is = mock.getIn();
-		MessageInputStream mis = new MessageInputStream(mr, is);
+		MessageInputStream mis = new MessageInputStream(is);
 		mis.setAESKey(key);
 		Message msg = mis.readMessage();
 		mis.close();
@@ -121,7 +121,7 @@ public class MessageInputStreamTest
 		mock.mockReadUtf("Lumberjack");
 
 		InputStream in = mock.getIn();
-		MessageInputStream mis = new MessageInputStream(mr, in);
+		MessageInputStream mis = new MessageInputStream(in);
 		Message msg = mis.readMessage();
 		mis.close();
 

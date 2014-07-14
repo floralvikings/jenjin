@@ -19,7 +19,7 @@ public class MessageOutputStreamTest
 	@Test
 	public void testWriteMessage() throws Exception {
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		MessageOutputStream mos = new MessageOutputStream(mr, bos);
+		MessageOutputStream mos = new MessageOutputStream(bos);
 
 		Message msg = mr.createMessage("InvalidMessage");
 		msg.setArgument("messageID", (short) -255);
@@ -30,7 +30,7 @@ public class MessageOutputStreamTest
 		mos.close();
 
 		ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
-		MessageInputStream mis = new MessageInputStream(mr, bis);
+		MessageInputStream mis = new MessageInputStream(bis);
 		Message readMsg = mis.readMessage();
 		Assert.assertEquals(readMsg.getArgs(), msg.getArgs());
 	}
@@ -38,7 +38,7 @@ public class MessageOutputStreamTest
 	@Test(expectedExceptions = {IOException.class})
 	public void testEncryptedMessageNoAESKey() throws Exception {
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		MessageOutputStream mos = new MessageOutputStream(mr, bos);
+		MessageOutputStream mos = new MessageOutputStream(bos);
 
 		Message msg = mr.createMessage("TestEncryptedMessage");
 		msg.setArgument("encryptedString", "FooBar");
@@ -53,7 +53,7 @@ public class MessageOutputStreamTest
 		byte[] key = keyGenerator.generateKey().getEncoded();
 
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		MessageOutputStream mos = new MessageOutputStream(mr, bos);
+		MessageOutputStream mos = new MessageOutputStream(bos);
 		mos.setAesKey(key);
 
 		Message msg = mr.createMessage("TestEncryptedMessage");
@@ -76,7 +76,7 @@ public class MessageOutputStreamTest
 	@Test
 	public void testAllTypesMessage() throws Exception {
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		MessageOutputStream mos = new MessageOutputStream(mr, bos);
+		MessageOutputStream mos = new MessageOutputStream(bos);
 		Message msg = mr.createMessage("TestAllTypesMessage");
 		msg.setArgument("testString", "SNAFU");
 		msg.setArgument("testInt", 123);
@@ -93,7 +93,7 @@ public class MessageOutputStreamTest
 		mos.close();
 
 		ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
-		MessageInputStream mis = new MessageInputStream(mr, bis);
+		MessageInputStream mis = new MessageInputStream(bis);
 		Message readMsg = mis.readMessage();
 		Assert.assertEquals(readMsg.getArgs(), msg.getArgs());
 	}

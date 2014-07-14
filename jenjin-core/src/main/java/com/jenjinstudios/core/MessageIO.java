@@ -13,10 +13,10 @@ public class MessageIO
 	private final MessageOutputStream out;
 	private final MessageRegistry mr;
 
-	public MessageIO(MessageInputStream in, MessageOutputStream out, MessageRegistry mr) {
+	public MessageIO(MessageInputStream in, MessageOutputStream out) {
 		this.in = in;
 		this.out = out;
-		this.mr = mr;
+		this.mr = MessageRegistry.getInstance();
 	}
 
 	public MessageInputStream getIn() { return in; }

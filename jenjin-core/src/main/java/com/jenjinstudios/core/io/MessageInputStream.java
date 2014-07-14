@@ -32,12 +32,11 @@ public class MessageInputStream extends DataInputStream
 
 	/**
 	 * Construct a new {@code MessageInputStream} from the given InputStream.
-	 * @param messageRegistry The messageRegistry using this stream.
 	 * @param inputStream The InputStream from which messages will be read.
 	 */
-	public MessageInputStream(MessageRegistry messageRegistry, InputStream inputStream) {
+	public MessageInputStream(InputStream inputStream) {
 		super(inputStream);
-		this.messageRegistry = messageRegistry;
+		this.messageRegistry = MessageRegistry.getInstance();
 	}
 
 	/**

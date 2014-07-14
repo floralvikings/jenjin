@@ -42,7 +42,8 @@ class ClientListener<T extends ClientHandler> implements Runnable
 	 * @throws NoSuchMethodException If there is no appropriate constructor for the specified ClientHandler
 	 * constructor.
 	 */
-	public ClientListener(Class<? extends Server> serverClass, ClientListenerInit<T> init) throws IOException, NoSuchMethodException {
+	public ClientListener(Class<? extends Server> serverClass, ClientListenerInit<T> init) throws IOException,
+		  NoSuchMethodException {
 		PORT = init.getPort();
 		Class<T> handlerClass = init.getHandlerClass();
 		/* The class of client handlers created by this listener. */
@@ -51,7 +52,8 @@ class ClientListener<T extends ClientHandler> implements Runnable
 			handlerConstructor = init.getHandlerClass().getConstructor(serverClass, MessageIO.class);
 		} catch (NoSuchMethodException e)
 		{
-			LOGGER.log(Level.SEVERE, "Unable to find appropriate ClientHandler constructor: " + handlerClass.getName(), e);
+			LOGGER.log(Level.SEVERE, "Unable to find appropriate ClientHandler constructor: " + handlerClass.getName()
+				  , e);
 			throw e;
 		}
 		listening = false;
@@ -117,7 +119,7 @@ class ClientListener<T extends ClientHandler> implements Runnable
 	private void addNewClient(MessageInputStream in, MessageOutputStream out) {
 		try
 		{
-			MessageIO messageIO = new MessageIO(in, out, server.getMessageRegistry());
+			MessageIO messageIO = new MessageIO(in, out);
 			T newHandler = handlerConstructor.newInstance(server, messageIO);
 			newHandler.sendFirstConnectResponse();
 			addNewClient(newHandler);
@@ -137,8 +139,8 @@ class ClientListener<T extends ClientHandler> implements Runnable
 			try
 			{
 				Socket sock = serverSock.accept();
-				MessageInputStream in = new MessageInputStream(server.getMessageRegistry(), sock.getInputStream());
-				MessageOutputStream out = new MessageOutputStream(server.getMessageRegistry(), sock.getOutputStream());
+				MessageInputStream in = new MessageInputStream(sock.getInputStream());
+				MessageOutputStream out = new MessageOutputStream(sock.getOutputStream());
 				addNewClient(in, out);
 			} catch (SocketException ignored)
 			{

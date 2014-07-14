@@ -176,7 +176,7 @@ public class ServerWorldFileTrackerTest
 
 		MessageInputStream inputStream = Mockito.mock(MessageInputStream.class);
 		MessageOutputStream outputStream = Mockito.mock(MessageOutputStream.class);
-		MessageIO messageIO = new MessageIO(inputStream, outputStream, messageRegistry);
+		MessageIO messageIO = new MessageIO(inputStream, outputStream);
 		ClientUser clientUser = new ClientUser("Foo", "Bar");
 		WorldClient wc = new WorldClient(messageIO, clientUser, new File("resources/ServerWorldFileTracker.xml"));
 

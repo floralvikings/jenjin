@@ -30,13 +30,12 @@ public class MessageOutputStream extends DataOutputStream
 	/**
 	 * Creates a new message output stream to write data to the specified underlying output stream. The counter {@code
 	 * written} is set to zero.
-	 * @param messageRegistry The messageRegistry using this stream.
 	 * @param out the underlying output stream, to be saved for later use.
 	 * @see java.io.FilterOutputStream#out
 	 */
-	public MessageOutputStream(MessageRegistry messageRegistry, OutputStream out) {
+	public MessageOutputStream(OutputStream out) {
 		super(out);
-		this.messageRegistry = messageRegistry;
+		this.messageRegistry = MessageRegistry.getInstance();
 	}
 
 	/**
