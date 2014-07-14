@@ -30,7 +30,7 @@ public class WorldAuthenticatorTest
 		String connectionUrl = "jdbc:h2:mem:jenjin_test" + connectionNumber;
 		Connection testConnection = DriverManager.getConnection(connectionUrl, "sa", "");
 		Statement statement = testConnection.createStatement();
-		statement.executeUpdate("CREATE TABLE users (" +
+		statement.executeUpdate("CREATE TABLE jenjin_users (" +
 			  "  `username` VARCHAR(16) NOT NULL," +
 			  "  `password` CHAR(64) NOT NULL," +
 			  "  `salt` CHAR(48) NOT NULL," +

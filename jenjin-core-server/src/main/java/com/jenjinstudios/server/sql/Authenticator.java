@@ -30,7 +30,7 @@ public class Authenticator
 	 * Create a new SQLHandler with the given database information, and connect to the database.
 	 */
 	public Authenticator(Connection dbConnection) {
-		USER_QUERY = "SELECT * FROM users WHERE username = ?";
+		USER_QUERY = "SELECT * FROM jenjin_users WHERE username = ?";
 		this.dbConnection = dbConnection;
 	}
 

@@ -8,13 +8,12 @@ import com.jenjinstudios.world.server.WorldClientHandler;
 import com.jenjinstudios.world.server.WorldServer;
 import com.jenjinstudios.world.server.sql.WorldAuthenticator;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
-import java.util.Properties;
+import java.sql.ResultSet;
 import java.util.Scanner;
-import java.util.logging.LogManager;
 
 /**
  * @author Caleb Brinkman
@@ -24,8 +23,6 @@ public class Main
 	public static void main(String[] args) throws Exception {
 		Scanner input = new Scanner(System.in);
 		WorldServer worldServer;
-
-		setUpLoggers();
 
 		worldServer = createWorldServer(args[0], args[1], args[2]);
 		worldServer.start();
@@ -39,14 +36,6 @@ public class Main
 		worldServer.shutdown();
 	}
 
-	public static void setUpLoggers() throws IOException {
-		Properties preferences = new Properties();
-		InputStream stream = Main.class.getClassLoader().
-			  getResourceAsStream("com/jenjinstudios/demo/server/logger.properties");
-		preferences.load(stream);
-		LogManager.getLogManager().readConfiguration(stream);
-	}
-
 	public static WorldServer createWorldServer(String dbName, String dbUser, String dbPass) throws Exception {
 		ClientListenerInit<WorldClientHandler> clientListenerInit =
 			  new ClientListenerInit<>(WorldClientHandler.class, 51015);
@@ -54,6 +43,12 @@ public class Main
 			  new ServerInit<>(MessageRegistry.getInstance(), 10, clientListenerInit);
 		Class.forName("org.h2.Driver");
 		Connection sqlConnection = DriverManager.getConnection("jdbc:h2:" + dbName, dbUser, dbPass);
+		DatabaseMetaData md = sqlConnection.getMetaData();
+		ResultSet rs = md.getTables(null, null, "%", null);
+		while (rs.next())
+		{
+			System.out.println(rs.getString(3));
+		}
 		WorldAuthenticator worldAuthenticator = new WorldAuthenticator(sqlConnection);
 		InputStream stream = Main.class.getClassLoader().
 			  getResourceAsStream("com/jenjinstudios/demo/server/World.xml");
