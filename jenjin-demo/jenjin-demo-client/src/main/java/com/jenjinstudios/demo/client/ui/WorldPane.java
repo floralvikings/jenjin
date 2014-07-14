@@ -23,6 +23,7 @@ public class WorldPane extends Group implements EventHandler<KeyEvent>
 	private final Dimension2D canvasSize;
 	private final ClientPlayer clientPlayer;
 	private final Canvas canvas;
+	private boolean upKey;
 
 	public WorldPane(ClientPlayer clientPlayer, Dimension2D size) {
 		this.canvasSize = size;
@@ -94,18 +95,20 @@ public class WorldPane extends Group implements EventHandler<KeyEvent>
 	public void handle(KeyEvent keyEvent) {
 		if (keyEvent.getCode().equals(KeyCode.UP))
 		{
-			if (keyEvent.getEventType() == KeyEvent.KEY_PRESSED)
+			if (keyEvent.getEventType() == KeyEvent.KEY_PRESSED && !upKey)
 			{
+				upKey = true;
 				Angle angle = new Angle(0.0, Angle.LEFT);
 				if (!clientPlayer.getAngle().equals(angle))
 				{
 					clientPlayer.setAngle(angle);
-					System.out.println(clientPlayer.getVector2D());
 				}
-			} else
+			} else if (keyEvent.getEventType() == KeyEvent.KEY_RELEASED)
 			{
+				upKey = false;
 				clientPlayer.setAngle(new Angle(0.0, Angle.IDLE));
 			}
+			keyEvent.consume();
 		}
 	}
 }
