@@ -1,3 +1,13 @@
+apply from: 'javafx.plugin'
+
 dependencies {
     compile project(':jenjin-world-client')
+}
+
+javafx {
+    mainClass = 'com.jenjinstudios.demo.client.Main'
+}
+
+jfxDeploy {
+    enabled = false
 }

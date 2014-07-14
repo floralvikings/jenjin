@@ -1,68 +1,92 @@
 package com.jenjinstudios.demo.client;
 
-import com.jenjinstudios.client.net.ClientUser;
-import com.jenjinstudios.core.MessageIO;
-import com.jenjinstudios.core.io.Message;
-import com.jenjinstudios.core.io.MessageInputStream;
-import com.jenjinstudios.core.io.MessageOutputStream;
 import com.jenjinstudios.world.client.WorldClient;
-import com.jenjinstudios.world.io.WorldDocumentException;
+import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.GridPane;
+import javafx.stage.Stage;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.Socket;
+import static com.jenjinstudios.demo.client.WorldClientInitUtils.*;
 
 /**
  * @author Caleb Brinkman
  */
-public class Main
+public class Main extends Application
 {
+	private WorldClient worldClient;
+
 	public static void main(String[] args) throws Exception {
-		WorldClient worldClient = createWorldClient(args);
-		worldClient.start();
-		requestWorldFile(worldClient);
-		sendLoginRequest(worldClient);
-		loginAndWaitForResponse(worldClient);
-		if (worldClient.isLoggedIn())
+		launch(args);
+	}
+
+	@Override
+	public void start(Stage primaryStage) throws Exception {
+		primaryStage.setTitle("Jenjin Demo Client");
+		Button loginButton = new Button();
+		Label addressLabel = new Label("Address");
+		Label portLabel = new Label("Port");
+		Label usernameLabel = new Label("Username");
+		Label passwordLabel = new Label("Password");
+		final TextField addressField = new TextField("127.0.0.1");
+		final TextField portField = new TextField("51015");
+		final TextField usernameField = new TextField();
+		final PasswordField passwordField = new PasswordField();
+		loginButton.setText("Log in");
+		loginButton.setOnAction(new EventHandler<ActionEvent>()
 		{
-			System.out.println("Successfully logged in!");
-		} else
-		{
-			System.out.println("Login unsuccessful");
-			worldClient.shutdown();
-		}
+
+			@Override
+			public void handle(ActionEvent event) {
+				worldClient = tryCreateWorldClient(addressField.getText(), Integer.parseInt
+							(portField.getText()),
+					  usernameField.getText(), passwordField.getText());
+				if (worldClient != null)
+				{
+					worldClient.start();
+					if (tryRequestWorldFile(worldClient))
+					{
+						if (tryLogin(worldClient))
+						{
+							if (worldClient.isLoggedIn())
+							{
+								System.out.println("Successfully logged in!");
+							} else
+							{
+								System.out.println("Login unsuccessful");
+								worldClient.shutdown();
+							}
+						}
+					}
+				}
+			}
+		});
+
+		GridPane grid = new GridPane();
+		grid.setAlignment(Pos.CENTER);
+		grid.setHgap(10);
+		grid.setVgap(10);
+		grid.setPadding(new Insets(25, 25, 25, 25));
+
+
+		grid.add(addressLabel, 0, 0);
+		grid.add(addressField, 1, 0);
+		grid.add(portLabel, 2, 0);
+		grid.add(portField, 3, 0);
+		grid.add(usernameLabel, 0, 1);
+		grid.add(usernameField, 1, 1);
+		grid.add(passwordLabel, 2, 1);
+		grid.add(passwordField, 3, 1);
+		grid.add(loginButton, 3, 2);
+		primaryStage.setScene(new Scene(grid, 800, 600));
+		primaryStage.show();
 	}
 
-	private static void loginAndWaitForResponse(WorldClient worldClient) throws InterruptedException {
-		long start = System.currentTimeMillis();
-		while (!worldClient.isLoggedIn() && System.currentTimeMillis() - start < 30000)
-		{
-			Thread.sleep(10);
-		}
-	}
-
-	private static void requestWorldFile(WorldClient worldClient) throws InterruptedException, WorldDocumentException {
-		worldClient.getServerWorldFileTracker().requestServerWorldFileChecksum(worldClient);
-		worldClient.getServerWorldFileTracker().requestServerWorldFile(worldClient);
-		worldClient.getServerWorldFileTracker().writeReceivedWorldToFile();
-	}
-
-	private static WorldClient createWorldClient(String[] args) throws IOException, WorldDocumentException {
-		String address = args[0];
-		int port = Integer.parseInt(args[1]);
-		String userName = args[2];
-		String password = args[3];
-		ClientUser clientUser = new ClientUser(userName, password);
-		File worldFile = new File(System.getProperty("user.home") + "/jenjin/World.xml");
-		Socket socket = new Socket(address, port);
-		MessageInputStream messageInputStream = new MessageInputStream(socket.getInputStream());
-		MessageOutputStream messageOutputStream = new MessageOutputStream(socket.getOutputStream());
-		MessageIO messageIO = new MessageIO(messageInputStream, messageOutputStream);
-		return new WorldClient(messageIO, clientUser, worldFile);
-	}
-
-	private static void sendLoginRequest(WorldClient worldClient) {
-		Message message = worldClient.getMessageFactory().generateLoginRequest(worldClient.getUser());
-		worldClient.queueOutgoingMessage(message);
-	}
 }
