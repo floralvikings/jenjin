@@ -131,7 +131,7 @@ public class Authenticator
 	 */
 	protected void updateLoggedinColumn(String username, boolean status) throws LoginException {
 		String newValue = status ? "1" : "0";
-		String updateLoggedInQuery = "UPDATE users SET " + LOGGED_IN_COLUMN + "=" + newValue + " WHERE " +
+		String updateLoggedInQuery = "UPDATE jenjin_users SET " + LOGGED_IN_COLUMN + "=" + newValue + " WHERE " +
 			  "username = ?";
 		synchronized (dbConnection)
 		{

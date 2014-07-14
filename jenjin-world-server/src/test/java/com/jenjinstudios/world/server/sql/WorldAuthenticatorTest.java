@@ -93,7 +93,7 @@ public class WorldAuthenticatorTest
 
 	@Test
 	public void testAlreadyLoggedIn() throws Exception {
-		String query = "UPDATE users SET loggedin=1 WHERE username='TestAccount3'";
+		String query = "UPDATE jenjin_users SET loggedin=1 WHERE username='TestAccount3'";
 		PreparedStatement statement = connection.prepareStatement(query);
 		statement.executeUpdate();
 		WorldAuthenticator worldAuthenticator = new WorldAuthenticator(connection);
@@ -108,7 +108,7 @@ public class WorldAuthenticatorTest
 
 	@Test
 	public void testLogOutPlayer() throws Exception {
-		String query = "UPDATE users SET loggedin=1 WHERE username='TestAccount1'";
+		String query = "UPDATE jenjin_users SET loggedin=1 WHERE username='TestAccount1'";
 		PreparedStatement statement = connection.prepareStatement(query);
 		statement.executeUpdate();
 		WorldAuthenticator worldAuthenticator = new WorldAuthenticator(connection);
@@ -136,7 +136,7 @@ public class WorldAuthenticatorTest
 
 		worldAuthenticator.updatePlayer(actor);
 
-		String query = "SELECT * FROM users WHERE username='TestAccount1'";
+		String query = "SELECT * FROM jenjin_users WHERE username='TestAccount1'";
 		PreparedStatement statement = connection.prepareStatement(query, TYPE_SCROLL_SENSITIVE, CONCUR_UPDATABLE);
 		ResultSet results = statement.executeQuery();
 		results.next();

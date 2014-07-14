@@ -114,7 +114,7 @@ public class WorldAuthenticator extends Authenticator
 		double xCoord = player.getVector2D().getXCoordinate();
 		double yCoord = player.getVector2D().getYCoordinate();
 
-		String updatePlayerQuery = "UPDATE users SET " + X_COORD + "=" + xCoord + ", " + Y_COORD +
+		String updatePlayerQuery = "UPDATE jenjin_users SET " + X_COORD + "=" + xCoord + ", " + Y_COORD +
 			  "=" + yCoord + " WHERE " + "username = ?";
 		synchronized (dbConnection)
 		{
