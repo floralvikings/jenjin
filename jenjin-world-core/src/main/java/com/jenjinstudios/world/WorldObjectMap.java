@@ -1,12 +1,12 @@
 package com.jenjinstudios.world;
 
-import java.util.HashMap;
+import java.util.*;
 
 /**
  * Used to store WorldObjects.
  * @author Caleb Brinkman
  */
-public class WorldObjectMap extends HashMap<Integer, WorldObject>
+public class WorldObjectMap extends TreeMap<Integer, WorldObject>
 {
 	@Override
 	public WorldObject remove(Object key) {
@@ -18,12 +18,13 @@ public class WorldObjectMap extends HashMap<Integer, WorldObject>
 		return r;
 	}
 
-	@Override
-	public void clear() {
-		Object[] set = keySet().toArray();
-		for (Object i : set)
+	public int getAvailableId() {
+		// FIXME This really could be a O(log(n)) method.  Someone should get on that.
+		int currentKey = 0;
+		while (containsKey(currentKey))
 		{
-			remove(i);
+			currentKey++;
 		}
+		return currentKey;
 	}
 }

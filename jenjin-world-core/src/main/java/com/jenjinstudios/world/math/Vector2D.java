@@ -1,7 +1,5 @@
 package com.jenjinstudios.world.math;
 
-import com.jenjinstudios.world.state.MoveState;
-
 /**
  * Stores a set of x and y coordinates.
  * @author Caleb Brinkman
@@ -33,6 +31,28 @@ public class Vector2D
 		yCoordinate = y;
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof Vector2D)) return false;
+
+		Vector2D vector2D = (Vector2D) o;
+
+		return Double.compare(vector2D.xCoordinate, xCoordinate) == 0 &&
+			Double.compare(vector2D.yCoordinate, yCoordinate) == 0;
+	}
+
+	@Override
+	public int hashCode() {
+		int result;
+		long temp;
+		temp = Double.doubleToLongBits(xCoordinate);
+		result = (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(yCoordinate);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		return result;
+	}
+
 	/**
 	 * Get the y coordinate.
 	 * @return The y coordinate.
@@ -49,13 +69,6 @@ public class Vector2D
 		return xCoordinate;
 	}
 
-	@Override
-	public boolean equals(Object obj) {
-		if (!(obj instanceof Vector2D))
-			return false;
-		Vector2D vector2D = (Vector2D) obj;
-		return vector2D.xCoordinate == xCoordinate && vector2D.yCoordinate == yCoordinate;
-	}
 
 	@Override
 	public String toString() {
@@ -69,7 +82,7 @@ public class Vector2D
 	 * @return The new Vector2D;
 	 */
 	public Vector2D getVectorInDirection(double distance, double angle) {
-		if (angle == MoveState.IDLE) return new Vector2D(this);
+		if (angle == Angle.IDLE) return new Vector2D(this);
 		double cos = java.lang.Math.cos(angle);
 		double sin = java.lang.Math.sin(angle);
 		double newX = MathUtil.round(xCoordinate + (distance * cos), 4);

@@ -1,11 +1,12 @@
 package com.jenjinstudios.world;
 
+import com.jenjinstudios.world.math.Dimension2D;
 import com.jenjinstudios.world.math.Vector2D;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.TreeMap;
 
 /**
  * Contains all the Zones, Locations and GameObjects.
@@ -13,33 +14,33 @@ import java.util.List;
  */
 public class World
 {
+	private static final int DEFAULT_SIZE = 50;
 	/** The list of in-world Zones. */
-	private final Zone[] zones;
+	private final TreeMap<Integer, Zone> zones;
 	/** The GameObjects contained in the world. */
 	private final WorldObjectMap worldObjects;
 	/** The time at which the most recent update completed. */
 	private long lastUpdateCompleted;
 	/** The start time of the most recent update. */
 	private long lastUpdateStarted;
-	/** The time taken by the most recent update. */
-	private long lastUpdateTime;
 
 	/** Construct a new World. */
 	public World() {
-		zones = new Zone[1];
-		/* The default size of the world's location grid. */
-		int DEFAULT_SIZE = 50;
-		zones[0] = new Zone(0, DEFAULT_SIZE, DEFAULT_SIZE, new Location[]{});
-		worldObjects = new WorldObjectMap();
+		this(new Zone(0, new Dimension2D(DEFAULT_SIZE, DEFAULT_SIZE)));
 	}
 
 	/**
 	 * Construct a new world with the specified Zone array.
 	 * @param zones The zones used to create the world.
 	 */
-	public World(Zone[] zones) {
-		this.zones = zones;
+	public World(Zone... zones) {
+		this.zones = new TreeMap<>();
+		for (Zone z : zones)
+		{
+			this.zones.put(z.id, z);
+		}
 		worldObjects = new WorldObjectMap();
+		lastUpdateCompleted = lastUpdateStarted = System.nanoTime();
 	}
 
 	/**
@@ -47,7 +48,8 @@ public class World
 	 * @param object The object to add.
 	 */
 	public void addObject(WorldObject object) {
-		this.addObject(object, worldObjects.size());
+		int id = worldObjects.getAvailableId();
+		this.addObject(object, id);
 	}
 
 	/**
@@ -60,12 +62,14 @@ public class World
 			throw new IllegalArgumentException("addObject(WorldObject obj) argument 0 not allowed to be null!");
 
 		if (worldObjects.get(id) != null)
-			throw new IllegalArgumentException("addObject(WorldObject obj) argument 1 not allowed to be an occupied id: " + id);
+			throw new IllegalArgumentException("addObject(WorldObject obj) not allowed to be an occupied id: "
+					+ id + ".  Existing object: " + worldObjects.get(id));
 
+		object.setId(id);
 		object.setWorld(this);
 		object.setVector2D(object.getVector2D());
-		synchronized (worldObjects) {
-			object.setId(id);
+		synchronized (worldObjects)
+		{
 			worldObjects.put(id, object);
 		}
 	}
@@ -83,7 +87,8 @@ public class World
 	 * @param id The id.
 	 */
 	public void removeObject(int id) {
-		synchronized (worldObjects) {
+		synchronized (worldObjects)
+		{
 			worldObjects.remove(id);
 		}
 	}
@@ -95,54 +100,38 @@ public class World
 	 * @return The location that contains the specified vector2D.
 	 */
 	public Location getLocationForCoordinates(int zoneID, Vector2D vector2D) {
-		if (!isValidLocation(zoneID, vector2D))
-			return null;
-		return zones[zoneID].getLocationForCoordinates(vector2D);
-	}
-
-	/**
-	 * Determine whether the given vector lies within a valid location.
-	 * @param zoneID The ID of the zone in which to look for the location.
-	 * @param vector2D The vector.
-	 * @return Whether the vector lies within a valid location.
-	 */
-	public boolean isValidLocation(int zoneID, Vector2D vector2D) {
-		Zone zone = zones[zoneID];
-		return zone == null || zone.isInvalidLocation(vector2D);
+		return zones.get(zoneID).getLocationForCoordinates(vector2D);
 	}
 
 	/** Update all objects in the world. */
 	public void update() {
 		lastUpdateStarted = System.nanoTime();
-		synchronized (worldObjects) {
+		synchronized (worldObjects)
+		{
 			Collection<WorldObject> values = worldObjects.values();
-			for (WorldObject o : values)
-				if (o != null)
-					o.setUp();
-
-			for (WorldObject o : values)
-				if (o != null)
-					o.update();
-
-			for (WorldObject o : values)
-				if (o != null)
-					o.reset();
+			setUpObjects(values);
+			updateObjects(values);
+			resetObjects(values);
 		}
 		lastUpdateCompleted = System.nanoTime();
-		lastUpdateTime = lastUpdateCompleted - lastUpdateStarted;
 	}
 
-	/**
-	 * Get an area of location objects.
-	 * @param zoneID The ID of the zone in which to get the location area.
-	 * @param center The center of the area to return.
-	 * @param radius The radius of the area.
-	 * @return An ArrayList containing all valid locations in the specified area.
-	 */
-	public ArrayList<Location> getLocationArea(int zoneID, Vector2D center, int radius) {
-		Zone z = zones[zoneID];
-		if (z == null) { return null; }
-		return z.getLocationArea(center, radius);
+	private void resetObjects(Collection<WorldObject> values) {
+		for (WorldObject o : values)
+			if (o != null)
+				o.reset();
+	}
+
+	private void updateObjects(Collection<WorldObject> values) {
+		for (WorldObject o : values)
+			if (o != null)
+				o.update();
+	}
+
+	private void setUpObjects(Collection<WorldObject> values) {
+		for (WorldObject o : values)
+			if (o != null)
+				o.setUp();
 	}
 
 	/**
@@ -151,11 +140,6 @@ public class World
 	 */
 	public int getObjectCount() { return worldObjects.size(); }
 
-	/**
-	 * Get an object by its id.
-	 * @param id The id.
-	 * @return The object with the specified id.
-	 */
 	public WorldObject getObject(int id) { return worldObjects.get(id); }
 
 	/**
@@ -163,13 +147,10 @@ public class World
 	 * @return A List of all IDs which are linked to a zone.
 	 */
 	public List<Integer> getZoneIDs() {
-		LinkedList<Integer> r = new LinkedList<>();
-		synchronized (zones) {
-			for (Zone z : zones) {
-				r.add(z.id);
-			}
+		synchronized (zones)
+		{
+			return new LinkedList<>(zones.keySet());
 		}
-		return r;
 	}
 
 	/**
@@ -178,20 +159,9 @@ public class World
 	 * @return The zone with the given id.
 	 */
 	public Zone getZone(int id) {
-		Zone r = null;
-		synchronized (zones) {
-			for (Zone z : zones) {
-				if (z.id == id)
-					r = z;
-			}
-		}
-		return r;
-	}
-
-	/** Reset the world to it's original state. */
-	public void purgeObjects() {
-		synchronized (worldObjects) {
-			worldObjects.clear();
+		synchronized (zones)
+		{
+			return zones.get(id);
 		}
 	}
 
@@ -199,15 +169,7 @@ public class World
 	 * Get the time at which the most recent update completed.
 	 * @return The time at which the most recent update completed.
 	 */
-	public long getLastUpdateCompleted() {
-		return lastUpdateCompleted;
-	}
-
-	/**
-	 * Get the time taken by the previous update.
-	 * @return The time taken by the previous update.
-	 */
-	public long getLastUpdateTime() { return lastUpdateTime; }
+	public long getLastUpdateCompleted() { return lastUpdateCompleted; }
 
 	/**
 	 * Get the time at which the most recent update started.

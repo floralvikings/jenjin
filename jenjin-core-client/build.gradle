@@ -3,3 +3,7 @@ description = ''
 dependencies {
     compile project(':jenjin-core')
 }
+
+test {
+    maxParallelForks = 1;
+}

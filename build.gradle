@@ -1,53 +1,29 @@
 allprojects {
-
     apply plugin: 'maven'
-    apply plugin: 'idea'
-
 
     group = 'com.jenjinstudios'
     version = '0.5.0-alpha'
-
 }
 
 subprojects {
     apply plugin: 'java'
-    apply plugin: 'idea'
-    sourceCompatibility = 7
-    targetCompatibility = 7
+    //apply plugin: 'jacoco'
 
     repositories {
         mavenLocal()
-
-        mavenRepo url: "http://repo.maven.apache.org/maven2"
+        mavenCentral()
     }
 
     dependencies {
         testCompile 'org.testng:testng:6.8.7'
+        testCompile 'org.mockito:mockito-all:1.9.5'
     }
 
     test {
         useTestNG()
-        maxParallelForks = 8;
-        workingDir = project.rootDir
-        beforeTest { descriptor ->
-            logger.lifecycle("Running test: " + descriptor)
-        }
-        afterTest { descriptor ->
-            logger.lifecycle("Completed test: " + descriptor)
-        }
-    }
-
-    tasks.withType(Compile) {
-        options.compilerArgs << "-Xlint:unchecked"
     }
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '1.4'
-}
-
-idea {
-    project {
-        languageLevel = 'JDK_1_7'
-    }
+    gradleVersion = '2.0'
 }

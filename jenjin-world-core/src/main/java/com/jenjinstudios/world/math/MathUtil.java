@@ -1,6 +1,6 @@
 package com.jenjinstudios.world.math;
 
-import static com.jenjinstudios.world.state.MoveState.IDLE;
+import java.math.BigDecimal;
 
 /**
  * This class is used to simplify rounding.
@@ -8,6 +8,8 @@ import static com.jenjinstudios.world.state.MoveState.IDLE;
  */
 public class MathUtil
 {
+	private MathUtil() { }
+
 	/**
 	 * MathUtil the given number to the given decimal place.
 	 * @param value The number to round.
@@ -15,22 +17,9 @@ public class MathUtil
 	 * @return The rounded value.
 	 */
 	public static double round(double value, int decimalPlaces) {
-		if (decimalPlaces < 0) throw new IllegalArgumentException();
-
-		long factor = (long) java.lang.Math.pow(10, decimalPlaces);
-		value = value * factor;
-		long tmp = java.lang.Math.round(value);
-		return (double) tmp / factor;
+		BigDecimal bd = new BigDecimal(value);
+		BigDecimal rounded = bd.setScale(decimalPlaces, BigDecimal.ROUND_HALF_UP);
+		return rounded.doubleValue();
 	}
 
-	/**
-	 * Given the specified relative and absolute angles, determine the angle in which an actor should move.
-	 * @param abs The absolute angle.
-	 * @param rel The relative angle.
-	 * @return The value of the angles combined.
-	 */
-	public static double calcStepAngle(double abs, double rel) {
-		double sAngle = rel != IDLE ? abs + rel : IDLE;
-		return (sAngle < 0) ? (sAngle + (Math.PI * 2)) : (sAngle % (Math.PI * 2));
-	}
 }
