@@ -1,9 +1,11 @@
 package com.jenjinstudios.demo.client;
 
+import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.demo.client.ui.LoginPane;
 import com.jenjinstudios.demo.client.ui.WorldPane;
 import com.jenjinstudios.world.client.WorldClient;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.geometry.Dimension2D;
 import javafx.scene.Scene;
@@ -39,7 +41,19 @@ public class JenjinDemoClient extends Application implements EventHandler<Window
 		this.worldClient = worldClient;
 		final WorldPane worldPane = new WorldPane(worldClient.getPlayer(), new Dimension2D(800, 600));
 		stage.setScene(new Scene(worldPane, 800, 600));
-		worldPane.drawWorld();
+		worldClient.addRepeatedTask(new Runnable()
+		{
+			@Override
+			public void run() {
+				Platform.runLater(new Runnable()
+				{
+					@Override
+					public void run() {
+						worldPane.drawWorld();
+					}
+				});
+			}
+		});
 		stage.show();
 	}
 
@@ -47,6 +61,8 @@ public class JenjinDemoClient extends Application implements EventHandler<Window
 	public void handle(WindowEvent windowEvent) {
 		if (worldClient != null)
 		{
+			Message message = worldClient.getMessageFactory().generateLoginRequest(worldClient.getUser());
+			worldClient.queueOutgoingMessage(message);
 			worldClient.shutdown();
 		}
 	}
