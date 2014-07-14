@@ -40,7 +40,7 @@ public class AuthenticatorTest
 		for (int i = 1; i < 10; i++)
 		{
 			statement.executeUpdate(
-					"INSERT INTO users " +
+				  "INSERT INTO jenjin_users " +
 							"(`username`, `password`, `salt`, `loggedin`, `xcoord`, `ycoord`, `zoneid`)" +
 							" VALUES " +
 							"('TestAccount" + i + "', " +
