@@ -29,8 +29,14 @@ public class Main extends Application
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
+		GridPane grid = createLoginForm(primaryStage);
+		primaryStage.setScene(new Scene(grid, 800, 600));
+		primaryStage.show();
+	}
+
+	private GridPane createLoginForm(Stage primaryStage) {
 		primaryStage.setTitle("Jenjin Demo Client");
-		Button loginButton = new Button();
+		Button loginButton = new Button("Login");
 		Label addressLabel = new Label("Address");
 		Label portLabel = new Label("Port");
 		Label usernameLabel = new Label("Username");
@@ -39,7 +45,21 @@ public class Main extends Application
 		final TextField portField = new TextField("51015");
 		final TextField usernameField = new TextField();
 		final PasswordField passwordField = new PasswordField();
-		loginButton.setText("Log in");
+		GridPane grid = new GridPane();
+		grid.setAlignment(Pos.CENTER);
+		grid.setHgap(10);
+		grid.setVgap(10);
+		grid.setPadding(new Insets(25, 25, 25, 25));
+
+		grid.add(addressLabel, 0, 0);
+		grid.add(addressField, 1, 0);
+		grid.add(portLabel, 2, 0);
+		grid.add(portField, 3, 0);
+		grid.add(usernameLabel, 0, 1);
+		grid.add(usernameField, 1, 1);
+		grid.add(passwordLabel, 2, 1);
+		grid.add(passwordField, 3, 1);
+		grid.add(loginButton, 3, 2);
 		loginButton.setOnAction(new EventHandler<ActionEvent>()
 		{
 
@@ -68,25 +88,7 @@ public class Main extends Application
 				}
 			}
 		});
-
-		GridPane grid = new GridPane();
-		grid.setAlignment(Pos.CENTER);
-		grid.setHgap(10);
-		grid.setVgap(10);
-		grid.setPadding(new Insets(25, 25, 25, 25));
-
-
-		grid.add(addressLabel, 0, 0);
-		grid.add(addressField, 1, 0);
-		grid.add(portLabel, 2, 0);
-		grid.add(portField, 3, 0);
-		grid.add(usernameLabel, 0, 1);
-		grid.add(usernameField, 1, 1);
-		grid.add(passwordLabel, 2, 1);
-		grid.add(passwordField, 3, 1);
-		grid.add(loginButton, 3, 2);
-		primaryStage.setScene(new Scene(grid, 800, 600));
-		primaryStage.show();
+		return grid;
 	}
 
 }
