@@ -39,7 +39,7 @@ public class Main
 		ClientListenerInit<WorldClientHandler> clientListenerInit =
 			  new ClientListenerInit<>(WorldClientHandler.class, 51015);
 		ServerInit<WorldClientHandler> serverInit =
-			  new ServerInit<>(MessageRegistry.getInstance(), 10, clientListenerInit);
+			  new ServerInit<>(MessageRegistry.getInstance(), 50, clientListenerInit);
 		Class.forName("org.h2.Driver");
 		Connection sqlConnection = createDemoConnection();
 		WorldAuthenticator worldAuthenticator = new WorldAuthenticator(sqlConnection);

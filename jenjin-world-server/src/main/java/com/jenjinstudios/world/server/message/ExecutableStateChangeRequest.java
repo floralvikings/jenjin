@@ -5,6 +5,7 @@ import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.math.Angle;
 import com.jenjinstudios.world.math.MathUtil;
 import com.jenjinstudios.world.math.Vector2D;
+import com.jenjinstudios.world.server.Player;
 import com.jenjinstudios.world.server.WorldClientHandler;
 import com.jenjinstudios.world.state.MoveState;
 
@@ -23,7 +24,6 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage
 	private double distance;
 	/** The position before correction. */
 	private Vector2D uncorrectedPosition;
-	private double originDistance;
 
 	/**
 	 * Construct a new ExecutableMessage.  Must be implemented by subclasses.
@@ -36,11 +36,10 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage
 
 	@Override
 	public void runDelayed() {
-		Actor player = getClientHandler().getPlayer();
-		originDistance = player.getVector2D().getDistanceToVector(uncorrectedPosition);
+		Player player = getClientHandler().getPlayer();
 		if (!isCorrectionSafe(player))
 		{
-			player.setForcedState(new MoveState(player.getAngle(), player.getVector2D(), System.nanoTime()));
+			player.setForcedState(new MoveState(player.getAngle(), player.getVectorBeforeUpdate(), System.nanoTime()));
 		} else
 		{
 			player.setAngle(angle);
@@ -65,16 +64,15 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage
 
 	private boolean isCorrectionSafe(Actor player) {
 		Vector2D proposedPlayerOrigin = getPlayerOrigin(player);
-		Vector2D proposedClientOrigin = getClientOrigin();
-		return distance < MAX_CORRECT && proposedClientOrigin.equals(proposedPlayerOrigin);
-	}
-
-	private Vector2D getClientOrigin() {
-		double clientReverseAngle = angle.reverseStepAngle();
-		return position.getVectorInDirection(originDistance, clientReverseAngle);
+		double distance = uncorrectedPosition.getDistanceToVector(proposedPlayerOrigin);
+		double clientDistance = uncorrectedPosition.getDistanceToVector(position);
+		// Tolerance of a single update to account for timing discrepency.
+		double tolerance = Actor.MOVE_SPEED / getClientHandler().getServer().getUps();
+		return clientDistance < MAX_CORRECT && distance < tolerance;
 	}
 
 	private Vector2D getPlayerOrigin(Actor player) {
+		double originDistance = player.getVector2D().getDistanceToVector(uncorrectedPosition);
 		double playerReverseAngle = player.getAngle().reverseStepAngle();
 		return player.getVector2D().getVectorInDirection(originDistance, playerReverseAngle);
 	}

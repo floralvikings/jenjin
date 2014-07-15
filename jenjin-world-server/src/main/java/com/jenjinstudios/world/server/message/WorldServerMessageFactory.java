@@ -6,7 +6,6 @@ import com.jenjinstudios.server.message.ServerMessageFactory;
 import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.WorldObject;
 import com.jenjinstudios.world.server.WorldClientHandler;
-import com.jenjinstudios.world.server.WorldServer;
 import com.jenjinstudios.world.state.MoveState;
 
 import java.util.LinkedList;
@@ -18,7 +17,10 @@ import java.util.List;
  */
 public class WorldServerMessageFactory extends ServerMessageFactory
 {
-	public WorldServerMessageFactory(WorldClientHandler conn, MessageRegistry reg) { super(conn, reg); }
+
+	public WorldServerMessageFactory(WorldClientHandler conn, MessageRegistry reg) {
+		super(conn, reg);
+	}
 
 	public Message generateNewlyVisibleMessage(WorldObject object) {
 		Message newlyVisibleMessage;
@@ -48,13 +50,13 @@ public class WorldServerMessageFactory extends ServerMessageFactory
 		return messages;
 	}
 
-	public Message generateForcedStateMessage(MoveState forcedState, WorldServer server) {
+	public Message generateForcedStateMessage(MoveState forcedState) {
 		Message forcedStateMessage = getMessageRegistry().createMessage("ForceStateMessage");
 		forcedStateMessage.setArgument("relativeAngle", forcedState.angle.getRelativeAngle());
 		forcedStateMessage.setArgument("absoluteAngle", forcedState.angle.getAbsoluteAngle());
 		forcedStateMessage.setArgument("xCoordinate", forcedState.position.getXCoordinate());
 		forcedStateMessage.setArgument("yCoordinate", forcedState.position.getYCoordinate());
-		forcedStateMessage.setArgument("timeOfForce", server.getCycleStartTime());
+		forcedStateMessage.setArgument("timeOfForce", forcedState.timeOfChange);
 		return forcedStateMessage;
 	}
 

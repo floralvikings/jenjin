@@ -30,6 +30,7 @@ public class Actor extends SightedObject
 	private MoveState forcedState;
 	private long lastStepTime;
 	private Angle newAngle;
+	private Vector2D vectorBeforeUpdate;
 
 	public Actor(String name) {
 		super(name);
@@ -39,6 +40,7 @@ public class Actor extends SightedObject
 	@Override
 	public void setUp() {
 		super.setUp();
+		vectorBeforeUpdate = getVector2D();
 		forcedState = null;
 		synchronized (stateChanges)
 		{
@@ -49,14 +51,15 @@ public class Actor extends SightedObject
 	@Override
 	public void reset() {
 		super.reset();
+		if (vectorBeforeUpdate == null) vectorBeforeUpdate = getVector2D();
 		if (newState)
 		{
 			newState = false;
 			resetAngles();
+			Vector2D beforeStep = new Vector2D(vectorBeforeUpdate);
 			synchronized (stateChanges)
 			{
-				stateChanges.add(new MoveState(getAngle(), getVector2D(),
-					  getLastStepTime()));
+				stateChanges.add(new MoveState(getAngle(), beforeStep, getLastStepTime()));
 			}
 		}
 	}
@@ -88,6 +91,14 @@ public class Actor extends SightedObject
 
 	public void setForcedState(MoveState forcedState) { this.forcedState = forcedState; }
 
+	/** Mark that the actor has been forced to its current position. */
+	public void forcePosition() {
+		MoveState forcedMoveState = new MoveState(getAngle(), getVector2D(), getLastStepTime());
+		setForcedState(forcedMoveState);
+		setVector2D(getVector2D());
+		setAngle(getAngle());
+	}
+
 	public double calcStepLength() {
 		return ((System.nanoTime() - (double) getLastStepTime()) / 1000000000) * Actor.MOVE_SPEED;
 	}
@@ -95,6 +106,8 @@ public class Actor extends SightedObject
 	public long getLastStepTime() { return lastStepTime; }
 
 	public void setLastStepTime(long lastStepTime) { this.lastStepTime = lastStepTime; }
+
+	public Vector2D getVectorBeforeUpdate() { return vectorBeforeUpdate; }
 
 	private boolean stepForward(double stepLength) {
 		boolean didStep;

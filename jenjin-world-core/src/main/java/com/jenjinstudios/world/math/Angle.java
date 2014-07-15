@@ -89,4 +89,8 @@ public class Angle
 		double sAngle = relativeAngle != IDLE ? absoluteAngle + relativeAngle - Math.PI : IDLE;
 		return (sAngle < 0) ? (sAngle + (Math.PI * 2)) : (sAngle % (Math.PI * 2));
 	}
+
+	public String toString() {
+		return "(" + relativeAngle + ", " + absoluteAngle + ")";
+	}
 }

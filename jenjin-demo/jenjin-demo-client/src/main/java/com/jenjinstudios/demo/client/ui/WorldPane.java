@@ -22,7 +22,7 @@ public class WorldPane extends Group implements EventHandler<KeyEvent>
 	private static final double OBJECT_SCALE = 25;
 	private final Dimension2D canvasSize;
 	private final ClientPlayer clientPlayer;
-	private final Canvas canvas;
+	private Canvas canvas;
 	private boolean upKey;
 
 	public WorldPane(ClientPlayer clientPlayer, Dimension2D size) {
@@ -43,11 +43,14 @@ public class WorldPane extends Group implements EventHandler<KeyEvent>
 
 	public void drawWorld() {
 		Canvas canvas = new Canvas(canvasSize.getWidth(), canvasSize.getHeight());
+		canvas.getGraphicsContext2D().setFill(Color.BEIGE);
+		canvas.getGraphicsContext2D().fillText(clientPlayer.getVector2D().toString(), 0, 24);
 		clearBackground(canvas);
 		drawLocations(canvas);
 		drawObjects(canvas);
 		drawPlayer(canvas);
 		getChildren().remove(this.canvas);
+		this.canvas = canvas;
 		getChildren().add(canvas);
 	}
 
@@ -66,17 +69,20 @@ public class WorldPane extends Group implements EventHandler<KeyEvent>
 
 	public void drawLocation(Canvas canvas, Location location) {
 		Location pLoc = clientPlayer.getLocation();
-		int xDiff = location.X_COORDINATE - pLoc.X_COORDINATE;
-		int yDiff = location.Y_COORDINATE - pLoc.Y_COORDINATE + 1;
-		double xBuff = clientPlayer.getVector2D().getXCoordinate() % Location.SIZE;
-		double yBuff = clientPlayer.getVector2D().getYCoordinate() % Location.SIZE;
+		if (location != null && pLoc != null)
+		{
+			int xDiff = location.X_COORDINATE - pLoc.X_COORDINATE;
+			int yDiff = location.Y_COORDINATE - pLoc.Y_COORDINATE + 1;
+			double xBuff = clientPlayer.getVector2D().getXCoordinate() % Location.SIZE;
+			double yBuff = clientPlayer.getVector2D().getYCoordinate() % Location.SIZE;
 
-		double x = canvas.getWidth() / 2 + (xDiff * SCALE - xBuff);
-		double y = canvas.getHeight() / 2 - (yDiff * SCALE - yBuff);
+			double x = canvas.getWidth() / 2 + (xDiff * SCALE - xBuff);
+			double y = canvas.getHeight() / 2 - (yDiff * SCALE - yBuff);
 
-		GraphicsContext graphicsContext2D = canvas.getGraphicsContext2D();
-		graphicsContext2D.setFill(Color.WHITE);
-		graphicsContext2D.fillRect(x, y, SCALE, SCALE);
+			GraphicsContext graphicsContext2D = canvas.getGraphicsContext2D();
+			graphicsContext2D.setFill(Color.WHITE);
+			graphicsContext2D.fillRect(x, y, SCALE, SCALE);
+		}
 	}
 
 	public void drawObjects(Canvas canvas) {
@@ -103,10 +109,10 @@ public class WorldPane extends Group implements EventHandler<KeyEvent>
 				{
 					clientPlayer.setAngle(angle);
 				}
-			} else if (keyEvent.getEventType() == KeyEvent.KEY_RELEASED)
+			} else if (keyEvent.getEventType() == KeyEvent.KEY_RELEASED && upKey)
 			{
 				upKey = false;
-				clientPlayer.setAngle(new Angle(0.0, Angle.IDLE));
+				clientPlayer.setAngle(clientPlayer.getAngle().asIdle());
 			}
 			keyEvent.consume();
 		}
