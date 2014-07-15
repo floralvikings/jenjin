@@ -4,6 +4,7 @@ import com.jenjinstudios.world.Location;
 import com.jenjinstudios.world.WorldObject;
 import com.jenjinstudios.world.client.ClientPlayer;
 import com.jenjinstudios.world.math.Angle;
+import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -26,6 +27,13 @@ public class WorldCanvas extends Canvas implements EventHandler<KeyEvent>
 		movementKeyTracker = new MovementKeyTracker();
 		setOnKeyPressed(this);
 		setOnKeyReleased(this);
+		Platform.runLater(new Runnable()
+		{
+			@Override
+			public void run() {
+				requestFocus();
+			}
+		});
 	}
 
 	public void drawWorld() {
