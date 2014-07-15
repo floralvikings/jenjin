@@ -10,7 +10,6 @@ import javafx.geometry.Dimension2D;
 import javafx.scene.Group;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 
@@ -24,12 +23,13 @@ public class WorldPane extends Group implements EventHandler<KeyEvent>
 	private final Dimension2D canvasSize;
 	private final ClientPlayer clientPlayer;
 	private Canvas canvas;
-	private boolean upKey, downKey, leftKey, righKey;
+	private MovementKeyTracker movementKeyTracker;
 
 	public WorldPane(ClientPlayer clientPlayer, Dimension2D size) {
 		this.canvasSize = size;
 		this.canvas = new Canvas(size.getWidth(), size.getHeight());
 		this.clientPlayer = clientPlayer;
+		movementKeyTracker = new MovementKeyTracker();
 		getChildren().add(canvas);
 		setOnKeyPressed(this);
 		setOnKeyReleased(this);
@@ -118,122 +118,15 @@ public class WorldPane extends Group implements EventHandler<KeyEvent>
 
 	@Override
 	public void handle(KeyEvent keyEvent) {
-		setKeyFlags(keyEvent);
+		movementKeyTracker.setKeyFlags(keyEvent);
 		setNewAngle();
 		keyEvent.consume();
 	}
 
 	private void setNewAngle() {
 		Angle angle = clientPlayer.getAngle().asIdle();
-		if (upKeyNotDown())
-		{
-			angle = getUpKeyAngle(angle);
-		} else if (downKeyNotUp())
-		{
-			angle = getDownKeyAngle(angle);
-		} else if (leftKeyNotRight())
-		{
-			angle = new Angle(0.0, Angle.BACK);
-		} else if (rightKeyNotLeft())
-		{
-			angle = new Angle(0.0, Angle.FRONT);
-		}
+		angle = movementKeyTracker.getMoveAngle(angle);
 		clientPlayer.setAngle(angle);
 	}
 
-	private boolean rightKeyNotLeft() {return righKey && !leftKey;}
-
-	private boolean leftKeyNotRight() {return leftKey && !righKey;}
-
-	private boolean downKeyNotUp() {return downKey && !upKey;}
-
-	private boolean upKeyNotDown() {return upKey && !downKey;}
-
-	private Angle getDownKeyAngle(Angle angle) {
-		if (leftKeyNotRight())
-		{
-			angle = new Angle(0.0, Angle.BACK_RIGHT);
-		} else if (rightKeyNotLeft())
-		{
-			angle = new Angle(0.0, Angle.BACK_RIGHT);
-		} else if (!righKey)
-		{
-			angle = new Angle(0.0, Angle.RIGHT);
-		}
-		return angle;
-	}
-
-	private Angle getUpKeyAngle(Angle angle) {
-		if (leftKeyNotRight())
-		{
-			angle = new Angle(0.0, Angle.BACK_LEFT);
-		} else if (rightKeyNotLeft())
-		{
-			angle = new Angle(0.0, Angle.FRONT_LEFT);
-		} else if (!righKey)
-		{
-			angle = new Angle(0.0, Angle.LEFT);
-		}
-		return angle;
-	}
-
-	private void setKeyFlags(KeyEvent keyEvent) {
-		KeyCode keyCode = keyEvent.getCode();
-		if (keyCode.equals(KeyCode.UP) || keyCode.equals(KeyCode.W))
-		{
-			setUpKeyFlag(keyEvent);
-		}
-		if (keyCode.equals(KeyCode.DOWN) || keyCode.equals(KeyCode.S))
-		{
-			setDownKeyFlag(keyEvent);
-		}
-		if (keyCode.equals(KeyCode.LEFT) || keyCode.equals(KeyCode.A))
-		{
-			setLeftKeyDown(keyEvent);
-		}
-		if (keyCode.equals(KeyCode.RIGHT) || keyCode.equals(KeyCode.D))
-		{
-			setRightKeyDown(keyEvent);
-		}
-	}
-
-	private void setRightKeyDown(KeyEvent keyEvent) {
-		if (keyEvent.getEventType() == KeyEvent.KEY_PRESSED && !righKey)
-		{
-			righKey = true;
-		} else if (keyEvent.getEventType() == KeyEvent.KEY_RELEASED && righKey)
-		{
-			righKey = false;
-		}
-	}
-
-	private void setLeftKeyDown(KeyEvent keyEvent) {
-		if (keyEvent.getEventType() == KeyEvent.KEY_PRESSED && !leftKey)
-		{
-			leftKey = true;
-		} else if (keyEvent.getEventType() == KeyEvent.KEY_RELEASED && leftKey)
-		{
-			leftKey = false;
-		}
-	}
-
-	private void setDownKeyFlag(KeyEvent keyEvent) {
-		if (keyEvent.getEventType() == KeyEvent.KEY_PRESSED && !downKey)
-		{
-			downKey = true;
-		} else if (keyEvent.getEventType() == KeyEvent.KEY_RELEASED && downKey)
-		{
-			downKey = false;
-		}
-	}
-
-	private void setUpKeyFlag(KeyEvent keyEvent) {
-		if (keyEvent.getEventType() == KeyEvent.KEY_PRESSED && !upKey)
-		{
-			upKey = true;
-		} else if (keyEvent.getEventType() == KeyEvent.KEY_RELEASED && upKey)
-		{
-			upKey = false;
-		}
-	}
 }
