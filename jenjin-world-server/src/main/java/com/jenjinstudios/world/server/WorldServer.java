@@ -1,6 +1,7 @@
 package com.jenjinstudios.world.server;
 
 import com.jenjinstudios.server.net.AuthServer;
+import com.jenjinstudios.server.net.ClientHandler;
 import com.jenjinstudios.server.net.ServerInit;
 import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.io.WorldDocumentException;
@@ -51,4 +52,10 @@ public class WorldServer extends AuthServer<WorldClientHandler>
 	public byte[] getWorldFileChecksum() { return worldFileChecksum; }
 
 	public byte[] getWorldFileBytes() { return worldFileBytes; }
+
+	@Override
+	public void removeClient(ClientHandler handler) {
+		super.removeClient(handler);
+		world.removeObject(((WorldClientHandler) handler).getPlayer());
+	}
 }

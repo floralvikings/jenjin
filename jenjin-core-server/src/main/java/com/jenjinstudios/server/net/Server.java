@@ -206,7 +206,7 @@ public class Server<T extends ClientHandler> extends Thread
 	 * Schedule a client to be removed during the next update.
 	 * @param handler The client handler to be removed.
 	 */
-	void removeClient(ClientHandler handler) {
+	protected void removeClient(ClientHandler handler) {
 		User user = handler.getUser();
 
 		if (user != null && user.getUsername() != null)
