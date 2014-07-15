@@ -73,7 +73,8 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage
 		boolean distanceWithinTolerance = distance < tolerance;
 		if (!distanceWithinTolerance)
 		{
-			LOGGER.log(Level.FINEST, "Distance to origin oustide of tolerance.");
+			LOGGER.log(Level.FINEST, "Distance to origin oustide of tolerance: {0},{1}",
+				  new Object[]{distance, tolerance});
 		}
 		double clientDistance = uncorrectedPosition.getDistanceToVector(position);
 		boolean withinMaxCorrect = clientDistance < MAX_CORRECT;
