@@ -28,6 +28,7 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage
 	private double distance;
 	/** The position before correction. */
 	private Vector2D uncorrectedPosition;
+	private long timePast;
 
 	/**
 	 * Construct a new ExecutableMessage.  Must be implemented by subclasses.
@@ -61,7 +62,7 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage
 		long timeOfChange = (long) getMessage().getArgument("timeOfChange");
 		uncorrectedPosition = new Vector2D(x, y);
 		angle = new Angle(absoluteAngle, relativeAngle);
-		long timePast = (System.nanoTime() - timeOfChange);
+		timePast = (System.nanoTime() - timeOfChange);
 		distance = MathUtil.round(Actor.MOVE_SPEED * ((double) timePast / 1000000000d), 2);
 		position = uncorrectedPosition.getVectorInDirection(distance, angle.getStepAngle());
 	}
@@ -80,8 +81,9 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage
 		boolean withinMaxCorrect = clientDistance < MAX_CORRECT;
 		if (!withinMaxCorrect)
 		{
-			LOGGER.log(Level.FINEST, "Distance to correct oustide of tolerance. Position: {0}, Corrected: {1}",
-				  new Object[]{uncorrectedPosition, position});
+			LOGGER.log(Level.FINEST, "Distance to correct oustide of tolerance. " +
+						"Position: {0}, Corrected: {1}, Step Angle: {2}, Time: {3}",
+				  new Object[]{uncorrectedPosition, position, angle, (double) timePast / 1000000000});
 		}
 		// Tolerance of a single update to account for timing discrepency.
 		return withinMaxCorrect && distanceWithinTolerance;
