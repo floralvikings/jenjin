@@ -1,13 +1,7 @@
-apply from: 'javafx.plugin'
+apply plugin: 'application'
 
 dependencies {
     compile project(':jenjin-world-client')
 }
 
-javafx {
-    mainClass = 'com.jenjinstudios.demo.client.JenjinDemoClient'
-}
-
-jfxDeploy {
-    enabled = false
-}
+mainClassName = 'com.jenjinstudios.demo.client.JenjinDemoClient'

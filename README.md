@@ -14,13 +14,18 @@ and can be foregone completely if desired.
 Modules without "world" in the name are part of the core Jenjin; they are necessary for the
 core threading and networking functionality of the Jenjin.
 
+***
+
+##Requirements
+
+Building and testing the Jenjin requires Java 8.
+
 
 ***
 
 ##Building and Testing
 
-The Jenjin is built using Gradle, and can be built and tested with a simple command on
-any operating system running Java 7; simply run
+To build and test the Jenjin, run
 
 `./gradlew build`
 
