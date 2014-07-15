@@ -29,29 +29,26 @@ public class WorldCanvas extends Canvas implements EventHandler<KeyEvent>
 	}
 
 	public void drawWorld() {
-		Canvas canvas = new Canvas(getWidth(), getHeight());
-		canvas.getGraphicsContext2D().setFill(Color.BEIGE);
-		canvas.getGraphicsContext2D().fillText(clientPlayer.getVector2D().toString(), 0, 24);
-		clearBackground(canvas);
-		drawLocations(canvas);
-		drawObjects(canvas);
-		drawPlayer(canvas);
+		clearBackground();
+		drawLocations();
+		drawObjects();
+		drawPlayer();
 	}
 
-	public void clearBackground(Canvas canvas) {
-		GraphicsContext graphicsContext2D = canvas.getGraphicsContext2D();
+	public void clearBackground() {
+		GraphicsContext graphicsContext2D = getGraphicsContext2D();
 		graphicsContext2D.setFill(Color.BLACK);
-		graphicsContext2D.fillRect(0, 0, canvas.getWidth(), getHeight());
+		graphicsContext2D.fillRect(0, 0, getWidth(), getHeight());
 	}
 
-	public void drawLocations(Canvas canvas) {
+	public void drawLocations() {
 		for (Location loc : clientPlayer.getVisibleLocations())
 		{
-			drawLocation(canvas, loc);
+			drawLocation(loc);
 		}
 	}
 
-	public void drawLocation(Canvas canvas, Location location) {
+	public void drawLocation(Location location) {
 		Location pLoc = clientPlayer.getLocation();
 		if (location != null && pLoc != null)
 		{
@@ -60,10 +57,10 @@ public class WorldCanvas extends Canvas implements EventHandler<KeyEvent>
 			double xBuff = clientPlayer.getVector2D().getXCoordinate() % Location.SIZE;
 			double yBuff = clientPlayer.getVector2D().getYCoordinate() % Location.SIZE;
 
-			double x = canvas.getWidth() / 2 + (xDiff * SCALE - xBuff * (SCALE / Location.SIZE));
-			double y = canvas.getHeight() / 2 - (yDiff * SCALE - yBuff * (SCALE / Location.SIZE));
+			double x = getWidth() / 2 + (xDiff * SCALE - xBuff * (SCALE / Location.SIZE));
+			double y = getHeight() / 2 - (yDiff * SCALE - yBuff * (SCALE / Location.SIZE));
 
-			GraphicsContext graphicsContext2D = canvas.getGraphicsContext2D();
+			GraphicsContext graphicsContext2D = getGraphicsContext2D();
 			graphicsContext2D.setFill(Color.WHITE);
 			graphicsContext2D.setStroke(Color.LIGHTSLATEGRAY);
 			graphicsContext2D.fillRect(x, y, SCALE, SCALE);
@@ -71,28 +68,28 @@ public class WorldCanvas extends Canvas implements EventHandler<KeyEvent>
 		}
 	}
 
-	public void drawObjects(Canvas canvas) {
+	public void drawObjects() {
 		for (WorldObject o : clientPlayer.getVisibleObjects().values())
 		{
-			drawObject(canvas, o);
+			drawObject(o);
 		}
 	}
 
-	private void drawObject(Canvas canvas, WorldObject o) {
+	private void drawObject(WorldObject o) {
 		double xDiff = o.getVector2D().getXCoordinate() - clientPlayer.getVector2D().getXCoordinate();
 		double yDiff = o.getVector2D().getYCoordinate() - clientPlayer.getVector2D().getYCoordinate();
 
-		double x = (canvas.getWidth() / 2) + (xDiff * (SCALE / Location.SIZE));
-		double y = (canvas.getWidth() / 2) - (yDiff * (SCALE / Location.SIZE)) -
+		double x = (getWidth() / 2) + (xDiff * (SCALE / Location.SIZE));
+		double y = (getWidth() / 2) - (yDiff * (SCALE / Location.SIZE)) -
 			  SCALE * ((Location.SIZE * Location.SIZE) / SCALE);
 
-		GraphicsContext graphicsContext2D = canvas.getGraphicsContext2D();
+		GraphicsContext graphicsContext2D = getGraphicsContext2D();
 		graphicsContext2D.setFill(Color.DARKGREEN);
 		graphicsContext2D.fillRect(x - OBJECT_SCALE / 2, y - OBJECT_SCALE / 2, OBJECT_SCALE, OBJECT_SCALE);
 	}
 
-	public void drawPlayer(Canvas canvas) {
-		GraphicsContext graphicsContext2D = canvas.getGraphicsContext2D();
+	public void drawPlayer() {
+		GraphicsContext graphicsContext2D = getGraphicsContext2D();
 		graphicsContext2D.setFill(Color.INDIGO);
 		double x = getWidth() / 2 - OBJECT_SCALE / 2;
 		double y = getHeight() / 2 - OBJECT_SCALE / 2;
