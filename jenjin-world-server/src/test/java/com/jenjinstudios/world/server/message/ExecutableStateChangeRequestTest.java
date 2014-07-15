@@ -35,7 +35,7 @@ public class ExecutableStateChangeRequestTest
 		request.setArgument("absoluteAngle", 0.0);
 		request.setArgument("xCoordinate", 0.0);
 		request.setArgument("yCoordinate", 0.0);
-		request.setArgument("timeOfChange", System.nanoTime());
+		request.setArgument("timeOfChange", System.currentTimeMillis());
 		ExecutableStateChangeRequest executableStateChangeRequest = new ExecutableStateChangeRequest(mock, request);
 		executableStateChangeRequest.runImmediate();
 		executableStateChangeRequest.runDelayed();
@@ -62,7 +62,7 @@ public class ExecutableStateChangeRequestTest
 		request.setArgument("absoluteAngle", 0.0);
 		request.setArgument("xCoordinate", 1.0);
 		request.setArgument("yCoordinate", 1.0);
-		request.setArgument("timeOfChange", System.nanoTime());
+		request.setArgument("timeOfChange", System.currentTimeMillis());
 		ExecutableStateChangeRequest executableStateChangeRequest = new ExecutableStateChangeRequest(mock, request);
 		executableStateChangeRequest.runImmediate();
 		executableStateChangeRequest.runDelayed();
@@ -90,7 +90,7 @@ public class ExecutableStateChangeRequestTest
 		request.setArgument("absoluteAngle", 0.0);
 		request.setArgument("xCoordinate", 0.0);
 		request.setArgument("yCoordinate", 0.0);
-		request.setArgument("timeOfChange", System.nanoTime() - 2000000000);
+		request.setArgument("timeOfChange", System.currentTimeMillis() - 2000);
 		ExecutableStateChangeRequest executableStateChangeRequest = new ExecutableStateChangeRequest(mock, request);
 		executableStateChangeRequest.runImmediate();
 		executableStateChangeRequest.runDelayed();
@@ -117,7 +117,7 @@ public class ExecutableStateChangeRequestTest
 		request.setArgument("absoluteAngle", 0.0);
 		request.setArgument("xCoordinate", 0.0);
 		request.setArgument("yCoordinate", 0.0);
-		request.setArgument("timeOfChange", System.nanoTime());
+		request.setArgument("timeOfChange", System.currentTimeMillis());
 		Thread.sleep(1200);
 		ExecutableStateChangeRequest executableStateChangeRequest = new ExecutableStateChangeRequest(mock, request);
 		executableStateChangeRequest.runImmediate();

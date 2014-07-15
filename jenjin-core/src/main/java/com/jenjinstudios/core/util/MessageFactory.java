@@ -23,7 +23,7 @@ public class MessageFactory
 	 */
 	public Message generatePingRequest() {
 		Message pingRequest = messageRegistry.createMessage("PingRequest");
-		pingRequest.setArgument("requestTimeNanos", System.nanoTime());
+		pingRequest.setArgument("requestTimeMillis", System.currentTimeMillis());
 		return pingRequest;
 	}
 
@@ -40,12 +40,12 @@ public class MessageFactory
 
 	/**
 	 * Generate a response to a PingRequest.
-	 * @param requestTimeNanos The time at which the ping request was made.
+	 * @param requestTimeMillis The time at which the ping request was made.
 	 * @return The PingResponse message.
 	 */
-	public Message generatePingResponse(long requestTimeNanos) {
+	public Message generatePingResponse(long requestTimeMillis) {
 		Message pingResponse = getMessageRegistry().createMessage("PingResponse");
-		pingResponse.setArgument("requestTimeNanos", requestTimeNanos);
+		pingResponse.setArgument("requestTimeMillis", requestTimeMillis);
 		return pingResponse;
 	}
 

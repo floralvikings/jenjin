@@ -73,7 +73,7 @@ public class ConnectionTest
 		MessageOutputStream messageOutputStream = new MessageOutputStream(bos);
 
 		Message pingRequest = mr.createMessage("PingRequest");
-		pingRequest.setArgument("requestTimeNanos", 123456789l);
+		pingRequest.setArgument("requestTimeMillis", 123456789l);
 
 		Mockito.when(messageInputStream.readMessage()).thenReturn(pingRequest).thenReturn(mr.createMessage
 			  ("BlankMessage"));
@@ -97,7 +97,7 @@ public class ConnectionTest
 		// Spoof an invalid message
 		DataInputStreamMock dataInputStreamMock = new DataInputStreamMock();
 		dataInputStreamMock.mockReadShort((short) 2);
-		dataInputStreamMock.mockReadLong(System.nanoTime());
+		dataInputStreamMock.mockReadLong(System.currentTimeMillis());
 		InputStream in = dataInputStreamMock.getIn();
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 

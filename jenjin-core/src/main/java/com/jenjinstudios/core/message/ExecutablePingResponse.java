@@ -26,8 +26,8 @@ public class ExecutablePingResponse extends ExecutableMessage
 	/** Run the synced portion of this message. */
 	@Override
 	public void runDelayed() {
-		long requestTime = (long) getMessage().getArgument("requestTimeNanos");
-		connection.getPingTracker().addPingTime((System.nanoTime() - requestTime) / 1000000);
+		long requestTime = (long) getMessage().getArgument("requestTimeMillis");
+		connection.getPingTracker().addPingTime((System.currentTimeMillis() - requestTime));
 	}
 
 	/** Run asynchronous portion of this message. */

@@ -80,7 +80,7 @@ public class Actor extends SightedObject
 			setLastStepTime(getWorld().getLastUpdateCompleted());
 		}
 		step();
-		setLastStepTime(System.nanoTime());
+		setLastStepTime(System.currentTimeMillis());
 	}
 
 	public LinkedList<MoveState> getStateChanges() {
@@ -100,7 +100,7 @@ public class Actor extends SightedObject
 	}
 
 	public double calcStepLength() {
-		return ((System.nanoTime() - (double) getLastStepTime()) / 1000000000) * Actor.MOVE_SPEED;
+		return ((System.currentTimeMillis() - (double) getLastStepTime()) / 1000) * Actor.MOVE_SPEED;
 	}
 
 	public long getLastStepTime() { return lastStepTime; }

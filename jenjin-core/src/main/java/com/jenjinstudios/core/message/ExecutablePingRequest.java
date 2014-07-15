@@ -30,7 +30,7 @@ public class ExecutablePingRequest extends ExecutableMessage
 	/** Run asynchronous portion of this message. */
 	@Override
 	public void runImmediate() {
-		long requestTimeNanos = (long) getMessage().getArgument("requestTimeNanos");
+		long requestTimeNanos = (long) getMessage().getArgument("requestTimeMillis");
 
 		Message pingResponse = connection.getMessageFactory()
 				.generatePingResponse(requestTimeNanos);

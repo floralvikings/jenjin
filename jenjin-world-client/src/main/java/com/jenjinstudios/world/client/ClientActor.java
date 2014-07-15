@@ -35,7 +35,7 @@ public class ClientActor extends WorldObject
 			setLastStepTime(getWorld().getLastUpdateCompleted());
 		}
 		step();
-		setLastStepTime(System.nanoTime());
+		setLastStepTime(System.currentTimeMillis());
 	}
 
 	private void step() {
@@ -51,7 +51,7 @@ public class ClientActor extends WorldObject
 	}
 
 	double calcStepLength() {
-		return ((System.nanoTime() - (double) getLastStepTime()) / 1000000000) * MOVE_SPEED;
+		return ((System.currentTimeMillis() - (double) getLastStepTime()) / 1000) * MOVE_SPEED;
 	}
 
 	long getLastStepTime() { return lastStepTime; }

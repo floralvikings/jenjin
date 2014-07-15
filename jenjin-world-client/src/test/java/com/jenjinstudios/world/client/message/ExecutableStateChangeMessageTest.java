@@ -8,8 +8,8 @@ import com.jenjinstudios.world.client.WorldClient;
 import com.jenjinstudios.world.math.Angle;
 import org.testng.annotations.Test;
 
-import static com.jenjinstudios.world.math.Angle.*;
-import static java.lang.Math.*;
+import static com.jenjinstudios.world.math.Angle.IDLE;
+import static java.lang.Math.PI;
 import static org.mockito.Mockito.*;
 
 /**
@@ -24,7 +24,7 @@ public class ExecutableStateChangeMessageTest
 		stateChangeMessage.setArgument("id", 100);
 		stateChangeMessage.setArgument("relativeAngle", IDLE);
 		stateChangeMessage.setArgument("absoluteAngle", PI);
-		stateChangeMessage.setArgument("timeOfChange", System.nanoTime());
+		stateChangeMessage.setArgument("timeOfChange", System.currentTimeMillis());
 		stateChangeMessage.setArgument("xCoordinate", PI);
 		stateChangeMessage.setArgument("yCoordinate", PI);
 

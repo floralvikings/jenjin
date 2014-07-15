@@ -45,12 +45,13 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage
 		Player player = getClientHandler().getPlayer();
 		if (!isCorrectionSafe(player))
 		{
-			player.setForcedState(new MoveState(player.getAngle(), player.getVectorBeforeUpdate(), System.nanoTime()));
+			player.setForcedState(new MoveState(player.getAngle(), player.getVectorBeforeUpdate(),
+				  System.currentTimeMillis()));
 		} else
 		{
 			player.setAngle(angle);
 			player.setVector2D(position);
-			player.setLastStepTime(System.nanoTime());
+			player.setLastStepTime(System.currentTimeMillis());
 		}
 	}
 
@@ -63,8 +64,8 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage
 		timeOfChange = (long) getMessage().getArgument("timeOfChange");
 		uncorrectedPosition = new Vector2D(x, y);
 		angle = new Angle(absoluteAngle, relativeAngle);
-		timePast = (System.nanoTime() - timeOfChange);
-		distance = MathUtil.round(Actor.MOVE_SPEED * ((double) timePast / 1000000000d), 2);
+		timePast = (System.currentTimeMillis() - timeOfChange);
+		distance = MathUtil.round(Actor.MOVE_SPEED * ((double) timePast / 1000d), 2);
 		position = uncorrectedPosition.getVectorInDirection(distance, angle.getStepAngle());
 	}
 

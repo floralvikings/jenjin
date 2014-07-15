@@ -1,9 +1,9 @@
 package com.jenjinstudios.world.client.message;
 
 import com.jenjinstudios.core.io.Message;
+import com.jenjinstudios.world.WorldObject;
 import com.jenjinstudios.world.client.ClientActor;
 import com.jenjinstudios.world.client.WorldClient;
-import com.jenjinstudios.world.WorldObject;
 import com.jenjinstudios.world.math.Angle;
 import com.jenjinstudios.world.math.Vector2D;
 
@@ -35,7 +35,7 @@ public class ExecutableStateChangeMessage extends WorldClientExecutableMessage
 		{
 			ClientActor actor = (ClientActor) obj;
 			actor.setAngle(angle);
-			actor.setLastStepTime(System.nanoTime());
+			actor.setLastStepTime(System.currentTimeMillis());
 			actor.setVector2D(position);
 		}
 	}
@@ -51,7 +51,7 @@ public class ExecutableStateChangeMessage extends WorldClientExecutableMessage
 		Vector2D oldVector = new Vector2D(x, y);
 		angle = new Angle(absoluteAngle, relativeAngle);
 		double dist = ClientActor.MOVE_SPEED *
-			  ((double) (System.nanoTime() - time) / 1000000000d);
+			  ((double) (System.currentTimeMillis() - time) / 1000d);
 		position = oldVector.getVectorInDirection(dist, angle.getStepAngle());
 	}
 }

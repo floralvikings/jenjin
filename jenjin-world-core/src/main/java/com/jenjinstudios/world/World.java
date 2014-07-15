@@ -40,7 +40,7 @@ public class World
 			this.zones.put(z.id, z);
 		}
 		worldObjects = new WorldObjectMap();
-		lastUpdateCompleted = lastUpdateStarted = System.nanoTime();
+		lastUpdateCompleted = lastUpdateStarted = System.currentTimeMillis();
 	}
 
 	/**
@@ -105,7 +105,7 @@ public class World
 
 	/** Update all objects in the world. */
 	public void update() {
-		lastUpdateStarted = System.nanoTime();
+		lastUpdateStarted = System.currentTimeMillis();
 		synchronized (worldObjects)
 		{
 			Collection<WorldObject> values = worldObjects.values();
@@ -113,7 +113,7 @@ public class World
 			updateObjects(values);
 			resetObjects(values);
 		}
-		lastUpdateCompleted = System.nanoTime();
+		lastUpdateCompleted = System.currentTimeMillis();
 	}
 
 	private void resetObjects(Collection<WorldObject> values) {

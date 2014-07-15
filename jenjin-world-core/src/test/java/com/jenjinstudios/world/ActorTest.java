@@ -41,7 +41,7 @@ public class ActorTest
 		actor.setAngle(angle);
 		world.update();
 		long l = System.currentTimeMillis();
-		wait(100);
+		wait(1000);
 		world.update();
 		l = System.currentTimeMillis() - l;
 		double distance = Vector2D.ORIGIN.getDistanceToVector(actor.getVector2D());
