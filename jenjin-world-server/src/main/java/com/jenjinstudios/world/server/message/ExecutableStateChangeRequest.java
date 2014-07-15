@@ -9,6 +9,9 @@ import com.jenjinstudios.world.server.Player;
 import com.jenjinstudios.world.server.WorldClientHandler;
 import com.jenjinstudios.world.state.MoveState;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  * Process a StateChangeRequest.
  * @author Caleb Brinkman
@@ -17,6 +20,7 @@ import com.jenjinstudios.world.state.MoveState;
 public class ExecutableStateChangeRequest extends WorldExecutableMessage
 {
 	private static final double MAX_CORRECT = Actor.MOVE_SPEED;
+	private static final Logger LOGGER = Logger.getLogger(ExecutableStateChangeRequest.class.getName());
 	private Angle angle;
 	/** The new position, corrected for lag. */
 	private Vector2D position;
@@ -63,12 +67,22 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage
 	}
 
 	private boolean isCorrectionSafe(Actor player) {
+		double tolerance = Actor.MOVE_SPEED / getClientHandler().getServer().getUps();
 		Vector2D proposedPlayerOrigin = getPlayerOrigin(player);
 		double distance = uncorrectedPosition.getDistanceToVector(proposedPlayerOrigin);
+		boolean distanceWithinTolerance = distance < tolerance;
+		if (!distanceWithinTolerance)
+		{
+			LOGGER.log(Level.FINEST, "Distance to origin oustide of tolerance.");
+		}
 		double clientDistance = uncorrectedPosition.getDistanceToVector(position);
+		boolean withinMaxCorrect = clientDistance < MAX_CORRECT;
+		if (!withinMaxCorrect)
+		{
+			LOGGER.log(Level.FINEST, "Distance to correct oustide of tolerance.");
+		}
 		// Tolerance of a single update to account for timing discrepency.
-		double tolerance = Actor.MOVE_SPEED / getClientHandler().getServer().getUps();
-		return clientDistance < MAX_CORRECT && distance < tolerance;
+		return withinMaxCorrect && distanceWithinTolerance;
 	}
 
 	private Vector2D getPlayerOrigin(Actor player) {
