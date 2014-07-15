@@ -70,7 +70,7 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage
 	}
 
 	private boolean isCorrectionSafe(Actor player) {
-		double tolerance = Actor.MOVE_SPEED / getClientHandler().getServer().getUps();
+		double tolerance = Actor.MOVE_SPEED * 0.1;
 		Vector2D proposedPlayerOrigin = getPlayerOrigin(player);
 		double distance = uncorrectedPosition.getDistanceToVector(proposedPlayerOrigin);
 		boolean distanceWithinTolerance = distance < tolerance;
