@@ -83,8 +83,8 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage
 		if (!withinMaxCorrect)
 		{
 			LOGGER.log(Level.FINEST, "Distance to correct oustide of tolerance. " +
-						"Position: {0}, Corrected: {1}, Step Angle: {2}, Time: {3}",
-				  new Object[]{uncorrectedPosition, position, angle, timeOfChange});
+						"Position: {0}, Corrected: {1}, Step Angle: {2}, Time: {3}, TimePast: {4}",
+				  new Object[]{uncorrectedPosition, position, angle, timeOfChange, timePast});
 		}
 		// Tolerance of a single update to account for timing discrepency.
 		return withinMaxCorrect && distanceWithinTolerance;
