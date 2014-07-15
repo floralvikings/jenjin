@@ -29,6 +29,7 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage
 	/** The position before correction. */
 	private Vector2D uncorrectedPosition;
 	private long timePast;
+	private long timeOfChange;
 
 	/**
 	 * Construct a new ExecutableMessage.  Must be implemented by subclasses.
@@ -59,7 +60,7 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage
 		double absoluteAngle = (double) getMessage().getArgument("absoluteAngle");
 		double x = (double) getMessage().getArgument("xCoordinate");
 		double y = (double) getMessage().getArgument("yCoordinate");
-		long timeOfChange = (long) getMessage().getArgument("timeOfChange");
+		timeOfChange = (long) getMessage().getArgument("timeOfChange");
 		uncorrectedPosition = new Vector2D(x, y);
 		angle = new Angle(absoluteAngle, relativeAngle);
 		timePast = (System.nanoTime() - timeOfChange);
@@ -83,7 +84,7 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage
 		{
 			LOGGER.log(Level.FINEST, "Distance to correct oustide of tolerance. " +
 						"Position: {0}, Corrected: {1}, Step Angle: {2}, Time: {3}",
-				  new Object[]{uncorrectedPosition, position, angle, (double) timePast / 1000000000});
+				  new Object[]{uncorrectedPosition, position, angle, timeOfChange});
 		}
 		// Tolerance of a single update to account for timing discrepency.
 		return withinMaxCorrect && distanceWithinTolerance;
