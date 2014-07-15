@@ -28,11 +28,11 @@ public class ExecutableWorldLoginResponse extends WorldClientExecutableMessage
 	public void runDelayed() {
 		WorldClient client = getClient();
 		boolean success = (boolean) getMessage().getArgument("success");
-		client.setLoggedIn(success);
+		client.getLoginTracker().setLoggedIn(success);
 		if (success)
 		{
 
-			client.setLoggedInTime((long) getMessage().getArgument("loginTime"));
+			client.getLoginTracker().setLoggedInTime((long) getMessage().getArgument("loginTime"));
 			client.setName(client.getUser().getUsername());
 			client.setPlayer(player);
 			client.getWorld().addObject(player, player.getId());

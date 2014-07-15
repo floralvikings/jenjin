@@ -12,7 +12,8 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 
-import static com.jenjinstudios.demo.client.WorldClientInitUtils.*;
+import static com.jenjinstudios.demo.client.WorldClientInitUtils.tryCreateWorldClient;
+import static com.jenjinstudios.demo.client.WorldClientInitUtils.tryRequestWorldFile;
 
 /**
  * @author Caleb Brinkman
@@ -60,9 +61,9 @@ public final class LoginPane extends GridPane implements EventHandler<ActionEven
 			worldClient.start();
 			if (tryRequestWorldFile(worldClient))
 			{
-				if (tryLogin(worldClient))
+				if (worldClient.getLoginTracker().sendLoginRequestAndWaitForResponse(30000))
 				{
-					if (worldClient.isLoggedIn())
+					if (worldClient.getLoginTracker().isLoggedIn())
 					{
 						System.out.println("Successfully logged in!");
 						jenjinDemoClient.successfulLogin(worldClient);

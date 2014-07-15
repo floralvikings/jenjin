@@ -1,7 +1,7 @@
 package com.jenjinstudios.client.message;
 
-import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.client.net.AuthClient;
+import com.jenjinstudios.core.io.Message;
 
 /**
  * This class is used to respond to a LoginResponse.
@@ -22,10 +22,10 @@ public class ExecutableLoginResponse extends AuthClientExecutableMessage
 	@Override
 	public void runDelayed() {
 		AuthClient client = getClient();
-		client.setLoggedIn((boolean) getMessage().getArgument("success"));
-		if (client.isLoggedIn())
+		client.getLoginTracker().setLoggedIn((boolean) getMessage().getArgument("success"));
+		if (client.getLoginTracker().isLoggedIn())
 		{
-			client.setLoggedInTime((long) getMessage().getArgument("loginTime"));
+			client.getLoginTracker().setLoggedInTime((long) getMessage().getArgument("loginTime"));
 			client.setName("Client: " + client.getUser().getUsername());
 		}
 	}

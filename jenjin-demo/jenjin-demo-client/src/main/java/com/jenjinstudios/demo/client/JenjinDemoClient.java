@@ -1,6 +1,5 @@
 package com.jenjinstudios.demo.client;
 
-import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.demo.client.ui.LoginPane;
 import com.jenjinstudios.demo.client.ui.WorldPane;
 import com.jenjinstudios.world.client.WorldClient;
@@ -61,8 +60,7 @@ public class JenjinDemoClient extends Application implements EventHandler<Window
 	public void handle(WindowEvent windowEvent) {
 		if (worldClient != null)
 		{
-			Message message = worldClient.getMessageFactory().generateLoginRequest(worldClient.getUser());
-			worldClient.queueOutgoingMessage(message);
+			worldClient.getLoginTracker().sendLogoutRequestAndWaitForResponse(30000);
 			worldClient.shutdown();
 		}
 	}

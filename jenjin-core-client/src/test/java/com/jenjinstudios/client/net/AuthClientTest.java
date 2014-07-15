@@ -17,9 +17,9 @@ public class AuthClientTest
 		ClientUser clientUser = mock(ClientUser.class);
 		boolean random = Math.random() * 10 % 2 == 0;
 		AuthClient authClient = new AuthClient(messageIO, clientUser);
-		authClient.setLoggedIn(random);
+		authClient.getLoginTracker().setLoggedIn(random);
 
-		Assert.assertEquals(authClient.isLoggedIn(), random);
+		Assert.assertEquals(authClient.getLoginTracker().isLoggedIn(), random);
 	}
 
 	@Test
@@ -28,9 +28,9 @@ public class AuthClientTest
 		ClientUser clientUser = mock(ClientUser.class);
 		long random = (long) (Math.random() * 1000);
 		AuthClient authClient = new AuthClient(messageIO, clientUser);
-		authClient.setLoggedInTime(random);
+		authClient.getLoginTracker().setLoggedInTime(random);
 
-		Assert.assertEquals(authClient.getLoggedInTime(), random);
+		Assert.assertEquals(authClient.getLoginTracker().getLoggedInTime(), random);
 	}
 
 	@Test

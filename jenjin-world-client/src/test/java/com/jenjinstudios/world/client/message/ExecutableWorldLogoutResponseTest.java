@@ -1,12 +1,12 @@
 package com.jenjinstudios.world.client.message;
 
+import com.jenjinstudios.client.net.LoginTracker;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageRegistry;
 import com.jenjinstudios.world.client.WorldClient;
 import org.testng.annotations.Test;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 /**
  * @author Caleb Brinkman
@@ -20,11 +20,13 @@ public class ExecutableWorldLogoutResponseTest
 		worldLogoutResponse.setArgument("success", true);
 
 		WorldClient worldClient = mock(WorldClient.class);
+		LoginTracker loginTracker = mock(LoginTracker.class);
+		when(worldClient.getLoginTracker()).thenReturn(loginTracker);
 
 		ExecutableWorldLogoutResponse message = new ExecutableWorldLogoutResponse(worldClient, worldLogoutResponse);
 		message.runImmediate();
 		message.runDelayed();
 
-		verify(worldClient).setLoggedIn(false);
+		verify(loginTracker).setLoggedIn(false);
 	}
 }

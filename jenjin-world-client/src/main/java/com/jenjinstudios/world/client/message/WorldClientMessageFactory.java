@@ -1,9 +1,9 @@
 package com.jenjinstudios.world.client.message;
 
+import com.jenjinstudios.client.message.ClientMessageFactory;
 import com.jenjinstudios.client.net.ClientUser;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageRegistry;
-import com.jenjinstudios.client.message.ClientMessageFactory;
 import com.jenjinstudios.world.state.MoveState;
 
 /**
@@ -51,7 +51,8 @@ public class WorldClientMessageFactory extends ClientMessageFactory
 	 * Generate a world logout request.
 	 * @return The world logout request.
 	 */
-	public Message generateWorldLogoutRequest() {return getMessageRegistry().createMessage("WorldLogoutRequest");}
+	@Override
+	public Message generateLogoutRequest() {return getMessageRegistry().createMessage("WorldLogoutRequest");}
 
 	/**
 	 * Generate a world file request.

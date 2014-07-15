@@ -24,7 +24,7 @@ public class WorldClient extends AuthClient
 	public WorldClient(MessageIO messageIO, ClientUser clientUser, File worldFile) throws WorldDocumentException {
 		super(messageIO, clientUser);
 		this.messageFactory = new WorldClientMessageFactory(getMessageRegistry());
-		serverWorldFileTracker = new ServerWorldFileTracker(worldFile);
+		serverWorldFileTracker = new ServerWorldFileTracker(this, worldFile);
 		world = serverWorldFileTracker.readWorldFromFile();
 	}
 
@@ -32,10 +32,6 @@ public class WorldClient extends AuthClient
 	public WorldClientMessageFactory getMessageFactory() {return messageFactory; }
 
 	public ServerWorldFileTracker getServerWorldFileTracker() { return serverWorldFileTracker; }
-
-	public void setServerWorldFileTracker(ServerWorldFileTracker serverWorldFileTracker) {
-		this.serverWorldFileTracker = serverWorldFileTracker;
-	}
 
 	public ClientPlayer getPlayer() { return player; }
 
