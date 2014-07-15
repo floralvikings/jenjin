@@ -40,7 +40,7 @@ public class JenjinDemoClient extends Application implements EventHandler<Window
 		}
 		this.worldClient = worldClient;
 		final WorldPane worldPane = new WorldPane(worldClient.getPlayer(), new Dimension2D(800, 600));
-		stage.setScene(new Scene(worldPane, 800, 600));
+		stage.setScene(new Scene(worldPane, 1280, 720));
 		worldClient.addRepeatedTask(new Runnable()
 		{
 			@Override
