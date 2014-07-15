@@ -80,7 +80,8 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage
 		boolean withinMaxCorrect = clientDistance < MAX_CORRECT;
 		if (!withinMaxCorrect)
 		{
-			LOGGER.log(Level.FINEST, "Distance to correct oustide of tolerance.");
+			LOGGER.log(Level.FINEST, "Distance to correct oustide of tolerance.{0},{1}",
+				  new Object[]{clientDistance, MAX_CORRECT});
 		}
 		// Tolerance of a single update to account for timing discrepency.
 		return withinMaxCorrect && distanceWithinTolerance;
