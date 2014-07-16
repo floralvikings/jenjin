@@ -50,8 +50,8 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage
 		} else
 		{
 			player.setAngle(angle);
-			player.setVector2D(position);
-			player.setLastStepTime(System.currentTimeMillis());
+			player.setVector2D(uncorrectedPosition);
+			player.setLastStepTime(timeOfChange);
 		}
 	}
 

@@ -54,7 +54,7 @@ public class MovementKeyTracker
 			angle = new Angle(0.0, Angle.BACK_RIGHT);
 		} else if (rightKeyNotLeft())
 		{
-			angle = new Angle(0.0, Angle.BACK_RIGHT);
+			angle = new Angle(0.0, Angle.FRONT_RIGHT);
 		} else if (!righKey)
 		{
 			angle = new Angle(0.0, Angle.RIGHT);
