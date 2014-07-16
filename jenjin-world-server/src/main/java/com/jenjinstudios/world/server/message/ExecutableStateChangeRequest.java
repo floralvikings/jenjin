@@ -49,9 +49,10 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage
 				  System.currentTimeMillis()));
 		} else
 		{
+			player.setPendingAngle(angle);
 			player.setAngle(angle);
-			player.setVector2D(uncorrectedPosition);
-			player.setLastStepTime(timeOfChange);
+			player.setVector2D(position);
+			player.setLastStepTime(System.currentTimeMillis());
 		}
 	}
 
@@ -69,7 +70,7 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage
 		position = uncorrectedPosition.getVectorInDirection(distance, angle.getStepAngle());
 	}
 
-	private boolean isCorrectionSafe(Actor player) {
+	private boolean isCorrectionSafe(Player player) {
 		double tolerance = Actor.MOVE_SPEED * 0.1;
 		Vector2D proposedPlayerOrigin = getPlayerOrigin(player);
 		double distance = uncorrectedPosition.getDistanceToVector(proposedPlayerOrigin);
@@ -91,9 +92,9 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage
 		return withinMaxCorrect && distanceWithinTolerance;
 	}
 
-	private Vector2D getPlayerOrigin(Actor player) {
+	private Vector2D getPlayerOrigin(Player player) {
 		double originDistance = player.getVector2D().getDistanceToVector(uncorrectedPosition);
-		double playerReverseAngle = player.getAngle().reverseStepAngle();
+		double playerReverseAngle = player.getPendingAngle().reverseStepAngle();
 		return player.getVector2D().getVectorInDirection(originDistance, playerReverseAngle);
 	}
 }

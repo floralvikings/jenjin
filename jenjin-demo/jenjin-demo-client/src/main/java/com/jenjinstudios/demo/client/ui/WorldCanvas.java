@@ -70,6 +70,10 @@ public class WorldCanvas extends Canvas implements EventHandler<KeyEvent>
 
 			GraphicsContext graphicsContext2D = getGraphicsContext2D();
 			graphicsContext2D.setFill(Color.WHITE);
+			if (Boolean.parseBoolean(location.getProperties().getProperty("blocksVision")))
+			{
+				graphicsContext2D.setFill(Color.DARKSLATEGRAY);
+			}
 			graphicsContext2D.setStroke(Color.LIGHTSLATEGRAY);
 			graphicsContext2D.fillRect(x, y, SCALE, SCALE);
 			graphicsContext2D.strokeRect(x, y, SCALE, SCALE);
