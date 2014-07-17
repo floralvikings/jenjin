@@ -2,6 +2,8 @@ package com.jenjinstudios.world.server.message;
 
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.world.Actor;
+import com.jenjinstudios.world.Location;
+import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.math.Angle;
 import com.jenjinstudios.world.math.MathUtil;
 import com.jenjinstudios.world.math.Vector2D;
@@ -41,7 +43,14 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage
 	@Override
 	public void runDelayed() {
 		Player player = getClientHandler().getPlayer();
-		if (!isCorrectionSafe(player))
+
+		if (!locationWalkable(player))
+		{
+			Angle pAngle = player.getAngle().asIdle();
+			Vector2D vector2D = player.getVectorBeforeUpdate();
+			MoveState forcedState = new MoveState(pAngle, vector2D, player.getLastStepTime());
+			player.setForcedState(forcedState);
+		} else if (!isCorrectionSafe(player))
 		{
 			Angle pAngle = player.getAngle();
 			Vector2D vector2D = player.getVectorBeforeUpdate();
@@ -52,7 +61,6 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage
 			player.setPendingAngle(angle);
 			player.setAngle(angle);
 			player.setVector2D(position);
-			//player.setLastStepTime(System.currentTimeMillis());
 		}
 	}
 
@@ -70,32 +78,35 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage
 		position = uncorrectedPosition.getVectorInDirection(distance, angle.getStepAngle());
 	}
 
+	private boolean locationWalkable(Player player) {
+		World world = player.getWorld();
+		int zoneID = player.getZoneID();
+		Location location = world.getLocationForCoordinates(zoneID, position);
+		String walkable = location.getProperties().getProperty("walkable");
+		return Boolean.parseBoolean(walkable);
+	}
+
 	private boolean isCorrectionSafe(Player player) {
-		boolean safe = false;
-		if (!Boolean.parseBoolean(player.getWorld().getLocationForCoordinates(player.getZoneID(),
-			  player.getVector2D()).getProperties().getProperty("walkable")))
+		double tolerance = Actor.MOVE_SPEED * 0.1;
+		Vector2D proposedPlayerOrigin = getPlayerOrigin(player);
+		double distance = uncorrectedPosition.getDistanceToVector(proposedPlayerOrigin);
+		boolean distanceWithinTolerance = distance < tolerance;
+		if (!distanceWithinTolerance)
 		{
-			double tolerance = Actor.MOVE_SPEED * 0.1;
-			Vector2D proposedPlayerOrigin = getPlayerOrigin(player);
-			double distance = uncorrectedPosition.getDistanceToVector(proposedPlayerOrigin);
-			boolean distanceWithinTolerance = distance < tolerance;
-			if (!distanceWithinTolerance)
-			{
-				LOGGER.log(Level.FINEST, "Distance to origin oustide of tolerance: {0},{1}",
-					  new Object[]{distance, tolerance});
-			}
-			double clientDistance = uncorrectedPosition.getDistanceToVector(position);
-			boolean withinMaxCorrect = clientDistance < MAX_CORRECT;
-			if (!withinMaxCorrect)
-			{
-				LOGGER.log(Level.FINEST, "Distance to correct oustide of tolerance. " +
-							"Position: {0}, Corrected: {1}, Step Angle: {2}, Time: {3}, TimePast: {4}",
-					  new Object[]{uncorrectedPosition, position, angle, timeOfChange, timePast});
-			}
-			// Tolerance of a single update to account for timing discrepency.
-			safe = withinMaxCorrect && distanceWithinTolerance;
+			LOGGER.log(Level.FINEST, "Distance to origin oustide of tolerance: {0},{1}",
+				  new Object[]{distance, tolerance});
 		}
-		return safe;
+		double clientDistance = uncorrectedPosition.getDistanceToVector(position);
+		boolean withinMaxCorrect = clientDistance < MAX_CORRECT;
+		if (!withinMaxCorrect)
+		{
+			LOGGER.log(Level.FINEST, "Distance to correct oustide of tolerance. " +
+						"Position: {0}, Corrected: {1}, Step Angle: {2}, Time: {3}, TimePast: {4}",
+				  new Object[]{uncorrectedPosition, position, angle, timeOfChange, timePast});
+		}
+		// Tolerance of a single update to account for timing discrepency.
+		return withinMaxCorrect && distanceWithinTolerance;
+
 	}
 
 	private Vector2D getPlayerOrigin(Player player) {
