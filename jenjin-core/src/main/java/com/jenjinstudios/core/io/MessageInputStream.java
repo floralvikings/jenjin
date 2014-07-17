@@ -166,7 +166,8 @@ public class MessageInputStream extends DataInputStream
 		int size = readInt();
 		bytes = new byte[size];
 		int read = read(bytes, 0, size);
-		if (read != size) throw new IOException("Incorrect number of bytes read for byte array.");
+		if (read != size) throw new IOException("Incorrect number of bytes read for byte array:" +
+			  "Expected " + size + ", got " + read);
 		return bytes;
 	}
 
