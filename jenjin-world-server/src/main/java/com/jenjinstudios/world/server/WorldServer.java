@@ -35,13 +35,7 @@ public class WorldServer extends AuthServer<WorldClientHandler>
 		this.world = reader.read();
 		worldFileBytes = reader.getWorldFileBytes();
 		worldFileChecksum = reader.getWorldFileChecksum();
-		addRepeatedTask(new Runnable()
-		{
-			@Override
-			public void run() {
-				world.update();
-			}
-		});
+		addRepeatedTask(world::update);
 	}
 
 	public World getWorld() { return world; }
@@ -56,6 +50,7 @@ public class WorldServer extends AuthServer<WorldClientHandler>
 	@Override
 	public void removeClient(ClientHandler handler) {
 		super.removeClient(handler);
-		world.removeObject(((WorldClientHandler) handler).getPlayer());
+		if (((WorldClientHandler) handler).getPlayer() != null)
+			world.removeObject(((WorldClientHandler) handler).getPlayer());
 	}
 }
