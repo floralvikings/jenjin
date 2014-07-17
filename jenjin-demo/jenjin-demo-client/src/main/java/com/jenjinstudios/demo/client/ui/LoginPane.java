@@ -83,15 +83,12 @@ public final class LoginPane extends GridPane
 					}
 					if (worldClient.getLoginTracker().sendLoginRequestAndWaitForResponse(30000))
 					{
-						if (worldClient.getLoginTracker().isLoggedIn())
-						{
-							System.out.println("Successfully logged in!");
-							jenjinDemoClient.successfulLogin(worldClient);
-						} else
-						{
-							System.out.println("Login unsuccessful");
-							worldClient.shutdown();
-						}
+						System.out.println("Successfully logged in!");
+						jenjinDemoClient.successfulLogin(worldClient);
+					} else
+					{
+						System.out.println("Login unsuccessful");
+						worldClient.shutdown();
 					}
 				}
 			}
