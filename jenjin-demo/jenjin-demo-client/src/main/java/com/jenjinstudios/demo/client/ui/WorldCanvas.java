@@ -4,12 +4,17 @@ import com.jenjinstudios.world.Location;
 import com.jenjinstudios.world.WorldObject;
 import com.jenjinstudios.world.client.ClientPlayer;
 import com.jenjinstudios.world.math.Angle;
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.TimelineBuilder;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
+import javafx.util.Duration;
 
 /**
  * @author Caleb Brinkman
@@ -34,6 +39,17 @@ public class WorldCanvas extends Canvas implements EventHandler<KeyEvent>
 				requestFocus();
 			}
 		});
+
+		final Duration oneFrameAmt = Duration.millis(1000 / (float) 60);
+		final KeyFrame oneFrame = new KeyFrame(oneFrameAmt,
+			  new EventHandler<ActionEvent>()
+			  {
+				  @Override
+				  public void handle(javafx.event.ActionEvent event) {
+					  drawWorld();
+				  }
+			  });
+		TimelineBuilder.create().cycleCount(Animation.INDEFINITE).keyFrames(oneFrame).build().play();
 	}
 
 	public void drawWorld() {
@@ -87,19 +103,6 @@ public class WorldCanvas extends Canvas implements EventHandler<KeyEvent>
 		}
 	}
 
-	private void drawObject(WorldObject o) {
-		double xDiff = o.getVector2D().getXCoordinate() - clientPlayer.getVector2D().getXCoordinate();
-		double yDiff = o.getVector2D().getYCoordinate() - clientPlayer.getVector2D().getYCoordinate();
-
-		double x = (getWidth() / 2) + (xDiff * (SCALE / Location.SIZE));
-		double y = (getWidth() / 2) - (yDiff * (SCALE / Location.SIZE)) -
-			  SCALE * ((Location.SIZE * Location.SIZE) / SCALE);
-
-		GraphicsContext graphicsContext2D = getGraphicsContext2D();
-		graphicsContext2D.setFill(Color.DARKGREEN);
-		graphicsContext2D.fillRect(x - OBJECT_SCALE / 2, y - OBJECT_SCALE / 2, OBJECT_SCALE, OBJECT_SCALE);
-	}
-
 	public void drawPlayer() {
 		GraphicsContext graphicsContext2D = getGraphicsContext2D();
 		graphicsContext2D.setFill(Color.INDIGO);
@@ -113,6 +116,19 @@ public class WorldCanvas extends Canvas implements EventHandler<KeyEvent>
 		movementKeyTracker.setKeyFlags(keyEvent);
 		setNewAngle();
 		keyEvent.consume();
+	}
+
+	private void drawObject(WorldObject o) {
+		double xDiff = o.getVector2D().getXCoordinate() - clientPlayer.getVector2D().getXCoordinate();
+		double yDiff = o.getVector2D().getYCoordinate() - clientPlayer.getVector2D().getYCoordinate();
+
+		double x = (getWidth() / 2) + (xDiff * (SCALE / Location.SIZE));
+		double y = (getWidth() / 2) - (yDiff * (SCALE / Location.SIZE)) -
+			  SCALE * ((Location.SIZE * Location.SIZE) / SCALE);
+
+		GraphicsContext graphicsContext2D = getGraphicsContext2D();
+		graphicsContext2D.setFill(Color.DARKGREEN);
+		graphicsContext2D.fillRect(x - OBJECT_SCALE / 2, y - OBJECT_SCALE / 2, OBJECT_SCALE, OBJECT_SCALE);
 	}
 
 	private void setNewAngle() {

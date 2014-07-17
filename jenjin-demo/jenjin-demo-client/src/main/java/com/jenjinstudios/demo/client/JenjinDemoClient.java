@@ -4,7 +4,6 @@ import com.jenjinstudios.demo.client.ui.LoginPane;
 import com.jenjinstudios.demo.client.ui.WorldPane;
 import com.jenjinstudios.world.client.WorldClient;
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.geometry.Dimension2D;
 import javafx.scene.Scene;
@@ -38,21 +37,8 @@ public class JenjinDemoClient extends Application implements EventHandler<Window
 			throw new IllegalStateException("WorldClient already set.");
 		}
 		this.worldClient = worldClient;
-		final WorldPane worldPane = new WorldPane(worldClient.getPlayer(), new Dimension2D(800, 600));
+		final WorldPane worldPane = new WorldPane(worldClient.getPlayer(), new Dimension2D(1280, 720));
 		stage.setScene(new Scene(worldPane, 1280, 720));
-		worldClient.addRepeatedTask(new Runnable()
-		{
-			@Override
-			public void run() {
-				Platform.runLater(new Runnable()
-				{
-					@Override
-					public void run() {
-						worldPane.drawWorld();
-					}
-				});
-			}
-		});
 		stage.show();
 	}
 
