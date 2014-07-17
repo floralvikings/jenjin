@@ -83,7 +83,7 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage
 		int zoneID = player.getZoneID();
 		Location location = world.getLocationForCoordinates(zoneID, position);
 		String walkable = location.getProperties().getProperty("walkable");
-		return Boolean.parseBoolean(walkable);
+		return !"false".equals(walkable);
 	}
 
 	private boolean isCorrectionSafe(Player player) {
