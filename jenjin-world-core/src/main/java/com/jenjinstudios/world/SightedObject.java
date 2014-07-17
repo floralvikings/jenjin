@@ -4,6 +4,7 @@ import com.jenjinstudios.world.math.FieldOfVisionCalculator;
 import com.jenjinstudios.world.math.Vector2D;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * The {@code SightedObject} class is a {@code WorldObject} which maintains a range of locations which are visible to
@@ -137,12 +138,7 @@ public class SightedObject extends WorldObject
 	}
 
 	private void addCurrentlyVisibleObjectsInLocation(ArrayList<WorldObject> currentlyVisible, Location loc) {
-		for (WorldObject object : loc.getObjects())
-		{
-			if (object != this)
-			{
-				currentlyVisible.add(object);
-			}
-		}
+		currentlyVisible.addAll(loc.getObjects().stream().filter(object ->
+			  object != this).collect(Collectors.toList()));
 	}
 }
