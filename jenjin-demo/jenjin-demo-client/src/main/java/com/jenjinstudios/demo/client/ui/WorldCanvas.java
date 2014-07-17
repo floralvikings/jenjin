@@ -8,23 +8,27 @@ import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.TimelineBuilder;
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
+
+import java.io.InputStream;
 
 /**
  * @author Caleb Brinkman
  */
 public class WorldCanvas extends Canvas implements EventHandler<KeyEvent>
 {
-	private static final double SCALE = 50;
-	private static final double OBJECT_SCALE = 25;
+	private static final double SCALE = 150;
+	private static final double OBJECT_SCALE = 50;
 	private final ClientPlayer clientPlayer;
 	private final MovementKeyTracker movementKeyTracker;
+	private final Image groundImage;
+	private final Image wallImage;
 
 	public WorldCanvas(ClientPlayer clientPlayer, double width, double height) {
 		super(width, height);
@@ -32,24 +36,18 @@ public class WorldCanvas extends Canvas implements EventHandler<KeyEvent>
 		movementKeyTracker = new MovementKeyTracker();
 		setOnKeyPressed(this);
 		setOnKeyReleased(this);
-		Platform.runLater(new Runnable()
-		{
-			@Override
-			public void run() {
-				requestFocus();
-			}
-		});
+		Platform.runLater(this::requestFocus);
 
 		final Duration oneFrameAmt = Duration.millis(1000 / (float) 60);
 		final KeyFrame oneFrame = new KeyFrame(oneFrameAmt,
-			  new EventHandler<ActionEvent>()
-			  {
-				  @Override
-				  public void handle(javafx.event.ActionEvent event) {
-					  drawWorld();
-				  }
-			  });
+			  event -> drawWorld());
 		TimelineBuilder.create().cycleCount(Animation.INDEFINITE).keyFrames(oneFrame).build().play();
+		InputStream groundInputStream = WorldCanvas.class.getClassLoader().
+			  getResourceAsStream("com/jenjinstudios/demo/client/images/ground.jpg");
+		groundImage = new Image(groundInputStream, SCALE, SCALE, false, false);
+		InputStream wallInputStream = WorldCanvas.class.getClassLoader().
+			  getResourceAsStream("com/jenjinstudios/demo/client/images/wall.jpg");
+		wallImage = new Image(wallInputStream, SCALE, SCALE, false, false);
 	}
 
 	public void drawWorld() {
@@ -65,12 +63,7 @@ public class WorldCanvas extends Canvas implements EventHandler<KeyEvent>
 		graphicsContext2D.fillRect(0, 0, getWidth(), getHeight());
 	}
 
-	public void drawLocations() {
-		for (Location loc : clientPlayer.getVisibleLocations())
-		{
-			drawLocation(loc);
-		}
-	}
+	public void drawLocations() { clientPlayer.getVisibleLocations().forEach(this::drawLocation); }
 
 	public void drawLocation(Location location) {
 		Location pLoc = clientPlayer.getLocation();
@@ -88,20 +81,15 @@ public class WorldCanvas extends Canvas implements EventHandler<KeyEvent>
 			graphicsContext2D.setFill(Color.WHITE);
 			if (Boolean.parseBoolean(location.getProperties().getProperty("blocksVision")))
 			{
-				graphicsContext2D.setFill(Color.DARKSLATEGRAY);
+				graphicsContext2D.drawImage(wallImage, x, y);
+			} else
+			{
+				graphicsContext2D.drawImage(groundImage, x, y);
 			}
-			graphicsContext2D.setStroke(Color.LIGHTSLATEGRAY);
-			graphicsContext2D.fillRect(x, y, SCALE, SCALE);
-			graphicsContext2D.strokeRect(x, y, SCALE, SCALE);
 		}
 	}
 
-	public void drawObjects() {
-		for (WorldObject o : clientPlayer.getVisibleObjects().values())
-		{
-			drawObject(o);
-		}
-	}
+	public void drawObjects() { clientPlayer.getVisibleObjects().values().forEach(this::drawObject); }
 
 	public void drawPlayer() {
 		GraphicsContext graphicsContext2D = getGraphicsContext2D();

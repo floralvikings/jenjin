@@ -6,7 +6,9 @@ import com.jenjinstudios.world.client.WorldClient;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.geometry.Dimension2D;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
@@ -27,7 +29,7 @@ public class JenjinDemoClient extends Application implements EventHandler<Window
 		LoginPane loginPane = new LoginPane(this);
 		stage = primaryStage;
 		stage.setOnCloseRequest(this);
-		stage.setScene(new Scene(loginPane, 800, 600));
+		stage.setScene(new Scene(loginPane, 600, 400));
 		stage.show();
 	}
 
@@ -37,8 +39,13 @@ public class JenjinDemoClient extends Application implements EventHandler<Window
 			throw new IllegalStateException("WorldClient already set.");
 		}
 		this.worldClient = worldClient;
-		final WorldPane worldPane = new WorldPane(worldClient.getPlayer(), new Dimension2D(1280, 720));
-		stage.setScene(new Scene(worldPane, 1280, 720));
+		Screen screen = Screen.getPrimary();
+		Rectangle2D bounds = screen.getVisualBounds();
+		stage.setX(bounds.getMinX());
+		stage.setY(bounds.getMinY());
+		final WorldPane worldPane = new WorldPane(worldClient.getPlayer(), new Dimension2D(bounds.getWidth(),
+			  bounds.getHeight()));
+		stage.setScene(new Scene(worldPane, bounds.getWidth(), bounds.getHeight()));
 		stage.show();
 	}
 
