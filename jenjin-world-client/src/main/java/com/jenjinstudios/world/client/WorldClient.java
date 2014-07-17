@@ -39,4 +39,6 @@ public class WorldClient extends AuthClient
 
 	public World getWorld() { return world; }
 
+	public void readWorldFile() throws WorldDocumentException { world = serverWorldFileTracker.readWorldFromFile(); }
+
 }

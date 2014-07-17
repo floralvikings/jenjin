@@ -23,12 +23,13 @@ import java.io.InputStream;
  */
 public class WorldCanvas extends Canvas implements EventHandler<KeyEvent>
 {
-	private static final double SCALE = 150;
-	private static final double OBJECT_SCALE = 50;
+	private static final double SCALE = 75;
+	private static final double OBJECT_SCALE = 20;
 	private final ClientPlayer clientPlayer;
 	private final MovementKeyTracker movementKeyTracker;
 	private final Image groundImage;
 	private final Image wallImage;
+	private final Image indoorsImage;
 
 	public WorldCanvas(ClientPlayer clientPlayer, double width, double height) {
 		super(width, height);
@@ -48,6 +49,9 @@ public class WorldCanvas extends Canvas implements EventHandler<KeyEvent>
 		InputStream wallInputStream = WorldCanvas.class.getClassLoader().
 			  getResourceAsStream("com/jenjinstudios/demo/client/images/wall.jpg");
 		wallImage = new Image(wallInputStream, SCALE, SCALE, false, false);
+		InputStream indoorsInputStream = WorldCanvas.class.getClassLoader().
+			  getResourceAsStream("com/jenjinstudios/demo/client/images/indoors.jpg");
+		indoorsImage = new Image(indoorsInputStream, SCALE, SCALE, false, false);
 	}
 
 	public void drawWorld() {
@@ -79,12 +83,18 @@ public class WorldCanvas extends Canvas implements EventHandler<KeyEvent>
 
 			GraphicsContext graphicsContext2D = getGraphicsContext2D();
 			graphicsContext2D.setFill(Color.WHITE);
-			if (Boolean.parseBoolean(location.getProperties().getProperty("blocksVision")))
+			if (!"false".equals(location.getProperties().getProperty("walkable")))
 			{
-				graphicsContext2D.drawImage(wallImage, x, y);
+				if ("true".equals(location.getProperties().getProperty("indoors")))
+				{
+					graphicsContext2D.drawImage(indoorsImage, x, y);
+				} else
+				{
+					graphicsContext2D.drawImage(groundImage, x, y);
+				}
 			} else
 			{
-				graphicsContext2D.drawImage(groundImage, x, y);
+				graphicsContext2D.drawImage(wallImage, x, y);
 			}
 		}
 	}
@@ -110,12 +120,16 @@ public class WorldCanvas extends Canvas implements EventHandler<KeyEvent>
 		double xDiff = o.getVector2D().getXCoordinate() - clientPlayer.getVector2D().getXCoordinate();
 		double yDiff = o.getVector2D().getYCoordinate() - clientPlayer.getVector2D().getYCoordinate();
 
-		double x = (getWidth() / 2) + (xDiff * (SCALE / Location.SIZE));
-		double y = (getWidth() / 2) - (yDiff * (SCALE / Location.SIZE)) -
-			  SCALE * ((Location.SIZE * Location.SIZE) / SCALE);
+		double yOrig = getHeight() / 2;
+		double xOrig = getWidth() / 2;
+
+		double locScale = (SCALE / Location.SIZE);
+
+		double x = xOrig + (xDiff * locScale);
+		double y = yOrig - (yDiff * locScale);
 
 		GraphicsContext graphicsContext2D = getGraphicsContext2D();
-		graphicsContext2D.setFill(Color.DARKGREEN);
+		graphicsContext2D.setFill(Color.DARKCYAN);
 		graphicsContext2D.fillRect(x - OBJECT_SCALE / 2, y - OBJECT_SCALE / 2, OBJECT_SCALE, OBJECT_SCALE);
 	}
 

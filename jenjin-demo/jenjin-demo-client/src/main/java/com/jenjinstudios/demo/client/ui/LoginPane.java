@@ -3,6 +3,7 @@ package com.jenjinstudios.demo.client.ui;
 import com.jenjinstudios.client.net.ClientUser;
 import com.jenjinstudios.demo.client.JenjinDemoClient;
 import com.jenjinstudios.world.client.WorldClient;
+import com.jenjinstudios.world.io.WorldDocumentException;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -29,6 +30,10 @@ public final class LoginPane extends GridPane
 		setVgap(10);
 		setPadding(new Insets(25, 25, 25, 25));
 
+		createForm(jenjinDemoClient);
+	}
+
+	private void createForm(JenjinDemoClient jenjinDemoClient) {
 		Label addressLabel = new Label("Address");
 		add(addressLabel, 0, 0);
 		add(addressField, 1, 0);
@@ -44,6 +49,21 @@ public final class LoginPane extends GridPane
 		Button loginButton = new Button("Login");
 		add(loginButton, 3, 2);
 
+		setLoginActionEvent(jenjinDemoClient, loginButton);
+
+		setEnterKeyActionEvent(loginButton);
+	}
+
+	private void setEnterKeyActionEvent(Button loginButton) {
+		setOnKeyPressed(event -> {
+			if (event.getCode().equals(KeyCode.ENTER))
+			{
+				loginButton.fire();
+			}
+		});
+	}
+
+	private void setLoginActionEvent(JenjinDemoClient jenjinDemoClient, Button loginButton) {
 		loginButton.setOnAction(event -> {
 			ClientUser clientUser = new ClientUser(usernameField.getText(), passwordField.getText());
 			String address = addressField.getText();
@@ -54,6 +74,13 @@ public final class LoginPane extends GridPane
 				worldClient.start();
 				if (tryRequestWorldFile(worldClient))
 				{
+					try
+					{
+						worldClient.readWorldFile();
+					} catch (WorldDocumentException e)
+					{
+						e.printStackTrace();
+					}
 					if (worldClient.getLoginTracker().sendLoginRequestAndWaitForResponse(30000))
 					{
 						if (worldClient.getLoginTracker().isLoggedIn())
@@ -69,14 +96,6 @@ public final class LoginPane extends GridPane
 				}
 			}
 		});
-
-		setOnKeyPressed(event -> {
-			if (event.getCode().equals(KeyCode.ENTER))
-			{
-				loginButton.fire();
-			}
-		});
-
 	}
 
 

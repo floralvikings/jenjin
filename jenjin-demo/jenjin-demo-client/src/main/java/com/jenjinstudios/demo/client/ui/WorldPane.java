@@ -9,15 +9,8 @@ import javafx.scene.Group;
  */
 public class WorldPane extends Group
 {
-	private WorldCanvas canvas;
-
 	public WorldPane(ClientPlayer clientPlayer, Dimension2D size) {
-		this.canvas = new WorldCanvas(clientPlayer, size.getWidth(), size.getHeight());
+		WorldCanvas canvas = new WorldCanvas(clientPlayer, size.getWidth(), size.getHeight());
 		getChildren().add(canvas);
 	}
-
-	public void drawWorld() {
-		canvas.drawWorld();
-	}
-
 }
