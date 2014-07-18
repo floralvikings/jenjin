@@ -32,6 +32,6 @@ public class GroundTileManager
 	public Image getTileForLocation(Location loc) {
 		int x = loc.X_COORDINATE % tiles.length;
 		int y = loc.Y_COORDINATE % tiles[x].length;
-		return tiles[x][y];
+		return tiles[y][x];
 	}
 }
