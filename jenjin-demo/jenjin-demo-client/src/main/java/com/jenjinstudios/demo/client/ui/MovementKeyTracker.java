@@ -30,13 +30,13 @@ public class MovementKeyTracker
 
 	private Angle getRightKeyAngle() {
 		Angle angle;
-		angle = new Angle(0.0, Angle.FRONT);
+		angle = new Angle(Angle.FRONT, Angle.FRONT);
 		return angle;
 	}
 
 	private Angle getLeftKeyAngle() {
 		Angle angle;
-		angle = new Angle(0.0, Angle.BACK);
+		angle = new Angle(Angle.BACK, Angle.FRONT);
 		return angle;
 	}
 
@@ -51,13 +51,13 @@ public class MovementKeyTracker
 	private Angle getDownKeyAngle(Angle angle) {
 		if (leftKeyNotRight())
 		{
-			angle = new Angle(0.0, Angle.BACK_RIGHT);
+			angle = new Angle(Angle.BACK_LEFT, Angle.FRONT);
 		} else if (rightKeyNotLeft())
 		{
-			angle = new Angle(0.0, Angle.FRONT_RIGHT);
+			angle = new Angle(Angle.FRONT_LEFT, Angle.FRONT);
 		} else if (!righKey)
 		{
-			angle = new Angle(0.0, Angle.RIGHT);
+			angle = new Angle(Angle.LEFT, Angle.FRONT);
 		}
 		return angle;
 	}
@@ -65,13 +65,13 @@ public class MovementKeyTracker
 	private Angle getUpKeyAngle(Angle angle) {
 		if (leftKeyNotRight())
 		{
-			angle = new Angle(0.0, Angle.BACK_LEFT);
+			angle = new Angle(Angle.BACK_RIGHT, Angle.FRONT);
 		} else if (rightKeyNotLeft())
 		{
-			angle = new Angle(0.0, Angle.FRONT_LEFT);
+			angle = new Angle(Angle.FRONT_RIGHT, Angle.FRONT);
 		} else if (!righKey)
 		{
-			angle = new Angle(0.0, Angle.LEFT);
+			angle = new Angle(Angle.RIGHT, Angle.FRONT);
 		}
 		return angle;
 	}

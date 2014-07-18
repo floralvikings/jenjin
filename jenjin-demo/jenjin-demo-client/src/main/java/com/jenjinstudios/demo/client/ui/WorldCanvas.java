@@ -14,7 +14,10 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
+import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
+
+import java.io.InputStream;
 
 /**
  * @author Caleb Brinkman
@@ -22,10 +25,11 @@ import javafx.util.Duration;
 public class WorldCanvas extends Canvas implements EventHandler<KeyEvent>
 {
 	private static final double SCALE = 75;
-	private static final double OBJECT_SCALE = 50;
+	private static final double OBJ_SCALE = 75;
 	private final ClientPlayer clientPlayer;
 	private final MovementKeyTracker movementKeyTracker;
 	private final LocationTileManager locationTileManager;
+	private final Image objectImage;
 
 	public WorldCanvas(ClientPlayer clientPlayer, double width, double height) {
 		super(width, height);
@@ -40,6 +44,9 @@ public class WorldCanvas extends Canvas implements EventHandler<KeyEvent>
 			  event -> drawWorld());
 		TimelineBuilder.create().cycleCount(Animation.INDEFINITE).keyFrames(oneFrame).build().play();
 		locationTileManager = new LocationTileManager();
+		String tankImageFile = "com/jenjinstudios/demo/client/images/tank.png";
+		InputStream stream = getClass().getClassLoader().getResourceAsStream(tankImageFile);
+		objectImage = new Image(stream);
 	}
 
 	public void drawWorld() {
@@ -67,7 +74,7 @@ public class WorldCanvas extends Canvas implements EventHandler<KeyEvent>
 			double yBuff = clientPlayer.getVector2D().getYCoordinate() % Location.SIZE;
 
 			double x = getWidth() / 2 + (xDiff * SCALE - xBuff * (SCALE / Location.SIZE));
-			double y = getHeight() / 2 - (yDiff * SCALE - yBuff * (SCALE / Location.SIZE));
+			double y = getHeight() / 2 + (yDiff * SCALE - yBuff * (SCALE / Location.SIZE));
 
 			GraphicsContext graphicsContext2D = getGraphicsContext2D();
 			Image tile = locationTileManager.getTileForLocation(location);
@@ -78,11 +85,19 @@ public class WorldCanvas extends Canvas implements EventHandler<KeyEvent>
 	public void drawObjects() { clientPlayer.getVisibleObjects().values().forEach(this::drawObject); }
 
 	public void drawPlayer() {
+		double x = getWidth() / 2;
+		double y = getHeight() / 2;
+
 		GraphicsContext graphicsContext2D = getGraphicsContext2D();
-		graphicsContext2D.setFill(Color.INDIGO);
-		double x = getWidth() / 2 - OBJECT_SCALE / 2;
-		double y = getHeight() / 2 - OBJECT_SCALE / 2;
-		graphicsContext2D.fillRect(x, y, OBJECT_SCALE, OBJECT_SCALE);
+		graphicsContext2D.save();
+		Angle pAngle = clientPlayer.getAngle();
+		double angle = pAngle.getAbsoluteAngle();
+		angle = Math.toDegrees(angle);
+		Rotate r = new Rotate(angle, x, y);
+		graphicsContext2D.setTransform(r.getMxx(), r.getMyx(), r.getMxy(), r.getMyy(), r.getTx(), r.getTy());
+		graphicsContext2D.drawImage(objectImage, x - OBJ_SCALE / 2, y - OBJ_SCALE / 2, OBJ_SCALE,
+			  OBJ_SCALE);
+		graphicsContext2D.restore();
 	}
 
 	@Override
@@ -102,11 +117,14 @@ public class WorldCanvas extends Canvas implements EventHandler<KeyEvent>
 		double locScale = (SCALE / Location.SIZE);
 
 		double x = xOrig + (xDiff * locScale);
-		double y = yOrig - (yDiff * locScale);
+		double y = yOrig + (yDiff * locScale);
 
 		GraphicsContext graphicsContext2D = getGraphicsContext2D();
-		graphicsContext2D.setFill(Color.DARKCYAN);
-		graphicsContext2D.fillRect(x - OBJECT_SCALE / 2, y - OBJECT_SCALE / 2, OBJECT_SCALE, OBJECT_SCALE);
+		graphicsContext2D.save();
+		Rotate r = new Rotate(Math.toDegrees(o.getAngle().getRelativeAngle()), x, y);
+		graphicsContext2D.setTransform(r.getMxx(), r.getMyx(), r.getMxy(), r.getMyy(), r.getTx(), r.getTy());
+		graphicsContext2D.drawImage(objectImage, x - OBJ_SCALE / 2, y - OBJ_SCALE / 2, OBJ_SCALE, OBJ_SCALE);
+		graphicsContext2D.restore();
 	}
 
 	private void setNewAngle() {
