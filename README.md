@@ -46,7 +46,7 @@ the Travis automated building is helping with that a great deal.
 
 Special thanks go out to:
 
-* This blog [http://seamless-pixels.blogspot.co.uk/], which supplied all the textures used in the demo application.  These
+* [This blog](http://seamless-pixels.blogspot.co.uk/), which supplied all the textures used in the demo application.  These
 textures are high-resolution, tileable, and very, very nice.  They are completely free but there is an option to download the entire
 archive for as little as $1.99 should you desire to support an open-source artist. (You should.)Yet 
 
