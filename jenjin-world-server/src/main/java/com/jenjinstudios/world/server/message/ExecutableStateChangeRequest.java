@@ -1,7 +1,6 @@
 package com.jenjinstudios.world.server.message;
 
 import com.jenjinstudios.core.io.Message;
-import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.Location;
 import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.math.Angle;
@@ -21,7 +20,6 @@ import java.util.logging.Logger;
 @SuppressWarnings("WeakerAccess")
 public class ExecutableStateChangeRequest extends WorldExecutableMessage
 {
-	private static final double MAX_CORRECT = Actor.MOVE_SPEED;
 	private static final Logger LOGGER = Logger.getLogger(ExecutableStateChangeRequest.class.getName());
 	private Angle angle;
 	/** The new position, corrected for lag. */
@@ -43,7 +41,8 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage
 	@Override
 	public void runDelayed() {
 		Player player = getClientHandler().getPlayer();
-
+		double distance = MathUtil.round(player.getMoveSpeed() * ((double) timePast / 1000d), 2);
+		position = uncorrectedPosition.getVectorInDirection(distance, angle.getStepAngle());
 		if (!locationWalkable(player))
 		{
 			Angle pAngle = player.getAngle().asIdle();
@@ -74,8 +73,7 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage
 		uncorrectedPosition = new Vector2D(x, y);
 		angle = new Angle(absoluteAngle, relativeAngle);
 		timePast = (System.currentTimeMillis() - timeOfChange);
-		double distance = MathUtil.round(Actor.MOVE_SPEED * ((double) timePast / 1000d), 2);
-		position = uncorrectedPosition.getVectorInDirection(distance, angle.getStepAngle());
+
 	}
 
 	private boolean locationWalkable(Player player) {
@@ -87,7 +85,7 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage
 	}
 
 	private boolean isCorrectionSafe(Player player) {
-		double tolerance = Actor.MOVE_SPEED * 0.1;
+		double tolerance = player.getMoveSpeed() * 0.1;
 		Vector2D proposedPlayerOrigin = getPlayerOrigin(player);
 		double distance = uncorrectedPosition.getDistanceToVector(proposedPlayerOrigin);
 		boolean distanceWithinTolerance = distance < tolerance;
@@ -97,7 +95,8 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage
 				  new Object[]{distance, tolerance});
 		}
 		double clientDistance = uncorrectedPosition.getDistanceToVector(position);
-		boolean withinMaxCorrect = clientDistance < MAX_CORRECT;
+		double maxCorrect = player.getMoveSpeed();
+		boolean withinMaxCorrect = clientDistance < maxCorrect;
 		if (!withinMaxCorrect)
 		{
 			LOGGER.log(Level.FINEST, "Distance to correct oustide of tolerance. " +

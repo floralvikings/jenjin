@@ -29,14 +29,13 @@ public class WorldClientHandler extends ClientHandler
 	@Override
 	public void update() {
 		super.update();
-		if (!hasSentActorStepMessage)
-		{
-			queueOutgoingMessage(getMessageFactory().generateActorMoveSpeedMessage());
-			hasSentActorStepMessage = true;
-		}
 		if (player != null)
 		{
-
+			if (!hasSentActorStepMessage)
+			{
+				queueOutgoingMessage(getMessageFactory().generateActorMoveSpeedMessage(player.getMoveSpeed()));
+				hasSentActorStepMessage = true;
+			}
 			queueForcesStateMessage();
 			queueNewlyVisibleMessages();
 			queueNewlyInvisibleMessages();

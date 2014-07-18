@@ -24,7 +24,8 @@ import java.util.LinkedList;
  */
 public class Actor extends SightedObject
 {
-	public static final double MOVE_SPEED = 30.0d;
+	public static final double DEFAULT_MOVE_SPEED = 30.0d;
+	private double moveSpeed;
 	private final LinkedList<MoveState> stateChanges;
 	private boolean newState;
 	private MoveState forcedState;
@@ -35,6 +36,7 @@ public class Actor extends SightedObject
 	public Actor(String name) {
 		super(name);
 		stateChanges = new LinkedList<>();
+		setMoveSpeed(DEFAULT_MOVE_SPEED);
 	}
 
 	@Override
@@ -100,7 +102,7 @@ public class Actor extends SightedObject
 	}
 
 	public double calcStepLength() {
-		return ((System.currentTimeMillis() - (double) getLastStepTime()) / 1000) * Actor.MOVE_SPEED;
+		return ((System.currentTimeMillis() - (double) getLastStepTime()) / 1000) * getMoveSpeed();
 	}
 
 	public long getLastStepTime() { return lastStepTime; }
@@ -108,6 +110,14 @@ public class Actor extends SightedObject
 	public void setLastStepTime(long lastStepTime) { this.lastStepTime = lastStepTime; }
 
 	public Vector2D getVectorBeforeUpdate() { return vectorBeforeUpdate; }
+
+	public double getMoveSpeed() {
+		return moveSpeed;
+	}
+
+	public void setMoveSpeed(double moveSpeed) {
+		this.moveSpeed = moveSpeed;
+	}
 
 	private boolean stepForward(double stepLength) {
 		boolean didStep;

@@ -60,9 +60,9 @@ public class WorldServerMessageFactory extends ServerMessageFactory
 		return forcedStateMessage;
 	}
 
-	public Message generateActorMoveSpeedMessage() {
+	public Message generateActorMoveSpeedMessage(double moveSpeed) {
 		Message stepLengthMessage = getMessageRegistry().createMessage("ActorMoveSpeed");
-		stepLengthMessage.setArgument("moveSpeed", Actor.MOVE_SPEED);
+		stepLengthMessage.setArgument("moveSpeed", moveSpeed);
 		return stepLengthMessage;
 	}
 
