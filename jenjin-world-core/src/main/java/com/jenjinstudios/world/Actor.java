@@ -24,7 +24,7 @@ import java.util.LinkedList;
  */
 public class Actor extends SightedObject
 {
-	public static final double MOVE_SPEED = 10.0d;
+	public static final double MOVE_SPEED = 30.0d;
 	private final LinkedList<MoveState> stateChanges;
 	private boolean newState;
 	private MoveState forcedState;

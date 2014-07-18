@@ -11,12 +11,9 @@ import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
-
-import java.io.InputStream;
 
 /**
  * @author Caleb Brinkman
@@ -27,9 +24,9 @@ public class WorldCanvas extends Canvas implements EventHandler<KeyEvent>
 	private static final double OBJECT_SCALE = 20;
 	private final ClientPlayer clientPlayer;
 	private final MovementKeyTracker movementKeyTracker;
-	private final Image groundImage;
-	private final Image wallImage;
-	private final Image indoorsImage;
+	private final GroundTileManager groundTileManager;
+	private final WallTileManager wallTileManager;
+	private final IndoorsTileManager indoorsTileManager;
 
 	public WorldCanvas(ClientPlayer clientPlayer, double width, double height) {
 		super(width, height);
@@ -43,15 +40,9 @@ public class WorldCanvas extends Canvas implements EventHandler<KeyEvent>
 		final KeyFrame oneFrame = new KeyFrame(oneFrameAmt,
 			  event -> drawWorld());
 		TimelineBuilder.create().cycleCount(Animation.INDEFINITE).keyFrames(oneFrame).build().play();
-		InputStream groundInputStream = WorldCanvas.class.getClassLoader().
-			  getResourceAsStream("com/jenjinstudios/demo/client/images/ground.jpg");
-		groundImage = new Image(groundInputStream, SCALE, SCALE, false, false);
-		InputStream wallInputStream = WorldCanvas.class.getClassLoader().
-			  getResourceAsStream("com/jenjinstudios/demo/client/images/wall.jpg");
-		wallImage = new Image(wallInputStream, SCALE, SCALE, false, false);
-		InputStream indoorsInputStream = WorldCanvas.class.getClassLoader().
-			  getResourceAsStream("com/jenjinstudios/demo/client/images/indoors.jpg");
-		indoorsImage = new Image(indoorsInputStream, SCALE, SCALE, false, false);
+		groundTileManager = new GroundTileManager();
+		wallTileManager = new WallTileManager();
+		indoorsTileManager = new IndoorsTileManager();
 	}
 
 	public void drawWorld() {
@@ -87,14 +78,14 @@ public class WorldCanvas extends Canvas implements EventHandler<KeyEvent>
 			{
 				if ("true".equals(location.getProperties().getProperty("indoors")))
 				{
-					graphicsContext2D.drawImage(indoorsImage, x, y);
+					graphicsContext2D.drawImage(indoorsTileManager.getTileForLocation(location), x, y, SCALE, SCALE);
 				} else
 				{
-					graphicsContext2D.drawImage(groundImage, x, y);
+					graphicsContext2D.drawImage(groundTileManager.getTileForLocation(location), x, y, SCALE, SCALE);
 				}
 			} else
 			{
-				graphicsContext2D.drawImage(wallImage, x, y);
+				graphicsContext2D.drawImage(wallTileManager.getTileForLocation(location), x, y, SCALE, SCALE);
 			}
 		}
 	}

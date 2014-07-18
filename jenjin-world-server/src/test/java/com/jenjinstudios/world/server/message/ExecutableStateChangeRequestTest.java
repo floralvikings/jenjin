@@ -60,8 +60,8 @@ public class ExecutableStateChangeRequestTest
 		Message request = messageRegistry.createMessage("StateChangeRequest");
 		request.setArgument("relativeAngle", Angle.FRONT);
 		request.setArgument("absoluteAngle", 0.0);
-		request.setArgument("xCoordinate", 1.0);
-		request.setArgument("yCoordinate", 1.0);
+		request.setArgument("xCoordinate", 10.0);
+		request.setArgument("yCoordinate", 10.0);
 		request.setArgument("timeOfChange", System.currentTimeMillis());
 		ExecutableStateChangeRequest executableStateChangeRequest = new ExecutableStateChangeRequest(mock, request);
 		executableStateChangeRequest.runImmediate();
