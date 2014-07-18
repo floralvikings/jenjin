@@ -22,7 +22,7 @@ import javafx.util.Duration;
 public class WorldCanvas extends Canvas implements EventHandler<KeyEvent>
 {
 	private static final double SCALE = 75;
-	private static final double OBJECT_SCALE = 20;
+	private static final double OBJECT_SCALE = 50;
 	private final ClientPlayer clientPlayer;
 	private final MovementKeyTracker movementKeyTracker;
 	private final LocationTileManager locationTileManager;
