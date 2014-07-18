@@ -8,11 +8,9 @@ import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.TimelineBuilder;
 import javafx.application.Platform;
-import javafx.event.EventHandler;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
@@ -22,21 +20,20 @@ import java.io.InputStream;
 /**
  * @author Caleb Brinkman
  */
-public class WorldCanvas extends Canvas implements EventHandler<KeyEvent>
+public class WorldCanvas extends Canvas
 {
 	private static final double SCALE = 75;
 	private static final double OBJ_SCALE = 75;
 	private final ClientPlayer clientPlayer;
-	private final MovementKeyTracker movementKeyTracker;
 	private final LocationTileManager locationTileManager;
 	private final Image objectImage;
 
 	public WorldCanvas(ClientPlayer clientPlayer, double width, double height) {
 		super(width, height);
 		this.clientPlayer = clientPlayer;
-		movementKeyTracker = new MovementKeyTracker();
-		setOnKeyPressed(this);
-		setOnKeyReleased(this);
+		PlayerControlKeyHandler playerControlKeyHandler = new PlayerControlKeyHandler(clientPlayer);
+		setOnKeyPressed(playerControlKeyHandler);
+		setOnKeyReleased(playerControlKeyHandler);
 		Platform.runLater(this::requestFocus);
 
 		final Duration oneFrameAmt = Duration.millis(1000 / (float) 60);
@@ -69,7 +66,7 @@ public class WorldCanvas extends Canvas implements EventHandler<KeyEvent>
 		if (location != null && pLoc != null)
 		{
 			int xDiff = location.X_COORDINATE - pLoc.X_COORDINATE;
-			int yDiff = location.Y_COORDINATE - pLoc.Y_COORDINATE + 1;
+			int yDiff = location.Y_COORDINATE - pLoc.Y_COORDINATE;//+ 1;
 			double xBuff = clientPlayer.getVector2D().getXCoordinate() % Location.SIZE;
 			double yBuff = clientPlayer.getVector2D().getYCoordinate() % Location.SIZE;
 
@@ -100,13 +97,6 @@ public class WorldCanvas extends Canvas implements EventHandler<KeyEvent>
 		graphicsContext2D.restore();
 	}
 
-	@Override
-	public void handle(KeyEvent keyEvent) {
-		movementKeyTracker.setKeyFlags(keyEvent);
-		setNewAngle();
-		keyEvent.consume();
-	}
-
 	private void drawObject(WorldObject o) {
 		double xDiff = o.getVector2D().getXCoordinate() - clientPlayer.getVector2D().getXCoordinate();
 		double yDiff = o.getVector2D().getYCoordinate() - clientPlayer.getVector2D().getYCoordinate();
@@ -125,11 +115,5 @@ public class WorldCanvas extends Canvas implements EventHandler<KeyEvent>
 		graphicsContext2D.setTransform(r.getMxx(), r.getMyx(), r.getMxy(), r.getMyy(), r.getTx(), r.getTy());
 		graphicsContext2D.drawImage(objectImage, x - OBJ_SCALE / 2, y - OBJ_SCALE / 2, OBJ_SCALE, OBJ_SCALE);
 		graphicsContext2D.restore();
-	}
-
-	private void setNewAngle() {
-		Angle angle = clientPlayer.getAngle().asIdle();
-		angle = movementKeyTracker.getMoveAngle(angle);
-		clientPlayer.setAngle(angle);
 	}
 }

@@ -1,15 +1,36 @@
 package com.jenjinstudios.demo.client.ui;
 
+import com.jenjinstudios.world.client.ClientPlayer;
 import com.jenjinstudios.world.math.Angle;
+import javafx.event.EventHandler;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
 /**
  * @author Caleb Brinkman
  */
-public class MovementKeyTracker
+public class PlayerControlKeyHandler implements EventHandler<KeyEvent>
 {
+	private final ClientPlayer clientPlayer;
 	private boolean upKey, downKey, leftKey, righKey;
+
+	public PlayerControlKeyHandler(ClientPlayer clientPlayer) {
+
+		this.clientPlayer = clientPlayer;
+	}
+
+	@Override
+	public void handle(KeyEvent keyEvent) {
+		setKeyFlags(keyEvent);
+		setNewAngle();
+		keyEvent.consume();
+	}
+
+	private void setNewAngle() {
+		Angle angle = clientPlayer.getAngle().asIdle();
+		angle = getMoveAngle(angle);
+		clientPlayer.setAngle(angle);
+	}
 
 	public Angle getMoveAngle(Angle angle) {
 		if (upKeyNotDown())
