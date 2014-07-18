@@ -32,10 +32,17 @@ To build and test the Jenjin, run
 
 ***
 
+##Special Thanks
+
+Special thanks go out to:
+
+* This blog [http://seamless-pixels.blogspot.co.uk/], which supplied all the textures used in the demo application.
+
+***
+
 ##Dependencies
 
-The Jenjin core architecture uses the following unmodified libraries:
+The Jenjin itself does not use any third party dependencies; however, the tests do utilize the following:
 
-* **Testing**
-    * The Jenjin uses [TestNG](http://testng.org/doc/index.html) for unit tests. ([License](http://testng.org/license/))
-    * For database integration tests, [H2Database](http://h2database.com/html/main.html) is used. ([License](http://h2database.com/html/license.html))
+* The Jenjin uses [TestNG](http://testng.org/doc/index.html) for unit tests. ([License](http://testng.org/license/))
+* For database integration tests, [H2Database](http://h2database.com/html/main.html) is used. ([License](http://h2database.com/html/license.html))
