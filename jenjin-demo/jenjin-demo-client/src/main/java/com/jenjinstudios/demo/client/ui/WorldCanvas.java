@@ -11,6 +11,7 @@ import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
@@ -24,9 +25,7 @@ public class WorldCanvas extends Canvas implements EventHandler<KeyEvent>
 	private static final double OBJECT_SCALE = 20;
 	private final ClientPlayer clientPlayer;
 	private final MovementKeyTracker movementKeyTracker;
-	private final GroundTileManager groundTileManager;
-	private final WallTileManager wallTileManager;
-	private final IndoorsTileManager indoorsTileManager;
+	private final LocationTileManager locationTileManager;
 
 	public WorldCanvas(ClientPlayer clientPlayer, double width, double height) {
 		super(width, height);
@@ -40,9 +39,7 @@ public class WorldCanvas extends Canvas implements EventHandler<KeyEvent>
 		final KeyFrame oneFrame = new KeyFrame(oneFrameAmt,
 			  event -> drawWorld());
 		TimelineBuilder.create().cycleCount(Animation.INDEFINITE).keyFrames(oneFrame).build().play();
-		groundTileManager = new GroundTileManager();
-		wallTileManager = new WallTileManager();
-		indoorsTileManager = new IndoorsTileManager();
+		locationTileManager = new LocationTileManager();
 	}
 
 	public void drawWorld() {
@@ -73,20 +70,8 @@ public class WorldCanvas extends Canvas implements EventHandler<KeyEvent>
 			double y = getHeight() / 2 - (yDiff * SCALE - yBuff * (SCALE / Location.SIZE));
 
 			GraphicsContext graphicsContext2D = getGraphicsContext2D();
-			graphicsContext2D.setFill(Color.WHITE);
-			if (!"false".equals(location.getProperties().getProperty("walkable")))
-			{
-				if ("true".equals(location.getProperties().getProperty("indoors")))
-				{
-					graphicsContext2D.drawImage(indoorsTileManager.getTileForLocation(location), x, y, SCALE, SCALE);
-				} else
-				{
-					graphicsContext2D.drawImage(groundTileManager.getTileForLocation(location), x, y, SCALE, SCALE);
-				}
-			} else
-			{
-				graphicsContext2D.drawImage(wallTileManager.getTileForLocation(location), x, y, SCALE, SCALE);
-			}
+			Image tile = locationTileManager.getTileForLocation(location);
+			graphicsContext2D.drawImage(tile, x, y, SCALE, SCALE);
 		}
 	}
 
