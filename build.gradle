@@ -21,7 +21,6 @@ subprojects {
 
     test {
         useTestNG()
-        workingDir = rootProject.projectDir
     }
 }
 
