@@ -3,6 +3,7 @@ package com.jenjinstudios.demo.client.ui;
 import com.jenjinstudios.world.Location;
 import com.jenjinstudios.world.WorldObject;
 import com.jenjinstudios.world.client.ClientPlayer;
+import com.jenjinstudios.world.client.WorldClient;
 import com.jenjinstudios.world.math.Angle;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
@@ -15,8 +16,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
-import java.io.InputStream;
-
 /**
  * @author Caleb Brinkman
  */
@@ -26,12 +25,12 @@ public class WorldCanvas extends Canvas
 	private static final double OBJ_SCALE = 75;
 	private final ClientPlayer clientPlayer;
 	private final LocationTileManager locationTileManager;
-	private final Image objectImage;
+	private final ObjectTileManager objectTileManager;
 
-	public WorldCanvas(ClientPlayer clientPlayer, double width, double height) {
+	public WorldCanvas(WorldClient worldClient, double width, double height) {
 		super(width, height);
-		this.clientPlayer = clientPlayer;
-		PlayerControlKeyHandler playerControlKeyHandler = new PlayerControlKeyHandler(clientPlayer);
+		this.clientPlayer = worldClient.getPlayer();
+		PlayerControlKeyHandler playerControlKeyHandler = new PlayerControlKeyHandler(worldClient);
 		setOnKeyPressed(playerControlKeyHandler);
 		setOnKeyReleased(playerControlKeyHandler);
 		Platform.runLater(this::requestFocus);
@@ -41,9 +40,7 @@ public class WorldCanvas extends Canvas
 			  event -> drawWorld());
 		TimelineBuilder.create().cycleCount(Animation.INDEFINITE).keyFrames(oneFrame).build().play();
 		locationTileManager = new LocationTileManager();
-		String tankImageFile = "com/jenjinstudios/demo/client/images/tank.png";
-		InputStream stream = getClass().getClassLoader().getResourceAsStream(tankImageFile);
-		objectImage = new Image(stream);
+		objectTileManager = new ObjectTileManager();
 	}
 
 	public void drawWorld() {
@@ -71,7 +68,7 @@ public class WorldCanvas extends Canvas
 			double yBuff = clientPlayer.getVector2D().getYCoordinate() % Location.SIZE;
 
 			double x = getWidth() / 2 + (xDiff * SCALE - xBuff * (SCALE / Location.SIZE));
-			double y = getHeight() / 2 + (yDiff * SCALE - yBuff * (SCALE / Location.SIZE));
+			double y = getHeight() / 2 - (yDiff * SCALE - yBuff * (SCALE / Location.SIZE)) - SCALE;
 
 			GraphicsContext graphicsContext2D = getGraphicsContext2D();
 			Image tile = locationTileManager.getTileForLocation(location);
@@ -89,11 +86,11 @@ public class WorldCanvas extends Canvas
 		graphicsContext2D.save();
 		Angle pAngle = clientPlayer.getAngle();
 		double angle = pAngle.getAbsoluteAngle();
-		angle = Math.toDegrees(angle);
+		angle = -Math.toDegrees(angle);
 		Rotate r = new Rotate(angle, x, y);
 		graphicsContext2D.setTransform(r.getMxx(), r.getMyx(), r.getMxy(), r.getMyy(), r.getTx(), r.getTy());
-		graphicsContext2D.drawImage(objectImage, x - OBJ_SCALE / 2, y - OBJ_SCALE / 2, OBJ_SCALE,
-			  OBJ_SCALE);
+		graphicsContext2D.drawImage(objectTileManager.getObjectTile(clientPlayer),
+			  x - OBJ_SCALE / 2, y - OBJ_SCALE / 2, OBJ_SCALE, OBJ_SCALE);
 		graphicsContext2D.restore();
 	}
 
@@ -107,13 +104,14 @@ public class WorldCanvas extends Canvas
 		double locScale = (SCALE / Location.SIZE);
 
 		double x = xOrig + (xDiff * locScale);
-		double y = yOrig + (yDiff * locScale);
+		double y = yOrig - (yDiff * locScale);
 
 		GraphicsContext graphicsContext2D = getGraphicsContext2D();
 		graphicsContext2D.save();
-		Rotate r = new Rotate(Math.toDegrees(o.getAngle().getRelativeAngle()), x, y);
+		Rotate r = new Rotate(-Math.toDegrees(o.getAngle().getAbsoluteAngle()), x, y);
 		graphicsContext2D.setTransform(r.getMxx(), r.getMyx(), r.getMxy(), r.getMyy(), r.getTx(), r.getTy());
-		graphicsContext2D.drawImage(objectImage, x - OBJ_SCALE / 2, y - OBJ_SCALE / 2, OBJ_SCALE, OBJ_SCALE);
+		graphicsContext2D.drawImage(objectTileManager.getObjectTile(o),
+			  x - OBJ_SCALE / 2, y - OBJ_SCALE / 2, OBJ_SCALE, OBJ_SCALE);
 		graphicsContext2D.restore();
 	}
 }

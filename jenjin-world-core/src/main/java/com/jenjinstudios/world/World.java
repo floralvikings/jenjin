@@ -3,7 +3,6 @@ package com.jenjinstudios.world;
 import com.jenjinstudios.world.math.Dimension2D;
 import com.jenjinstudios.world.math.Vector2D;
 
-import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.TreeMap;
@@ -23,6 +22,7 @@ public class World
 	private long lastUpdateCompleted;
 	/** The start time of the most recent update. */
 	private long lastUpdateStarted;
+	private final LinkedList<WorldObject> scheduledForRemoval;
 
 	/** Construct a new World. */
 	public World() {
@@ -41,6 +41,7 @@ public class World
 		}
 		worldObjects = new WorldObjectMap();
 		lastUpdateCompleted = lastUpdateStarted = System.currentTimeMillis();
+		scheduledForRemoval = new LinkedList<>();
 	}
 
 	/**
@@ -108,31 +109,49 @@ public class World
 		lastUpdateStarted = System.currentTimeMillis();
 		synchronized (worldObjects)
 		{
-			Collection<WorldObject> values = worldObjects.values();
-			setUpObjects(values);
-			updateObjects(values);
-			resetObjects(values);
+			removeScheduledObjects();
+			setUpObjects();
+			updateObjects();
+			resetObjects();
 		}
 		lastUpdateCompleted = System.currentTimeMillis();
 	}
 
-	private void resetObjects(Collection<WorldObject> values) {
-		for (WorldObject o : values)
-			if (o != null)
-				o.reset();
+	public void removeScheduledObjects() {
+		synchronized (scheduledForRemoval)
+		{
+			scheduledForRemoval.forEach(this::removeObject);
+			scheduledForRemoval.clear();
+		}
 	}
 
-	private void updateObjects(Collection<WorldObject> values) {
-		for (WorldObject o : values)
-			if (o != null)
-				o.update();
+	public void scheduleForRemoval(int id) {
+		WorldObject o = getObject(id);
+		synchronized (scheduledForRemoval)
+		{
+			scheduledForRemoval.add(o);
+		}
 	}
 
-	private void setUpObjects(Collection<WorldObject> values) {
-		for (WorldObject o : values)
-			if (o != null)
-				o.setUp();
+	public void scheduleForRemoval(WorldObject object) {
+		synchronized (scheduledForRemoval)
+		{
+			scheduledForRemoval.add(object);
+		}
 	}
+
+	private void resetObjects() {
+		worldObjects.forEach((Integer i, WorldObject o) -> o.reset());
+	}
+
+	private void updateObjects() {
+		worldObjects.forEach((Integer i, WorldObject o) -> o.update());
+	}
+
+	private void setUpObjects() {
+		worldObjects.forEach((Integer i, WorldObject o) -> o.setUp());
+	}
+
 
 	/**
 	 * Get the number of objects currently in the world.

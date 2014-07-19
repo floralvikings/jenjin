@@ -58,10 +58,10 @@ public class Actor extends SightedObject
 		{
 			newState = false;
 			resetAngles();
-			Vector2D beforeStep = new Vector2D(vectorBeforeUpdate);
+			//Vector2D beforeStep = new Vector2D(vectorBeforeUpdate);
 			synchronized (stateChanges)
 			{
-				stateChanges.add(new MoveState(getAngle(), beforeStep, getLastStepTime()));
+				stateChanges.add(new MoveState(getAngle(), getVector2D(), getLastStepTime()));
 			}
 		}
 	}
@@ -99,6 +99,15 @@ public class Actor extends SightedObject
 		setForcedState(forcedMoveState);
 		setVector2D(getVector2D());
 		setAngle(getAngle());
+		newState = true;
+	}
+
+	public void forceIdle() {
+		MoveState forcedMoveState = new MoveState(getAngle(), getVector2D(), getLastStepTime());
+		setForcedState(forcedMoveState);
+		setVector2D(getVector2D());
+		setAngle(getAngle().asIdle());
+		newState = true;
 	}
 
 	public double calcStepLength() {

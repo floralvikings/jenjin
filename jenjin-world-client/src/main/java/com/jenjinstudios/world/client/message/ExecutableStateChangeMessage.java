@@ -16,8 +16,8 @@ public class ExecutableStateChangeMessage extends WorldClientExecutableMessage
 	/** The ID of the actor to which to add the state. */
 	private int actorID;
 	private Angle angle;
-	/** The new position of the actor. */
-	private Vector2D position;
+	private Vector2D oldVector;
+	private long time;
 
 	/**
 	 * Construct an ExecutableMessage with the given Message.
@@ -34,6 +34,8 @@ public class ExecutableStateChangeMessage extends WorldClientExecutableMessage
 		if (obj != null && obj instanceof ClientActor)
 		{
 			ClientActor actor = (ClientActor) obj;
+			double dist = actor.getMoveSpeed() * ((double) (System.currentTimeMillis() - time) / 1000d);
+			Vector2D position = oldVector.getVectorInDirection(dist, angle.getStepAngle());
 			actor.setAngle(angle);
 			actor.setLastStepTime(System.currentTimeMillis());
 			actor.setVector2D(position);
@@ -45,13 +47,10 @@ public class ExecutableStateChangeMessage extends WorldClientExecutableMessage
 		actorID = (int) getMessage().getArgument("id");
 		double relativeAngle = (double) getMessage().getArgument("relativeAngle");
 		double absoluteAngle = (double) getMessage().getArgument("absoluteAngle");
-		long time = (long) getMessage().getArgument("timeOfChange");
+		time = (long) getMessage().getArgument("timeOfChange");
 		double x = (double) getMessage().getArgument("xCoordinate");
 		double y = (double) getMessage().getArgument("yCoordinate");
-		Vector2D oldVector = new Vector2D(x, y);
+		oldVector = new Vector2D(x, y);
 		angle = new Angle(absoluteAngle, relativeAngle);
-		double dist = ClientActor.MOVE_SPEED *
-			  ((double) (System.currentTimeMillis() - time) / 1000d);
-		position = oldVector.getVectorInDirection(dist, angle.getStepAngle());
 	}
 }

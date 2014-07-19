@@ -25,6 +25,7 @@ public class ClientActorTest
 	public void testStep() throws InterruptedException {
 		World world = new World();
 		ClientActor actor = new ClientActor(0, "ClientActor");
+		world.update();
 		world.addObject(actor);
 		Angle angle = new Angle(0, Angle.FRONT);
 		actor.setAngle(angle);
@@ -34,7 +35,7 @@ public class ClientActorTest
 		world.update();
 		l = System.currentTimeMillis() - l;
 		double distance = Vector2D.ORIGIN.getDistanceToVector(actor.getVector2D());
-		Assert.assertEquals(distance, ClientActor.MOVE_SPEED * ((double) l / 1000), 0.1);
+		Assert.assertEquals(distance, actor.getMoveSpeed() * ((double) l / 1000), 0.1);
 	}
 
 	private void wait(int waitTime) throws InterruptedException {

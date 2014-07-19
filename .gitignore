@@ -7,3 +7,4 @@ jenjin.log*
 /out/
 /classes/
 /caption.log
+/logConfig.properties

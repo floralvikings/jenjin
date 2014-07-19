@@ -44,10 +44,10 @@ public class WorldClientHandler extends ClientHandler
 	}
 
 	@Override
-	public WorldServer getServer() { return (WorldServer) super.getServer(); }
+	public WorldServerMessageFactory getMessageFactory() { return messageFactory; }
 
 	@Override
-	public WorldServerMessageFactory getMessageFactory() { return messageFactory; }
+	public WorldServer getServer() { return (WorldServer) super.getServer(); }
 
 	public Player getPlayer() { return player; }
 
@@ -71,18 +71,13 @@ public class WorldClientHandler extends ClientHandler
 	}
 
 	private void queueStateChangeMessages() {
-		for (WorldObject object : player.getVisibleObjects().values())
-		{
-			if (object instanceof Actor)
-			{
-				queueActorStateChangeMessages((Actor) object);
-			}
-		}
+		player.getVisibleObjects().values().stream().filter(object -> object instanceof Actor).forEach(object ->
+			  queueActorStateChangeMessages((Actor) object));
 	}
 
 	private void queueActorStateChangeMessages(Actor object) {
 		List<Message> newState = getMessageFactory().generateChangeStateMessages(object);
-		for (Message m : newState) { queueOutgoingMessage(m); }
+		newState.forEach(this::queueOutgoingMessage);
 	}
 
 	private void queueForcesStateMessage() {

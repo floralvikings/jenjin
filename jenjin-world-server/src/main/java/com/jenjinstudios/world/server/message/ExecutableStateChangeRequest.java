@@ -80,8 +80,13 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage
 		World world = player.getWorld();
 		int zoneID = player.getZoneID();
 		Location location = world.getLocationForCoordinates(zoneID, position);
-		String walkable = location.getProperties().getProperty("walkable");
-		return !"false".equals(walkable);
+		boolean walkable = false;
+		if (location != null)
+		{
+			String prop = location.getProperties().getProperty("walkable");
+			walkable = !"false".equals(prop);
+		}
+		return walkable;
 	}
 
 	private boolean isCorrectionSafe(Player player) {

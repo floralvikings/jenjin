@@ -30,15 +30,16 @@ public class ExecutableActorVisibleMessage extends WorldClientExecutableMessage
 		double relativeAngle = (double) message.getArgument("relativeAngle");
 		double absoluteAngle = (double) message.getArgument("absoluteAngle");
 		long timeOfVisibility = (long) message.getArgument("timeOfVisibility");
+		double moveSpeed = (double) message.getArgument("moveSpeed");
 
 		newlyVisible = new ClientActor(id, name);
 		newlyVisible.setResourceID(resourceID);
-		double dist = ClientActor.MOVE_SPEED *
-			  ((double) (System.currentTimeMillis() - timeOfVisibility) / 1000d);
+		double dist = moveSpeed * ((double) (System.currentTimeMillis() - timeOfVisibility) / 1000d);
 		Angle angle = new Angle(absoluteAngle, relativeAngle);
 		Vector2D oldVector = new Vector2D(xCoordinate, yCoordinate);
 		Vector2D newVector = oldVector.getVectorInDirection(dist, angle.getStepAngle());
 		newlyVisible.setVector2D(newVector);
 		newlyVisible.setAngle(new Angle(absoluteAngle, relativeAngle));
+		newlyVisible.setMoveSpeed(moveSpeed);
 	}
 }

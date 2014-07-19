@@ -37,7 +37,6 @@ public class ClientPlayer extends Actor
 	 */
 	@Override
 	public double calcStepLength() {
-		return ((System.currentTimeMillis() - (double) getLastStepTime()) / 1000)
-			  * ClientActor.MOVE_SPEED;
+		return ((System.currentTimeMillis() - (double) getLastStepTime()) / 1000) * getMoveSpeed();
 	}
 }

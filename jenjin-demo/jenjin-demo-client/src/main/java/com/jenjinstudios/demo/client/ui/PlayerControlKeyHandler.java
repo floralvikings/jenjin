@@ -1,6 +1,9 @@
 package com.jenjinstudios.demo.client.ui;
 
+import com.jenjinstudios.core.io.Message;
+import com.jenjinstudios.core.io.MessageRegistry;
 import com.jenjinstudios.world.client.ClientPlayer;
+import com.jenjinstudios.world.client.WorldClient;
 import com.jenjinstudios.world.math.Angle;
 import javafx.event.EventHandler;
 import javafx.scene.input.KeyCode;
@@ -11,19 +14,46 @@ import javafx.scene.input.KeyEvent;
  */
 public class PlayerControlKeyHandler implements EventHandler<KeyEvent>
 {
+	private final WorldClient worldClient;
 	private final ClientPlayer clientPlayer;
 	private boolean upKey, downKey, leftKey, righKey;
 
-	public PlayerControlKeyHandler(ClientPlayer clientPlayer) {
-
-		this.clientPlayer = clientPlayer;
+	public PlayerControlKeyHandler(WorldClient worldClient) {
+		this.worldClient = worldClient;
+		this.clientPlayer = worldClient.getPlayer();
 	}
 
 	@Override
 	public void handle(KeyEvent keyEvent) {
-		setKeyFlags(keyEvent);
-		setNewAngle();
+		if (isMovementKey(keyEvent))
+		{
+			setKeyFlags(keyEvent);
+			setNewAngle();
+		} else if (isFireKey(keyEvent))
+		{
+			sendFireRequest();
+		}
 		keyEvent.consume();
+	}
+
+	private void sendFireRequest() {
+		Message message = MessageRegistry.getInstance().createMessage("FireRequest");
+		worldClient.queueOutgoingMessage(message);
+	}
+
+	private boolean isFireKey(KeyEvent keyEvent) {
+		KeyCode code = keyEvent.getCode();
+		return code.equals(KeyCode.SPACE) && keyEvent.getEventType() == KeyEvent.KEY_PRESSED;
+	}
+
+	private boolean isMovementKey(KeyEvent keyEvent) {
+		KeyCode code = keyEvent.getCode();
+		boolean isMovementKey = code.isArrowKey();
+		isMovementKey |= code.equals(KeyCode.W);
+		isMovementKey |= code.equals(KeyCode.A);
+		isMovementKey |= code.equals(KeyCode.S);
+		isMovementKey |= code.equals(KeyCode.D);
+		return isMovementKey;
 	}
 
 	private void setNewAngle() {
@@ -72,20 +102,6 @@ public class PlayerControlKeyHandler implements EventHandler<KeyEvent>
 	private Angle getDownKeyAngle(Angle angle) {
 		if (leftKeyNotRight())
 		{
-			angle = new Angle(Angle.BACK_LEFT, Angle.FRONT);
-		} else if (rightKeyNotLeft())
-		{
-			angle = new Angle(Angle.FRONT_LEFT, Angle.FRONT);
-		} else if (!righKey)
-		{
-			angle = new Angle(Angle.LEFT, Angle.FRONT);
-		}
-		return angle;
-	}
-
-	private Angle getUpKeyAngle(Angle angle) {
-		if (leftKeyNotRight())
-		{
 			angle = new Angle(Angle.BACK_RIGHT, Angle.FRONT);
 		} else if (rightKeyNotLeft())
 		{
@@ -93,6 +109,20 @@ public class PlayerControlKeyHandler implements EventHandler<KeyEvent>
 		} else if (!righKey)
 		{
 			angle = new Angle(Angle.RIGHT, Angle.FRONT);
+		}
+		return angle;
+	}
+
+	private Angle getUpKeyAngle(Angle angle) {
+		if (leftKeyNotRight())
+		{
+			angle = new Angle(Angle.BACK_LEFT, Angle.FRONT);
+		} else if (rightKeyNotLeft())
+		{
+			angle = new Angle(Angle.FRONT_LEFT, Angle.FRONT);
+		} else if (!righKey)
+		{
+			angle = new Angle(Angle.LEFT, Angle.FRONT);
 		}
 		return angle;
 	}

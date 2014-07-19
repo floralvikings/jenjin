@@ -12,9 +12,7 @@ import com.jenjinstudios.world.server.sql.WorldAuthenticator;
 import org.testng.annotations.Test;
 
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * @author Caleb Brinkman
@@ -47,7 +45,7 @@ public class ExecutableWorldLogoutRequestTest
 		exec.runDelayed();
 
 		verify(handler).sendLogoutStatus(true);
-		verify(world).removeObject(player);
+		verify(world).scheduleForRemoval(player);
 	}
 
 	@Test

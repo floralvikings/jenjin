@@ -65,7 +65,7 @@ public class ClientPlayerTest
 		l = System.currentTimeMillis() - l;
 		world.update();
 		double distance = Vector2D.ORIGIN.getDistanceToVector(player.getVector2D());
-		Assert.assertEquals(distance, ClientActor.MOVE_SPEED * ((double) l / 1000), 0.5);
+		Assert.assertEquals(distance, player.getMoveSpeed() * ((double) l / 1000), 0.5);
 	}
 
 	private void wait(int waitTime) throws InterruptedException {

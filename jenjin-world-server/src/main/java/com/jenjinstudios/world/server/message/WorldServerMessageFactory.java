@@ -99,6 +99,7 @@ public class WorldServerMessageFactory extends ServerMessageFactory
 		newlyVisibleMessage.setArgument("relativeAngle", newlyVisible.getAngle().getRelativeAngle());
 		newlyVisibleMessage.setArgument("absoluteAngle", newlyVisible.getAngle().getAbsoluteAngle());
 		newlyVisibleMessage.setArgument("timeOfVisibility", newlyVisible.getWorld().getLastUpdateStarted());
+		newlyVisibleMessage.setArgument("moveSpeed", newlyVisible.getMoveSpeed());
 		return newlyVisibleMessage;
 	}
 

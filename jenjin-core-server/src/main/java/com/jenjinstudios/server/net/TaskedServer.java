@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Timer;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -61,8 +60,7 @@ public class TaskedServer<T extends ClientHandler> extends Server<T>
 
 		serverUpdateTask = new ServerUpdateTask(this);
 
-		/* The name of the timer that is looping the server thread. */
-		loopTimer = Executors.newSingleThreadScheduledExecutor();
+		loopTimer = Executors.newSingleThreadScheduledExecutor(new ServerUpdateThreadFactory());
 		loopTimer.scheduleAtFixedRate(serverUpdateTask, 0, PERIOD, TimeUnit.MILLISECONDS);
 	}
 

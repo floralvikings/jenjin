@@ -43,8 +43,7 @@ public class JenjinDemoClient extends Application implements EventHandler<Window
 		Rectangle2D bounds = screen.getVisualBounds();
 		stage.setX(bounds.getMinX());
 		stage.setY(bounds.getMinY());
-		final WorldPane worldPane = new WorldPane(worldClient.getPlayer(), new Dimension2D(bounds.getWidth(),
-			  bounds.getHeight()));
+		final WorldPane worldPane = new WorldPane(worldClient, new Dimension2D(bounds.getWidth(), bounds.getHeight()));
 		stage.setScene(new Scene(worldPane, bounds.getWidth(), bounds.getHeight()));
 		stage.show();
 	}

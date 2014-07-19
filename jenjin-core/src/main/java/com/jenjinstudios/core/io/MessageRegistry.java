@@ -10,8 +10,7 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
+import java.util.regex.Pattern;
 
 /**
  * Handles the registration of message classes and the information on how to reconstruct them from raw data.
@@ -48,50 +47,9 @@ public class MessageRegistry
 	 * Find the Messages.xml ZipEntry objects in the classpath.
 	 * @return The list of found entries.
 	 */
-	private static LinkedList<String> findJarMessageEntries() {
-		LinkedList<String> jarMessageEntries = new LinkedList<>();
-		String classPath = System.getProperty("java.class.path");
-		String[] pathElements = classPath.split(System.getProperty("path.separator"));
-		for (String fileName : pathElements)
-		{
-			if (isCoreJar(fileName))
-			{
-				continue;
-			}
-			seachJarFile(jarMessageEntries, fileName);
-		}
-		return jarMessageEntries;
-	}
-
-	private static boolean isCoreJar(String fileName) {
-		String javaHome = System.getProperty("java.home");
-		return fileName.contains(javaHome);
-	}
-
-	private static void seachJarFile(LinkedList<String> jarMessageEntries, String fileName) {
-		File file = new File(fileName);
-		if (!file.isDirectory() && file.exists())
-		{
-			try (FileInputStream inputStream = new FileInputStream(file);
-				 ZipInputStream zip = new ZipInputStream(inputStream))
-			{
-				searchZipEntries(jarMessageEntries, zip);
-				inputStream.close();
-				zip.close();
-			} catch (IOException ex)
-			{
-				LOGGER.log(Level.WARNING, "Unable to read JAR entry " + fileName, ex);
-			}
-		}
-	}
-
-	private static void searchZipEntries(LinkedList<String> jarMessageEntries, ZipInputStream zip) throws IOException {
-		ZipEntry ze;
-		while ((ze = zip.getNextEntry()) != null)
-		{
-			String entryName = ze.getName();
-			if (entryName.endsWith("Messages.xml")) { jarMessageEntries.add(entryName); }
-		}
+	private static Collection<String> findJarMessageEntries() {
+		Pattern pattern = Pattern.compile("Messages\\.xml$");
+		return ClassPathSearcher.getResources(pattern);
 	}
 
 	/**
@@ -175,7 +133,7 @@ public class MessageRegistry
 	/** Register all messages found in registry files.  Also checks the JAR file. */
 	private void registerXmlMessages() {
 		LinkedList<InputStream> streamsToRead = new LinkedList<>();
-		addJarMessageEntries(streamsToRead);
+		addClassPathMessageEntries(streamsToRead);
 		addMessageFiles(streamsToRead);
 		readXmlStreams(streamsToRead);
 	}
@@ -232,8 +190,8 @@ public class MessageRegistry
 	 * Add the Messages.xml entries in the classpath and add their InputStream to the given list.
 	 * @param streamsToRead The list to which to add the input streams.
 	 */
-	private void addJarMessageEntries(List<InputStream> streamsToRead) {
-		LinkedList<String> jarMessageEntries = findJarMessageEntries();
+	private void addClassPathMessageEntries(List<InputStream> streamsToRead) {
+		Collection<String> jarMessageEntries = findJarMessageEntries();
 		for (String entry : jarMessageEntries)
 		{
 			LOGGER.log(Level.INFO, "Registering XML entry {0}", entry);

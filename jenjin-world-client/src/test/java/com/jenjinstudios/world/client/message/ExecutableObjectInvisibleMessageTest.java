@@ -28,6 +28,6 @@ public class ExecutableObjectInvisibleMessageTest
 		message.runImmediate();
 		message.runDelayed();
 
-		verify(world).removeObject(100);
+		verify(world).scheduleForRemoval(100);
 	}
 }

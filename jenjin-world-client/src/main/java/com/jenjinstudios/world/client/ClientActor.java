@@ -5,7 +5,7 @@ import com.jenjinstudios.world.WorldObject;
 /**
  * The {@code ClientActor} class is used to represent a server-side {@code Actor} object on the client side.  It is an
  * object capable of movement.
- * <p/>
+ * <p>
  * Actors start with a {@code MoveState} with {@code MoveState.IDLE}.  Each update, the Actor checks to see if there are
  * any MoveStates in the queue.  If there are, it checks the first state in line for the number of steps needed before
  * the state changes.  Once the number of steps has been reached, the state switches to that of the first position in
@@ -13,7 +13,7 @@ import com.jenjinstudios.world.WorldObject;
  * taken more than the required number of steps to change state, the Actor is moved back by the "overstepped" number of
  * states, the Actor's state is updated, and the Actor then takes the number of extra steps in the correct
  * relativeAngle.
- * <p/>
+ * <p>
  * An Actor's state is considered "changed" when the Actor is facing a new relativeAngle or moving in a new
  * relativeAngle.
  * @author Caleb Brinkman
@@ -22,10 +22,12 @@ public class ClientActor extends WorldObject
 {
 	public static double MOVE_SPEED = 10.0d;
 	private long lastStepTime;
+	private double moveSpeed;
 
 	public ClientActor(int id, String name) {
 		super(name);
 		setId(id);
+		setMoveSpeed(MOVE_SPEED);
 	}
 
 	@Override
@@ -36,6 +38,14 @@ public class ClientActor extends WorldObject
 		}
 		step();
 		setLastStepTime(System.currentTimeMillis());
+	}
+
+	public void setMoveSpeed(double moveSpeed) {
+		this.moveSpeed = moveSpeed;
+	}
+
+	public double getMoveSpeed() {
+		return moveSpeed;
 	}
 
 	private void step() {
@@ -51,7 +61,7 @@ public class ClientActor extends WorldObject
 	}
 
 	double calcStepLength() {
-		return ((System.currentTimeMillis() - (double) getLastStepTime()) / 1000) * MOVE_SPEED;
+		return ((System.currentTimeMillis() - (double) getLastStepTime()) / 1000) * getMoveSpeed();
 	}
 
 	long getLastStepTime() { return lastStepTime; }

@@ -46,10 +46,13 @@ public class SightedObject extends WorldObject
 	public void reset() {
 		// If we're in a new locations after stepping, update the visible array.
 		World world = getWorld();
-		Location oldLoc = world.getLocationForCoordinates(getZoneID(), vectorBeforeUpdate);
-		if (oldLoc != getLocation() || getVisibleLocations().isEmpty())
-			resetVisibleLocations();
-		resetVisibleObjects();
+		if (world != null)
+		{
+			Location oldLoc = world.getLocationForCoordinates(getZoneID(), vectorBeforeUpdate);
+			if (oldLoc != getLocation() || getVisibleLocations().isEmpty())
+				resetVisibleLocations();
+			resetVisibleObjects();
+		}
 	}
 
 	public AbstractMap<Integer, WorldObject> getVisibleObjects() {
@@ -76,12 +79,18 @@ public class SightedObject extends WorldObject
 	public AbstractCollection<Location> getVisibleLocations() { return new LinkedList<>(visibleLocations); }
 
 	private void resetVisibleLocations() {
-		visibleLocations.clear();
+		synchronized (visibleLocations)
+		{
+			visibleLocations.clear();
+		}
 		if (getLocation() != null)
 		{
 			Zone zone = getWorld().getZone(getZoneID());
 			FieldOfVisionCalculator fov = new FieldOfVisionCalculator(zone, getLocation(), VIEW_RADIUS);
-			visibleLocations.addAll(fov.scan());
+			synchronized (visibleLocations)
+			{
+				visibleLocations.addAll(fov.scan());
+			}
 		}
 	}
 
@@ -92,11 +101,9 @@ public class SightedObject extends WorldObject
 		{
 			visibles = visibleObjects.values();
 		}
-
 		addNewlyInvisibleObjects(currentlyVisible, visibles);
 		addNewlyVisibleObjects(currentlyVisible, visibles);
 		setCurrentlyVisibleObjects(currentlyVisible);
-
 	}
 
 	private void addNewlyVisibleObjects(ArrayList<WorldObject> currentlyVisible, Collection<WorldObject> visibles) {

@@ -38,19 +38,12 @@ public class WorldTest
 	}
 
 	@Test
-	public void testRemoveObjectById() {
-		World world = new World();
-		world.addObject(mock(WorldObject.class), 0);
-		world.removeObject(0);
-		Assert.assertEquals(world.getObjectCount(), 0);
-	}
-
-	@Test
-	public void testRemoveObject() {
+	public void testScheduleForRemoval() {
 		WorldObject worldObject = new WorldObject("Bob");
 		World world = new World();
 		world.addObject(worldObject);
-		world.removeObject(worldObject);
+		world.scheduleForRemoval(worldObject);
+		world.update();
 		Assert.assertEquals(world.getObjectCount(), 0);
 	}
 

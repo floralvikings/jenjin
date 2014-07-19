@@ -71,7 +71,7 @@ public class SightedObjectTest
 
 		world.update();
 
-		world.removeObject(visibleObject);
+		world.scheduleForRemoval(visibleObject);
 
 		world.update();
 
