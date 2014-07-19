@@ -41,8 +41,11 @@ public class ClassPathSearcher
 	private static Collection<String> getResourcesFromJarFile(final File file, final Pattern pattern) {
 		final ArrayList<String> foundResources = new ArrayList<>();
 		ZipFile zf = tryGetZipFile(file);
-		searchZipFile(pattern, foundResources, zf);
-		tryCloseZipFile(zf);
+		if (zf != null)
+		{
+			searchZipFile(pattern, foundResources, zf);
+			tryCloseZipFile(zf);
+		}
 		return foundResources;
 	}
 
@@ -77,7 +80,7 @@ public class ClassPathSearcher
 			zf = new ZipFile(file);
 		} catch (IOException e)
 		{
-			throw new Error(e);
+			zf = null;
 		}
 		return zf;
 	}

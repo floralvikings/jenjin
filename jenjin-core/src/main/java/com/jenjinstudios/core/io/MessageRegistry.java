@@ -48,7 +48,7 @@ public class MessageRegistry
 	 * @return The list of found entries.
 	 */
 	private static Collection<String> findJarMessageEntries() {
-		Pattern pattern = Pattern.compile("Messages\\.xml$");
+		Pattern pattern = Pattern.compile("Messages\\.xml");
 		return ClassPathSearcher.getResources(pattern);
 	}
 
@@ -210,6 +210,7 @@ public class MessageRegistry
 				  .containsKey(messageType.name))
 			{
 				// Add the message type to the two trees.
+				LOGGER.log(Level.INFO, "Registering Message Type: {0}", messageType.name);
 				messageTypesByID.put(messageType.id, messageType);
 				messageTypesByName.put(messageType.name, messageType);
 			}
@@ -221,7 +222,7 @@ public class MessageRegistry
 		MessageType messageType = getMessageType(name);
 		if (messageType == null)
 		{
-			LOGGER.log(Level.INFO, "Requested non-existant message {0}, refreshing XML registry", name);
+			LOGGER.log(Level.INFO, "Requested non-existant message " + name + ", refreshing XML registry");
 			// Try again after re-registering XML files
 			registerXmlMessages();
 			messageType = getMessageType(name);
@@ -231,7 +232,7 @@ public class MessageRegistry
 			message = new Message(messageType);
 		} else
 		{
-			LOGGER.log(Level.WARNING, "Couldn't find {0} even after refreshing XML registry.", name);
+			LOGGER.log(Level.WARNING, "Couldn't find " + name + " even after refreshing XML registry.");
 		}
 		return message;
 	}
