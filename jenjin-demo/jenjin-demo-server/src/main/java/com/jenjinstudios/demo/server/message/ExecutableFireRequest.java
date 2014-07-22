@@ -37,7 +37,7 @@ public class ExecutableFireRequest extends WorldExecutableMessage
 	@Override
 	public void runImmediate() {
 		Player player = getClientHandler().getPlayer();
-		bullet = new Bullet(player.getVector2D(), player.getAngle().getAbsoluteAngle());
+		bullet = new Bullet(player);
 		bullet.setZoneID(player.getZoneID());
 	}
 }

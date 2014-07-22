@@ -45,7 +45,7 @@ public class ActorTest
 		world.update();
 		l = System.currentTimeMillis() - l;
 		double distance = Vector2D.ORIGIN.getDistanceToVector(actor.getVector2D());
-		Assert.assertEquals(distance, actor.getMoveSpeed() * ((double) l / 1000), 0.1);
+		Assert.assertEquals(distance, actor.getMoveSpeed() * ((double) l / 1000), distance * 0.1);
 	}
 
 	@Test

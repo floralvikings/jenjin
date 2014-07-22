@@ -21,6 +21,7 @@ public class SightedObject extends WorldObject
 	private final Set<WorldObject> newlyVisibleObjects;
 	private final Set<WorldObject> newlyInvisibleObjects;
 	private Vector2D vectorBeforeUpdate;
+	private Vector2D vectorAfterUpdate;
 
 	public SightedObject(String name) {
 		super(name);
@@ -34,12 +35,16 @@ public class SightedObject extends WorldObject
 	@Override
 	public void setWorld(World world) {
 		super.setWorld(world);
-		resetVisibleLocations();
+		//resetVisibleLocations();
 	}
 
 	@Override
 	public void setUp() {
 		vectorBeforeUpdate = getVector2D();
+		if (!vectorBeforeUpdate.equals(vectorAfterUpdate))
+		{
+			resetVisibleLocations();
+		}
 	}
 
 	@Override
@@ -53,6 +58,7 @@ public class SightedObject extends WorldObject
 				resetVisibleLocations();
 			resetVisibleObjects();
 		}
+		vectorAfterUpdate = getVector2D();
 	}
 
 	public AbstractMap<Integer, WorldObject> getVisibleObjects() {

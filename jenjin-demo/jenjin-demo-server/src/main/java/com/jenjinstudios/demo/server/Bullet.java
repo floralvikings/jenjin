@@ -5,62 +5,39 @@ import com.jenjinstudios.world.Location;
 import com.jenjinstudios.world.WorldObject;
 import com.jenjinstudios.world.math.Angle;
 import com.jenjinstudios.world.math.Vector2D;
+import com.jenjinstudios.world.server.Player;
 
 import java.util.Collection;
 
-import static com.jenjinstudios.world.Location.SIZE;
-import static com.jenjinstudios.world.math.Angle.*;
+import static com.jenjinstudios.world.math.Angle.FRONT;
 
 /**
  * @author Caleb Brinkman
  */
 public class Bullet extends Actor
 {
-	public static final double MAX_RANGE = 100;
-	private final Vector2D firedFrom;
-	private final double targetAngle;
-	private Vector2D startVector;
+	public static final double MAX_RANGE = 250;
 	private boolean updatedOnce;
+	private Vector2D startVector;
+	private Player playerFiring;
 
-	public Bullet(Vector2D firedFrom, double targetAngle) {
+	public Bullet(Player playerFiring) {
 		super("Bullet");
-		this.firedFrom = firedFrom;
-		this.targetAngle = targetAngle;
+		this.playerFiring = playerFiring;
+		double targetAngle = playerFiring.getAngle().getAbsoluteAngle();
 		setAngle(new Angle(targetAngle, FRONT));
-		setMoveSpeed(Actor.DEFAULT_MOVE_SPEED * 1.5);
+		setMoveSpeed(Actor.DEFAULT_MOVE_SPEED * 10);
 		setResourceID(1);
 	}
 
-	public Vector2D calculateStartVector(Vector2D firedFrom, double targetAngle) {
-		Vector2D startVector = getVector2D();
+	public Vector2D calculateStartVector() {
+		startVector = playerFiring.getVector2D();
 
-		if (targetAngle == FRONT)
-		{
-			startVector = new Vector2D(firedFrom.getXCoordinate() + SIZE, firedFrom.getYCoordinate());
-		} else if (targetAngle == FRONT_LEFT)
-		{
-			startVector = new Vector2D(firedFrom.getXCoordinate() + SIZE, firedFrom.getYCoordinate() + SIZE);
-		} else if (targetAngle == LEFT)
-		{
-			startVector = new Vector2D(firedFrom.getXCoordinate(), firedFrom.getYCoordinate() + SIZE);
-		} else if (targetAngle == BACK_LEFT)
-		{
-			startVector = new Vector2D(firedFrom.getXCoordinate() - SIZE, firedFrom.getYCoordinate() + SIZE);
-		} else if (targetAngle == BACK)
-		{
-			startVector = new Vector2D(firedFrom.getXCoordinate() - SIZE, firedFrom.getYCoordinate());
-		} else if (targetAngle == BACK_RIGHT)
-		{
-			startVector = new Vector2D(firedFrom.getXCoordinate() - SIZE, firedFrom.getYCoordinate() - SIZE);
-		} else if (targetAngle == RIGHT)
-		{
-			startVector = new Vector2D(firedFrom.getXCoordinate(), firedFrom.getYCoordinate() - SIZE);
-		} else if (targetAngle == FRONT_RIGHT)
-		{
-			startVector = new Vector2D(firedFrom.getXCoordinate() + SIZE, firedFrom.getYCoordinate() - SIZE);
-		}
 		Location loc = getWorld().getLocationForCoordinates(getZoneID(), startVector);
-		if (loc == null) startVector = getVector2D();
+		if (loc == null)
+		{
+			startVector = null;
+		}
 		return startVector;
 	}
 
@@ -69,10 +46,15 @@ public class Bullet extends Actor
 		super.update();
 		if (!updatedOnce)
 		{
-			startVector = calculateStartVector(firedFrom, targetAngle);
-			setVector2D(startVector);
-			//forcePosition();
-			updatedOnce = true;
+			startVector = calculateStartVector();
+			if (startVector != null)
+			{
+				setVector2D(startVector);
+				updatedOnce = true;
+			} else
+			{
+				getWorld().scheduleForRemoval(this);
+			}
 		} else
 		{
 			Location loc = getLocation();
@@ -95,13 +77,32 @@ public class Bullet extends Actor
 	public void hitActor(Actor actor) {
 		actor.setVector2D(Vector2D.ORIGIN);
 		actor.forceIdle();
+		incrementDeathCounter(actor);
+		incrementKillCounter();
 		getWorld().scheduleForRemoval(this);
+	}
+
+	private void incrementKillCounter() {
+		Object killsProperty = playerFiring.getProperty("kills");
+		int kills = killsProperty != null ? (int) killsProperty : 0;
+		kills++;
+		playerFiring.setProperty("kills", kills);
+	}
+
+	private void incrementDeathCounter(Actor actor) {
+		if (actor instanceof Player)
+		{
+			Object deathsProperty = ((Player) actor).getProperty("deaths");
+			int deaths = deathsProperty != null ? (int) deathsProperty : 0;
+			deaths++;
+			((Player) actor).setProperty("deaths", deaths);
+		}
 	}
 
 	private void tryHitActor(Collection<WorldObject> objects) {
 		for (WorldObject object : objects)
 		{
-			if (object != this && object instanceof Actor && !(object instanceof Bullet))
+			if (object != this && object instanceof Actor && !(object instanceof Bullet) && object != playerFiring)
 			{
 				hitActor((Actor) object);
 				break;

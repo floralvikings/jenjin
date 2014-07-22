@@ -38,6 +38,7 @@ public class ExecutableWorldLoginRequestTest
 		when(worldServer.getWorld()).thenReturn(world);
 		when(handler.getServer()).thenReturn(worldServer);
 		when(handler.getMessageFactory()).thenReturn(messageFactory);
+		when(handler.getPlayer()).thenReturn(player);
 		when(authenticator.logInPlayer(any(User.class))).thenReturn(player);
 		when(player.getId()).thenReturn(0);
 		when(player.getVector2D()).thenReturn(Vector2D.ORIGIN);

@@ -14,7 +14,7 @@ import java.io.IOException;
  * The WorldServer class is responsible for updating a game world.
  * @author Caleb Brinkman
  */
-public class WorldServer extends AuthServer<WorldClientHandler>
+public class WorldServer<T extends WorldClientHandler> extends AuthServer<T>
 {
 	private final World world;
 	private final byte[] worldFileChecksum;
@@ -28,7 +28,7 @@ public class WorldServer extends AuthServer<WorldClientHandler>
 	 * @throws NoSuchMethodException If there is no appropriate constructor for the specified ClientHandler
 	 * constructor.
 	 */
-	public WorldServer(ServerInit<WorldClientHandler> init, WorldAuthenticator authenticator,
+	public WorldServer(ServerInit<T> init, WorldAuthenticator authenticator,
 					   WorldDocumentReader reader) throws IOException, WorldDocumentException, NoSuchMethodException
 	{
 		super(init, authenticator);

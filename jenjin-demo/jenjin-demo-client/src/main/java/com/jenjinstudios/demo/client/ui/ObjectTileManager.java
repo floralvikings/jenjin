@@ -10,17 +10,19 @@ import java.io.InputStream;
  */
 public class ObjectTileManager
 {
+	public static final double PLAYER_SCALE = 75;
+	public static final double BULLET_SCALE = 15;
 	private final Image playerTile;
 	private final Image bulletTile;
 
 	public ObjectTileManager() {
 		String tankImageFile = "com/jenjinstudios/demo/client/images/tank.png";
 		InputStream tankStream = getClass().getClassLoader().getResourceAsStream(tankImageFile);
-		playerTile = new Image(tankStream);
+		playerTile = new Image(tankStream, PLAYER_SCALE * 1.25, PLAYER_SCALE, false, true);
 
 		String bulletImageFile = "com/jenjinstudios/demo/client/images/bullet.png";
 		InputStream bulletStream = getClass().getClassLoader().getResourceAsStream(bulletImageFile);
-		bulletTile = new Image(bulletStream);
+		bulletTile = new Image(bulletStream, BULLET_SCALE, BULLET_SCALE, false, true);
 	}
 
 	public Image getObjectTile(WorldObject object) {

@@ -46,7 +46,7 @@ public class Main
 		InputStream stream = Main.class.getClassLoader().
 			  getResourceAsStream("com/jenjinstudios/demo/server/World.xml");
 		WorldDocumentReader worldDocumentReader = new WorldDocumentReader(stream);
-		return new WorldServer(serverInit, worldAuthenticator, worldDocumentReader);
+		return new WorldServer<>(serverInit, worldAuthenticator, worldDocumentReader);
 	}
 
 	public static Connection createDemoConnection() throws Exception {

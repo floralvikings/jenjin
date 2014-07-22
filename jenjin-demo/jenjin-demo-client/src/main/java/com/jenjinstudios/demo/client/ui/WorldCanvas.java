@@ -22,7 +22,6 @@ import javafx.util.Duration;
 public class WorldCanvas extends Canvas
 {
 	private static final double SCALE = 75;
-	private static final double OBJ_SCALE = 75;
 	private final ClientPlayer clientPlayer;
 	private final LocationTileManager locationTileManager;
 	private final ObjectTileManager objectTileManager;
@@ -89,8 +88,8 @@ public class WorldCanvas extends Canvas
 		angle = -Math.toDegrees(angle);
 		Rotate r = new Rotate(angle, x, y);
 		graphicsContext2D.setTransform(r.getMxx(), r.getMyx(), r.getMxy(), r.getMyy(), r.getTx(), r.getTy());
-		graphicsContext2D.drawImage(objectTileManager.getObjectTile(clientPlayer),
-			  x - OBJ_SCALE / 2, y - OBJ_SCALE / 2, OBJ_SCALE, OBJ_SCALE);
+		Image objectTile = objectTileManager.getObjectTile(clientPlayer);
+		graphicsContext2D.drawImage(objectTile, x - objectTile.getWidth() / 2, y - objectTile.getHeight() / 2);
 		graphicsContext2D.restore();
 	}
 
@@ -110,8 +109,8 @@ public class WorldCanvas extends Canvas
 		graphicsContext2D.save();
 		Rotate r = new Rotate(-Math.toDegrees(o.getAngle().getAbsoluteAngle()), x, y);
 		graphicsContext2D.setTransform(r.getMxx(), r.getMyx(), r.getMxy(), r.getMyy(), r.getTx(), r.getTy());
-		graphicsContext2D.drawImage(objectTileManager.getObjectTile(o),
-			  x - OBJ_SCALE / 2, y - OBJ_SCALE / 2, OBJ_SCALE, OBJ_SCALE);
+		Image objectTile = objectTileManager.getObjectTile(o);
+		graphicsContext2D.drawImage(objectTile, x - objectTile.getWidth() / 2, y - objectTile.getHeight() / 2);
 		graphicsContext2D.restore();
 	}
 }

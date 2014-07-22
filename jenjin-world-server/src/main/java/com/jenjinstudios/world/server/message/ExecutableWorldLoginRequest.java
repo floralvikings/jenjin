@@ -31,10 +31,10 @@ public class ExecutableWorldLoginRequest extends WorldExecutableMessage
 
 	@Override
 	public void runDelayed() {
-		if (player != null)
+		if (getClientHandler().getPlayer() != null)
 		{
-			getClientHandler().getServer().getWorld().addObject(player);
-			loginResponse.setArgument("id", player.getId());
+			getClientHandler().getServer().getWorld().addObject(getClientHandler().getPlayer());
+			loginResponse.setArgument("id", getClientHandler().getPlayer().getId());
 		}
 		getClientHandler().queueOutgoingMessage(loginResponse);
 
