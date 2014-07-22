@@ -2,4 +2,16 @@
     <message name="FireRequest" id="300">
         <executable language="java">com.jenjinstudios.demo.server.message.ExecutableFireRequest</executable>
     </message>
+
+    <message name="HighScoreRequest" id="301">
+        <executable language="java">com.jenjinstudios.demo.server.message.ExecutableHighScoreRequest</executable>
+    </message>
+
+    <message name="HighScoreResponse" id="302">
+        <executable language="java">com.jenjinstudios.demo.client.message.ExecutableHighScoreResponse</executable>
+        <argument type="String" name="name" />
+        <argument type="double" name="ratio" />
+        <argument type="int" name="kills" />
+        <argument type="int" name="deaths" />
+    </message>
 </base_messages>

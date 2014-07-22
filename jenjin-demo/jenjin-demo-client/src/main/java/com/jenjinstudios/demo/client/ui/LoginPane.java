@@ -1,8 +1,8 @@
 package com.jenjinstudios.demo.client.ui;
 
 import com.jenjinstudios.client.net.ClientUser;
-import com.jenjinstudios.demo.client.JenjinDemoClient;
-import com.jenjinstudios.world.client.WorldClient;
+import com.jenjinstudios.demo.client.DemoWorldClient;
+import com.jenjinstudios.demo.client.JenjinDemoApp;
 import com.jenjinstudios.world.io.WorldDocumentException;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
@@ -25,15 +25,15 @@ public final class LoginPane extends GridPane
 	private final TextField usernameField = new TextField();
 	private final PasswordField passwordField = new PasswordField();
 
-	public LoginPane(final JenjinDemoClient jenjinDemoClient) {
+	public LoginPane(final JenjinDemoApp jenjinDemoApp) {
 		setHgap(10);
 		setVgap(10);
 		setPadding(new Insets(25, 25, 25, 25));
 
-		createForm(jenjinDemoClient);
+		createForm(jenjinDemoApp);
 	}
 
-	private void createForm(JenjinDemoClient jenjinDemoClient) {
+	private void createForm(JenjinDemoApp jenjinDemoApp) {
 		Label addressLabel = new Label("Address");
 		add(addressLabel, 0, 0);
 		add(addressField, 1, 0);
@@ -49,7 +49,7 @@ public final class LoginPane extends GridPane
 		Button loginButton = new Button("Login");
 		add(loginButton, 3, 2);
 
-		setLoginActionEvent(jenjinDemoClient, loginButton);
+		setLoginActionEvent(jenjinDemoApp, loginButton);
 
 		setEnterKeyActionEvent(loginButton);
 	}
@@ -63,12 +63,12 @@ public final class LoginPane extends GridPane
 		});
 	}
 
-	private void setLoginActionEvent(JenjinDemoClient jenjinDemoClient, Button loginButton) {
+	private void setLoginActionEvent(JenjinDemoApp jenjinDemoApp, Button loginButton) {
 		loginButton.setOnAction(event -> {
 			ClientUser clientUser = new ClientUser(usernameField.getText(), passwordField.getText());
 			String address = addressField.getText();
 			int port = Integer.parseInt(portField.getText());
-			WorldClient worldClient = tryCreateWorldClient(address, port, clientUser);
+			DemoWorldClient worldClient = tryCreateWorldClient(address, port, clientUser);
 			if (worldClient != null)
 			{
 				worldClient.start();
@@ -84,7 +84,7 @@ public final class LoginPane extends GridPane
 					if (worldClient.getLoginTracker().sendLoginRequestAndWaitForResponse(30000))
 					{
 						System.out.println("Successfully logged in!");
-						jenjinDemoClient.successfulLogin(worldClient);
+						jenjinDemoApp.successfulLogin(worldClient);
 					} else
 					{
 						System.out.println("Login unsuccessful");

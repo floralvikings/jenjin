@@ -3,7 +3,9 @@ package com.jenjinstudios.server.net;
 import com.jenjinstudios.core.io.MessageRegistry;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -15,8 +17,6 @@ import java.util.logging.Logger;
 @SuppressWarnings("SameParameterValue")
 public class Server<T extends ClientHandler> extends Thread
 {
-	/** The default number of max clients. */
-	private static final int DEFAULT_MAX_CLIENTS = 100;
 	/** The logger used by this class. */
 	public static final Logger LOGGER = Logger.getLogger(Server.class.getName());
 	/** The number of milliseconds before a blocking method should time out. */
@@ -28,15 +28,15 @@ public class Server<T extends ClientHandler> extends Thread
 	/** The list of {@code ClientListener}s working for this server. */
 	private final ClientListener<T> clientListener;
 	/** The list of {@code ClientHandler}s working for this server. */
-	private final List<T> clientHandlers;
+	private final Map<Integer, T> clientHandlers;
 	/** The map of clients stored by username. */
 	private final Map<String, T> clientsByUsername;
+	/** The MessageRegistry used by this server. */
+	private final MessageRegistry messageRegistry;
 	/** Indicates whether this server is initialized. */
 	private volatile boolean initialized;
 	/** The current number of connected clients. */
 	private int numClients;
-	/** The MessageRegistry used by this server. */
-	private final MessageRegistry messageRegistry;
 
 	/**
 	 * Construct a new Server without a SQLHandler.
@@ -54,9 +54,7 @@ public class Server<T extends ClientHandler> extends Thread
 		PERIOD = 1000 / UPS;
 		clientsByUsername = new TreeMap<>();
 		clientListener = new ClientListener<>(getClass(), listenerInit);
-		clientHandlers = new ArrayList<>();
-		for (int i = 0; i < DEFAULT_MAX_CLIENTS; i++)
-			clientHandlers.add(null);
+		clientHandlers = new TreeMap<>();
 		numClients = 0;
 	}
 
@@ -70,8 +68,9 @@ public class Server<T extends ClientHandler> extends Thread
 		clientsAdded = !nc.isEmpty();
 		for (T h : nc)
 		{
-			int nullIndex = clientHandlers.indexOf(null);
-			clientHandlers.set(nullIndex, h);
+			int nullIndex = 0;
+			while (clientHandlers.containsKey(nullIndex)) nullIndex++;
+			clientHandlers.put(nullIndex, h);
 			h.setHandlerId(nullIndex);
 			h.start();
 			numClients++;
@@ -83,7 +82,7 @@ public class Server<T extends ClientHandler> extends Thread
 	public void runClientHandlerQueuedMessages() {
 		synchronized (clientHandlers)
 		{
-			for (ClientHandler current : clientHandlers)
+			for (ClientHandler current : clientHandlers.values())
 			{
 				if (current != null)
 				{
@@ -97,7 +96,7 @@ public class Server<T extends ClientHandler> extends Thread
 	public void broadcast() {
 		synchronized (clientHandlers)
 		{
-			for (ClientHandler current : clientHandlers)
+			for (ClientHandler current : clientHandlers.values())
 			{
 				if (current != null) { current.writeAllMessages(); }
 			}
@@ -108,7 +107,7 @@ public class Server<T extends ClientHandler> extends Thread
 	public void update() {
 		synchronized (clientHandlers)
 		{
-			for (ClientHandler current : clientHandlers)
+			for (ClientHandler current : clientHandlers.values())
 			{
 				if (current != null) { current.update(); }
 			}
@@ -119,7 +118,7 @@ public class Server<T extends ClientHandler> extends Thread
 	public void refresh() {
 		synchronized (clientHandlers)
 		{
-			for (ClientHandler current : clientHandlers)
+			for (ClientHandler current : clientHandlers.values())
 			{
 				if (current != null) { current.refresh(); }
 			}
@@ -162,7 +161,7 @@ public class Server<T extends ClientHandler> extends Thread
 	public void shutdown() throws IOException {
 		synchronized (clientHandlers)
 		{
-			for (ClientHandler h : clientHandlers)
+			for (ClientHandler h : clientHandlers.values())
 			{
 				if (h != null) { h.shutdown(); }
 			}
@@ -202,22 +201,11 @@ public class Server<T extends ClientHandler> extends Thread
 	 */
 	public MessageRegistry getMessageRegistry() { return messageRegistry; }
 
-	/**
-	 * Schedule a client to be removed during the next update.
-	 * @param handler The client handler to be removed.
-	 */
-	protected void removeClient(ClientHandler handler) {
-		User user = handler.getUser();
-
-		if (user != null && user.getUsername() != null)
-		{
-			clientsByUsername.remove(user.getUsername());
-		}
+	public TreeMap<Integer, T> getClientHandlers() {
 		synchronized (clientHandlers)
 		{
-			clientHandlers.set(handler.getHandlerId(), null);
+			return new TreeMap<>(clientHandlers);
 		}
-		numClients--;
 	}
 
 	/**
@@ -231,5 +219,23 @@ public class Server<T extends ClientHandler> extends Thread
 		{
 			clientsByUsername.put(username, (T) handler);
 		}
+	}
+
+	/**
+	 * Schedule a client to be removed during the next update.
+	 * @param handler The client handler to be removed.
+	 */
+	protected void removeClient(ClientHandler handler) {
+		User user = handler.getUser();
+
+		if (user != null && user.getUsername() != null)
+		{
+			clientsByUsername.remove(user.getUsername());
+		}
+		synchronized (clientHandlers)
+		{
+			clientHandlers.remove(handler.getHandlerId());
+		}
+		numClients--;
 	}
 }

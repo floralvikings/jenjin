@@ -5,16 +5,12 @@ import com.jenjinstudios.world.WorldObject;
 import com.jenjinstudios.world.client.ClientPlayer;
 import com.jenjinstudios.world.client.WorldClient;
 import com.jenjinstudios.world.math.Angle;
-import javafx.animation.Animation;
-import javafx.animation.KeyFrame;
-import javafx.animation.TimelineBuilder;
 import javafx.application.Platform;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Rotate;
-import javafx.util.Duration;
 
 /**
  * @author Caleb Brinkman
@@ -34,10 +30,6 @@ public class WorldCanvas extends Canvas
 		setOnKeyReleased(playerControlKeyHandler);
 		Platform.runLater(this::requestFocus);
 
-		final Duration oneFrameAmt = Duration.millis(1000 / (float) 60);
-		final KeyFrame oneFrame = new KeyFrame(oneFrameAmt,
-			  event -> drawWorld());
-		TimelineBuilder.create().cycleCount(Animation.INDEFINITE).keyFrames(oneFrame).build().play();
 		locationTileManager = new LocationTileManager();
 		objectTileManager = new ObjectTileManager();
 	}

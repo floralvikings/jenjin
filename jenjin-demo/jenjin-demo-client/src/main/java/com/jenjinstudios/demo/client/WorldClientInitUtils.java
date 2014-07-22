@@ -34,8 +34,8 @@ public class WorldClientInitUtils
 		return success;
 	}
 
-	public static WorldClient tryCreateWorldClient(String address, int port, ClientUser user) {
-		WorldClient worldClient;
+	public static DemoWorldClient tryCreateWorldClient(String address, int port, ClientUser user) {
+		DemoWorldClient worldClient;
 		try
 		{
 			worldClient = createWorldClient(address, port, user);
@@ -53,7 +53,7 @@ public class WorldClientInitUtils
 		worldClient.getServerWorldFileTracker().writeReceivedWorldToFile();
 	}
 
-	private static WorldClient createWorldClient(String address, int port, ClientUser clientUser)
+	private static DemoWorldClient createWorldClient(String address, int port, ClientUser clientUser)
 		  throws IOException, WorldDocumentException
 	{
 		File worldFile = new File(System.getProperty("user.home") + "/jenjin/World.xml");
@@ -61,7 +61,7 @@ public class WorldClientInitUtils
 		MessageInputStream messageInputStream = new MessageInputStream(socket.getInputStream());
 		MessageOutputStream messageOutputStream = new MessageOutputStream(socket.getOutputStream());
 		MessageIO messageIO = new MessageIO(messageInputStream, messageOutputStream);
-		return new WorldClient(messageIO, clientUser, worldFile);
+		return new DemoWorldClient(messageIO, clientUser, worldFile);
 	}
 
 }
