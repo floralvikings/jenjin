@@ -9,6 +9,7 @@ import javafx.animation.TimelineBuilder;
 import javafx.geometry.Dimension2D;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
+import javafx.scene.text.Font;
 import javafx.util.Duration;
 
 /**
@@ -19,9 +20,11 @@ public class WorldPane extends GridPane
 	private volatile int frameCount = 0;
 
 	public WorldPane(DemoWorldClient worldClient, Dimension2D size) {
-		WorldCanvas canvas = new WorldCanvas(worldClient, size.getWidth(), size.getHeight() - 120);
+		WorldCanvas canvas = new WorldCanvas(worldClient, size.getWidth(), size.getHeight() - 48);
 		add(canvas, 0, 0);
+		Font font = new Font("Courier", 24);
 		Label highScoreLabel = new Label("High Score: ");
+		highScoreLabel.setFont(font);
 		add(highScoreLabel, 0, 1);
 
 		final Duration oneFrameAmt = Duration.millis(1000 / (float) 60);
