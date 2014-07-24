@@ -46,31 +46,39 @@ public class Bullet extends Actor
 		super.update();
 		if (!updatedOnce)
 		{
-			startVector = calculateStartVector();
-			if (startVector != null)
-			{
-				setVector2D(startVector);
-				updatedOnce = true;
-			} else
-			{
-				getWorld().scheduleForRemoval(this);
-			}
+			initialize();
 		} else
 		{
-			Location loc = getLocation();
-			if (loc != null)
+			checkForHit();
+		}
+	}
+
+	private void checkForHit() {
+		Location loc = getLocation();
+		if (loc != null)
+		{
+			Collection<WorldObject> objects = loc.getObjects();
+			if (objects.size() > 1)
 			{
-				Collection<WorldObject> objects = loc.getObjects();
-				if (objects.size() > 1)
-				{
-					tryHitActor(objects);
-				}
+				tryHitActor(objects);
 			}
-			double distance = getVector2D().getDistanceToVector(startVector);
-			if (getAngle().getRelativeAngle() == Angle.IDLE || distance > MAX_RANGE)
-			{
-				getWorld().scheduleForRemoval(this);
-			}
+		}
+		double distance = getVector2D().getDistanceToVector(startVector);
+		if (getAngle().getRelativeAngle() == Angle.IDLE || distance > MAX_RANGE)
+		{
+			getWorld().scheduleForRemoval(this);
+		}
+	}
+
+	private void initialize() {
+		startVector = calculateStartVector();
+		if (startVector != null)
+		{
+			setVector2D(startVector);
+			updatedOnce = true;
+		} else
+		{
+			getWorld().scheduleForRemoval(this);
 		}
 	}
 
