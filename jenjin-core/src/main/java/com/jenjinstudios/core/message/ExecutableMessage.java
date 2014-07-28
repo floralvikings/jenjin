@@ -30,59 +30,51 @@ public abstract class ExecutableMessage
 		this.message = message;
 	}
 
-	/** Run the synced portion of this message. */
-	public abstract void runDelayed();
-
-	/** Run asynchronous portion of this message. */
-	public abstract void runImmediate();
-
-	/**
-	 * The Message for this ExecutableMessage.
-	 * @return The Message used by this ExecutableMessage
-	 */
-	public Message getMessage() {
-		return message;
-	}
-
 	/**
 	 * Get an executable message for the given connection and message.
 	 * @param connection The connection.
 	 * @param message The Message.
 	 * @return The ExecutableMessage appropriate to the given message.
 	 */
-	@SuppressWarnings("unchecked")
 	public static ExecutableMessage getExecutableMessageFor(Connection connection, Message message) {
 		ExecutableMessage executableMessage = null;
+		Constructor execConstructor = getExecConstructor(connection, message);
+		if (execConstructor != null)
+		{
+			executableMessage = createExec(connection, message, execConstructor);
+		} else
+		{
+			Object[] args = {connection.getClass().getName(), message.name};
+			String report = "No constructor containing Connection or {0} as first argument type found for {1}";
+			LOGGER.log(Level.SEVERE, report, args);
+		}
+		return executableMessage;
+	}
 
+	private static Constructor getExecConstructor(Connection connection, Message message) {
 		MessageType messageType = connection.getMessageRegistry().getMessageType(message.getID());
 		List<Class<? extends ExecutableMessage>> execClasses = messageType.getExecutableMessageClasses();
 
+		Constructor execConstructor = null;
+		for (Class<? extends ExecutableMessage> execClass : execClasses)
+		{
+			if (execClass == null) continue;
+			Constructor[] execConstructors;
+			execConstructors = execClass.getConstructors();
+			execConstructor = getAppropriateConstructor(connection, execConstructors);
+		}
+		return execConstructor;
+	}
+
+	private static ExecutableMessage createExec(Connection conn, Message msg, Constructor constructor) {
+		ExecutableMessage executableMessage = null;
 		try
 		{
-			Constructor<? extends ExecutableMessage> execConstructor = null;
-			for (Class<? extends ExecutableMessage> execClass : execClasses)
-			{
-				if (execClass == null) continue;
-				Constructor<? extends ExecutableMessage>[] execConstructors;
-				execConstructors = (Constructor<? extends ExecutableMessage>[]) execClass.getConstructors();
-				execConstructor = getAppropriateConstructor(connection, execConstructors);
-			}
-			if (execConstructor != null)
-			{
-				executableMessage = execConstructor.newInstance(connection, message);
-			} else
-			{
-				LOGGER.log(Level.SEVERE, "No constructor containing Connection or {0} as first argument type found for {1}",
-						new Object[]{connection.getClass().getName(), message.name});
-			}
+			executableMessage = (ExecutableMessage) constructor.newInstance(conn, msg);
 		} catch (InvocationTargetException | InstantiationException | IllegalAccessException e)
 		{
 			LOGGER.log(Level.SEVERE, "Constructor not correct", e);
-		} catch (NullPointerException e)
-		{
-			LOGGER.log(Level.SEVERE, "No executable message found for: " + message, e);
 		}
-
 		return executableMessage;
 	}
 
@@ -96,5 +88,19 @@ public abstract class ExecutableMessage
 				correctConstructor = constructor;
 		}
 		return correctConstructor;
+	}
+
+	/** Run the synced portion of this message. */
+	public abstract void runDelayed();
+
+	/** Run asynchronous portion of this message. */
+	public abstract void runImmediate();
+
+	/**
+	 * The Message for this ExecutableMessage.
+	 * @return The Message used by this ExecutableMessage
+	 */
+	public Message getMessage() {
+		return message;
 	}
 }
