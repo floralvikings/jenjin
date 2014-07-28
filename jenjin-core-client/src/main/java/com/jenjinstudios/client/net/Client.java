@@ -42,9 +42,7 @@ public class Client extends Connection
 		this.messageFactory = new ClientMessageFactory(getMessageRegistry());
 	}
 
-	public PublicKey getPublicKey() {
-		return publicKey;
-	}
+	public PublicKey getPublicKey() { return publicKey; }
 
 	/**
 	 * Generate the public and private key used by this client.

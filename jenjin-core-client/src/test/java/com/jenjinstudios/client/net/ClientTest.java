@@ -20,4 +20,9 @@ public class ClientTest
 		client.runRepeatedTasks();
 		verify(r).run();
 	}
+
+	@Test
+	public void testDoPostConnectInit() {
+		// TODO Write this test
+	}
 }
