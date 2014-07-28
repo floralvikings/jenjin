@@ -9,6 +9,10 @@ import java.util.ArrayList;
  */
 public class Files
 {
+	private Files() {
+
+	}
+
 	/**
 	 * Search a directory and subdirectories for files with the given name.
 	 * @param dir The directory in which to start looking.
