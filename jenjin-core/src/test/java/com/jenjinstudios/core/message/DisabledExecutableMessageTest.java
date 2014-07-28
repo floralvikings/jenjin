@@ -32,4 +32,14 @@ public class DisabledExecutableMessageTest
 		DisabledExecutableMessage disabledExecutableMessage = new DisabledExecutableMessage(connection, message);
 		disabledExecutableMessage.runImmediate();
 	}
+
+	@Test(expectedExceptions = IllegalStateException.class)
+	public void testMessageExecutionDelayed() {
+		Connection connection = mock(Connection.class);
+		Message message = mock(Message.class);
+
+		DisabledExecutableMessage disabledExecutableMessage = new DisabledExecutableMessage(connection, message);
+		disabledExecutableMessage.runDelayed();
+
+	}
 }
