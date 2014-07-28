@@ -9,7 +9,7 @@ import com.jenjinstudios.world.math.Vector2D;
  */
 public class WorldObject
 {
-	private final String name;
+	private String name;
 	private int zoneID;
 	private int resourceID;
 	private int id = Integer.MIN_VALUE;
@@ -76,6 +76,8 @@ public class WorldObject
 	public void setZoneID(int zoneID) { this.zoneID = zoneID; }
 
 	public String getName() { return name; }
+
+	public void setName(String name) { this.name = name; }
 
 	/** Set up this WorldObject before updating. */
 	public void setUp() { }

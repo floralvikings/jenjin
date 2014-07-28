@@ -1,9 +1,7 @@
 package com.jenjinstudios.world.server.sql;
 
-import com.jenjinstudios.server.net.User;
 import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.math.Vector2D;
-import com.jenjinstudios.world.server.Player;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -14,7 +12,7 @@ import static java.sql.ResultSet.CONCUR_UPDATABLE;
 import static java.sql.ResultSet.TYPE_SCROLL_SENSITIVE;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertEquals;
 
 /**
  * @author Caleb Brinkman
@@ -63,68 +61,6 @@ public class WorldAuthenticatorTest
 	@AfterClass
 	public void closeConnection() throws Exception {
 		connection.close();
-	}
-
-	@Test
-	public void testLogInPlayer() throws Exception {
-		WorldAuthenticator worldAuthenticator = new WorldAuthenticator(connection);
-		User user = new User();
-		user.setUsername("TestAccount1");
-		user.setPassword("testPassword");
-
-		Player player = worldAuthenticator.logInPlayer(user);
-
-		assertNotNull(player);
-		assertEquals(player.getName(), "TestAccount1");
-		assertEquals(player.getVector2D(), Vector2D.ORIGIN);
-	}
-
-	@Test
-	public void testLogInPlayerBadPassword() throws Exception {
-		WorldAuthenticator worldAuthenticator = new WorldAuthenticator(connection);
-		User user = new User();
-		user.setUsername("TestAccount2");
-		user.setPassword("Not a correct password");
-
-		Player player = worldAuthenticator.logInPlayer(user);
-
-		assertNull(player);
-	}
-
-	@Test
-	public void testAlreadyLoggedIn() throws Exception {
-		String query = "UPDATE jenjin_users SET loggedin=1 WHERE username='TestAccount3'";
-		PreparedStatement statement = connection.prepareStatement(query);
-		statement.executeUpdate();
-		WorldAuthenticator worldAuthenticator = new WorldAuthenticator(connection);
-		User user = new User();
-		user.setUsername("TestAccount3");
-		user.setPassword("testPassword");
-
-		Player player = worldAuthenticator.logInPlayer(user);
-
-		assertNull(player);
-	}
-
-	@Test
-	public void testLogOutPlayer() throws Exception {
-		String query = "UPDATE jenjin_users SET loggedin=1 WHERE username='TestAccount1'";
-		PreparedStatement statement = connection.prepareStatement(query);
-		statement.executeUpdate();
-		WorldAuthenticator worldAuthenticator = new WorldAuthenticator(connection);
-		Actor actor = mock(Actor.class);
-		when(actor.getName()).thenReturn("TestAccount1");
-		boolean success = worldAuthenticator.logOutPlayer(actor);
-		assertTrue(success);
-	}
-
-	@Test
-	public void testAlreadLoggedOut() throws Exception {
-		WorldAuthenticator worldAuthenticator = new WorldAuthenticator(connection);
-		Actor actor = mock(Actor.class);
-		when(actor.getName()).thenReturn("TestAccount1");
-		boolean success = worldAuthenticator.logOutPlayer(actor);
-		assertFalse(success);
 	}
 
 	@Test

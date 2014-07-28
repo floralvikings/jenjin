@@ -1,6 +1,7 @@
 package com.jenjinstudios.world.server.message;
 
 import com.jenjinstudios.core.io.Message;
+import com.jenjinstudios.server.sql.LoginException;
 import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.server.WorldClientHandler;
 import com.jenjinstudios.world.server.WorldServer;
@@ -38,22 +39,23 @@ public class ExecutableWorldLogoutRequest extends WorldExecutableMessage
 
 	@Override
 	public void runImmediate() {
-		boolean success = tryLogOutUser();
-		getClientHandler().sendLogoutStatus(success);
+		try
+		{
+			tryLogOutUser();
+			getClientHandler().sendLogoutStatus(true);
+		} catch (LoginException e)
+		{
+			getClientHandler().sendLogoutStatus(false);
+		}
+
 	}
 
-	private boolean tryLogOutUser() {
-		boolean success = false;
+	private void tryLogOutUser() throws LoginException {
 		WorldClientHandler handler = getClientHandler();
 		if (authenticator != null && handler.getUser() != null)
 		{
 			authenticator.updatePlayer(handler.getPlayer());
-			success = authenticator.logOutPlayer(handler.getPlayer());
-			if (success)
-			{
-				handler.setUser(null);
-			}
+			authenticator.logOutUser(handler.getUser().getUsername());
 		}
-		return success;
 	}
 }

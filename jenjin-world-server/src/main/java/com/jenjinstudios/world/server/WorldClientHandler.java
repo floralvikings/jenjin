@@ -18,37 +18,33 @@ import java.util.List;
 public class WorldClientHandler extends ClientHandler
 {
 	private final WorldServerMessageFactory messageFactory;
-	private Player player;
+	private final Player player;
 	private boolean hasSentActorStepMessage;
 
 	public WorldClientHandler(WorldServer<? extends WorldClientHandler> s, MessageIO messageIO) throws IOException {
 		super(s, messageIO);
 		this.messageFactory = new WorldServerMessageFactory(this, getServer().getMessageRegistry());
+		player = new Player("PLAYER");
 	}
 
 	@Override
 	public void update() {
 		super.update();
-		if (player != null)
+		if (!hasSentActorStepMessage)
 		{
-			if (!hasSentActorStepMessage)
-			{
-				queueOutgoingMessage(getMessageFactory().generateActorMoveSpeedMessage(player.getMoveSpeed()));
-				hasSentActorStepMessage = true;
-			}
-			queueForcesStateMessage();
-			queueNewlyVisibleMessages();
-			queueNewlyInvisibleMessages();
-			queueStateChangeMessages();
+			queueOutgoingMessage(getMessageFactory().generateActorMoveSpeedMessage(player.getMoveSpeed()));
+			hasSentActorStepMessage = true;
 		}
+		queueForcesStateMessage();
+		queueNewlyVisibleMessages();
+		queueNewlyInvisibleMessages();
+		queueStateChangeMessages();
 	}
 
 	@Override
 	public WorldServerMessageFactory getMessageFactory() { return messageFactory; }
 
 	public Player getPlayer() { return player; }
-
-	public void setPlayer(Player player) { this.player = player; }
 
 	private void queueNewlyVisibleMessages() {
 		for (WorldObject object : player.getNewlyVisibleObjects())

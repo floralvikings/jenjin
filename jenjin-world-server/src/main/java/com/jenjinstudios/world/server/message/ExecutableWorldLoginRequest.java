@@ -2,10 +2,14 @@ package com.jenjinstudios.world.server.message;
 
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.server.net.User;
+import com.jenjinstudios.server.sql.LoginException;
+import com.jenjinstudios.world.math.Vector2D;
 import com.jenjinstudios.world.server.Player;
 import com.jenjinstudios.world.server.WorldClientHandler;
 import com.jenjinstudios.world.server.WorldServer;
 import com.jenjinstudios.world.server.sql.WorldAuthenticator;
+
+import java.util.Map;
 
 /**
  * Handles requests to login to the world.
@@ -13,12 +17,14 @@ import com.jenjinstudios.world.server.sql.WorldAuthenticator;
  */
 public class ExecutableWorldLoginRequest extends WorldExecutableMessage
 {
-	/** The SQL handler used by this executable message. */
+	private static final String X_COORD = "xCoord";
+	private static final String Y_COORD = "yCoord";
+	private static final String ZONE_ID = "zoneID";
+	private static final String USERNAME = "username";
 	private final WorldAuthenticator authenticator;
-	/** The player added to the world. */
-	private Player player;
-	/** The LoginResponse to send to the client. */
 	private Message loginResponse;
+	private Map<String, Object> playerData;
+	private User user;
 
 	/**
 	 * Construct a new ExecutableMessage.  Must be implemented by subclasses.
@@ -32,72 +38,82 @@ public class ExecutableWorldLoginRequest extends WorldExecutableMessage
 
 	@Override
 	public void runDelayed() {
-		if (getClientHandler().getPlayer() != null)
+		if (user != null)
 		{
+			handleLoginSuccess();
 			((WorldServer) getClientHandler().getServer()).getWorld().addObject(getClientHandler().getPlayer());
 			loginResponse.setArgument("id", getClientHandler().getPlayer().getId());
 		}
 		getClientHandler().queueOutgoingMessage(loginResponse);
-
 	}
 
 	@Override
 	public void runImmediate() {
-		boolean success;
-		User user = tryLogInUser();
-
-		success = player != null;
-		getClientHandler().setLoggedInTime(getClientHandler().getServer().getCycleStartTime());
-
-		initLoginResponse(success);
-
-		if (success)
+		try
 		{
-			prepareSuccessResponse(user);
-		} else
+			tryLogInUser();
+		} catch (LoginException e)
 		{
-			prepareFailureResponse();
+			handleLoginFailure();
 		}
+		getClientHandler().setLoggedInTime(getClientHandler().getServer().getCycleStartTime());
 	}
 
-	private User tryLogInUser() {
-		User user = new User();
+	private void tryLogInUser() throws LoginException {
 		WorldClientHandler handler = getClientHandler();
 		if (authenticator != null && handler.getUser() == null)
 		{
 			String username = (String) getMessage().getArgument("username");
 			String password = (String) getMessage().getArgument("password");
-			user.setUsername(username);
-			user.setPassword(password);
-			/* The map used to create the player. */
-			player = authenticator.logInPlayer(user);
+			user = authenticator.logInUser(username, password);
+			playerData = authenticator.getPlayerInfo(username);
 		}
-		return user;
 	}
 
-	private void initLoginResponse(boolean success) {
-		WorldClientHandler handler = getClientHandler();
-		loginResponse = handler.getMessageFactory().generateWorldLoginResponse();
-		loginResponse.setArgument("success", success);
+	private void handleLoginFailure() {
+		this.loginResponse = createFailureResponse();
 	}
 
-	private void prepareFailureResponse() {
+	private Message createFailureResponse() {
 		WorldClientHandler handler = getClientHandler();
+		Message loginResponse = handler.getMessageFactory().generateWorldLoginResponse();
+		loginResponse.setArgument("success", false);
 		loginResponse.setArgument("id", -1);
 		loginResponse.setArgument("loginTime", handler.getLoggedInTime());
 		loginResponse.setArgument("xCoordinate", 0d);
 		loginResponse.setArgument("yCoordinate", 0d);
 		loginResponse.setArgument("zoneNumber", -1);
+		return loginResponse;
 	}
 
-	private void prepareSuccessResponse(User user) {
+	private void handleLoginSuccess() {
+		Player player = setHandlerPlayerInfo();
+		loginResponse = createSuccessResponse(player);
+	}
+
+	private Player setHandlerPlayerInfo() {
 		WorldClientHandler handler = getClientHandler();
-		handler.setPlayer(player);
+		Player player = handler.getPlayer();
+		double x = (double) playerData.get(X_COORD);
+		double y = (double) playerData.get(Y_COORD);
+		int zoneId = (int) playerData.get(ZONE_ID);
+		String username = (String) playerData.get(USERNAME);
+		Vector2D coordinates = new Vector2D(x, y);
+		player.setName(username);
+		player.setVector2D(coordinates);
+		player.setZoneID(zoneId);
 		handler.setUser(user);
-		handler.getServer().associateUsernameWithClientHandler(user.getUsername(), handler);
-		loginResponse.setArgument("loginTime", handler.getLoggedInTime());
+		handler.getServer().associateUsernameWithClientHandler(username, handler);
+		return player;
+	}
+
+	private Message createSuccessResponse(Player player) {
+		Message loginResponse = getClientHandler().getMessageFactory().generateWorldLoginResponse();
+		loginResponse.setArgument("success", true);
+		loginResponse.setArgument("loginTime", getClientHandler().getLoggedInTime());
 		loginResponse.setArgument("xCoordinate", player.getVector2D().getXCoordinate());
 		loginResponse.setArgument("yCoordinate", player.getVector2D().getYCoordinate());
 		loginResponse.setArgument("zoneNumber", player.getZoneID());
+		return loginResponse;
 	}
 }
