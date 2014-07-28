@@ -1,15 +1,10 @@
 package com.jenjinstudios.client.message;
 
+import com.jenjinstudios.client.net.Client;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageInputStream;
-import com.jenjinstudios.client.net.Client;
 
-import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.util.Arrays;
 import java.util.logging.Level;
@@ -42,27 +37,19 @@ public class ExecutableAESKeyMessage extends ClientExecutableMessage
 	public void runImmediate() {
 		byte[] encryptedAESKey = (byte[]) getMessage().getArgument("key");
 		byte[] decryptedAESKey = MessageInputStream.NO_KEY;
-		if (Arrays.equals(encryptedAESKey, MessageInputStream.NO_KEY))
-			return;
-		PrivateKey privateKey = getClient().getPrivateKey();
-		try
+		if (!Arrays.equals(encryptedAESKey, MessageInputStream.NO_KEY))
 		{
-			Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
-			cipher.init(Cipher.DECRYPT_MODE, privateKey);
-			decryptedAESKey = cipher.doFinal(encryptedAESKey);
-		} catch (NoSuchAlgorithmException e)
-		{
-			LOGGER.log(Level.SEVERE, "Unable to find RSA algorithm!", e);
-		} catch (NoSuchPaddingException | BadPaddingException e)
-		{
-			LOGGER.log(Level.SEVERE, "Incorrect padding specified in RSA encryption?!?", e);
-		} catch (InvalidKeyException e)
-		{
-			LOGGER.log(Level.SEVERE, "Incorrect key!");
-		} catch (IllegalBlockSizeException e)
-		{
-			LOGGER.log(Level.SEVERE, "Illegal block size?!?", e);
+			PrivateKey privateKey = getClient().getPrivateKey();
+			try
+			{
+				Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
+				cipher.init(Cipher.DECRYPT_MODE, privateKey);
+				decryptedAESKey = cipher.doFinal(encryptedAESKey);
+			} catch (Exception e)
+			{
+				LOGGER.log(Level.SEVERE, "Exception when decrypting key:", e);
+			}
+			getClient().setAESKey(decryptedAESKey);
 		}
-		getClient().setAESKey(decryptedAESKey);
 	}
 }
