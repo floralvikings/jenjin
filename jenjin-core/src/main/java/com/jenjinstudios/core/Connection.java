@@ -1,6 +1,8 @@
 package com.jenjinstudios.core;
 
-import com.jenjinstudios.core.io.*;
+import com.jenjinstudios.core.io.Message;
+import com.jenjinstudios.core.io.MessageRegistry;
+import com.jenjinstudios.core.io.MessageTypeException;
 import com.jenjinstudios.core.util.MessageFactory;
 
 import java.io.IOException;
@@ -23,7 +25,6 @@ public class Connection extends Thread
 	private final MessageIO messageIO;
 	private final MessageExecutor messageExecutor;
 	private int invalidMsgCount;
-	private boolean aesKeySet;
 	private boolean running;
 
 	protected Connection(MessageIO streams) {
@@ -56,20 +57,7 @@ public class Connection extends Thread
 		}
 	}
 
-	void writeMessage(Message o) {
-		try
-		{
-			LOGGER.log(Level.FINEST, "Connection {0} writing message {1}", new Object[]{getName(), o});
-			messageIO.getOut().writeMessage(o);
-		} catch (IOException e)
-		{
-			LOGGER.log(Level.SEVERE, "Unable to write message " + o + " to socket, shutting down.", e);
-			shutdown();
-		}
-	}
-
 	public void setAESKey(byte[] key) {
-		aesKeySet = true;
 		messageIO.getIn().setAESKey(key);
 		messageIO.getOut().setAesKey(key);
 	}
@@ -87,12 +75,15 @@ public class Connection extends Thread
 		}
 	}
 
-	void reportInvalidMessage(MessageTypeException e) {
-		LOGGER.log(Level.WARNING, "Input stream reported invalid message receipt.");
-		Message unknown = messageFactory.generateInvalidMessage(e.getId(), "Unknown");
-		queueOutgoingMessage(unknown);
-		invalidMsgCount++;
-	}
+	public void runQueuedExecutableMessages() { executableMessageQueue.runQueuedExecutableMessages(); }
+
+	public MessageFactory getMessageFactory() { return messageFactory; }
+
+	public PingTracker getPingTracker() { return pingTracker; }
+
+	public ExecutableMessageQueue getExecutableMessageQueue() { return executableMessageQueue; }
+
+	public MessageRegistry getMessageRegistry() { return messageIO.getMr(); }
 
 	protected void shutdown() {
 		running = false;
@@ -124,15 +115,22 @@ public class Connection extends Thread
 		}
 	}
 
-	public void runQueuedExecutableMessages() { executableMessageQueue.runQueuedExecutableMessages(); }
+	void writeMessage(Message o) {
+		try
+		{
+			LOGGER.log(Level.FINEST, "Connection {0} writing message {1}", new Object[]{getName(), o});
+			messageIO.getOut().writeMessage(o);
+		} catch (IOException e)
+		{
+			LOGGER.log(Level.SEVERE, "Unable to write message " + o + " to socket, shutting down.", e);
+			shutdown();
+		}
+	}
 
-	public MessageFactory getMessageFactory() { return messageFactory; }
-
-	public PingTracker getPingTracker() { return pingTracker; }
-
-	public ExecutableMessageQueue getExecutableMessageQueue() { return executableMessageQueue; }
-
-	protected boolean isAesKeySet() { return aesKeySet;}
-
-	public MessageRegistry getMessageRegistry() { return messageIO.getMr(); }
+	void reportInvalidMessage(MessageTypeException e) {
+		LOGGER.log(Level.WARNING, "Input stream reported invalid message receipt.");
+		Message unknown = messageFactory.generateInvalidMessage(e.getId(), "Unknown");
+		queueOutgoingMessage(unknown);
+		invalidMsgCount++;
+	}
 }
