@@ -155,17 +155,18 @@ public class MessageOutputStream extends DataOutputStream
 	 * @param key The AES key used by this output stream to encrypt messages.
 	 */
 	public void setAesKey(byte[] key) {
-		if (key == null)
-			return;
-		try
+		if (key != null)
 		{
-			aesKey = new SecretKeySpec(key, "AES");
-			aesEncryptCipher = Cipher.getInstance("AES");
-			aesEncryptCipher.init(Cipher.ENCRYPT_MODE, aesKey);
-		} catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException e)
-		{
-			LOGGER.log(Level.SEVERE, "Unable to create cipher, messages will not be encrypted.", e);
-			aesKey = null;
+			try
+			{
+				aesKey = new SecretKeySpec(key, "AES");
+				aesEncryptCipher = Cipher.getInstance("AES");
+				aesEncryptCipher.init(Cipher.ENCRYPT_MODE, aesKey);
+			} catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException e)
+			{
+				LOGGER.log(Level.SEVERE, "Unable to create cipher, messages will not be encrypted.", e);
+				aesKey = null;
+			}
 		}
 	}
 }
