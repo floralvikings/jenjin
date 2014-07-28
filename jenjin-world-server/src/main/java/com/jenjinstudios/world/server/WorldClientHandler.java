@@ -21,7 +21,7 @@ public class WorldClientHandler extends ClientHandler
 	private Player player;
 	private boolean hasSentActorStepMessage;
 
-	public WorldClientHandler(WorldServer s, MessageIO messageIO) throws IOException {
+	public WorldClientHandler(WorldServer<? extends WorldClientHandler> s, MessageIO messageIO) throws IOException {
 		super(s, messageIO);
 		this.messageFactory = new WorldServerMessageFactory(this, getServer().getMessageRegistry());
 	}
@@ -45,9 +45,6 @@ public class WorldClientHandler extends ClientHandler
 
 	@Override
 	public WorldServerMessageFactory getMessageFactory() { return messageFactory; }
-
-	@Override
-	public WorldServer getServer() { return (WorldServer) super.getServer(); }
 
 	public Player getPlayer() { return player; }
 

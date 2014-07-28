@@ -5,6 +5,7 @@ import com.jenjinstudios.demo.server.Bullet;
 import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.server.Player;
 import com.jenjinstudios.world.server.WorldClientHandler;
+import com.jenjinstudios.world.server.WorldServer;
 import com.jenjinstudios.world.server.message.WorldExecutableMessage;
 
 /**
@@ -26,7 +27,7 @@ public class ExecutableFireRequest extends WorldExecutableMessage
 	/** Run the synced portion of this message. */
 	@Override
 	public void runDelayed() {
-		World world = getClientHandler().getServer().getWorld();
+		World world = ((WorldServer) getClientHandler().getServer()).getWorld();
 		if (world.getZone(bullet.getZoneID()).getLocationForCoordinates(bullet.getVector2D()) != null)
 		{
 			world.addObject(bullet);

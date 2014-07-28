@@ -3,6 +3,7 @@ package com.jenjinstudios.world.server.message;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.server.WorldClientHandler;
+import com.jenjinstudios.world.server.WorldServer;
 import com.jenjinstudios.world.server.sql.WorldAuthenticator;
 
 /**
@@ -21,7 +22,7 @@ public class ExecutableWorldLogoutRequest extends WorldExecutableMessage
 	 */
 	public ExecutableWorldLogoutRequest(WorldClientHandler handler, Message message) {
 		super(handler, message);
-		authenticator = handler.getServer().getAuthenticator();
+		authenticator = ((WorldServer) handler.getServer()).getAuthenticator();
 
 	}
 

@@ -4,6 +4,7 @@ import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.server.net.User;
 import com.jenjinstudios.world.server.Player;
 import com.jenjinstudios.world.server.WorldClientHandler;
+import com.jenjinstudios.world.server.WorldServer;
 import com.jenjinstudios.world.server.sql.WorldAuthenticator;
 
 /**
@@ -26,14 +27,14 @@ public class ExecutableWorldLoginRequest extends WorldExecutableMessage
 	 */
 	public ExecutableWorldLoginRequest(WorldClientHandler handler, Message message) {
 		super(handler, message);
-		authenticator = handler.getServer().getAuthenticator();
+		authenticator = ((WorldServer) handler.getServer()).getAuthenticator();
 	}
 
 	@Override
 	public void runDelayed() {
 		if (getClientHandler().getPlayer() != null)
 		{
-			getClientHandler().getServer().getWorld().addObject(getClientHandler().getPlayer());
+			((WorldServer) getClientHandler().getServer()).getWorld().addObject(getClientHandler().getPlayer());
 			loginResponse.setArgument("id", getClientHandler().getPlayer().getId());
 		}
 		getClientHandler().queueOutgoingMessage(loginResponse);
