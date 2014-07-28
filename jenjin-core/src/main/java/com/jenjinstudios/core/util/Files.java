@@ -9,9 +9,7 @@ import java.util.ArrayList;
  */
 public class Files
 {
-	private Files() {
-
-	}
+	private Files() { }
 
 	/**
 	 * Search a directory and subdirectories for files with the given name.
