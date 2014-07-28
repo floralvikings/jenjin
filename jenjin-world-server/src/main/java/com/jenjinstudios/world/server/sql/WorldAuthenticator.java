@@ -118,7 +118,7 @@ public class WorldAuthenticator extends Authenticator
 			  "=" + yCoord + " WHERE " + "username = ?";
 		synchronized (dbConnection)
 		{
-			try (PreparedStatement updatePlayerStatement = super.dbConnection.prepareStatement(updatePlayerQuery))
+			try (PreparedStatement updatePlayerStatement = dbConnection.prepareStatement(updatePlayerQuery))
 			{
 				updatePlayerStatement.setString(1, username);
 				updatePlayerStatement.executeUpdate();
