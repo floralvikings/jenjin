@@ -20,8 +20,6 @@ public class Client extends Connection
 {
 	/** The logger associated with this class. */
 	private static final Logger LOGGER = Logger.getLogger(Client.class.getName());
-	/** The number of milliseconds before a blocking method should time out. */
-	private static final long TIMEOUT_MILLIS = 30000;
 	/** The list of tasks that this client will execute each update cycle. */
 	private final List<Runnable> repeatedTasks;
 	/** The message factory used by this client. */
@@ -74,30 +72,6 @@ public class Client extends Connection
 		{
 			repeatedTasks.add(r);
 		}
-	}
-
-	/**
-	 * Start the client, blocking until the client has successfully initialized.
-	 * @return The success of the client start. initializing.
-	 */
-	public boolean blockingStart() {
-		long startTime = System.currentTimeMillis();
-		long timePast = System.currentTimeMillis() - startTime;
-		start();
-
-		while (!isAesKeySet() && (timePast < TIMEOUT_MILLIS))
-		{
-			try
-			{
-				Thread.sleep(10);
-			} catch (InterruptedException e)
-			{
-				LOGGER.log(Level.FINE, "Unable to sleep during blocking start.", e);
-			}
-			timePast = System.currentTimeMillis() - startTime;
-		}
-
-		return isAesKeySet();
 	}
 
 	/** Tell the client threads to stop running. */
