@@ -1,6 +1,5 @@
 package com.jenjinstudios.demo.server;
 
-import com.jenjinstudios.core.io.MessageRegistry;
 import com.jenjinstudios.demo.server.message.DemoClientHandler;
 import com.jenjinstudios.server.net.ClientListenerInit;
 import com.jenjinstudios.server.net.ServerInit;
@@ -38,7 +37,7 @@ public class Main
 		ClientListenerInit<DemoClientHandler> clientListenerInit =
 			  new ClientListenerInit<>(DemoClientHandler.class, 51015);
 		ServerInit<DemoClientHandler> serverInit =
-			  new ServerInit<>(MessageRegistry.getInstance(), 50, clientListenerInit);
+			  new ServerInit<>(50, clientListenerInit);
 		Class.forName("org.h2.Driver");
 		Connection sqlConnection = createDemoConnection();
 		WorldAuthenticator worldAuthenticator = new WorldAuthenticator(sqlConnection);
