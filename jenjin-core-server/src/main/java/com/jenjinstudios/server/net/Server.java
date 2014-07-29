@@ -1,7 +1,6 @@
 package com.jenjinstudios.server.net;
 
 import com.jenjinstudios.core.Connection;
-import com.jenjinstudios.core.io.MessageRegistry;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -29,8 +28,6 @@ public class Server<T extends ClientHandler> extends Thread
 	private final ClientListener<T> clientListener;
 	/** The list of {@code ClientHandler}s working for this server. */
 	private final Map<Integer, T> clientHandlers;
-	/** The MessageRegistry used by this server. */
-	private final MessageRegistry messageRegistry;
 
 	/**
 	 * Construct a new Server without a SQLHandler.
@@ -42,7 +39,6 @@ public class Server<T extends ClientHandler> extends Thread
 	protected Server(ServerInit<T> initInfo) throws IOException, NoSuchMethodException {
 		super("Server");
 		ClientListenerInit<T> listenerInit = initInfo.getClientListenerInit();
-		messageRegistry = initInfo.getMessageRegistry();
 		LOGGER.log(Level.FINE, "Initializing Server.");
 		UPS = initInfo.getUps();
 		PERIOD = 1000 / UPS;
@@ -111,12 +107,6 @@ public class Server<T extends ClientHandler> extends Thread
 		}
 		clientListener.stopListening();
 	}
-
-	/**
-	 * Get the MessageRegistry used by this server.
-	 * @return The MessageRegistry used by this server,
-	 */
-	public MessageRegistry getMessageRegistry() { return messageRegistry; }
 
 	public TreeMap<Integer, T> getClientHandlers() {
 		synchronized (clientHandlers)
