@@ -81,10 +81,6 @@ public class Angle
 
 	public boolean isNotIdle() { return relativeAngle != IDLE; }
 
-	public Angle withRelativeAngle(double relativeAngle) {
-		return new Angle(absoluteAngle, relativeAngle);
-	}
-
 	public double reverseStepAngle() {
 		double sAngle = relativeAngle != IDLE ? absoluteAngle + relativeAngle - Math.PI : IDLE;
 		return (sAngle < 0) ? (sAngle + (Math.PI * 2)) : (sAngle % (Math.PI * 2));
