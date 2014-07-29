@@ -175,12 +175,7 @@ public class Location
 	}
 
 	private void removeDiagonalsWithAdjacentUnwalkables(Location walkable) {
-		for (Location blocked : walkable.getAdjacentLocations())
-		{
-			if (diagonals.contains(blocked))
-			{
-				adjacentWalkableLocations.remove(blocked);
-			}
-		}
+		walkable.getAdjacentLocations().stream().filter(diagonals::contains).
+			  forEach(adjacentWalkableLocations::remove);
 	}
 }
