@@ -47,14 +47,13 @@ public class LoginTracker
 		return loggedIn;
 	}
 
-	public boolean sendLogoutRequestAndWaitForResponse(long timeout) {
+	public void sendLogoutRequestAndWaitForResponse(long timeout) {
 		sendLogoutRequest();
 		long startTime = System.currentTimeMillis();
 		while (waitingForResponse && System.currentTimeMillis() - startTime < timeout)
 		{
 			wait(100);
 		}
-		return loggedIn;
 	}
 
 	private void sendLogoutRequest() {
