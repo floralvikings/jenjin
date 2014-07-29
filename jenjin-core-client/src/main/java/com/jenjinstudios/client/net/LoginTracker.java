@@ -15,7 +15,7 @@ public class LoginTracker
 	private volatile boolean loggedIn;
 	private volatile boolean waitingForResponse;
 	private long loggedInTime;
-	private AuthClient client;
+	private final AuthClient client;
 
 
 	public LoginTracker(AuthClient client) { this.client = client; }
