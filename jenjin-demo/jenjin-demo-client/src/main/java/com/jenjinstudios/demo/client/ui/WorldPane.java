@@ -23,7 +23,10 @@ public class WorldPane extends GridPane
 		add(highScoreLabel, 0, 1);
 
 		final Duration oneFrameAmt = Duration.millis(1000 / (float) 60);
-		final KeyFrame oneFrame = new KeyFrame(oneFrameAmt, event -> canvas.drawWorld());
+		final KeyFrame oneFrame = new KeyFrame(oneFrameAmt, event -> {
+			canvas.drawWorld();
+			highScoreLabel.setText("High Score: " + worldClient.getHighScore());
+		});
 		Timeline timeline = new Timeline(oneFrame);
 		timeline.setCycleCount(Timeline.INDEFINITE);
 		timeline.play();

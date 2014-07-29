@@ -16,6 +16,7 @@ public class DemoWorldClient extends WorldClient
 
 	public DemoWorldClient(MessageIO messageIO, ClientUser clientUser, File worldFile) throws WorldDocumentException {
 		super(messageIO, clientUser, worldFile);
+		this.highScore = new Score("None", 0, 0);
 	}
 
 	public Score getHighScore() { return highScore; }
