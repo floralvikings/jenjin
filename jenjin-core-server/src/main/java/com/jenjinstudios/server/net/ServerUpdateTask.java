@@ -42,7 +42,6 @@ class ServerUpdateTask implements Runnable
 		runQueuedMessages();
 		update();
 		broadcast();
-		refresh();
 	}
 
 	private void checkForNewClients() {
@@ -52,16 +51,6 @@ class ServerUpdateTask implements Runnable
 		} catch (Exception ex)
 		{
 			LOGGER.log(Level.WARNING, "Exception when checking for new clients", ex);
-		}
-	}
-
-	private void refresh() {
-		try
-		{
-			server.refresh();
-		} catch (Exception ex)
-		{
-			LOGGER.log(Level.WARNING, "Exception when refreshing server", ex);
 		}
 	}
 

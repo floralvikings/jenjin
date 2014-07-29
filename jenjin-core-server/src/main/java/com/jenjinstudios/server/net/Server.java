@@ -94,14 +94,6 @@ public class Server<T extends ClientHandler> extends Thread
 		}
 	}
 
-	/** Refresh all clients after they sendAllMessages. */
-	public void refresh() {
-		synchronized (clientHandlers)
-		{
-			clientHandlers.values().stream().filter(current -> current != null).forEach(ClientHandler::refresh);
-		}
-	}
-
 	/** Run the server. */
 	@Override
 	public void run() {
