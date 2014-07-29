@@ -67,6 +67,7 @@ public class MessageOutputStream extends DataOutputStream
 	 * @param encryptStrings Whether to encryptPublic strings in this message.
 	 * @throws IOException If there is an IO error.
 	 */
+	@SuppressWarnings("OverlyComplexMethod")
 	private void writeArgument(Object arg, boolean encryptStrings) throws IOException {
 		if (arg instanceof String) writeString((String) arg, encryptStrings);
 		else if (arg instanceof Integer) writeInt((int) arg);
