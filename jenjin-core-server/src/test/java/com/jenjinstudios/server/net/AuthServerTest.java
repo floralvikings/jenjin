@@ -10,6 +10,7 @@ import static org.mockito.Mockito.when;
 /**
  * @author Caleb Brinkman
  */
+@SuppressWarnings("unchecked")
 public class AuthServerTest
 {
 	@Test
