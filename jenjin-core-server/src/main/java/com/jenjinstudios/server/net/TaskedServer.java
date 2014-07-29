@@ -76,6 +76,20 @@ public class TaskedServer<T extends ClientHandler> extends Server<T>
 
 	public int getUps() { return UPS; }
 
+	public void runRepeatedTasks() {
+		synchronized (repeatedTasks)
+		{
+			for (Runnable r : repeatedTasks) r.run();
+		}
+	}
+
+	public void runSyncedTasks() {
+		synchronized (syncedTasks)
+		{
+			while (!syncedTasks.isEmpty()) { syncedTasks.remove().run(); }
+		}
+	}
+
 	/**
 	 * Tasks to be repeated in the main loop.
 	 * @return The list of repeated tasks to be executed by this server.

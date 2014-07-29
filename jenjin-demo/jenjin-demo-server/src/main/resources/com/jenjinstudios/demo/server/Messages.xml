@@ -3,11 +3,7 @@
         <executable language="java">com.jenjinstudios.demo.server.message.ExecutableFireRequest</executable>
     </message>
 
-    <message name="HighScoreRequest" id="301">
-        <executable language="java">com.jenjinstudios.demo.server.message.ExecutableHighScoreRequest</executable>
-    </message>
-
-    <message name="HighScoreResponse" id="302">
+    <message name="HighScoreResponse" id="301">
         <executable language="java">com.jenjinstudios.demo.client.message.ExecutableHighScoreResponse</executable>
         <argument type="String" name="name" />
         <argument type="double" name="ratio" />

@@ -1,11 +1,10 @@
 package com.jenjinstudios.demo.server;
 
 import com.jenjinstudios.core.io.MessageRegistry;
+import com.jenjinstudios.demo.server.message.DemoClientHandler;
 import com.jenjinstudios.server.net.ClientListenerInit;
 import com.jenjinstudios.server.net.ServerInit;
 import com.jenjinstudios.world.io.WorldDocumentReader;
-import com.jenjinstudios.world.server.WorldClientHandler;
-import com.jenjinstudios.world.server.WorldServer;
 import com.jenjinstudios.world.server.sql.WorldAuthenticator;
 
 import java.io.InputStream;
@@ -21,10 +20,10 @@ public class Main
 {
 	public static void main(String[] args) throws Exception {
 		Scanner input = new Scanner(System.in);
-		WorldServer worldServer;
+		DemoServer demoServer;
 
-		worldServer = createWorldServer();
-		worldServer.start();
+		demoServer = createWorldServer();
+		demoServer.start();
 
 		String readLine = input.nextLine();
 		while (readLine != null && !"quit".equals(readLine))
@@ -32,13 +31,13 @@ public class Main
 			Thread.sleep(100);
 		}
 
-		worldServer.shutdown();
+		demoServer.shutdown();
 	}
 
-	public static WorldServer createWorldServer() throws Exception {
-		ClientListenerInit<WorldClientHandler> clientListenerInit =
-			  new ClientListenerInit<>(WorldClientHandler.class, 51015);
-		ServerInit<WorldClientHandler> serverInit =
+	private static DemoServer createWorldServer() throws Exception {
+		ClientListenerInit<DemoClientHandler> clientListenerInit =
+			  new ClientListenerInit<>(DemoClientHandler.class, 51015);
+		ServerInit<DemoClientHandler> serverInit =
 			  new ServerInit<>(MessageRegistry.getInstance(), 50, clientListenerInit);
 		Class.forName("org.h2.Driver");
 		Connection sqlConnection = createDemoConnection();
@@ -46,10 +45,10 @@ public class Main
 		InputStream stream = Main.class.getClassLoader().
 			  getResourceAsStream("com/jenjinstudios/demo/server/World.xml");
 		WorldDocumentReader worldDocumentReader = new WorldDocumentReader(stream);
-		return new WorldServer<>(serverInit, worldAuthenticator, worldDocumentReader);
+		return new DemoServer<>(serverInit, worldAuthenticator, worldDocumentReader);
 	}
 
-	public static Connection createDemoConnection() throws Exception {
+	private static Connection createDemoConnection() throws Exception {
 		Class.forName("org.h2.Driver");
 		String connectionUrl = "jdbc:h2:mem:jenjin_test";
 		Connection testConnection = DriverManager.getConnection(connectionUrl, "sa", "");

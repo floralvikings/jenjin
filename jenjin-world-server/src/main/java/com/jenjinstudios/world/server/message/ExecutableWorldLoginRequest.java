@@ -17,10 +17,10 @@ import java.util.Map;
  */
 public class ExecutableWorldLoginRequest extends WorldExecutableMessage
 {
-	private static final String X_COORD = "xCoord";
-	private static final String Y_COORD = "yCoord";
-	private static final String ZONE_ID = "zoneID";
-	private static final String USERNAME = "username";
+	private static final String X_COORD = "XCOORD";
+	private static final String Y_COORD = "YCOORD";
+	private static final String ZONE_ID = "ZONEID";
+	private static final String USERNAME = "USERNAME";
 	private final WorldAuthenticator authenticator;
 	private Message loginResponse;
 	private Map<String, Object> playerData;
@@ -103,7 +103,6 @@ public class ExecutableWorldLoginRequest extends WorldExecutableMessage
 		player.setVector2D(coordinates);
 		player.setZoneID(zoneId);
 		handler.setUser(user);
-		handler.getServer().associateUsernameWithClientHandler(username, handler);
 		return player;
 	}
 

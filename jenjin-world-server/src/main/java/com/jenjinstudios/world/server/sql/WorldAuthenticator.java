@@ -36,9 +36,9 @@ public class WorldAuthenticator extends Authenticator
 		{
 			ResultSetMetaData metaData = results.getMetaData();
 			results.next();
-			for (int i = 0; i < metaData.getColumnCount(); i++)
+			for (int i = 1; i <= metaData.getColumnCount(); i++)
 			{
-				playerData.put(metaData.getColumnName(i), results.getObject(i));
+				playerData.put(metaData.getColumnName(i).toUpperCase(), results.getObject(i));
 			}
 		} catch (SQLException | IndexOutOfBoundsException e)
 		{

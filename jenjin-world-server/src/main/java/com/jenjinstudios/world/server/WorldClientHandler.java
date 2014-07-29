@@ -8,7 +8,6 @@ import com.jenjinstudios.world.WorldObject;
 import com.jenjinstudios.world.server.message.WorldServerMessageFactory;
 import com.jenjinstudios.world.state.MoveState;
 
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -18,13 +17,13 @@ import java.util.List;
 public class WorldClientHandler extends ClientHandler
 {
 	private final WorldServerMessageFactory messageFactory;
-	private final Player player;
+	private Player player;
 	private boolean hasSentActorStepMessage;
 
-	public WorldClientHandler(WorldServer<? extends WorldClientHandler> s, MessageIO messageIO) throws IOException {
+	public WorldClientHandler(WorldServer<? extends WorldClientHandler> s, MessageIO messageIO) {
 		super(s, messageIO);
 		this.messageFactory = new WorldServerMessageFactory(this, getServer().getMessageRegistry());
-		player = new Player("PLAYER");
+		setPlayer(new Player("PLAYER"));
 	}
 
 	@Override
@@ -45,6 +44,8 @@ public class WorldClientHandler extends ClientHandler
 	public WorldServerMessageFactory getMessageFactory() { return messageFactory; }
 
 	public Player getPlayer() { return player; }
+
+	protected void setPlayer(Player player) { this.player = player; }
 
 	private void queueNewlyVisibleMessages() {
 		for (WorldObject object : player.getNewlyVisibleObjects())
