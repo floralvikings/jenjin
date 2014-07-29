@@ -27,13 +27,12 @@ public class ExecutableLogoutRequestTest
 		user.setUsername("bar");
 		ClientHandler clientHandler = mock(ClientHandler.class);
 		AuthServer server = mock(AuthServer.class);
-		ServerMessageFactory serverMessageFactory = new ServerMessageFactory(clientHandler, messageRegistry);
+		ServerMessageFactory serverMessageFactory = new ServerMessageFactory(clientHandler);
 		Authenticator authenticator = mock(Authenticator.class);
 		when(server.getAuthenticator()).thenReturn(authenticator);
 		when(server.getCycleStartTime()).thenReturn(12345l);
 		when(authenticator.logOutUser(Mockito.<String>any())).thenReturn(new User());
 		when(clientHandler.getServer()).thenReturn(server);
-		when(clientHandler.getMessageRegistry()).thenReturn(messageRegistry);
 		when(clientHandler.getMessageFactory()).thenReturn(serverMessageFactory);
 		when(clientHandler.getUser()).thenReturn(user);
 

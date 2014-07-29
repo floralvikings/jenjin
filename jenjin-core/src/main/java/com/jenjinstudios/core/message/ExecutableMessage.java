@@ -2,6 +2,7 @@ package com.jenjinstudios.core.message;
 
 import com.jenjinstudios.core.Connection;
 import com.jenjinstudios.core.io.Message;
+import com.jenjinstudios.core.io.MessageRegistry;
 import com.jenjinstudios.core.io.MessageType;
 
 import java.lang.reflect.Constructor;
@@ -52,7 +53,7 @@ public abstract class ExecutableMessage
 	}
 
 	private static Constructor getExecConstructor(Connection connection, Message message) {
-		MessageType messageType = connection.getMessageRegistry().getMessageType(message.getID());
+		MessageType messageType = MessageRegistry.getInstance().getMessageType(message.getID());
 		List<Class<? extends ExecutableMessage>> execClasses = messageType.getExecutableMessageClasses();
 
 		Constructor execConstructor = null;

@@ -23,7 +23,7 @@ public class WorldClient extends AuthClient
 
 	public WorldClient(MessageIO messageIO, ClientUser clientUser, File worldFile) throws WorldDocumentException {
 		super(messageIO, clientUser);
-		this.messageFactory = new WorldClientMessageFactory(getMessageRegistry());
+		this.messageFactory = new WorldClientMessageFactory();
 		serverWorldFileTracker = new ServerWorldFileTracker(this, worldFile);
 		world = serverWorldFileTracker.readWorldFromFile();
 	}

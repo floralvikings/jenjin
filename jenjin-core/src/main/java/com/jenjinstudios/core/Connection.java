@@ -1,7 +1,6 @@
 package com.jenjinstudios.core;
 
 import com.jenjinstudios.core.io.Message;
-import com.jenjinstudios.core.io.MessageRegistry;
 import com.jenjinstudios.core.io.MessageTypeException;
 import com.jenjinstudios.core.util.MessageFactory;
 
@@ -32,7 +31,7 @@ public class Connection extends Thread
 		outgoingMessages = new LinkedList<>();
 		pingTracker = new PingTracker();
 		executableMessageQueue = new ExecutableMessageQueue();
-		messageFactory = new MessageFactory(messageIO.getMr());
+		messageFactory = new MessageFactory();
 		messageExecutor = new MessageExecutor(this, messageIO.getIn());
 	}
 
@@ -82,8 +81,6 @@ public class Connection extends Thread
 	public PingTracker getPingTracker() { return pingTracker; }
 
 	public ExecutableMessageQueue getExecutableMessageQueue() { return executableMessageQueue; }
-
-	public MessageRegistry getMessageRegistry() { return messageIO.getMr(); }
 
 	protected void shutdown() {
 		running = false;

@@ -1,7 +1,6 @@
 package com.jenjinstudios.world.server.message;
 
 import com.jenjinstudios.core.io.Message;
-import com.jenjinstudios.core.io.MessageRegistry;
 import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.WorldObject;
@@ -27,7 +26,6 @@ import static org.testng.Assert.assertEquals;
  */
 public class WorldServerMessageFactoryTest
 {
-	private static final MessageRegistry messageRegistry = MessageRegistry.getInstance();
 	private WorldClientHandler clientHandler;
 	private WorldServerMessageFactory worldServerMessageFactory;
 
@@ -37,7 +35,7 @@ public class WorldServerMessageFactoryTest
 		WorldServer worldServer = mock(WorldServer.class);
 		clientHandler = mock(WorldClientHandler.class);
 		when(clientHandler.getServer()).thenReturn(worldServer);
-		worldServerMessageFactory = new WorldServerMessageFactory(clientHandler, messageRegistry);
+		worldServerMessageFactory = new WorldServerMessageFactory(clientHandler);
 	}
 
 	@Test

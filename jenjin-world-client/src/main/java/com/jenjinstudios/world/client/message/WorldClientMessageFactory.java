@@ -3,7 +3,6 @@ package com.jenjinstudios.world.client.message;
 import com.jenjinstudios.client.message.ClientMessageFactory;
 import com.jenjinstudios.client.net.ClientUser;
 import com.jenjinstudios.core.io.Message;
-import com.jenjinstudios.core.io.MessageRegistry;
 import com.jenjinstudios.world.state.MoveState;
 
 /**
@@ -12,13 +11,6 @@ import com.jenjinstudios.world.state.MoveState;
  */
 public class WorldClientMessageFactory extends ClientMessageFactory
 {
-
-	/**
-	 * Construct a new WorldClientMessageFactory working for the given client.
-	 */
-	public WorldClientMessageFactory(MessageRegistry messageRegistry) {
-		super(messageRegistry);
-	}
 
 	/**
 	 * Generate a state change request for the given move state.

@@ -40,7 +40,7 @@ public class Client extends Connection
 		super(messageIO);
 		repeatedTasks = new LinkedList<>();
 		generateKeys();
-		this.messageFactory = new ClientMessageFactory(getMessageRegistry());
+		this.messageFactory = new ClientMessageFactory();
 	}
 
 	public PublicKey getPublicKey() { return publicKey; }

@@ -13,9 +13,8 @@ public class MessageFactory
 
 	/**
 	 * Construct a new MessageFactory working for the given connection.
-	 * @param messageRegistry The message registry for this factory.
 	 */
-	public MessageFactory(MessageRegistry messageRegistry) { this.messageRegistry = messageRegistry; }
+	public MessageFactory() { this.messageRegistry = MessageRegistry.getInstance(); }
 
 	/**
 	 * Generate a "ping" request.

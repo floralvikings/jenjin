@@ -7,7 +7,6 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 /**
  * @author Caleb Brinkman
@@ -18,7 +17,6 @@ public class DisabledExecutableMessageTest
 	public void testMessageIsDisabled() {
 		Message disabledMessage = MessageRegistry.getInstance().createMessage("DisabledMessage");
 		Connection connection = mock(Connection.class);
-		when(connection.getMessageRegistry()).thenReturn(MessageRegistry.getInstance());
 		ExecutableMessage message =
 			  ExecutableMessage.getExecutableMessageFor(connection, disabledMessage);
 		Assert.assertNull(message);

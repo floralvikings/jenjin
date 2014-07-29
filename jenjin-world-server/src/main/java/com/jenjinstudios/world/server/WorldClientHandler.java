@@ -22,7 +22,7 @@ public class WorldClientHandler extends ClientHandler
 
 	public WorldClientHandler(WorldServer<? extends WorldClientHandler> s, MessageIO messageIO) {
 		super(s, messageIO);
-		this.messageFactory = new WorldServerMessageFactory(this, getServer().getMessageRegistry());
+		this.messageFactory = new WorldServerMessageFactory(this);
 		setPlayer(new Player("PLAYER"));
 	}
 

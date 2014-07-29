@@ -2,9 +2,8 @@ package com.jenjinstudios.server.message;
 
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageInputStream;
-import com.jenjinstudios.core.io.MessageRegistry;
-import com.jenjinstudios.server.net.ClientHandler;
 import com.jenjinstudios.core.util.MessageFactory;
+import com.jenjinstudios.server.net.ClientHandler;
 
 import javax.crypto.*;
 import java.security.InvalidKeyException;
@@ -31,8 +30,7 @@ public class ServerMessageFactory extends MessageFactory
 	 * Construct a new ServerMessageFactory.
 	 * @param conn The ClientHandler for which this message factory works.
 	 */
-	public ServerMessageFactory(ClientHandler conn, MessageRegistry messageRegistry) {
-		super(messageRegistry);
+	public ServerMessageFactory(ClientHandler conn) {
 		this.clientHandler = conn;
 	}
 

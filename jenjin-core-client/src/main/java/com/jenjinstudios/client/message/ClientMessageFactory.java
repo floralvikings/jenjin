@@ -13,14 +13,6 @@ import java.security.PublicKey;
  */
 public class ClientMessageFactory extends MessageFactory
 {
-
-	/**
-	 * Construct a new ClientMessageFactory.
-	 */
-	public ClientMessageFactory(MessageRegistry messageRegistry) {
-		super(messageRegistry);
-	}
-
 	/**
 	 * Generate a PublicKeyMessage with the given public key.
 	 * @param publicKey The public key.

@@ -30,14 +30,13 @@ public class ExecutableLoginRequestTest
 		user.setLoggedIn(true);
 		ClientHandler clientHandler = mock(ClientHandler.class);
 		AuthServer server = mock(AuthServer.class);
-		ServerMessageFactory serverMessageFactory = new ServerMessageFactory(clientHandler,
-			  MessageRegistry.getInstance());
+		ServerMessageFactory serverMessageFactory = new ServerMessageFactory(clientHandler
+		);
 		Authenticator authenticator = mock(Authenticator.class);
 		when(server.getAuthenticator()).thenReturn(authenticator);
 		when(server.getCycleStartTime()).thenReturn(12345l);
 		when(authenticator.logInUser("foo", "bar")).thenReturn(user);
 		when(clientHandler.getServer()).thenReturn(server);
-		when(clientHandler.getMessageRegistry()).thenReturn(MessageRegistry.getInstance());
 		when(clientHandler.getMessageFactory()).thenReturn(serverMessageFactory);
 
 		ExecutableLoginRequest executableLoginRequest = new ExecutableLoginRequest(clientHandler, message);
@@ -60,15 +59,14 @@ public class ExecutableLoginRequestTest
 		user.setLoggedIn(true);
 		ClientHandler clientHandler = mock(ClientHandler.class);
 		AuthServer server = mock(AuthServer.class);
-		ServerMessageFactory serverMessageFactory = new ServerMessageFactory(clientHandler,
-			  MessageRegistry.getInstance());
+		ServerMessageFactory serverMessageFactory = new ServerMessageFactory(clientHandler
+		);
 		Authenticator authenticator = mock(Authenticator.class);
 		when(server.getAuthenticator()).thenReturn(authenticator);
 		when(server.getCycleStartTime()).thenReturn(12345l);
 		when(authenticator.logInUser("foo", "bar")).thenReturn(user);
 		when(authenticator.logInUser("foo-dapoo", "bar")).thenThrow(new LoginException("Nope"));
 		when(clientHandler.getServer()).thenReturn(server);
-		when(clientHandler.getMessageRegistry()).thenReturn(MessageRegistry.getInstance());
 		when(clientHandler.getMessageFactory()).thenReturn(serverMessageFactory);
 
 		ExecutableLoginRequest executableLoginRequest = new ExecutableLoginRequest(clientHandler, message);

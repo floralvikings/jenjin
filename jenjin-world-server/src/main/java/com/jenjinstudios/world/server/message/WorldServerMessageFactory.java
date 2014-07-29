@@ -1,7 +1,6 @@
 package com.jenjinstudios.world.server.message;
 
 import com.jenjinstudios.core.io.Message;
-import com.jenjinstudios.core.io.MessageRegistry;
 import com.jenjinstudios.server.message.ServerMessageFactory;
 import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.WorldObject;
@@ -18,8 +17,8 @@ import java.util.List;
 public class WorldServerMessageFactory extends ServerMessageFactory
 {
 
-	public WorldServerMessageFactory(WorldClientHandler conn, MessageRegistry reg) {
-		super(conn, reg);
+	public WorldServerMessageFactory(WorldClientHandler conn) {
+		super(conn);
 	}
 
 	public Message generateNewlyVisibleMessage(WorldObject object) {
