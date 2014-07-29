@@ -1,4 +1,4 @@
-rootProject.name = 'Jenjin'
+rootProject.name = 'jenjin'
 include ':jenjin-core-server', ':jenjin-core-client', ':jenjin-world-server', ':jenjin-world-client', ':jenjin-core',
         ':jenjin-world-core', ':jenjin-demo:jenjin-demo-client', ':jenjin-demo:jenjin-demo-server'
 
