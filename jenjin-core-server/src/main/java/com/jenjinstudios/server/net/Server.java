@@ -100,7 +100,7 @@ public class Server<T extends ClientHandler> extends Thread
 	 * Shutdown the server, forcing all client links to close.
 	 * @throws IOException if there is an error shutting down a client.
 	 */
-	public void shutdown() throws IOException {
+	protected void shutdown() throws IOException {
 		synchronized (clientHandlers)
 		{
 			clientHandlers.values().stream().filter(h -> h != null).forEach(ClientHandler::shutdown);
