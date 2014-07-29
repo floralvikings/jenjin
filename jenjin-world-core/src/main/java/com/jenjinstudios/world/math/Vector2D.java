@@ -96,14 +96,14 @@ public class Vector2D
 	 * @return The angle to the supplied vector.
 	 */
 	public double getAngleToVector(Vector2D vector2D) {
-		if (vector2D.equals(this))
+		Double angle = Double.NEGATIVE_INFINITY;
+		if (!vector2D.equals(this))
 		{
-			// Negative infinity specifies that the vectors are the same (can't get an angle).
-			return Double.NEGATIVE_INFINITY;
+			double xDist = vector2D.getXCoordinate() - xCoordinate;
+			double yDist = vector2D.getYCoordinate() - yCoordinate;
+			angle = java.lang.Math.atan2(yDist, xDist);
 		}
-		double xDist = vector2D.getXCoordinate() - xCoordinate;
-		double yDist = vector2D.getYCoordinate() - yCoordinate;
-		return java.lang.Math.atan2(yDist, xDist);
+		return angle;
 	}
 
 	/**
