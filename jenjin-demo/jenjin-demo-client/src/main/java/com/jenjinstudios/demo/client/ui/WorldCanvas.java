@@ -41,15 +41,15 @@ public class WorldCanvas extends Canvas
 		drawPlayer();
 	}
 
-	public void clearBackground() {
+	protected void clearBackground() {
 		GraphicsContext graphicsContext2D = getGraphicsContext2D();
 		graphicsContext2D.setFill(Color.BLACK);
 		graphicsContext2D.fillRect(0, 0, getWidth(), getHeight());
 	}
 
-	public void drawLocations() { clientPlayer.getVisibleLocations().forEach(this::drawLocation); }
+	protected void drawLocations() { clientPlayer.getVisibleLocations().forEach(this::drawLocation); }
 
-	public void drawLocation(Location location) {
+	protected void drawLocation(Location location) {
 		Location pLoc = clientPlayer.getLocation();
 		if (location != null && pLoc != null)
 		{
@@ -67,9 +67,9 @@ public class WorldCanvas extends Canvas
 		}
 	}
 
-	public void drawObjects() { clientPlayer.getVisibleObjects().values().forEach(this::drawObject); }
+	protected void drawObjects() { clientPlayer.getVisibleObjects().values().forEach(this::drawObject); }
 
-	public void drawPlayer() {
+	protected void drawPlayer() {
 		double x = getWidth() / 2;
 		double y = getHeight() / 2;
 
