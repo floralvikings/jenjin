@@ -47,7 +47,7 @@ public class TaskedServer<T extends ClientHandler> extends Server<T>
 	 * Add a task to be repeated every update.
 	 * @param r The {@code Runnable} containing the task to be repeated.
 	 */
-	public void addRepeatedTask(Runnable r) {
+	protected void addRepeatedTask(Runnable r) {
 		synchronized (repeatedTasks)
 		{
 			repeatedTasks.add(r);
