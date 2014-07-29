@@ -11,11 +11,11 @@ import java.util.List;
  */
 public class FieldOfVisionCalculator
 {
-	private Zone zone;
-	private int radius;
-	private int centerX;
-	private int centerY;
-	private Location center;
+	private final Zone zone;
+	private final int radius;
+	private final int centerX;
+	private final int centerY;
+	private final Location center;
 
 	public FieldOfVisionCalculator(Zone zone, Location center, int radius) {
 		this.center = center;
