@@ -1,7 +1,6 @@
 package com.jenjinstudios.server.net;
 
 import com.jenjinstudios.core.MessageIO;
-import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageOutputStream;
 import com.jenjinstudios.server.sql.Authenticator;
 import org.testng.annotations.Test;
@@ -25,7 +24,7 @@ public class ClientHandlerTest
 		clientHandler.sendFirstConnectResponse();
 		clientHandler.writeAllMessages();
 
-		verify(messageOutputStream, times(1)).writeMessage((Message) any());
+		verify(messageOutputStream, times(1)).writeMessage(any());
 	}
 
 	@Test
@@ -39,7 +38,7 @@ public class ClientHandlerTest
 		clientHandler.sendLogoutStatus(true);
 		clientHandler.writeAllMessages();
 
-		verify(messageOutputStream, times(1)).writeMessage((Message) any());
+		verify(messageOutputStream, times(1)).writeMessage(any());
 	}
 
 	@Test
