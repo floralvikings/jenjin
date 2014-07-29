@@ -10,7 +10,7 @@ import org.testng.annotations.Test;
  */
 public class ActorTest
 {
-	private static World world = new World();
+	private static final World world = new World();
 
 	@Test
 	public void testReset() {
