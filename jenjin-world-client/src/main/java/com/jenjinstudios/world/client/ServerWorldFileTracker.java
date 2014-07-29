@@ -30,16 +30,16 @@ public class ServerWorldFileTracker
 		this.worldFile = worldFile;
 	}
 
-	public void requestServerWorldFileChecksum(WorldClient worldClient) {
-		Message worldFileChecksumRequest = worldClient.getMessageFactory().generateWorldChecksumRequest();
-		worldClient.queueOutgoingMessage(worldFileChecksumRequest);
+	public void requestServerWorldFileChecksum() {
+		Message worldFileChecksumRequest = this.worldClient.getMessageFactory().generateWorldChecksumRequest();
+		this.worldClient.queueOutgoingMessage(worldFileChecksumRequest);
 		waitForWorldFileChecksum();
 	}
 
-	public void requestServerWorldFile(WorldClient worldClient) {
+	public void requestServerWorldFile() {
 		if (needsWorldFile())
 		{
-			this.worldClient.queueOutgoingMessage(worldClient.getMessageFactory().generateWorldFileRequest());
+			this.worldClient.queueOutgoingMessage(this.worldClient.getMessageFactory().generateWorldFileRequest());
 			waitForWorldFile();
 		}
 	}

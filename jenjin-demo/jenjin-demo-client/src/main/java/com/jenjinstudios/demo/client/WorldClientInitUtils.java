@@ -48,8 +48,8 @@ public class WorldClientInitUtils
 	}
 
 	private static void requestWorldFile(WorldClient worldClient) throws WorldDocumentException {
-		worldClient.getServerWorldFileTracker().requestServerWorldFileChecksum(worldClient);
-		worldClient.getServerWorldFileTracker().requestServerWorldFile(worldClient);
+		worldClient.getServerWorldFileTracker().requestServerWorldFileChecksum();
+		worldClient.getServerWorldFileTracker().requestServerWorldFile();
 		worldClient.getServerWorldFileTracker().writeReceivedWorldToFile();
 	}
 
