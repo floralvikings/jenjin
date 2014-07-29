@@ -23,7 +23,7 @@ public class WorldAuthenticatorTest
 
 	private static Connection connection;
 
-	public static Connection createTestConnection() throws Exception {
+	private static Connection createTestConnection() throws Exception {
 		Class.forName("org.h2.Driver");
 		String connectionUrl = "jdbc:h2:mem:jenjin_test" + connectionNumber;
 		Connection testConnection = DriverManager.getConnection(connectionUrl, "sa", "");
