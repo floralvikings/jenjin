@@ -16,6 +16,7 @@ import static org.mockito.Mockito.*;
  */
 public class ExecutableLogoutRequestTest
 {
+	@SuppressWarnings("unchecked")
 	@Test
 	public void testMessageExecution() throws Exception {
 		MessageRegistry messageRegistry = MessageRegistry.getInstance();
