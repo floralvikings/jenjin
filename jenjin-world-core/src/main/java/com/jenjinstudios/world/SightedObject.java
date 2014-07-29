@@ -33,12 +33,6 @@ public class SightedObject extends WorldObject
 	}
 
 	@Override
-	public void setWorld(World world) {
-		super.setWorld(world);
-		//resetVisibleLocations();
-	}
-
-	@Override
 	public void setUp() {
 		vectorBeforeUpdate = getVector2D();
 		if (!vectorBeforeUpdate.equals(vectorAfterUpdate))
