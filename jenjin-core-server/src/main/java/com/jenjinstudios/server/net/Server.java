@@ -108,7 +108,7 @@ public class Server<T extends ClientHandler> extends Thread
 		clientListener.stopListening();
 	}
 
-	public TreeMap<Integer, T> getClientHandlers() {
+	protected TreeMap<Integer, T> getClientHandlers() {
 		synchronized (clientHandlers)
 		{
 			return new TreeMap<>(clientHandlers);
