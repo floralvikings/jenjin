@@ -43,7 +43,7 @@ public class ServerWorldFileTrackerTest
 				"</world>\n";
 	private WorldClient worldClient;
 
-	public static void removeRecursive(Path path) throws IOException {
+	private static void removeRecursive(Path path) throws IOException {
 		Files.walkFileTree(path, new SimpleFileVisitor<Path>()
 		{
 			@Override
