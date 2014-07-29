@@ -10,9 +10,9 @@ import java.util.Properties;
  */
 public class LocationTileManager
 {
-	private GroundTileManager groundTileManager;
-	private WallTileManager wallTileManager;
-	private IndoorsTileManager indoorsTileManager;
+	private final GroundTileManager groundTileManager;
+	private final WallTileManager wallTileManager;
+	private final IndoorsTileManager indoorsTileManager;
 
 	public LocationTileManager() {
 		groundTileManager = new GroundTileManager();
