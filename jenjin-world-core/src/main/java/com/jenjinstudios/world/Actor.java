@@ -130,7 +130,7 @@ public class Actor extends SightedObject
 
 	private boolean stepForward(double stepLength) {
 		boolean didStep;
-		if (!getAngle().isIdle())
+		if (getAngle().isNotIdle())
 		{
 			Vector2D newVector = getVector2D().getVectorInDirection(stepLength, getAngle().getStepAngle());
 			Location newLocation = getWorld().getLocationForCoordinates(getZoneID(), newVector);

@@ -79,7 +79,7 @@ public class Angle
 		return new Angle(this.absoluteAngle, IDLE);
 	}
 
-	public boolean isIdle() { return relativeAngle == IDLE; }
+	public boolean isNotIdle() { return relativeAngle != IDLE; }
 
 	public Angle withRelativeAngle(double relativeAngle) {
 		return new Angle(absoluteAngle, relativeAngle);

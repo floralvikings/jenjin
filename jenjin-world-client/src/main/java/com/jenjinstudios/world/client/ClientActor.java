@@ -54,7 +54,7 @@ public class ClientActor extends WorldObject
 	}
 
 	private void stepForward(double stepLength) {
-		if (!getAngle().isIdle())
+		if (getAngle().isNotIdle())
 		{
 			setVector2D(getVector2D().getVectorInDirection(stepLength, getAngle().getStepAngle()));
 		}
