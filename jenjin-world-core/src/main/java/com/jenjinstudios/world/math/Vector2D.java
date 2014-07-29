@@ -82,12 +82,16 @@ public class Vector2D
 	 * @return The new Vector2D;
 	 */
 	public Vector2D getVectorInDirection(double distance, double angle) {
-		if (angle == Angle.IDLE) return new Vector2D(this);
-		double cos = java.lang.Math.cos(angle);
-		double sin = java.lang.Math.sin(angle);
-		double newX = MathUtil.round(xCoordinate + (distance * cos), 4);
-		double newY = MathUtil.round(yCoordinate + (distance * sin), 4);
-		return new Vector2D(newX, newY);
+		Vector2D vector2D = new Vector2D(this);
+		if (angle != Angle.IDLE)
+		{
+			double cos = Math.cos(angle);
+			double sin = Math.sin(angle);
+			double newX = MathUtil.round(xCoordinate + (distance * cos), 4);
+			double newY = MathUtil.round(yCoordinate + (distance * sin), 4);
+			vector2D = new Vector2D(newX, newY);
+		}
+		return vector2D;
 	}
 
 	/**
