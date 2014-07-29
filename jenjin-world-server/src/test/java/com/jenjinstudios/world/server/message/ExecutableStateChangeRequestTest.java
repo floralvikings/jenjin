@@ -19,7 +19,7 @@ import static org.mockito.Mockito.when;
 @SuppressWarnings("unchecked")
 public class ExecutableStateChangeRequestTest
 {
-	private static MessageRegistry messageRegistry = MessageRegistry.getInstance();
+	private static final MessageRegistry messageRegistry = MessageRegistry.getInstance();
 
 	@Test
 	public void testValidRequest() throws InterruptedException {
