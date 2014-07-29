@@ -1,9 +1,8 @@
 package com.jenjinstudios.demo.client.ui;
 
 import com.jenjinstudios.demo.client.DemoWorldClient;
-import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
-import javafx.animation.TimelineBuilder;
+import javafx.animation.Timeline;
 import javafx.geometry.Dimension2D;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
@@ -25,6 +24,8 @@ public class WorldPane extends GridPane
 
 		final Duration oneFrameAmt = Duration.millis(1000 / (float) 60);
 		final KeyFrame oneFrame = new KeyFrame(oneFrameAmt, event -> canvas.drawWorld());
-		TimelineBuilder.create().cycleCount(Animation.INDEFINITE).keyFrames(oneFrame).build().play();
+		Timeline timeline = new Timeline(oneFrame);
+		timeline.setCycleCount(Timeline.INDEFINITE);
+		timeline.play();
 	}
 }
