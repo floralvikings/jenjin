@@ -11,6 +11,7 @@ import static org.testng.Assert.assertEquals;
 /**
  * @author Caleb Brinkman
  */
+@SuppressWarnings("unchecked")
 public class ClientHandlerTest
 {
 	@Test
