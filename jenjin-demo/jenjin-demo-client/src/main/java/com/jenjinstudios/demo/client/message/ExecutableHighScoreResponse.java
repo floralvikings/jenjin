@@ -32,7 +32,6 @@ public class ExecutableHighScoreResponse extends WorldClientExecutableMessage
 		String name = (String) getMessage().getArgument("name");
 		int kills = (int) getMessage().getArgument("kills");
 		int deaths = (int) getMessage().getArgument("deaths");
-		double ratio = (double) getMessage().getArgument("ratio");
-		score = new Score(name, kills, deaths, ratio);
+		score = new Score(name, kills, deaths);
 	}
 }

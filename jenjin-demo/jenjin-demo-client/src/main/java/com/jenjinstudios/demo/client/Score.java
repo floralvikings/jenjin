@@ -10,10 +10,10 @@ public class Score
 	public final double ratio;
 	public final String name;
 
-	public Score(String name, int kills, int deaths, double ratio) {
+	public Score(String name, int kills, int deaths) {
 		this.kills = kills;
 		this.deaths = deaths;
-		this.ratio = ratio;
+		this.ratio = kills / ((deaths > 0) ? deaths : 1);
 		this.name = name;
 	}
 
