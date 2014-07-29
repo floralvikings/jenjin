@@ -31,6 +31,7 @@ public class Client extends Connection
 	/** The private key sent to the server. */
 	private PrivateKey privateKey;
 	private volatile boolean initialized;
+	private int ups;
 
 	/**
 	 * Construct a new client and attempt to connect to the server over the specified port.
@@ -43,6 +44,14 @@ public class Client extends Connection
 	}
 
 	public PublicKey getPublicKey() { return publicKey; }
+
+	public boolean isInitialized() {
+		return initialized;
+	}
+
+	public int getUps() {
+		return ups;
+	}
 
 	/**
 	 * Generate the public and private key used by this client.
@@ -97,7 +106,7 @@ public class Client extends Connection
 		{
 			throw new IllegalStateException("Trying to perform connection init when already initialized.");
 		}
-		int ups = (int) firstConnectResponse.getArgument("ups");
+		ups = (int) firstConnectResponse.getArgument("ups");
 		/* The period of the update in milliseconds. */
 		int period = 1000 / ups;
 

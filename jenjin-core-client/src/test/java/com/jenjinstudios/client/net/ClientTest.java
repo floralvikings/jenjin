@@ -1,10 +1,12 @@
 package com.jenjinstudios.client.net;
 
 import com.jenjinstudios.core.MessageIO;
+import com.jenjinstudios.core.io.Message;
+import com.jenjinstudios.core.io.MessageOutputStream;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 /**
  * @author Caleb Brinkman
@@ -23,6 +25,15 @@ public class ClientTest
 
 	@Test
 	public void testDoPostConnectInit() {
-		// TODO Write this test
+		MessageOutputStream out = mock(MessageOutputStream.class);
+		MessageIO messageIO = mock(MessageIO.class);
+		when(messageIO.getOut()).thenReturn(out);
+		when(out.isClosed()).thenReturn(false);
+		Client client = new Client(messageIO);
+		Message message = mock(Message.class);
+		when(message.getArgument("ups")).thenReturn(50);
+		client.doPostConnectInit(message);
+		Assert.assertTrue(client.isInitialized());
+		Assert.assertEquals(client.getUps(), 50);
 	}
 }

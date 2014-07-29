@@ -27,7 +27,7 @@ public class ClientMessageFactory extends MessageFactory
 	 * @return The PublicKeyMessage.
 	 */
 	public Message generatePublicKeyMessage(PublicKey publicKey) {
-		Message publicKeyMessage = getMessageRegistry().createMessage("PublicKeyMessage");
+		Message publicKeyMessage = MessageRegistry.getInstance().createMessage("PublicKeyMessage");
 		publicKeyMessage.setArgument("key", publicKey.getEncoded());
 		return publicKeyMessage;
 	}

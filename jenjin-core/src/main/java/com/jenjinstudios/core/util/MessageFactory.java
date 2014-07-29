@@ -22,7 +22,7 @@ public class MessageFactory
 	 * @return A "PintRequest" message.
 	 */
 	public Message generatePingRequest() {
-		Message pingRequest = messageRegistry.createMessage("PingRequest");
+		Message pingRequest = MessageRegistry.getInstance().createMessage("PingRequest");
 		pingRequest.setArgument("requestTimeMillis", System.currentTimeMillis());
 		return pingRequest;
 	}
