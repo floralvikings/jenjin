@@ -31,6 +31,7 @@ public class WorldServerMessageFactoryTest
 	private WorldClientHandler clientHandler;
 	private WorldServerMessageFactory worldServerMessageFactory;
 
+	@SuppressWarnings("unchecked")
 	@BeforeMethod
 	public void setUp() {
 		WorldServer worldServer = mock(WorldServer.class);
