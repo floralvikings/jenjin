@@ -23,8 +23,8 @@ public class Angle
 	public static final double LEFT = Math.PI * 0.5;
 	/** The front-left state. */
 	public static final double FRONT_LEFT = Math.PI * 0.25;
-	private double absoluteAngle;
-	private double relativeAngle;
+	private final double absoluteAngle;
+	private final double relativeAngle;
 
 	public Angle() {
 		this(0.0, IDLE);
