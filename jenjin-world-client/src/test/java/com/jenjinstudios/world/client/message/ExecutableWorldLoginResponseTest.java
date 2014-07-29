@@ -5,8 +5,6 @@ import com.jenjinstudios.client.net.LoginTracker;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageRegistry;
 import com.jenjinstudios.world.World;
-import com.jenjinstudios.world.WorldObject;
-import com.jenjinstudios.world.client.ClientPlayer;
 import com.jenjinstudios.world.client.WorldClient;
 import org.testng.annotations.Test;
 
@@ -42,7 +40,7 @@ public class ExecutableWorldLoginResponseTest
 
 		verify(loginTracker).setLoggedIn(true);
 		verify(loginTracker).setLoggedInTime(0l);
-		verify(worldClient).setPlayer((ClientPlayer) any());
-		verify(world).addObject((WorldObject) any(), eq(0));
+		verify(worldClient).setPlayer(any());
+		verify(world).addObject(any(), eq(0));
 	}
 }
