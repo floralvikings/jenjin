@@ -36,7 +36,7 @@ public class ServerWorldFileTracker
 		waitForWorldFileChecksum();
 	}
 
-	public void requestServerWorldFile(WorldClient worldClient) throws WorldDocumentException {
+	public void requestServerWorldFile(WorldClient worldClient) {
 		if (needsWorldFile())
 		{
 			this.worldClient.queueOutgoingMessage(worldClient.getMessageFactory().generateWorldFileRequest());
