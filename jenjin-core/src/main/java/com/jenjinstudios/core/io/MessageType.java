@@ -2,7 +2,10 @@ package com.jenjinstudios.core.io;
 
 import com.jenjinstudios.core.message.ExecutableMessage;
 
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * This class is used to define the ID, name, and Argument Types for each type of message contained in the XML files.
@@ -36,7 +39,7 @@ public class MessageType
 	}
 
 	public MessageType(MessageInfo info) {
-		this(info, new LinkedList<Class<? extends ExecutableMessage>>());
+		this(info, new LinkedList<>());
 	}
 
 	/**
