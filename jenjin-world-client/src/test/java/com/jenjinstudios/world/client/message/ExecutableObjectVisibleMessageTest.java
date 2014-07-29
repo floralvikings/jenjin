@@ -3,7 +3,6 @@ package com.jenjinstudios.world.client.message;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageRegistry;
 import com.jenjinstudios.world.World;
-import com.jenjinstudios.world.WorldObject;
 import com.jenjinstudios.world.client.WorldClient;
 import org.testng.annotations.Test;
 
@@ -32,6 +31,6 @@ public class ExecutableObjectVisibleMessageTest
 		message.runImmediate();
 		message.runDelayed();
 
-		verify(world).addObject((WorldObject) any(), eq(100));
+		verify(world).addObject(any(), eq(100));
 	}
 }
