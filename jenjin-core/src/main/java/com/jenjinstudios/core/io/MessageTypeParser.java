@@ -118,6 +118,7 @@ class MessageTypeParser
 	 * @param className The name of the class as read from the XML file.
 	 * @return The class type if a correct string is parsed.  Null otherwise.
 	 */
+	@SuppressWarnings("OverlyLongMethod")
 	private static Class parseClassName(String className) {
 		Class type = null;
 		switch (className)

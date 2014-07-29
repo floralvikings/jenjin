@@ -90,6 +90,7 @@ public class MessageInputStream extends DataInputStream
 	 * @return An Object[] containing the message argumentTypes.
 	 * @throws IOException If there is an IO error
 	 */
+	@SuppressWarnings("OverlyLongMethod")
 	private Object[] readMessageArgs(LinkedList<Class> classes) throws IOException {
 		Object[] args = new Object[classes.size()];
 
