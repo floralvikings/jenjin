@@ -2,6 +2,7 @@ package com.jenjinstudios.demo.server.message;
 
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.demo.server.Bullet;
+import com.jenjinstudios.demo.server.DemoPlayer;
 import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.server.WorldClientHandler;
 import com.jenjinstudios.world.server.WorldServer;

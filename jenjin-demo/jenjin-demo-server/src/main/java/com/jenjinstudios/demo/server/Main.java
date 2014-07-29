@@ -1,6 +1,7 @@
 package com.jenjinstudios.demo.server;
 
-import com.jenjinstudios.demo.server.message.DemoClientHandler;
+import com.jenjinstudios.demo.server.net.DemoClientHandler;
+import com.jenjinstudios.demo.server.net.DemoServer;
 import com.jenjinstudios.server.net.ClientListenerInit;
 import com.jenjinstudios.server.net.ServerInit;
 import com.jenjinstudios.world.io.WorldDocumentReader;

@@ -1,4 +1,4 @@
-package com.jenjinstudios.demo.server.message;
+package com.jenjinstudios.demo.server;
 
 import com.jenjinstudios.world.server.Player;
 

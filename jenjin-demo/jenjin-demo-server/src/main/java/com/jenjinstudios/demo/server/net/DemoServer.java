@@ -1,8 +1,8 @@
-package com.jenjinstudios.demo.server;
+package com.jenjinstudios.demo.server.net;
 
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageRegistry;
-import com.jenjinstudios.demo.server.message.DemoPlayer;
+import com.jenjinstudios.demo.server.DemoPlayer;
 import com.jenjinstudios.server.net.ServerInit;
 import com.jenjinstudios.world.io.WorldDocumentException;
 import com.jenjinstudios.world.io.WorldDocumentReader;

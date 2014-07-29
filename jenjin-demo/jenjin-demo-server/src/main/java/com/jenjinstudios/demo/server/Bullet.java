@@ -1,6 +1,5 @@
 package com.jenjinstudios.demo.server;
 
-import com.jenjinstudios.demo.server.message.DemoPlayer;
 import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.Location;
 import com.jenjinstudios.world.WorldObject;
