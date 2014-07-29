@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 public class SightedObject extends WorldObject
 {
 	/** The radius of the square of visible locations. */
-	public static final int VIEW_RADIUS = 11;
+	private static final int VIEW_RADIUS = 11;
 	private final ArrayList<Location> visibleLocations;
 	private final TreeMap<Integer, WorldObject> visibleObjects;
 	private final Set<WorldObject> newlyVisibleObjects;
