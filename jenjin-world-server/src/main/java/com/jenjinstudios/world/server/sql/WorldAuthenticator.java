@@ -51,8 +51,7 @@ public class WorldAuthenticator extends Authenticator
 	 * Update the coordinates of the given actor in the database.
 	 * @param player The player to update.
 	 */
-	public boolean updatePlayer(Actor player) {
-		boolean success = false;
+	public void updatePlayer(Actor player) {
 		String username = player.getName();
 		double xCoord = player.getVector2D().getXCoordinate();
 		double yCoord = player.getVector2D().getYCoordinate();
@@ -67,12 +66,10 @@ public class WorldAuthenticator extends Authenticator
 				updatePlayerStatement.setString(1, username);
 				updatePlayerStatement.executeUpdate();
 				updatePlayerStatement.close();
-				success = true;
 			} catch (SQLException e)
 			{
 				LOGGER.log(Level.WARNING, "Unable to log out player.", e);
 			}
 		}
-		return success;
 	}
 }
