@@ -14,7 +14,7 @@ import java.io.InputStream;
  */
 public class ConnectionTest
 {
-	private static MessageRegistry mr = MessageRegistry.getInstance();
+	private static final MessageRegistry mr = MessageRegistry.getInstance();
 
 	@Test
 	public void testProcessMessage() throws Exception {
