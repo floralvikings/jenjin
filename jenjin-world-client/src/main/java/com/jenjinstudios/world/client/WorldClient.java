@@ -17,7 +17,7 @@ import java.io.File;
 public class WorldClient extends AuthClient
 {
 	private final WorldClientMessageFactory messageFactory;
-	private ServerWorldFileTracker serverWorldFileTracker;
+	private final ServerWorldFileTracker serverWorldFileTracker;
 	private World world;
 	private ClientPlayer player;
 
