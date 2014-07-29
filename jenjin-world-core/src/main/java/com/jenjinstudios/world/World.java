@@ -79,7 +79,7 @@ public class World
 	 * Remove an object from the world.  Specifically, sets the index of the given object in the world's array to null.
 	 * @param object The object to remove.
 	 */
-	public void removeObject(WorldObject object) {
+	protected void removeObject(WorldObject object) {
 		removeObject(object.getId());
 	}
 
@@ -87,7 +87,7 @@ public class World
 	 * Remove the object with the specified id.
 	 * @param id The id.
 	 */
-	public void removeObject(int id) {
+	protected void removeObject(int id) {
 		synchronized (worldObjects)
 		{
 			worldObjects.remove(id);
@@ -117,7 +117,7 @@ public class World
 		lastUpdateCompleted = System.currentTimeMillis();
 	}
 
-	public void removeScheduledObjects() {
+	protected void removeScheduledObjects() {
 		synchronized (scheduledForRemoval)
 		{
 			scheduledForRemoval.forEach(this::removeObject);
