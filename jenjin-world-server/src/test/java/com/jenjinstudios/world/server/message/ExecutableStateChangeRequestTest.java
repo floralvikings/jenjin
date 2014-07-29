@@ -16,6 +16,7 @@ import static org.mockito.Mockito.when;
 /**
  * @author Caleb Brinkman
  */
+@SuppressWarnings("unchecked")
 public class ExecutableStateChangeRequestTest
 {
 	private static MessageRegistry messageRegistry = MessageRegistry.getInstance();
