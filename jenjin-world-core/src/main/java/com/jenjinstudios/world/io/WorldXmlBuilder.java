@@ -88,15 +88,19 @@ public class WorldXmlBuilder
 	private void addLocationNodes(Zone zone, Element zoneElement) {
 		for (int x = 0; x < zone.xSize; x++)
 		{
-			for (int y = 0; y < zone.ySize; y++)
+			addRow(zone, x, zoneElement);
+		}
+	}
+
+	private void addRow(Zone zone, int row, Element zoneElement) {
+		for (int y = 0; y < zone.ySize; y++)
+		{
+			Location location = zone.getLocationOnGrid(row, y);
+			Properties locationProperties = location.getProperties();
+			if (locationProperties.size() > 0)
 			{
-				Location location = zone.getLocationOnGrid(x, y);
-				Properties locationProperties = location.getProperties();
-				if (locationProperties.size() > 0)
-				{
-					Element locationElement = createLocationElement(location);
-					zoneElement.appendChild(locationElement);
-				}
+				Element locationElement = createLocationElement(location);
+				zoneElement.appendChild(locationElement);
 			}
 		}
 	}
