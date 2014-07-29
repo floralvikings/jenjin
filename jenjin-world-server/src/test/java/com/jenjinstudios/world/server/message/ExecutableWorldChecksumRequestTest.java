@@ -13,6 +13,7 @@ import static org.mockito.Mockito.*;
  */
 public class ExecutableWorldChecksumRequestTest
 {
+	@SuppressWarnings("unchecked")
 	@Test
 	public void testExecuteMessage() {
 		Message message = mock(Message.class);
