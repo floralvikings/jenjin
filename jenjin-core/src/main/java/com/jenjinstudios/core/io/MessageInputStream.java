@@ -6,6 +6,7 @@ import javax.xml.bind.DatatypeConverter;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.LinkedList;
@@ -184,25 +185,31 @@ public class MessageInputStream extends DataInputStream
 	private String readString() throws IOException {
 		boolean encrypted = readBoolean();
 		String received = readUTF();
-		if (!encrypted) { return received; }
-
-		if (aesKey == null)
+		if (encrypted)
 		{
-
-			LOGGER.log(Level.SEVERE, "AES key not properly set, unable to decrypt messages.");
-			return received;
+			if (aesKey != null)
+			{
+				received = decryptString(received);
+			} else
+			{
+				LOGGER.log(Level.SEVERE, "AES key not properly set, unable to decrypt messages.");
+			}
 		}
+		return received;
+	}
+
+	private String decryptString(String encrypted) throws UnsupportedEncodingException {
+		String decrypted = encrypted;
 		try
 		{
-			byte[] encBytes = DatatypeConverter.parseHexBinary(received);
+			byte[] encBytes = DatatypeConverter.parseHexBinary(encrypted);
 			byte[] decBytes = aesDecryptCipher.doFinal(encBytes);
-			received = new String(decBytes, "UTF-8");
+			decrypted = new String(decBytes, "UTF-8");
 		} catch (IllegalBlockSizeException | BadPaddingException e)
 		{
 			LOGGER.log(Level.WARNING, "Unable to decrypt message: ", e);
 		}
-
-		return received;
+		return decrypted;
 	}
 
 }
