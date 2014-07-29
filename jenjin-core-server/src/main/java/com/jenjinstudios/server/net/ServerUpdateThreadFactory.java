@@ -1,6 +1,5 @@
 package com.jenjinstudios.server.net;
 
-
 import java.util.concurrent.ThreadFactory;
 
 /**
