@@ -19,7 +19,7 @@ public class Bullet extends Actor
 	private static final double MAX_RANGE = 250;
 	private boolean initialized;
 	private Vector2D startVector;
-	private DemoPlayer playerFiring;
+	private final DemoPlayer playerFiring;
 
 	public Bullet(DemoPlayer playerFiring) {
 		super("Bullet");
