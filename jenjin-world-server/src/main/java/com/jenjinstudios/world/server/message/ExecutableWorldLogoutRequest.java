@@ -56,6 +56,6 @@ public class ExecutableWorldLogoutRequest extends WorldExecutableMessage
 		{
 			authenticator.updatePlayer(handler.getPlayer());
 			authenticator.logOutUser(handler.getUser().getUsername());
-		}
+		} else throw new LoginException("Missing ClientHandler username or Authenticator.");
 	}
 }

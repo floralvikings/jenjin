@@ -3,6 +3,7 @@ package com.jenjinstudios.world.server.message;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageRegistry;
 import com.jenjinstudios.server.net.User;
+import com.jenjinstudios.server.sql.LoginException;
 import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.math.Vector2D;
 import com.jenjinstudios.world.server.Player;
@@ -48,7 +49,7 @@ public class ExecutableWorldLogoutRequestTest
 	}
 
 	@Test
-	public void testNullUser() {
+	public void testNullUser() throws Exception {
 		Message logOutRequest = messageRegistry.createMessage("WorldLogoutRequest");
 
 		World world = mock(World.class);
@@ -71,7 +72,7 @@ public class ExecutableWorldLogoutRequestTest
 	}
 
 	@Test
-	public void testFailedLogout() {
+	public void testFailedLogout() throws Exception {
 		Message logOutRequest = messageRegistry.createMessage("WorldLogoutRequest");
 
 		World world = mock(World.class);
@@ -81,6 +82,7 @@ public class ExecutableWorldLogoutRequestTest
 		WorldAuthenticator authenticator = mock(WorldAuthenticator.class);
 		when(worldServer.getAuthenticator()).thenReturn(authenticator);
 		when(worldServer.getWorld()).thenReturn(world);
+		when(authenticator.logOutUser(any())).thenThrow(new LoginException("Foo"));
 		when(handler.getServer()).thenReturn(worldServer);
 		when(handler.getUser()).thenReturn(new User());
 		when(player.getId()).thenReturn(0);
