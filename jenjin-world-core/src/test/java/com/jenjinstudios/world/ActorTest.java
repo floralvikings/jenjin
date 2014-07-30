@@ -41,7 +41,7 @@ public class ActorTest
 		actor.setAngle(angle);
 		world.update();
 		long l = System.currentTimeMillis();
-		wait(1000);
+		waitOneSecond();
 		world.update();
 		l = System.currentTimeMillis() - l;
 		double distance = Vector2D.ORIGIN.getDistanceToVector(actor.getVector2D());
@@ -73,8 +73,8 @@ public class ActorTest
 		Assert.assertNotNull(actor.getForcedState());
 	}
 
-	private void wait(int waitTime) throws InterruptedException {
+	private void waitOneSecond() throws InterruptedException {
 		long startTime = System.currentTimeMillis();
-		while (System.currentTimeMillis() - startTime < waitTime) Thread.sleep(1);
+		while (System.currentTimeMillis() - startTime < 1000) Thread.sleep(1);
 	}
 }
