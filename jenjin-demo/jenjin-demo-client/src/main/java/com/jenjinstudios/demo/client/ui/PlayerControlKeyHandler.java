@@ -62,7 +62,7 @@ public class PlayerControlKeyHandler implements EventHandler<KeyEvent>
 		clientPlayer.setAngle(angle);
 	}
 
-	public Angle getMoveAngle(Angle angle) {
+	protected Angle getMoveAngle(Angle angle) {
 		if (upKeyNotDown())
 		{
 			angle = getUpKeyAngle(angle);
@@ -127,7 +127,7 @@ public class PlayerControlKeyHandler implements EventHandler<KeyEvent>
 		return angle;
 	}
 
-	public void setKeyFlags(KeyEvent keyEvent) {
+	protected void setKeyFlags(KeyEvent keyEvent) {
 		KeyCode keyCode = keyEvent.getCode();
 		if (keyCode.equals(KeyCode.UP) || keyCode.equals(KeyCode.W))
 		{
