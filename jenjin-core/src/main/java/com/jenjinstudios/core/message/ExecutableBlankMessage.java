@@ -18,6 +18,7 @@ public class ExecutableBlankMessage extends ExecutableMessage
 	 * Construct an ExecutableMessage with the given Message.
 	 * @param message The Message.
 	 */
+	@SuppressWarnings("WeakerAccess")
 	public ExecutableBlankMessage(Connection connection, Message message) {
 		super(message);
 		this.connection = connection;
