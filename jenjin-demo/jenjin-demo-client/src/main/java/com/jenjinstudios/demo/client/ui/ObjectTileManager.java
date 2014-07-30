@@ -10,8 +10,8 @@ import java.io.InputStream;
  */
 public class ObjectTileManager
 {
-	public static final double PLAYER_SCALE = 75;
-	public static final double BULLET_SCALE = 15;
+	private static final double PLAYER_SCALE = 75;
+	private static final double BULLET_SCALE = 15;
 	private final Image playerTile;
 	private final Image bulletTile;
 
