@@ -5,10 +5,10 @@ package com.jenjinstudios.demo.client;
  */
 public class Score
 {
-	public final int kills;
-	public final int deaths;
-	public final double ratio;
-	public final String name;
+	private final int kills;
+	private final int deaths;
+	private final double ratio;
+	private final String name;
 
 	public Score(String name, int kills, int deaths) {
 		this.kills = kills;
