@@ -102,6 +102,7 @@ public class Actor extends SightedObject
 		newState = true;
 	}
 
+	@SuppressWarnings("WeakerAccess")
 	public void forceIdle() {
 		MoveState forcedMoveState = new MoveState(getAngle(), getVector2D(), getLastStepTime());
 		setForcedState(forcedMoveState);
