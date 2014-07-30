@@ -56,7 +56,7 @@ public class WorldClientInitUtils
 	private static DemoWorldClient createWorldClient(String address, int port, ClientUser clientUser)
 		  throws IOException, WorldDocumentException
 	{
-		File worldFile = new File(System.getProperty("user.home") + "/jenjin/World.xml");
+		File worldFile = new File(System.getProperty("user.home") + "/.jenjin-demo/World.xml");
 		Socket socket = new Socket(address, port);
 		MessageInputStream messageInputStream = new MessageInputStream(socket.getInputStream());
 		MessageOutputStream messageOutputStream = new MessageOutputStream(socket.getOutputStream());
