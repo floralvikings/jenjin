@@ -42,7 +42,7 @@ public class LoginTracker
 		long startTime = System.currentTimeMillis();
 		while (waitingForResponse && System.currentTimeMillis() - startTime < timeout)
 		{
-			wait(100);
+			waitTenMillis();
 		}
 		return loggedIn;
 	}
@@ -52,7 +52,7 @@ public class LoginTracker
 		long startTime = System.currentTimeMillis();
 		while (waitingForResponse && System.currentTimeMillis() - startTime < timeout)
 		{
-			wait(100);
+			waitTenMillis();
 		}
 	}
 
@@ -62,10 +62,10 @@ public class LoginTracker
 		client.queueOutgoingMessage(message);
 	}
 
-	private void wait(int waitTime) {
+	private void waitTenMillis() {
 		try
 		{
-			Thread.sleep(waitTime);
+			Thread.sleep(10);
 		} catch (InterruptedException e)
 		{
 			LOGGER.log(Level.WARNING, "Interrupted while waiting for login response.");
