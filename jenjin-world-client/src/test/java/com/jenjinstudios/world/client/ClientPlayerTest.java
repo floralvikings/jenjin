@@ -61,7 +61,7 @@ public class ClientPlayerTest
 		player.setAngle(angle);
 		world.update();
 		long l = System.currentTimeMillis();
-		wait(100);
+		waitOneSecond();
 		l = System.currentTimeMillis() - l;
 		world.update();
 		double distance = Vector2D.ORIGIN.getDistanceToVector(player.getVector2D());
@@ -69,8 +69,8 @@ public class ClientPlayerTest
 		Assert.assertEquals(distance, expectedDistance, expectedDistance * 0.1);
 	}
 
-	private void wait(int waitTime) throws InterruptedException {
+	private void waitOneSecond() throws InterruptedException {
 		long startTime = System.currentTimeMillis();
-		while (System.currentTimeMillis() - startTime < waitTime) Thread.sleep(1);
+		while (System.currentTimeMillis() - startTime < 1000) Thread.sleep(1);
 	}
 }
