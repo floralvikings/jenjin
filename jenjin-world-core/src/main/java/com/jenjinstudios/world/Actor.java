@@ -102,7 +102,7 @@ public class Actor extends SightedObject
 		newState = true;
 	}
 
-	public void forceIdle() {
+	protected void forceIdle() {
 		MoveState forcedMoveState = new MoveState(getAngle(), getVector2D(), getLastStepTime());
 		setForcedState(forcedMoveState);
 		setVector2D(getVector2D());
@@ -110,7 +110,7 @@ public class Actor extends SightedObject
 		newState = true;
 	}
 
-	public double calcStepLength() {
+	protected double calcStepLength() {
 		return ((System.currentTimeMillis() - (double) getLastStepTime()) / 1000) * getMoveSpeed();
 	}
 
@@ -124,7 +124,7 @@ public class Actor extends SightedObject
 		return moveSpeed;
 	}
 
-	public void setMoveSpeed(double moveSpeed) {
+	protected void setMoveSpeed(double moveSpeed) {
 		this.moveSpeed = moveSpeed;
 	}
 
