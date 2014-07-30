@@ -17,6 +17,7 @@ public class FieldOfVisionCalculator
 	private final int centerY;
 	private final Location center;
 
+	@SuppressWarnings("SameParameterValue")
 	public FieldOfVisionCalculator(Zone zone, Location center, int radius) {
 		this.center = center;
 		this.radius = radius;
