@@ -199,7 +199,7 @@ public class ServerWorldFileTrackerTest
 		worldChecksumResponse.setArgument("checksum", checksum);
 		Message worldFileResponse = messageRegistry.createMessage("WorldFileResponse");
 		worldFileResponse.setArgument("fileBytes", file);
-		Message aesMessage = getAesKeyMessage(messageRegistry, wc);
+		Message aesMessage = getAesKeyMessage(wc);
 
 		Mockito.when(inputStream.readMessage()).
 			  thenReturn(firstConnectResponse, blankMessageSpam).
@@ -209,7 +209,7 @@ public class ServerWorldFileTrackerTest
 		this.worldClient = wc;
 	}
 
-	private Message getAesKeyMessage(MessageRegistry messageRegistry, WorldClient wc) throws Exception {
+	private Message getAesKeyMessage(WorldClient wc) throws Exception {
 		byte[] clientKey = wc.getPublicKey().getEncoded();
 		KeyGenerator keyGenerator = KeyGenerator.getInstance("AES");
 		keyGenerator.init(128);
@@ -218,7 +218,7 @@ public class ServerWorldFileTrackerTest
 		Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
 		cipher.init(Cipher.ENCRYPT_MODE, publicKey);
 		byte[] encryptedAESKey = cipher.doFinal(aesKeyBytes);
-		Message aesMessage = messageRegistry.createMessage("AESKeyMessage");
+		Message aesMessage = MessageRegistry.getInstance().createMessage("AESKeyMessage");
 		aesMessage.setArgument("key", encryptedAESKey);
 		return aesMessage;
 	}
