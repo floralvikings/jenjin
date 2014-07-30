@@ -6,15 +6,15 @@ import com.jenjinstudios.world.Location;
 class PathNode
 {
 	/** The x coordinate of this node. */
-	public final int x;
+	private final int x;
 	/** The y coordinate of this node. */
-	public final int y;
+	private final int y;
 	/** The location represented in this node. */
 	public final Location location;
 	/** The G-Score of this node. */
 	public final int G;
 	/** The H-Score of this node. */
-	public final int H;
+	private final int H;
 	/** The F-Score of this node. */
 	public final int F;
 	/** The parent of this node. */
