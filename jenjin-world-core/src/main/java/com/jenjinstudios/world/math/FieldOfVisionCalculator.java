@@ -46,7 +46,7 @@ public class FieldOfVisionCalculator
 		}
 	}
 
-	public boolean inRange(Location location) {
+	protected boolean inRange(Location location) {
 		double deltaX = location.X_COORDINATE - centerX;
 		double deltaY = location.Y_COORDINATE - centerY;
 		double distance = Math.sqrt((deltaX * deltaX) + (deltaY * deltaY));
