@@ -130,14 +130,14 @@ public class ServerWorldFileTracker
 		setWaitingForFile(true);
 		while (isWaitingForFile())
 		{
-			wait(10);
+			waitTenMillis();
 		}
 	}
 
-	private void wait(int waitTime) {
+	private void waitTenMillis() {
 		try
 		{
-			Thread.sleep(waitTime);
+			Thread.sleep(10);
 		} catch (InterruptedException e)
 		{
 			LOGGER.log(Level.WARNING, "Interrupted while waiting.");
@@ -148,7 +148,7 @@ public class ServerWorldFileTracker
 		setWaitingForChecksum(true);
 		while (isWaitingForChecksum())
 		{
-			wait(10);
+			waitTenMillis();
 		}
 	}
 
