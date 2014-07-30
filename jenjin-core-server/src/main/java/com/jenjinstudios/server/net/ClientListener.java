@@ -42,14 +42,13 @@ class ClientListener<T extends ClientHandler> implements Runnable
 	 * @throws NoSuchMethodException If there is no appropriate constructor for the specified ClientHandler
 	 * constructor.
 	 */
-	public ClientListener(Class<? extends Server> serverClass, ClientListenerInit<T> init) throws IOException,
+	public ClientListener(Class<? extends Server> serverClass, Class<T> handlerClass, int port) throws IOException,
 		  NoSuchMethodException {
-		PORT = init.getPort();
-		Class<T> handlerClass = init.getHandlerClass();
+		PORT = port;
 		/* The class of client handlers created by this listener. */
 		try
 		{
-			handlerConstructor = init.getHandlerClass().getConstructor(serverClass, MessageIO.class);
+			handlerConstructor = handlerClass.getConstructor(serverClass, MessageIO.class);
 		} catch (NoSuchMethodException e)
 		{
 			LOGGER.log(Level.SEVERE, "Unable to find appropriate ClientHandler constructor: " + handlerClass.getName()

@@ -102,7 +102,7 @@ public class Actor extends SightedObject
 		newState = true;
 	}
 
-	protected void forceIdle() {
+	public void forceIdle() {
 		MoveState forcedMoveState = new MoveState(getAngle(), getVector2D(), getLastStepTime());
 		setForcedState(forcedMoveState);
 		setVector2D(getVector2D());

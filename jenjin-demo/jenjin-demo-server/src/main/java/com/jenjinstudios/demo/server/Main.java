@@ -2,7 +2,6 @@ package com.jenjinstudios.demo.server;
 
 import com.jenjinstudios.demo.server.net.DemoClientHandler;
 import com.jenjinstudios.demo.server.net.DemoServer;
-import com.jenjinstudios.server.net.ClientListenerInit;
 import com.jenjinstudios.server.net.ServerInit;
 import com.jenjinstudios.world.io.WorldDocumentReader;
 import com.jenjinstudios.world.server.sql.WorldAuthenticator;
@@ -35,10 +34,7 @@ public class Main
 	}
 
 	private static DemoServer createWorldServer() throws Exception {
-		ClientListenerInit<DemoClientHandler> clientListenerInit =
-			  new ClientListenerInit<>(DemoClientHandler.class, 51015);
-		ServerInit<DemoClientHandler> serverInit =
-			  new ServerInit<>(50, clientListenerInit);
+		ServerInit<DemoClientHandler> serverInit = new ServerInit<>(50, DemoClientHandler.class, 51015);
 		Class.forName("org.h2.Driver");
 		Connection sqlConnection = createDemoConnection();
 		WorldAuthenticator worldAuthenticator = new WorldAuthenticator(sqlConnection);

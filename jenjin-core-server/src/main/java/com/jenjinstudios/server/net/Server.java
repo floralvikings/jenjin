@@ -38,11 +38,10 @@ public class Server<T extends ClientHandler> extends Thread
 	@SuppressWarnings("unchecked")
 	protected Server(ServerInit<T> initInfo) throws IOException, NoSuchMethodException {
 		super("Server");
-		ClientListenerInit<T> listenerInit = initInfo.getClientListenerInit();
 		LOGGER.log(Level.FINE, "Initializing Server.");
 		UPS = initInfo.getUps();
 		PERIOD = 1000 / UPS;
-		clientListener = new ClientListener<>(getClass(), listenerInit);
+		clientListener = new ClientListener<>(getClass(), initInfo.getHandlerClass(), initInfo.getPort());
 		clientHandlers = new TreeMap<>();
 	}
 

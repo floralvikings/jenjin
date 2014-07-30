@@ -13,12 +13,11 @@ public class TaskedServerTest
 	@Test
 	@SuppressWarnings("unchecked")
 	public void testGetAverageUPS() throws Exception {
-		ClientListenerInit clientListenerInit = Mockito.mock(ClientListenerInit.class);
 		ServerInit serverInit = Mockito.mock(ServerInit.class);
 		Authenticator authenticator = Mockito.mock(Authenticator.class);
-		Mockito.when(clientListenerInit.getHandlerClass()).thenReturn(ClientHandler.class);
+		Mockito.when(serverInit.getHandlerClass()).thenReturn(ClientHandler.class);
 		Mockito.when(serverInit.getUps()).thenReturn(50);
-		Mockito.when(serverInit.getClientListenerInit()).thenReturn(clientListenerInit);
+		Mockito.when(serverInit.getPort()).thenReturn(12345);
 		AuthServer<ClientHandler> taskedServer = new AuthServer<ClientHandler>(serverInit, authenticator);
 		taskedServer.start();
 		Thread.sleep(5000);
