@@ -31,7 +31,7 @@ public class LoginTracker
 
 	public void setLoggedInTime(long loggedInTime) { this.loggedInTime = loggedInTime; }
 
-	public void sendLoginRequest() {
+	protected void sendLoginRequest() {
 		waitingForResponse = true;
 		Message message = ((ClientMessageFactory) client.getMessageFactory()).generateLoginRequest(client.getUser());
 		client.queueOutgoingMessage(message);
