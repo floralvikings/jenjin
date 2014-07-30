@@ -5,16 +5,10 @@ import com.jenjinstudios.world.Location;
 /** Used to represent a path finding node. */
 class PathNode
 {
-	/** The x coordinate of this node. */
-	private final int x;
-	/** The y coordinate of this node. */
-	private final int y;
 	/** The location represented in this node. */
 	public final Location location;
 	/** The G-Score of this node. */
 	public final int G;
-	/** The H-Score of this node. */
-	private final int H;
 	/** The F-Score of this node. */
 	public final int F;
 	/** The parent of this node. */
@@ -29,11 +23,15 @@ class PathNode
 	public PathNode(PathNode parent, Location location, Location target) {
 		this.parent = parent;
 		this.location = location;
-		x = location.X_COORDINATE;
-		y = location.Y_COORDINATE;
-		G = this.parent == null ? 0 : parent.G + (parent.y == y || parent.x == x ? 10 : 14);
-		H = 10 * (Math.abs(x - target.X_COORDINATE) + Math.abs(y - target.Y_COORDINATE));
-		F = G + H;
+		/* The x coordinate of this node. */
+		int x = location.X_COORDINATE;
+		/* The y coordinate of this node. */
+		int y = location.Y_COORDINATE;
+		boolean parentNull = this.parent == null;
+		boolean diagonal = !parentNull && (parent.location.Y_COORDINATE == y || parent.location.X_COORDINATE == x);
+		G = parentNull ? 0 : parent.G + (diagonal ? 10 : 14);
+		int h = 10 * (Math.abs(x - target.X_COORDINATE) + Math.abs(y - target.Y_COORDINATE));
+		F = G + h;
 	}
 
 	/**
