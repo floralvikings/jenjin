@@ -65,7 +65,6 @@ public class Bullet extends Actor
 		double distance = getVector2D().getDistanceToVector(startVector);
 		if (getAngle().getRelativeAngle() == Angle.IDLE || distance > MAX_RANGE)
 		{
-			System.out.println("Out of Range: " + getAngle().getRelativeAngle() + ", " + distance);
 			getWorld().scheduleForRemoval(this);
 		}
 	}
