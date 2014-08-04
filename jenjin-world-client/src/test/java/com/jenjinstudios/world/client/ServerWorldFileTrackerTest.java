@@ -194,7 +194,7 @@ public class ServerWorldFileTrackerTest
 		firstConnectResponse.setArgument("ups", 123);
 		Message blankMessage = messageRegistry.createMessage("BlankMessage");
 		Message worldChecksumResponse = messageRegistry.createMessage("WorldChecksumResponse");
-		Message[] blankMessageSpam = new Message[1500];
+		Message[] blankMessageSpam = new Message[2500];
 		for (int i = 0; i < blankMessageSpam.length; i++) { blankMessageSpam[i] = blankMessage; }
 		worldChecksumResponse.setArgument("checksum", checksum);
 		Message worldFileResponse = messageRegistry.createMessage("WorldFileResponse");
