@@ -6,18 +6,32 @@ import com.jenjinstudios.world.client.WorldClient;
 import com.jenjinstudios.world.math.Angle;
 import com.jenjinstudios.world.math.Vector2D;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  * Process an ActorVisibleMessage.
  * @author Caleb Brinkman
  */
 public class ExecutableActorVisibleMessage extends WorldClientExecutableMessage
 {
+	private static final Logger LOGGER = Logger.getLogger(ExecutableActorVisibleMessage.class.getName());
 	private ClientActor newlyVisible;
 
 	public ExecutableActorVisibleMessage(WorldClient client, Message message) { super(client, message); }
 
 	@Override
-	public void runDelayed() { getClient().getWorld().addObject(newlyVisible, newlyVisible.getId()); }
+	public void runDelayed() {
+		try
+		{
+			getClient().getWorld().addObject(newlyVisible, newlyVisible.getId());
+		} catch (Exception ex)
+		{
+			LOGGER.log(Level.SEVERE, "Received message for already extant object ID:  {0}, {1}",
+				  new Object[]{newlyVisible.getId(), newlyVisible});
+		}
+
+	}
 
 	@Override
 	public void runImmediate() {
