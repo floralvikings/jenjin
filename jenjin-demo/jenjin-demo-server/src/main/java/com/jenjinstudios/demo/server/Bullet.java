@@ -82,7 +82,6 @@ public class Bullet extends Actor
 	}
 
 	protected void hitActor(Actor actor) {
-		System.out.println("Hit");
 		actor.setVector2D(Vector2D.ORIGIN);
 		actor.forceIdle();
 		if (actor instanceof DemoPlayer)

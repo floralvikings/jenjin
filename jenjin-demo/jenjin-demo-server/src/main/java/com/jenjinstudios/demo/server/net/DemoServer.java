@@ -44,9 +44,7 @@ public class DemoServer<T extends WorldClientHandler> extends WorldServer<T>
 			}
 			if (oldHighRatio != highRatio)
 			{
-				System.out.println("Before");
 				sendHighScoreUpdates();
-				System.out.println("After");
 			}
 		}
 	}
