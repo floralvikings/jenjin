@@ -17,7 +17,7 @@ public class TaskedServerTest
 		Authenticator authenticator = Mockito.mock(Authenticator.class);
 		Mockito.when(serverInit.getHandlerClass()).thenReturn(ClientHandler.class);
 		Mockito.when(serverInit.getUps()).thenReturn(50);
-		Mockito.when(serverInit.getPort()).thenReturn(12345);
+		Mockito.when(serverInit.getPort()).thenReturn(51015);
 		AuthServer<ClientHandler> taskedServer = new AuthServer<ClientHandler>(serverInit, authenticator);
 		taskedServer.start();
 		Thread.sleep(5000);

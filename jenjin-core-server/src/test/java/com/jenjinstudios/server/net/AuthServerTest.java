@@ -18,7 +18,7 @@ public class AuthServerTest
 		ServerInit<ClientHandler> serverInit = mock(ServerInit.class);
 		Authenticator authenticator = mock(Authenticator.class);
 		when(serverInit.getUps()).thenReturn(1);
-		when(serverInit.getPort()).thenReturn(12345);
+		when(serverInit.getPort()).thenReturn(51015);
 		when(serverInit.getHandlerClass()).thenReturn(ClientHandler.class);
 
 		AuthServer<ClientHandler> authServer = new AuthServer<>(serverInit, authenticator);
