@@ -27,8 +27,9 @@ public class ExecutableActorVisibleMessage extends WorldClientExecutableMessage
 			getClient().getWorld().addObject(newlyVisible, newlyVisible.getId());
 		} catch (Exception ex)
 		{
-			LOGGER.log(Level.SEVERE, "Received message for already extant object ID:  {0}, {1}",
+			LOGGER.log(Level.WARNING, "Received message for already extant object ID:  {0}, {1}",
 				  new Object[]{newlyVisible.getId(), newlyVisible});
+			// TODO Try to remove existing object, add new
 		}
 
 	}
