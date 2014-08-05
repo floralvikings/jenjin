@@ -35,6 +35,7 @@ public class Actor extends SightedObject
 
 	public Actor(String name) {
 		super(name);
+		newAngle = getAngle();
 		stateChanges = new LinkedList<>();
 		setMoveSpeed(DEFAULT_MOVE_SPEED);
 	}
@@ -104,10 +105,11 @@ public class Actor extends SightedObject
 
 	@SuppressWarnings("WeakerAccess")
 	public void forceIdle() {
-		MoveState forcedMoveState = new MoveState(getAngle(), getVector2D(), getLastStepTime());
+		Angle idle = getAngle().asIdle();
+		MoveState forcedMoveState = new MoveState(idle, getVector2D(), getLastStepTime());
 		setForcedState(forcedMoveState);
 		setVector2D(getVector2D());
-		setAngle(getAngle().asIdle());
+		setAngle(idle);
 		newState = true;
 	}
 
