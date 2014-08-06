@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 
-<base_messages xmlns="" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation=" ">
+<messages>
 
     <message name="FirstConnectResponse" id="100">
         <argument type="int" name="ups" />
@@ -10,32 +10,32 @@
     <message name="LoginRequest" id="101">
         <argument type="String" name="username" encrypt="true" />
         <argument type="String" name="password" encrypt="true" />
-        <executable language="java" side="server">com.jenjinstudios.server.message.ExecutableLoginRequest</executable>
+        <executable language="java">com.jenjinstudios.server.message.ExecutableLoginRequest</executable>
     </message>
 
     <message name="LoginResponse" id="102">
         <argument type="boolean" name="success" />
         <argument type="long" name="loginTime" />
-        <executable language="java" side="client">com.jenjinstudios.client.message.ExecutableLoginResponse</executable>
+        <executable language="java">com.jenjinstudios.client.message.ExecutableLoginResponse</executable>
     </message>
 
     <message name="LogoutRequest" id="103">
-        <executable language="java" side="server">com.jenjinstudios.server.message.ExecutableLogoutRequest</executable>
+        <executable language="java">com.jenjinstudios.server.message.ExecutableLogoutRequest</executable>
     </message>
 
     <message name="LogoutResponse" id="104">
         <argument type="boolean" name="success" />
-        <executable language="java" side="client">com.jenjinstudios.client.message.ExecutableLogoutResponse</executable>
+        <executable language="java">com.jenjinstudios.client.message.ExecutableLogoutResponse</executable>
     </message>
 
     <message name="PublicKeyMessage" id="105">
-        <executable language="java" side="server">com.jenjinstudios.server.message.ExecutablePublicKeyMessage</executable>
+        <executable language="java">com.jenjinstudios.server.message.ExecutablePublicKeyMessage</executable>
         <argument type="byte[]" name="key" />
     </message>
 
     <message name="AESKeyMessage" id="106">
-        <executable language="java" side="client">com.jenjinstudios.client.message.ExecutableAESKeyMessage</executable>
+        <executable language="java">com.jenjinstudios.client.message.ExecutableAESKeyMessage</executable>
         <argument type="byte[]" name="key" />
     </message>
 
-</base_messages>
+</messages>

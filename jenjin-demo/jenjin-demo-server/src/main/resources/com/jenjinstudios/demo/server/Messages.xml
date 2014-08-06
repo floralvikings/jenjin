@@ -1,5 +1,7 @@
-<base_messages>
-    <message name="FireRequest" id="300">
+<?xml version="1.0" ?>
+
+<messages>
+<message name="FireRequest" id="300">
         <executable language="java">com.jenjinstudios.demo.server.message.ExecutableFireRequest</executable>
     </message>
 
@@ -10,4 +12,4 @@
         <argument type="int" name="kills" />
         <argument type="int" name="deaths" />
     </message>
-</base_messages>
+</messages>
