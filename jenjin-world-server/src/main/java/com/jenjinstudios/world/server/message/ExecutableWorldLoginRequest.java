@@ -41,7 +41,8 @@ public class ExecutableWorldLoginRequest extends WorldExecutableMessage
 		if (user != null)
 		{
 			handleLoginSuccess();
-			((WorldServer) getClientHandler().getServer()).getWorld().addObject(getClientHandler().getPlayer());
+			((WorldServer) getClientHandler().getServer()).getWorld().scheduleForAddition(getClientHandler()
+				  .getPlayer());
 			loginResponse.setArgument("id", getClientHandler().getPlayer().getId());
 		}
 		getClientHandler().queueOutgoingMessage(loginResponse);

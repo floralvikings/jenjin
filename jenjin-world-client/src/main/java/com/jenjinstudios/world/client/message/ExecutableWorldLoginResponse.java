@@ -35,7 +35,7 @@ public class ExecutableWorldLoginResponse extends WorldClientExecutableMessage
 			client.getLoginTracker().setLoggedInTime((long) getMessage().getArgument("loginTime"));
 			client.setName(client.getUser().getUsername());
 			client.setPlayer(player);
-			client.getWorld().addObject(player, player.getId());
+			client.getWorld().scheduleForAddition(player, player.getId());
 
 			client.addRepeatedTask(new WorldClientUpdater(client));
 		}

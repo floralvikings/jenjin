@@ -30,7 +30,7 @@ public class ExecutableFireRequest extends WorldExecutableMessage
 		World world = ((WorldServer) getClientHandler().getServer()).getWorld();
 		if (world.getZone(bullet.getZoneID()).getLocationForCoordinates(bullet.getVector2D()) != null)
 		{
-			world.addObject(bullet);
+			world.scheduleForAddition(bullet);
 		}
 	}
 

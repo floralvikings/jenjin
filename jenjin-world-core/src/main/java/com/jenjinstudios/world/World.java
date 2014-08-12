@@ -18,11 +18,13 @@ public class World
 	private final TreeMap<Integer, Zone> zones;
 	/** The GameObjects contained in the world. */
 	private final WorldObjectMap worldObjects;
+	private final LinkedList<WorldObject> scheduledForRemoval;
+	private final LinkedList<WorldObject> scheduledForAddition;
+	private final LinkedList<WorldObject> scheduledForOverwrite;
 	/** The time at which the most recent update completed. */
 	private long lastUpdateCompleted;
 	/** The start time of the most recent update. */
 	private long lastUpdateStarted;
-	private final LinkedList<WorldObject> scheduledForRemoval;
 
 	/** Construct a new World. */
 	public World() {
@@ -42,6 +44,8 @@ public class World
 		worldObjects = new WorldObjectMap();
 		lastUpdateCompleted = lastUpdateStarted = System.currentTimeMillis();
 		scheduledForRemoval = new LinkedList<>();
+		scheduledForAddition = new LinkedList<>();
+		scheduledForOverwrite = new LinkedList<>();
 	}
 
 	/**
@@ -64,7 +68,7 @@ public class World
 
 		if (worldObjects.get(id) != null)
 			throw new IllegalArgumentException("addObject(WorldObject obj) not allowed to be an occupied id: "
-					+ id + ".  Existing object: " + worldObjects.get(id));
+				  + id + ".  Existing object: " + worldObjects.get(id));
 
 		object.setId(id);
 		object.setWorld(this);
@@ -72,25 +76,6 @@ public class World
 		synchronized (worldObjects)
 		{
 			worldObjects.put(id, object);
-		}
-	}
-
-	/**
-	 * Remove an object from the world.  Specifically, sets the index of the given object in the world's array to null.
-	 * @param object The object to remove.
-	 */
-	protected void removeObject(WorldObject object) {
-		removeObject(object.getId());
-	}
-
-	/**
-	 * Remove the object with the specified id.
-	 * @param id The id.
-	 */
-	protected void removeObject(int id) {
-		synchronized (worldObjects)
-		{
-			worldObjects.remove(id);
 		}
 	}
 
@@ -110,19 +95,13 @@ public class World
 		synchronized (worldObjects)
 		{
 			removeScheduledObjects();
+			addScheduledObjects();
+			overwriteScheduledObjects();
 			setUpObjects();
 			updateObjects();
 			resetObjects();
 		}
 		lastUpdateCompleted = System.currentTimeMillis();
-	}
-
-	protected void removeScheduledObjects() {
-		synchronized (scheduledForRemoval)
-		{
-			scheduledForRemoval.forEach(this::removeObject);
-			scheduledForRemoval.clear();
-		}
 	}
 
 	public void scheduleForRemoval(int id) {
@@ -140,18 +119,32 @@ public class World
 		}
 	}
 
-	private void resetObjects() {
-		worldObjects.forEach((Integer i, WorldObject o) -> o.reset());
+	public void scheduleForAddition(WorldObject object) {
+		int id = worldObjects.getAvailableId();
+		this.scheduleForAddition(object, id);
 	}
 
-	private void updateObjects() {
-		worldObjects.forEach((Integer i, WorldObject o) -> o.update());
+	public void scheduleForAddition(WorldObject object, int id) {
+		if (object == null)
+			throw new IllegalArgumentException("addObject(WorldObject obj) argument 0 not allowed to be null!");
+
+		if (worldObjects.get(id) != null)
+			throw new IllegalArgumentException("addObject(WorldObject obj) not allowed to be an occupied id: "
+				  + id + ".  Existing object: " + worldObjects.get(id));
+
+		synchronized (scheduledForAddition)
+		{
+			scheduledForAddition.add(object);
+		}
 	}
 
-	private void setUpObjects() {
-		worldObjects.forEach((Integer i, WorldObject o) -> o.setUp());
+	public void scheduleForOverwrite(WorldObject o, int id) {
+		o.setId(id);
+		synchronized (scheduledForOverwrite)
+		{
+			scheduledForOverwrite.add(o);
+		}
 	}
-
 
 	/**
 	 * Get the number of objects currently in the world.
@@ -195,4 +188,63 @@ public class World
 	 * @return The time at which the most recent update started.
 	 */
 	public long getLastUpdateStarted() { return lastUpdateStarted; }
+
+	/**
+	 * Remove an object from the world.  Specifically, sets the index of the given object in the world's array to null.
+	 * @param object The object to remove.
+	 */
+	protected void removeObject(WorldObject object) {
+		synchronized (worldObjects)
+		{
+			if (object != null)
+			{
+				worldObjects.remove(object.getId());
+			}
+		}
+	}
+
+	protected void removeScheduledObjects() {
+		synchronized (scheduledForRemoval)
+		{
+			scheduledForRemoval.forEach(this::removeObject);
+			scheduledForRemoval.clear();
+		}
+	}
+
+	protected void addScheduledObjects() {
+		synchronized (scheduledForAddition)
+		{
+			scheduledForAddition.forEach(this::addObject);
+			scheduledForAddition.clear();
+		}
+	}
+
+	protected void overwriteScheduledObjects() {
+		LinkedList<WorldObject> temp;
+		synchronized (scheduledForOverwrite)
+		{
+			temp = new LinkedList<>(scheduledForOverwrite);
+			scheduledForOverwrite.clear();
+		}
+		temp.forEach(this::overwriteExistingWith);
+	}
+
+	private void overwriteExistingWith(WorldObject o) {
+		WorldObject old = getObject(o.getId());
+		if (old != null)
+			removeObject(old);
+		addObject(o);
+	}
+
+	private void resetObjects() {
+		worldObjects.forEach((Integer i, WorldObject o) -> o.reset());
+	}
+
+	private void updateObjects() {
+		worldObjects.forEach((Integer i, WorldObject o) -> o.update());
+	}
+
+	private void setUpObjects() {
+		worldObjects.forEach((Integer i, WorldObject o) -> o.setUp());
+	}
 }
