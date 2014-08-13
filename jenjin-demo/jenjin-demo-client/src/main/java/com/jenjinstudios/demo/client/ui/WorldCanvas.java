@@ -62,8 +62,8 @@ public class WorldCanvas extends Canvas
 			double y = getHeight() / 2 - (yDiff * SCALE - yBuff * (SCALE / Location.SIZE)) - SCALE;
 
 			GraphicsContext graphicsContext2D = getGraphicsContext2D();
-			Image tile = locationTileManager.getTileForLocation(location);
-			graphicsContext2D.drawImage(tile, x, y, SCALE, SCALE);
+			locationTileManager.setGraphicsColor(location, graphicsContext2D);
+			graphicsContext2D.fillRect(x, y, SCALE, SCALE);
 		}
 	}
 

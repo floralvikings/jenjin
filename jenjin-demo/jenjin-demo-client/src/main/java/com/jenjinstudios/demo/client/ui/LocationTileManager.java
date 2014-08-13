@@ -1,7 +1,8 @@
 package com.jenjinstudios.demo.client.ui;
 
 import com.jenjinstudios.world.Location;
-import javafx.scene.image.Image;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
 
 import java.util.Properties;
 
@@ -10,31 +11,23 @@ import java.util.Properties;
  */
 public class LocationTileManager
 {
-	private final GroundTileManager groundTileManager;
-	private final WallTileManager wallTileManager;
-	private final IndoorsTileManager indoorsTileManager;
 
 	public LocationTileManager() {
-		groundTileManager = new GroundTileManager();
-		wallTileManager = new WallTileManager();
-		indoorsTileManager = new IndoorsTileManager();
 	}
 
-	public Image getTileForLocation(Location location) {
+	public void setGraphicsColor(Location location, GraphicsContext g) {
 		Properties properties = location.getProperties();
 		boolean walkable = !"false".equals(properties.getProperty("walkable"));
 		boolean indoors = "true".equals(properties.get("indoors"));
-		Image tile;
 		if (!walkable)
 		{
-			tile = wallTileManager.getTileForLocation(location);
+			g.setFill(Color.GRAY);
 		} else if (indoors)
 		{
-			tile = indoorsTileManager.getTileForLocation(location);
+			g.setFill(Color.BROWN);
 		} else
 		{
-			tile = groundTileManager.getTileForLocation(location);
+			g.setFill(Color.GREEN);
 		}
-		return tile;
 	}
 }
