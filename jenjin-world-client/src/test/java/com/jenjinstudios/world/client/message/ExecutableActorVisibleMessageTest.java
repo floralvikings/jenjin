@@ -36,6 +36,6 @@ public class ExecutableActorVisibleMessageTest
 		message.runImmediate();
 		message.runDelayed();
 
-		verify(world).addObject(any(), eq(100));
+		verify(world).scheduleForAddition(any(), eq(100));
 	}
 }

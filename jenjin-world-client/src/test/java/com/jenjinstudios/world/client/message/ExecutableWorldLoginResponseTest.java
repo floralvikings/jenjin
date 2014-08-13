@@ -41,6 +41,6 @@ public class ExecutableWorldLoginResponseTest
 		verify(loginTracker).setLoggedIn(true);
 		verify(loginTracker).setLoggedInTime(0l);
 		verify(worldClient).setPlayer(any());
-		verify(world).addObject(any(), eq(0));
+		verify(world).scheduleForAddition(any(), eq(0));
 	}
 }

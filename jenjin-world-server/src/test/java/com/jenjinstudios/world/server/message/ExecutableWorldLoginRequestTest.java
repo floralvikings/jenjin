@@ -49,6 +49,6 @@ public class ExecutableWorldLoginRequestTest
 		exec.runImmediate();
 		exec.runDelayed();
 
-		Mockito.verify(world).addObject(Mockito.anyObject());
+		Mockito.verify(world).scheduleForAddition(Mockito.anyObject());
 	}
 }
