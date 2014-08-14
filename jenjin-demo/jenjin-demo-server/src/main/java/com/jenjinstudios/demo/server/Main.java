@@ -26,6 +26,7 @@ public class Main
 		while (readLine != null && !"quit".equals(readLine))
 		{
 			Thread.sleep(100);
+			readLine = input.nextLine();
 		}
 
 		demoServer.shutdown();
@@ -33,7 +34,6 @@ public class Main
 
 	private static WorldServer<WorldClientHandler> createWorldServer() throws Exception {
 		ServerInit<WorldClientHandler> serverInit = new ServerInit<>(50, WorldClientHandler.class, 51015);
-		Class.forName("org.h2.Driver");
 		Connection sqlConnection = createDemoConnection();
 		WorldAuthenticator worldAuthenticator = new WorldAuthenticator(sqlConnection);
 		return new WorldServer<>(serverInit, worldAuthenticator, null);
