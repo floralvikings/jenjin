@@ -1,9 +1,9 @@
 package com.jenjinstudios.demo.server;
 
-import com.jenjinstudios.demo.server.net.DemoClientHandler;
-import com.jenjinstudios.demo.server.net.DemoServer;
 import com.jenjinstudios.server.net.ServerInit;
 import com.jenjinstudios.world.io.WorldDocumentReader;
+import com.jenjinstudios.world.server.WorldClientHandler;
+import com.jenjinstudios.world.server.WorldServer;
 import com.jenjinstudios.world.server.sql.WorldAuthenticator;
 
 import java.io.InputStream;
@@ -19,7 +19,7 @@ public class Main
 {
 	public static void main(String[] args) throws Exception {
 		Scanner input = new Scanner(System.in);
-		DemoServer demoServer;
+		WorldServer<WorldClientHandler> demoServer;
 
 		demoServer = createWorldServer();
 		demoServer.start();
@@ -33,15 +33,15 @@ public class Main
 		demoServer.shutdown();
 	}
 
-	private static DemoServer createWorldServer() throws Exception {
-		ServerInit<DemoClientHandler> serverInit = new ServerInit<>(50, DemoClientHandler.class, 51015);
+	private static WorldServer<WorldClientHandler> createWorldServer() throws Exception {
+		ServerInit<WorldClientHandler> serverInit = new ServerInit<>(50, WorldClientHandler.class, 51015);
 		Class.forName("org.h2.Driver");
 		Connection sqlConnection = createDemoConnection();
 		WorldAuthenticator worldAuthenticator = new WorldAuthenticator(sqlConnection);
 		InputStream stream = Main.class.getClassLoader().
 			  getResourceAsStream("com/jenjinstudios/demo/server/World.xml");
 		WorldDocumentReader worldDocumentReader = new WorldDocumentReader(stream);
-		return new DemoServer<>(serverInit, worldAuthenticator, worldDocumentReader);
+		return new WorldServer<>(serverInit, worldAuthenticator, worldDocumentReader);
 	}
 
 	private static Connection createDemoConnection() throws Exception {

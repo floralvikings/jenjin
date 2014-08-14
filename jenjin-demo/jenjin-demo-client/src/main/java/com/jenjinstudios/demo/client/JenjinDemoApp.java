@@ -2,6 +2,7 @@ package com.jenjinstudios.demo.client;
 
 import com.jenjinstudios.demo.client.ui.LoginPane;
 import com.jenjinstudios.demo.client.ui.WorldPane;
+import com.jenjinstudios.world.client.WorldClient;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
@@ -18,7 +19,7 @@ import javafx.stage.WindowEvent;
  */
 public class JenjinDemoApp extends Application implements EventHandler<WindowEvent>
 {
-	private DemoWorldClient worldClient;
+	private WorldClient worldClient;
 	private Stage stage;
 
 	public static void main(String[] args) throws Exception {
@@ -35,7 +36,7 @@ public class JenjinDemoApp extends Application implements EventHandler<WindowEve
 		Platform.runLater(() -> Platform.setImplicitExit(false));
 	}
 
-	public void successfulLogin(DemoWorldClient worldClient) {
+	public void successfulLogin(WorldClient worldClient) {
 		if (this.worldClient != null)
 		{
 			throw new IllegalStateException("WorldClient already set.");

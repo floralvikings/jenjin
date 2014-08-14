@@ -1,8 +1,8 @@
 package com.jenjinstudios.demo.client.ui;
 
 import com.jenjinstudios.client.net.ClientUser;
-import com.jenjinstudios.demo.client.DemoWorldClient;
 import com.jenjinstudios.demo.client.JenjinDemoApp;
+import com.jenjinstudios.world.client.WorldClient;
 import com.jenjinstudios.world.io.WorldDocumentException;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
@@ -68,7 +68,7 @@ public final class LoginPane extends GridPane
 			ClientUser clientUser = new ClientUser(usernameField.getText(), passwordField.getText());
 			String address = addressField.getText();
 			int port = Integer.parseInt(portField.getText());
-			DemoWorldClient worldClient = tryCreateWorldClient(address, port, clientUser);
+			WorldClient worldClient = tryCreateWorldClient(address, port, clientUser);
 			if (worldClient != null)
 			{
 				worldClient.start();

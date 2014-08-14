@@ -5,6 +5,7 @@ import com.jenjinstudios.world.Location;
 import com.jenjinstudios.world.WorldObject;
 import com.jenjinstudios.world.math.Angle;
 import com.jenjinstudios.world.math.Vector2D;
+import com.jenjinstudios.world.server.Player;
 
 import java.util.Collection;
 
@@ -18,9 +19,9 @@ public class Bullet extends Actor
 	private static final double MAX_RANGE = 250;
 	private boolean initialized;
 	private Vector2D startVector;
-	private final DemoPlayer playerFiring;
+	private final Player playerFiring;
 
-	public Bullet(DemoPlayer playerFiring) {
+	public Bullet(Player playerFiring) {
 		super("Bullet");
 		this.playerFiring = playerFiring;
 		double targetAngle = playerFiring.getAngle().getAbsoluteAngle();
@@ -84,11 +85,6 @@ public class Bullet extends Actor
 	protected void hitActor(Actor actor) {
 		actor.setVector2D(Vector2D.ORIGIN);
 		actor.forceIdle();
-		if (actor instanceof DemoPlayer)
-		{
-			((DemoPlayer) actor).incrementDeathCounter();
-		}
-		playerFiring.incrementKillCounter();
 		getWorld().scheduleForRemoval(this);
 	}
 
