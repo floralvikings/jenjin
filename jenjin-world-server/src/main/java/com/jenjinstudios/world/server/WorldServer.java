@@ -6,8 +6,11 @@ import com.jenjinstudios.server.net.ServerInit;
 import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.io.WorldDocumentException;
 import com.jenjinstudios.world.io.WorldDocumentReader;
+import com.jenjinstudios.world.io.WorldDocumentWriter;
 import com.jenjinstudios.world.server.sql.WorldAuthenticator;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 /**
@@ -32,7 +35,17 @@ public class WorldServer<T extends WorldClientHandler> extends AuthServer<T>
 					   WorldDocumentReader reader) throws IOException, WorldDocumentException, NoSuchMethodException
 	{
 		super(init, authenticator);
-		this.world = reader.read();
+		if (reader != null)
+		{
+			this.world = reader.read();
+		} else
+		{
+			this.world = new World();
+			WorldDocumentWriter writer = new WorldDocumentWriter(world);
+			ByteArrayOutputStream bos = new ByteArrayOutputStream();
+			writer.write(bos);
+			reader = new WorldDocumentReader(new ByteArrayInputStream(bos.toByteArray()));
+		}
 		worldFileBytes = reader.getWorldFileBytes();
 		worldFileChecksum = reader.getWorldFileChecksum();
 		addRepeatedTask(world::update);
