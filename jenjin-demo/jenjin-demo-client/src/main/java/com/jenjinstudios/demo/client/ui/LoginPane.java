@@ -72,6 +72,16 @@ public final class LoginPane extends GridPane
 			if (worldClient != null)
 			{
 				worldClient.start();
+				while (!worldClient.isInitialized())
+				{
+					try
+					{
+						Thread.sleep(10);
+					} catch (InterruptedException e)
+					{
+						e.printStackTrace();
+					}
+				}
 				if (tryRequestWorldFile(worldClient))
 				{
 					try
