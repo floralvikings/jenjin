@@ -74,8 +74,7 @@ class MessageTypeParser
 				exMsgClassName = currentExecutableElement.getTextContent();
 				try
 				{
-					executableMessageClasses.add((Class<? extends ExecutableMessage>)
-						  Class.forName(exMsgClassName));
+					executableMessageClasses.add((Class<? extends ExecutableMessage>) Class.forName(exMsgClassName));
 				} catch (ClassNotFoundException e)
 				{
 					LOGGER.log(Level.INFO, "Unable to locate Executable Message class {0} ", exMsgClassName);
