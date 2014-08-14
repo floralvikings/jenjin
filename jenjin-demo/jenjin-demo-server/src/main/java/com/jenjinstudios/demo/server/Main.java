@@ -1,12 +1,10 @@
 package com.jenjinstudios.demo.server;
 
 import com.jenjinstudios.server.net.ServerInit;
-import com.jenjinstudios.world.io.WorldDocumentReader;
 import com.jenjinstudios.world.server.WorldClientHandler;
 import com.jenjinstudios.world.server.WorldServer;
 import com.jenjinstudios.world.server.sql.WorldAuthenticator;
 
-import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Statement;
@@ -38,10 +36,7 @@ public class Main
 		Class.forName("org.h2.Driver");
 		Connection sqlConnection = createDemoConnection();
 		WorldAuthenticator worldAuthenticator = new WorldAuthenticator(sqlConnection);
-		InputStream stream = Main.class.getClassLoader().
-			  getResourceAsStream("com/jenjinstudios/demo/server/World.xml");
-		WorldDocumentReader worldDocumentReader = new WorldDocumentReader(stream);
-		return new WorldServer<>(serverInit, worldAuthenticator, worldDocumentReader);
+		return new WorldServer<>(serverInit, worldAuthenticator, null);
 	}
 
 	private static Connection createDemoConnection() throws Exception {
