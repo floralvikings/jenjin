@@ -45,6 +45,7 @@ public class WorldServer<T extends WorldClientHandler> extends AuthServer<T>
 			ByteArrayOutputStream bos = new ByteArrayOutputStream();
 			writer.write(bos);
 			reader = new WorldDocumentReader(new ByteArrayInputStream(bos.toByteArray()));
+			reader.read();
 		}
 		worldFileBytes = reader.getWorldFileBytes();
 		worldFileChecksum = reader.getWorldFileChecksum();
