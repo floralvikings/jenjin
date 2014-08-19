@@ -96,33 +96,13 @@ public class PlayerControlKeyHandler implements EventHandler<KeyEvent>
 	}
 
 	private Angle getDownKeyAngle() {
-		Angle angle;
-		if (leftKeyNotRight())
-		{
-			angle = new Angle(Angle.BACK_RIGHT, Angle.FRONT);
-		} else if (rightKeyNotLeft())
-		{
-			angle = new Angle(Angle.FRONT_RIGHT, Angle.FRONT);
-		} else
-		{
-			angle = new Angle(Angle.RIGHT, Angle.FRONT);
-		}
-		return angle;
+		double absAngle = leftKeyNotRight() ? Angle.BACK_RIGHT : (rightKeyNotLeft() ? Angle.FRONT_RIGHT : Angle.RIGHT);
+		return new Angle(absAngle, Angle.FRONT);
 	}
 
 	private Angle getUpKeyAngle() {
-		Angle angle;
-		if (leftKeyNotRight())
-		{
-			angle = new Angle(Angle.BACK_LEFT, Angle.FRONT);
-		} else if (rightKeyNotLeft())
-		{
-			angle = new Angle(Angle.FRONT_LEFT, Angle.FRONT);
-		} else
-		{
-			angle = new Angle(Angle.LEFT, Angle.FRONT);
-		}
-		return angle;
+		double absAngle = leftKeyNotRight() ? Angle.BACK_LEFT : (rightKeyNotLeft() ? Angle.FRONT_LEFT : Angle.LEFT);
+		return new Angle(absAngle, Angle.FRONT);
 	}
 
 	private Angle getRightKeyAngle() { return new Angle(Angle.FRONT, Angle.FRONT); }
