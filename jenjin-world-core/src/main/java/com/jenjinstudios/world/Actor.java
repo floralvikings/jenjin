@@ -79,7 +79,6 @@ public class Actor extends SightedObject
 	@Override
 	public void initialize() {
 		super.initialize();
-		System.out.println("Foo");
 		resetAngles();
 	}
 
