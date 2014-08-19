@@ -4,7 +4,6 @@ import com.jenjinstudios.world.Location;
 import com.jenjinstudios.world.WorldObject;
 import com.jenjinstudios.world.client.ClientPlayer;
 import com.jenjinstudios.world.client.WorldClient;
-import com.jenjinstudios.world.math.Angle;
 import javafx.application.Platform;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -38,7 +37,6 @@ public class WorldCanvas extends Canvas
 		clearBackground();
 		drawLocations();
 		drawObjects();
-		drawPlayer();
 	}
 
 	protected void clearBackground() {
@@ -67,22 +65,9 @@ public class WorldCanvas extends Canvas
 		}
 	}
 
-	protected void drawObjects() { clientPlayer.getVisibleObjects().values().forEach(this::drawObject); }
-
-	protected void drawPlayer() {
-		double x = getWidth() / 2;
-		double y = getHeight() / 2;
-
-		GraphicsContext graphicsContext2D = getGraphicsContext2D();
-		graphicsContext2D.save();
-		Angle pAngle = clientPlayer.getAngle();
-		double angle = pAngle.getAbsoluteAngle();
-		angle = -Math.toDegrees(angle);
-		Rotate r = new Rotate(angle, x, y);
-		graphicsContext2D.setTransform(r.getMxx(), r.getMyx(), r.getMxy(), r.getMyy(), r.getTx(), r.getTy());
-		Image objectTile = objectTileManager.getObjectTile(clientPlayer);
-		graphicsContext2D.drawImage(objectTile, x - objectTile.getWidth() / 2, y - objectTile.getHeight() / 2);
-		graphicsContext2D.restore();
+	protected void drawObjects() {
+		clientPlayer.getVisibleObjects().values().forEach(this::drawObject);
+		drawObject(clientPlayer);
 	}
 
 	private void drawObject(WorldObject o) {
