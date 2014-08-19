@@ -67,8 +67,7 @@ public class ActorTest
 		world.addObject(actor);
 		Angle angle = new Angle(0.0, Angle.BACK);
 		actor.setAngle(angle);
-		world.update();
-		Thread.sleep(1000); // Sleep to move one DEFAULT_MOVE_SPEED forward
+		Thread.sleep(1000); // Sleep to move one DEFAULT_MOVE_SPEED backward
 		world.update();
 		Assert.assertNotNull(actor.getForcedState());
 	}
