@@ -39,18 +39,20 @@ public class PlayerControlKeyHandler implements EventHandler<KeyEvent>
 	}
 
 	protected Angle getMoveAngle(Angle angle) {
-		if (upKeyNotDown())
+		if (upKey())
 		{
-			angle = getUpKeyAngle();
-		} else if (downKeyNotUp())
+			double absAngle = leftKey() ? Angle.BACK_LEFT : (rightKey() ? Angle.FRONT_LEFT : Angle.LEFT);
+			angle = new Angle(absAngle, Angle.FRONT);
+		} else if (downkey())
 		{
-			angle = getDownKeyAngle();
-		} else if (leftKeyNotRight())
+			double absAngle = leftKey() ? Angle.BACK_RIGHT : (rightKey() ? Angle.FRONT_RIGHT : Angle.RIGHT);
+			angle = new Angle(absAngle, Angle.FRONT);
+		} else if (leftKey())
 		{
-			angle = getLeftKeyAngle();
-		} else if (rightKeyNotLeft())
+			angle = new Angle(Angle.BACK, Angle.FRONT);
+		} else if (rightKey())
 		{
-			angle = getRightKeyAngle();
+			angle = new Angle(Angle.FRONT, Angle.FRONT);
 		}
 		return angle;
 	}
@@ -95,26 +97,12 @@ public class PlayerControlKeyHandler implements EventHandler<KeyEvent>
 		clientPlayer.setAngle(angle);
 	}
 
-	private Angle getDownKeyAngle() {
-		double absAngle = leftKeyNotRight() ? Angle.BACK_RIGHT : (rightKeyNotLeft() ? Angle.FRONT_RIGHT : Angle.RIGHT);
-		return new Angle(absAngle, Angle.FRONT);
-	}
+	private boolean rightKey() {return rightKey && !leftKey;}
 
-	private Angle getUpKeyAngle() {
-		double absAngle = leftKeyNotRight() ? Angle.BACK_LEFT : (rightKeyNotLeft() ? Angle.FRONT_LEFT : Angle.LEFT);
-		return new Angle(absAngle, Angle.FRONT);
-	}
+	private boolean leftKey() {return leftKey && !rightKey;}
 
-	private Angle getRightKeyAngle() { return new Angle(Angle.FRONT, Angle.FRONT); }
+	private boolean downkey() {return downKey && !upKey;}
 
-	private Angle getLeftKeyAngle() { return new Angle(Angle.BACK, Angle.FRONT); }
-
-	private boolean rightKeyNotLeft() {return rightKey && !leftKey;}
-
-	private boolean leftKeyNotRight() {return leftKey && !rightKey;}
-
-	private boolean downKeyNotUp() {return downKey && !upKey;}
-
-	private boolean upKeyNotDown() {return upKey && !downKey;}
+	private boolean upKey() {return upKey && !downKey;}
 
 }
