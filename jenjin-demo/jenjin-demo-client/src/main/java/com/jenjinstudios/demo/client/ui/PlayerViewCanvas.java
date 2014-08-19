@@ -3,7 +3,6 @@ package com.jenjinstudios.demo.client.ui;
 import com.jenjinstudios.world.Location;
 import com.jenjinstudios.world.WorldObject;
 import com.jenjinstudios.world.client.ClientPlayer;
-import com.jenjinstudios.world.client.WorldClient;
 import javafx.application.Platform;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -14,22 +13,17 @@ import javafx.scene.transform.Rotate;
 /**
  * @author Caleb Brinkman
  */
-public class WorldCanvas extends Canvas
+public class PlayerViewCanvas extends Canvas
 {
 	private static final double SCALE = 75;
 	private final ClientPlayer clientPlayer;
-	private final LocationTileManager locationTileManager;
 	private final ObjectTileManager objectTileManager;
 
-	public WorldCanvas(WorldClient worldClient, double width, double height) {
+	public PlayerViewCanvas(ClientPlayer clientPlayer, double width, double height) {
 		super(width, height);
-		this.clientPlayer = worldClient.getPlayer();
-		PlayerControlKeyHandler playerControlKeyHandler = new PlayerControlKeyHandler(worldClient);
-		setOnKeyPressed(playerControlKeyHandler);
-		setOnKeyReleased(playerControlKeyHandler);
+		this.clientPlayer = clientPlayer;
 		Platform.runLater(this::requestFocus);
 
-		locationTileManager = new LocationTileManager();
 		objectTileManager = new ObjectTileManager();
 	}
 
@@ -60,7 +54,7 @@ public class WorldCanvas extends Canvas
 			double y = getHeight() / 2 - (yDiff * SCALE - yBuff * (SCALE / Location.SIZE)) - SCALE;
 
 			GraphicsContext graphicsContext2D = getGraphicsContext2D();
-			locationTileManager.setGraphicsColor(location, graphicsContext2D);
+			LocationTileManager.setGraphicsColor(location, graphicsContext2D);
 			graphicsContext2D.fillRect(x, y, SCALE, SCALE);
 		}
 	}

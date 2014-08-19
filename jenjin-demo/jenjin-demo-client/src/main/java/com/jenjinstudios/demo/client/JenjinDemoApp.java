@@ -31,7 +31,7 @@ public class JenjinDemoApp extends Application implements EventHandler<WindowEve
 		LoginPane loginPane = new LoginPane(this);
 		stage = primaryStage;
 		stage.setOnCloseRequest(this);
-		stage.setScene(new Scene(loginPane, 600, 400));
+		stage.setScene(new Scene(loginPane, 400, 175));
 		stage.show();
 		Platform.runLater(() -> Platform.setImplicitExit(false));
 	}

@@ -5,7 +5,6 @@ import com.jenjinstudios.core.MessageIO;
 import com.jenjinstudios.core.io.MessageInputStream;
 import com.jenjinstudios.core.io.MessageOutputStream;
 import com.jenjinstudios.world.client.WorldClient;
-import com.jenjinstudios.world.io.WorldDocumentException;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,30 +15,22 @@ import java.util.logging.Logger;
 /**
  * @author Caleb Brinkman
  */
-public class WorldClientInitUtils
+public class WorldClientFactory
 {
 
-	private static final Logger LOGGER = Logger.getLogger(WorldClientInitUtils.class.getName());
-
-	public static boolean tryRequestWorldFile(WorldClient worldClient) {
-		boolean success = false;
-		try
-		{
-			requestWorldFile(worldClient);
-			success = true;
-		} catch (WorldDocumentException e)
-		{
-			LOGGER.log(Level.SEVERE, "Exception downloading world file.", e);
-		}
-		return success;
-	}
+	private static final Logger LOGGER = Logger.getLogger(WorldClientFactory.class.getName());
 
 	public static WorldClient tryCreateWorldClient(String address, int port, ClientUser user) {
 		WorldClient worldClient;
 		try
 		{
 			worldClient = createWorldClient(address, port, user);
-		} catch (IOException | WorldDocumentException e)
+			worldClient.startAndInitialize();
+			worldClient.getServerWorldFileTracker().requestServerWorldFileChecksum();
+			worldClient.getServerWorldFileTracker().requestServerWorldFile();
+			worldClient.getServerWorldFileTracker().writeReceivedWorldToFile();
+			worldClient.readWorldFile();
+		} catch (IOException e)
 		{
 			LOGGER.log(Level.SEVERE, "Exception creating world client.", e);
 			worldClient = null;
@@ -47,14 +38,7 @@ public class WorldClientInitUtils
 		return worldClient;
 	}
 
-	private static void requestWorldFile(WorldClient worldClient) throws WorldDocumentException {
-		worldClient.getServerWorldFileTracker().requestServerWorldFileChecksum();
-		worldClient.getServerWorldFileTracker().requestServerWorldFile();
-		worldClient.getServerWorldFileTracker().writeReceivedWorldToFile();
-	}
-
-	private static WorldClient createWorldClient(String address, int port, ClientUser clientUser)
-		  throws IOException, WorldDocumentException
+	private static WorldClient createWorldClient(String address, int port, ClientUser clientUser) throws IOException
 	{
 		File worldFile = new File(System.getProperty("user.home") + "/.jenjin-demo/World.xml");
 		Socket socket = new Socket(address, port);

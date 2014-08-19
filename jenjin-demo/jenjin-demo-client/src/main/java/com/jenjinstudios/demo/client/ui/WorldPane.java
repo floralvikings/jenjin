@@ -13,7 +13,10 @@ import javafx.util.Duration;
 public class WorldPane extends GridPane
 {
 	public WorldPane(WorldClient worldClient, Dimension2D size) {
-		WorldCanvas canvas = new WorldCanvas(worldClient, size.getWidth(), size.getHeight());
+		PlayerViewCanvas canvas = new PlayerViewCanvas(worldClient.getPlayer(), size.getWidth(), size.getHeight());
+		PlayerControlKeyHandler playerControlKeyHandler = new PlayerControlKeyHandler(worldClient);
+		canvas.setOnKeyPressed(playerControlKeyHandler);
+		canvas.setOnKeyReleased(playerControlKeyHandler);
 		add(canvas, 0, 0);
 
 		final Duration oneFrameAmt = Duration.millis(1000 / (float) 60);

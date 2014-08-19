@@ -11,11 +11,7 @@ import java.util.Properties;
  */
 public class LocationTileManager
 {
-
-	public LocationTileManager() {
-	}
-
-	public void setGraphicsColor(Location location, GraphicsContext g) {
+	public static void setGraphicsColor(Location location, GraphicsContext g) {
 		Properties properties = location.getProperties();
 		boolean walkable = !"false".equals(properties.getProperty("walkable"));
 		boolean indoors = "true".equals(properties.get("indoors"));
