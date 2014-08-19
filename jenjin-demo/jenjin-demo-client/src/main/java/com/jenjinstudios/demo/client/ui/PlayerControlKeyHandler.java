@@ -41,10 +41,10 @@ public class PlayerControlKeyHandler implements EventHandler<KeyEvent>
 	protected Angle getMoveAngle(Angle angle) {
 		if (upKeyNotDown())
 		{
-			angle = getUpKeyAngle(angle);
+			angle = getUpKeyAngle();
 		} else if (downKeyNotUp())
 		{
-			angle = getDownKeyAngle(angle);
+			angle = getDownKeyAngle();
 		} else if (leftKeyNotRight())
 		{
 			angle = getLeftKeyAngle();
@@ -67,11 +67,11 @@ public class PlayerControlKeyHandler implements EventHandler<KeyEvent>
 		}
 		if (keyCode.equals(LEFT) || keyCode.equals(A))
 		{
-			setLeftKeyDown(keyEvent);
+			setLeftKeyFlag(keyEvent);
 		}
 		if (keyCode.equals(RIGHT) || keyCode.equals(D))
 		{
-			setRightKeyDown(keyEvent);
+			setRightKeyFlag(keyEvent);
 		}
 	}
 
@@ -107,35 +107,37 @@ public class PlayerControlKeyHandler implements EventHandler<KeyEvent>
 
 	private boolean upKeyNotDown() {return upKey && !downKey;}
 
-	private Angle getDownKeyAngle(Angle angle) {
+	private Angle getDownKeyAngle() {
+		Angle angle;
 		if (leftKeyNotRight())
 		{
 			angle = new Angle(Angle.BACK_RIGHT, Angle.FRONT);
 		} else if (rightKeyNotLeft())
 		{
 			angle = new Angle(Angle.FRONT_RIGHT, Angle.FRONT);
-		} else if (!righKey)
+		} else
 		{
 			angle = new Angle(Angle.RIGHT, Angle.FRONT);
 		}
 		return angle;
 	}
 
-	private Angle getUpKeyAngle(Angle angle) {
+	private Angle getUpKeyAngle() {
+		Angle angle;
 		if (leftKeyNotRight())
 		{
 			angle = new Angle(Angle.BACK_LEFT, Angle.FRONT);
 		} else if (rightKeyNotLeft())
 		{
 			angle = new Angle(Angle.FRONT_LEFT, Angle.FRONT);
-		} else if (!righKey)
+		} else
 		{
 			angle = new Angle(Angle.LEFT, Angle.FRONT);
 		}
 		return angle;
 	}
 
-	private void setRightKeyDown(KeyEvent keyEvent) {
+	private void setRightKeyFlag(KeyEvent keyEvent) {
 		if (keyEvent.getEventType() == KeyEvent.KEY_PRESSED && !righKey)
 		{
 			righKey = true;
@@ -145,7 +147,7 @@ public class PlayerControlKeyHandler implements EventHandler<KeyEvent>
 		}
 	}
 
-	private void setLeftKeyDown(KeyEvent keyEvent) {
+	private void setLeftKeyFlag(KeyEvent keyEvent) {
 		if (keyEvent.getEventType() == KeyEvent.KEY_PRESSED && !leftKey)
 		{
 			leftKey = true;
