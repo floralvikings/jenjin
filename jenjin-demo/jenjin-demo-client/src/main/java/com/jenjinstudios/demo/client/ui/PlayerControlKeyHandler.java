@@ -38,6 +38,43 @@ public class PlayerControlKeyHandler implements EventHandler<KeyEvent>
 		keyEvent.consume();
 	}
 
+	protected Angle getMoveAngle(Angle angle) {
+		if (upKeyNotDown())
+		{
+			angle = getUpKeyAngle(angle);
+		} else if (downKeyNotUp())
+		{
+			angle = getDownKeyAngle(angle);
+		} else if (leftKeyNotRight())
+		{
+			angle = getLeftKeyAngle();
+		} else if (rightKeyNotLeft())
+		{
+			angle = getRightKeyAngle();
+		}
+		return angle;
+	}
+
+	protected void setKeyFlags(KeyEvent keyEvent) {
+		KeyCode keyCode = keyEvent.getCode();
+		if (keyCode.equals(UP) || keyCode.equals(W))
+		{
+			setUpKeyFlag(keyEvent);
+		}
+		if (keyCode.equals(DOWN) || keyCode.equals(S))
+		{
+			setDownKeyFlag(keyEvent);
+		}
+		if (keyCode.equals(LEFT) || keyCode.equals(A))
+		{
+			setLeftKeyDown(keyEvent);
+		}
+		if (keyCode.equals(RIGHT) || keyCode.equals(D))
+		{
+			setRightKeyDown(keyEvent);
+		}
+	}
+
 	private void sendFireRequest() {
 		Message message = MessageRegistry.getInstance().createMessage("FireRequest");
 		worldClient.queueOutgoingMessage(message);
@@ -58,34 +95,9 @@ public class PlayerControlKeyHandler implements EventHandler<KeyEvent>
 		clientPlayer.setAngle(angle);
 	}
 
-	protected Angle getMoveAngle(Angle angle) {
-		if (upKeyNotDown())
-		{
-			angle = getUpKeyAngle(angle);
-		} else if (downKeyNotUp())
-		{
-			angle = getDownKeyAngle(angle);
-		} else if (leftKeyNotRight())
-		{
-			angle = getLeftKeyAngle();
-		} else if (rightKeyNotLeft())
-		{
-			angle = getRightKeyAngle();
-		}
-		return angle;
-	}
+	private Angle getRightKeyAngle() { return new Angle(Angle.FRONT, Angle.FRONT); }
 
-	private Angle getRightKeyAngle() {
-		Angle angle;
-		angle = new Angle(Angle.FRONT, Angle.FRONT);
-		return angle;
-	}
-
-	private Angle getLeftKeyAngle() {
-		Angle angle;
-		angle = new Angle(Angle.BACK, Angle.FRONT);
-		return angle;
-	}
+	private Angle getLeftKeyAngle() { return new Angle(Angle.BACK, Angle.FRONT); }
 
 	private boolean rightKeyNotLeft() {return righKey && !leftKey;}
 
@@ -121,26 +133,6 @@ public class PlayerControlKeyHandler implements EventHandler<KeyEvent>
 			angle = new Angle(Angle.LEFT, Angle.FRONT);
 		}
 		return angle;
-	}
-
-	protected void setKeyFlags(KeyEvent keyEvent) {
-		KeyCode keyCode = keyEvent.getCode();
-		if (keyCode.equals(UP) || keyCode.equals(W))
-		{
-			setUpKeyFlag(keyEvent);
-		}
-		if (keyCode.equals(DOWN) || keyCode.equals(S))
-		{
-			setDownKeyFlag(keyEvent);
-		}
-		if (keyCode.equals(LEFT) || keyCode.equals(A))
-		{
-			setLeftKeyDown(keyEvent);
-		}
-		if (keyCode.equals(RIGHT) || keyCode.equals(D))
-		{
-			setRightKeyDown(keyEvent);
-		}
 	}
 
 	private void setRightKeyDown(KeyEvent keyEvent) {
