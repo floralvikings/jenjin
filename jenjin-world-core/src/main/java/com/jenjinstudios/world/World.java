@@ -68,7 +68,7 @@ public class World
 
 		if (worldObjects.get(id) != null)
 			throw new IllegalArgumentException("addObject(WorldObject obj) not allowed to be an occupied id: "
-				  + id + ".  Existing object: " + worldObjects.get(id));
+				  + object + ": " + id + ".  Existing object: " + worldObjects.get(id));
 
 		object.setId(id);
 		object.setWorld(this);
@@ -120,7 +120,12 @@ public class World
 	}
 
 	public void scheduleForAddition(WorldObject object) {
-		int id = worldObjects.getAvailableId();
+		int id;
+		synchronized (worldObjects)
+		{
+			id = worldObjects.getAvailableId();
+			worldObjects.reserveId(id);
+		}
 		object.setId(id);
 		this.scheduleForAddition(object, id);
 	}
