@@ -38,7 +38,6 @@ public class Bullet extends Actor
 	}
 
 	protected void hitActor(Actor actor) {
-		System.out.println("Hit");
 		actor.setVector2D(Vector2D.ORIGIN);
 		actor.forceIdle();
 		getWorld().scheduleForRemoval(this);
@@ -57,11 +56,9 @@ public class Bullet extends Actor
 		double distance = getVector2D().getDistanceToVector(startVector);
 		if (getAngle().getRelativeAngle() == Angle.IDLE)
 		{
-			System.out.println("Idle");
 			getWorld().scheduleForRemoval(this);
 		} else if (distance > MAX_RANGE)
 		{
-			System.out.println("Out of range");
 			getWorld().scheduleForRemoval(this);
 		}
 	}
