@@ -95,18 +95,6 @@ public class PlayerControlKeyHandler implements EventHandler<KeyEvent>
 		clientPlayer.setAngle(angle);
 	}
 
-	private Angle getRightKeyAngle() { return new Angle(Angle.FRONT, Angle.FRONT); }
-
-	private Angle getLeftKeyAngle() { return new Angle(Angle.BACK, Angle.FRONT); }
-
-	private boolean rightKeyNotLeft() {return righKey && !leftKey;}
-
-	private boolean leftKeyNotRight() {return leftKey && !righKey;}
-
-	private boolean downKeyNotUp() {return downKey && !upKey;}
-
-	private boolean upKeyNotDown() {return upKey && !downKey;}
-
 	private Angle getDownKeyAngle() {
 		Angle angle;
 		if (leftKeyNotRight())
@@ -136,6 +124,18 @@ public class PlayerControlKeyHandler implements EventHandler<KeyEvent>
 		}
 		return angle;
 	}
+
+	private Angle getRightKeyAngle() { return new Angle(Angle.FRONT, Angle.FRONT); }
+
+	private Angle getLeftKeyAngle() { return new Angle(Angle.BACK, Angle.FRONT); }
+
+	private boolean rightKeyNotLeft() {return righKey && !leftKey;}
+
+	private boolean leftKeyNotRight() {return leftKey && !righKey;}
+
+	private boolean downKeyNotUp() {return downKey && !upKey;}
+
+	private boolean upKeyNotDown() {return upKey && !downKey;}
 
 	private void setRightKeyFlag(KeyEvent keyEvent) {
 		if (keyEvent.getEventType() == KeyEvent.KEY_PRESSED && !righKey)
