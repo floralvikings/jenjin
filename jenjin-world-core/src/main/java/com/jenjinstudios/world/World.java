@@ -144,6 +144,10 @@ public class World
 		{
 			scheduledForOverwrite.add(o);
 		}
+		synchronized (scheduledForRemoval)
+		{
+			scheduledForRemoval.remove(o);
+		}
 	}
 
 	/**
