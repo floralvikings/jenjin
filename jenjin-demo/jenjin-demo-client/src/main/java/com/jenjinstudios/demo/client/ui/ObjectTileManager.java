@@ -26,7 +26,7 @@ public class ObjectTileManager
 	}
 
 	public Image getObjectTile(WorldObject object) {
-		Image tile = null;
+		Image tile;
 		switch (object.getResourceID())
 		{
 			case 0:
@@ -34,6 +34,9 @@ public class ObjectTileManager
 				break;
 			case 1:
 				tile = bulletTile;
+				break;
+			default:
+				tile = playerTile;
 				break;
 		}
 		return tile;
