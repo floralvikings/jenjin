@@ -18,7 +18,7 @@ public class PlayerControlKeyHandler implements EventHandler<KeyEvent>
 {
 	private final WorldClient worldClient;
 	private final ClientPlayer clientPlayer;
-	private boolean upKey, downKey, leftKey, righKey;
+	private boolean upKey, downKey, leftKey, rightKey;
 
 	public PlayerControlKeyHandler(WorldClient worldClient) {
 		this.worldClient = worldClient;
@@ -59,19 +59,19 @@ public class PlayerControlKeyHandler implements EventHandler<KeyEvent>
 		KeyCode keyCode = keyEvent.getCode();
 		if (keyCode.equals(UP) || keyCode.equals(W))
 		{
-			setUpKeyFlag(keyEvent);
+			upKey = keyEvent.getEventType() == KeyEvent.KEY_PRESSED;
 		}
 		if (keyCode.equals(DOWN) || keyCode.equals(S))
 		{
-			setDownKeyFlag(keyEvent);
+			downKey = keyEvent.getEventType() == KeyEvent.KEY_PRESSED;
 		}
 		if (keyCode.equals(LEFT) || keyCode.equals(A))
 		{
-			setLeftKeyFlag(keyEvent);
+			leftKey = keyEvent.getEventType() == KeyEvent.KEY_PRESSED;
 		}
 		if (keyCode.equals(RIGHT) || keyCode.equals(D))
 		{
-			setRightKeyFlag(keyEvent);
+			rightKey = keyEvent.getEventType() == KeyEvent.KEY_PRESSED;
 		}
 	}
 
@@ -109,51 +109,12 @@ public class PlayerControlKeyHandler implements EventHandler<KeyEvent>
 
 	private Angle getLeftKeyAngle() { return new Angle(Angle.BACK, Angle.FRONT); }
 
-	private boolean rightKeyNotLeft() {return righKey && !leftKey;}
+	private boolean rightKeyNotLeft() {return rightKey && !leftKey;}
 
-	private boolean leftKeyNotRight() {return leftKey && !righKey;}
+	private boolean leftKeyNotRight() {return leftKey && !rightKey;}
 
 	private boolean downKeyNotUp() {return downKey && !upKey;}
 
 	private boolean upKeyNotDown() {return upKey && !downKey;}
 
-	private void setRightKeyFlag(KeyEvent keyEvent) {
-		if (keyEvent.getEventType() == KeyEvent.KEY_PRESSED && !righKey)
-		{
-			righKey = true;
-		} else if (keyEvent.getEventType() == KeyEvent.KEY_RELEASED && righKey)
-		{
-			righKey = false;
-		}
-	}
-
-	private void setLeftKeyFlag(KeyEvent keyEvent) {
-		if (keyEvent.getEventType() == KeyEvent.KEY_PRESSED && !leftKey)
-		{
-			leftKey = true;
-		} else if (keyEvent.getEventType() == KeyEvent.KEY_RELEASED && leftKey)
-		{
-			leftKey = false;
-		}
-	}
-
-	private void setDownKeyFlag(KeyEvent keyEvent) {
-		if (keyEvent.getEventType() == KeyEvent.KEY_PRESSED && !downKey)
-		{
-			downKey = true;
-		} else if (keyEvent.getEventType() == KeyEvent.KEY_RELEASED && downKey)
-		{
-			downKey = false;
-		}
-	}
-
-	private void setUpKeyFlag(KeyEvent keyEvent) {
-		if (keyEvent.getEventType() == KeyEvent.KEY_PRESSED && !upKey)
-		{
-			upKey = true;
-		} else if (keyEvent.getEventType() == KeyEvent.KEY_RELEASED && upKey)
-		{
-			upKey = false;
-		}
-	}
 }
