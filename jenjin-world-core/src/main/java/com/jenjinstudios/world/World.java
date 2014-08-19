@@ -121,6 +121,7 @@ public class World
 
 	public void scheduleForAddition(WorldObject object) {
 		int id = worldObjects.getAvailableId();
+		object.setId(id);
 		this.scheduleForAddition(object, id);
 	}
 
@@ -218,7 +219,7 @@ public class World
 	protected void addScheduledObjects() {
 		synchronized (scheduledForAddition)
 		{
-			scheduledForAddition.forEach(this::addObject);
+			scheduledForAddition.forEach(object -> addObject(object, object.getId()));
 			scheduledForAddition.clear();
 		}
 	}
