@@ -17,40 +17,31 @@ import static com.jenjinstudios.world.math.Angle.FRONT;
 public class Bullet extends Actor
 {
 	private static final double MAX_RANGE = 250;
-	private boolean initialized;
-	private Vector2D startVector;
 	private final Player playerFiring;
+	private Vector2D startVector;
 
 	public Bullet(Player playerFiring) {
 		super("Bullet");
 		this.playerFiring = playerFiring;
+		setVector2D(playerFiring.getVector2D());
+		startVector = getVector2D();
 		double targetAngle = playerFiring.getAngle().getAbsoluteAngle();
 		setAngle(new Angle(targetAngle, FRONT));
 		setMoveSpeed(Actor.DEFAULT_MOVE_SPEED * 3);
 		setResourceID(1);
 	}
 
-	protected Vector2D calculateStartVector() {
-		startVector = playerFiring.getVector2D();
-
-		Location loc = getWorld().getLocationForCoordinates(getZoneID(), startVector);
-		if (loc == null)
-		{
-			startVector = null;
-		}
-		return startVector;
-	}
-
 	@Override
 	public void update() {
 		super.update();
-		if (!initialized)
-		{
-			initialize();
-		} else
-		{
-			checkForHit();
-		}
+		checkForHit();
+	}
+
+	protected void hitActor(Actor actor) {
+		System.out.println("Hit");
+		actor.setVector2D(Vector2D.ORIGIN);
+		actor.forceIdle();
+		getWorld().scheduleForRemoval(this);
 	}
 
 	private void checkForHit() {
@@ -64,28 +55,15 @@ public class Bullet extends Actor
 			}
 		}
 		double distance = getVector2D().getDistanceToVector(startVector);
-		if (getAngle().getRelativeAngle() == Angle.IDLE || distance > MAX_RANGE)
+		if (getAngle().getRelativeAngle() == Angle.IDLE)
 		{
+			System.out.println("Idle");
+			getWorld().scheduleForRemoval(this);
+		} else if (distance > MAX_RANGE)
+		{
+			System.out.println("Out of range");
 			getWorld().scheduleForRemoval(this);
 		}
-	}
-
-	private void initialize() {
-		startVector = calculateStartVector();
-		if (startVector != null)
-		{
-			setVector2D(startVector);
-			initialized = true;
-		} else
-		{
-			getWorld().scheduleForRemoval(this);
-		}
-	}
-
-	protected void hitActor(Actor actor) {
-		actor.setVector2D(Vector2D.ORIGIN);
-		actor.forceIdle();
-		getWorld().scheduleForRemoval(this);
 	}
 
 	private void tryHitActor(Collection<WorldObject> objects) {

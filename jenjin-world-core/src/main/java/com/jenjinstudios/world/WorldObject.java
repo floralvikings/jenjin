@@ -17,6 +17,7 @@ public class WorldObject
 	private Location location;
 	private Vector2D vector2D;
 	private World world;
+	private boolean initialized;
 
 	public WorldObject(String name) {
 		vector2D = Vector2D.ORIGIN;
@@ -79,8 +80,17 @@ public class WorldObject
 
 	public void setName(String name) { this.name = name; }
 
+	protected void initialize() {
+		initialized = true;
+	}
+
 	/** Set up this WorldObject before updating. */
-	public void setUp() { }
+	public void setUp() {
+		if (!initialized)
+		{
+			initialize();
+		}
+	}
 
 	/** Update this WorldObject. */
 	public void update() { }

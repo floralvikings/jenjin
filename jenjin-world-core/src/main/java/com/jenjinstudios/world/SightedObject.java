@@ -34,6 +34,7 @@ public class SightedObject extends WorldObject
 
 	@Override
 	public void setUp() {
+		super.setUp();
 		vectorBeforeUpdate = getVector2D();
 		if (!vectorBeforeUpdate.equals(vectorAfterUpdate))
 		{
