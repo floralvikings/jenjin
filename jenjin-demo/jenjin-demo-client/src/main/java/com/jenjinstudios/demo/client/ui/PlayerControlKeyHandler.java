@@ -9,6 +9,8 @@ import javafx.event.EventHandler;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
+import static javafx.scene.input.KeyCode.*;
+
 /**
  * @author Caleb Brinkman
  */
@@ -42,18 +44,12 @@ public class PlayerControlKeyHandler implements EventHandler<KeyEvent>
 	}
 
 	private boolean isFireKey(KeyEvent keyEvent) {
-		KeyCode code = keyEvent.getCode();
-		return code.equals(KeyCode.SPACE) && keyEvent.getEventType() == KeyEvent.KEY_PRESSED;
+		return keyEvent.getCode().equals(SPACE) && keyEvent.getEventType() == KeyEvent.KEY_PRESSED;
 	}
 
 	private boolean isMovementKey(KeyEvent keyEvent) {
-		KeyCode code = keyEvent.getCode();
-		boolean isMovementKey = code.isArrowKey();
-		isMovementKey |= code.equals(KeyCode.W);
-		isMovementKey |= code.equals(KeyCode.A);
-		isMovementKey |= code.equals(KeyCode.S);
-		isMovementKey |= code.equals(KeyCode.D);
-		return isMovementKey;
+		KeyCode c = keyEvent.getCode();
+		return c.isArrowKey() || c.equals(W) || c.equals(A) || c.equals(S) || c.equals(D);
 	}
 
 	private void setNewAngle() {
@@ -129,19 +125,19 @@ public class PlayerControlKeyHandler implements EventHandler<KeyEvent>
 
 	protected void setKeyFlags(KeyEvent keyEvent) {
 		KeyCode keyCode = keyEvent.getCode();
-		if (keyCode.equals(KeyCode.UP) || keyCode.equals(KeyCode.W))
+		if (keyCode.equals(UP) || keyCode.equals(W))
 		{
 			setUpKeyFlag(keyEvent);
 		}
-		if (keyCode.equals(KeyCode.DOWN) || keyCode.equals(KeyCode.S))
+		if (keyCode.equals(DOWN) || keyCode.equals(S))
 		{
 			setDownKeyFlag(keyEvent);
 		}
-		if (keyCode.equals(KeyCode.LEFT) || keyCode.equals(KeyCode.A))
+		if (keyCode.equals(LEFT) || keyCode.equals(A))
 		{
 			setLeftKeyDown(keyEvent);
 		}
-		if (keyCode.equals(KeyCode.RIGHT) || keyCode.equals(KeyCode.D))
+		if (keyCode.equals(RIGHT) || keyCode.equals(D))
 		{
 			setRightKeyDown(keyEvent);
 		}
