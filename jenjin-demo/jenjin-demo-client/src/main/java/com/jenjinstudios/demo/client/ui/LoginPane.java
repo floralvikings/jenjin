@@ -12,6 +12,9 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import static com.jenjinstudios.demo.client.WorldClientFactory.tryCreateWorldClient;
 
 /**
@@ -19,6 +22,7 @@ import static com.jenjinstudios.demo.client.WorldClientFactory.tryCreateWorldCli
  */
 public final class LoginPane extends GridPane
 {
+	private static final Logger LOGGER = Logger.getLogger(LoginPane.class.getName());
 	private final TextField addressField = new TextField("127.0.0.1");
 	private final TextField portField = new TextField("51015");
 	private final TextField usernameField = new TextField("TestAccount1");
@@ -60,6 +64,7 @@ public final class LoginPane extends GridPane
 	}
 
 	private void loginButtonFired(ActionEvent event) {
+		LOGGER.log(Level.FINE, "Login Button Fired: {0}", event);
 		ClientUser clientUser = new ClientUser(usernameField.getText(), passwordField.getText());
 		String address = addressField.getText();
 		int port = Integer.parseInt(portField.getText());
