@@ -4,7 +4,6 @@ import com.jenjinstudios.server.net.AuthServer;
 import com.jenjinstudios.server.net.ClientHandler;
 import com.jenjinstudios.server.net.ServerInit;
 import com.jenjinstudios.world.World;
-import com.jenjinstudios.world.io.WorldDocumentException;
 import com.jenjinstudios.world.io.WorldDocumentReader;
 import com.jenjinstudios.world.io.WorldDocumentWriter;
 import com.jenjinstudios.world.server.sql.WorldAuthenticator;
@@ -31,8 +30,8 @@ public class WorldServer<T extends WorldClientHandler> extends AuthServer<T>
 	 * @throws NoSuchMethodException If there is no appropriate constructor for the specified ClientHandler
 	 * constructor.
 	 */
-	public WorldServer(ServerInit<T> init, WorldAuthenticator authenticator,
-					   WorldDocumentReader reader) throws IOException, WorldDocumentException, NoSuchMethodException
+	public WorldServer(ServerInit<T> init, WorldAuthenticator authenticator, WorldDocumentReader reader)
+		  throws IOException, NoSuchMethodException
 	{
 		super(init, authenticator);
 		if (reader != null)
