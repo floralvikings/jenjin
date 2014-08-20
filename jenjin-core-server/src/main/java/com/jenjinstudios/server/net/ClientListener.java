@@ -43,7 +43,8 @@ class ClientListener<T extends ClientHandler> implements Runnable
 	 * constructor.
 	 */
 	public ClientListener(Class<? extends Server> serverClass, Class<T> handlerClass, int port) throws IOException,
-		  NoSuchMethodException {
+		  NoSuchMethodException
+	{
 		PORT = port;
 		/* The class of client handlers created by this listener. */
 		try

@@ -27,7 +27,7 @@ public class ExecutableLogoutRequestTest
 		user.setUsername("bar");
 		ClientHandler clientHandler = mock(ClientHandler.class);
 		AuthServer server = mock(AuthServer.class);
-		ServerMessageFactory serverMessageFactory = new ServerMessageFactory(clientHandler);
+		ServerMessageFactory serverMessageFactory = new ServerMessageFactory();
 		Authenticator authenticator = mock(Authenticator.class);
 		when(server.getAuthenticator()).thenReturn(authenticator);
 		when(server.getCycleStartTime()).thenReturn(12345l);

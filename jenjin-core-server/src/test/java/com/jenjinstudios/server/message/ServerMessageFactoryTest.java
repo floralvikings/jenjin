@@ -1,8 +1,6 @@
 package com.jenjinstudios.server.message;
 
 import com.jenjinstudios.core.io.Message;
-import com.jenjinstudios.server.net.ClientHandler;
-import org.mockito.Mockito;
 import org.testng.annotations.Test;
 
 import java.security.KeyPair;
@@ -18,9 +16,8 @@ public class ServerMessageFactoryTest
 {
 	@Test
 	public void testGenerateFirstConnectResponse() {
-		ClientHandler clientHandler = Mockito.mock(ClientHandler.class);
 		ServerMessageFactory serverMessageFactory =
-			  new ServerMessageFactory(clientHandler);
+			  new ServerMessageFactory();
 		Message message = serverMessageFactory.generateFirstConnectResponse(100);
 
 		assertEquals(message.name, "FirstConnectResponse");
@@ -29,9 +26,8 @@ public class ServerMessageFactoryTest
 
 	@Test
 	public void testGenerateLogoutResponse() {
-		ClientHandler clientHandler = Mockito.mock(ClientHandler.class);
 		ServerMessageFactory serverMessageFactory =
-			  new ServerMessageFactory(clientHandler);
+			  new ServerMessageFactory();
 		Message message = serverMessageFactory.generateLogoutResponse(true);
 
 		assertEquals(message.name, "LogoutResponse");
@@ -46,9 +42,8 @@ public class ServerMessageFactoryTest
 		PublicKey publicKey = keyPair.getPublic();
 		byte[] publicKeyEncoded = publicKey.getEncoded();
 
-		ClientHandler clientHandler = Mockito.mock(ClientHandler.class);
 		ServerMessageFactory serverMessageFactory =
-			  new ServerMessageFactory(clientHandler);
+			  new ServerMessageFactory();
 		Message message = serverMessageFactory.generateAESKeyMessage(publicKeyEncoded);
 
 		assertEquals(message.name, "AESKeyMessage");

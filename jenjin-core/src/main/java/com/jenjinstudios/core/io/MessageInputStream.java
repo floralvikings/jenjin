@@ -1,7 +1,9 @@
 package com.jenjinstudios.core.io;
 
-import javax.crypto.*;
-import javax.crypto.spec.SecretKeySpec;
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import javax.xml.bind.DatatypeConverter;
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -9,6 +11,7 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
 import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -25,10 +28,8 @@ public class MessageInputStream extends DataInputStream
 	private static final Logger LOGGER = Logger.getLogger(MessageInputStream.class.getName());
 	/** The Connection using this stream. */
 	private final MessageRegistry messageRegistry;
-	/** The AES key used to encrypt outgoing messages. */
-	private SecretKey aesKey;
 	/** The cipher used to decrypt messages. */
-	private Cipher aesDecryptCipher;
+	private Cipher decryptCipher;
 	private boolean closed;
 
 	/**
@@ -68,20 +69,14 @@ public class MessageInputStream extends DataInputStream
 		closed = true;
 	}
 
-	/**
-	 * Set the AES key used to decrypt messages.
-	 * @param key The AES key used to decrypt messages.
-	 */
-	public void setAESKey(byte[] key) {
+	public void setPrivateKey(PrivateKey privateKey) {
 		try
 		{
-			aesKey = new SecretKeySpec(key, "AES");
-			aesDecryptCipher = Cipher.getInstance("AES");
-			aesDecryptCipher.init(Cipher.DECRYPT_MODE, aesKey);
-		} catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException e)
+			decryptCipher = Cipher.getInstance("RSA");
+			decryptCipher.init(Cipher.DECRYPT_MODE, privateKey);
+		} catch (InvalidKeyException | NoSuchAlgorithmException | NoSuchPaddingException e)
 		{
 			LOGGER.log(Level.SEVERE, "Unable to create cipher, messages will not be decrypted.", e);
-			aesKey = null;
 		}
 	}
 
@@ -187,7 +182,7 @@ public class MessageInputStream extends DataInputStream
 		String received = readUTF();
 		if (encrypted)
 		{
-			if (aesKey != null)
+			if (decryptCipher != null)
 			{
 				received = decryptString(received);
 			} else
@@ -203,7 +198,7 @@ public class MessageInputStream extends DataInputStream
 		try
 		{
 			byte[] encBytes = DatatypeConverter.parseHexBinary(encrypted);
-			byte[] decBytes = aesDecryptCipher.doFinal(encBytes);
+			byte[] decBytes = decryptCipher.doFinal(encBytes);
 			decrypted = new String(decBytes, "UTF-8");
 		} catch (IllegalBlockSizeException | BadPaddingException e)
 		{

@@ -5,6 +5,10 @@ import com.jenjinstudios.core.io.MessageTypeException;
 import com.jenjinstudios.core.util.MessageFactory;
 
 import java.io.IOException;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.security.NoSuchAlgorithmException;
+import java.security.PublicKey;
 import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -33,7 +37,16 @@ public class Connection extends Thread
 		executableMessageQueue = new ExecutableMessageQueue();
 		messageFactory = new MessageFactory();
 		messageExecutor = new MessageExecutor(this, messageIO.getIn());
+		KeyPair rsaKeyPair = generateRSAKeyPair();
+		if (rsaKeyPair != null)
+		{
+			messageIO.getIn().setPrivateKey(rsaKeyPair.getPrivate());
+			Message message = messageFactory.generatePublicKeyMessage(rsaKeyPair.getPublic());
+			queueOutgoingMessage(message);
+		}
 	}
+
+	public void setPublicKey(PublicKey publicKey) { messageIO.getOut().setPublicKey(publicKey); }
 
 	public void queueOutgoingMessage(Message message) {
 		if (messageIO.getOut().isClosed())
@@ -54,11 +67,6 @@ public class Connection extends Thread
 				writeMessage(outgoingMessages.remove());
 			}
 		}
-	}
-
-	public void setAESKey(byte[] key) {
-		messageIO.getIn().setAESKey(key);
-		messageIO.getOut().setAesKey(key);
 	}
 
 	@Override
@@ -90,6 +98,21 @@ public class Connection extends Thread
 	protected void closeLink() {
 		closeInputStream();
 		closeOutputStream();
+	}
+
+	private KeyPair generateRSAKeyPair() {
+		KeyPair keyPair = null;
+		try
+		{
+			KeyPairGenerator keyPairGenerator;
+			keyPairGenerator = KeyPairGenerator.getInstance("RSA");
+			keyPairGenerator.initialize(512);
+			keyPair = keyPairGenerator.generateKeyPair();
+		} catch (NoSuchAlgorithmException e)
+		{
+			LOGGER.log(Level.SEVERE, "Unable to create RSA key pair!", e);
+		}
+		return keyPair;
 	}
 
 	private void closeOutputStream() {

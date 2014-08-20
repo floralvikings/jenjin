@@ -42,6 +42,11 @@
         <executable language="java">com.jenjinstudios.core.message.ExecutablePingResponse</executable>
     </message>
 
+    <message name="PublicKeyMessage" id="3">
+        <argument type="byte[]" name="publicKey" />
+        <executable language="java">com.jenjinstudios.core.message.ExecutablePublicKeyMessage</executable>
+    </message>
+
     <disabled_message name="DisabledMessage" />
 
 </messages>

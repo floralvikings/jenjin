@@ -39,7 +39,7 @@ public class ClientHandler extends Connection
 		setName("ClientHandler with unset ID");
 		server = s;
 
-		this.messageFactory = new ServerMessageFactory(this);
+		this.messageFactory = new ServerMessageFactory();
 	}
 
 	/**

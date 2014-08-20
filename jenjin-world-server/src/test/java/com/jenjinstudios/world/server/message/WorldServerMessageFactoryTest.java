@@ -35,7 +35,7 @@ public class WorldServerMessageFactoryTest
 		WorldServer worldServer = mock(WorldServer.class);
 		clientHandler = mock(WorldClientHandler.class);
 		when(clientHandler.getServer()).thenReturn(worldServer);
-		worldServerMessageFactory = new WorldServerMessageFactory(clientHandler);
+		worldServerMessageFactory = new WorldServerMessageFactory();
 	}
 
 	@Test

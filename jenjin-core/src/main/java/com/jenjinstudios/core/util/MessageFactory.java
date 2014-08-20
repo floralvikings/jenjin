@@ -3,6 +3,8 @@ package com.jenjinstudios.core.util;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageRegistry;
 
+import java.security.PublicKey;
+
 /**
  * Used to generate messages to be passed between client and server.
  * @author Caleb Brinkman
@@ -46,6 +48,12 @@ public class MessageFactory
 		Message pingResponse = getMessageRegistry().createMessage("PingResponse");
 		pingResponse.setArgument("requestTimeMillis", requestTimeMillis);
 		return pingResponse;
+	}
+
+	public Message generatePublicKeyMessage(PublicKey publicKey) {
+		Message publicKeyMessage = getMessageRegistry().createMessage("PublicKeyMessage");
+		publicKeyMessage.setArgument("publicKey", publicKey.getEncoded());
+		return publicKeyMessage;
 	}
 
 	protected MessageRegistry getMessageRegistry() { return messageRegistry; }

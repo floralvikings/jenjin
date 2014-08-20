@@ -41,6 +41,7 @@ public class ConnectionTest
 		// The connection should execute the InvalidExecutableMessage,
 		byte[] bytes = bos.toByteArray();
 		MessageInputStream mis = new MessageInputStream(new ByteArrayInputStream(bytes));
+		mis.readMessage();
 		Message msg = mis.readMessage();
 		Assert.assertEquals(msg.getArgument("messageName"), "Unknown");
 	}
@@ -88,6 +89,7 @@ public class ConnectionTest
 		// The connection should execute the InvalidExecutableMessage,
 		byte[] bytes = bos.toByteArray();
 		MessageInputStream mis = new MessageInputStream(new ByteArrayInputStream(bytes));
+		mis.readMessage(); // Read the public key message
 		Message msg = mis.readMessage();
 		Assert.assertEquals(msg.name, "PingResponse");
 	}
@@ -96,6 +98,9 @@ public class ConnectionTest
 	public void testPingResponse() throws Exception {
 		// Spoof an invalid message
 		DataInputStreamMock dataInputStreamMock = new DataInputStreamMock();
+		dataInputStreamMock.mockReadShort((short) 3);
+		dataInputStreamMock.mockReadInt(1);
+		dataInputStreamMock.mockReadByte((byte) 0);
 		dataInputStreamMock.mockReadShort((short) 2);
 		dataInputStreamMock.mockReadLong(System.currentTimeMillis());
 		InputStream in = dataInputStreamMock.getIn();

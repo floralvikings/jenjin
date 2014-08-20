@@ -3,7 +3,6 @@ package com.jenjinstudios.server.message;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageInputStream;
 import com.jenjinstudios.core.util.MessageFactory;
-import com.jenjinstudios.server.net.ClientHandler;
 
 import javax.crypto.*;
 import java.security.InvalidKeyException;
@@ -23,16 +22,6 @@ public class ServerMessageFactory extends MessageFactory
 {
 	/** The logger used by this class. */
 	private static final Logger LOGGER = Logger.getLogger(ServerMessageFactory.class.getName());
-	/** The ClientHandler for which this message factory works. */
-	private final ClientHandler clientHandler;
-
-	/**
-	 * Construct a new ServerMessageFactory.
-	 * @param conn The ClientHandler for which this message factory works.
-	 */
-	public ServerMessageFactory(ClientHandler conn) {
-		this.clientHandler = conn;
-	}
 
 	/**
 	 * Generate a LogoutResponse.
@@ -70,7 +59,6 @@ public class ServerMessageFactory extends MessageFactory
 			KeyGenerator keyGenerator = KeyGenerator.getInstance("AES");
 			keyGenerator.init(128);
 			byte[] aesKeyBytes = keyGenerator.generateKey().getEncoded();
-			clientHandler.setAESKey(aesKeyBytes);
 			PublicKey publicKey = KeyFactory.getInstance("RSA").generatePublic(new X509EncodedKeySpec(publicKeyBytes));
 			Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
 			cipher.init(Cipher.ENCRYPT_MODE, publicKey);

@@ -1,13 +1,16 @@
 package com.jenjinstudios.core.io;
 
-import javax.crypto.*;
-import javax.crypto.spec.SecretKeySpec;
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import javax.xml.bind.DatatypeConverter;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.security.PublicKey;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -21,10 +24,8 @@ public class MessageOutputStream extends DataOutputStream
 	private static final Logger LOGGER = Logger.getLogger(MessageOutputStream.class.getName());
 	/** The messageRegistry using this stream. */
 	private final MessageRegistry messageRegistry;
-	/** The AES key used to encrypt messages from this client handler. */
-	private SecretKey aesKey;
 	/** The AES cipher. */
-	private Cipher aesEncryptCipher;
+	private Cipher encryptCipher;
 	private boolean closed;
 
 	/**
@@ -61,6 +62,17 @@ public class MessageOutputStream extends DataOutputStream
 		return closed;
 	}
 
+	public void setPublicKey(PublicKey publicKey) {
+		try
+		{
+			encryptCipher = Cipher.getInstance("RSA");
+			encryptCipher.init(Cipher.ENCRYPT_MODE, publicKey);
+		} catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException e)
+		{
+			LOGGER.log(Level.SEVERE, "Unable to create cipher, messages will not be decrypted.", e);
+		}
+	}
+
 	/**
 	 * Write an argument to the data stream, properly cast.
 	 * @param arg The argument to be written.
@@ -92,7 +104,7 @@ public class MessageOutputStream extends DataOutputStream
 	void writeString(String s, boolean encrypt) throws IOException {
 		if (encrypt)
 		{
-			if (aesKey == null)
+			if (encryptCipher == null)
 			{
 				LOGGER.log(Level.SEVERE, "AES key not set, message will not be encrypted: " + s);
 				throw new IOException("Unable to encrypt sensitive data.");
@@ -101,7 +113,7 @@ public class MessageOutputStream extends DataOutputStream
 				try
 				{
 					byte[] sBytes = s.getBytes("UTF-8");
-					String encryptedString = DatatypeConverter.printHexBinary(aesEncryptCipher.doFinal(sBytes));
+					String encryptedString = DatatypeConverter.printHexBinary(encryptCipher.doFinal(sBytes));
 					writeBoolean(true);
 					writeUTF(encryptedString);
 				} catch (IllegalBlockSizeException | BadPaddingException | IllegalStateException e)
@@ -151,23 +163,4 @@ public class MessageOutputStream extends DataOutputStream
 		closed = true;
 	}
 
-	/**
-	 * Set the AES key for this output stream to encrypt messages.
-	 * @param key The AES key used by this output stream to encrypt messages.
-	 */
-	public void setAesKey(byte[] key) {
-		if (key != null)
-		{
-			try
-			{
-				aesKey = new SecretKeySpec(key, "AES");
-				aesEncryptCipher = Cipher.getInstance("AES");
-				aesEncryptCipher.init(Cipher.ENCRYPT_MODE, aesKey);
-			} catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException e)
-			{
-				LOGGER.log(Level.SEVERE, "Unable to create cipher, messages will not be encrypted.", e);
-				aesKey = null;
-			}
-		}
-	}
 }

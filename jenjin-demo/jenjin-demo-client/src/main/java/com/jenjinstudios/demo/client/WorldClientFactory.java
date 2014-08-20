@@ -38,8 +38,7 @@ public class WorldClientFactory
 		return worldClient;
 	}
 
-	private static WorldClient createWorldClient(String address, int port, ClientUser clientUser) throws IOException
-	{
+	private static WorldClient createWorldClient(String address, int port, ClientUser clientUser) throws IOException {
 		File worldFile = new File(System.getProperty("user.home") + "/.jenjin-demo/World.xml");
 		Socket socket = new Socket(address, port);
 		MessageInputStream messageInputStream = new MessageInputStream(socket.getInputStream());
