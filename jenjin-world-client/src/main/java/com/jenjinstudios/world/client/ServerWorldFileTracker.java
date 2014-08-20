@@ -33,14 +33,12 @@ public class ServerWorldFileTracker
 	public void requestServerWorldFileChecksum() {
 		Message worldFileChecksumRequest = this.worldClient.getMessageFactory().generateWorldChecksumRequest();
 		this.worldClient.queueOutgoingMessage(worldFileChecksumRequest);
-		waitForWorldFileChecksum();
 	}
 
 	public void requestServerWorldFile() {
 		if (needsWorldFile())
 		{
 			this.worldClient.queueOutgoingMessage(this.worldClient.getMessageFactory().generateWorldFileRequest());
-			waitForWorldFile();
 		}
 	}
 
@@ -126,8 +124,7 @@ public class ServerWorldFileTracker
 		return worldFile.getParentFile().exists() || worldFile.getParentFile().mkdirs();
 	}
 
-	private void waitForWorldFile() {
-		setWaitingForFile(true);
+	public void waitForWorldFile() {
 		while (isWaitingForFile())
 		{
 			waitTenMillis();
@@ -144,8 +141,7 @@ public class ServerWorldFileTracker
 		}
 	}
 
-	private void waitForWorldFileChecksum() {
-		setWaitingForChecksum(true);
+	public void waitForWorldFileChecksum() {
 		while (isWaitingForChecksum())
 		{
 			waitTenMillis();

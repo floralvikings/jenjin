@@ -26,8 +26,12 @@ public class WorldClientFactory
 		{
 			worldClient = createWorldClient(address, port, user);
 			worldClient.start();
+			worldClient.getServerWorldFileTracker().setWaitingForChecksum(true);
 			worldClient.getServerWorldFileTracker().requestServerWorldFileChecksum();
+			worldClient.getServerWorldFileTracker().waitForWorldFileChecksum();
+			worldClient.getServerWorldFileTracker().setWaitingForFile(true);
 			worldClient.getServerWorldFileTracker().requestServerWorldFile();
+			worldClient.getServerWorldFileTracker().waitForWorldFile();
 			worldClient.getServerWorldFileTracker().writeReceivedWorldToFile();
 			worldClient.readWorldFile();
 		} catch (IOException e)
