@@ -18,6 +18,9 @@ public class PlayerViewCanvas extends Canvas
 	private static final double SCALE = 75;
 	private final ClientPlayer clientPlayer;
 	private final ObjectTileManager objectTileManager;
+	private double yOrig = getHeight() / 2;
+	private double xOrig = getWidth() / 2;
+	private double locScale = (SCALE / Location.SIZE);
 
 	public PlayerViewCanvas(ClientPlayer clientPlayer, double width, double height) {
 		super(width, height);
@@ -50,8 +53,8 @@ public class PlayerViewCanvas extends Canvas
 			double xBuff = clientPlayer.getVector2D().getXCoordinate() % Location.SIZE;
 			double yBuff = clientPlayer.getVector2D().getYCoordinate() % Location.SIZE;
 
-			double x = getWidth() / 2 + (xDiff * SCALE - xBuff * (SCALE / Location.SIZE));
-			double y = getHeight() / 2 - (yDiff * SCALE - yBuff * (SCALE / Location.SIZE)) - SCALE;
+			double x = xOrig + (xDiff * SCALE - xBuff * locScale);
+			double y = yOrig - (yDiff * SCALE - yBuff * locScale) - SCALE;
 
 			GraphicsContext graphicsContext2D = getGraphicsContext2D();
 			LocationTileManager.setGraphicsColor(location, graphicsContext2D);
@@ -67,11 +70,6 @@ public class PlayerViewCanvas extends Canvas
 	private void drawObject(WorldObject o) {
 		double xDiff = o.getVector2D().getXCoordinate() - clientPlayer.getVector2D().getXCoordinate();
 		double yDiff = o.getVector2D().getYCoordinate() - clientPlayer.getVector2D().getYCoordinate();
-
-		double yOrig = getHeight() / 2;
-		double xOrig = getWidth() / 2;
-
-		double locScale = (SCALE / Location.SIZE);
 
 		double x = xOrig + (xDiff * locScale);
 		double y = yOrig - (yDiff * locScale);

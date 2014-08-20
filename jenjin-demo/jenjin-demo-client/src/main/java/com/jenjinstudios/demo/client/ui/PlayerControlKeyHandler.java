@@ -18,7 +18,7 @@ public class PlayerControlKeyHandler implements EventHandler<KeyEvent>
 {
 	private final WorldClient worldClient;
 	private final ClientPlayer clientPlayer;
-	private boolean upKey, downKey, leftKey, rightKey;
+	private boolean up, down, left, right;
 
 	public PlayerControlKeyHandler(WorldClient worldClient) {
 		this.worldClient = worldClient;
@@ -43,7 +43,7 @@ public class PlayerControlKeyHandler implements EventHandler<KeyEvent>
 		{
 			double absAngle = leftKey() ? Angle.BACK_LEFT : (rightKey() ? Angle.FRONT_LEFT : Angle.LEFT);
 			angle = new Angle(absAngle, Angle.FRONT);
-		} else if (downkey())
+		} else if (downKey())
 		{
 			double absAngle = leftKey() ? Angle.BACK_RIGHT : (rightKey() ? Angle.FRONT_RIGHT : Angle.RIGHT);
 			angle = new Angle(absAngle, Angle.FRONT);
@@ -59,22 +59,10 @@ public class PlayerControlKeyHandler implements EventHandler<KeyEvent>
 
 	protected void setKeyFlags(KeyEvent keyEvent) {
 		KeyCode keyCode = keyEvent.getCode();
-		if (keyCode.equals(UP) || keyCode.equals(W))
-		{
-			upKey = keyEvent.getEventType() == KeyEvent.KEY_PRESSED;
-		}
-		if (keyCode.equals(DOWN) || keyCode.equals(S))
-		{
-			downKey = keyEvent.getEventType() == KeyEvent.KEY_PRESSED;
-		}
-		if (keyCode.equals(LEFT) || keyCode.equals(A))
-		{
-			leftKey = keyEvent.getEventType() == KeyEvent.KEY_PRESSED;
-		}
-		if (keyCode.equals(RIGHT) || keyCode.equals(D))
-		{
-			rightKey = keyEvent.getEventType() == KeyEvent.KEY_PRESSED;
-		}
+		up = keyCode.equals(UP) || keyCode.equals(W) ? keyEvent.getEventType() == KeyEvent.KEY_PRESSED : up;
+		down = keyCode.equals(DOWN) || keyCode.equals(S) ? keyEvent.getEventType() == KeyEvent.KEY_PRESSED : down;
+		left = keyCode.equals(LEFT) || keyCode.equals(A) ? keyEvent.getEventType() == KeyEvent.KEY_PRESSED : left;
+		right = keyCode.equals(RIGHT) || keyCode.equals(D) ? keyEvent.getEventType() == KeyEvent.KEY_PRESSED : right;
 	}
 
 	private void sendFireRequest() {
@@ -97,12 +85,12 @@ public class PlayerControlKeyHandler implements EventHandler<KeyEvent>
 		clientPlayer.setAngle(angle);
 	}
 
-	private boolean rightKey() {return rightKey && !leftKey;}
+	private boolean rightKey() {return right && !left;}
 
-	private boolean leftKey() {return leftKey && !rightKey;}
+	private boolean leftKey() {return left && !right;}
 
-	private boolean downkey() {return downKey && !upKey;}
+	private boolean downKey() {return down && !up;}
 
-	private boolean upKey() {return upKey && !downKey;}
+	private boolean upKey() {return up && !down;}
 
 }
