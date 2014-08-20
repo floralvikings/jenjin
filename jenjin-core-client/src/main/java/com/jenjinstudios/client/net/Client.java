@@ -20,7 +20,6 @@ public class Client extends Connection
 	private final ClientMessageFactory messageFactory;
 	/** The timer that manages the update loop. */
 	private Timer sendMessagesTimer;
-	private volatile boolean initialized;
 
 	/**
 	 * Construct a new client and attempt to connect to the server over the specified port.
@@ -29,10 +28,6 @@ public class Client extends Connection
 		super(messageIO);
 		repeatedTasks = new LinkedList<>();
 		this.messageFactory = new ClientMessageFactory();
-	}
-
-	public boolean isInitialized() {
-		return initialized;
 	}
 
 	/**
@@ -62,8 +57,6 @@ public class Client extends Connection
 
 		// Finally, send a ping request to establish latency.
 		queueOutgoingMessage(messageFactory.generatePingRequest());
-
-		initialized = true;
 
 		sendMessagesTimer = new Timer("Client Update Loop", false);
 		sendMessagesTimer.scheduleAtFixedRate(new ClientLoop(this), 0, period);

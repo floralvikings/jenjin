@@ -25,7 +25,7 @@ public class WorldClientFactory
 		try
 		{
 			worldClient = createWorldClient(address, port, user);
-			worldClient.startAndInitialize();
+			worldClient.start();
 			worldClient.getServerWorldFileTracker().requestServerWorldFileChecksum();
 			worldClient.getServerWorldFileTracker().requestServerWorldFile();
 			worldClient.getServerWorldFileTracker().writeReceivedWorldToFile();

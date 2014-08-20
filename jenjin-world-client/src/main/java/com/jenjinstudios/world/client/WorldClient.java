@@ -8,8 +8,6 @@ import com.jenjinstudios.world.client.message.WorldClientMessageFactory;
 import com.jenjinstudios.world.io.WorldDocumentException;
 
 import java.io.File;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * The WorldClient class is used to connect to a WorldServer and stores information about the environment immediately
@@ -18,7 +16,6 @@ import java.util.logging.Logger;
  */
 public class WorldClient extends AuthClient
 {
-	private static final Logger LOGGER = Logger.getLogger(WorldClient.class.getName());
 	private final WorldClientMessageFactory messageFactory;
 	private final ServerWorldFileTracker serverWorldFileTracker;
 	private World world;
@@ -43,19 +40,5 @@ public class WorldClient extends AuthClient
 	public World getWorld() { return world; }
 
 	public void readWorldFile() throws WorldDocumentException { world = serverWorldFileTracker.readWorldFromFile(); }
-
-	public void startAndInitialize() {
-		start();
-		while (!isInitialized())
-		{
-			try
-			{
-				Thread.sleep(10);
-			} catch (InterruptedException e)
-			{
-				LOGGER.log(Level.FINEST, "Interrupted during sleep cycle while waiting for initialization.");
-			}
-		}
-	}
 
 }
