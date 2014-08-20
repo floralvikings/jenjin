@@ -3,7 +3,6 @@ package com.jenjinstudios.client.net;
 import com.jenjinstudios.client.message.ClientMessageFactory;
 import com.jenjinstudios.core.Connection;
 import com.jenjinstudios.core.MessageIO;
-import com.jenjinstudios.core.io.Message;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -22,7 +21,6 @@ public class Client extends Connection
 	/** The timer that manages the update loop. */
 	private Timer sendMessagesTimer;
 	private volatile boolean initialized;
-	private int ups;
 
 	/**
 	 * Construct a new client and attempt to connect to the server over the specified port.
@@ -35,10 +33,6 @@ public class Client extends Connection
 
 	public boolean isInitialized() {
 		return initialized;
-	}
-
-	public int getUps() {
-		return ups;
 	}
 
 	/**
@@ -62,18 +56,9 @@ public class Client extends Connection
 		}
 	}
 
-	/**
-	 * Take care of all the necessary initialization messages between client and server.  These include things like RSA
-	 * key exchanges and latency checks.
-	 */
-	public void doPostConnectInit(Message firstConnectResponse) {
-		if (initialized)
-		{
-			throw new IllegalStateException("Trying to perform connection init when already initialized.");
-		}
-		ups = (int) firstConnectResponse.getArgument("ups");
-		/* The period of the update in milliseconds. */
-		int period = 1000 / ups;
+	@Override
+	public void run() {
+		int period = 1000 / 60;
 
 		// Finally, send a ping request to establish latency.
 		queueOutgoingMessage(messageFactory.generatePingRequest());
@@ -82,6 +67,8 @@ public class Client extends Connection
 
 		sendMessagesTimer = new Timer("Client Update Loop", false);
 		sendMessagesTimer.scheduleAtFixedRate(new ClientLoop(this), 0, period);
+
+		super.run();
 	}
 
 	/** Run the repeated synchronized tasks. */

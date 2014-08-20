@@ -2,11 +2,6 @@
 
 <messages>
 
-    <message name="FirstConnectResponse" id="100">
-        <argument type="int" name="ups" />
-        <executable language="java">com.jenjinstudios.client.message.ExecutableFirstConnectResponse</executable>
-    </message>
-
     <message name="LoginRequest" id="101">
         <argument type="String" name="username" encrypt="true" />
         <argument type="String" name="password" encrypt="true" />

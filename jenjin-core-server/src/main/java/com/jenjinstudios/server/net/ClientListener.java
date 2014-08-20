@@ -121,7 +121,6 @@ class ClientListener<T extends ClientHandler> implements Runnable
 		{
 			MessageIO messageIO = new MessageIO(in, out);
 			T newHandler = handlerConstructor.newInstance(server, messageIO);
-			newHandler.sendFirstConnectResponse();
 			addNewClient(newHandler);
 		} catch (InstantiationException | IllegalAccessException e)
 		{

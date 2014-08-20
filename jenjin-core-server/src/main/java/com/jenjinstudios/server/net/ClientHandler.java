@@ -24,8 +24,6 @@ public class ClientHandler extends Connection
 	private int handlerId = -1;
 	/** The time at which this client was successfully logged in. */
 	private long loggedInTime;
-	/** Flags whether the connection acknowledgement response has been sent. */
-	private boolean firstConnectResponseSent;
 	private User user;
 
 	/**
@@ -40,18 +38,6 @@ public class ClientHandler extends Connection
 		server = s;
 
 		this.messageFactory = new ServerMessageFactory();
-	}
-
-	/**
-	 * Send a connection acknowledgement response.
-	 */
-	public void sendFirstConnectResponse() {
-		if (!firstConnectResponseSent)
-		{
-			Message firstConnectResponse = getMessageFactory().generateFirstConnectResponse(getServer().UPS);
-			queueOutgoingMessage(firstConnectResponse);
-			firstConnectResponseSent = true;
-		}
 	}
 
 	/**

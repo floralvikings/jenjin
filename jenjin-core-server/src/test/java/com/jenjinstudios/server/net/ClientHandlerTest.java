@@ -15,21 +15,6 @@ import static org.testng.Assert.assertEquals;
 @SuppressWarnings("unchecked")
 public class ClientHandlerTest
 {
-	@Test
-	public void testSendFirstConnectResponse() throws Exception {
-		MessageIO messageIO = mock(MessageIO.class);
-		AuthServer server = mock(AuthServer.class);
-		MessageInputStream mis = mock(MessageInputStream.class);
-		MessageOutputStream mos = mock(MessageOutputStream.class);
-		when(messageIO.getIn()).thenReturn(mis);
-		when(messageIO.getOut()).thenReturn(mos);
-
-		ClientHandler clientHandler = new ClientHandler(server, messageIO);
-		clientHandler.sendFirstConnectResponse();
-		clientHandler.writeAllMessages();
-
-		verify(mos, times(2)).writeMessage(any());
-	}
 
 	@Test
 	public void testSendLogoutStatus() throws Exception {
