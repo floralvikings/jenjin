@@ -107,13 +107,6 @@ public class Server<T extends ClientHandler> extends Thread
 		clientListener.stopListening();
 	}
 
-	protected TreeMap<Integer, T> getClientHandlers() {
-		synchronized (clientHandlers)
-		{
-			return new TreeMap<>(clientHandlers);
-		}
-	}
-
 	/**
 	 * Schedule a client to be removed during the next update.
 	 * @param handler The client handler to be removed.

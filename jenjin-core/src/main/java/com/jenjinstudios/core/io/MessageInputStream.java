@@ -22,8 +22,6 @@ import java.util.logging.Logger;
  */
 public class MessageInputStream extends DataInputStream
 {
-	/** The default value used when no AES key can be used. */
-	public static final byte[] NO_KEY = new byte[1];
 	/** The Logger for this class. */
 	private static final Logger LOGGER = Logger.getLogger(MessageInputStream.class.getName());
 	/** The Connection using this stream. */
