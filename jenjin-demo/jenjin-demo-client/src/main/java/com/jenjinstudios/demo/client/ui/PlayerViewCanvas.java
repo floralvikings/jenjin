@@ -18,9 +18,9 @@ public class PlayerViewCanvas extends Canvas
 	private static final double SCALE = 75;
 	private final ClientPlayer clientPlayer;
 	private final ObjectTileManager objectTileManager;
-	private double yOrig = getHeight() / 2;
-	private double xOrig = getWidth() / 2;
-	private double locScale = (SCALE / Location.SIZE);
+	private final double yOrig = getHeight() / 2;
+	private final double xOrig = getWidth() / 2;
+	private final double locScale = (SCALE / Location.SIZE);
 
 	public PlayerViewCanvas(ClientPlayer clientPlayer, double width, double height) {
 		super(width, height);

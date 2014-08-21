@@ -9,7 +9,7 @@ import java.util.TreeMap;
  */
 public class WorldObjectMap extends TreeMap<Integer, WorldObject>
 {
-	private HashSet<Integer> reservedIds = new HashSet<>();
+	private final HashSet<Integer> reservedIds = new HashSet<>();
 
 	@Override
 	public WorldObject remove(Object key) {
