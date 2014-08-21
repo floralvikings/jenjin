@@ -21,7 +21,7 @@ public class Server<T extends ClientHandler> extends Thread
 	/** The logger used by this class. */
 	public static final Logger LOGGER = Logger.getLogger(Server.class.getName());
 	/** The updates per second. */
-	public final int UPS;
+	protected final int UPS;
 	/** The period of the update in milliseconds. */
 	protected final int PERIOD;
 	/** The list of {@code ClientListener}s working for this server. */
