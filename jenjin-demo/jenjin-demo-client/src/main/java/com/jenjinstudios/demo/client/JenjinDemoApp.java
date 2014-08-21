@@ -57,7 +57,7 @@ public class JenjinDemoApp extends Application implements EventHandler<WindowEve
 	public void handle(WindowEvent windowEvent) {
 		if (worldClient != null)
 		{
-			worldClient.getLoginTracker().sendLogoutRequestAndWaitForResponse(30000);
+			worldClient.getLoginTracker().sendLogoutRequestAndWaitForResponse();
 			worldClient.shutdown();
 		}
 		Platform.exit();

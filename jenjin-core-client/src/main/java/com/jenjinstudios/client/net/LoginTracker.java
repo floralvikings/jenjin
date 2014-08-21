@@ -37,20 +37,20 @@ public class LoginTracker
 		client.queueOutgoingMessage(message);
 	}
 
-	public boolean sendLoginRequestAndWaitForResponse(long timeout) {
+	public boolean sendLoginRequestAndWaitForResponse() {
 		sendLoginRequest();
 		long startTime = System.currentTimeMillis();
-		while (waitingForResponse && System.currentTimeMillis() - startTime < timeout)
+		while (waitingForResponse && System.currentTimeMillis() - startTime < (long) 30000)
 		{
 			waitTenMillis();
 		}
 		return loggedIn;
 	}
 
-	public void sendLogoutRequestAndWaitForResponse(long timeout) {
+	public void sendLogoutRequestAndWaitForResponse() {
 		sendLogoutRequest();
 		long startTime = System.currentTimeMillis();
-		while (waitingForResponse && System.currentTimeMillis() - startTime < timeout)
+		while (waitingForResponse && System.currentTimeMillis() - startTime < (long) 30000)
 		{
 			waitTenMillis();
 		}

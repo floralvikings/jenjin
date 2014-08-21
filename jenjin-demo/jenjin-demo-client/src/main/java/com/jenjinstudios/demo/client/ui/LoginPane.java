@@ -76,7 +76,7 @@ public final class LoginPane extends GridPane
 	}
 
 	private void logIn() {
-		if (worldClient.getLoginTracker().sendLoginRequestAndWaitForResponse(30000))
+		if (worldClient.getLoginTracker().sendLoginRequestAndWaitForResponse())
 		{
 			System.out.println("Successfully logged in!");
 			jenjinDemoApp.successfulLogin(worldClient);
