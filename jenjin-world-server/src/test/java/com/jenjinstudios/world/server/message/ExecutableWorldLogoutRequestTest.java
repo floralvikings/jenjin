@@ -5,6 +5,7 @@ import com.jenjinstudios.core.io.MessageRegistry;
 import com.jenjinstudios.server.net.User;
 import com.jenjinstudios.server.sql.LoginException;
 import com.jenjinstudios.world.World;
+import com.jenjinstudios.world.WorldObjectMap;
 import com.jenjinstudios.world.math.Vector2D;
 import com.jenjinstudios.world.server.Player;
 import com.jenjinstudios.world.server.WorldClientHandler;
@@ -31,6 +32,8 @@ public class ExecutableWorldLogoutRequestTest
 		WorldClientHandler handler = mock(WorldClientHandler.class);
 		WorldServer worldServer = mock(WorldServer.class);
 		WorldAuthenticator authenticator = mock(WorldAuthenticator.class);
+		WorldObjectMap worldObjectMap = mock(WorldObjectMap.class);
+		when(world.getWorldObjects()).thenReturn(worldObjectMap);
 		when(worldServer.getAuthenticator()).thenReturn(authenticator);
 		when(worldServer.getWorld()).thenReturn(world);
 		when(handler.getServer()).thenReturn(worldServer);
@@ -45,7 +48,7 @@ public class ExecutableWorldLogoutRequestTest
 		exec.runDelayed();
 
 		verify(handler).sendLogoutStatus(true);
-		verify(world).scheduleForRemoval(player);
+		verify(worldObjectMap).scheduleForRemoval(player);
 	}
 
 	@Test

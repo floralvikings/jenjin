@@ -3,6 +3,7 @@ package com.jenjinstudios.world.server.message;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.server.net.User;
 import com.jenjinstudios.world.World;
+import com.jenjinstudios.world.WorldObjectMap;
 import com.jenjinstudios.world.math.Vector2D;
 import com.jenjinstudios.world.server.Player;
 import com.jenjinstudios.world.server.WorldClientHandler;
@@ -13,6 +14,9 @@ import org.testng.annotations.Test;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * @author Caleb Brinkman
@@ -35,6 +39,8 @@ public class ExecutableWorldLoginRequestTest
 		WorldAuthenticator authenticator = Mockito.mock(WorldAuthenticator.class);
 		WorldServer server = Mockito.mock(WorldServer.class);
 		WorldClientHandler wch = Mockito.mock(WorldClientHandler.class);
+		WorldObjectMap worldObjectMap = mock(WorldObjectMap.class);
+		when(world.getWorldObjects()).thenReturn(worldObjectMap);
 		Mockito.when(user.isLoggedIn()).thenReturn(true);
 		Mockito.when(authenticator.logInUser(Mockito.anyString(), Mockito.anyString())).thenReturn(user);
 		Mockito.when(authenticator.getPlayerInfo(Mockito.anyString())).thenReturn(playerData);
@@ -49,6 +55,6 @@ public class ExecutableWorldLoginRequestTest
 		exec.runImmediate();
 		exec.runDelayed();
 
-		Mockito.verify(world).scheduleForAddition(Mockito.anyObject());
+		Mockito.verify(worldObjectMap).scheduleForAddition(Mockito.anyObject());
 	}
 }

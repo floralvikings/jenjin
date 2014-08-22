@@ -16,7 +16,7 @@ public class ExecutableObjectInvisibleMessage extends WorldClientExecutableMessa
 
 	@Override
 	public void runDelayed() {
-		getClient().getWorld().scheduleForRemoval(id);
+		getClient().getWorld().getWorldObjects().scheduleForRemoval(id);
 	}
 
 	@Override

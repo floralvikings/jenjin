@@ -25,7 +25,8 @@ public class ExecutableStateChangeRequestTest
 	public void testValidRequest() throws InterruptedException {
 		World world = new World();
 		Player player = new Player("FooBar");
-		world.addObject(player);
+		world.getWorldObjects().scheduleForAddition(player);
+		world.update();
 		WorldClientHandler mock = mock(WorldClientHandler.class);
 		when(mock.getPlayer()).thenReturn(player);
 		WorldServer worldServer = mock(WorldServer.class);
@@ -52,7 +53,8 @@ public class ExecutableStateChangeRequestTest
 	public void testInvalidRequestCoordinates() {
 		World world = new World();
 		Player player = new Player("FooBar");
-		world.addObject(player);
+		world.getWorldObjects().scheduleForAddition(player);
+		world.update();
 		WorldClientHandler mock = mock(WorldClientHandler.class);
 		when(mock.getPlayer()).thenReturn(player);
 		WorldServer worldServer = mock(WorldServer.class);
@@ -80,7 +82,8 @@ public class ExecutableStateChangeRequestTest
 		// Functionally the same as testing excessive delay.
 		World world = new World();
 		Player player = new Player("FooBar");
-		world.addObject(player);
+		world.getWorldObjects().scheduleForAddition(player);
+		world.update();
 		WorldClientHandler mock = mock(WorldClientHandler.class);
 		when(mock.getPlayer()).thenReturn(player);
 		WorldServer worldServer = mock(WorldServer.class);
@@ -107,7 +110,8 @@ public class ExecutableStateChangeRequestTest
 	public void testExcessiveDelay() throws InterruptedException {
 		World world = new World();
 		Player player = new Player("FooBar");
-		world.addObject(player);
+		world.getWorldObjects().scheduleForAddition(player);
+		world.update();
 		WorldClientHandler mock = mock(WorldClientHandler.class);
 		WorldServer worldServer = mock(WorldServer.class);
 		when(mock.getServer()).thenReturn(worldServer);

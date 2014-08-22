@@ -17,9 +17,10 @@ public class WorldTest
 		WorldObject obj2 = new WorldObject("Bob");
 		World world = new World();
 
-		world.addObject(obj0);
-		world.addObject(obj1);
-		world.addObject(obj2);
+		world.getWorldObjects().scheduleForAddition(obj0);
+		world.getWorldObjects().scheduleForAddition(obj1);
+		world.getWorldObjects().scheduleForAddition(obj2);
+		world.update();
 
 		Assert.assertEquals(obj2.getId(), 2);
 	}
@@ -27,31 +28,32 @@ public class WorldTest
 	@Test(expectedExceptions = IllegalArgumentException.class)
 	public void testAddNullObject() {
 		World world = new World();
-		world.addObject(null);
+		world.getWorldObjects().scheduleForAddition(null);
 	}
 
 	@Test(expectedExceptions = IllegalArgumentException.class)
 	public void testAddOccupiedID() {
 		World world = new World();
-		world.addObject(mock(WorldObject.class), 0);
-		world.addObject(mock(WorldObject.class), 0);
+		world.getWorldObjects().scheduleForAddition(mock(WorldObject.class), 0);
+		world.getWorldObjects().scheduleForAddition(mock(WorldObject.class), 0);
 	}
 
 	@Test
 	public void testScheduleForRemoval() {
 		WorldObject worldObject = new WorldObject("Bob");
 		World world = new World();
-		world.addObject(worldObject);
-		world.scheduleForRemoval(worldObject);
+		world.getWorldObjects().scheduleForAddition(worldObject);
 		world.update();
-		Assert.assertEquals(world.getObjectCount(), 0);
+		world.getWorldObjects().scheduleForRemoval(worldObject);
+		world.update();
+		Assert.assertEquals(world.getWorldObjects().getObjectCount(), 0);
 	}
 
 	@Test
 	public void testUpdate() {
 		WorldObject worldObject = mock(WorldObject.class);
 		World world = new World();
-		world.addObject(worldObject);
+		world.getWorldObjects().scheduleForAddition(worldObject);
 		world.update();
 		verify(worldObject, times(1)).setUp();
 		verify(worldObject, times(1)).update();
@@ -60,12 +62,13 @@ public class WorldTest
 
 	@Test
 	public void testGetObject() {
-		WorldObject obj0 = mock(WorldObject.class);
-		WorldObject obj1 = mock(WorldObject.class);
+		WorldObject obj0 = new WorldObject("Foo");
+		WorldObject obj1 = new WorldObject("Bar");
 		World world = new World();
-		world.addObject(obj0, 0);
-		world.addObject(obj1, 1);
-		WorldObject retrieved = world.getObject(0);
+		world.getWorldObjects().scheduleForAddition(obj0, 0);
+		world.getWorldObjects().scheduleForAddition(obj1, 1);
+		world.update();
+		WorldObject retrieved = world.getWorldObjects().getObject(0);
 		Assert.assertEquals(retrieved, obj0);
 	}
 }

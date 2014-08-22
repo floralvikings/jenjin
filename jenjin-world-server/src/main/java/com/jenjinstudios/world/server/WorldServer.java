@@ -64,6 +64,6 @@ public class WorldServer<T extends WorldClientHandler> extends AuthServer<T>
 	public void removeClient(ClientHandler handler) {
 		super.removeClient(handler);
 		if (((WorldClientHandler) handler).getPlayer() != null)
-			world.scheduleForRemoval(((WorldClientHandler) handler).getPlayer());
+			world.getWorldObjects().scheduleForRemoval(((WorldClientHandler) handler).getPlayer());
 	}
 }

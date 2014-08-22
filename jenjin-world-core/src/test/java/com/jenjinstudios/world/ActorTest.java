@@ -15,7 +15,8 @@ public class ActorTest
 	@Test
 	public void testReset() {
 		Actor actor = new Actor("Actor");
-		world.addObject(actor);
+		world.getWorldObjects().scheduleForAddition(actor);
+		world.update();
 		Angle angle = new Angle(0.0, Angle.FRONT);
 		actor.setAngle(angle);
 		actor.reset();
@@ -25,7 +26,8 @@ public class ActorTest
 	@Test
 	public void testSetUp() {
 		Actor actor = new Actor("Actor");
-		world.addObject(actor);
+		world.getWorldObjects().scheduleForAddition(actor);
+		world.update();
 		Angle angle = new Angle(0.0, Angle.FRONT);
 		actor.setAngle(angle);
 		world.update();
@@ -36,7 +38,8 @@ public class ActorTest
 	@Test
 	public void testStep() throws InterruptedException {
 		Actor actor = new Actor("Actor");
-		world.addObject(actor);
+		world.getWorldObjects().scheduleForAddition(actor);
+		world.update();
 		Angle angle = new Angle(0.0, Angle.FRONT);
 		actor.setAngle(angle);
 		world.update();
@@ -51,7 +54,8 @@ public class ActorTest
 	@Test
 	public void testStepToNullLocation() throws InterruptedException {
 		Actor actor = new Actor("Actor");
-		world.addObject(actor);
+		world.getWorldObjects().scheduleForAddition(actor);
+		world.update();
 		Angle angle = new Angle(0.0, Angle.BACK);
 		actor.setAngle(angle);
 		world.update();
@@ -64,7 +68,7 @@ public class ActorTest
 	@Test
 	public void testGetForcedState() throws InterruptedException {
 		Actor actor = new Actor("Actor");
-		world.addObject(actor);
+		world.getWorldObjects().scheduleForAddition(actor);
 		Angle angle = new Angle(0.0, Angle.BACK);
 		actor.setAngle(angle);
 		Thread.sleep(1000); // Sleep to move one DEFAULT_MOVE_SPEED backward

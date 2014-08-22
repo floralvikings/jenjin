@@ -42,7 +42,8 @@ public class WorldObjectTest
 		world = new World();
 		/* The zone used for testing. */
 		worldObject.setVector2D(vector2D);
-		world.addObject(worldObject);
+		world.getWorldObjects().scheduleForAddition(worldObject);
+		world.update();
 	}
 
 	/**

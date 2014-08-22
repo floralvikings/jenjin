@@ -40,7 +40,7 @@ public class Bullet extends Actor
 	protected void hitActor(Actor actor) {
 		actor.setVector2D(Vector2D.ORIGIN);
 		actor.forceIdle();
-		getWorld().scheduleForRemoval(this);
+		getWorld().getWorldObjects().scheduleForRemoval(this);
 	}
 
 	private void checkForHit() {
@@ -56,10 +56,10 @@ public class Bullet extends Actor
 		double distance = getVector2D().getDistanceToVector(startVector);
 		if (getAngle().getRelativeAngle() == Angle.IDLE)
 		{
-			getWorld().scheduleForRemoval(this);
+			getWorld().getWorldObjects().scheduleForRemoval(this);
 		} else if (distance > MAX_RANGE)
 		{
-			getWorld().scheduleForRemoval(this);
+			getWorld().getWorldObjects().scheduleForRemoval(this);
 		}
 	}
 

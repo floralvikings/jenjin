@@ -24,12 +24,12 @@ public class ExecutableActorVisibleMessage extends WorldClientExecutableMessage
 	public void runDelayed() {
 		try
 		{
-			getClient().getWorld().scheduleForAddition(newlyVisible, newlyVisible.getId());
+			getClient().getWorld().getWorldObjects().scheduleForAddition(newlyVisible, newlyVisible.getId());
 		} catch (Exception ex)
 		{
 			LOGGER.log(Level.WARNING, "Received message for already extant object ID:  {0}, {1}",
 				  new Object[]{newlyVisible.getId(), newlyVisible});
-			getClient().getWorld().scheduleForOverwrite(newlyVisible, newlyVisible.getId());
+			getClient().getWorld().getWorldObjects().scheduleForOverwrite(newlyVisible, newlyVisible.getId());
 		}
 
 	}

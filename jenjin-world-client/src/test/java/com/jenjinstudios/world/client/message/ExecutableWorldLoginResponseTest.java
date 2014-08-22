@@ -5,6 +5,7 @@ import com.jenjinstudios.client.net.LoginTracker;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageRegistry;
 import com.jenjinstudios.world.World;
+import com.jenjinstudios.world.WorldObjectMap;
 import com.jenjinstudios.world.client.WorldClient;
 import org.testng.annotations.Test;
 
@@ -28,6 +29,8 @@ public class ExecutableWorldLoginResponseTest
 
 		WorldClient worldClient = mock(WorldClient.class);
 		World world = mock(World.class);
+		WorldObjectMap worldObjectMap = mock(WorldObjectMap.class);
+		when(world.getWorldObjects()).thenReturn(worldObjectMap);
 		LoginTracker loginTracker = mock(LoginTracker.class);
 		when(loginTracker.isLoggedIn()).thenReturn(true);
 		when(worldClient.getWorld()).thenReturn(world);
@@ -41,6 +44,6 @@ public class ExecutableWorldLoginResponseTest
 		verify(loginTracker).setLoggedIn(true);
 		verify(loginTracker).setLoggedInTime(0l);
 		verify(worldClient).setPlayer(any());
-		verify(world).scheduleForAddition(any(), eq(0));
+		verify(worldObjectMap).scheduleForAddition(any(), eq(0));
 	}
 }

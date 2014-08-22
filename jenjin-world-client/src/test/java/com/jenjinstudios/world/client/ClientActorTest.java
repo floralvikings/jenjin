@@ -26,7 +26,7 @@ public class ClientActorTest
 		World world = new World();
 		ClientActor actor = new ClientActor(0, "ClientActor");
 		world.update();
-		world.scheduleForAddition(actor);
+		world.getWorldObjects().scheduleForAddition(actor);
 		Angle angle = new Angle(0, Angle.FRONT);
 		actor.setAngle(angle);
 		world.update();
