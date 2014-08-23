@@ -29,6 +29,7 @@ public class Bullet extends Actor
 		setAngle(new Angle(targetAngle, FRONT));
 		setMoveSpeed(Actor.DEFAULT_MOVE_SPEED * 3);
 		setResourceID(1);
+		setZoneID(playerFiring.getZoneID());
 	}
 
 	@Override

@@ -13,8 +13,6 @@ import com.jenjinstudios.world.server.message.WorldExecutableMessage;
  */
 public class ExecutableFireRequest extends WorldExecutableMessage
 {
-	private Bullet bullet;
-
 	/**
 	 * Construct a new ExecutableMessage.  Must be implemented by subclasses.
 	 * @param handler The handler using this ExecutableMessage.
@@ -28,17 +26,13 @@ public class ExecutableFireRequest extends WorldExecutableMessage
 	@Override
 	public void runDelayed() {
 		World world = ((WorldServer) getClientHandler().getServer()).getWorld();
-		if (world.getZone(bullet.getZoneID()).getLocationForCoordinates(bullet.getVector2D()) != null)
-		{
-			world.getWorldObjects().scheduleForAddition(bullet);
-		}
+		Player player = getClientHandler().getPlayer();
+		Bullet bullet = new Bullet(player);
+		world.getWorldObjects().scheduleForAddition(bullet);
 	}
 
 	/** Run asynchronous portion of this message. */
 	@Override
 	public void runImmediate() {
-		Player player = getClientHandler().getPlayer();
-		bullet = new Bullet(player);
-		bullet.setZoneID(player.getZoneID());
 	}
 }
