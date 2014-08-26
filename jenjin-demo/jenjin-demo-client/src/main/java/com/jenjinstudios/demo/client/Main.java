@@ -17,7 +17,7 @@ import javafx.stage.WindowEvent;
 /**
  * @author Caleb Brinkman
  */
-public class JenjinDemoApp extends Application implements EventHandler<WindowEvent>
+public class Main extends Application implements EventHandler<WindowEvent>
 {
 	private WorldClient worldClient;
 	private Stage stage;

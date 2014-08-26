@@ -1,7 +1,7 @@
 package com.jenjinstudios.demo.client.ui;
 
 import com.jenjinstudios.client.net.ClientUser;
-import com.jenjinstudios.demo.client.JenjinDemoApp;
+import com.jenjinstudios.demo.client.Main;
 import com.jenjinstudios.world.client.WorldClient;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
@@ -28,11 +28,11 @@ public final class LoginPane extends GridPane
 	private final TextField usernameField = new TextField("TestAccount1");
 	private final Button loginButton = new Button("Login");
 	private final PasswordField passwordField = new PasswordField();
-	private final JenjinDemoApp jenjinDemoApp;
+	private final Main main;
 	private WorldClient worldClient;
 
-	public LoginPane(final JenjinDemoApp jenjinDemoApp) {
-		this.jenjinDemoApp = jenjinDemoApp;
+	public LoginPane(final Main main) {
+		this.main = main;
 		setHgap(10);
 		setVgap(10);
 		setPadding(new Insets(25, 25, 25, 25));
@@ -79,7 +79,7 @@ public final class LoginPane extends GridPane
 		if (worldClient.getLoginTracker().sendLoginRequestAndWaitForResponse())
 		{
 			System.out.println("Successfully logged in!");
-			jenjinDemoApp.successfulLogin(worldClient);
+			main.successfulLogin(worldClient);
 		} else
 		{
 			System.out.println("Login unsuccessful");
