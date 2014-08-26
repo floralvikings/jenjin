@@ -17,6 +17,11 @@ public class PlayerKeyFlags
 		return keyEvent.getCode().equals(SPACE) && keyEvent.getEventType() == KEY_PRESSED;
 	}
 
+	public static boolean isMovementKey(KeyEvent keyEvent) {
+		KeyCode c = keyEvent.getCode();
+		return c.isArrowKey() || c.equals(W) || c.equals(A) || c.equals(S) || c.equals(D);
+	}
+
 	public boolean rightKey() {return right && !left;}
 
 	public boolean leftKey() {return left && !right;}
@@ -31,10 +36,5 @@ public class PlayerKeyFlags
 		down = ((keyCode.equals(DOWN) || keyCode.equals(S)) ? (keyEvent.getEventType() == KEY_PRESSED) : down);
 		left = ((keyCode.equals(LEFT) || keyCode.equals(A)) ? (keyEvent.getEventType() == KEY_PRESSED) : left);
 		right = ((keyCode.equals(RIGHT) || keyCode.equals(D)) ? (keyEvent.getEventType() == KEY_PRESSED) : right);
-	}
-
-	public static boolean isMovementKey(KeyEvent keyEvent) {
-		KeyCode c = keyEvent.getCode();
-		return c.isArrowKey() || c.equals(W) || c.equals(A) || c.equals(S) || c.equals(D);
 	}
 }
