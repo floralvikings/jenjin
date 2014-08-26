@@ -39,6 +39,9 @@ public class ServerWorldFileTracker
 		if (needsWorldFile())
 		{
 			this.worldClient.queueOutgoingMessage(this.worldClient.getMessageFactory().generateWorldFileRequest());
+		} else
+		{
+			setWaitingForFile(false);
 		}
 	}
 

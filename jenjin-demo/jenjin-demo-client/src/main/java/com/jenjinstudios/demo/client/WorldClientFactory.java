@@ -28,10 +28,14 @@ public class WorldClientFactory
 			worldClient.start();
 			worldClient.getServerWorldFileTracker().setWaitingForChecksum(true);
 			worldClient.getServerWorldFileTracker().requestServerWorldFileChecksum();
+			LOGGER.log(Level.INFO, "Requested World Checksum.");
 			worldClient.getServerWorldFileTracker().waitForWorldFileChecksum();
+			LOGGER.log(Level.INFO, "Received World Checksum.");
 			worldClient.getServerWorldFileTracker().setWaitingForFile(true);
 			worldClient.getServerWorldFileTracker().requestServerWorldFile();
+			LOGGER.log(Level.INFO, "Requested World File.");
 			worldClient.getServerWorldFileTracker().waitForWorldFile();
+			LOGGER.log(Level.INFO, "Received World File.");
 			worldClient.getServerWorldFileTracker().writeReceivedWorldToFile();
 			worldClient.readWorldFile();
 		} catch (IOException e)
@@ -39,6 +43,7 @@ public class WorldClientFactory
 			LOGGER.log(Level.SEVERE, "Exception creating world client.", e);
 			worldClient = null;
 		}
+		LOGGER.log(Level.INFO, "Created World Client.");
 		return worldClient;
 	}
 
