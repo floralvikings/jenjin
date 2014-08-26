@@ -22,13 +22,13 @@ public class PlayerKeyFlags
 		return c.isArrowKey() || c.equals(W) || c.equals(A) || c.equals(S) || c.equals(D);
 	}
 
-	public boolean rightKey() {return right && !left;}
+	protected boolean rightKey() {return right && !left;}
 
-	public boolean leftKey() {return left && !right;}
+	protected boolean leftKey() {return left && !right;}
 
-	public boolean downKey() {return down && !up;}
+	protected boolean downKey() {return down && !up;}
 
-	public boolean upKey() {return up && !down;}
+	protected boolean upKey() {return up && !down;}
 
 	protected void setKeyFlags(KeyEvent keyEvent) {
 		KeyCode keyCode = keyEvent.getCode();
