@@ -1,7 +1,7 @@
 package com.jenjinstudios.demo.client;
 
+import com.jenjinstudios.demo.client.ui.ClientPane;
 import com.jenjinstudios.demo.client.ui.LoginPane;
-import com.jenjinstudios.demo.client.ui.WorldPane;
 import com.jenjinstudios.world.client.WorldClient;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -46,7 +46,7 @@ public class Main extends Application implements EventHandler<WindowEvent>
 		Rectangle2D bounds = screen.getVisualBounds();
 		stage.setX(bounds.getMinX());
 		stage.setY(bounds.getMinY());
-		GridPane worldPane = new WorldPane(worldClient, new Dimension2D(bounds.getWidth(), bounds.getHeight()));
+		GridPane worldPane = new ClientPane(worldClient, new Dimension2D(bounds.getWidth(), bounds.getHeight()));
 		stage.getScene().setRoot(worldPane);
 		stage.setWidth(bounds.getWidth());
 		stage.setHeight(bounds.getHeight());

@@ -10,9 +10,9 @@ import javafx.util.Duration;
 /**
  * @author Caleb Brinkman
  */
-public class WorldPane extends GridPane
+public class ClientPane extends GridPane
 {
-	public WorldPane(WorldClient worldClient, Dimension2D size) {
+	public ClientPane(WorldClient worldClient, Dimension2D size) {
 		PlayerViewCanvas canvas = new PlayerViewCanvas(worldClient.getPlayer(), size.getWidth(), size.getHeight());
 		PlayerControlKeyHandler playerControlKeyHandler = new PlayerControlKeyHandler(worldClient);
 		canvas.setOnKeyPressed(playerControlKeyHandler);
