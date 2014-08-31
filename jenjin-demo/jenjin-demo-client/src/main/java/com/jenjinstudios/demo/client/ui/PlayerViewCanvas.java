@@ -10,24 +10,36 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Rotate;
 
+import java.io.InputStream;
+import java.util.Properties;
+
 /**
  * @author Caleb Brinkman
  */
 public class PlayerViewCanvas extends Canvas
 {
+	private static final double PLAYER_SCALE = 75;
+	private static final double BULLET_SCALE = 15;
 	private static final double SCALE = 75;
+	private final double locScale = (SCALE / Location.SIZE);
+	private final Image playerTile;
+	private final Image bulletTile;
 	private final ClientPlayer clientPlayer;
-	private final ObjectTileManager objectTileManager;
 	private final double yOrig = getHeight() / 2;
 	private final double xOrig = getWidth() / 2;
-	private final double locScale = (SCALE / Location.SIZE);
 
 	public PlayerViewCanvas(ClientPlayer clientPlayer, double width, double height) {
 		super(width, height);
 		this.clientPlayer = clientPlayer;
 		Platform.runLater(this::requestFocus);
 
-		objectTileManager = new ObjectTileManager();
+		String tankImageFile = "com/jenjinstudios/demo/client/images/tank.png";
+		InputStream tankStream = getClass().getClassLoader().getResourceAsStream(tankImageFile);
+		playerTile = new Image(tankStream, PLAYER_SCALE * 1.25, PLAYER_SCALE, false, true);
+
+		String bulletImageFile = "com/jenjinstudios/demo/client/images/bullet.png";
+		InputStream bulletStream = getClass().getClassLoader().getResourceAsStream(bulletImageFile);
+		bulletTile = new Image(bulletStream, BULLET_SCALE, BULLET_SCALE, false, true);
 	}
 
 	public void drawWorld() {
@@ -42,24 +54,40 @@ public class PlayerViewCanvas extends Canvas
 		graphicsContext2D.fillRect(0, 0, getWidth(), getHeight());
 	}
 
-	protected void drawLocations() { clientPlayer.getVisibleLocations().forEach(this::drawLocation); }
+	protected void drawLocations() {
+		if (clientPlayer.getLocation() != null)
+		{
+			clientPlayer.getVisibleLocations().stream().filter(l -> l != null).forEach(this::drawLocation);
+		}
+	}
 
 	protected void drawLocation(Location location) {
 		Location pLoc = clientPlayer.getLocation();
-		if (location != null && pLoc != null)
+		int xDiff = location.X_COORDINATE - pLoc.X_COORDINATE;
+		int yDiff = location.Y_COORDINATE - pLoc.Y_COORDINATE;//+ 1;
+		double xBuff = clientPlayer.getVector2D().getXCoordinate() % Location.SIZE;
+		double yBuff = clientPlayer.getVector2D().getYCoordinate() % Location.SIZE;
+
+		double x = xOrig + (xDiff * SCALE - xBuff * locScale);
+		double y = yOrig - (yDiff * SCALE - yBuff * locScale) - SCALE;
+
+		GraphicsContext graphicsContext2D = getGraphicsContext2D();
+
+		Properties properties = location.getProperties();
+		boolean walkable = !"false".equals(properties.getProperty("walkable"));
+		boolean indoors = "true".equals(properties.get("indoors"));
+		if (!walkable)
 		{
-			int xDiff = location.X_COORDINATE - pLoc.X_COORDINATE;
-			int yDiff = location.Y_COORDINATE - pLoc.Y_COORDINATE;//+ 1;
-			double xBuff = clientPlayer.getVector2D().getXCoordinate() % Location.SIZE;
-			double yBuff = clientPlayer.getVector2D().getYCoordinate() % Location.SIZE;
-
-			double x = xOrig + (xDiff * SCALE - xBuff * locScale);
-			double y = yOrig - (yDiff * SCALE - yBuff * locScale) - SCALE;
-
-			GraphicsContext graphicsContext2D = getGraphicsContext2D();
-			LocationTileManager.setGraphicsColor(location, graphicsContext2D);
-			graphicsContext2D.fillRect(x, y, SCALE, SCALE);
+			graphicsContext2D.setFill(Color.GRAY);
+		} else if (indoors)
+		{
+			graphicsContext2D.setFill(Color.BROWN);
+		} else
+		{
+			graphicsContext2D.setFill(Color.GREEN);
 		}
+
+		graphicsContext2D.fillRect(x, y, SCALE, SCALE);
 	}
 
 	protected void drawObjects() {
@@ -78,8 +106,25 @@ public class PlayerViewCanvas extends Canvas
 		graphicsContext2D.save();
 		Rotate r = new Rotate(-Math.toDegrees(o.getAngle().getAbsoluteAngle()), x, y);
 		graphicsContext2D.setTransform(r.getMxx(), r.getMyx(), r.getMxy(), r.getMyy(), r.getTx(), r.getTy());
-		Image objectTile = objectTileManager.getObjectTile(o);
+		Image objectTile = getObjectTile(o);
 		graphicsContext2D.drawImage(objectTile, x - objectTile.getWidth() / 2, y - objectTile.getHeight() / 2);
 		graphicsContext2D.restore();
+	}
+
+	private Image getObjectTile(WorldObject object) {
+		Image tile;
+		switch (object.getResourceID())
+		{
+			case 0:
+				tile = playerTile;
+				break;
+			case 1:
+				tile = bulletTile;
+				break;
+			default:
+				tile = playerTile;
+				break;
+		}
+		return tile;
 	}
 }
