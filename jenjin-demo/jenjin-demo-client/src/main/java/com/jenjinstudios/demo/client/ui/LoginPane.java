@@ -1,6 +1,9 @@
 package com.jenjinstudios.demo.client.ui;
 
 import com.jenjinstudios.client.net.ClientUser;
+import com.jenjinstudios.core.MessageIO;
+import com.jenjinstudios.core.io.MessageInputStream;
+import com.jenjinstudios.core.io.MessageOutputStream;
 import com.jenjinstudios.demo.client.Main;
 import com.jenjinstudios.world.client.WorldClient;
 import javafx.event.ActionEvent;
@@ -12,10 +15,11 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import static com.jenjinstudios.demo.client.WorldClientFactory.tryCreateWorldClient;
 
 /**
  * @author Caleb Brinkman
@@ -38,6 +42,32 @@ public final class LoginPane extends GridPane
 		setPadding(new Insets(25, 25, 25, 25));
 
 		createForm();
+	}
+
+	public static WorldClient tryCreateWorldClient(String address, int port, ClientUser user) {
+		WorldClient worldClient;
+		try
+		{
+			worldClient = createWorldClient(address, port, user);
+			worldClient.start();
+			worldClient.initializeWorldFromServer();
+		} catch (IOException e)
+		{
+			LOGGER.log(Level.SEVERE, "Exception creating world client.", e);
+			worldClient = null;
+		}
+		LOGGER.log(Level.INFO, "Created World Client.");
+		return worldClient;
+	}
+
+	private static WorldClient createWorldClient(String address, int port, ClientUser clientUser) throws IOException {
+		String slash = File.separator;
+		File worldFile = new File(System.getProperty("user.home") + slash + ".jenjin-demo" + slash + "World.xml");
+		Socket socket = new Socket(address, port);
+		MessageInputStream messageInputStream = new MessageInputStream(socket.getInputStream());
+		MessageOutputStream messageOutputStream = new MessageOutputStream(socket.getOutputStream());
+		MessageIO messageIO = new MessageIO(messageInputStream, messageOutputStream);
+		return new WorldClient(messageIO, clientUser, worldFile);
 	}
 
 	private void createForm() {
