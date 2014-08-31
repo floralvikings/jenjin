@@ -26,18 +26,7 @@ public class WorldClientFactory
 		{
 			worldClient = createWorldClient(address, port, user);
 			worldClient.start();
-			worldClient.getServerWorldFileTracker().setWaitingForChecksum(true);
-			worldClient.getServerWorldFileTracker().requestServerWorldFileChecksum();
-			LOGGER.log(Level.INFO, "Requested World Checksum.");
-			worldClient.getServerWorldFileTracker().waitForWorldFileChecksum();
-			LOGGER.log(Level.INFO, "Received World Checksum.");
-			worldClient.getServerWorldFileTracker().setWaitingForFile(true);
-			worldClient.getServerWorldFileTracker().requestServerWorldFile();
-			LOGGER.log(Level.INFO, "Requested World File.");
-			worldClient.getServerWorldFileTracker().waitForWorldFile();
-			LOGGER.log(Level.INFO, "Received World File.");
-			worldClient.getServerWorldFileTracker().writeReceivedWorldToFile();
-			worldClient.readWorldFile();
+			worldClient.initializeWorldFromServer();
 		} catch (IOException e)
 		{
 			LOGGER.log(Level.SEVERE, "Exception creating world client.", e);
@@ -48,7 +37,8 @@ public class WorldClientFactory
 	}
 
 	private static WorldClient createWorldClient(String address, int port, ClientUser clientUser) throws IOException {
-		File worldFile = new File(System.getProperty("user.home") + "/.jenjin-demo/World.xml");
+		String slash = File.separator;
+		File worldFile = new File(System.getProperty("user.home") + slash + ".jenjin-demo" + slash + "World.xml");
 		Socket socket = new Socket(address, port);
 		MessageInputStream messageInputStream = new MessageInputStream(socket.getInputStream());
 		MessageOutputStream messageOutputStream = new MessageOutputStream(socket.getOutputStream());
