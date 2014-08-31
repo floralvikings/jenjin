@@ -72,13 +72,13 @@ public final class LoginPane extends GridPane
 
 	private void createForm() {
 		addressField.setPromptText("Server Address");
-		add(addressField, 1, 0);
 		portField.setPromptText("Port Number");
-		add(portField, 3, 0);
 		usernameField.setPromptText("Username");
-		add(usernameField, 1, 1);
 		passwordField.setPromptText("Password");
 		passwordField.setText("testPassword");
+		add(addressField, 1, 0);
+		add(portField, 3, 0);
+		add(usernameField, 1, 1);
 		add(passwordField, 3, 1);
 		add(loginButton, 3, 2);
 
@@ -108,11 +108,11 @@ public final class LoginPane extends GridPane
 	private void logIn() {
 		if (worldClient.getLoginTracker().sendLoginRequestAndWaitForResponse())
 		{
-			System.out.println("Successfully logged in!");
+			LOGGER.log(Level.INFO, "Successfully logged in!");
 			main.successfulLogin(worldClient);
 		} else
 		{
-			System.out.println("Login unsuccessful");
+			LOGGER.log(Level.WARNING, "Login unsuccessful");
 			worldClient.shutdown();
 		}
 	}
