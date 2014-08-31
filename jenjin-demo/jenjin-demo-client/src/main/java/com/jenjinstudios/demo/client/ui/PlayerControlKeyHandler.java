@@ -43,11 +43,25 @@ public class PlayerControlKeyHandler implements EventHandler<KeyEvent>
 	protected Angle getMoveAngle(Angle angle) {
 		if (flags.upKey())
 		{
-			double absAngle = flags.leftKey() ? BACK_LEFT : (flags.rightKey() ? FRONT_LEFT : LEFT);
+			double absAngle;
+			if (flags.rightKey())
+			{
+				absAngle = flags.leftKey() ? BACK_LEFT : FRONT_LEFT;
+			} else
+			{
+				absAngle = flags.leftKey() ? BACK_LEFT : LEFT;
+			}
 			angle = new Angle(absAngle, FRONT);
 		} else if (flags.downKey())
 		{
-			double absAngle = flags.leftKey() ? BACK_RIGHT : (flags.rightKey() ? FRONT_RIGHT : RIGHT);
+			double absAngle;
+			if (flags.leftKey())
+			{
+				absAngle = BACK_RIGHT;
+			} else
+			{
+				absAngle = (flags.rightKey() ? FRONT_RIGHT : RIGHT);
+			}
 			angle = new Angle(absAngle, FRONT);
 		} else if (flags.leftKey())
 		{
