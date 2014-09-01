@@ -1,12 +1,9 @@
 package com.jenjinstudios.world.server.message;
 
 import com.jenjinstudios.core.io.Message;
-import com.jenjinstudios.core.io.MessageRegistry;
 import com.jenjinstudios.server.message.ServerMessageFactory;
 import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.WorldObject;
-import com.jenjinstudios.world.server.WorldClientHandler;
-import com.jenjinstudios.world.server.WorldServer;
 import com.jenjinstudios.world.state.MoveState;
 
 import java.util.LinkedList;
@@ -18,8 +15,6 @@ import java.util.List;
  */
 public class WorldServerMessageFactory extends ServerMessageFactory
 {
-	public WorldServerMessageFactory(WorldClientHandler conn, MessageRegistry reg) { super(conn, reg); }
-
 	public Message generateNewlyVisibleMessage(WorldObject object) {
 		Message newlyVisibleMessage;
 		if (object instanceof Actor)
@@ -48,19 +43,19 @@ public class WorldServerMessageFactory extends ServerMessageFactory
 		return messages;
 	}
 
-	public Message generateForcedStateMessage(MoveState forcedState, WorldServer server) {
+	public Message generateForcedStateMessage(MoveState forcedState) {
 		Message forcedStateMessage = getMessageRegistry().createMessage("ForceStateMessage");
 		forcedStateMessage.setArgument("relativeAngle", forcedState.angle.getRelativeAngle());
 		forcedStateMessage.setArgument("absoluteAngle", forcedState.angle.getAbsoluteAngle());
 		forcedStateMessage.setArgument("xCoordinate", forcedState.position.getXCoordinate());
 		forcedStateMessage.setArgument("yCoordinate", forcedState.position.getYCoordinate());
-		forcedStateMessage.setArgument("timeOfForce", server.getCycleStartTime());
+		forcedStateMessage.setArgument("timeOfForce", forcedState.timeOfChange);
 		return forcedStateMessage;
 	}
 
-	public Message generateActorMoveSpeedMessage() {
+	public Message generateActorMoveSpeedMessage(double moveSpeed) {
 		Message stepLengthMessage = getMessageRegistry().createMessage("ActorMoveSpeed");
-		stepLengthMessage.setArgument("moveSpeed", Actor.MOVE_SPEED);
+		stepLengthMessage.setArgument("moveSpeed", moveSpeed);
 		return stepLengthMessage;
 	}
 
@@ -97,6 +92,7 @@ public class WorldServerMessageFactory extends ServerMessageFactory
 		newlyVisibleMessage.setArgument("relativeAngle", newlyVisible.getAngle().getRelativeAngle());
 		newlyVisibleMessage.setArgument("absoluteAngle", newlyVisible.getAngle().getAbsoluteAngle());
 		newlyVisibleMessage.setArgument("timeOfVisibility", newlyVisible.getWorld().getLastUpdateStarted());
+		newlyVisibleMessage.setArgument("moveSpeed", newlyVisible.getMoveSpeed());
 		return newlyVisibleMessage;
 	}
 

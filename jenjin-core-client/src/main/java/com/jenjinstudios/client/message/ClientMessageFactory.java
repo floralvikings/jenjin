@@ -2,10 +2,7 @@ package com.jenjinstudios.client.message;
 
 import com.jenjinstudios.client.net.ClientUser;
 import com.jenjinstudios.core.io.Message;
-import com.jenjinstudios.core.io.MessageRegistry;
 import com.jenjinstudios.core.util.MessageFactory;
-
-import java.security.PublicKey;
 
 /**
  * Used to generate messages for the Jenjin core client.
@@ -13,24 +10,6 @@ import java.security.PublicKey;
  */
 public class ClientMessageFactory extends MessageFactory
 {
-
-	/**
-	 * Construct a new ClientMessageFactory.
-	 */
-	public ClientMessageFactory(MessageRegistry messageRegistry) {
-		super(messageRegistry);
-	}
-
-	/**
-	 * Generate a PublicKeyMessage with the given public key.
-	 * @param publicKey The public key.
-	 * @return The PublicKeyMessage.
-	 */
-	public Message generatePublicKeyMessage(PublicKey publicKey) {
-		Message publicKeyMessage = getMessageRegistry().createMessage("PublicKeyMessage");
-		publicKeyMessage.setArgument("key", publicKey.getEncoded());
-		return publicKeyMessage;
-	}
 
 	/**
 	 * Generate a LogoutRequest message.

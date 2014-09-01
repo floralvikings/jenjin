@@ -1,8 +1,10 @@
 package com.jenjinstudios.world.server.message;
 
 import com.jenjinstudios.core.io.Message;
+import com.jenjinstudios.server.sql.LoginException;
 import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.server.WorldClientHandler;
+import com.jenjinstudios.world.server.WorldServer;
 import com.jenjinstudios.world.server.sql.WorldAuthenticator;
 
 /**
@@ -21,7 +23,7 @@ public class ExecutableWorldLogoutRequest extends WorldExecutableMessage
 	 */
 	public ExecutableWorldLogoutRequest(WorldClientHandler handler, Message message) {
 		super(handler, message);
-		authenticator = handler.getServer().getAuthenticator();
+		authenticator = ((WorldServer) handler.getServer()).getAuthenticator();
 
 	}
 
@@ -31,28 +33,29 @@ public class ExecutableWorldLogoutRequest extends WorldExecutableMessage
 		// Multiple logout requests can cause Player to be null; have to check first.
 		if (clientActor != null)
 		{
-			clientActor.getWorld().removeObject(clientActor);
+			clientActor.getWorld().getWorldObjects().scheduleForRemoval(clientActor);
 		}
 	}
 
 	@Override
 	public void runImmediate() {
-		boolean success = tryLogOutUser();
-		getClientHandler().sendLogoutStatus(success);
+		try
+		{
+			tryLogOutUser();
+			getClientHandler().sendLogoutStatus(true);
+		} catch (LoginException e)
+		{
+			getClientHandler().sendLogoutStatus(false);
+		}
+
 	}
 
-	private boolean tryLogOutUser() {
-		boolean success = false;
+	private void tryLogOutUser() throws LoginException {
 		WorldClientHandler handler = getClientHandler();
 		if (authenticator != null && handler.getUser() != null)
 		{
 			authenticator.updatePlayer(handler.getPlayer());
-			success = authenticator.logOutPlayer(handler.getPlayer());
-			if (success)
-			{
-				handler.setUser(null);
-			}
-		}
-		return success;
+			authenticator.logOutUser(handler.getUser().getUsername());
+		} else throw new LoginException("Missing ClientHandler username or Authenticator.");
 	}
 }

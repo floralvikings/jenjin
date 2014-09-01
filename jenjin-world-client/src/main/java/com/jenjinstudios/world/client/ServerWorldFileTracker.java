@@ -8,12 +8,16 @@ import com.jenjinstudios.world.io.WorldDocumentWriter;
 
 import java.io.*;
 import java.util.Arrays;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * @author Caleb Brinkman
  */
 public class ServerWorldFileTracker
 {
+	private static final Logger LOGGER = Logger.getLogger(ServerWorldFileTracker.class.getName());
+	private final WorldClient worldClient;
 	private final File worldFile;
 	private boolean waitingForChecksum;
 	private byte[] checksum;
@@ -21,21 +25,23 @@ public class ServerWorldFileTracker
 	private byte[] bytes;
 	private WorldDocumentReader worldDocumentReader;
 
-	public ServerWorldFileTracker(File worldFile) {
+	public ServerWorldFileTracker(WorldClient worldClient, File worldFile) {
+		this.worldClient = worldClient;
 		this.worldFile = worldFile;
 	}
 
-	public void requestServerWorldFileChecksum(WorldClient worldClient) throws InterruptedException {
-		Message worldFileChecksumRequest = worldClient.getMessageFactory().generateWorldChecksumRequest();
-		worldClient.queueOutgoingMessage(worldFileChecksumRequest);
-		waitForWorldFileChecksum();
+	public void requestServerWorldFileChecksum() {
+		Message worldFileChecksumRequest = this.worldClient.getMessageFactory().generateWorldChecksumRequest();
+		this.worldClient.queueOutgoingMessage(worldFileChecksumRequest);
 	}
 
-	public void requestServerWorldFile(WorldClient worldClient) throws InterruptedException, WorldDocumentException {
+	public void requestServerWorldFile() {
 		if (needsWorldFile())
 		{
-			worldClient.queueOutgoingMessage(worldClient.getMessageFactory().generateWorldFileRequest());
-			waitForWorldFile();
+			this.worldClient.queueOutgoingMessage(this.worldClient.getMessageFactory().generateWorldFileRequest());
+		} else
+		{
+			setWaitingForFile(false);
 		}
 	}
 
@@ -121,19 +127,27 @@ public class ServerWorldFileTracker
 		return worldFile.getParentFile().exists() || worldFile.getParentFile().mkdirs();
 	}
 
-	private void waitForWorldFile() throws InterruptedException {
-		setWaitingForFile(true);
+	public void waitForWorldFile() {
 		while (isWaitingForFile())
 		{
-			Thread.sleep(10);
+			waitTenMillis();
 		}
 	}
 
-	private void waitForWorldFileChecksum() throws InterruptedException {
-		setWaitingForChecksum(true);
-		while (isWaitingForChecksum())
+	private void waitTenMillis() {
+		try
 		{
 			Thread.sleep(10);
+		} catch (InterruptedException e)
+		{
+			LOGGER.log(Level.WARNING, "Interrupted while waiting.");
+		}
+	}
+
+	public void waitForWorldFileChecksum() {
+		while (isWaitingForChecksum())
+		{
+			waitTenMillis();
 		}
 	}
 

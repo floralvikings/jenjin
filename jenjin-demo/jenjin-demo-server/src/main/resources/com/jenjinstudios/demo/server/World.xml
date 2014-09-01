@@ -1,0 +1,136 @@
+<world>
+    <zone id="0" xSize="50" ySize="50">
+        <location x="5" y="5" walkable="false" />
+        <location x="6" y="5" walkable="false" />
+        <location x="7" y="5" walkable="false" />
+        <location x="8" y="5" walkable="false" />
+        <location x="9" y="5" walkable="false" />
+        <location x="10" y="5" walkable="false" />
+        <location x="11" y="5" walkable="false" />
+        <location x="12" y="5" walkable="false" />
+        <location x="13" y="5" walkable="false" />
+        <location x="14" y="5" walkable="false" />
+        <location x="15" y="5" walkable="false" />
+        <location x="15" y="6" walkable="false" />
+        <location x="15" y="7" walkable="false" />
+        <location x="15" y="8" walkable="false" />
+        <location x="15" y="9" walkable="false" />
+        <location x="15" y="10" walkable="false" />
+        <location x="15" y="11" walkable="false" />
+        <location x="15" y="12" walkable="false" />
+        <location x="15" y="13" walkable="false" />
+        <location x="15" y="14" walkable="false" />
+        <location x="15" y="15" walkable="false" />
+        <location x="14" y="15" walkable="false" />
+        <location x="13" y="15" walkable="false" />
+        <location x="12" y="15" walkable="false" />
+        <location x="8" y="15" walkable="false" />
+        <location x="7" y="15" walkable="false" />
+        <location x="6" y="15" walkable="false" />
+        <location x="5" y="15" walkable="false" />
+        <location x="5" y="14" walkable="false" />
+        <location x="5" y="15" walkable="false" />
+        <location x="5" y="13" walkable="false" />
+        <location x="5" y="12" walkable="false" />
+        <location x="5" y="11" walkable="false" />
+        <location x="5" y="10" walkable="false" />
+        <location x="5" y="9" walkable="false" />
+        <location x="5" y="8" walkable="false" />
+        <location x="5" y="7" walkable="false" />
+        <location x="5" y="6" walkable="false" />
+
+        <location x="6" y="6" indoors="true" />
+        <location x="7" y="6" indoors="true" />
+        <location x="8" y="6" indoors="true" />
+        <location x="9" y="6" indoors="true" />
+        <location x="10" y="6" indoors="true" />
+        <location x="11" y="6" indoors="true" />
+        <location x="12" y="6" indoors="true" />
+        <location x="13" y="6" indoors="true" />
+        <location x="14" y="6" indoors="true" />
+
+        <location x="6" y="7" indoors="true" />
+        <location x="7" y="7" indoors="true" />
+        <location x="8" y="7" indoors="true" />
+        <location x="9" y="7" indoors="true" />
+        <location x="10" y="7" indoors="true" />
+        <location x="11" y="7" indoors="true" />
+        <location x="12" y="7" indoors="true" />
+        <location x="13" y="7" indoors="true" />
+        <location x="14" y="7" indoors="true" />
+
+        <location x="6" y="8" indoors="true" />
+        <location x="7" y="8" indoors="true" />
+        <location x="8" y="8" indoors="true" />
+        <location x="9" y="8" indoors="true" />
+        <location x="10" y="8" indoors="true" />
+        <location x="11" y="8" indoors="true" />
+        <location x="12" y="8" indoors="true" />
+        <location x="13" y="8" indoors="true" />
+        <location x="14" y="8" indoors="true" />
+
+        <location x="6" y="9" indoors="true" />
+        <location x="7" y="9" indoors="true" />
+        <location x="8" y="9" indoors="true" />
+        <location x="9" y="9" indoors="true" />
+        <location x="10" y="9" indoors="true" />
+        <location x="11" y="9" indoors="true" />
+        <location x="12" y="9" indoors="true" />
+        <location x="14" y="9" indoors="true" />
+        <location x="13" y="9" indoors="true" />
+
+        <location x="6" y="10" indoors="true" />
+        <location x="7" y="10" indoors="true" />
+        <location x="8" y="10" indoors="true" />
+        <location x="9" y="10" indoors="true" />
+        <location x="10" y="10" indoors="true" />
+        <location x="11" y="10" indoors="true" />
+        <location x="12" y="10" indoors="true" />
+        <location x="14" y="10" indoors="true" />
+        <location x="13" y="10" indoors="true" />
+
+        <location x="6" y="11" indoors="true" />
+        <location x="7" y="11" indoors="true" />
+        <location x="8" y="11" indoors="true" />
+        <location x="9" y="11" indoors="true" />
+        <location x="10" y="11" indoors="true" />
+        <location x="11" y="11" indoors="true" />
+        <location x="12" y="11" indoors="true" />
+        <location x="14" y="11" indoors="true" />
+        <location x="13" y="11" indoors="true" />
+
+        <location x="6" y="12" indoors="true" />
+        <location x="7" y="12" indoors="true" />
+        <location x="8" y="12" indoors="true" />
+        <location x="9" y="12" indoors="true" />
+        <location x="10" y="12" indoors="true" />
+        <location x="11" y="12" indoors="true" />
+        <location x="12" y="12" indoors="true" />
+        <location x="14" y="12" indoors="true" />
+        <location x="13" y="12" indoors="true" />
+
+        <location x="6" y="13" indoors="true" />
+        <location x="7" y="13" indoors="true" />
+        <location x="8" y="13" indoors="true" />
+        <location x="9" y="13" indoors="true" />
+        <location x="10" y="13" indoors="true" />
+        <location x="11" y="13" indoors="true" />
+        <location x="12" y="13" indoors="true" />
+        <location x="14" y="13" indoors="true" />
+        <location x="13" y="13" indoors="true" />
+
+        <location x="6" y="14" indoors="true" />
+        <location x="7" y="14" indoors="true" />
+        <location x="8" y="14" indoors="true" />
+        <location x="9" y="14" indoors="true" />
+        <location x="10" y="14" indoors="true" />
+        <location x="11" y="14" indoors="true" />
+        <location x="12" y="14" indoors="true" />
+        <location x="14" y="14" indoors="true" />
+        <location x="13" y="14" indoors="true" />
+
+        <location x="9" y="15" indoors="true" />
+        <location x="10" y="15" indoors="true" />
+        <location x="11" y="15" indoors="true" />
+    </zone>
+</world>

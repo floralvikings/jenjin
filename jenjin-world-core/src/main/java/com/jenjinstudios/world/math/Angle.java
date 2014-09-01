@@ -23,8 +23,8 @@ public class Angle
 	public static final double LEFT = Math.PI * 0.5;
 	/** The front-left state. */
 	public static final double FRONT_LEFT = Math.PI * 0.25;
-	private double absoluteAngle;
-	private double relativeAngle;
+	private final double absoluteAngle;
+	private final double relativeAngle;
 
 	public Angle() {
 		this(0.0, IDLE);
@@ -79,14 +79,14 @@ public class Angle
 		return new Angle(this.absoluteAngle, IDLE);
 	}
 
-	public boolean isIdle() { return relativeAngle == IDLE; }
-
-	public Angle withRelativeAngle(double relativeAngle) {
-		return new Angle(absoluteAngle, relativeAngle);
-	}
+	public boolean isNotIdle() { return relativeAngle != IDLE; }
 
 	public double reverseStepAngle() {
 		double sAngle = relativeAngle != IDLE ? absoluteAngle + relativeAngle - Math.PI : IDLE;
 		return (sAngle < 0) ? (sAngle + (Math.PI * 2)) : (sAngle % (Math.PI * 2));
+	}
+
+	public String toString() {
+		return "(" + relativeAngle + ", " + absoluteAngle + ")";
 	}
 }

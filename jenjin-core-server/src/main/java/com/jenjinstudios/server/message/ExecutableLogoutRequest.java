@@ -3,8 +3,8 @@ package com.jenjinstudios.server.message;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.server.net.ClientHandler;
 import com.jenjinstudios.server.net.User;
-import com.jenjinstudios.server.sql.LoginException;
 import com.jenjinstudios.server.sql.Authenticator;
+import com.jenjinstudios.server.sql.LoginException;
 
 /**
  * Executable message to handle client logging out.
@@ -41,7 +41,6 @@ public class ExecutableLogoutRequest extends ServerExecutableMessage
 			{
 				user = authenticator.logOutUser(username);
 				handler.sendLogoutStatus(!user.isLoggedIn());
-				handler.getServer().associateUsernameWithClientHandler(username, null);
 				handler.setUser(null);
 			} catch (LoginException e)
 			{

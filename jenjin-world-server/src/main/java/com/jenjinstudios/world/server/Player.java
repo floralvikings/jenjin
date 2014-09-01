@@ -1,6 +1,7 @@
 package com.jenjinstudios.world.server;
 
 import com.jenjinstudios.world.Actor;
+import com.jenjinstudios.world.math.Angle;
 
 /**
  * The player class represents a player in the server-side world.
@@ -8,11 +9,20 @@ import com.jenjinstudios.world.Actor;
  */
 public class Player extends Actor
 {
-	/**
-	 * Construct a player with the given username.
-	 * @param username The username.
-	 */
+	private Angle pendingAngle;
+
 	public Player(String username) {
 		super(username);
+		setPendingAngle(getAngle());
+	}
+
+	public Angle getPendingAngle() { return pendingAngle; }
+
+	public void setPendingAngle(Angle pendingAngle) { this.pendingAngle = pendingAngle; }
+
+	@Override
+	public void setUp() {
+		super.setUp();
+		setPendingAngle(getAngle());
 	}
 }

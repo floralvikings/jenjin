@@ -1,0 +1,8 @@
+apply plugin: 'application'
+
+dependencies {
+    compile 'com.h2database:h2:1.4.178'
+    compile project(':jenjin-world-server')
+}
+
+mainClassName = "com.jenjinstudios.demo.server.Main"

@@ -1,7 +1,6 @@
 package com.jenjinstudios.world.server.message;
 
 import com.jenjinstudios.core.io.Message;
-import com.jenjinstudios.core.io.MessageRegistry;
 import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.WorldObject;
@@ -27,16 +26,16 @@ import static org.testng.Assert.assertEquals;
  */
 public class WorldServerMessageFactoryTest
 {
-	private static MessageRegistry messageRegistry = MessageRegistry.getInstance();
 	private WorldClientHandler clientHandler;
 	private WorldServerMessageFactory worldServerMessageFactory;
 
+	@SuppressWarnings("unchecked")
 	@BeforeMethod
 	public void setUp() {
 		WorldServer worldServer = mock(WorldServer.class);
 		clientHandler = mock(WorldClientHandler.class);
 		when(clientHandler.getServer()).thenReturn(worldServer);
-		worldServerMessageFactory = new WorldServerMessageFactory(clientHandler, messageRegistry);
+		worldServerMessageFactory = new WorldServerMessageFactory();
 	}
 
 	@Test
@@ -84,7 +83,7 @@ public class WorldServerMessageFactoryTest
 	@Test
 	public void testGenerateForcedStateMessage() {
 		MoveState forcedState = new MoveState(new Angle(), Vector2D.ORIGIN, 0);
-		Message message = worldServerMessageFactory.generateForcedStateMessage(forcedState, clientHandler.getServer());
+		Message message = worldServerMessageFactory.generateForcedStateMessage(forcedState);
 		assertEquals(message.name, "ForceStateMessage");
 		assertEquals(message.getArgument("relativeAngle"), forcedState.angle.getRelativeAngle());
 		assertEquals(message.getArgument("absoluteAngle"), forcedState.angle.getAbsoluteAngle());
@@ -95,9 +94,9 @@ public class WorldServerMessageFactoryTest
 
 	@Test
 	public void testGenerateActorMoveSpeedMessage() {
-		Message message = worldServerMessageFactory.generateActorMoveSpeedMessage();
+		Message message = worldServerMessageFactory.generateActorMoveSpeedMessage(Actor.DEFAULT_MOVE_SPEED);
 		assertEquals(message.name, "ActorMoveSpeed");
-		assertEquals(message.getArgument("moveSpeed"), Actor.MOVE_SPEED);
+		assertEquals(message.getArgument("moveSpeed"), Actor.DEFAULT_MOVE_SPEED);
 	}
 
 	@Test

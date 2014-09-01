@@ -10,9 +10,6 @@ import com.jenjinstudios.world.client.WorldClient;
  */
 public abstract class WorldClientExecutableMessage extends AuthClientExecutableMessage
 {
-	/** The WorldClient invoking this message. */
-	private final WorldClient client;
-
 	/**
 	 * Construct an ExecutableMessage with the given Message.
 	 * @param client The client invoking this message.
@@ -20,11 +17,10 @@ public abstract class WorldClientExecutableMessage extends AuthClientExecutableM
 	 */
 	protected WorldClientExecutableMessage(WorldClient client, Message message) {
 		super(client, message);
-		this.client = client;
 	}
 
 	@Override
 	protected WorldClient getClient() {
-		return client;
+		return (WorldClient) super.getClient();
 	}
 }

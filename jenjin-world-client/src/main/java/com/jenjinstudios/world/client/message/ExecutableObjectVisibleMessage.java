@@ -1,8 +1,8 @@
 package com.jenjinstudios.world.client.message;
 
 import com.jenjinstudios.core.io.Message;
-import com.jenjinstudios.world.client.WorldClient;
 import com.jenjinstudios.world.WorldObject;
+import com.jenjinstudios.world.client.WorldClient;
 import com.jenjinstudios.world.math.Vector2D;
 
 /**
@@ -26,7 +26,7 @@ public class ExecutableObjectVisibleMessage extends WorldClientExecutableMessage
 
 	@Override
 	public void runDelayed() {
-		getClient().getWorld().addObject(newlyVisible, newlyVisible.getId());
+		getClient().getWorld().getWorldObjects().scheduleForAddition(newlyVisible, newlyVisible.getId());
 	}
 
 	@Override

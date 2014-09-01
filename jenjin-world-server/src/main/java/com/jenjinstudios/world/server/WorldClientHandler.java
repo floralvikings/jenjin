@@ -8,7 +8,6 @@ import com.jenjinstudios.world.WorldObject;
 import com.jenjinstudios.world.server.message.WorldServerMessageFactory;
 import com.jenjinstudios.world.state.MoveState;
 
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -21,9 +20,10 @@ public class WorldClientHandler extends ClientHandler
 	private Player player;
 	private boolean hasSentActorStepMessage;
 
-	public WorldClientHandler(WorldServer s, MessageIO messageIO) throws IOException {
+	public WorldClientHandler(WorldServer<? extends WorldClientHandler> s, MessageIO messageIO) {
 		super(s, messageIO);
-		this.messageFactory = new WorldServerMessageFactory(this, getServer().getMessageRegistry());
+		this.messageFactory = new WorldServerMessageFactory();
+		setPlayer(new Player("PLAYER"));
 	}
 
 	@Override
@@ -31,28 +31,21 @@ public class WorldClientHandler extends ClientHandler
 		super.update();
 		if (!hasSentActorStepMessage)
 		{
-			queueOutgoingMessage(getMessageFactory().generateActorMoveSpeedMessage());
+			queueOutgoingMessage(getMessageFactory().generateActorMoveSpeedMessage(player.getMoveSpeed()));
 			hasSentActorStepMessage = true;
 		}
-		if (player != null)
-		{
-
-			queueForcesStateMessage();
-			queueNewlyVisibleMessages();
-			queueNewlyInvisibleMessages();
-			queueStateChangeMessages();
-		}
+		queueForcesStateMessage();
+		queueNewlyVisibleMessages();
+		queueNewlyInvisibleMessages();
+		queueStateChangeMessages();
 	}
-
-	@Override
-	public WorldServer getServer() { return (WorldServer) super.getServer(); }
 
 	@Override
 	public WorldServerMessageFactory getMessageFactory() { return messageFactory; }
 
 	public Player getPlayer() { return player; }
 
-	public void setPlayer(Player player) { this.player = player; }
+	protected void setPlayer(Player player) { this.player = player; }
 
 	private void queueNewlyVisibleMessages() {
 		for (WorldObject object : player.getNewlyVisibleObjects())
@@ -72,23 +65,18 @@ public class WorldClientHandler extends ClientHandler
 	}
 
 	private void queueStateChangeMessages() {
-		for (WorldObject object : player.getVisibleObjects().values())
-		{
-			if (object instanceof Actor)
-			{
-				queueActorStateChangeMessages((Actor) object);
-			}
-		}
+		player.getVisibleObjects().values().stream().filter(object -> object instanceof Actor).forEach(object ->
+			  queueActorStateChangeMessages((Actor) object));
 	}
 
 	private void queueActorStateChangeMessages(Actor object) {
 		List<Message> newState = getMessageFactory().generateChangeStateMessages(object);
-		for (Message m : newState) { queueOutgoingMessage(m); }
+		newState.forEach(this::queueOutgoingMessage);
 	}
 
 	private void queueForcesStateMessage() {
 		MoveState forcedState = player.getForcedState();
 		if (forcedState != null)
-			queueOutgoingMessage(getMessageFactory().generateForcedStateMessage(forcedState, getServer()));
+			queueOutgoingMessage(getMessageFactory().generateForcedStateMessage(forcedState));
 	}
 }

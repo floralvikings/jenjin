@@ -3,7 +3,6 @@ package com.jenjinstudios.server.net;
 import com.jenjinstudios.core.Connection;
 import com.jenjinstudios.core.MessageIO;
 import com.jenjinstudios.core.io.Message;
-import com.jenjinstudios.core.io.MessageRegistry;
 import com.jenjinstudios.server.message.ServerMessageFactory;
 import com.jenjinstudios.server.sql.LoginException;
 
@@ -25,8 +24,6 @@ public class ClientHandler extends Connection
 	private int handlerId = -1;
 	/** The time at which this client was successfully logged in. */
 	private long loggedInTime;
-	/** Flags whether the connection acknowledgement response has been sent. */
-	private boolean firstConnectResponseSent;
 	private User user;
 
 	/**
@@ -40,19 +37,7 @@ public class ClientHandler extends Connection
 		setName("ClientHandler with unset ID");
 		server = s;
 
-		this.messageFactory = new ServerMessageFactory(this, MessageRegistry.getInstance());
-	}
-
-	/**
-	 * Send a connection acknowledgement response.
-	 */
-	public void sendFirstConnectResponse() {
-		if (!firstConnectResponseSent)
-		{
-			Message firstConnectResponse = getMessageFactory().generateFirstConnectResponse(getServer().UPS);
-			queueOutgoingMessage(firstConnectResponse);
-			firstConnectResponseSent = true;
-		}
+		this.messageFactory = new ServerMessageFactory();
 	}
 
 	/**
@@ -66,9 +51,6 @@ public class ClientHandler extends Connection
 
 	/** Update anything that needs to be taken care of before sendAllMessages. */
 	public void update() { }
-
-	/** Reset anything that needs to be taken care of after sendAllMessages. */
-	public void refresh() { }
 
 	/** Shut down the client handler. */
 	@Override

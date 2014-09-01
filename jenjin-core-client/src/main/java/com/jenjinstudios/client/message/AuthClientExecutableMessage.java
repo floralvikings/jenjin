@@ -1,7 +1,7 @@
 package com.jenjinstudios.client.message;
 
-import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.client.net.AuthClient;
+import com.jenjinstudios.core.io.Message;
 
 /**
  * This class should be extended by ExecutableMessages intended to be run by an {@code AuthClient}.
@@ -9,9 +9,6 @@ import com.jenjinstudios.client.net.AuthClient;
  */
 public abstract class AuthClientExecutableMessage extends ClientExecutableMessage
 {
-	/** The client invoking this ExecutableMessage. */
-	private final AuthClient client;
-
 	/**
 	 * Construct an ExecutableMessage with the given Message.
 	 * @param client The client invoking this message.
@@ -19,7 +16,6 @@ public abstract class AuthClientExecutableMessage extends ClientExecutableMessag
 	 */
 	protected AuthClientExecutableMessage(AuthClient client, Message message) {
 		super(client, message);
-		this.client = client;
 	}
 
 	/**
@@ -28,6 +24,6 @@ public abstract class AuthClientExecutableMessage extends ClientExecutableMessag
 	 */
 	@Override
 	protected AuthClient getClient() {
-		return client;
+		return (AuthClient) super.getClient();
 	}
 }

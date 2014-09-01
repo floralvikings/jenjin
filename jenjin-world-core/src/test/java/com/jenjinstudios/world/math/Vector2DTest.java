@@ -28,47 +28,78 @@ public class Vector2DTest
 	@Test
 	public void getGetVectorInDirection() {
 		Vector2D original = new Vector2D(5, 5);
+		testRight(original);
+		testLeft(original);
+		testBack(original);
+		testForward(original);
+		testForwardRight(original);
+		testBackRight(original);
+		testBackLeft(original);
+	}
 
-		double right = 0;
-		Vector2D stepped = original.getVectorInDirection(1, right);
-		Assert.assertEquals(6, stepped.getXCoordinate(), 0.001);
-		Assert.assertEquals(5, stepped.getYCoordinate(), 0.001);
-
-		double left = Math.PI;
-		stepped = original.getVectorInDirection(1, left);
-		Assert.assertEquals(4, stepped.getXCoordinate(), 0.001);
-		Assert.assertEquals(5, stepped.getYCoordinate(), 0.001);
-
-		double back = Math.PI * 1.5;
-		stepped = original.getVectorInDirection(1, back);
-		Assert.assertEquals(5, stepped.getXCoordinate(), 0.001);
-		Assert.assertEquals(4, stepped.getYCoordinate(), 0.001);
-
-		double forward = Math.PI * .5;
-		stepped = original.getVectorInDirection(1, forward);
-		Assert.assertEquals(5, stepped.getXCoordinate(), 0.001);
-		Assert.assertEquals(6, stepped.getYCoordinate(), 0.001);
-
-		double forwardRight = Math.PI * .25;
-		double expectedX = 5 + Math.sqrt(2) / 2;
-		double expectedY = 5 + Math.sqrt(2) / 2;
-		stepped = original.getVectorInDirection(1, forwardRight);
-		Assert.assertEquals(expectedX, stepped.getXCoordinate(), 0.001);
-		Assert.assertEquals(expectedY, stepped.getYCoordinate(), 0.001);
-
-		double backRight = Math.PI * -.25;
-		expectedX = 5 + Math.sqrt(2) / 2;
-		expectedY = 5 - Math.sqrt(2) / 2;
-		stepped = original.getVectorInDirection(1, backRight);
-		Assert.assertEquals(expectedX, stepped.getXCoordinate(), 0.1);
-		Assert.assertEquals(expectedY, stepped.getYCoordinate(), 0.1);
-
+	private void testBackLeft(Vector2D original) {
+		double expectedX;
+		double expectedY;
+		Vector2D stepped;
 		double backLeft = Math.PI * 1.25;
 		expectedX = 5 - Math.sqrt(2) / 2;
 		expectedY = 5 - Math.sqrt(2) / 2;
 		stepped = original.getVectorInDirection(1, backLeft);
 		Assert.assertEquals(expectedX, stepped.getXCoordinate(), 0.1);
 		Assert.assertEquals(expectedY, stepped.getYCoordinate(), 0.1);
+	}
+
+	private void testBackRight(Vector2D original) {
+		double expectedX;
+		double expectedY;
+		Vector2D stepped;
+		double backRight = Math.PI * -.25;
+		expectedX = 5 + Math.sqrt(2) / 2;
+		expectedY = 5 - Math.sqrt(2) / 2;
+		stepped = original.getVectorInDirection(1, backRight);
+		Assert.assertEquals(expectedX, stepped.getXCoordinate(), 0.1);
+		Assert.assertEquals(expectedY, stepped.getYCoordinate(), 0.1);
+	}
+
+	private void testForwardRight(Vector2D original) {
+		Vector2D stepped;
+		double forwardRight = Math.PI * .25;
+		double expectedX = 5 + Math.sqrt(2) / 2;
+		double expectedY = 5 + Math.sqrt(2) / 2;
+		stepped = original.getVectorInDirection(1, forwardRight);
+		Assert.assertEquals(expectedX, stepped.getXCoordinate(), 0.001);
+		Assert.assertEquals(expectedY, stepped.getYCoordinate(), 0.001);
+	}
+
+	private void testForward(Vector2D original) {
+		Vector2D stepped;
+		double forward = Math.PI * .5;
+		stepped = original.getVectorInDirection(1, forward);
+		Assert.assertEquals(5, stepped.getXCoordinate(), 0.001);
+		Assert.assertEquals(6, stepped.getYCoordinate(), 0.001);
+	}
+
+	private void testBack(Vector2D original) {
+		Vector2D stepped;
+		double back = Math.PI * 1.5;
+		stepped = original.getVectorInDirection(1, back);
+		Assert.assertEquals(5, stepped.getXCoordinate(), 0.001);
+		Assert.assertEquals(4, stepped.getYCoordinate(), 0.001);
+	}
+
+	private void testLeft(Vector2D original) {
+		Vector2D stepped;
+		double left = Math.PI;
+		stepped = original.getVectorInDirection(1, left);
+		Assert.assertEquals(4, stepped.getXCoordinate(), 0.001);
+		Assert.assertEquals(5, stepped.getYCoordinate(), 0.001);
+	}
+
+	private void testRight(Vector2D original) {
+		double right = 0;
+		Vector2D stepped = original.getVectorInDirection(1, right);
+		Assert.assertEquals(6, stepped.getXCoordinate(), 0.001);
+		Assert.assertEquals(5, stepped.getYCoordinate(), 0.001);
 	}
 
 	@Test

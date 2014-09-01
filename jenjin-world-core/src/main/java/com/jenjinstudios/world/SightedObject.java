@@ -4,6 +4,7 @@ import com.jenjinstudios.world.math.FieldOfVisionCalculator;
 import com.jenjinstudios.world.math.Vector2D;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * The {@code SightedObject} class is a {@code WorldObject} which maintains a range of locations which are visible to
@@ -14,12 +15,13 @@ import java.util.*;
 public class SightedObject extends WorldObject
 {
 	/** The radius of the square of visible locations. */
-	public static final int VIEW_RADIUS = 11;
+	private static final int VIEW_RADIUS = 11;
 	private final ArrayList<Location> visibleLocations;
 	private final TreeMap<Integer, WorldObject> visibleObjects;
 	private final Set<WorldObject> newlyVisibleObjects;
 	private final Set<WorldObject> newlyInvisibleObjects;
 	private Vector2D vectorBeforeUpdate;
+	private Vector2D vectorAfterUpdate;
 
 	public SightedObject(String name) {
 		super(name);
@@ -31,24 +33,27 @@ public class SightedObject extends WorldObject
 	}
 
 	@Override
-	public void setWorld(World world) {
-		super.setWorld(world);
-		resetVisibleLocations();
-	}
-
-	@Override
 	public void setUp() {
+		super.setUp();
 		vectorBeforeUpdate = getVector2D();
+		if (!vectorBeforeUpdate.equals(vectorAfterUpdate))
+		{
+			resetVisibleLocations();
+		}
 	}
 
 	@Override
 	public void reset() {
 		// If we're in a new locations after stepping, update the visible array.
 		World world = getWorld();
-		Location oldLoc = world.getLocationForCoordinates(getZoneID(), vectorBeforeUpdate);
-		if (oldLoc != getLocation() || getVisibleLocations().isEmpty())
-			resetVisibleLocations();
-		resetVisibleObjects();
+		if (world != null)
+		{
+			Location oldLoc = world.getLocationForCoordinates(getZoneID(), vectorBeforeUpdate);
+			if (oldLoc != getLocation() || getVisibleLocations().isEmpty())
+				resetVisibleLocations();
+			resetVisibleObjects();
+		}
+		vectorAfterUpdate = getVector2D();
 	}
 
 	public AbstractMap<Integer, WorldObject> getVisibleObjects() {
@@ -72,15 +77,21 @@ public class SightedObject extends WorldObject
 		}
 	}
 
-	public AbstractCollection<Location> getVisibleLocations() { return visibleLocations; }
+	public AbstractCollection<Location> getVisibleLocations() { return new LinkedList<>(visibleLocations); }
 
 	private void resetVisibleLocations() {
-		visibleLocations.clear();
+		synchronized (visibleLocations)
+		{
+			visibleLocations.clear();
+		}
 		if (getLocation() != null)
 		{
 			Zone zone = getWorld().getZone(getZoneID());
 			FieldOfVisionCalculator fov = new FieldOfVisionCalculator(zone, getLocation(), VIEW_RADIUS);
-			visibleLocations.addAll(fov.scan());
+			synchronized (visibleLocations)
+			{
+				visibleLocations.addAll(fov.scan());
+			}
 		}
 	}
 
@@ -91,11 +102,9 @@ public class SightedObject extends WorldObject
 		{
 			visibles = visibleObjects.values();
 		}
-
 		addNewlyInvisibleObjects(currentlyVisible, visibles);
 		addNewlyVisibleObjects(currentlyVisible, visibles);
 		setCurrentlyVisibleObjects(currentlyVisible);
-
 	}
 
 	private void addNewlyVisibleObjects(ArrayList<WorldObject> currentlyVisible, Collection<WorldObject> visibles) {
@@ -137,12 +146,7 @@ public class SightedObject extends WorldObject
 	}
 
 	private void addCurrentlyVisibleObjectsInLocation(ArrayList<WorldObject> currentlyVisible, Location loc) {
-		for (WorldObject object : loc.getObjects())
-		{
-			if (object != this)
-			{
-				currentlyVisible.add(object);
-			}
-		}
+		currentlyVisible.addAll(loc.getObjects().stream().filter(object ->
+			  object != this).collect(Collectors.toList()));
 	}
 }

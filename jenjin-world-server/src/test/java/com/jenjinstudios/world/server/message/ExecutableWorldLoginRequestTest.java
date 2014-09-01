@@ -1,78 +1,60 @@
 package com.jenjinstudios.world.server.message;
 
 import com.jenjinstudios.core.io.Message;
-import com.jenjinstudios.core.io.MessageRegistry;
 import com.jenjinstudios.server.net.User;
 import com.jenjinstudios.world.World;
+import com.jenjinstudios.world.WorldObjectMap;
 import com.jenjinstudios.world.math.Vector2D;
 import com.jenjinstudios.world.server.Player;
 import com.jenjinstudios.world.server.WorldClientHandler;
 import com.jenjinstudios.world.server.WorldServer;
 import com.jenjinstudios.world.server.sql.WorldAuthenticator;
+import org.mockito.Mockito;
 import org.testng.annotations.Test;
 
-import static org.mockito.Mockito.*;
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * @author Caleb Brinkman
  */
 public class ExecutableWorldLoginRequestTest
 {
-	private static MessageRegistry messageRegistry = MessageRegistry.getInstance();
-
 	@Test
-	public void testSuccessfulLogin() {
-		Message loginRequest = messageRegistry.createMessage("WorldLoginRequest");
-		loginRequest.setArgument("username", "foo");
-		loginRequest.setArgument("password", "bar");
-		Message loginResponse = messageRegistry.createMessage("WorldLoginResponse");
-
-		World world = mock(World.class);
-		Player player = mock(Player.class);
-		WorldServerMessageFactory messageFactory = mock(WorldServerMessageFactory.class);
-		WorldClientHandler handler = mock(WorldClientHandler.class);
-		WorldServer worldServer = mock(WorldServer.class);
-		WorldAuthenticator authenticator = mock(WorldAuthenticator.class);
-		when(messageFactory.generateWorldLoginResponse()).thenReturn(loginResponse);
-		when(worldServer.getAuthenticator()).thenReturn(authenticator);
-		when(worldServer.getWorld()).thenReturn(world);
-		when(handler.getServer()).thenReturn(worldServer);
-		when(handler.getMessageFactory()).thenReturn(messageFactory);
-		when(authenticator.logInPlayer(any(User.class))).thenReturn(player);
-		when(player.getId()).thenReturn(0);
-		when(player.getVector2D()).thenReturn(Vector2D.ORIGIN);
-
-		ExecutableWorldLoginRequest exec = new ExecutableWorldLoginRequest(handler, loginRequest);
+	@SuppressWarnings("unchecked")
+	public void testSuccessfulLogin() throws Exception {
+		Map<String, Object> playerData = new HashMap<>();
+		playerData.put("XCOORD", 0.0);
+		playerData.put("YCOORD", 0.0);
+		playerData.put("ZONEID", 0);
+		playerData.put("USERNAME", "Foo");
+		Message message = Mockito.mock(Message.class);
+		WorldServerMessageFactory messageFactory = Mockito.mock(WorldServerMessageFactory.class);
+		World world = Mockito.mock(World.class);
+		User user = Mockito.mock(User.class);
+		Player player = Mockito.mock(Player.class);
+		WorldAuthenticator authenticator = Mockito.mock(WorldAuthenticator.class);
+		WorldServer server = Mockito.mock(WorldServer.class);
+		WorldClientHandler wch = Mockito.mock(WorldClientHandler.class);
+		WorldObjectMap worldObjectMap = mock(WorldObjectMap.class);
+		when(world.getWorldObjects()).thenReturn(worldObjectMap);
+		Mockito.when(user.isLoggedIn()).thenReturn(true);
+		Mockito.when(authenticator.logInUser(Mockito.anyString(), Mockito.anyString())).thenReturn(user);
+		Mockito.when(authenticator.getPlayerInfo(Mockito.anyString())).thenReturn(playerData);
+		Mockito.when(server.getAuthenticator()).thenReturn(authenticator);
+		Mockito.when(server.getWorld()).thenReturn(world);
+		Mockito.when(wch.getServer()).thenReturn(server);
+		Mockito.when(wch.getPlayer()).thenReturn(player);
+		Mockito.when(wch.getMessageFactory()).thenReturn(messageFactory);
+		Mockito.when(messageFactory.generateWorldLoginResponse()).thenReturn(message);
+		Mockito.when(player.getVector2D()).thenReturn(Vector2D.ORIGIN);
+		ExecutableWorldLoginRequest exec = new ExecutableWorldLoginRequest(wch, message);
 		exec.runImmediate();
 		exec.runDelayed();
 
-		verify(world).addObject(player);
-		verify(handler).queueOutgoingMessage(loginResponse);
-	}
-
-	@Test
-	public void testFailedLogin() {
-		Message loginRequest = messageRegistry.createMessage("WorldLoginRequest");
-		loginRequest.setArgument("username", "foo");
-		loginRequest.setArgument("password", "bar");
-		Message loginResponse = messageRegistry.createMessage("WorldLoginResponse");
-
-		World world = mock(World.class);
-		WorldServerMessageFactory messageFactory = mock(WorldServerMessageFactory.class);
-		WorldClientHandler handler = mock(WorldClientHandler.class);
-		WorldServer worldServer = mock(WorldServer.class);
-		WorldAuthenticator authenticator = mock(WorldAuthenticator.class);
-		when(messageFactory.generateWorldLoginResponse()).thenReturn(loginResponse);
-		when(worldServer.getAuthenticator()).thenReturn(authenticator);
-		when(worldServer.getWorld()).thenReturn(world);
-		when(handler.getServer()).thenReturn(worldServer);
-		when(handler.getMessageFactory()).thenReturn(messageFactory);
-		when(authenticator.logInPlayer(any(User.class))).thenReturn(null);
-
-		ExecutableWorldLoginRequest exec = new ExecutableWorldLoginRequest(handler, loginRequest);
-		exec.runImmediate();
-		exec.runDelayed();
-
-		verify(handler).queueOutgoingMessage(loginResponse);
+		Mockito.verify(worldObjectMap).scheduleForAddition(Mockito.anyObject());
 	}
 }

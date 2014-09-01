@@ -1,6 +1,5 @@
 package com.jenjinstudios.server.net;
 
-import java.util.Deque;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -16,10 +15,6 @@ class ServerUpdateTask implements Runnable
 	private final double[] lastCycles;
 	/** The server for which this loop runs. */
 	private final TaskedServer server;
-	/** The list of synchronized tasks to be executed by the loop. */
-	private final Deque<Runnable> syncedTasks;
-	/** The list of repeated tasks to be executed by the loop. */
-	private final Iterable<Runnable> repeatedTasks;
 	/** The start time, in nanoseconds, of the current cycle. */
 	private volatile long cycleStart = 0;
 	/** The current cycle number. */
@@ -34,43 +29,85 @@ class ServerUpdateTask implements Runnable
 	@SuppressWarnings("unchecked")
 	public ServerUpdateTask(TaskedServer server) {
 		this.server = server;
-		syncedTasks = this.server.getSyncedTasks();
-		repeatedTasks = this.server.getRepeatedTasks();
 		lastCycles = new double[server.getUps() * 10];
 		cycleNum = 0;
 	}
 
 	@Override
 	public void run() {
-		newCycle();
-		boolean clientsAdded = server.getNewClients();
-		if (clientsAdded) LOGGER.log(Level.FINE, "New Clients Added");
+		startNewCycle();
+		checkForNewClients();
 		runSynchronizedTasks();
 		runRepeatedTasks();
-		server.runClientHandlerQueuedMessages();
-		server.update();
-		server.broadcast();
-		server.refresh();
+		runQueuedMessages();
+		update();
+		broadcast();
+	}
+
+	private void checkForNewClients() {
+		try
+		{
+			server.checkListenerForClients();
+		} catch (Exception ex)
+		{
+			LOGGER.log(Level.WARNING, "Exception when checking for new clients", ex);
+		}
+	}
+
+	private void broadcast() {
+		try
+		{
+			server.broadcast();
+		} catch (Exception ex)
+		{
+			LOGGER.log(Level.WARNING, "Exception when broadcasting", ex);
+		}
+	}
+
+	private void update() {
+		try
+		{
+			server.update();
+		} catch (Exception ex)
+		{
+			LOGGER.log(Level.WARNING, "Exception when updating server", ex);
+		}
+	}
+
+	private void runQueuedMessages() {
+		try
+		{
+			server.runClientHandlerQueuedMessages();
+		} catch (Exception ex)
+		{
+			LOGGER.log(Level.WARNING, "Exception when executing client messages", ex);
+		}
 	}
 
 	/** Run the repeated tasks in the server queue. */
 	private void runRepeatedTasks() {
-		synchronized (repeatedTasks)
+		try
 		{
-			for (Runnable r : repeatedTasks) { r.run(); }
+			server.runRepeatedTasks();
+		} catch (Exception ex)
+		{
+			LOGGER.log(Level.WARNING, "Exception when running repeated tasks.", ex);
 		}
 	}
 
 	/** Run the synchronized tasks in the server queue. */
 	private void runSynchronizedTasks() {
-		synchronized (syncedTasks)
+		try
 		{
-			while (!syncedTasks.isEmpty()) { syncedTasks.remove().run(); }
+			server.runSyncedTasks();
+		} catch (Exception ex)
+		{
+			LOGGER.log(Level.WARNING, "Exception when running repeated tasks.", ex);
 		}
 	}
 
 	/** Called at the beginning of a new server update cycle. */
-	private void newCycle() {
+	private void startNewCycle() {
 		long oldCycleStart = cycleStart == 0 ? System.currentTimeMillis() - 1000 / server.getUps() : cycleStart;
 		cycleStart = System.currentTimeMillis();
 		double cycleLength = (cycleStart - oldCycleStart) / 1000d;

@@ -28,14 +28,14 @@ public class ExecutableWorldLoginResponse extends WorldClientExecutableMessage
 	public void runDelayed() {
 		WorldClient client = getClient();
 		boolean success = (boolean) getMessage().getArgument("success");
-		client.setLoggedIn(success);
+		client.getLoginTracker().setLoggedIn(success);
 		if (success)
 		{
 
-			client.setLoggedInTime((long) getMessage().getArgument("loginTime"));
+			client.getLoginTracker().setLoggedInTime((long) getMessage().getArgument("loginTime"));
 			client.setName(client.getUser().getUsername());
 			client.setPlayer(player);
-			client.getWorld().addObject(player, player.getId());
+			client.getWorld().getWorldObjects().scheduleForAddition(player, player.getId());
 
 			client.addRepeatedTask(new WorldClientUpdater(client));
 		}
@@ -49,5 +49,6 @@ public class ExecutableWorldLoginResponse extends WorldClientExecutableMessage
 		player = new ClientPlayer(id, getClient().getUser().getUsername());
 		Vector2D vector2D = new Vector2D(xCoordinate, yCoordinate);
 		player.setVector2D(vector2D);
+		player.setLastStepTime((long) getMessage().getArgument("loginTime"));
 	}
 }

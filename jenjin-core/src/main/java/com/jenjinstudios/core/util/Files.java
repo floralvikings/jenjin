@@ -9,6 +9,8 @@ import java.util.ArrayList;
  */
 public class Files
 {
+	private Files() { }
+
 	/**
 	 * Search a directory and subdirectories for files with the given name.
 	 * @param dir The directory in which to start looking.
@@ -30,36 +32,4 @@ public class Files
 		return files;
 	}
 
-	/**
-	 * Delete the specified file, recursively if the file is a directory.
-	 * @param file The file or directory to be deleted.
-	 * @return Whether the file or directory was successfully deleted.
-	 */
-	public static boolean deleteRecursively(File file) {
-		boolean deleted = false;
-		if (file.isDirectory())
-		{
-			if (file.list().length == 0)
-			{
-				deleted = (file.delete());
-			} else
-			{
-				String files[] = file.list();
-				for (String temp : files)
-				{
-					File fileDelete = new File(file, temp);
-					deleted = deleteRecursively(fileDelete);
-				}
-				if (file.list().length == 0)
-				{
-					deleted = file.delete();
-				}
-			}
-
-		} else
-		{
-			deleted = file.delete();
-		}
-		return deleted;
-	}
 }

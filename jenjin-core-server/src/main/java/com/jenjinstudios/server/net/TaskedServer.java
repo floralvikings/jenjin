@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Timer;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -30,7 +29,7 @@ public class TaskedServer<T extends ClientHandler> extends Server<T>
 	 * @throws NoSuchMethodException If there is no appropriate constructor for the specified ClientHandler
 	 * constructor.
 	 */
-	public TaskedServer(ServerInit<T> initInfo) throws IOException, NoSuchMethodException {
+	protected TaskedServer(ServerInit<T> initInfo) throws IOException, NoSuchMethodException {
 		super(initInfo);
 		repeatedTasks = new LinkedList<>();
 		syncedTasks = new LinkedList<>();
@@ -48,7 +47,7 @@ public class TaskedServer<T extends ClientHandler> extends Server<T>
 	 * Add a task to be repeated every update.
 	 * @param r The {@code Runnable} containing the task to be repeated.
 	 */
-	public void addRepeatedTask(Runnable r) {
+	protected void addRepeatedTask(Runnable r) {
 		synchronized (repeatedTasks)
 		{
 			repeatedTasks.add(r);
@@ -61,8 +60,7 @@ public class TaskedServer<T extends ClientHandler> extends Server<T>
 
 		serverUpdateTask = new ServerUpdateTask(this);
 
-		/* The name of the timer that is looping the server thread. */
-		loopTimer = Executors.newSingleThreadScheduledExecutor();
+		loopTimer = Executors.newSingleThreadScheduledExecutor(new ServerUpdateThreadFactory());
 		loopTimer.scheduleAtFixedRate(serverUpdateTask, 0, PERIOD, TimeUnit.MILLISECONDS);
 	}
 
@@ -77,6 +75,20 @@ public class TaskedServer<T extends ClientHandler> extends Server<T>
 	public double getAverageUPS() { return serverUpdateTask.getAverageUPS(); }
 
 	public int getUps() { return UPS; }
+
+	public void runRepeatedTasks() {
+		synchronized (repeatedTasks)
+		{
+			for (Runnable r : repeatedTasks) r.run();
+		}
+	}
+
+	public void runSyncedTasks() {
+		synchronized (syncedTasks)
+		{
+			while (!syncedTasks.isEmpty()) { syncedTasks.remove().run(); }
+		}
+	}
 
 	/**
 	 * Tasks to be repeated in the main loop.

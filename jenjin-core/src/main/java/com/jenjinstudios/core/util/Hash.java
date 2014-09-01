@@ -16,6 +16,7 @@ public class Hash
 	 * @return a SHA1 hash of the given string.
 	 */
 	private static String getHashedString(String input) {
+		String hashedString;
 		try
 		{
 			//Convert the pass to an md5 hash string
@@ -32,11 +33,12 @@ public class Hash
 				}
 				hexString.append(hex);
 			}
-			return hexString.toString();
+			hashedString = hexString.toString();
 		} catch (NoSuchAlgorithmException | UnsupportedEncodingException ex)
 		{
-			return null;
+			hashedString = null;
 		}
+		return hashedString;
 	}
 
 	/**

@@ -60,7 +60,7 @@ class MessageTypeParser
 	@SuppressWarnings("unchecked")
 	private List<Class<? extends ExecutableMessage>> getExecutableMessageClasses() {
 		NodeList executableNodes = messageElement.getElementsByTagName("executable");
-		String executableMessageClassName;
+		String exMsgClassName;
 		List<Class<? extends ExecutableMessage>> executableMessageClasses = new LinkedList<>();
 		// Parse executable tags for those containing language="java"
 		for (int i = 0; i < executableNodes.getLength(); i++)
@@ -71,16 +71,13 @@ class MessageTypeParser
 			// If it's in java, set the executable message class name.
 			if ("java".equalsIgnoreCase(languageAttribute))
 			{
-				executableMessageClassName = currentExecutableElement.getTextContent();
+				exMsgClassName = currentExecutableElement.getTextContent();
 				try
 				{
-					executableMessageClasses.add((Class<? extends ExecutableMessage>)
-							Class.forName(executableMessageClassName));
+					executableMessageClasses.add((Class<? extends ExecutableMessage>) Class.forName(exMsgClassName));
 				} catch (ClassNotFoundException e)
 				{
-					LOGGER.log(Level.INFO,
-							"Unable to locate Executable Message class {0} ", executableMessageClassName);
-					LOGGER.log(Level.FINE, "Exception: ", e);
+					LOGGER.log(Level.INFO, "Unable to locate Executable Message class {0} ", exMsgClassName);
 				}
 			}
 		}
@@ -118,6 +115,7 @@ class MessageTypeParser
 	 * @param className The name of the class as read from the XML file.
 	 * @return The class type if a correct string is parsed.  Null otherwise.
 	 */
+	@SuppressWarnings({"OverlyLongMethod", "OverlyComplexMethod"})
 	private static Class parseClassName(String className) {
 		Class type = null;
 		switch (className)

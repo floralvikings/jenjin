@@ -1,11 +1,11 @@
 package com.jenjinstudios.world.client.message;
 
 import com.jenjinstudios.client.net.ClientUser;
+import com.jenjinstudios.client.net.LoginTracker;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageRegistry;
 import com.jenjinstudios.world.World;
-import com.jenjinstudios.world.WorldObject;
-import com.jenjinstudios.world.client.ClientPlayer;
+import com.jenjinstudios.world.WorldObjectMap;
 import com.jenjinstudios.world.client.WorldClient;
 import org.testng.annotations.Test;
 
@@ -29,17 +29,21 @@ public class ExecutableWorldLoginResponseTest
 
 		WorldClient worldClient = mock(WorldClient.class);
 		World world = mock(World.class);
+		WorldObjectMap worldObjectMap = mock(WorldObjectMap.class);
+		when(world.getWorldObjects()).thenReturn(worldObjectMap);
+		LoginTracker loginTracker = mock(LoginTracker.class);
+		when(loginTracker.isLoggedIn()).thenReturn(true);
 		when(worldClient.getWorld()).thenReturn(world);
 		when(worldClient.getUser()).thenReturn(new ClientUser("Foo", "Bar"));
-		when(worldClient.isLoggedIn()).thenReturn(true);
+		when(worldClient.getLoginTracker()).thenReturn(loginTracker);
 
 		ExecutableWorldLoginResponse response = new ExecutableWorldLoginResponse(worldClient, message);
 		response.runImmediate();
 		response.runDelayed();
 
-		verify(worldClient).setLoggedIn(true);
-		verify(worldClient).setLoggedInTime(0l);
-		verify(worldClient).setPlayer((ClientPlayer) any());
-		verify(world).addObject((WorldObject) any(), eq(0));
+		verify(loginTracker).setLoggedIn(true);
+		verify(loginTracker).setLoggedInTime(0l);
+		verify(worldClient).setPlayer(any());
+		verify(worldObjectMap).scheduleForAddition(any(), eq(0));
 	}
 }

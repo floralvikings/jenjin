@@ -82,12 +82,16 @@ public class Vector2D
 	 * @return The new Vector2D;
 	 */
 	public Vector2D getVectorInDirection(double distance, double angle) {
-		if (angle == Angle.IDLE) return new Vector2D(this);
-		double cos = java.lang.Math.cos(angle);
-		double sin = java.lang.Math.sin(angle);
-		double newX = MathUtil.round(xCoordinate + (distance * cos), 4);
-		double newY = MathUtil.round(yCoordinate + (distance * sin), 4);
-		return new Vector2D(newX, newY);
+		Vector2D vector2D = new Vector2D(this);
+		if (angle != Angle.IDLE)
+		{
+			double cos = Math.cos(angle);
+			double sin = Math.sin(angle);
+			double newX = MathUtil.round(xCoordinate + (distance * cos), 4);
+			double newY = MathUtil.round(yCoordinate + (distance * sin), 4);
+			vector2D = new Vector2D(newX, newY);
+		}
+		return vector2D;
 	}
 
 	/**
@@ -96,14 +100,14 @@ public class Vector2D
 	 * @return The angle to the supplied vector.
 	 */
 	public double getAngleToVector(Vector2D vector2D) {
-		if (vector2D.equals(this))
+		Double angle = Double.NEGATIVE_INFINITY;
+		if (!vector2D.equals(this))
 		{
-			// Negative infinity specifies that the vectors are the same (can't get an angle).
-			return Double.NEGATIVE_INFINITY;
+			double xDist = vector2D.getXCoordinate() - xCoordinate;
+			double yDist = vector2D.getYCoordinate() - yCoordinate;
+			angle = java.lang.Math.atan2(yDist, xDist);
 		}
-		double xDist = vector2D.getXCoordinate() - xCoordinate;
-		double yDist = vector2D.getYCoordinate() - yCoordinate;
-		return java.lang.Math.atan2(yDist, xDist);
+		return angle;
 	}
 
 	/**

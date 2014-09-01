@@ -6,16 +6,14 @@ import com.jenjinstudios.world.server.WorldClientHandler;
 import com.jenjinstudios.world.server.WorldServer;
 import org.testng.annotations.Test;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * @author Caleb Brinkman
  */
 public class ExecutableWorldFileRequestTest
 {
+	@SuppressWarnings("unchecked")
 	@Test
 	public void testExecuteMessage() {
 		Message message = mock(Message.class);
@@ -25,7 +23,7 @@ public class ExecutableWorldFileRequestTest
 		WorldClientHandler clientHandler = mock(WorldClientHandler.class);
 		WorldServer server = mock(WorldServer.class);
 		WorldServerMessageFactory messageFactory = mock(WorldServerMessageFactory.class);
-		when(messageFactory.generateWorldFileResponse((byte[]) any())).thenReturn(response);
+		when(messageFactory.generateWorldFileResponse(any())).thenReturn(response);
 		when(server.getWorldFileChecksum()).thenReturn(fileBytes);
 		when(clientHandler.getMessageFactory()).thenReturn(messageFactory);
 		when(clientHandler.getServer()).thenReturn(server);

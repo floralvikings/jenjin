@@ -1,6 +1,7 @@
 package com.jenjinstudios.world;
 
 import java.util.*;
+import java.util.stream.Stream;
 
 /**
  * Represents a location in the world's location grid.
@@ -77,7 +78,12 @@ public class Location
 	public void removeObject(WorldObject object) { objects.remove(object); }
 
 	@Override
-	public String toString() { return "(" + X_COORDINATE + ", " + Y_COORDINATE + ")"; }
+	public int hashCode() {
+		int result = X_COORDINATE;
+		result = 31 * result + Y_COORDINATE;
+		result = 31 * result + locationProperties.hashCode();
+		return result;
+	}
 
 	@Override
 	public boolean equals(Object o) {
@@ -87,16 +93,11 @@ public class Location
 		Location location = (Location) o;
 
 		return X_COORDINATE == location.X_COORDINATE && Y_COORDINATE == location.Y_COORDINATE &&
-			locationProperties.equals(location.locationProperties);
+			  locationProperties.equals(location.locationProperties);
 	}
 
 	@Override
-	public int hashCode() {
-		int result = X_COORDINATE;
-		result = 31 * result + Y_COORDINATE;
-		result = 31 * result + locationProperties.hashCode();
-		return result;
-	}
+	public String toString() { return "(" + X_COORDINATE + ", " + Y_COORDINATE + ")"; }
 
 	/**
 	 * Get a list of locations adjacent to this one, all of which can be walked to.
@@ -129,14 +130,13 @@ public class Location
 	/** Set the locations adjacent to this one which can be moved to while finding a path. */
 	protected void setAdjacentWalkableLocations() {
 		adjacentWalkableLocations.addAll(adjacentLocations);
-		for (Location walkable : adjacentLocations)
-		{
-			if ("false".equals(walkable.getProperties().getProperty("walkable")))
-			{
-				adjacentWalkableLocations.remove(walkable);
-				removeDiagonalsWithAdjacentUnwalkables(walkable);
-			}
-		}
+		Stream<Location> stream = adjacentLocations.stream();
+		Stream<Location> filtered = stream.filter(walkable ->
+			  "false".equals(walkable.getProperties().getProperty("walkable")));
+		filtered.forEach(walkable -> {
+			adjacentWalkableLocations.remove(walkable);
+			removeDiagonalsWithAdjacentUnwalkables(walkable);
+		});
 	}
 
 	private void setOrdinals(Zone zone) {
@@ -175,12 +175,7 @@ public class Location
 	}
 
 	private void removeDiagonalsWithAdjacentUnwalkables(Location walkable) {
-		for (Location blocked : walkable.getAdjacentLocations())
-		{
-			if (diagonals.contains(blocked))
-			{
-				adjacentWalkableLocations.remove(blocked);
-			}
-		}
+		walkable.getAdjacentLocations().stream().filter(diagonals::contains).
+			  forEach(adjacentWalkableLocations::remove);
 	}
 }

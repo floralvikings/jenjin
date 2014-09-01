@@ -33,6 +33,6 @@ public class PingTracker
 			num = pingTimes.size();
 			for (long l : pingTimes) total += l;
 		}
-		return total / num;
+		return total / (num > 0 ? num : 1);
 	}
 }

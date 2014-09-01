@@ -3,7 +3,6 @@ package com.jenjinstudios.world;
 import com.jenjinstudios.world.math.Dimension2D;
 import com.jenjinstudios.world.math.Vector2D;
 
-import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.TreeMap;
@@ -39,59 +38,12 @@ public class World
 		{
 			this.zones.put(z.id, z);
 		}
-		worldObjects = new WorldObjectMap();
-		lastUpdateCompleted = lastUpdateStarted = System.nanoTime();
+		worldObjects = new WorldObjectMap(this);
+
+		lastUpdateCompleted = lastUpdateStarted = System.currentTimeMillis();
 	}
 
-	/**
-	 * Add an object to the world.
-	 * @param object The object to add.
-	 */
-	public void addObject(WorldObject object) {
-		int id = worldObjects.getAvailableId();
-		this.addObject(object, id);
-	}
-
-	/**
-	 * Add an object with the specified ID.
-	 * @param object The object to add.
-	 * @param id The id.
-	 */
-	public void addObject(WorldObject object, int id) {
-		if (object == null)
-			throw new IllegalArgumentException("addObject(WorldObject obj) argument 0 not allowed to be null!");
-
-		if (worldObjects.get(id) != null)
-			throw new IllegalArgumentException("addObject(WorldObject obj) not allowed to be an occupied id: "
-					+ id + ".  Existing object: " + worldObjects.get(id));
-
-		object.setId(id);
-		object.setWorld(this);
-		object.setVector2D(object.getVector2D());
-		synchronized (worldObjects)
-		{
-			worldObjects.put(id, object);
-		}
-	}
-
-	/**
-	 * Remove an object from the world.  Specifically, sets the index of the given object in the world's array to null.
-	 * @param object The object to remove.
-	 */
-	public void removeObject(WorldObject object) {
-		removeObject(object.getId());
-	}
-
-	/**
-	 * Remove the object with the specified id.
-	 * @param id The id.
-	 */
-	public void removeObject(int id) {
-		synchronized (worldObjects)
-		{
-			worldObjects.remove(id);
-		}
-	}
+	public WorldObjectMap getWorldObjects() { return worldObjects; }
 
 	/**
 	 * Get the location from the zone grid that contains the specified vector2D.
@@ -105,42 +57,18 @@ public class World
 
 	/** Update all objects in the world. */
 	public void update() {
-		lastUpdateStarted = System.nanoTime();
+		lastUpdateStarted = System.currentTimeMillis();
 		synchronized (worldObjects)
 		{
-			Collection<WorldObject> values = worldObjects.values();
-			setUpObjects(values);
-			updateObjects(values);
-			resetObjects(values);
+			worldObjects.removeScheduledObjects();
+			worldObjects.addScheduledObjects();
+			worldObjects.overwriteScheduledObjects();
+			setUpObjects();
+			updateObjects();
+			resetObjects();
 		}
-		lastUpdateCompleted = System.nanoTime();
+		lastUpdateCompleted = System.currentTimeMillis();
 	}
-
-	private void resetObjects(Collection<WorldObject> values) {
-		for (WorldObject o : values)
-			if (o != null)
-				o.reset();
-	}
-
-	private void updateObjects(Collection<WorldObject> values) {
-		for (WorldObject o : values)
-			if (o != null)
-				o.update();
-	}
-
-	private void setUpObjects(Collection<WorldObject> values) {
-		for (WorldObject o : values)
-			if (o != null)
-				o.setUp();
-	}
-
-	/**
-	 * Get the number of objects currently in the world.
-	 * @return The number of objects currently in the world.
-	 */
-	public int getObjectCount() { return worldObjects.size(); }
-
-	public WorldObject getObject(int id) { return worldObjects.get(id); }
 
 	/**
 	 * Get a list of all valid Zone IDs in this world.
@@ -176,4 +104,16 @@ public class World
 	 * @return The time at which the most recent update started.
 	 */
 	public long getLastUpdateStarted() { return lastUpdateStarted; }
+
+	private void resetObjects() {
+		worldObjects.forEach((Integer i, WorldObject o) -> o.reset());
+	}
+
+	private void updateObjects() {
+		worldObjects.forEach((Integer i, WorldObject o) -> o.update());
+	}
+
+	private void setUpObjects() {
+		worldObjects.forEach((Integer i, WorldObject o) -> o.setUp());
+	}
 }

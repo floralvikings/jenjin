@@ -9,7 +9,7 @@ import com.jenjinstudios.world.math.Vector2D;
  */
 public class WorldObject
 {
-	private final String name;
+	private String name;
 	private int zoneID;
 	private int resourceID;
 	private int id = Integer.MIN_VALUE;
@@ -17,6 +17,7 @@ public class WorldObject
 	private Location location;
 	private Vector2D vector2D;
 	private World world;
+	private boolean initialized;
 
 	public WorldObject(String name) {
 		vector2D = Vector2D.ORIGIN;
@@ -77,8 +78,19 @@ public class WorldObject
 
 	public String getName() { return name; }
 
+	public void setName(String name) { this.name = name; }
+
+	protected void initialize() {
+		initialized = true;
+	}
+
 	/** Set up this WorldObject before updating. */
-	public void setUp() { }
+	public void setUp() {
+		if (!initialized)
+		{
+			initialize();
+		}
+	}
 
 	/** Update this WorldObject. */
 	public void update() { }

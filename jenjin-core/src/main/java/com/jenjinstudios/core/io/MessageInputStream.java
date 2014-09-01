@@ -1,13 +1,17 @@
 package com.jenjinstudios.core.io;
 
-import javax.crypto.*;
-import javax.crypto.spec.SecretKeySpec;
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import javax.xml.bind.DatatypeConverter;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
 import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -18,26 +22,21 @@ import java.util.logging.Logger;
  */
 public class MessageInputStream extends DataInputStream
 {
-	/** The default value used when no AES key can be used. */
-	public static final byte[] NO_KEY = new byte[1];
 	/** The Logger for this class. */
 	private static final Logger LOGGER = Logger.getLogger(MessageInputStream.class.getName());
 	/** The Connection using this stream. */
 	private final MessageRegistry messageRegistry;
-	/** The AES key used to encrypt outgoing messages. */
-	private SecretKey aesKey;
 	/** The cipher used to decrypt messages. */
-	private Cipher aesDecryptCipher;
+	private Cipher decryptCipher;
 	private boolean closed;
 
 	/**
 	 * Construct a new {@code MessageInputStream} from the given InputStream.
-	 * @param messageRegistry The messageRegistry using this stream.
 	 * @param inputStream The InputStream from which messages will be read.
 	 */
-	public MessageInputStream(MessageRegistry messageRegistry, InputStream inputStream) {
+	public MessageInputStream(InputStream inputStream) {
 		super(inputStream);
-		this.messageRegistry = messageRegistry;
+		this.messageRegistry = MessageRegistry.getInstance();
 	}
 
 	/**
@@ -68,20 +67,14 @@ public class MessageInputStream extends DataInputStream
 		closed = true;
 	}
 
-	/**
-	 * Set the AES key used to decrypt messages.
-	 * @param key The AES key used to decrypt messages.
-	 */
-	public void setAESKey(byte[] key) {
+	public void setPrivateKey(PrivateKey privateKey) {
 		try
 		{
-			aesKey = new SecretKeySpec(key, "AES");
-			aesDecryptCipher = Cipher.getInstance("AES");
-			aesDecryptCipher.init(Cipher.DECRYPT_MODE, aesKey);
-		} catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException e)
+			decryptCipher = Cipher.getInstance("RSA");
+			decryptCipher.init(Cipher.DECRYPT_MODE, privateKey);
+		} catch (InvalidKeyException | NoSuchAlgorithmException | NoSuchPaddingException e)
 		{
 			LOGGER.log(Level.SEVERE, "Unable to create cipher, messages will not be decrypted.", e);
-			aesKey = null;
 		}
 	}
 
@@ -91,6 +84,7 @@ public class MessageInputStream extends DataInputStream
 	 * @return An Object[] containing the message argumentTypes.
 	 * @throws IOException If there is an IO error
 	 */
+	@SuppressWarnings({"OverlyLongMethod", "OverlyComplexMethod"})
 	private Object[] readMessageArgs(LinkedList<Class> classes) throws IOException {
 		Object[] args = new Object[classes.size()];
 
@@ -166,8 +160,13 @@ public class MessageInputStream extends DataInputStream
 		byte[] bytes;
 		int size = readInt();
 		bytes = new byte[size];
-		int read = read(bytes, 0, size);
-		if (read != size) throw new IOException("Incorrect number of bytes read for byte array.");
+		int numBytesRead = 0;
+		while (numBytesRead < size)
+		{
+			numBytesRead += read(bytes, numBytesRead, size - numBytesRead);
+		}
+		if (numBytesRead != size) throw new IOException("Incorrect number of bytes read for byte array:" +
+			  "Expected " + size + ", got " + numBytesRead);
 		return bytes;
 	}
 
@@ -179,25 +178,31 @@ public class MessageInputStream extends DataInputStream
 	private String readString() throws IOException {
 		boolean encrypted = readBoolean();
 		String received = readUTF();
-		if (!encrypted) { return received; }
-
-		if (aesKey == null)
+		if (encrypted)
 		{
-
-			LOGGER.log(Level.SEVERE, "AES key not properly set, unable to decrypt messages.");
-			return received;
+			if (decryptCipher != null)
+			{
+				received = decryptString(received);
+			} else
+			{
+				LOGGER.log(Level.SEVERE, "AES key not properly set, unable to decrypt messages.");
+			}
 		}
+		return received;
+	}
+
+	private String decryptString(String encrypted) throws UnsupportedEncodingException {
+		String decrypted = encrypted;
 		try
 		{
-			byte[] encBytes = DatatypeConverter.parseHexBinary(received);
-			byte[] decBytes = aesDecryptCipher.doFinal(encBytes);
-			received = new String(decBytes, "UTF-8");
+			byte[] encBytes = DatatypeConverter.parseHexBinary(encrypted);
+			byte[] decBytes = decryptCipher.doFinal(encBytes);
+			decrypted = new String(decBytes, "UTF-8");
 		} catch (IllegalBlockSizeException | BadPaddingException e)
 		{
 			LOGGER.log(Level.WARNING, "Unable to decrypt message: ", e);
 		}
-
-		return received;
+		return decrypted;
 	}
 
 }

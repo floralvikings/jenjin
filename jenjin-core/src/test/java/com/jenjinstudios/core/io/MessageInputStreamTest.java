@@ -4,11 +4,14 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import javax.crypto.Cipher;
-import javax.crypto.KeyGenerator;
-import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.security.NoSuchAlgorithmException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Test the MessageInputStream class.
@@ -16,7 +19,8 @@ import java.io.InputStream;
  */
 public class MessageInputStreamTest
 {
-	private static MessageRegistry mr = MessageRegistry.getInstance();
+
+	private static final Logger LOGGER = Logger.getLogger(MessageInputStreamTest.class.getName());
 
 	@Test
 	public void testReadValidMessage() throws IOException {
@@ -28,7 +32,7 @@ public class MessageInputStreamTest
 
 		InputStream inputStream = dataInputStreamMock.getIn();
 
-		MessageInputStream messageInputStream = new MessageInputStream(mr, inputStream);
+		MessageInputStream messageInputStream = new MessageInputStream(inputStream);
 		Message message = messageInputStream.readMessage();
 		messageInputStream.close();
 
@@ -45,7 +49,7 @@ public class MessageInputStreamTest
 
 		InputStream is = mock.getIn();
 
-		MessageInputStream mis = new MessageInputStream(mr, is);
+		MessageInputStream mis = new MessageInputStream(is);
 		mis.readMessage();
 	}
 
@@ -57,7 +61,7 @@ public class MessageInputStreamTest
 		mock.mockReadUtf("FooBar");
 
 		InputStream is = mock.getIn();
-		MessageInputStream mis = new MessageInputStream(mr, is);
+		MessageInputStream mis = new MessageInputStream(is);
 		Message msg = mis.readMessage();
 		mis.close();
 
@@ -69,15 +73,12 @@ public class MessageInputStreamTest
 		DataInputStreamMock mock = new DataInputStreamMock();
 		mock.mockReadShort((short) -3);
 
-		KeyGenerator keyGenerator = KeyGenerator.getInstance("AES");
-		keyGenerator.init(128);
-		byte[] key = keyGenerator.generateKey().getEncoded();
-		SecretKeySpec aesKey = new SecretKeySpec(key, "AES");
-		Cipher aesEncryptCipher = Cipher.getInstance("AES");
-		aesEncryptCipher.init(Cipher.ENCRYPT_MODE, aesKey);
+		KeyPair keyPair = generateRSAKeyPair();
+		Cipher encryptCipher = Cipher.getInstance("RSA");
+		encryptCipher.init(Cipher.ENCRYPT_MODE, keyPair.getPublic());
+
 		byte[] sBytes = "FooBar".getBytes("UTF-8");
-		String encryptedString = DatatypeConverter.printHexBinary(
-			  aesEncryptCipher.doFinal(sBytes));
+		String encryptedString = DatatypeConverter.printHexBinary(encryptCipher.doFinal(sBytes));
 
 		Assert.assertNotEquals("FooBar", encryptedString);
 
@@ -85,8 +86,8 @@ public class MessageInputStreamTest
 		mock.mockReadUtf(encryptedString);
 
 		InputStream is = mock.getIn();
-		MessageInputStream mis = new MessageInputStream(mr, is);
-		mis.setAESKey(key);
+		MessageInputStream mis = new MessageInputStream(is);
+		mis.setPrivateKey(keyPair.getPrivate());
 		Message msg = mis.readMessage();
 		mis.close();
 
@@ -121,10 +122,25 @@ public class MessageInputStreamTest
 		mock.mockReadUtf("Lumberjack");
 
 		InputStream in = mock.getIn();
-		MessageInputStream mis = new MessageInputStream(mr, in);
+		MessageInputStream mis = new MessageInputStream(in);
 		Message msg = mis.readMessage();
 		mis.close();
 
 		Assert.assertEquals(((String[]) msg.getArgument("testStringArray"))[1], "A");
+	}
+
+	private KeyPair generateRSAKeyPair() {
+		KeyPair keyPair = null;
+		try
+		{
+			KeyPairGenerator keyPairGenerator;
+			keyPairGenerator = KeyPairGenerator.getInstance("RSA");
+			keyPairGenerator.initialize(512);
+			keyPair = keyPairGenerator.generateKeyPair();
+		} catch (NoSuchAlgorithmException e)
+		{
+			LOGGER.log(Level.SEVERE, "Unable to create RSA key pair!", e);
+		}
+		return keyPair;
 	}
 }

@@ -24,7 +24,7 @@ public class ExecutableWorldFileResponseTest
 		message.setArgument("fileBytes", fileBytes);
 
 		WorldClient worldClient = mock(WorldClient.class);
-		ServerWorldFileTracker serverWorldFileTracker = new ServerWorldFileTracker(null);
+		ServerWorldFileTracker serverWorldFileTracker = new ServerWorldFileTracker(worldClient, null);
 		when(worldClient.getServerWorldFileTracker()).thenReturn(serverWorldFileTracker);
 
 		ExecutableWorldFileResponse response = new ExecutableWorldFileResponse(worldClient, message);

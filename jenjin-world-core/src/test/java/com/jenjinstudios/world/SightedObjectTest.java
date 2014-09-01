@@ -14,9 +14,10 @@ public class SightedObjectTest
 		World world = new World();
 		WorldObject visibleObject = new WorldObject("VisibleObject");
 		SightedObject sightedObject = new SightedObject("SightedObject");
-		world.addObject(visibleObject);
-		world.addObject(sightedObject);
+		world.getWorldObjects().scheduleForAddition(visibleObject);
+		world.getWorldObjects().scheduleForAddition(sightedObject);
 
+		world.update();
 		world.update();
 
 		Assert.assertTrue(sightedObject.getVisibleObjects().containsKey(visibleObject.getId()));
@@ -40,12 +41,13 @@ public class SightedObjectTest
 		Zone zone = new Zone(0, new Dimension2D(50, 50), locations);
 		World world = new World(zone);
 		SightedObject sightedObject = new SightedObject("SightedObject");
-		world.addObject(sightedObject);
+		world.getWorldObjects().scheduleForAddition(sightedObject);
 		sightedObject.setVector2D(new Vector2D(55, 55));
 
 		world.update();
+		world.update();
 
-		Assert.assertEquals(sightedObject.getVisibleLocations().size(), 293);
+		Assert.assertEquals(sightedObject.getVisibleLocations().size(), 238);
 	}
 
 	@Test
@@ -53,8 +55,8 @@ public class SightedObjectTest
 		World world = new World();
 		WorldObject visibleObject = new WorldObject("VisibleObject");
 		SightedObject sightedObject = new SightedObject("SightedObject");
-		world.addObject(visibleObject);
-		world.addObject(sightedObject);
+		world.getWorldObjects().scheduleForAddition(visibleObject);
+		world.getWorldObjects().scheduleForAddition(sightedObject);
 
 		world.update();
 
@@ -66,12 +68,13 @@ public class SightedObjectTest
 		World world = new World();
 		WorldObject visibleObject = new WorldObject("VisibleObject");
 		SightedObject sightedObject = new SightedObject("SightedObject");
-		world.addObject(visibleObject);
-		world.addObject(sightedObject);
+		world.getWorldObjects().scheduleForAddition(visibleObject);
+		world.getWorldObjects().scheduleForAddition(sightedObject);
 
 		world.update();
+		world.update();
 
-		world.removeObject(visibleObject);
+		world.getWorldObjects().scheduleForRemoval(visibleObject);
 
 		world.update();
 

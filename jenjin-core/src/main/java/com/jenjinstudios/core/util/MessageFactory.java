@@ -3,6 +3,8 @@ package com.jenjinstudios.core.util;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageRegistry;
 
+import java.security.PublicKey;
+
 /**
  * Used to generate messages to be passed between client and server.
  * @author Caleb Brinkman
@@ -13,17 +15,16 @@ public class MessageFactory
 
 	/**
 	 * Construct a new MessageFactory working for the given connection.
-	 * @param messageRegistry The message registry for this factory.
 	 */
-	public MessageFactory(MessageRegistry messageRegistry) { this.messageRegistry = messageRegistry; }
+	public MessageFactory() { this.messageRegistry = MessageRegistry.getInstance(); }
 
 	/**
 	 * Generate a "ping" request.
 	 * @return A "PintRequest" message.
 	 */
 	public Message generatePingRequest() {
-		Message pingRequest = messageRegistry.createMessage("PingRequest");
-		pingRequest.setArgument("requestTimeNanos", System.nanoTime());
+		Message pingRequest = MessageRegistry.getInstance().createMessage("PingRequest");
+		pingRequest.setArgument("requestTimeMillis", System.currentTimeMillis());
 		return pingRequest;
 	}
 
@@ -40,13 +41,19 @@ public class MessageFactory
 
 	/**
 	 * Generate a response to a PingRequest.
-	 * @param requestTimeNanos The time at which the ping request was made.
+	 * @param requestTimeMillis The time at which the ping request was made.
 	 * @return The PingResponse message.
 	 */
-	public Message generatePingResponse(long requestTimeNanos) {
+	public Message generatePingResponse(long requestTimeMillis) {
 		Message pingResponse = getMessageRegistry().createMessage("PingResponse");
-		pingResponse.setArgument("requestTimeNanos", requestTimeNanos);
+		pingResponse.setArgument("requestTimeMillis", requestTimeMillis);
 		return pingResponse;
+	}
+
+	public Message generatePublicKeyMessage(PublicKey publicKey) {
+		Message publicKeyMessage = getMessageRegistry().createMessage("PublicKeyMessage");
+		publicKeyMessage.setArgument("publicKey", publicKey.getEncoded());
+		return publicKeyMessage;
 	}
 
 	protected MessageRegistry getMessageRegistry() { return messageRegistry; }

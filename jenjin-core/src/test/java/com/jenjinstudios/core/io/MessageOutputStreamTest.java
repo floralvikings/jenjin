@@ -3,11 +3,15 @@ package com.jenjinstudios.core.io;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import javax.crypto.KeyGenerator;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.security.NoSuchAlgorithmException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * @author Caleb Brinkman
@@ -15,11 +19,12 @@ import java.io.IOException;
 public class MessageOutputStreamTest
 {
 	private static final MessageRegistry mr = MessageRegistry.getInstance();
+	private static final Logger LOGGER = Logger.getLogger(MessageOutputStreamTest.class.getName());
 
 	@Test
 	public void testWriteMessage() throws Exception {
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		MessageOutputStream mos = new MessageOutputStream(mr, bos);
+		MessageOutputStream mos = new MessageOutputStream(bos);
 
 		Message msg = mr.createMessage("InvalidMessage");
 		msg.setArgument("messageID", (short) -255);
@@ -30,7 +35,7 @@ public class MessageOutputStreamTest
 		mos.close();
 
 		ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
-		MessageInputStream mis = new MessageInputStream(mr, bis);
+		MessageInputStream mis = new MessageInputStream(bis);
 		Message readMsg = mis.readMessage();
 		Assert.assertEquals(readMsg.getArgs(), msg.getArgs());
 	}
@@ -38,7 +43,7 @@ public class MessageOutputStreamTest
 	@Test(expectedExceptions = {IOException.class})
 	public void testEncryptedMessageNoAESKey() throws Exception {
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		MessageOutputStream mos = new MessageOutputStream(mr, bos);
+		MessageOutputStream mos = new MessageOutputStream(bos);
 
 		Message msg = mr.createMessage("TestEncryptedMessage");
 		msg.setArgument("encryptedString", "FooBar");
@@ -48,13 +53,12 @@ public class MessageOutputStreamTest
 
 	@Test
 	public void testEncryptedMessage() throws Exception {
-		KeyGenerator keyGenerator = KeyGenerator.getInstance("AES");
-		keyGenerator.init(128);
-		byte[] key = keyGenerator.generateKey().getEncoded();
+
+		KeyPair keyPair = generateRSAKeyPair();
 
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		MessageOutputStream mos = new MessageOutputStream(mr, bos);
-		mos.setAesKey(key);
+		MessageOutputStream mos = new MessageOutputStream(bos);
+		mos.setPublicKey(keyPair.getPublic());
 
 		Message msg = mr.createMessage("TestEncryptedMessage");
 		msg.setArgument("encryptedString", "FooBar");
@@ -71,12 +75,13 @@ public class MessageOutputStreamTest
 		Assert.assertEquals(id, msg.getID());
 		Assert.assertTrue(encrypted);
 		Assert.assertNotEquals(encStr, msg.getArgument("encryptedString"));
+
 	}
 
 	@Test
 	public void testAllTypesMessage() throws Exception {
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		MessageOutputStream mos = new MessageOutputStream(mr, bos);
+		MessageOutputStream mos = new MessageOutputStream(bos);
 		Message msg = mr.createMessage("TestAllTypesMessage");
 		msg.setArgument("testString", "SNAFU");
 		msg.setArgument("testInt", 123);
@@ -93,8 +98,23 @@ public class MessageOutputStreamTest
 		mos.close();
 
 		ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
-		MessageInputStream mis = new MessageInputStream(mr, bis);
+		MessageInputStream mis = new MessageInputStream(bis);
 		Message readMsg = mis.readMessage();
 		Assert.assertEquals(readMsg.getArgs(), msg.getArgs());
+	}
+
+	private KeyPair generateRSAKeyPair() {
+		KeyPair keyPair = null;
+		try
+		{
+			KeyPairGenerator keyPairGenerator;
+			keyPairGenerator = KeyPairGenerator.getInstance("RSA");
+			keyPairGenerator.initialize(512);
+			keyPair = keyPairGenerator.generateKeyPair();
+		} catch (NoSuchAlgorithmException e)
+		{
+			LOGGER.log(Level.SEVERE, "Unable to create RSA key pair!", e);
+		}
+		return keyPair;
 	}
 }

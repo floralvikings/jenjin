@@ -14,7 +14,7 @@ import java.io.InputStream;
  */
 public class ConnectionTest
 {
-	private static MessageRegistry mr = MessageRegistry.getInstance();
+	private static final MessageRegistry mr = MessageRegistry.getInstance();
 
 	@Test
 	public void testProcessMessage() throws Exception {
@@ -28,9 +28,9 @@ public class ConnectionTest
 		InputStream in = dataInputStreamMock.getIn();
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 
-		MessageInputStream messageInputStream = new MessageInputStream(mr, in);
-		MessageOutputStream messageOutputStream = new MessageOutputStream(mr, bos);
-		MessageIO messageIO = new MessageIO(messageInputStream, messageOutputStream, mr);
+		MessageInputStream messageInputStream = new MessageInputStream(in);
+		MessageOutputStream messageOutputStream = new MessageOutputStream(bos);
+		MessageIO messageIO = new MessageIO(messageInputStream, messageOutputStream);
 		Connection connection = new Connection(messageIO);
 		connection.start();
 		Thread.sleep(100);
@@ -40,7 +40,8 @@ public class ConnectionTest
 
 		// The connection should execute the InvalidExecutableMessage,
 		byte[] bytes = bos.toByteArray();
-		MessageInputStream mis = new MessageInputStream(mr, new ByteArrayInputStream(bytes));
+		MessageInputStream mis = new MessageInputStream(new ByteArrayInputStream(bytes));
+		mis.readMessage();
 		Message msg = mis.readMessage();
 		Assert.assertEquals(msg.getArgument("messageName"), "Unknown");
 	}
@@ -52,9 +53,9 @@ public class ConnectionTest
 		dataInputStreamMock.mockReadShort((short) -255);
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 
-		MessageInputStream messageInputStream = new MessageInputStream(mr, in);
-		MessageOutputStream messageOutputStream = new MessageOutputStream(mr, bos);
-		MessageIO messageIO = new MessageIO(messageInputStream, messageOutputStream, mr);
+		MessageInputStream messageInputStream = new MessageInputStream(in);
+		MessageOutputStream messageOutputStream = new MessageOutputStream(bos);
+		MessageIO messageIO = new MessageIO(messageInputStream, messageOutputStream);
 		Connection connection = new Connection(messageIO);
 		connection.closeLink();
 
@@ -70,14 +71,14 @@ public class ConnectionTest
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 
 		MessageInputStream messageInputStream = Mockito.mock(MessageInputStream.class);
-		MessageOutputStream messageOutputStream = new MessageOutputStream(mr, bos);
+		MessageOutputStream messageOutputStream = new MessageOutputStream(bos);
 
 		Message pingRequest = mr.createMessage("PingRequest");
-		pingRequest.setArgument("requestTimeNanos", 123456789l);
+		pingRequest.setArgument("requestTimeMillis", 123456789l);
 
 		Mockito.when(messageInputStream.readMessage()).thenReturn(pingRequest).thenReturn(mr.createMessage
 			  ("BlankMessage"));
-		MessageIO messageIO = new MessageIO(messageInputStream, messageOutputStream, mr);
+		MessageIO messageIO = new MessageIO(messageInputStream, messageOutputStream);
 		Connection connection = new Connection(messageIO);
 		connection.start();
 		Thread.sleep(100);
@@ -87,7 +88,8 @@ public class ConnectionTest
 
 		// The connection should execute the InvalidExecutableMessage,
 		byte[] bytes = bos.toByteArray();
-		MessageInputStream mis = new MessageInputStream(mr, new ByteArrayInputStream(bytes));
+		MessageInputStream mis = new MessageInputStream(new ByteArrayInputStream(bytes));
+		mis.readMessage(); // Read the public key message
 		Message msg = mis.readMessage();
 		Assert.assertEquals(msg.name, "PingResponse");
 	}
@@ -96,14 +98,17 @@ public class ConnectionTest
 	public void testPingResponse() throws Exception {
 		// Spoof an invalid message
 		DataInputStreamMock dataInputStreamMock = new DataInputStreamMock();
+		dataInputStreamMock.mockReadShort((short) 3);
+		dataInputStreamMock.mockReadInt(1);
+		dataInputStreamMock.mockReadByte((byte) 0);
 		dataInputStreamMock.mockReadShort((short) 2);
-		dataInputStreamMock.mockReadLong(System.nanoTime());
+		dataInputStreamMock.mockReadLong(System.currentTimeMillis());
 		InputStream in = dataInputStreamMock.getIn();
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 
-		MessageInputStream messageInputStream = new MessageInputStream(mr, in);
-		MessageOutputStream messageOutputStream = new MessageOutputStream(mr, bos);
-		MessageIO messageIO = new MessageIO(messageInputStream, messageOutputStream, mr);
+		MessageInputStream messageInputStream = new MessageInputStream(in);
+		MessageOutputStream messageOutputStream = new MessageOutputStream(bos);
+		MessageIO messageIO = new MessageIO(messageInputStream, messageOutputStream);
 		Connection connection = new Connection(messageIO);
 
 		// Create and run the connection.  Normally, we would use connection.start() to spawn a new thread

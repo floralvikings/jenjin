@@ -24,21 +24,26 @@ import java.util.LinkedList;
  */
 public class Actor extends SightedObject
 {
-	public static final double MOVE_SPEED = 10.0d;
+	public static final double DEFAULT_MOVE_SPEED = 30.0d;
 	private final LinkedList<MoveState> stateChanges;
+	private double moveSpeed;
 	private boolean newState;
 	private MoveState forcedState;
 	private long lastStepTime;
 	private Angle newAngle;
+	private Vector2D vectorBeforeUpdate;
 
 	public Actor(String name) {
 		super(name);
+		newAngle = getAngle();
 		stateChanges = new LinkedList<>();
+		setMoveSpeed(DEFAULT_MOVE_SPEED);
 	}
 
 	@Override
 	public void setUp() {
 		super.setUp();
+		vectorBeforeUpdate = getVector2D();
 		forcedState = null;
 		synchronized (stateChanges)
 		{
@@ -49,25 +54,32 @@ public class Actor extends SightedObject
 	@Override
 	public void reset() {
 		super.reset();
+		if (vectorBeforeUpdate == null) vectorBeforeUpdate = getVector2D();
 		if (newState)
 		{
 			newState = false;
 			resetAngles();
+			//Vector2D beforeStep = new Vector2D(vectorBeforeUpdate);
 			synchronized (stateChanges)
 			{
-				stateChanges.add(new MoveState(getAngle(), getVector2D(),
-					  getLastStepTime()));
+				stateChanges.add(new MoveState(getAngle(), getVector2D(), getLastStepTime()));
 			}
 		}
 	}
 
 	@Override
 	public void setAngle(Angle angle) {
-		if (!getAngle().equals(angle))
+		if (newState || !getAngle().equals(angle))
 		{
 			newState = true;
 			this.newAngle = angle;
 		}
+	}
+
+	@Override
+	public void initialize() {
+		super.initialize();
+		resetAngles();
 	}
 
 	@Override
@@ -77,7 +89,7 @@ public class Actor extends SightedObject
 			setLastStepTime(getWorld().getLastUpdateCompleted());
 		}
 		step();
-		setLastStepTime(System.nanoTime());
+		setLastStepTime(System.currentTimeMillis());
 	}
 
 	public LinkedList<MoveState> getStateChanges() {
@@ -88,17 +100,46 @@ public class Actor extends SightedObject
 
 	public void setForcedState(MoveState forcedState) { this.forcedState = forcedState; }
 
-	public double calcStepLength() {
-		return ((System.nanoTime() - (double) getLastStepTime()) / 1000000000) * Actor.MOVE_SPEED;
+	/** Mark that the actor has been forced to its current position. */
+	public void forcePosition() {
+		MoveState forcedMoveState = new MoveState(getAngle(), getVector2D(), getLastStepTime());
+		setForcedState(forcedMoveState);
+		setVector2D(getVector2D());
+		setAngle(getAngle());
+		newState = true;
+	}
+
+	@SuppressWarnings("WeakerAccess")
+	public void forceIdle() {
+		Angle idle = getAngle().asIdle();
+		MoveState forcedMoveState = new MoveState(idle, getVector2D(), getLastStepTime());
+		setForcedState(forcedMoveState);
+		setVector2D(getVector2D());
+		setAngle(idle);
+		newState = true;
 	}
 
 	public long getLastStepTime() { return lastStepTime; }
 
 	public void setLastStepTime(long lastStepTime) { this.lastStepTime = lastStepTime; }
 
+	public Vector2D getVectorBeforeUpdate() { return vectorBeforeUpdate; }
+
+	public double getMoveSpeed() {
+		return moveSpeed;
+	}
+
+	protected void setMoveSpeed(double moveSpeed) {
+		this.moveSpeed = moveSpeed;
+	}
+
+	protected double calcStepLength() {
+		return ((System.currentTimeMillis() - (double) getLastStepTime()) / 1000) * getMoveSpeed();
+	}
+
 	private boolean stepForward(double stepLength) {
 		boolean didStep;
-		if (!getAngle().isIdle())
+		if (getAngle().isNotIdle())
 		{
 			Vector2D newVector = getVector2D().getVectorInDirection(stepLength, getAngle().getStepAngle());
 			Location newLocation = getWorld().getLocationForCoordinates(getZoneID(), newVector);

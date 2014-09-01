@@ -1,6 +1,8 @@
 package com.jenjinstudios.core;
 
-import com.jenjinstudios.core.io.*;
+import com.jenjinstudios.core.io.Message;
+import com.jenjinstudios.core.io.MessageInputStream;
+import com.jenjinstudios.core.io.MessageTypeException;
 import com.jenjinstudios.core.message.ExecutableMessage;
 
 import java.io.IOException;
@@ -27,6 +29,7 @@ public class MessageExecutor
 		try
 		{
 			Message currentMessage = inputStream.readMessage();
+			LOGGER.log(Level.FINEST, "Reading message: {0}", currentMessage);
 			executeMessage(currentMessage);
 		} catch (MessageTypeException e)
 		{

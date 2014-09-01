@@ -3,8 +3,8 @@ package com.jenjinstudios.server.message;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.server.net.ClientHandler;
 import com.jenjinstudios.server.net.User;
-import com.jenjinstudios.server.sql.LoginException;
 import com.jenjinstudios.server.sql.Authenticator;
+import com.jenjinstudios.server.sql.LoginException;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -46,7 +46,6 @@ public class ExecutableLoginRequest extends ServerExecutableMessage
 			handler.setLoggedInTime(loggedInTime);
 			queueLoginSuccessResponse(loggedInTime);
 			handler.setUser(user);
-			handler.getServer().associateUsernameWithClientHandler(username, handler);
 		} catch (LoginException | NullPointerException e)
 		{
 			LOGGER.log(Level.FINEST, "User login failure: ", e);

@@ -15,7 +15,9 @@ public class ExecutableObjectInvisibleMessage extends WorldClientExecutableMessa
 	public ExecutableObjectInvisibleMessage(WorldClient client, Message message) { super(client, message); }
 
 	@Override
-	public void runDelayed() { getClient().getWorld().removeObject(id); }
+	public void runDelayed() {
+		getClient().getWorld().getWorldObjects().scheduleForRemoval(id);
+	}
 
 	@Override
 	public void runImmediate() { id = (int) getMessage().getArgument("id"); }

@@ -53,7 +53,7 @@ public class WorldDocumentWriter
 	private Document createWorldDocument() throws WorldDocumentException {
 		try
 		{
-			return WorldXmlBuilder.createWorldDocument(world);
+			return new WorldXmlBuilder(world).createWorldDocument();
 		} catch (ParserConfigurationException e)
 		{
 			throw new WorldDocumentException("Couldn't create world document.", e);

@@ -20,7 +20,7 @@ public class ExecutableWorldLogoutResponse extends WorldClientExecutableMessage
 
 	@Override
 	public void runDelayed() {
-		getClient().setLoggedIn(!((boolean) getMessage().getArgument("success")));
+		getClient().getLoginTracker().setLoggedIn(!((boolean) getMessage().getArgument("success")));
 	}
 
 	@Override

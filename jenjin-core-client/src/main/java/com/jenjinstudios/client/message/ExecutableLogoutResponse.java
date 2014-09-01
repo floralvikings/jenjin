@@ -1,7 +1,7 @@
 package com.jenjinstudios.client.message;
 
-import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.client.net.AuthClient;
+import com.jenjinstudios.core.io.Message;
 
 /**
  * This class responds to a LogoutResponse message.
@@ -21,7 +21,7 @@ public class ExecutableLogoutResponse extends AuthClientExecutableMessage
 
 	@Override
 	public void runDelayed() {
-		getClient().setLoggedIn(!((boolean) getMessage().getArgument("success")));
+		getClient().getLoginTracker().setLoggedIn(!((boolean) getMessage().getArgument("success")));
 	}
 
 	@Override

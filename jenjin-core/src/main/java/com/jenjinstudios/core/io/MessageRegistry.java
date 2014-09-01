@@ -10,6 +10,7 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -23,11 +24,18 @@ public class MessageRegistry
 	private static final Logger LOGGER = Logger.getLogger(MessageRegistry.class.getName());
 	/** The file name of message registry classed. */
 	private static final String messageFileName = "Messages.xml";
+	private static MessageRegistry messageRegistry;
 	/** A map that stores messages types sorted by ID. */
 	private final Map<Short, MessageType> messageTypesByID = new TreeMap<>();
 	/** A map that stores message types sorted by name. */
 	private final Map<String, MessageType> messageTypesByName = new TreeMap<>();
-	private static MessageRegistry messageRegistry;
+
+	/**
+	 * Construct a new MessageRegistry.
+	 */
+	private MessageRegistry() {
+		registerXmlMessages();
+	}
 
 	public static MessageRegistry getInstance() {
 		if (messageRegistry == null)
@@ -35,13 +43,6 @@ public class MessageRegistry
 			messageRegistry = new MessageRegistry();
 		}
 		return messageRegistry;
-	}
-
-	/**
-	 * Construct a new MessageRegistry.
-	 */
-	private MessageRegistry() {
-		registerXmlMessages();
 	}
 
 	/**
@@ -152,24 +153,24 @@ public class MessageRegistry
 		return temp;
 	}
 
-	/**
-	 * Disable the ExecutableMessage invoked by the message with the given name.
-	 * @param messageName The name of the message.
-	 */
-	void disableExecutableMessage(String messageName) {
-		LOGGER.log(Level.INFO, "Disabling message: {0}", messageName);
-		MessageType type;
-		synchronized (messageTypesByName)
+	public Message createMessage(String name) {
+		Message message = null;
+		MessageType messageType = getMessageType(name);
+		if (messageType == null)
 		{
-			type = messageTypesByName.get(messageName);
+			LOGGER.log(Level.INFO, "Requested non-existant message {0}, refreshing XML registry", name);
+			// Try again after re-registering XML files
+			registerXmlMessages();
+			messageType = getMessageType(name);
 		}
-		short id = type.id;
-		ArgumentType[] argumentTypes = type.argumentTypes;
-		MessageInfo info = new MessageInfo(id, messageName, argumentTypes);
-		MessageType newMessageType = new MessageType(info);
-		messageTypesByName.put(messageName, newMessageType);
-		messageTypesByID.put(id, newMessageType);
-
+		if (messageType != null)
+		{
+			message = new Message(messageType);
+		} else
+		{
+			LOGGER.log(Level.WARNING, "Couldn't find {0} even after refreshing XML registry.", name);
+		}
+		return message;
 	}
 
 	/** Register all messages found in registry files.  Also checks the JAR file. */
@@ -203,10 +204,7 @@ public class MessageRegistry
 	}
 
 	private void disableExecutableMessages(LinkedList<String> disabled) {
-		for (String disabledMessageName : disabled)
-		{
-			disableExecutableMessage(disabledMessageName);
-		}
+		disabled.forEach(this::disableExecutableMessage);
 	}
 
 	/**
@@ -246,35 +244,32 @@ public class MessageRegistry
 	 * @param messageTypes The list of message types to add.
 	 */
 	private void addAllMessages(List<MessageType> messageTypes) {
-		for (MessageType messageType : messageTypes)
-		{
-			if (messageType != null && !messageTypesByID.containsKey(messageType.id) && !messageTypesByName
-				  .containsKey(messageType.name))
-			{
-				// Add the message type to the two trees.
-				messageTypesByID.put(messageType.id, messageType);
-				messageTypesByName.put(messageType.name, messageType);
-			}
-		}
+		Stream<MessageType> stream = messageTypes.stream();
+		Stream<MessageType> filter = stream.filter(messageType -> messageType != null &&
+			  !messageTypesByID.containsKey(messageType.id) && !messageTypesByName.containsKey(messageType.name));
+		filter.forEach(messageType -> {
+			messageTypesByID.put(messageType.id, messageType);
+			messageTypesByName.put(messageType.name, messageType);
+		});
 	}
 
-	public Message createMessage(String name) {
-		Message message = null;
-		MessageType messageType = getMessageType(name);
-		if (messageType == null)
+	/**
+	 * Disable the ExecutableMessage invoked by the message with the given name.
+	 * @param messageName The name of the message.
+	 */
+	void disableExecutableMessage(String messageName) {
+		LOGGER.log(Level.INFO, "Disabling message: {0}", messageName);
+		MessageType type;
+		synchronized (messageTypesByName)
 		{
-			LOGGER.log(Level.INFO, "Requested non-existant message {0}, refreshing XML registry", name);
-			// Try again after re-registering XML files
-			registerXmlMessages();
-			messageType = getMessageType(name);
+			type = messageTypesByName.get(messageName);
 		}
-		if (messageType != null)
-		{
-			message = new Message(messageType);
-		} else
-		{
-			LOGGER.log(Level.WARNING, "Couldn't find {0} even after refreshing XML registry.", name);
-		}
-		return message;
+		short id = type.id;
+		ArgumentType[] argumentTypes = type.argumentTypes;
+		MessageInfo info = new MessageInfo(id, messageName, argumentTypes);
+		MessageType newMessageType = new MessageType(info);
+		messageTypesByName.put(messageName, newMessageType);
+		messageTypesByID.put(id, newMessageType);
+
 	}
 }
