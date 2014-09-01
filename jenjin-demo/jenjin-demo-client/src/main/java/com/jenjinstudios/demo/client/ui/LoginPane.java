@@ -51,12 +51,12 @@ public final class LoginPane extends GridPane
 			worldClient = createWorldClient(address, port, user);
 			worldClient.start();
 			worldClient.initializeWorldFromServer();
+			LOGGER.log(Level.INFO, "Created World Client.");
 		} catch (IOException e)
 		{
 			LOGGER.log(Level.SEVERE, "Exception creating world client.", e);
 			worldClient = null;
 		}
-		LOGGER.log(Level.INFO, "Created World Client.");
 		return worldClient;
 	}
 
