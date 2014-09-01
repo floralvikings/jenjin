@@ -1,7 +1,10 @@
 package com.jenjinstudios.world;
 
-import java.util.ArrayList;
-import java.util.TreeMap;
+import com.jenjinstudios.world.math.FieldOfVisionCalculator;
+import com.jenjinstudios.world.math.Vector2D;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * The {@code SightedObject} class is a {@code WorldObject} which maintains a range of locations which are visible to
@@ -12,108 +15,138 @@ import java.util.TreeMap;
 public class SightedObject extends WorldObject
 {
 	/** The radius of the square of visible locations. */
-	public static final int VIEW_RADIUS = 10;
-	/** The array of visible locations. */
+	private static final int VIEW_RADIUS = 11;
 	private final ArrayList<Location> visibleLocations;
-	/** The container for visible objects. */
 	private final TreeMap<Integer, WorldObject> visibleObjects;
-	/** The list of newly visible objects. */
-	private final ArrayList<WorldObject> newlyVisibleObjects;
-	/** The list of newly invisible objects. */
-	private final ArrayList<WorldObject> newlyInvisibleObjects;
+	private final Set<WorldObject> newlyVisibleObjects;
+	private final Set<WorldObject> newlyInvisibleObjects;
+	private Vector2D vectorBeforeUpdate;
+	private Vector2D vectorAfterUpdate;
 
-	/**
-	 * Construct a new SightedObject.
-	 * @param name The name of this object.
-	 */
 	public SightedObject(String name) {
 		super(name);
 		visibleObjects = new TreeMap<>();
 		visibleLocations = new ArrayList<>();
-		newlyVisibleObjects = new ArrayList<>();
-		newlyInvisibleObjects = new ArrayList<>();
-	}
-
-	/**
-	 * Construct a new SightedObject.
-	 * @param name The name of this object.
-	 * @param id The id of the object.
-	 */
-	public SightedObject(String name, int id) {
-		this(name);
-		this.setId(id);
+		newlyVisibleObjects = new HashSet<>();
+		newlyInvisibleObjects = new HashSet<>();
+		vectorBeforeUpdate = getVector2D();
 	}
 
 	@Override
-	public void setWorld(World world) {
-		super.setWorld(world);
-		resetVisibleLocations();
+	public void setUp() {
+		super.setUp();
+		vectorBeforeUpdate = getVector2D();
+		if (!vectorBeforeUpdate.equals(vectorAfterUpdate))
+		{
+			resetVisibleLocations();
+		}
 	}
 
-	/**
-	 * The container for visible objects.
-	 * @return An ArrayList containing all objects visible to this actor.
-	 */
-	public TreeMap<Integer, WorldObject> getVisibleObjects() {
+	@Override
+	public void reset() {
+		// If we're in a new locations after stepping, update the visible array.
+		World world = getWorld();
+		if (world != null)
+		{
+			Location oldLoc = world.getLocationForCoordinates(getZoneID(), vectorBeforeUpdate);
+			if (oldLoc != getLocation() || getVisibleLocations().isEmpty())
+				resetVisibleLocations();
+			resetVisibleObjects();
+		}
+		vectorAfterUpdate = getVector2D();
+	}
+
+	public AbstractMap<Integer, WorldObject> getVisibleObjects() {
 		synchronized (visibleObjects)
 		{
 			return new TreeMap<>(visibleObjects);
 		}
 	}
 
-	/**
-	 * Get newly visible objects.
-	 * @return A list of all objects newly visible.
-	 */
-	public ArrayList<WorldObject> getNewlyVisibleObjects() {return newlyVisibleObjects;}
-
-	/**
-	 * Get newly invisible objects.
-	 * @return A list of all objects newly invisible.
-	 */
-	public ArrayList<WorldObject> getNewlyInvisibleObjects() {return newlyInvisibleObjects;}
-
-	/**
-	 * Get the currently visible locations.
-	 * @return The array list of currently visible locations.
-	 */
-	public ArrayList<Location> getVisibleLocations() { return visibleLocations; }
-
-	/** Resets the array of currently visible location. */
-	protected void resetVisibleLocations() {
-		visibleLocations.clear();
-		if (getLocation() != null)
+	public Set<WorldObject> getNewlyVisibleObjects() {
+		synchronized (newlyVisibleObjects)
 		{
-			visibleLocations.addAll(getLocation().getLocationsVisibleFrom());
+			return new HashSet<>(newlyVisibleObjects);
 		}
 	}
 
-	/** Reset the current list of visible objects. */
-	protected void resetVisibleObjects() {
+	public Set<WorldObject> getNewlyInvisibleObjects() {
+		synchronized (newlyInvisibleObjects)
+		{
+			return new HashSet<>(newlyInvisibleObjects);
+		}
+	}
+
+	public AbstractCollection<Location> getVisibleLocations() { return new LinkedList<>(visibleLocations); }
+
+	private void resetVisibleLocations() {
+		synchronized (visibleLocations)
+		{
+			visibleLocations.clear();
+		}
+		if (getLocation() != null)
+		{
+			Zone zone = getWorld().getZone(getZoneID());
+			FieldOfVisionCalculator fov = new FieldOfVisionCalculator(zone, getLocation(), VIEW_RADIUS);
+			synchronized (visibleLocations)
+			{
+				visibleLocations.addAll(fov.scan());
+			}
+		}
+	}
+
+	private void resetVisibleObjects() {
+		ArrayList<WorldObject> currentlyVisible = getCurrentlyVisibleObjects();
+		Collection<WorldObject> visibles;
+		synchronized (visibleObjects)
+		{
+			visibles = visibleObjects.values();
+		}
+		addNewlyInvisibleObjects(currentlyVisible, visibles);
+		addNewlyVisibleObjects(currentlyVisible, visibles);
+		setCurrentlyVisibleObjects(currentlyVisible);
+	}
+
+	private void addNewlyVisibleObjects(ArrayList<WorldObject> currentlyVisible, Collection<WorldObject> visibles) {
+		synchronized (newlyVisibleObjects)
+		{
+			newlyVisibleObjects.clear();
+			newlyVisibleObjects.addAll(currentlyVisible);
+			newlyVisibleObjects.removeAll(visibles);
+		}
+	}
+
+	private void addNewlyInvisibleObjects(ArrayList<WorldObject> currentlyVisible, Collection<WorldObject> visibles) {
+		synchronized (newlyInvisibleObjects)
+		{
+			newlyInvisibleObjects.clear();
+			newlyInvisibleObjects.addAll(visibles);
+			newlyInvisibleObjects.removeAll(currentlyVisible);
+		}
+	}
+
+	private ArrayList<WorldObject> getCurrentlyVisibleObjects() {
 		ArrayList<WorldObject> currentlyVisible = new ArrayList<>();
 		for (Location loc : visibleLocations)
 		{
-			for (WorldObject object : loc.getObjects())
+			addCurrentlyVisibleObjectsInLocation(currentlyVisible, loc);
+		}
+		return currentlyVisible;
+	}
+
+	private void setCurrentlyVisibleObjects(ArrayList<WorldObject> currentlyVisible) {
+		synchronized (visibleObjects)
+		{
+			visibleObjects.clear();
+			for (WorldObject object : currentlyVisible)
 			{
-				if (object != this)
-				{
-					currentlyVisible.add(object);
-				}
+				visibleObjects.put(object.getId(), object);
 			}
 		}
+	}
 
-		newlyInvisibleObjects.clear();
-		newlyInvisibleObjects.addAll(visibleObjects.values());
-		newlyInvisibleObjects.removeAll(currentlyVisible);
-
-		newlyVisibleObjects.clear();
-		newlyVisibleObjects.addAll(currentlyVisible);
-		newlyVisibleObjects.removeAll(visibleObjects.values());
-
-		visibleObjects.clear();
-		for (WorldObject object : currentlyVisible)
-		{
-			visibleObjects.put(object.getId(), object);
-		}
+	private void addCurrentlyVisibleObjectsInLocation(ArrayList<WorldObject> currentlyVisible, Location loc) {
+		currentlyVisible.addAll(loc.getObjects().stream().filter(object ->
+			  object != this).collect(Collectors.toList()));
 	}
 }

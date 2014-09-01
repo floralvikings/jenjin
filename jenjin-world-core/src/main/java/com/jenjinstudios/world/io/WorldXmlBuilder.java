@@ -10,8 +10,7 @@ import org.w3c.dom.Element;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import java.util.List;
-import java.util.TreeMap;
+import java.util.*;
 
 /**
  * Used to create XML representations of World objects.
@@ -35,42 +34,46 @@ public class WorldXmlBuilder
 	private static final String LOC_X_ATTR = "x";
 	/** The name of the location y attribute. */
 	private static final String LOC_Y_ATTR = "y";
+	private final World world;
+	private Document worldDocument;
+
+	public WorldXmlBuilder(World world) {
+		this.world = world;
+	}
 
 	/**
 	 * Create an XML document from the given world.
-	 * @param world The world.
 	 * @return The XML document from the world
 	 * @throws javax.xml.parsers.ParserConfigurationException If there's an error configuring the parser.
 	 */
-	public static Document createWorldDocument(World world) throws ParserConfigurationException {
+	public Document createWorldDocument() throws ParserConfigurationException {
 		DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
 
 		// Add the root "world" tag
-		Document doc = docBuilder.newDocument();
-		Element rootElement = doc.createElement(WORLD_TAG_NAME);
-		doc.appendChild(rootElement);
+		worldDocument = docBuilder.newDocument();
+		Element rootElement = worldDocument.createElement(WORLD_TAG_NAME);
+		worldDocument.appendChild(rootElement);
 
 		List<Integer> zoneIDs = world.getZoneIDs();
 		for (int id : zoneIDs)
 		{
 			Zone zone = world.getZone(id);
-			Element zoneElement = createZoneElement(doc, zone);
-			addLocationNodes(doc, zone, zoneElement);
+			Element zoneElement = createZoneElement(zone);
+			addLocationNodes(zone, zoneElement);
 			rootElement.appendChild(zoneElement);
 		}
 
-		return doc;
+		return worldDocument;
 	}
 
 	/**
 	 * Add xml for the zone to the specified document.
-	 * @param doc The document.
 	 * @param zone The zone.
 	 * @return The XML element created for the zone.
 	 */
-	private static Element createZoneElement(Document doc, Zone zone) {
-		Element zoneElement = doc.createElement(ZONE_TAG_NAME);
+	private Element createZoneElement(Zone zone) {
+		Element zoneElement = worldDocument.createElement(ZONE_TAG_NAME);
 		zoneElement.setAttribute(ZONE_ID_ATTR, String.valueOf(zone.id));
 		zoneElement.setAttribute(ZONE_X_SIZE_ATTR, String.valueOf(zone.xSize));
 		zoneElement.setAttribute(ZONE_Y_SIZE_ATTR, String.valueOf(zone.ySize));
@@ -79,43 +82,48 @@ public class WorldXmlBuilder
 
 	/**
 	 * Add location nodes to the specified zone element.
-	 * @param doc The document.
 	 * @param zone The zone.
 	 * @param zoneElement The zone element.
 	 */
-	private static void addLocationNodes(Document doc, Zone zone, Element zoneElement) {
+	private void addLocationNodes(Zone zone, Element zoneElement) {
 		for (int x = 0; x < zone.xSize; x++)
 		{
-			for (int y = 0; y < zone.ySize; y++)
+			addRow(zone, x, zoneElement);
+		}
+	}
+
+	private void addRow(Zone zone, int row, Element zoneElement) {
+		for (int y = 0; y < zone.ySize; y++)
+		{
+			Location location = zone.getLocationOnGrid(row, y);
+			Properties locationProperties = location.getProperties();
+			if (locationProperties.size() > 0)
 			{
-				Location location = zone.getLocationOnGrid(x, y);
-				TreeMap<String, String> locationProperties = location.getLocationProperties().getProperties();
-				if (locationProperties.size() > 0)
-				{
-					Element locationElement = createLocationElement(doc, location);
-					zoneElement.appendChild(locationElement);
-				}
+				Element locationElement = createLocationElement(location);
+				zoneElement.appendChild(locationElement);
 			}
 		}
 	}
 
 	/**
 	 * Create a location xml element.
-	 * @param doc The document.
 	 * @param location The location.
 	 * @return The element.
 	 */
-	private static Element createLocationElement(Document doc, Location location) {
-		Element locationElement = doc.createElement(LOC_TAG_NAME);
+	private Element createLocationElement(Location location) {
+		Element locationElement = worldDocument.createElement(LOC_TAG_NAME);
 		locationElement.setAttribute(LOC_X_ATTR, String.valueOf(location.X_COORDINATE));
 		locationElement.setAttribute(LOC_Y_ATTR, String.valueOf(location.Y_COORDINATE));
-		TreeMap<String, String> locationProperties = location.getLocationProperties().getProperties();
+		Properties locationProperties = location.getProperties();
 		if (locationProperties.size() > 0)
 		{
-			for (String name : locationProperties.keySet())
+			Enumeration<?> propertyNames = locationProperties.propertyNames();
+			ArrayList<?> list = Collections.list(propertyNames);
+			for (Object property : list)
 			{
-				String value = locationProperties.get(name);
-				Attr locAttr = doc.createAttribute(name);
+				String name = property.toString();
+				String value = locationProperties.getProperty(name);
+				Attr locAttr = worldDocument.createAttribute(name);
 				locAttr.setValue(value);
 				locationElement.setAttributeNode(locAttr);
 			}

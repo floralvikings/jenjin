@@ -1,0 +1,8 @@
+description = ''
+
+dependencies {
+}
+
+test {
+    maxParallelForks = 1;
+}

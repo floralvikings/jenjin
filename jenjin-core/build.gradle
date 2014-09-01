@@ -1,4 +1,5 @@
-description = ''
+description = 'Jenjin Core I/O Classes'
 
-dependencies {
+test {
+    maxParallelForks = 8;
 }

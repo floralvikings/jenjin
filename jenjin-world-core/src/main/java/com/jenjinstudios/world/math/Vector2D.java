@@ -1,7 +1,5 @@
 package com.jenjinstudios.world.math;
 
-import com.jenjinstudios.world.state.MoveState;
-
 /**
  * Stores a set of x and y coordinates.
  * @author Caleb Brinkman
@@ -11,9 +9,9 @@ public class Vector2D
 	/** The vector representing (0,0). */
 	public static final Vector2D ORIGIN = new Vector2D(0, 0);
 	/** The x coordinate. */
-	private double xCoordinate;
+	private final double xCoordinate;
 	/** The y coordinate. */
-	private double yCoordinate;
+	private final double yCoordinate;
 
 	/**
 	 * Construct a new set of vector2D copying another set.
@@ -33,20 +31,34 @@ public class Vector2D
 		yCoordinate = y;
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof Vector2D)) return false;
+
+		Vector2D vector2D = (Vector2D) o;
+
+		return Double.compare(vector2D.xCoordinate, xCoordinate) == 0 &&
+			Double.compare(vector2D.yCoordinate, yCoordinate) == 0;
+	}
+
+	@Override
+	public int hashCode() {
+		int result;
+		long temp;
+		temp = Double.doubleToLongBits(xCoordinate);
+		result = (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(yCoordinate);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		return result;
+	}
+
 	/**
 	 * Get the y coordinate.
 	 * @return The y coordinate.
 	 */
 	public double getYCoordinate() {
 		return yCoordinate;
-	}
-
-	/**
-	 * Set the y coordinate.
-	 * @param yCoordinate The new Y coordinate.
-	 */
-	public void setYCoordinate(double yCoordinate) {
-		this.yCoordinate = yCoordinate;
 	}
 
 	/**
@@ -57,25 +69,10 @@ public class Vector2D
 		return xCoordinate;
 	}
 
-	/**
-	 * Set the x coordinate.
-	 * @param xCoordinate The new x coordinate.
-	 */
-	public void setXCoordinate(double xCoordinate) {
-		this.xCoordinate = xCoordinate;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (!(obj instanceof Vector2D))
-			return false;
-		Vector2D vector2D = (Vector2D) obj;
-		return vector2D.xCoordinate == xCoordinate && vector2D.yCoordinate == yCoordinate;
-	}
 
 	@Override
 	public String toString() {
-		return "(" + xCoordinate + ", " + yCoordinate + ")";
+		return String.format("(%.3f, %.3f)", xCoordinate, yCoordinate);
 	}
 
 	/**
@@ -85,12 +82,16 @@ public class Vector2D
 	 * @return The new Vector2D;
 	 */
 	public Vector2D getVectorInDirection(double distance, double angle) {
-		if (angle == MoveState.IDLE) return new Vector2D(this);
-		double cos = java.lang.Math.cos(angle);
-		double sin = java.lang.Math.sin(angle);
-		double newX = MathUtil.round(xCoordinate + (distance * cos), 4);
-		double newY = MathUtil.round(yCoordinate + (distance * sin), 4);
-		return new Vector2D(newX, newY);
+		Vector2D vector2D = new Vector2D(this);
+		if (angle != Angle.IDLE)
+		{
+			double cos = Math.cos(angle);
+			double sin = Math.sin(angle);
+			double newX = MathUtil.round(xCoordinate + (distance * cos), 4);
+			double newY = MathUtil.round(yCoordinate + (distance * sin), 4);
+			vector2D = new Vector2D(newX, newY);
+		}
+		return vector2D;
 	}
 
 	/**
@@ -99,14 +100,14 @@ public class Vector2D
 	 * @return The angle to the supplied vector.
 	 */
 	public double getAngleToVector(Vector2D vector2D) {
-		if (vector2D.equals(this))
+		Double angle = Double.NEGATIVE_INFINITY;
+		if (!vector2D.equals(this))
 		{
-			// Negative infinity specifies that the vectors are the same (can't get an angle).
-			return Double.NEGATIVE_INFINITY;
+			double xDist = vector2D.getXCoordinate() - xCoordinate;
+			double yDist = vector2D.getYCoordinate() - yCoordinate;
+			angle = java.lang.Math.atan2(yDist, xDist);
 		}
-		double xDist = vector2D.getXCoordinate() - xCoordinate;
-		double yDist = vector2D.getYCoordinate() - yCoordinate;
-		return java.lang.Math.atan2(yDist, xDist);
+		return angle;
 	}
 
 	/**

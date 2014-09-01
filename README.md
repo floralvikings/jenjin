@@ -1,58 +1,60 @@
-Jenjin
+Jenjin ![Build Status](https://travis-ci.org/floralvikings/jenjin.svg?branch=jenjin-184)
 =====
 
 The Jenjin is a flexible server architecture designed for use in MMORPGs.
-Programmed in Java, and built with Gradle, it is runnable on virtually any Operating
-system.
+Programmed in Java, and built with Gradle, it is runnable on virtually any operating
+system; it has been tested in OSX 10.8 and 10.9, Ubuntu 14.04, Windows 7, and is integrated
+with Travis CI for build automation.
 
 The project is made up of several modules; the modules including the name "world" contain
-basic MMORPG functionality including persistence, synchronized action and movement, and
-line-of-sight visibility.  It also includes a format for XML files that can be used to
-pre-initialize the game world.  These modules are not required for the Jenjin functionality
-and can be foregone completely if desired.
+basic MMORPG functionality including authentication, basic persistence, and synchronized movement.
+It also includes a format for XML files that can be used to pre-initialize the game world.  
+These modules are not required for the core Jenjin functionality and can be foregone completely if desired.
 
 Modules without "world" in the name are part of the core Jenjin; they are necessary for the
-core threading and networking functionality of the Jenjin.
+core threading and networking functionality of the Jenjin.  They include the XML Message registry and ExecutableMessage
+system that allows for easy extension of client and server responses to messages, as well as thread management
+allowing a server to support a large number of clients.
 
+***
+
+##Requirements
+
+Building and testing the Jenjin requires Java 8.  The gradle wrapper is built in to the repository; the only thing
+you need to do is make sure your ```$JAVA_HOME``` environment variable points to a Java 8 JDK.  All dependencies (there
+are very few) will be downloaded automatically by the Gradle wrapper.
 
 ***
 
 ##Building and Testing
 
-The Jenjin is built using Gradle, and can be built with a simple command on
-any operating system that supports Java 7; simply run
+To build and test the Jenjin, run
 
 `./gradlew build`
 
-In order for the tests to run properly, you must be running a MySQL server on localhost on port 3306,
-with a database named "jenjin_test", a user with permission to SELECT and UPDATE named "jenjin_user" with
-a password "jenjin_password"
+in the project directory.  This will download the Gradle wrapper to a local folder, and use it to assemble and test the
+entire repository.
 
-This database must contain a table called "users" laid out in the following way:
+Be forewarned that there are a few tests that are occasionally... wonky.  If your build fails the first time, please
+make sure to try again before creating a ticket, and note in the ticket that the build doesn't fail 100% of the time
+if it passes on the second try.  Efforts are currently being made to track down and eliminate all spurious tests, and
+the Travis automated building is helping with that a great deal.
 
-**users**
+***
 
+##Special Thanks
 
-| username               | password                                                          | salt                                             | loggedin   | xCoord | yCoord | zoneID |
-| ---------------------- | ----------------------------------------------------------------- | ------------------------------------------------ | ---------- | ------ | ------ | ------ |
-| TestAccount1           | 8b678bbcf5cf2a60c6dc631b01d6b3c77d142d05eb521a62f73014cc987e0156  | 66db065da6853ec1dafb45933c77b3fdac9ce354a391e8d3 | 0          | 0      | 0      | 0      |
-| TestAccount2           | 650f00f552d4df0147d236e240ccfc490444f4b358c4ff1d79f5fd90f57243bd  | e3c42b85a183d3f654a3d2bb3bc5ea607d0fb529d9b890d3 | 0          | 0      | 0      | 0      |
-| TestAccount...(to 99)  | 650f00f552d4df0147d236e240ccfc490444f4b358c4ff1d79f5fd90f57243bd  | e3c42b85a183d3f654a3d2bb3bc5ea607d0fb529d9b890d3 | 0          | 0      | 0      | 0      |
+Special thanks go out to:
 
-Any tests that utilize the login functionality will fail without this table.
+* [This blog](http://seamless-pixels.blogspot.co.uk/), which supplied all the textures used in the demo application.  These
+textures are high-resolution, tileable, and very, very nice.  They are completely free but there is an option to download the entire
+archive for as little as $1.99 should you desire to support an open-source artist. (You should.)
 
-The password and salt fields are necessary for the salted SAH256 hashing that is done to user passwords.
-
-If testing is interrupted before completion, it may be necessary to manually reset the loggedin and/or xCoord and yCoord
-fields in the MySQL database.
-
-
+***
 
 ##Dependencies
 
-The Jenjin core architecture uses the following unmodified libraries:
+The Jenjin itself does not use any third party dependencies; however, the tests do utilize the following:
 
-* [TestNG](http://testng.org/doc/index.html)
-    * License: Apache 2.0
-* [Drizzle](https://github.com/krummas/DrizzleJDBC)
-    * License: BSD
+* The Jenjin uses [TestNG](http://testng.org/doc/index.html) for unit tests. ([License](http://testng.org/license/))
+* For database integration tests, [H2Database](http://h2database.com/html/main.html) is used. ([License](http://h2database.com/html/license.html))

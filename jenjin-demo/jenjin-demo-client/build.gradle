@@ -1,0 +1,7 @@
+apply plugin: 'application'
+
+dependencies {
+    compile project(':jenjin-world-client')
+}
+
+mainClassName = 'com.jenjinstudios.demo.client.JenjinDemoApp'
