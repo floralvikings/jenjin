@@ -17,13 +17,13 @@ import java.util.List;
 public class WorldClientHandler extends ClientHandler
 {
 	private final WorldServerMessageFactory messageFactory;
-	private Player player;
+	private Actor player;
 	private boolean hasSentActorStepMessage;
 
 	public WorldClientHandler(WorldServer<? extends WorldClientHandler> s, MessageIO messageIO) {
 		super(s, messageIO);
 		this.messageFactory = new WorldServerMessageFactory();
-		setPlayer(new Player("PLAYER"));
+		setPlayer(new Actor("PLAYER"));
 	}
 
 	@Override
@@ -43,9 +43,9 @@ public class WorldClientHandler extends ClientHandler
 	@Override
 	public WorldServerMessageFactory getMessageFactory() { return messageFactory; }
 
-	public Player getPlayer() { return player; }
+	public Actor getPlayer() { return player; }
 
-	protected void setPlayer(Player player) { this.player = player; }
+	protected void setPlayer(Actor player) { this.player = player; }
 
 	private void queueNewlyVisibleMessages() {
 		for (WorldObject object : player.getNewlyVisibleObjects())

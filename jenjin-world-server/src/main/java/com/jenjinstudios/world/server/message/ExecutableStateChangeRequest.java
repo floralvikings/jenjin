@@ -1,12 +1,12 @@
 package com.jenjinstudios.world.server.message;
 
 import com.jenjinstudios.core.io.Message;
+import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.Location;
 import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.math.Angle;
 import com.jenjinstudios.world.math.MathUtil;
 import com.jenjinstudios.world.math.Vector2D;
-import com.jenjinstudios.world.server.Player;
 import com.jenjinstudios.world.server.WorldClientHandler;
 import com.jenjinstudios.world.state.MoveState;
 
@@ -40,7 +40,7 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage
 
 	@Override
 	public void runDelayed() {
-		Player player = getClientHandler().getPlayer();
+		Actor player = getClientHandler().getPlayer();
 		double distance = MathUtil.round(player.getMoveSpeed() * ((double) timePast / 1000d), 2);
 		position = uncorrectedPosition.getVectorInDirection(distance, angle.getStepAngle());
 		if (!locationWalkable(player))
@@ -57,7 +57,6 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage
 			player.setForcedState(forcedState);
 		} else
 		{
-			player.setPendingAngle(angle);
 			player.setAngle(angle);
 			player.setVector2D(position);
 		}
@@ -76,7 +75,7 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage
 
 	}
 
-	private boolean locationWalkable(Player player) {
+	private boolean locationWalkable(Actor player) {
 		World world = player.getWorld();
 		int zoneID = player.getZoneID();
 		Location location = world.getLocationForCoordinates(zoneID, position);
@@ -89,7 +88,7 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage
 		return walkable;
 	}
 
-	private boolean isCorrectionSafe(Player player) {
+	private boolean isCorrectionSafe(Actor player) {
 		double tolerance = player.getMoveSpeed() * 0.1;
 		Vector2D proposedPlayerOrigin = getPlayerOrigin(player);
 		double distance = uncorrectedPosition.getDistanceToVector(proposedPlayerOrigin);
@@ -113,9 +112,9 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage
 
 	}
 
-	private Vector2D getPlayerOrigin(Player player) {
+	private Vector2D getPlayerOrigin(Actor player) {
 		double originDistance = player.getVector2D().getDistanceToVector(uncorrectedPosition);
-		double playerReverseAngle = player.getPendingAngle().reverseStepAngle();
+		double playerReverseAngle = angle.reverseStepAngle();
 		return player.getVector2D().getVectorInDirection(originDistance, playerReverseAngle);
 	}
 }
