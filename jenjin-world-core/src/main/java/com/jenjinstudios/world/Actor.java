@@ -69,7 +69,8 @@ public class Actor extends SightedObject
 
 	@Override
 	public void setAngle(Angle angle) {
-		if (newState || !getAngle().equals(angle))
+		boolean forcedStateMatch = getForcedState() != null && angle.equals(getForcedState().angle);
+		if ((newState || !getAngle().equals(angle)) && !forcedStateMatch)
 		{
 			setForcedState(null);
 			newState = true;
