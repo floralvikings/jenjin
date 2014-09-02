@@ -2,7 +2,7 @@ package com.jenjinstudios.world.client.message;
 
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageRegistry;
-import com.jenjinstudios.world.client.ClientPlayer;
+import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.client.WorldClient;
 import com.jenjinstudios.world.math.Angle;
 import com.jenjinstudios.world.math.Vector2D;
@@ -28,7 +28,7 @@ public class ExecutableForceStateMessageTest
 		forceStateMessage.setArgument("timeOfForce", 12345l);
 
 		WorldClient worldClient = mock(WorldClient.class);
-		ClientPlayer clientPlayer = mock(ClientPlayer.class);
+		Actor clientPlayer = mock(Actor.class);
 		when(worldClient.getPlayer()).thenReturn(clientPlayer);
 
 		ExecutableForceStateMessage message = new ExecutableForceStateMessage(worldClient, forceStateMessage);

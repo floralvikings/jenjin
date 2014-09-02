@@ -1,5 +1,6 @@
 package com.jenjinstudios.world.client;
 
+import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.math.Angle;
 import com.jenjinstudios.world.math.Vector2D;
@@ -14,7 +15,7 @@ public class ClientPlayerTest
 	@Test(timeOut = 5000)
 	public void testSetAngleNoUpdate() {
 		World world = new World();
-		ClientPlayer player = new ClientPlayer(0, "ClientActor");
+		Actor player = new Actor("ClientActor");
 		world.getWorldObjects().scheduleForAddition(player);
 		world.update();
 		Angle angle = new Angle(Angle.LEFT, Angle.FRONT);
@@ -25,7 +26,7 @@ public class ClientPlayerTest
 	@Test(timeOut = 5000)
 	public void testSetAngle() {
 		World world = new World();
-		ClientPlayer player = new ClientPlayer(0, "ClientActor");
+		Actor player = new Actor("ClientActor");
 		world.getWorldObjects().scheduleForAddition(player);
 		world.update();
 		Angle angle = new Angle(Angle.LEFT, Angle.FRONT);
@@ -37,7 +38,7 @@ public class ClientPlayerTest
 	@Test(timeOut = 5000)
 	public void testSetAngleToForcedPosition() {
 		World world = new World();
-		ClientPlayer player = new ClientPlayer(0, "ClientActor");
+		Actor player = new Actor("ClientActor");
 		world.getWorldObjects().scheduleForAddition(player);
 		world.update();
 		player.forcePosition();
@@ -49,7 +50,8 @@ public class ClientPlayerTest
 	@Test(timeOut = 5000)
 	public void testForcePosition() {
 		World world = new World();
-		ClientPlayer player = new ClientPlayer(0, "ClientActor");
+		Actor player = new Actor("ClientActor");
+		player.setId(0);
 		world.getWorldObjects().scheduleForAddition(player);
 		world.update();
 		player.forcePosition();
@@ -59,7 +61,7 @@ public class ClientPlayerTest
 	@Test(timeOut = 5000)
 	public void testStep() throws InterruptedException {
 		World world = new World();
-		ClientPlayer player = new ClientPlayer(0, "ClientActor");
+		Actor player = new Actor("ClientActor");
 		world.getWorldObjects().scheduleForAddition(player);
 		world.update();
 		Angle angle = new Angle(0, Angle.FRONT);

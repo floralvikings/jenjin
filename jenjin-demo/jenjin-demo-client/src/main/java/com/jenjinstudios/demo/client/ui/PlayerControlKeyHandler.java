@@ -2,7 +2,7 @@ package com.jenjinstudios.demo.client.ui;
 
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageRegistry;
-import com.jenjinstudios.world.client.ClientPlayer;
+import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.client.WorldClient;
 import com.jenjinstudios.world.math.Angle;
 import javafx.event.EventHandler;
@@ -18,7 +18,7 @@ import static com.jenjinstudios.world.math.Angle.*;
 public class PlayerControlKeyHandler implements EventHandler<KeyEvent>
 {
 	private final WorldClient worldClient;
-	private final ClientPlayer clientPlayer;
+	private final Actor clientPlayer;
 	private final PlayerKeyFlags flags;
 
 	public PlayerControlKeyHandler(WorldClient worldClient) {

@@ -1,7 +1,7 @@
 package com.jenjinstudios.world.client.message;
 
 import com.jenjinstudios.core.io.Message;
-import com.jenjinstudios.world.client.ClientPlayer;
+import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.client.WorldClient;
 import com.jenjinstudios.world.client.WorldClientUpdater;
 import com.jenjinstudios.world.math.Vector2D;
@@ -13,7 +13,7 @@ import com.jenjinstudios.world.math.Vector2D;
 public class ExecutableWorldLoginResponse extends WorldClientExecutableMessage
 {
 	/** The player created as indicated by the world login response. */
-	private ClientPlayer player;
+	private Actor player;
 
 	/**
 	 * Construct an ExecutableMessage with the given Message.
@@ -46,7 +46,8 @@ public class ExecutableWorldLoginResponse extends WorldClientExecutableMessage
 		int id = (int) getMessage().getArgument("id");
 		double xCoordinate = (double) getMessage().getArgument("xCoordinate");
 		double yCoordinate = (double) getMessage().getArgument("yCoordinate");
-		player = new ClientPlayer(id, getClient().getUser().getUsername());
+		player = new Actor(getClient().getUser().getUsername());
+		player.setId(id);
 		Vector2D vector2D = new Vector2D(xCoordinate, yCoordinate);
 		player.setVector2D(vector2D);
 		player.setLastStepTime((long) getMessage().getArgument("loginTime"));

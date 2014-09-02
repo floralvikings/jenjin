@@ -1,7 +1,7 @@
 package com.jenjinstudios.world.client.message;
 
 import com.jenjinstudios.core.io.Message;
-import com.jenjinstudios.world.client.ClientActor;
+import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.client.WorldClient;
 import com.jenjinstudios.world.math.Angle;
 import com.jenjinstudios.world.math.Vector2D;
@@ -16,7 +16,7 @@ import java.util.logging.Logger;
 public class ExecutableActorVisibleMessage extends WorldClientExecutableMessage
 {
 	private static final Logger LOGGER = Logger.getLogger(ExecutableActorVisibleMessage.class.getName());
-	private ClientActor newlyVisible;
+	private Actor newlyVisible;
 
 	public ExecutableActorVisibleMessage(WorldClient client, Message message) { super(client, message); }
 
@@ -47,7 +47,8 @@ public class ExecutableActorVisibleMessage extends WorldClientExecutableMessage
 		long timeOfVisibility = (long) message.getArgument("timeOfVisibility");
 		double moveSpeed = (double) message.getArgument("moveSpeed");
 
-		newlyVisible = new ClientActor(id, name);
+		newlyVisible = new Actor(name);
+		newlyVisible.setId(id);
 		newlyVisible.setResourceID(resourceID);
 		double dist = moveSpeed * ((double) (System.currentTimeMillis() - timeOfVisibility) / 1000d);
 		Angle angle = new Angle(absoluteAngle, relativeAngle);

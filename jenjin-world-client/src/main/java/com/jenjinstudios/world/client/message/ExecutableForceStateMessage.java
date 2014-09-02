@@ -1,7 +1,7 @@
 package com.jenjinstudios.world.client.message;
 
 import com.jenjinstudios.core.io.Message;
-import com.jenjinstudios.world.client.ClientPlayer;
+import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.client.WorldClient;
 import com.jenjinstudios.world.math.Angle;
 import com.jenjinstudios.world.math.Vector2D;
@@ -20,7 +20,7 @@ public class ExecutableForceStateMessage extends WorldClientExecutableMessage
 
 	@Override
 	public void runDelayed() {
-		ClientPlayer player = getClient().getPlayer();
+		Actor player = getClient().getPlayer();
 		player.setAngle(angle);
 		player.setVector2D(vector2D);
 		player.setLastStepTime(timeOfForce);

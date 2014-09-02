@@ -1,5 +1,6 @@
 package com.jenjinstudios.world.client;
 
+import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.World;
 import org.testng.annotations.Test;
 
@@ -13,7 +14,7 @@ public class WorldClientUpdaterTest
 	@Test
 	public void testRun() {
 		WorldClient worldClient = mock(WorldClient.class);
-		ClientPlayer clientPlayer = mock(ClientPlayer.class);
+		Actor clientPlayer = mock(Actor.class);
 		World world = mock(World.class);
 
 		when(worldClient.getWorld()).thenReturn(world);

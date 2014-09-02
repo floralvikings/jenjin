@@ -3,6 +3,7 @@ package com.jenjinstudios.world.client;
 import com.jenjinstudios.client.net.AuthClient;
 import com.jenjinstudios.client.net.ClientUser;
 import com.jenjinstudios.core.MessageIO;
+import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.client.message.WorldClientMessageFactory;
 import com.jenjinstudios.world.io.WorldDocumentException;
@@ -22,7 +23,7 @@ public class WorldClient extends AuthClient
 	private final WorldClientMessageFactory messageFactory;
 	private final ServerWorldFileTracker serverWorldFileTracker;
 	private World world;
-	private ClientPlayer player;
+	private Actor player;
 
 	public WorldClient(MessageIO messageIO, ClientUser clientUser, File worldFile) throws WorldDocumentException {
 		super(messageIO, clientUser);
@@ -36,9 +37,9 @@ public class WorldClient extends AuthClient
 
 	public ServerWorldFileTracker getServerWorldFileTracker() { return serverWorldFileTracker; }
 
-	public ClientPlayer getPlayer() { return player; }
+	public Actor getPlayer() { return player; }
 
-	public void setPlayer(ClientPlayer player) { this.player = player; }
+	public void setPlayer(Actor player) { this.player = player; }
 
 	public World getWorld() { return world; }
 

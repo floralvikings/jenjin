@@ -1,6 +1,7 @@
 package com.jenjinstudios.world.client;
 
 import com.jenjinstudios.core.io.Message;
+import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.client.message.WorldClientMessageFactory;
 import com.jenjinstudios.world.state.MoveState;
 
@@ -15,7 +16,7 @@ public class WorldClientUpdater implements Runnable
 	/** The client being updated by this runnable. */
 	private final WorldClient worldClient;
 	/** The player being controlled by the world client. */
-	private final ClientPlayer player;
+	private final Actor player;
 
 	/**
 	 * Construct a new {@code WorldClientUpdater} for the given client.
