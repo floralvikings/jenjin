@@ -2,10 +2,10 @@ package com.jenjinstudios.world.server.message;
 
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.server.net.User;
+import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.WorldObjectMap;
 import com.jenjinstudios.world.math.Vector2D;
-import com.jenjinstudios.world.server.Player;
 import com.jenjinstudios.world.server.WorldClientHandler;
 import com.jenjinstudios.world.server.WorldServer;
 import com.jenjinstudios.world.server.sql.WorldAuthenticator;
@@ -35,7 +35,7 @@ public class ExecutableWorldLoginRequestTest
 		WorldServerMessageFactory messageFactory = Mockito.mock(WorldServerMessageFactory.class);
 		World world = Mockito.mock(World.class);
 		User user = Mockito.mock(User.class);
-		Player player = Mockito.mock(Player.class);
+		Actor player = Mockito.mock(Actor.class);
 		WorldAuthenticator authenticator = Mockito.mock(WorldAuthenticator.class);
 		WorldServer server = Mockito.mock(WorldServer.class);
 		WorldClientHandler wch = Mockito.mock(WorldClientHandler.class);

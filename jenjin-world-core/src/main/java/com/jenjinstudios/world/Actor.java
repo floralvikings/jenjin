@@ -24,7 +24,7 @@ import java.util.LinkedList;
  */
 public class Actor extends SightedObject
 {
-	public static final double DEFAULT_MOVE_SPEED = 30.0d;
+	public static double DEFAULT_MOVE_SPEED = 30.0d;
 	private final LinkedList<MoveState> stateChanges;
 	private double moveSpeed;
 	private boolean newState;
@@ -69,8 +69,10 @@ public class Actor extends SightedObject
 
 	@Override
 	public void setAngle(Angle angle) {
-		if (newState || !getAngle().equals(angle))
+		boolean forcedStateMatch = getForcedState() != null && angle.equals(getForcedState().angle);
+		if ((newState || !getAngle().equals(angle)) && !forcedStateMatch)
 		{
+			setForcedState(null);
 			newState = true;
 			this.newAngle = angle;
 		}
@@ -129,7 +131,7 @@ public class Actor extends SightedObject
 		return moveSpeed;
 	}
 
-	protected void setMoveSpeed(double moveSpeed) {
+	public void setMoveSpeed(double moveSpeed) {
 		this.moveSpeed = moveSpeed;
 	}
 

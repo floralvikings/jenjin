@@ -2,9 +2,9 @@ package com.jenjinstudios.world.server.message;
 
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageRegistry;
+import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.math.Angle;
-import com.jenjinstudios.world.server.Player;
 import com.jenjinstudios.world.server.WorldClientHandler;
 import com.jenjinstudios.world.server.WorldServer;
 import org.testng.Assert;
@@ -24,7 +24,7 @@ public class ExecutableStateChangeRequestTest
 	@Test
 	public void testValidRequest() throws InterruptedException {
 		World world = new World();
-		Player player = new Player("FooBar");
+		Actor player = new Actor("FooBar");
 		world.getWorldObjects().scheduleForAddition(player);
 		world.update();
 		WorldClientHandler mock = mock(WorldClientHandler.class);
@@ -52,7 +52,7 @@ public class ExecutableStateChangeRequestTest
 	@Test
 	public void testInvalidRequestCoordinates() {
 		World world = new World();
-		Player player = new Player("FooBar");
+		Actor player = new Actor("FooBar");
 		world.getWorldObjects().scheduleForAddition(player);
 		world.update();
 		WorldClientHandler mock = mock(WorldClientHandler.class);
@@ -81,7 +81,7 @@ public class ExecutableStateChangeRequestTest
 	public void testInvalidRequestTime() {
 		// Functionally the same as testing excessive delay.
 		World world = new World();
-		Player player = new Player("FooBar");
+		Actor player = new Actor("FooBar");
 		world.getWorldObjects().scheduleForAddition(player);
 		world.update();
 		WorldClientHandler mock = mock(WorldClientHandler.class);
@@ -109,7 +109,7 @@ public class ExecutableStateChangeRequestTest
 	@Test
 	public void testExcessiveDelay() throws InterruptedException {
 		World world = new World();
-		Player player = new Player("FooBar");
+		Actor player = new Actor("FooBar");
 		world.getWorldObjects().scheduleForAddition(player);
 		world.update();
 		WorldClientHandler mock = mock(WorldClientHandler.class);

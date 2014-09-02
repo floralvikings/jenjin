@@ -3,8 +3,8 @@ package com.jenjinstudios.world.server.message;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.server.net.User;
 import com.jenjinstudios.server.sql.LoginException;
+import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.math.Vector2D;
-import com.jenjinstudios.world.server.Player;
 import com.jenjinstudios.world.server.WorldClientHandler;
 import com.jenjinstudios.world.server.WorldServer;
 import com.jenjinstudios.world.server.sql.WorldAuthenticator;
@@ -88,13 +88,13 @@ public class ExecutableWorldLoginRequest extends WorldExecutableMessage
 	}
 
 	private void handleLoginSuccess() {
-		Player player = setHandlerPlayerInfo();
+		Actor player = setHandlerPlayerInfo();
 		loginResponse = createSuccessResponse(player);
 	}
 
-	private Player setHandlerPlayerInfo() {
+	private Actor setHandlerPlayerInfo() {
 		WorldClientHandler handler = getClientHandler();
-		Player player = handler.getPlayer();
+		Actor player = handler.getPlayer();
 		double x = (double) playerData.get(X_COORD);
 		double y = (double) playerData.get(Y_COORD);
 		int zoneId = (int) playerData.get(ZONE_ID);
@@ -107,7 +107,7 @@ public class ExecutableWorldLoginRequest extends WorldExecutableMessage
 		return player;
 	}
 
-	private Message createSuccessResponse(Player player) {
+	private Message createSuccessResponse(Actor player) {
 		Message loginResponse = getClientHandler().getMessageFactory().generateWorldLoginResponse();
 		loginResponse.setArgument("success", true);
 		loginResponse.setArgument("loginTime", getClientHandler().getLoggedInTime());

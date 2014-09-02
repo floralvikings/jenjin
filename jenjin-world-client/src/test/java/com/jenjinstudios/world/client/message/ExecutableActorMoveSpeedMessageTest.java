@@ -2,7 +2,7 @@ package com.jenjinstudios.world.client.message;
 
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageRegistry;
-import com.jenjinstudios.world.client.ClientActor;
+import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.client.WorldClient;
 import org.mockito.Mockito;
 import org.testng.Assert;
@@ -25,6 +25,6 @@ public class ExecutableActorMoveSpeedMessageTest
 		message.runImmediate();
 		message.runDelayed();
 
-		Assert.assertEquals(ClientActor.MOVE_SPEED, 123.45);
+		Assert.assertEquals(Actor.DEFAULT_MOVE_SPEED, 123.45);
 	}
 }

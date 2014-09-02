@@ -5,7 +5,6 @@ import com.jenjinstudios.world.Location;
 import com.jenjinstudios.world.WorldObject;
 import com.jenjinstudios.world.math.Angle;
 import com.jenjinstudios.world.math.Vector2D;
-import com.jenjinstudios.world.server.Player;
 
 import java.util.Collection;
 
@@ -17,19 +16,19 @@ import static com.jenjinstudios.world.math.Angle.FRONT;
 public class Bullet extends Actor
 {
 	private static final double MAX_RANGE = 250;
-	private final Player playerFiring;
+	private final Actor actorFiring;
 	private final Vector2D startVector;
 
-	public Bullet(Player playerFiring) {
+	public Bullet(Actor actorFiring) {
 		super("Bullet");
-		this.playerFiring = playerFiring;
-		setVector2D(playerFiring.getVector2D());
+		this.actorFiring = actorFiring;
+		setVector2D(actorFiring.getVector2D());
 		startVector = getVector2D();
-		double targetAngle = playerFiring.getAngle().getAbsoluteAngle();
+		double targetAngle = actorFiring.getAngle().getAbsoluteAngle();
 		setAngle(new Angle(targetAngle, FRONT));
 		setMoveSpeed(Actor.DEFAULT_MOVE_SPEED * 3);
 		setResourceID(1);
-		setZoneID(playerFiring.getZoneID());
+		setZoneID(actorFiring.getZoneID());
 	}
 
 	@Override
@@ -67,7 +66,7 @@ public class Bullet extends Actor
 	private void tryHitActor(Collection<WorldObject> objects) {
 		for (WorldObject object : objects)
 		{
-			if (object != this && object instanceof Actor && !(object instanceof Bullet) && object != playerFiring)
+			if (object != this && object instanceof Actor && !(object instanceof Bullet) && object != actorFiring)
 			{
 				hitActor((Actor) object);
 				break;

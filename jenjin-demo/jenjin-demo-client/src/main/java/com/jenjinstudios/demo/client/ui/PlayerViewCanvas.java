@@ -1,8 +1,8 @@
 package com.jenjinstudios.demo.client.ui;
 
+import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.Location;
 import com.jenjinstudios.world.WorldObject;
-import com.jenjinstudios.world.client.ClientPlayer;
 import javafx.application.Platform;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -24,11 +24,11 @@ public class PlayerViewCanvas extends Canvas
 	private final double locScale = (SCALE / Location.SIZE);
 	private final Image playerTile;
 	private final Image bulletTile;
-	private final ClientPlayer clientPlayer;
+	private final Actor clientPlayer;
 	private final double yOrig = getHeight() / 2;
 	private final double xOrig = getWidth() / 2;
 
-	public PlayerViewCanvas(ClientPlayer clientPlayer, double width, double height) {
+	public PlayerViewCanvas(Actor clientPlayer, double width, double height) {
 		super(width, height);
 		this.clientPlayer = clientPlayer;
 		Platform.runLater(this::requestFocus);
