@@ -54,7 +54,7 @@ public class ExecutableWorldLogoutRequest extends WorldExecutableMessage
 		WorldClientHandler handler = getClientHandler();
 		if (authenticator != null && handler.getUser() != null)
 		{
-			authenticator.updatePlayer(handler.getPlayer());
+			authenticator.updatePlayer(handler);
 			authenticator.logOutUser(handler.getUser().getUsername());
 		} else throw new LoginException("Missing ClientHandler username or Authenticator.");
 	}

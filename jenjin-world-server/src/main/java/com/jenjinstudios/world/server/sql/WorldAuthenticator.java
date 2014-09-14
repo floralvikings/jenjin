@@ -1,11 +1,12 @@
 package com.jenjinstudios.world.server.sql;
 
+import com.jenjinstudios.server.net.User;
 import com.jenjinstudios.server.sql.Authenticator;
 import com.jenjinstudios.world.Actor;
+import com.jenjinstudios.world.server.WorldClientHandler;
 
-import java.sql.*;
-import java.util.HashMap;
-import java.util.Map;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -30,46 +31,20 @@ public class WorldAuthenticator extends Authenticator
 	 */
 	public WorldAuthenticator(Connection connection) { super(connection); }
 
-	public Map<String, Object> getPlayerInfo(String username) {
-		HashMap<String, Object> playerData = new HashMap<>();
-		try (ResultSet results = makeUserQuery(username))
-		{
-			ResultSetMetaData metaData = results.getMetaData();
-			results.next();
-			for (int i = 1; i <= metaData.getColumnCount(); i++)
-			{
-				playerData.put(metaData.getColumnName(i).toUpperCase(), results.getObject(i));
-			}
-		} catch (SQLException | IndexOutOfBoundsException e)
-		{
-			LOGGER.log(Level.FINE, "Failed to get user data: " + username, e);
-		}
-		return playerData;
-	}
+	public void updatePlayer(WorldClientHandler worldClientHandler) {
+		Actor player = worldClientHandler.getPlayer();
+		User user = worldClientHandler.getUser();
 
-	/**
-	 * Update the coordinates of the given actor in the database.
-	 * @param player The player to update.
-	 */
-	public void updatePlayer(Actor player) {
-		String username = player.getName();
-		double xCoord = player.getVector2D().getXCoordinate();
-		double yCoord = player.getVector2D().getYCoordinate();
-		int zoneId = player.getZoneID();
+		user.getProperties().put(X_COORD, player.getVector2D().getXCoordinate());
+		user.getProperties().put(Y_COORD, player.getVector2D().getYCoordinate());
+		user.getProperties().put(ZONE_ID, player.getZoneID());
 
-		String updatePlayerQuery = "UPDATE jenjin_users SET " + X_COORD + "=" + xCoord + ", " + Y_COORD +
-			  "=" + yCoord + ", " + ZONE_ID + "=" + zoneId + " WHERE " + "username = ?";
-		synchronized (dbConnection)
+		try
 		{
-			try (PreparedStatement updatePlayerStatement = dbConnection.prepareStatement(updatePlayerQuery))
-			{
-				updatePlayerStatement.setString(1, username);
-				updatePlayerStatement.executeUpdate();
-				updatePlayerStatement.close();
-			} catch (SQLException e)
-			{
-				LOGGER.log(Level.WARNING, "Unable to log out player.", e);
-			}
+			super.updateUserProperties(user);
+		} catch (SQLException e)
+		{
+			LOGGER.log(Level.SEVERE, "Unable to update player information in database!", e);
 		}
 	}
 }
