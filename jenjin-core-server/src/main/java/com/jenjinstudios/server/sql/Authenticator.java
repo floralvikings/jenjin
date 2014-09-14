@@ -181,38 +181,45 @@ public class Authenticator
 		}
 	}
 
-	protected void updateUserProperties(User user) throws LoginException {
-		// Mildly complex SQL incoming
-		String updateStatement = "IF NOT EXISTS (" +
-			  "SELECT * FROM " + PROPERTIES_TABLE + " WHERE " + USER + " = ? AND " + PROPERTY_NAME + " = ?)" +
-			  "INSERT INTO " + PROPERTIES_TABLE + " (" + USER + ", " + PROPERTY_NAME + ", " + PROPERTY_VALUE + ")" +
-			  "VALUES (?, ?, ?)" +
-			  "ELSE UPDATE " + PROPERTIES_TABLE + " WHERE " + USER + " = ? AND " + PROPERTY_NAME + " = ? " +
-			  "SET " + PROPERTY_VALUE + " = ?";
-
-		HashMap<String, Object> properties = user.getProperties();
+	public Object getUserProperty(String username, String propertyName) throws SQLException {
+		String propertyQuery = "SELECT * FROM " + PROPERTIES_TABLE + " " +
+			  "WHERE " + USER + " = ? AND " + PROPERTY_NAME + " = ?";
+		Object r = null;
 		synchronized (dbConnection)
 		{
-			for (String name : properties.keySet())
+			PreparedStatement statement = dbConnection.prepareStatement(propertyQuery);
+			statement.setString(1, username);
+			statement.setString(2, propertyName);
+			ResultSet results = statement.executeQuery();
+			if (results.next())
 			{
-				Object value = properties.get(name);
-				try (PreparedStatement statement = dbConnection.prepareStatement(updateStatement))
-				{
-					statement.setString(1, user.getUsername());
-					statement.setString(2, name);
-					statement.setString(3, user.getUsername());
-					statement.setString(4, name);
-					statement.setObject(5, value);
-					statement.setString(6, user.getUsername());
-					statement.setString(7, name);
-					statement.setObject(8, value);
-					statement.execute();
-					statement.close();
-				} catch (SQLException e)
-				{
-					throw new LoginException("Unable to update user properties: ", e);
-				}
+				r = results.getObject(PROPERTY_VALUE);
 			}
 		}
+		return r;
+	}
+
+	protected void updateUserProperties(User user) throws SQLException {
+		HashMap<String, Object> properties = user.getProperties();
+		for (String name : properties.keySet())
+		{
+			Object value = properties.get(name);
+			Object existing = getUserProperty(user.getUsername(), name);
+			if (existing == null)
+			{
+				insertUserProperty(user.getUsername(), name, value);
+			} else if (!existing.equals(value))
+			{
+				updateUserProperty(user.getUsername(), name, value);
+			}
+		}
+	}
+
+	private void insertUserProperty(String username, String propertyName, Object propertyValue) {
+
+	}
+
+	private void updateUserProperty(String username, String propertyName, Object propertyValue) {
+
 	}
 }
