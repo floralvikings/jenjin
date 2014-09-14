@@ -93,7 +93,7 @@ public class Authenticator
 		}
 	}
 
-	public Map<String, Object> lookUpProperties(String username) throws LoginException {
+	public Map<String, Object> lookUpUserProperties(String username) throws LoginException {
 		Map<String, Object> properties = new HashMap<>();
 
 		try (ResultSet results = makePropertiesQuery(username))
@@ -181,7 +181,7 @@ public class Authenticator
 		}
 	}
 
-	public Object getUserProperty(String username, String propertyName) throws SQLException {
+	public Object lookUpUserProperty(String username, String propertyName) throws SQLException {
 		String propertyQuery = "SELECT * FROM " + PROPERTIES_TABLE + " " +
 			  "WHERE " + USER + " = ? AND " + PROPERTY_NAME + " = ?";
 		Object r = null;
@@ -204,7 +204,7 @@ public class Authenticator
 		for (String name : properties.keySet())
 		{
 			Object value = properties.get(name);
-			Object existing = getUserProperty(user.getUsername(), name);
+			Object existing = lookUpUserProperty(user.getUsername(), name);
 			if (existing == null)
 			{
 				insertUserProperty(user.getUsername(), name, value);
@@ -215,11 +215,32 @@ public class Authenticator
 		}
 	}
 
-	private void insertUserProperty(String username, String propertyName, Object propertyValue) {
-
+	private void insertUserProperty(String username, String propertyName, Object propertyValue) throws SQLException {
+		String insertPropertyQuery = "INSERT INTO " + PROPERTIES_TABLE + " " +
+			  "(`" + USER + "`, `" + PROPERTY_NAME + "`, `" + PROPERTY_VALUE + "`) VALUES " +
+			  "(?, ?, ?)";
+		synchronized (dbConnection)
+		{
+			PreparedStatement statement = dbConnection.prepareStatement(insertPropertyQuery);
+			statement.setString(1, username);
+			statement.setString(2, propertyName);
+			statement.setObject(3, propertyValue);
+			statement.executeUpdate();
+			statement.close();
+		}
 	}
 
-	private void updateUserProperty(String username, String propertyName, Object propertyValue) {
-
+	private void updateUserProperty(String username, String propertyName, Object propertyValue) throws SQLException {
+		String updatePropertyQuery = "UPDATE " + PROPERTIES_TABLE + " SET " + PROPERTY_VALUE + " = ? WHERE " +
+			  USER + " = ? AND " + PROPERTY_NAME + " = ?";
+		synchronized (dbConnection)
+		{
+			PreparedStatement statement = dbConnection.prepareStatement(updatePropertyQuery);
+			statement.setObject(1, propertyValue);
+			statement.setString(2, username);
+			statement.setObject(3, propertyName);
+			statement.executeUpdate();
+			statement.close();
+		}
 	}
 }
