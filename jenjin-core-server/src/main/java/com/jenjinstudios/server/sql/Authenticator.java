@@ -18,7 +18,8 @@ import static java.sql.ResultSet.TYPE_SCROLL_SENSITIVE;
 @SuppressWarnings("SameParameterValue")
 public class Authenticator
 {
-
+	private static final String SALT_COLUMN = "salt";
+	private static final String PASSWORD_COLUMN = "password";
 	/** The name of the column in the user table specifying whether the user is currently logged in. */
 	private static final String LOGGED_IN_COLUMN = "loggedin";
 	/** The connection used to communicate with the SQL database. */
@@ -74,8 +75,8 @@ public class Authenticator
 				throw new LoginException("User " + username + " does not exist.");
 			}
 			loggedIn = results.getBoolean(LOGGED_IN_COLUMN);
-			salt = results.getString("salt");
-			dbPass = results.getString("password");
+			salt = results.getString(SALT_COLUMN);
+			dbPass = results.getString(PASSWORD_COLUMN);
 			user = new User();
 			user.setUsername(username);
 			user.setPassword(dbPass);
