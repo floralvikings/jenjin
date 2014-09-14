@@ -8,8 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import static java.sql.ResultSet.CONCUR_UPDATABLE;
-import static java.sql.ResultSet.TYPE_SCROLL_SENSITIVE;
+import static java.sql.ResultSet.*;
 
 /**
  * The SQLHandler class is responsible for connecting to and querying the SQL database associated with a given Server.
@@ -19,6 +18,7 @@ import static java.sql.ResultSet.TYPE_SCROLL_SENSITIVE;
 public class Authenticator
 {
 	private static final String USER_TABLE = "jenjin_users";
+	private static final String PROPERTIES_TABLE = "jenjin_user_properties";
 	private static final String SALT = "salt";
 	private static final String PASSWORD = "password";
 	private static final String USER = "username";
@@ -28,12 +28,14 @@ public class Authenticator
 	protected final Connection dbConnection;
 	/** The string used to get all information about the user. */
 	private final String USER_QUERY;
+	private final String PROPERTIES_QUERY;
 
 	/**
 	 * Create a new SQLHandler with the given database information, and connect to the database.
 	 */
 	public Authenticator(Connection dbConnection) {
 		USER_QUERY = "SELECT * FROM " + USER_TABLE + " WHERE username = ?";
+		PROPERTIES_QUERY = "SELECT * FROM " + PROPERTIES_TABLE + " WHERE username = ?";
 		this.dbConnection = dbConnection;
 	}
 
@@ -118,6 +120,16 @@ public class Authenticator
 				  TYPE_SCROLL_SENSITIVE, CONCUR_UPDATABLE);
 			statement.setString(1, username);
 
+		}
+		return statement.executeQuery();
+	}
+
+	protected ResultSet makePropertiesQuery(String username) throws SQLException {
+		PreparedStatement statement;
+		synchronized (dbConnection)
+		{
+			statement = dbConnection.prepareStatement(PROPERTIES_QUERY, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
+			statement.setString(1, username);
 		}
 		return statement.executeQuery();
 	}
