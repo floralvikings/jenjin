@@ -18,6 +18,7 @@ import static java.sql.ResultSet.TYPE_SCROLL_SENSITIVE;
 @SuppressWarnings("SameParameterValue")
 public class Authenticator
 {
+	private static final String USER_TABLE = "jenjin_users";
 	private static final String SALT_COLUMN = "salt";
 	private static final String PASSWORD_COLUMN = "password";
 	/** The name of the column in the user table specifying whether the user is currently logged in. */
@@ -31,7 +32,7 @@ public class Authenticator
 	 * Create a new SQLHandler with the given database information, and connect to the database.
 	 */
 	public Authenticator(Connection dbConnection) {
-		USER_QUERY = "SELECT * FROM jenjin_users WHERE username = ?";
+		USER_QUERY = "SELECT * FROM " + USER_TABLE + " WHERE username = ?";
 		this.dbConnection = dbConnection;
 	}
 
@@ -132,7 +133,7 @@ public class Authenticator
 	 */
 	protected void updateLoggedinColumn(String username, boolean status) throws LoginException {
 		String newValue = status ? "1" : "0";
-		String updateLoggedInQuery = "UPDATE jenjin_users SET " + LOGGED_IN_COLUMN + "=" + newValue + " WHERE " +
+		String updateLoggedInQuery = "UPDATE " + USER_TABLE + " SET " + LOGGED_IN_COLUMN + "=" + newValue + " WHERE " +
 			  "username = ?";
 		synchronized (dbConnection)
 		{
