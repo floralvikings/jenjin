@@ -180,4 +180,39 @@ public class Authenticator
 			}
 		}
 	}
+
+	protected void updateUserProperties(User user) throws LoginException {
+		// Mildly complex SQL incoming
+		String updateStatement = "IF NOT EXISTS (" +
+			  "SELECT * FROM " + PROPERTIES_TABLE + " WHERE " + USER + " = ? AND " + PROPERTY_NAME + " = ?)" +
+			  "INSERT INTO " + PROPERTIES_TABLE + " (" + USER + ", " + PROPERTY_NAME + ", " + PROPERTY_VALUE + ")" +
+			  "VALUES (?, ?, ?)" +
+			  "ELSE UPDATE " + PROPERTIES_TABLE + " WHERE " + USER + " = ? AND " + PROPERTY_NAME + " = ? " +
+			  "SET " + PROPERTY_VALUE + " = ?";
+
+		HashMap<String, Object> properties = user.getProperties();
+		synchronized (dbConnection)
+		{
+			for (String name : properties.keySet())
+			{
+				Object value = properties.get(name);
+				try (PreparedStatement statement = dbConnection.prepareStatement(updateStatement))
+				{
+					statement.setString(1, user.getUsername());
+					statement.setString(2, name);
+					statement.setString(3, user.getUsername());
+					statement.setString(4, name);
+					statement.setObject(5, value);
+					statement.setString(6, user.getUsername());
+					statement.setString(7, name);
+					statement.setObject(8, value);
+					statement.execute();
+					statement.close();
+				} catch (SQLException e)
+				{
+					throw new LoginException("Unable to update user properties: ", e);
+				}
+			}
+		}
+	}
 }
