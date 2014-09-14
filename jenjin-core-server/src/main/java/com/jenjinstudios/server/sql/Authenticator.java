@@ -7,6 +7,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 
 import static java.sql.ResultSet.*;
 
@@ -22,6 +24,8 @@ public class Authenticator
 	private static final String SALT = "salt";
 	private static final String PASSWORD = "password";
 	private static final String USER = "username";
+	private static final String PROPERTY_NAME = "propertyName";
+	private static final String PROPERTY_VALUE = "propertyValue";
 	/** The name of the column in the user table specifying whether the user is currently logged in. */
 	private static final String LOGGED_IN = "loggedin";
 	/** The connection used to communicate with the SQL database. */
@@ -87,6 +91,25 @@ public class Authenticator
 		{
 			throw new LoginException("Unable to retrieve user " + username + " because of SQL Exception.", e);
 		}
+	}
+
+	public Map<String, Object> lookUpProperties(String username) throws LoginException {
+		Map<String, Object> properties = new HashMap<>();
+
+		try (ResultSet results = makePropertiesQuery(username))
+		{
+			while (results.next())
+			{
+				String propertyName = results.getString(PROPERTY_NAME);
+				Object propertyValue = results.getObject(PROPERTY_VALUE);
+				properties.put(propertyName, propertyValue);
+			}
+		} catch (SQLException e)
+		{
+			throw new LoginException("Unable to retrieve" + username + " properties because of SQL Exception.", e);
+		}
+
+		return properties;
 	}
 
 	/**
