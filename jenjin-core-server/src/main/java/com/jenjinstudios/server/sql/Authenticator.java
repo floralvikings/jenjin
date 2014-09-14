@@ -66,29 +66,25 @@ public class Authenticator
 	}
 
 	public User lookUpUser(String username) throws LoginException {
-		boolean loggedIn;
-		String salt;
-		String dbPass;
-		User user;
 		try (ResultSet results = makeUserQuery(username))
 		{
 			if (!results.next())
 			{
 				throw new LoginException("User " + username + " does not exist.");
 			}
-			loggedIn = results.getBoolean(LOGGED_IN);
-			salt = results.getString(SALT);
-			dbPass = results.getString(PASSWORD);
-			user = new User();
+			boolean loggedIn = results.getBoolean(LOGGED_IN);
+			String salt = results.getString(SALT);
+			String dbPass = results.getString(PASSWORD);
+			User user = new User();
 			user.setUsername(username);
 			user.setPassword(dbPass);
 			user.setSalt(salt);
 			user.setLoggedIn(loggedIn);
+			return user;
 		} catch (SQLException e)
 		{
 			throw new LoginException("Unable to retrieve user " + username + " because of SQL Exception.", e);
 		}
-		return user;
 	}
 
 	/**
