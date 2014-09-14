@@ -19,10 +19,11 @@ import static java.sql.ResultSet.TYPE_SCROLL_SENSITIVE;
 public class Authenticator
 {
 	private static final String USER_TABLE = "jenjin_users";
-	private static final String SALT_COLUMN = "salt";
-	private static final String PASSWORD_COLUMN = "password";
+	private static final String SALT = "salt";
+	private static final String PASSWORD = "password";
+	private static final String USER = "username";
 	/** The name of the column in the user table specifying whether the user is currently logged in. */
-	private static final String LOGGED_IN_COLUMN = "loggedin";
+	private static final String LOGGED_IN = "loggedin";
 	/** The connection used to communicate with the SQL database. */
 	protected final Connection dbConnection;
 	/** The string used to get all information about the user. */
@@ -75,9 +76,9 @@ public class Authenticator
 			{
 				throw new LoginException("User " + username + " does not exist.");
 			}
-			loggedIn = results.getBoolean(LOGGED_IN_COLUMN);
-			salt = results.getString(SALT_COLUMN);
-			dbPass = results.getString(PASSWORD_COLUMN);
+			loggedIn = results.getBoolean(LOGGED_IN);
+			salt = results.getString(SALT);
+			dbPass = results.getString(PASSWORD);
 			user = new User();
 			user.setUsername(username);
 			user.setPassword(dbPass);
@@ -132,12 +133,11 @@ public class Authenticator
 	 * @throws com.jenjinstudios.server.sql.LoginException If there is a SQL error.
 	 */
 	protected void updateLoggedinColumn(String username, boolean status) throws LoginException {
-		String newValue = status ? "1" : "0";
-		String updateLoggedInQuery = "UPDATE " + USER_TABLE + " SET " + LOGGED_IN_COLUMN + "=" + newValue + " WHERE " +
-			  "username = ?";
+		String s = status ? "1" : "0";
+		String updateQuery = "UPDATE " + USER_TABLE + " SET " + LOGGED_IN + "=" + s + " WHERE " + USER + " = ?";
 		synchronized (dbConnection)
 		{
-			try (PreparedStatement updateLoggedIn = dbConnection.prepareStatement(updateLoggedInQuery))
+			try (PreparedStatement updateLoggedIn = dbConnection.prepareStatement(updateQuery))
 			{
 				updateLoggedIn.setString(1, username);
 				updateLoggedIn.executeUpdate();
