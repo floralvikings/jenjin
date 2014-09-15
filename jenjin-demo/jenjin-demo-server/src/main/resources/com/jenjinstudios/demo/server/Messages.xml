@@ -2,6 +2,6 @@
 
 <messages>
     <message name="FireRequest" id="300">
-    <executable language="java">com.jenjinstudios.demo.server.message.ExecutableFireRequest</executable>
+        <executable>com.jenjinstudios.demo.server.message.ExecutableFireRequest</executable>
     </message>
 </messages>

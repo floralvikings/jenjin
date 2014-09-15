@@ -53,8 +53,8 @@ class MessageTypeParser
 	}
 
 	/**
-	 * Parse the supplied XML element looking for an executable tag with the attribute language="java".  If multiple
-	 * executable tags with the language="java" attribute exist, the last one found is used.
+	 * Parse the supplied XML element looking for an executable tag with the attribute .  If multiple executable tags
+	 * with the  attribute exist, the last one found is used.
 	 * @return The class derived from the XML element.
 	 */
 	@SuppressWarnings("unchecked")
@@ -62,24 +62,21 @@ class MessageTypeParser
 		NodeList executableNodes = messageElement.getElementsByTagName("executable");
 		String exMsgClassName;
 		List<Class<? extends ExecutableMessage>> executableMessageClasses = new LinkedList<>();
-		// Parse executable tags for those containing language="java"
+		// Parse executable tags for those containing
 		for (int i = 0; i < executableNodes.getLength(); i++)
 		{
 			Node currentExecutableNode = executableNodes.item(i);
 			Element currentExecutableElement = (Element) currentExecutableNode;
-			String languageAttribute = currentExecutableElement.getAttribute("language");
-			// If it's in java, set the executable message class name.
-			if ("java".equalsIgnoreCase(languageAttribute))
+
+			exMsgClassName = currentExecutableElement.getTextContent();
+			try
 			{
-				exMsgClassName = currentExecutableElement.getTextContent();
-				try
-				{
-					executableMessageClasses.add((Class<? extends ExecutableMessage>) Class.forName(exMsgClassName));
-				} catch (ClassNotFoundException e)
-				{
-					LOGGER.log(Level.INFO, "Unable to locate Executable Message class {0} ", exMsgClassName);
-				}
+				executableMessageClasses.add((Class<? extends ExecutableMessage>) Class.forName(exMsgClassName));
+			} catch (ClassNotFoundException e)
+			{
+				LOGGER.log(Level.INFO, "Unable to locate Executable Message class {0} ", exMsgClassName);
 			}
+
 		}
 		return executableMessageClasses;
 	}
