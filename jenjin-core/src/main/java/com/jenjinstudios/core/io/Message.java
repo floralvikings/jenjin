@@ -1,5 +1,9 @@
 package com.jenjinstudios.core.io;
 
+import com.jenjinstudios.core.util.TypeMapper;
+import com.jenjinstudios.core.xml.ArgumentType;
+import com.jenjinstudios.core.xml.MessageType;
+
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -31,13 +35,13 @@ public class Message
 	Message(MessageRegistry messageRegistry, short id, Object... args) {
 		this.id = id;
 		messageType = messageRegistry.getMessageType(id);
-		name = messageType.name;
+		name = messageType.getName();
 		argumentsByName = new TreeMap<>();
-		for (int i = 0; i < messageType.argumentTypes.length; i++)
+		for (int i = 0; i < messageType.getArguments().size(); i++)
 		{
 			try
 			{
-				setArgument(messageType.argumentTypes[i].name, args[i]);
+				setArgument(messageType.getArguments().get(i).getName(), args[i]);
 			} catch (ArrayIndexOutOfBoundsException ex)
 			{
 				throw new IllegalStateException(
@@ -54,8 +58,8 @@ public class Message
 	 */
 	Message(MessageType messageType) {
 		this.messageType = messageType;
-		this.name = messageType.name;
-		id = messageType.id;
+		this.name = messageType.getName();
+		id = messageType.getId();
 		argumentsByName = new TreeMap<>();
 	}
 
@@ -67,13 +71,21 @@ public class Message
 	 * IllegalArgumentException} will be thrown.
 	 */
 	public void setArgument(String argumentName, Object argument) {
-		ArgumentType argType = messageType.getArgumentType(argumentName);
+		ArgumentType argType = null;
+		for (ArgumentType a : messageType.getArguments())
+		{
+			if (argumentName.equals(a.getName()))
+			{
+				argType = a;
+			}
+		}
 		if (argType == null)
 			throw new IllegalArgumentException("Invalid argument name for Message: " + argumentName +
-				  " (Message type: " + messageType.name + ")");
-		if (!argType.type.isInstance(argument))
+				  " (Message type: " + messageType.getName() + ")");
+		Class c = TypeMapper.getTypeForName(argType.getType());
+		if (!c.isInstance(argument))
 			throw new IllegalArgumentException("Invalid argument type for Message: " + argument +
-				  " (Expected " + argType.type + ", got " + argument.getClass() + ")");
+				  " (Expected " + argType.getType() + ", got " + argument.getClass() + ")");
 		argumentsByName.put(argumentName, argument);
 	}
 
@@ -104,10 +116,10 @@ public class Message
 		if (isInvalid())
 			throw new IllegalStateException("Attempting to retrieve arguments while message is invalid. (Not all " +
 				  "arguments have been set.)");
-		Object[] argsArray = new Object[messageType.argumentTypes.length];
-		for (int i = 0; i < messageType.argumentTypes.length; i++)
+		Object[] argsArray = new Object[messageType.getArguments().size()];
+		for (int i = 0; i < messageType.getArguments().size(); i++)
 		{
-			argsArray[i] = argumentsByName.get(messageType.argumentTypes[i].name);
+			argsArray[i] = argumentsByName.get(messageType.getArguments().get(i).getName());
 		}
 		return argsArray;
 	}
@@ -120,6 +132,6 @@ public class Message
 	 * @return true if all arguments have been set, and correctly.
 	 */
 	boolean isInvalid() {
-		return argumentsByName.size() != messageType.argumentTypes.length;
+		return argumentsByName.size() != messageType.getArguments().size();
 	}
 }

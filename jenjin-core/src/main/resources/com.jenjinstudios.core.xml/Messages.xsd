@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <xs:element name="messages" type="messageTypeCollection" />
+
+    <xs:complexType name="argumentType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute name="type" use="required">
+                    <xs:simpleType>
+                        <xs:restriction base="xs:string">
+                            <xs:enumeration value="byte[]" />
+                            <xs:enumeration value="String[]" />
+                            <xs:enumeration value="boolean" />
+                            <xs:enumeration value="byte" />
+                            <xs:enumeration value="short" />
+                            <xs:enumeration value="int" />
+                            <xs:enumeration value="long" />
+                            <xs:enumeration value="float" />
+                            <xs:enumeration value="double" />
+                            <xs:enumeration value="String" />
+                        </xs:restriction>
+                    </xs:simpleType>
+                </xs:attribute>
+                <xs:attribute type="xs:string" name="name" use="required" />
+                <xs:attribute type="xs:boolean" name="encrypt" use="optional" />
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="disabled_messageType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="name" />
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="messageType">
+        <xs:sequence>
+            <xs:element type="argumentType" name="arguments" maxOccurs="unbounded" minOccurs="0" />
+            <xs:element name="executable" minOccurs="0" maxOccurs="1" type="xs:string" />
+        </xs:sequence>
+        <xs:attribute type="xs:string" name="name" use="required" />
+        <xs:attribute type="xs:short" name="id" use="required" />
+    </xs:complexType>
+
+    <xs:complexType name="messageTypeCollection">
+        <xs:sequence>
+            <xs:element type="messageType" name="messages" maxOccurs="unbounded" minOccurs="0" />
+            <xs:element type="disabled_messageType" minOccurs="0" maxOccurs="unbounded" name="disabled_messages" />
+        </xs:sequence>
+    </xs:complexType>
+
+</xs:schema>

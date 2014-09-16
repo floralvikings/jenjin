@@ -1,6 +1,8 @@
 package com.jenjinstudios.core.io;
 
 import com.jenjinstudios.core.util.Files;
+import com.jenjinstudios.core.xml.ArgumentType;
+import com.jenjinstudios.core.xml.MessageType;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -134,8 +136,8 @@ public class MessageRegistry
 	 * @param id The ID to lookup.
 	 * @return A LinkedList of class names.
 	 */
-	public LinkedList<Class> getArgumentClasses(short id) throws MessageTypeException {
-		LinkedList<Class> temp = new LinkedList<>();
+	public LinkedList<String> getArgumentClasses(short id) throws MessageTypeException {
+		LinkedList<String> temp = new LinkedList<>();
 		MessageType type;
 		synchronized (messageTypesByID)
 		{
@@ -146,8 +148,8 @@ public class MessageRegistry
 			throw new MessageTypeException(id);
 		} else
 		{
-			for (int i = 0; i < type.argumentTypes.length; i++)
-				temp.add(type.argumentTypes[i].type);
+			for (int i = 0; i < type.getArguments().size(); i++)
+				temp.add(type.getArguments().get(i).getType());
 		}
 
 		return temp;
@@ -246,10 +248,11 @@ public class MessageRegistry
 	private void addAllMessages(List<MessageType> messageTypes) {
 		Stream<MessageType> stream = messageTypes.stream();
 		Stream<MessageType> filter = stream.filter(messageType -> messageType != null &&
-			  !messageTypesByID.containsKey(messageType.id) && !messageTypesByName.containsKey(messageType.name));
+			  !messageTypesByID.containsKey(messageType.getId()) && !messageTypesByName.containsKey(messageType
+			  .getName()));
 		filter.forEach(messageType -> {
-			messageTypesByID.put(messageType.id, messageType);
-			messageTypesByName.put(messageType.name, messageType);
+			messageTypesByID.put(messageType.getId(), messageType);
+			messageTypesByName.put(messageType.getName(), messageType);
 		});
 	}
 
@@ -264,10 +267,12 @@ public class MessageRegistry
 		{
 			type = messageTypesByName.get(messageName);
 		}
-		short id = type.id;
-		ArgumentType[] argumentTypes = type.argumentTypes;
-		MessageInfo info = new MessageInfo(id, messageName, argumentTypes);
-		MessageType newMessageType = new MessageType(info);
+		short id = type.getId();
+		List<ArgumentType> argumentTypes = type.getArguments();
+		MessageType newMessageType = new MessageType();
+		newMessageType.setId(id);
+		newMessageType.setName(messageName);
+		newMessageType.getArguments().addAll(argumentTypes);
 		messageTypesByName.put(messageName, newMessageType);
 		messageTypesByID.put(id, newMessageType);
 

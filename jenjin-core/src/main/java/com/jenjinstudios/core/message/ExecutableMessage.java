@@ -3,11 +3,10 @@ package com.jenjinstudios.core.message;
 import com.jenjinstudios.core.Connection;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageRegistry;
-import com.jenjinstudios.core.io.MessageType;
+import com.jenjinstudios.core.xml.MessageType;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -54,17 +53,17 @@ public abstract class ExecutableMessage
 
 	private static Constructor getExecConstructor(Connection connection, Message message) {
 		MessageType messageType = MessageRegistry.getInstance().getMessageType(message.getID());
-		List<Class<? extends ExecutableMessage>> execClasses = messageType.getExecutableMessageClasses();
-
-		Constructor execConstructor = null;
-		for (Class<? extends ExecutableMessage> execClass : execClasses)
+		String className = messageType.getExecutable();
+		Constructor[] execConstructors = new Constructor[0];
+		try
 		{
-			if (execClass == null) continue;
-			Constructor[] execConstructors;
+			Class execClass = Class.forName(className);
 			execConstructors = execClass.getConstructors();
-			execConstructor = getAppropriateConstructor(connection, execConstructors);
+		} catch (ClassNotFoundException | NullPointerException e)
+		{
+			LOGGER.log(Level.WARNING, "Could not find class: {0}", className);
 		}
-		return execConstructor;
+		return getAppropriateConstructor(connection, execConstructors);
 	}
 
 	private static ExecutableMessage createExec(Connection conn, Message msg, Constructor constructor) {

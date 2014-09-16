@@ -1,5 +1,6 @@
 package com.jenjinstudios.core.io;
 
+import com.jenjinstudios.core.xml.MessageType;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;

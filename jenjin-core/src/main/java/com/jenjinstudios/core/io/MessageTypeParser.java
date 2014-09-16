@@ -1,13 +1,11 @@
 package com.jenjinstudios.core.io;
 
-import com.jenjinstudios.core.message.ExecutableMessage;
+import com.jenjinstudios.core.xml.ArgumentType;
+import com.jenjinstudios.core.xml.MessageType;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.logging.Level;
+import java.util.Arrays;
 import java.util.logging.Logger;
 
 /**
@@ -35,50 +33,32 @@ class MessageTypeParser
 		short id;
 		String name;
 		ArgumentType[] argumentTypes;
-		List<Class<? extends ExecutableMessage>> classes = new LinkedList<>();
 		id = Short.parseShort(messageElement.getAttribute("id"));
 		name = messageElement.getAttribute("name");
 		argumentTypes = parseArgumentNodes();
-		classes.addAll(getExecutableMessageClasses());
 
 		MessageType messageType = null;
 
 		if (argumentTypes != null)
 		{
-			MessageInfo info = new MessageInfo(id, name, argumentTypes);
-			messageType = new MessageType(info, classes);
+			messageType = new MessageType();
+			messageType.setId(id);
+			messageType.setName(name);
+			messageType.getArguments().addAll(Arrays.asList(argumentTypes));
+			messageType.setExecutable(getExecutableMessageClassName());
 		}
 
 		return messageType;
 	}
 
-	/**
-	 * Parse the supplied XML element looking for an executable tag with the attribute .  If multiple executable tags
-	 * with the  attribute exist, the last one found is used.
-	 * @return The class derived from the XML element.
-	 */
-	@SuppressWarnings("unchecked")
-	private List<Class<? extends ExecutableMessage>> getExecutableMessageClasses() {
+	private String getExecutableMessageClassName() {
+		String r = null;
 		NodeList executableNodes = messageElement.getElementsByTagName("executable");
-		String exMsgClassName;
-		List<Class<? extends ExecutableMessage>> executableMessageClasses = new LinkedList<>();
-		// Parse executable tags for those containing
-		for (int i = 0; i < executableNodes.getLength(); i++)
+		if (executableNodes.getLength() > 0)
 		{
-			Node currentExecutableNode = executableNodes.item(i);
-			Element currentExecutableElement = (Element) currentExecutableNode;
-
-			exMsgClassName = currentExecutableElement.getTextContent();
-			try
-			{
-				executableMessageClasses.add((Class<? extends ExecutableMessage>) Class.forName(exMsgClassName));
-			} catch (ClassNotFoundException e)
-			{
-				LOGGER.log(Level.INFO, "Unable to locate Executable Message class {0} ", exMsgClassName);
-			}
-
+			r = executableNodes.item(0).getTextContent();
 		}
-		return executableMessageClasses;
+		return r;
 	}
 
 	/**
@@ -93,7 +73,7 @@ class MessageTypeParser
 		{
 			Element currentArgElement = (Element) argumentNodes.item(i);
 			String name = currentArgElement.getAttribute("name");
-			Class type = parseClassName(currentArgElement.getAttribute("type"));
+			String type = currentArgElement.getAttribute("type");
 			boolean encrypt = Boolean.parseBoolean(currentArgElement.getAttribute("encrypt"));
 
 			if (name == null || type == null)
@@ -102,7 +82,10 @@ class MessageTypeParser
 				break;
 			}
 
-			argumentTypes[i] = new ArgumentType(name, type, encrypt);
+			argumentTypes[i] = new ArgumentType();
+			argumentTypes[i].setName(name);
+			argumentTypes[i].setType(type);
+			argumentTypes[i].setEncrypt(encrypt);
 		}
 		return argumentTypes;
 	}
