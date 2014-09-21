@@ -1,6 +1,9 @@
 package com.jenjinstudios.core.xml;
 
-import javax.xml.bind.annotation.*;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlType;
 
 
 /**
@@ -36,84 +39,33 @@ import javax.xml.bind.annotation.*;
  * </pre>
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "argumentType", propOrder = {
-	  "value"
-})
+@XmlType(name = "argument")
 public class ArgumentType
 {
-
-	@XmlValue
-	protected String value;
 	@XmlAttribute(name = "type", required = true)
-	protected String type;
+	private String type;
 	@XmlAttribute(name = "name", required = true)
-	protected String name;
+	private String name;
 	@XmlAttribute(name = "encrypt")
-	protected Boolean encrypt;
-
-	/**
-	 * Gets the value of the value property.
-	 * @return possible object is {@link String }
-	 */
-	public String getValue() {
-		return value;
-	}
-
-	/**
-	 * Sets the value of the value property.
-	 * @param value allowed object is {@link String }
-	 */
-	public void setValue(String value) {
-		this.value = value;
-	}
+	private boolean encrypt = false;
 
 	/**
 	 * Gets the value of the type property.
 	 * @return possible object is {@link String }
 	 */
-	public String getType() {
-		return type;
-	}
-
-	/**
-	 * Sets the value of the type property.
-	 * @param value allowed object is {@link String }
-	 */
-	public void setType(String value) {
-		this.type = value;
-	}
+	public String getType() { return type; }
 
 	/**
 	 * Gets the value of the name property.
 	 * @return possible object is {@link String }
 	 */
-	public String getName() {
-		return name;
-	}
-
-	/**
-	 * Sets the value of the name property.
-	 * @param value allowed object is {@link String }
-	 */
-	public void setName(String value) {
-		this.name = value;
-	}
+	public String getName() { return name; }
 
 	/**
 	 * Gets the value of the encrypt property.
 	 * @return possible object is {@link Boolean }
 	 */
-	public Boolean isEncrypt() {
-		return encrypt;
-	}
-
-	/**
-	 * Sets the value of the encrypt property.
-	 * @param value allowed object is {@link Boolean }
-	 */
-	public void setEncrypt(Boolean value) {
-		this.encrypt = value;
-	}
+	public Boolean isEncrypt() { return encrypt; }
 
 	@Override
 	public String toString() { return name + ", " + type + ", encrypt: " + encrypt; }

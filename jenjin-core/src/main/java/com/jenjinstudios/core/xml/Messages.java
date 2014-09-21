@@ -3,7 +3,7 @@ package com.jenjinstudios.core.xml;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,16 +27,13 @@ import java.util.List;
  * </pre>
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "messageTypeCollection", propOrder = {
-	  "messages",
-	  "disabledMessages"
-})
-public class MessageTypeCollection
+@XmlRootElement(name = "messages")
+public class Messages
 {
-
-	protected List<MessageType> messages;
-	@XmlElement(name = "disabled_messages")
-	protected List<DisabledMessageType> disabledMessages;
+	@XmlElement(name = "message")
+	private List<MessageType> messages;
+	@XmlElement(name = "disabled_message")
+	private List<DisabledMessageType> disabledMessages;
 
 	/**
 	 * Gets the value of the messages property.
@@ -60,7 +57,7 @@ public class MessageTypeCollection
 	public List<MessageType> getMessages() {
 		if (messages == null)
 		{
-			messages = new ArrayList<MessageType>();
+			messages = new ArrayList<>();
 		}
 		return this.messages;
 	}
@@ -87,9 +84,17 @@ public class MessageTypeCollection
 	public List<DisabledMessageType> getDisabledMessages() {
 		if (disabledMessages == null)
 		{
-			disabledMessages = new ArrayList<DisabledMessageType>();
+			disabledMessages = new ArrayList<>();
 		}
 		return this.disabledMessages;
+	}
+
+	public void addAll(Messages messages) {
+		if (messages != null)
+		{
+			getMessages().addAll(messages.getMessages());
+			getDisabledMessages().addAll(messages.getDisabledMessages());
+		}
 	}
 
 }

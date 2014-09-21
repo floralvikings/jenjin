@@ -1,9 +1,6 @@
 package com.jenjinstudios.core.xml;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,19 +26,20 @@ import java.util.List;
  * </pre>
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "messageType", propOrder = {
+@XmlType(name = "message", propOrder = {
 	  "arguments",
 	  "executable"
 })
 public class MessageType
 {
-
-	protected List<ArgumentType> arguments;
-	protected String executable;
+	@XmlElement(name = "argument")
+	private List<ArgumentType> arguments;
+	@XmlElement(name = "executable")
+	private String executable;
 	@XmlAttribute(name = "name", required = true)
-	protected String name;
+	private String name;
 	@XmlAttribute(name = "id", required = true)
-	protected short id;
+	private short id;
 
 	/**
 	 * Gets the value of the arguments property.
@@ -65,7 +63,7 @@ public class MessageType
 	public List<ArgumentType> getArguments() {
 		if (arguments == null)
 		{
-			arguments = new ArrayList<ArgumentType>();
+			arguments = new ArrayList<>();
 		}
 		return this.arguments;
 	}
@@ -75,12 +73,6 @@ public class MessageType
 	 * @return possible object is {@link String }
 	 */
 	public String getExecutable() { return executable; }
-
-	/**
-	 * Sets the value of the executable property.
-	 * @param value allowed object is {@link String }
-	 */
-	public void setExecutable(String value) { this.executable = value; }
 
 	/**
 	 * Gets the value of the name property.
