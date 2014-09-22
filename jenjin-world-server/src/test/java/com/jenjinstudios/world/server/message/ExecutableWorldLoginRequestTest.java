@@ -27,10 +27,10 @@ public class ExecutableWorldLoginRequestTest
 	@SuppressWarnings("unchecked")
 	public void testSuccessfulLogin() throws Exception {
 		Map<String, Object> playerData = new HashMap<>();
-		playerData.put("XCOORD", 0.0);
-		playerData.put("YCOORD", 0.0);
-		playerData.put("ZONEID", 0);
-		playerData.put("USERNAME", "Foo");
+		playerData.put("xCoord", 0.0);
+		playerData.put("yCoord", 0.0);
+		playerData.put("zoneID", 0);
+		playerData.put("username", "Foo");
 		Message message = Mockito.mock(Message.class);
 		WorldServerMessageFactory messageFactory = Mockito.mock(WorldServerMessageFactory.class);
 		World world = Mockito.mock(World.class);
@@ -43,7 +43,7 @@ public class ExecutableWorldLoginRequestTest
 		when(world.getWorldObjects()).thenReturn(worldObjectMap);
 		Mockito.when(user.isLoggedIn()).thenReturn(true);
 		Mockito.when(authenticator.logInUser(Mockito.anyString(), Mockito.anyString())).thenReturn(user);
-		Mockito.when(authenticator.getPlayerInfo(Mockito.anyString())).thenReturn(playerData);
+		Mockito.when(authenticator.lookUpUserProperties(Mockito.anyString())).thenReturn(playerData);
 		Mockito.when(server.getAuthenticator()).thenReturn(authenticator);
 		Mockito.when(server.getWorld()).thenReturn(world);
 		Mockito.when(wch.getServer()).thenReturn(server);

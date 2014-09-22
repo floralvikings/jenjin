@@ -1,5 +1,9 @@
 package com.jenjinstudios.core.io;
 
+import com.jenjinstudios.core.util.TypeMapper;
+import com.jenjinstudios.core.xml.ArgumentType;
+import com.jenjinstudios.core.xml.MessageType;
+
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
@@ -49,7 +53,17 @@ public class MessageInputStream extends DataInputStream
 			throw new IOException("Stream closed");
 		}
 		short id = readShort();
-		LinkedList<Class> classes = messageRegistry.getArgumentClasses(id);
+		MessageType messageType = messageRegistry.getMessageType(id);
+		if (messageType == null)
+		{
+			throw new MessageTypeException(id);
+		}
+		LinkedList<Class> classes = new LinkedList<>();
+		for (ArgumentType argumentType : messageType.getArguments())
+		{
+			Class c = TypeMapper.getTypeForName(argumentType.getType());
+			classes.add(c);
+		}
 		Class<?>[] classArray = new Class[classes.size()];
 		classes.toArray(classArray);
 		Object[] args = readMessageArgs(classes);

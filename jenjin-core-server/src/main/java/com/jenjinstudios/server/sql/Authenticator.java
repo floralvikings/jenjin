@@ -7,9 +7,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 
-import static java.sql.ResultSet.CONCUR_UPDATABLE;
-import static java.sql.ResultSet.TYPE_SCROLL_SENSITIVE;
+import static java.sql.ResultSet.*;
 
 /**
  * The SQLHandler class is responsible for connecting to and querying the SQL database associated with a given Server.
@@ -18,19 +19,27 @@ import static java.sql.ResultSet.TYPE_SCROLL_SENSITIVE;
 @SuppressWarnings("SameParameterValue")
 public class Authenticator
 {
-
+	private static final String USER_TABLE = "jenjin_users";
+	private static final String PROPERTIES_TABLE = "jenjin_user_properties";
+	private static final String SALT = "salt";
+	private static final String PASSWORD = "password";
+	private static final String USER = "username";
+	private static final String PROPERTY_NAME = "propertyName";
+	private static final String PROPERTY_VALUE = "propertyValue";
 	/** The name of the column in the user table specifying whether the user is currently logged in. */
-	private static final String LOGGED_IN_COLUMN = "loggedin";
+	private static final String LOGGED_IN = "loggedin";
 	/** The connection used to communicate with the SQL database. */
-	protected final Connection dbConnection;
+	private final Connection dbConnection;
 	/** The string used to get all information about the user. */
 	private final String USER_QUERY;
+	private final String PROPERTIES_QUERY;
 
 	/**
 	 * Create a new SQLHandler with the given database information, and connect to the database.
 	 */
 	public Authenticator(Connection dbConnection) {
-		USER_QUERY = "SELECT * FROM jenjin_users WHERE username = ?";
+		USER_QUERY = "SELECT * FROM " + USER_TABLE + " WHERE username = ?";
+		PROPERTIES_QUERY = "SELECT * FROM " + PROPERTIES_TABLE + " WHERE username = ?";
 		this.dbConnection = dbConnection;
 	}
 
@@ -63,29 +72,44 @@ public class Authenticator
 	}
 
 	public User lookUpUser(String username) throws LoginException {
-		boolean loggedIn;
-		String salt;
-		String dbPass;
-		User user;
 		try (ResultSet results = makeUserQuery(username))
 		{
 			if (!results.next())
 			{
 				throw new LoginException("User " + username + " does not exist.");
 			}
-			loggedIn = results.getBoolean(LOGGED_IN_COLUMN);
-			salt = results.getString("salt");
-			dbPass = results.getString("password");
-			user = new User();
+			boolean loggedIn = results.getBoolean(LOGGED_IN);
+			String salt = results.getString(SALT);
+			String dbPass = results.getString(PASSWORD);
+			User user = new User();
 			user.setUsername(username);
 			user.setPassword(dbPass);
 			user.setSalt(salt);
 			user.setLoggedIn(loggedIn);
+			return user;
 		} catch (SQLException e)
 		{
 			throw new LoginException("Unable to retrieve user " + username + " because of SQL Exception.", e);
 		}
-		return user;
+	}
+
+	public Map<String, Object> lookUpUserProperties(String username) throws LoginException {
+		Map<String, Object> properties = new HashMap<>();
+
+		try (ResultSet results = makePropertiesQuery(username))
+		{
+			while (results.next())
+			{
+				String propertyName = results.getString(PROPERTY_NAME);
+				Object propertyValue = results.getObject(PROPERTY_VALUE);
+				properties.put(propertyName, propertyValue);
+			}
+		} catch (SQLException e)
+		{
+			throw new LoginException("Unable to retrieve" + username + " properties because of SQL Exception.", e);
+		}
+
+		return properties;
 	}
 
 	/**
@@ -123,6 +147,16 @@ public class Authenticator
 		return statement.executeQuery();
 	}
 
+	protected ResultSet makePropertiesQuery(String username) throws SQLException {
+		PreparedStatement statement;
+		synchronized (dbConnection)
+		{
+			statement = dbConnection.prepareStatement(PROPERTIES_QUERY, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
+			statement.setString(1, username);
+		}
+		return statement.executeQuery();
+	}
+
 	/**
 	 * Update the loggedin column to reflect the supplied boolean.
 	 * @param username The user being queried.
@@ -130,12 +164,11 @@ public class Authenticator
 	 * @throws com.jenjinstudios.server.sql.LoginException If there is a SQL error.
 	 */
 	protected void updateLoggedinColumn(String username, boolean status) throws LoginException {
-		String newValue = status ? "1" : "0";
-		String updateLoggedInQuery = "UPDATE jenjin_users SET " + LOGGED_IN_COLUMN + "=" + newValue + " WHERE " +
-			  "username = ?";
+		String s = status ? "1" : "0";
+		String updateQuery = "UPDATE " + USER_TABLE + " SET " + LOGGED_IN + "=" + s + " WHERE " + USER + " = ?";
 		synchronized (dbConnection)
 		{
-			try (PreparedStatement updateLoggedIn = dbConnection.prepareStatement(updateLoggedInQuery))
+			try (PreparedStatement updateLoggedIn = dbConnection.prepareStatement(updateQuery))
 			{
 				updateLoggedIn.setString(1, username);
 				updateLoggedIn.executeUpdate();
@@ -145,6 +178,69 @@ public class Authenticator
 				throw new LoginException("Unable to update " + username + "; SQLException when updating loggedin " +
 					  "column.");
 			}
+		}
+	}
+
+	public Object lookUpUserProperty(String username, String propertyName) throws SQLException {
+		String propertyQuery = "SELECT * FROM " + PROPERTIES_TABLE + " " +
+			  "WHERE " + USER + " = ? AND " + PROPERTY_NAME + " = ?";
+		Object r = null;
+		synchronized (dbConnection)
+		{
+			PreparedStatement statement = dbConnection.prepareStatement(propertyQuery);
+			statement.setString(1, username);
+			statement.setString(2, propertyName);
+			ResultSet results = statement.executeQuery();
+			if (results.next())
+			{
+				r = results.getObject(PROPERTY_VALUE);
+			}
+		}
+		return r;
+	}
+
+	protected void updateUserProperties(User user) throws SQLException {
+		HashMap<String, Object> properties = user.getProperties();
+		for (String name : properties.keySet())
+		{
+			Object value = properties.get(name);
+			Object existing = lookUpUserProperty(user.getUsername(), name);
+			if (existing == null)
+			{
+				insertUserProperty(user.getUsername(), name, value);
+			} else if (!existing.equals(value))
+			{
+				updateUserProperty(user.getUsername(), name, value);
+			}
+		}
+	}
+
+	private void insertUserProperty(String username, String propertyName, Object propertyValue) throws SQLException {
+		String insertPropertyQuery = "INSERT INTO " + PROPERTIES_TABLE + " " +
+			  "(`" + USER + "`, `" + PROPERTY_NAME + "`, `" + PROPERTY_VALUE + "`) VALUES " +
+			  "(?, ?, ?)";
+		synchronized (dbConnection)
+		{
+			PreparedStatement statement = dbConnection.prepareStatement(insertPropertyQuery);
+			statement.setString(1, username);
+			statement.setString(2, propertyName);
+			statement.setObject(3, propertyValue);
+			statement.executeUpdate();
+			statement.close();
+		}
+	}
+
+	private void updateUserProperty(String username, String propertyName, Object propertyValue) throws SQLException {
+		String updatePropertyQuery = "UPDATE " + PROPERTIES_TABLE + " SET " + PROPERTY_VALUE + " = ? WHERE " +
+			  USER + " = ? AND " + PROPERTY_NAME + " = ?";
+		synchronized (dbConnection)
+		{
+			PreparedStatement statement = dbConnection.prepareStatement(updatePropertyQuery);
+			statement.setObject(1, propertyValue);
+			statement.setString(2, username);
+			statement.setObject(3, propertyName);
+			statement.executeUpdate();
+			statement.close();
 		}
 	}
 }

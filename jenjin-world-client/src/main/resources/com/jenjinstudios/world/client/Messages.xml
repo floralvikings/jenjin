@@ -1,9 +1,9 @@
 <?xml version="1.0" ?>
 
-<messages>
+<messages xmlns="https://www.jenjinstudios.com">
 
-    <message name="StateChangeRequest" id="201">
-        <executable language="java">com.jenjinstudios.world.server.message.ExecutableStateChangeRequest</executable>
+<message name="StateChangeRequest" id="201">
+        <executable>com.jenjinstudios.world.server.message.ExecutableStateChangeRequest</executable>
         <argument type="double" name="relativeAngle" />
         <argument type="double" name="absoluteAngle" />
         <argument type="long" name="timeOfChange" />
@@ -12,7 +12,7 @@
     </message>
 
     <message name="ObjectVisibleMessage" id="202">
-        <executable language="java">com.jenjinstudios.world.client.message.ExecutableObjectVisibleMessage</executable>
+        <executable>com.jenjinstudios.world.client.message.ExecutableObjectVisibleMessage</executable>
         <argument type="String" name="name" encrypt="true" />
         <argument type="int" name="id" />
         <argument type="int" name="resourceID" />
@@ -21,7 +21,7 @@
     </message>
 
     <message name="ActorVisibleMessage" id="203">
-        <executable language="java">com.jenjinstudios.world.client.message.ExecutableActorVisibleMessage</executable>
+        <executable>com.jenjinstudios.world.client.message.ExecutableActorVisibleMessage</executable>
         <argument type="String" name="name" encrypt="true" />
         <argument type="int" name="id" />
         <argument type="int" name="resourceID" />
@@ -34,12 +34,12 @@
     </message>
 
     <message name="ObjectInvisibleMessage" id="204">
-        <executable language="java">com.jenjinstudios.world.client.message.ExecutableObjectInvisibleMessage</executable>
+        <executable>com.jenjinstudios.world.client.message.ExecutableObjectInvisibleMessage</executable>
         <argument type="int" name="id" />
     </message>
 
     <message name="StateChangeMessage" id="205">
-        <executable language="java">com.jenjinstudios.world.client.message.ExecutableStateChangeMessage</executable>
+        <executable>com.jenjinstudios.world.client.message.ExecutableStateChangeMessage</executable>
         <argument type="int" name="id" />
         <argument type="double" name="relativeAngle" />
         <argument type="double" name="absoluteAngle" />
@@ -49,7 +49,7 @@
     </message>
 
     <message name="ForceStateMessage" id="206">
-        <executable language="java">com.jenjinstudios.world.client.message.ExecutableForceStateMessage</executable>
+        <executable>com.jenjinstudios.world.client.message.ExecutableForceStateMessage</executable>
         <argument type="double" name="relativeAngle" />
         <argument type="double" name="absoluteAngle" />
         <argument type="double" name="xCoordinate" />
@@ -58,13 +58,13 @@
     </message>
 
     <message name="WorldLoginRequest" id="207">
-        <executable language="java">com.jenjinstudios.world.server.message.ExecutableWorldLoginRequest</executable>
+        <executable>com.jenjinstudios.world.server.message.ExecutableWorldLoginRequest</executable>
         <argument type="String" name="username" encrypt="true" />
         <argument type="String" name="password" encrypt="true" />
     </message>
 
     <message name="WorldLogoutRequest" id="208">
-        <executable language="java">com.jenjinstudios.world.server.message.ExecutableWorldLogoutRequest</executable>
+        <executable>com.jenjinstudios.world.server.message.ExecutableWorldLogoutRequest</executable>
     </message>
 
     <message name="WorldLoginResponse" id="209">
@@ -74,35 +74,35 @@
         <argument type="double" name="xCoordinate" />
         <argument type="double" name="yCoordinate" />
         <argument type="int" name="zoneNumber" />
-        <executable language="java">com.jenjinstudios.world.client.message.ExecutableWorldLoginResponse</executable>
+        <executable>com.jenjinstudios.world.client.message.ExecutableWorldLoginResponse</executable>
     </message>
 
     <message name="WorldLogoutResponse" id="210">
         <argument type="boolean" name="success" />
-        <executable language="java">com.jenjinstudios.world.client.message.ExecutableWorldLogoutResponse</executable>
+        <executable>com.jenjinstudios.world.client.message.ExecutableWorldLogoutResponse</executable>
     </message>
 
     <message name="ActorMoveSpeed" id="211">
         <argument type="double" name="moveSpeed" />
-        <executable language="java">com.jenjinstudios.world.client.message.ExecutableActorMoveSpeedMessage</executable>
+        <executable>com.jenjinstudios.world.client.message.ExecutableActorMoveSpeedMessage</executable>
     </message>
 
     <message name="WorldChecksumRequest" id="212">
-        <executable language="java">com.jenjinstudios.world.server.message.ExecutableWorldChecksumRequest</executable>
+        <executable>com.jenjinstudios.world.server.message.ExecutableWorldChecksumRequest</executable>
     </message>
 
     <message name="WorldChecksumResponse" id="213">
         <argument type="byte[]" name="checksum" />
-        <executable language="java">com.jenjinstudios.world.client.message.ExecutableWorldChecksumResponse</executable>
+        <executable>com.jenjinstudios.world.client.message.ExecutableWorldChecksumResponse</executable>
     </message>
 
     <message name="WorldFileRequest" id="214">
-        <executable language="java">com.jenjinstudios.world.server.message.ExecutableWorldFileRequest</executable>
+        <executable>com.jenjinstudios.world.server.message.ExecutableWorldFileRequest</executable>
     </message>
 
     <message name="WorldFileResponse" id="215">
         <argument type="byte[]" name="fileBytes" />
-        <executable language="java">com.jenjinstudios.world.client.message.ExecutableWorldFileResponse</executable>
+        <executable>com.jenjinstudios.world.client.message.ExecutableWorldFileResponse</executable>
     </message>
 
 </messages>

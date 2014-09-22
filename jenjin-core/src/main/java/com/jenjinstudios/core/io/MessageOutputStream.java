@@ -1,5 +1,8 @@
 package com.jenjinstudios.core.io;
 
+import com.jenjinstudios.core.xml.ArgumentType;
+import com.jenjinstudios.core.xml.MessageType;
+
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
@@ -11,6 +14,7 @@ import java.io.OutputStream;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -51,11 +55,11 @@ public class MessageOutputStream extends DataOutputStream
 		}
 		Object[] args = message.getArgs();
 		MessageType messageType = messageRegistry.getMessageType(message.getID());
-		ArgumentType[] argumentTypes = messageType.argumentTypes;
+		List<ArgumentType> argumentTypes = messageType.getArguments();
 		int id = message.getID();
 		writeShort(id);
 		for (int i = 0; i < args.length; i++)
-			writeArgument(args[i], argumentTypes[i].encrypt);
+			writeArgument(args[i], argumentTypes.get(i).isEncrypt());
 	}
 
 	public boolean isClosed() {
