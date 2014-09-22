@@ -1,7 +1,8 @@
 <?xml version="1.0" ?>
 
-<messages>
-    <message name="TestAllTypesMessage" id="-4">
+<messages xmlns="https://www.jenjinstudios.com">
+
+<message name="TestAllTypesMessage" id="-4">
         <argument type="String" name="testString" />
         <argument type="int" name="testInt" />
         <argument type="long" name="testLong" />

@@ -1,8 +1,8 @@
 <?xml version="1.0" ?>
 
-<messages>
+<messages xmlns="https://www.jenjinstudios.com">
 
-    <message name="StateChangeRequest" id="201">
+<message name="StateChangeRequest" id="201">
         <executable>com.jenjinstudios.world.server.message.ExecutableStateChangeRequest</executable>
         <argument type="double" name="relativeAngle" />
         <argument type="double" name="absoluteAngle" />

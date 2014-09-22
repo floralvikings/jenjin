@@ -1,8 +1,8 @@
 <?xml version="1.0" ?>
 
-<messages>
+<messages xmlns="https://www.jenjinstudios.com">
 
-    <message name="LoginRequest" id="101">
+<message name="LoginRequest" id="101">
         <argument type="String" name="username" encrypt="true" />
         <argument type="String" name="password" encrypt="true" />
         <executable>com.jenjinstudios.server.message.ExecutableLoginRequest</executable>
