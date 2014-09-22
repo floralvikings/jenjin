@@ -29,7 +29,7 @@ public class Authenticator
 	/** The name of the column in the user table specifying whether the user is currently logged in. */
 	private static final String LOGGED_IN = "loggedin";
 	/** The connection used to communicate with the SQL database. */
-	protected final Connection dbConnection;
+	private final Connection dbConnection;
 	/** The string used to get all information about the user. */
 	private final String USER_QUERY;
 	private final String PROPERTIES_QUERY;
