@@ -1,5 +1,6 @@
 package com.jenjinstudios.world;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.TreeMap;
@@ -25,9 +26,9 @@ public class WorldObjectMap
 		scheduledForOverwrite = new LinkedList<>();
 	}
 
-	public void reserveId(int i) { reservedIds.add(i); }
-
 	public void put(int key, WorldObject value) { worldObjects.put(key, value); }
+
+	public Collection<WorldObject> getWorldObjectCollection() { return worldObjects.values(); }
 
 	public int getAvailableId() {
 		// FIXME This really could be a O(log(n)) method.  Someone should get on that.
@@ -146,7 +147,7 @@ public class WorldObjectMap
 			throw new IllegalArgumentException("addObject(WorldObject obj) not allowed to be an occupied id: "
 				  + id + ".  Existing object: " + getObject(id));
 
-		reserveId(id);
+		reservedIds.add(id);
 		object.setId(id);
 
 		synchronized (scheduledForAddition)

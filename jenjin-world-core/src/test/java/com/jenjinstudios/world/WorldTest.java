@@ -1,5 +1,6 @@
 package com.jenjinstudios.world;
 
+import com.jenjinstudios.world.math.Vector2D;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -12,9 +13,9 @@ public class WorldTest
 {
 	@Test
 	public void testAddObject() {
-		WorldObject obj0 = mock(WorldObject.class);
-		WorldObject obj1 = mock(WorldObject.class);
-		WorldObject obj2 = new WorldObject("Bob");
+		WorldObject obj0 = new WorldObject("Alice");
+		WorldObject obj1 = new WorldObject("Bob");
+		WorldObject obj2 = new WorldObject("Carol");
 		World world = new World();
 
 		world.getWorldObjects().scheduleForAddition(obj0);
@@ -52,6 +53,7 @@ public class WorldTest
 	@Test
 	public void testUpdate() {
 		WorldObject worldObject = mock(WorldObject.class);
+		when(worldObject.getVector2D()).thenReturn(Vector2D.ORIGIN);
 		World world = new World();
 		world.getWorldObjects().scheduleForAddition(worldObject);
 		world.update();

@@ -20,11 +20,13 @@ public class SightedObject extends WorldObject
 	private final TreeMap<Integer, WorldObject> visibleObjects;
 	private final Set<WorldObject> newlyVisibleObjects;
 	private final Set<WorldObject> newlyInvisibleObjects;
+	private final Set<WorldObject> visibleBeforeUpdate;
 	private Vector2D vectorBeforeUpdate;
 	private Vector2D vectorAfterUpdate;
 
 	public SightedObject(String name) {
 		super(name);
+		visibleBeforeUpdate = new HashSet<>();
 		visibleObjects = new TreeMap<>();
 		visibleLocations = new ArrayList<>();
 		newlyVisibleObjects = new HashSet<>();
@@ -36,6 +38,14 @@ public class SightedObject extends WorldObject
 	public void setUp() {
 		super.setUp();
 		vectorBeforeUpdate = getVector2D();
+		newlyVisibleObjects.clear();
+		newlyInvisibleObjects.clear();
+		newlyInvisibleObjects.addAll(visibleBeforeUpdate.stream().filter(o ->
+			  !getVisibleObjects().containsKey(o.getId())).collect(Collectors.toList()));
+		getVisibleObjects().values().stream().filter(o ->
+			  !visibleBeforeUpdate.contains(o)).forEach(newlyVisibleObjects::add);
+		visibleBeforeUpdate.clear();
+		visibleBeforeUpdate.addAll(getVisibleObjects().values());
 		if (!vectorBeforeUpdate.equals(vectorAfterUpdate))
 		{
 			resetVisibleLocations();
@@ -44,15 +54,6 @@ public class SightedObject extends WorldObject
 
 	@Override
 	public void reset() {
-		// If we're in a new locations after stepping, update the visible array.
-		World world = getWorld();
-		if (world != null)
-		{
-			Location oldLoc = world.getLocationForCoordinates(getZoneID(), vectorBeforeUpdate);
-			if (oldLoc != getLocation() || getVisibleLocations().isEmpty())
-				resetVisibleLocations();
-			resetVisibleObjects();
-		}
 		vectorAfterUpdate = getVector2D();
 	}
 
@@ -60,6 +61,20 @@ public class SightedObject extends WorldObject
 		synchronized (visibleObjects)
 		{
 			return new TreeMap<>(visibleObjects);
+		}
+	}
+
+	public void addVisibleObject(WorldObject visible) {
+		synchronized (visibleObjects)
+		{
+			visibleObjects.put(visible.getId(), visible);
+		}
+	}
+
+	public void clearVisibleObjects() {
+		synchronized (visibleObjects)
+		{
+			visibleObjects.clear();
 		}
 	}
 
@@ -95,58 +110,4 @@ public class SightedObject extends WorldObject
 		}
 	}
 
-	private void resetVisibleObjects() {
-		ArrayList<WorldObject> currentlyVisible = getCurrentlyVisibleObjects();
-		Collection<WorldObject> visibles;
-		synchronized (visibleObjects)
-		{
-			visibles = visibleObjects.values();
-		}
-		addNewlyInvisibleObjects(currentlyVisible, visibles);
-		addNewlyVisibleObjects(currentlyVisible, visibles);
-		setCurrentlyVisibleObjects(currentlyVisible);
-	}
-
-	private void addNewlyVisibleObjects(ArrayList<WorldObject> currentlyVisible, Collection<WorldObject> visibles) {
-		synchronized (newlyVisibleObjects)
-		{
-			newlyVisibleObjects.clear();
-			newlyVisibleObjects.addAll(currentlyVisible);
-			newlyVisibleObjects.removeAll(visibles);
-		}
-	}
-
-	private void addNewlyInvisibleObjects(ArrayList<WorldObject> currentlyVisible, Collection<WorldObject> visibles) {
-		synchronized (newlyInvisibleObjects)
-		{
-			newlyInvisibleObjects.clear();
-			newlyInvisibleObjects.addAll(visibles);
-			newlyInvisibleObjects.removeAll(currentlyVisible);
-		}
-	}
-
-	private ArrayList<WorldObject> getCurrentlyVisibleObjects() {
-		ArrayList<WorldObject> currentlyVisible = new ArrayList<>();
-		for (Location loc : visibleLocations)
-		{
-			addCurrentlyVisibleObjectsInLocation(currentlyVisible, loc);
-		}
-		return currentlyVisible;
-	}
-
-	private void setCurrentlyVisibleObjects(ArrayList<WorldObject> currentlyVisible) {
-		synchronized (visibleObjects)
-		{
-			visibleObjects.clear();
-			for (WorldObject object : currentlyVisible)
-			{
-				visibleObjects.put(object.getId(), object);
-			}
-		}
-	}
-
-	private void addCurrentlyVisibleObjectsInLocation(ArrayList<WorldObject> currentlyVisible, Location loc) {
-		currentlyVisible.addAll(loc.getObjects().stream().filter(object ->
-			  object != this).collect(Collectors.toList()));
-	}
 }

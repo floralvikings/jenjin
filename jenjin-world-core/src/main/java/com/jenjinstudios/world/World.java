@@ -1,6 +1,7 @@
 package com.jenjinstudios.world;
 
 import com.jenjinstudios.world.math.Dimension2D;
+import com.jenjinstudios.world.math.SightCalculator;
 import com.jenjinstudios.world.math.Vector2D;
 
 import java.util.LinkedList;
@@ -63,6 +64,7 @@ public class World
 			worldObjects.removeScheduledObjects();
 			worldObjects.addScheduledObjects();
 			worldObjects.overwriteScheduledObjects();
+			SightCalculator.updateVisibleObjects(worldObjects.getWorldObjectCollection());
 			setUpObjects();
 			updateObjects();
 			resetObjects();
