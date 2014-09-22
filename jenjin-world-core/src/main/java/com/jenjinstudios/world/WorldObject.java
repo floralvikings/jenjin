@@ -3,12 +3,15 @@ package com.jenjinstudios.world;
 import com.jenjinstudios.world.math.Angle;
 import com.jenjinstudios.world.math.Vector2D;
 
+import java.util.HashMap;
+
 /**
  * Represents an object that exists in the game world.
  * @author Caleb Brinkman
  */
 public class WorldObject
 {
+	private final HashMap<String, Object> properties;
 	private String name;
 	private int zoneID;
 	private int resourceID;
@@ -23,6 +26,7 @@ public class WorldObject
 		vector2D = Vector2D.ORIGIN;
 		this.name = name;
 		angle = new Angle();
+		properties = new HashMap<>();
 	}
 
 	public Angle getAngle() { return angle; }
@@ -50,6 +54,10 @@ public class WorldObject
 	public void setId(int id) { this.id = id; }
 
 	public Location getLocation() { return location; }
+
+	public HashMap<String, Object> getProperties() {
+		return properties;
+	}
 
 	protected void setLocation(Location newLocation) {
 		Location oldLocation = location;

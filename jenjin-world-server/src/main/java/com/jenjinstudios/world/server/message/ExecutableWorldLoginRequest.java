@@ -95,14 +95,18 @@ public class ExecutableWorldLoginRequest extends WorldExecutableMessage
 	private Actor setHandlerPlayerInfo() {
 		WorldClientHandler handler = getClientHandler();
 		Actor player = handler.getPlayer();
-		double x = (double) playerData.get(X_COORD);
-		double y = (double) playerData.get(Y_COORD);
-		int zoneId = (int) playerData.get(ZONE_ID);
-		String username = (String) playerData.get(USERNAME);
+		double x = (double) playerData.remove(X_COORD);
+		double y = (double) playerData.remove(Y_COORD);
+		int zoneId = (int) playerData.remove(ZONE_ID);
+		String username = (String) playerData.remove(USERNAME);
 		Vector2D coordinates = new Vector2D(x, y);
 		player.setName(username);
 		player.setVector2D(coordinates);
 		player.setZoneID(zoneId);
+		for (String s : playerData.keySet())
+		{
+			player.getProperties().put(s, playerData.get(s));
+		}
 		handler.setUser(user);
 		return player;
 	}
