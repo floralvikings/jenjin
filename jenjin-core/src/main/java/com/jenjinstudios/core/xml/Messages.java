@@ -27,12 +27,12 @@ import java.util.List;
  * </pre>
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlRootElement(name = "messages")
+@XmlRootElement(name = "messages", namespace = "https://www.jenjinstudios.com")
 public class Messages
 {
-	@XmlElement(name = "message")
+	@XmlElement(name = "message", namespace = "https://www.jenjinstudios.com")
 	private List<MessageType> messages;
-	@XmlElement(name = "disabled_message")
+	@XmlElement(name = "disabled_message", namespace = "https://www.jenjinstudios.com")
 	private List<DisabledMessageType> disabledMessages;
 
 	/**

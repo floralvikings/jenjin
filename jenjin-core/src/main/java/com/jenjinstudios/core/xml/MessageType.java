@@ -26,15 +26,15 @@ import java.util.List;
  * </pre>
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "message", propOrder = {
+@XmlType(name = "message", namespace = "https://www.jenjinstudios.com", propOrder = {
 	  "arguments",
 	  "executable"
 })
 public class MessageType
 {
-	@XmlElement(name = "argument")
+	@XmlElement(name = "argument", namespace = "https://www.jenjinstudios.com")
 	private List<ArgumentType> arguments;
-	@XmlElement(name = "executable")
+	@XmlElement(name = "executable", namespace = "https://www.jenjinstudios.com")
 	private String executable;
 	@XmlAttribute(name = "name", required = true)
 	private String name;

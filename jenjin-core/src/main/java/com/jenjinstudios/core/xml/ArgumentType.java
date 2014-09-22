@@ -39,7 +39,7 @@ import javax.xml.bind.annotation.XmlType;
  * </pre>
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "argument")
+@XmlType(name = "argument", namespace = "https://www.jenjinstudios.com")
 public class ArgumentType
 {
 	@XmlAttribute(name = "type", required = true)

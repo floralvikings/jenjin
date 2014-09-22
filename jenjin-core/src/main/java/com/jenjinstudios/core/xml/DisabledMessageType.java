@@ -22,7 +22,7 @@ import javax.xml.bind.annotation.XmlType;
  * </pre>
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "disabled_message")
+@XmlType(name = "disabled_message", namespace = "https://www.jenjinstudios.com")
 public class DisabledMessageType
 {
 
