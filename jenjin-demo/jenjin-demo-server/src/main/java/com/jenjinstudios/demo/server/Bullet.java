@@ -4,8 +4,8 @@ import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.Location;
 import com.jenjinstudios.world.WorldObject;
 import com.jenjinstudios.world.math.Angle;
-import com.jenjinstudios.world.math.LocationCalculator;
 import com.jenjinstudios.world.math.Vector2D;
+import com.jenjinstudios.world.util.LocationUtils;
 
 import java.util.Collection;
 
@@ -45,7 +45,7 @@ public class Bullet extends Actor
 	}
 
 	private void checkForHit() {
-		Location loc = LocationCalculator.getObjectLocation(this);
+		Location loc = LocationUtils.getObjectLocation(this);
 		if (loc != null)
 		{
 			Collection<WorldObject> objects = loc.getObjects();

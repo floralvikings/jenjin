@@ -1,4 +1,4 @@
-package com.jenjinstudios.world.math;
+package com.jenjinstudios.world.util;
 
 import com.jenjinstudios.world.Location;
 import com.jenjinstudios.world.World;
@@ -8,7 +8,7 @@ import com.jenjinstudios.world.Zone;
 /**
  * @author Caleb Brinkman
  */
-public class LocationCalculator
+public class LocationUtils
 {
 	public static Location getObjectLocation(WorldObject worldObject) {
 		Location loc = null;

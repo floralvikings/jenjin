@@ -1,8 +1,8 @@
 package com.jenjinstudios.world;
 
 import com.jenjinstudios.world.math.Angle;
-import com.jenjinstudios.world.math.LocationCalculator;
 import com.jenjinstudios.world.math.Vector2D;
+import com.jenjinstudios.world.util.LocationUtils;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -77,7 +77,7 @@ public class WorldObjectTest
 	@Test
 	public void testGetLocation() throws Exception {
 		worldObject.setVector2D(vector2D);
-		Location loc = LocationCalculator.getObjectLocation(worldObject);
+		Location loc = LocationUtils.getObjectLocation(worldObject);
 		Assert.assertTrue(loc == world.getLocationForCoordinates(0, vector2D));
 	}
 
