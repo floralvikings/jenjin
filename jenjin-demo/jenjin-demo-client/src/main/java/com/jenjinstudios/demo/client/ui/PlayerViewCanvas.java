@@ -13,7 +13,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.transform.Rotate;
 
 import java.io.InputStream;
-import java.util.Properties;
+import java.util.Map;
 
 /**
  * @author Caleb Brinkman
@@ -66,8 +66,8 @@ public class PlayerViewCanvas extends Canvas
 
 	protected void drawLocation(Location location) {
 		Location pLoc = LocationUtils.getObjectLocation(clientPlayer);
-		int xDiff = location.X_COORDINATE - pLoc.X_COORDINATE;
-		int yDiff = location.Y_COORDINATE - pLoc.Y_COORDINATE;//+ 1;
+		int xDiff = location.getXCoordinate() - pLoc.getXCoordinate();
+		int yDiff = location.getYCoordinate() - pLoc.getYCoordinate();//+ 1;
 		double xBuff = clientPlayer.getVector2D().getXCoordinate() % Location.SIZE;
 		double yBuff = clientPlayer.getVector2D().getYCoordinate() % Location.SIZE;
 
@@ -76,8 +76,8 @@ public class PlayerViewCanvas extends Canvas
 
 		GraphicsContext graphicsContext2D = getGraphicsContext2D();
 
-		Properties properties = location.getProperties();
-		boolean walkable = !"false".equals(properties.getProperty("walkable"));
+		Map<String, Object> properties = location.getProperties();
+		boolean walkable = !"false".equals(properties.get("walkable"));
 		boolean indoors = "true".equals(properties.get("indoors"));
 		if (!walkable)
 		{

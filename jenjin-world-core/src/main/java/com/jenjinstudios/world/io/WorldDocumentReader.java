@@ -15,7 +15,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.NoSuchAlgorithmException;
-import java.util.Properties;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * This class handles the reading of and construction from world xml files.
@@ -128,14 +129,14 @@ public class WorldDocumentReader
 			NamedNodeMap attributes = currentLocationNode.getAttributes();
 			int x = Integer.parseInt(attributes.getNamedItem("x").getTextContent());
 			int y = Integer.parseInt(attributes.getNamedItem("y").getTextContent());
-			Properties properties = getLocationProperties(attributes);
+			Map<String, Object> properties = getLocationProperties(attributes);
 			locations[i] = new Location(x, y, properties);
 		}
 		return locations;
 	}
 
-	private Properties getLocationProperties(NamedNodeMap attributes) {
-		Properties properties = new Properties();
+	private Map<String, Object> getLocationProperties(NamedNodeMap attributes) {
+		Map<String, Object> properties = new HashMap<>();
 		for (int j = 0; j < attributes.getLength(); j++)
 		{
 			Attr item = (Attr) attributes.item(j);
@@ -143,7 +144,7 @@ public class WorldDocumentReader
 			{
 				String name = item.getName();
 				String value = item.getValue();
-				properties.setProperty(name, value);
+				properties.put(name, value);
 			}
 		}
 		return properties;

@@ -48,7 +48,7 @@ public class Zone
 	}
 
 	private void addSpecialLocations(Location[] specialLocations) {
-		for (Location l : specialLocations) { locationGrid[l.X_COORDINATE][l.Y_COORDINATE] = l; }
+		for (Location l : specialLocations) { locationGrid[l.getXCoordinate()][l.getYCoordinate()] = l; }
 	}
 
 	private void constructLocations() { for (int x = 0; x < xSize; x++) { constructColumn(x); } }

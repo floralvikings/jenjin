@@ -6,8 +6,9 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Properties;
+import java.util.Map;
 
 /**
  * @author Caleb Brinkman
@@ -35,8 +36,8 @@ public class LocationTest
 
 	@Test
 	public void testGetAdjacentWalkableLocations() {
-		Properties props = new Properties();
-		props.setProperty("walkable", "false");
+		Map<String, Object> props = new HashMap<>();
+		props.put("walkable", "false");
 		Location special = new Location(5, 6, props);
 		Zone zone = new Zone(0, new Dimension2D(10, 10), special);
 		Location loc = zone.getLocationOnGrid(5, 5);

@@ -147,7 +147,7 @@ public class Actor extends SightedObject
 			Location newLocation = getWorld().getLocationForCoordinates(getZoneID(), newVector);
 			if (newLocation != null)
 			{
-				boolean walkable = !"false".equals(newLocation.getProperties().getProperty("walkable"));
+				boolean walkable = !"false".equals(newLocation.getProperties().get("walkable"));
 				if (walkable) { setVector2D(newVector); }
 				didStep = walkable;
 			} else

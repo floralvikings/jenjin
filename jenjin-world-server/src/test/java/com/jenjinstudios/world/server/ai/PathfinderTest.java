@@ -7,8 +7,9 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.Properties;
+import java.util.Map;
 
 /**
  * @author Caleb Brinkman
@@ -17,8 +18,8 @@ public class PathfinderTest
 {
 	@Test
 	public void testFindPath() {
-		Properties properties = new Properties();
-		properties.setProperty("walkable", "false");
+		Map<String, Object> properties = new HashMap<>();
+		properties.put("walkable", "false");
 		Location[] obstacles = {
 			  new Location(0, 8, properties), new Location(1, 8, properties), new Location(2, 8, properties),
 			  new Location(3, 8, properties), new Location(4, 8, properties), new Location(5, 8, properties),

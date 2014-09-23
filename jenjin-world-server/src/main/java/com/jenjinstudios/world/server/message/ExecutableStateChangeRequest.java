@@ -82,7 +82,7 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage
 		boolean walkable = false;
 		if (location != null)
 		{
-			String prop = location.getProperties().getProperty("walkable");
+			String prop = (String) location.getProperties().get("walkable");
 			walkable = !"false".equals(prop);
 		}
 		return walkable;

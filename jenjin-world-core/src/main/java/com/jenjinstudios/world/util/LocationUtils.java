@@ -33,8 +33,8 @@ public class LocationUtils
 		List<Location> adjacents = new LinkedList<>();
 		if (zone != null)
 		{
-			int x = loc.X_COORDINATE;
-			int y = loc.Y_COORDINATE;
+			int x = loc.getXCoordinate();
+			int y = loc.getYCoordinate();
 
 			Location adjNorthEast = zone.getLocationOnGrid(x + 1, y + 1);
 			Location adjNorthWest = zone.getLocationOnGrid(x - 1, y + 1);
@@ -64,8 +64,8 @@ public class LocationUtils
 
 		if (zone != null)
 		{
-			int x = loc.X_COORDINATE;
-			int y = loc.Y_COORDINATE;
+			int x = loc.getXCoordinate();
+			int y = loc.getYCoordinate();
 
 			Location adjNorthEast = zone.getLocationOnGrid(x + 1, y + 1);
 			Location adjNorthWest = zone.getLocationOnGrid(x - 1, y + 1);
@@ -101,25 +101,27 @@ public class LocationUtils
 	}
 
 	public static boolean isWalkable(Location location) {
-		return !"false".equals(location.getProperties().getProperty("walkable"));
+		return !"false".equals(location.getProperties().get("walkable"));
 	}
 
 	public static Vector2D getNorthEastCorner(Location location) {
-		return new Vector2D((location.X_COORDINATE + 1) * Location.SIZE - 1,
-			  (location.Y_COORDINATE + 1) * Location.SIZE - 1);
+		return new Vector2D((location.getXCoordinate() + 1) * Location.SIZE - 1,
+			  (location.getYCoordinate() + 1) * Location.SIZE - 1);
 	}
 
 	public static Vector2D getNorthWestCorner(Location location) {
-		return new Vector2D(location.X_COORDINATE * Location.SIZE, (location.Y_COORDINATE + 1) * Location.SIZE - 1);
+		return new Vector2D(location.getXCoordinate() * Location.SIZE, (location.getYCoordinate() + 1) * Location.SIZE
+			  - 1);
 	}
 
 	public static Vector2D getSouthEastCorner(Location location) {
-		return new Vector2D((location.X_COORDINATE + 1) * Location.SIZE - 1, location.Y_COORDINATE * Location.SIZE);
+		return new Vector2D((location.getXCoordinate() + 1) * Location.SIZE - 1,
+			  location.getYCoordinate() * Location.SIZE);
 	}
 
 	public static Vector2D getSouthWestCorner(Location location) {
-		return new Vector2D(location.X_COORDINATE *
-			  Location.SIZE, location.Y_COORDINATE * Location.SIZE);
+		return new Vector2D(location.getXCoordinate() *
+			  Location.SIZE, location.getYCoordinate() * Location.SIZE);
 	}
 
 	/**
@@ -127,7 +129,7 @@ public class LocationUtils
 	 * @return The Vector2D at the center of this location.
 	 */
 	public static Vector2D getCenter(Location location) {
-		return new Vector2D(location.X_COORDINATE * Location.SIZE + Location.SIZE / 2,
-			  location.Y_COORDINATE * Location.SIZE + Location.SIZE / 2);
+		return new Vector2D(location.getXCoordinate() * Location.SIZE + Location.SIZE / 2,
+			  location.getYCoordinate() * Location.SIZE + Location.SIZE / 2);
 	}
 }

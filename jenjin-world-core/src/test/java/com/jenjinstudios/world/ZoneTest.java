@@ -5,7 +5,8 @@ import com.jenjinstudios.world.math.Vector2D;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import java.util.Properties;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Caleb Brinkman
@@ -14,8 +15,8 @@ public class ZoneTest
 {
 	@Test
 	public void testConstructor() {
-		Properties properties = new Properties();
-		properties.setProperty("blocksVision", "true");
+		Map<String, Object> properties = new HashMap<>();
+		properties.put("blocksVision", "true");
 		Location specialLocation = new Location(10, 10, properties);
 
 		Zone zone = new Zone(0, new Dimension2D(20, 20), specialLocation);

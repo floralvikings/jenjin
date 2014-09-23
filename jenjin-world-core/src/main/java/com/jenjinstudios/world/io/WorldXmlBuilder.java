@@ -10,7 +10,9 @@ import org.w3c.dom.Element;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Used to create XML representations of World objects.
@@ -96,7 +98,7 @@ public class WorldXmlBuilder
 		for (int y = 0; y < zone.ySize; y++)
 		{
 			Location location = zone.getLocationOnGrid(row, y);
-			Properties locationProperties = location.getProperties();
+			Map<String, Object> locationProperties = location.getProperties();
 			if (locationProperties.size() > 0)
 			{
 				Element locationElement = createLocationElement(location);
@@ -112,18 +114,16 @@ public class WorldXmlBuilder
 	 */
 	private Element createLocationElement(Location location) {
 		Element locationElement = worldDocument.createElement(LOC_TAG_NAME);
-		locationElement.setAttribute(LOC_X_ATTR, String.valueOf(location.X_COORDINATE));
-		locationElement.setAttribute(LOC_Y_ATTR, String.valueOf(location.Y_COORDINATE));
-		Properties locationProperties = location.getProperties();
+		locationElement.setAttribute(LOC_X_ATTR, String.valueOf(location.getXCoordinate()));
+		locationElement.setAttribute(LOC_Y_ATTR, String.valueOf(location.getYCoordinate()));
+		Map<String, Object> locationProperties = location.getProperties();
 		if (locationProperties.size() > 0)
 		{
-			Enumeration<?> propertyNames = locationProperties.propertyNames();
-			ArrayList<?> list = Collections.list(propertyNames);
-			for (Object property : list)
+			Set<String> propertyNames = locationProperties.keySet();
+			for (String property : propertyNames)
 			{
-				String name = property.toString();
-				String value = locationProperties.getProperty(name);
-				Attr locAttr = worldDocument.createAttribute(name);
+				String value = locationProperties.get(property).toString();
+				Attr locAttr = worldDocument.createAttribute(property);
 				locAttr.setValue(value);
 				locationElement.setAttributeNode(locAttr);
 			}

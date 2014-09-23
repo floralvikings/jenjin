@@ -8,7 +8,8 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.io.*;
-import java.util.Properties;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Caleb Brinkman
@@ -44,8 +45,8 @@ public class WorldDocumentWriterTest
 	}
 
 	private World createWorld() {
-		Properties locationProperties = new Properties();
-		locationProperties.setProperty("walkable", "false");
+		Map<String, Object> locationProperties = new HashMap<>();
+		locationProperties.put("walkable", "false");
 		Location location = new Location(1, 1, locationProperties);
 		Zone[] zones = {new Zone(0, new Dimension2D(15, 15), location)};
 		return new World(zones);
