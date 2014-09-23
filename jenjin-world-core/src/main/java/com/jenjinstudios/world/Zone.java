@@ -12,7 +12,7 @@ import java.util.Collections;
  * @author Caleb Brinkman
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlRootElement(name = "zone", namespace = "https://www.jenjinstudios.com")
+@XmlType(name = "zone", namespace = "https://www.jenjinstudios.com")
 public class Zone
 {
 	@XmlAttribute(name = "id", namespace = "https://www.jenjinstudios.com")
@@ -38,6 +38,8 @@ public class Zone
 		populateLocations();
 		Collections.addAll(locationGrid, specialLocations);
 	}
+
+	public Zone() { }
 
 	public LocationArrayList getLocationGrid() {
 		if (locationGrid == null)
