@@ -9,7 +9,6 @@ import com.jenjinstudios.world.math.Vector2D;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.Stream;
 
 /**
  * @author Caleb Brinkman
@@ -30,7 +29,7 @@ public class LocationUtils
 		return loc;
 	}
 
-	public static List<Location> getAdjacentLocations(Location loc, Zone zone) {
+	public static List<Location> getAdjacentLocations(Zone zone, Location loc) {
 		List<Location> adjacents = new LinkedList<>();
 		if (zone != null)
 		{
@@ -46,21 +45,21 @@ public class LocationUtils
 			Location adjEast = zone.getLocationOnGrid(x + 1, y);
 			Location adjWest = zone.getLocationOnGrid(x - 1, y);
 
-			adjacents.add(adjNorthEast);
-			adjacents.add(adjNorthWest);
-			adjacents.add(adjSouthEast);
-			adjacents.add(adjSouthWest);
 			adjacents.add(adjNorth);
 			adjacents.add(adjSouth);
 			adjacents.add(adjEast);
 			adjacents.add(adjWest);
+			adjacents.add(adjNorthEast);
+			adjacents.add(adjNorthWest);
+			adjacents.add(adjSouthEast);
+			adjacents.add(adjSouthWest);
 
 			adjacents.removeAll(Collections.singleton(null));
 		}
 		return adjacents;
 	}
 
-	public static List<Location> getAdjacentDiagonalLocations(Location loc, Zone zone) {
+	public static List<Location> getAdjacentDiagonalLocations(Zone zone, Location loc) {
 		List<Location> diagonals = new LinkedList<>();
 
 		if (zone != null)
@@ -83,14 +82,20 @@ public class LocationUtils
 		return diagonals;
 	}
 
-	public static List<Location> getAdjacentWalkableLocations(Location location, Zone zone) {
+	public static List<Location> getAdjacentWalkableLocations(Zone zone, Location location) {
 		List<Location> adjacentWalkable = new LinkedList<>();
 		if (zone != null)
 		{
-			List<Location> adjacent = getAdjacentLocations(location, zone);
-			List<Location> diagonals = getAdjacentDiagonalLocations(location, zone);
+			List<Location> adjacent = getAdjacentLocations(zone, location);
+			List<Location> diagonals = getAdjacentDiagonalLocations(zone, location);
+			List<Location> unwalkable = new LinkedList<>();
 			adjacentWalkable.addAll(adjacent);
-			Stream<Location> stream = adjacentWalkable.stream().filter(LocationUtils::isWalkable);
+			adjacentWalkable.stream().filter(loc -> !isWalkable(loc)).forEach(loc -> {
+				unwalkable.add(loc);
+				getAdjacentLocations(zone, loc).stream().filter(diagonals::contains).
+					  forEach(unwalkable::add);
+			});
+			adjacentWalkable.removeAll(unwalkable);
 		}
 		return adjacentWalkable;
 	}

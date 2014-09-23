@@ -1,6 +1,7 @@
 package com.jenjinstudios.world;
 
 import com.jenjinstudios.world.math.Dimension2D;
+import com.jenjinstudios.world.util.LocationUtils;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -17,7 +18,7 @@ public class LocationTest
 	public void testGetAdjacentLocations() {
 		Zone zone = new Zone(0, new Dimension2D(10, 10));
 		Location loc = zone.getLocationOnGrid(5, 5);
-		List<Location> adjacentLocations = loc.getAdjacentLocations();
+		List<Location> adjacentLocations = LocationUtils.getAdjacentLocations(zone, loc);
 		Location[] expectedLocationArray = {
 			new Location(5, 6),
 			new Location(5, 4),
@@ -39,7 +40,7 @@ public class LocationTest
 		Location special = new Location(5, 6, props);
 		Zone zone = new Zone(0, new Dimension2D(10, 10), special);
 		Location loc = zone.getLocationOnGrid(5, 5);
-		List<Location> adjacentLocations = loc.getAdjacentWalkableLocations();
+		List<Location> adjacentLocations = LocationUtils.getAdjacentWalkableLocations(zone, loc);
 		Location[] expectedLocationArray = {
 			new Location(5, 4),
 			new Location(6, 5),

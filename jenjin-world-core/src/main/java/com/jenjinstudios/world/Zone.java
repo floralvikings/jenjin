@@ -28,7 +28,6 @@ public class Zone
 		locationGrid = new Location[size.getXSize()][size.getYSize()];
 		constructLocations();
 		addSpecialLocations(specialLocations);
-		initializeLocationAdjacency();
 	}
 
 	public Location getLocationForCoordinates(Vector2D coordinates) {
@@ -58,20 +57,4 @@ public class Zone
 		for (int y = 0; y < ySize; y++) { locationGrid[x][y] = new Location(x, y); }
 	}
 
-	private void initializeLocationAdjacency() {
-		setAdjacentLocations();
-		setAdjacentWalkableLocations();
-	}
-
-	private void setAdjacentWalkableLocations() { for (int x = 0; x < xSize; x++) { setAdjacentWalkableColumn(x); } }
-
-	private void setAdjacentWalkableColumn(int x) {
-		for (int y = 0; y < ySize; y++) { locationGrid[x][y].setAdjacentWalkableLocations(); }
-	}
-
-	private void setAdjacentLocations() { for (int x = 0; x < xSize; x++) { setAdjacentColumn(x); } }
-
-	private void setAdjacentColumn(int x) {
-		for (int y = 0; y < ySize; y++) { locationGrid[x][y].setAdjacentLocations(this);}
-	}
 }

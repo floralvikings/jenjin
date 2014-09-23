@@ -37,7 +37,7 @@ public class PathfinderTest
 		Zone zone = new Zone(0, new Dimension2D(20, 20), obstacles);
 		Location start = zone.getLocationOnGrid(5, 5);
 		Location end = zone.getLocationOnGrid(5, 15);
-		Pathfinder pathfinder = new Pathfinder(start, end);
+		Pathfinder pathfinder = new Pathfinder(zone, start, end);
 		LinkedList<Location> actualPath = pathfinder.findPath();
 		Assert.assertEquals(actualPath, expectedPath);
 	}

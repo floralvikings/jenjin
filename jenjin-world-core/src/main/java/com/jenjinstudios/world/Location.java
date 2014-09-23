@@ -1,7 +1,6 @@
 package com.jenjinstudios.world;
 
-import java.util.*;
-import java.util.stream.Stream;
+import java.util.Properties;
 
 /**
  * Represents a location in the world's location grid.
@@ -15,18 +14,8 @@ public class Location
 	public final int X_COORDINATE;
 	/** The y coordinate of the location in it's zone's grid. */
 	public final int Y_COORDINATE;
-	/** The objects residing in this location. */
-	private final HashSet<WorldObject> objects;
 	/** The locationProperties of this location. */
 	private final Properties locationProperties;
-	/** The locations adjacent to this one. */
-	private final LinkedList<Location> adjacentLocations;
-	/** The locations adjacent to this one through which a path may be plotted. */
-	private final LinkedList<Location> adjacentWalkableLocations;
-	/** The locations adjacent diagonally. */
-	private final List<Location> diagonals;
-	/** Flags whether the adjacent locations are set. */
-	private boolean adjacentsSet;
 
 	/**
 	 * Construct a new location at the given position in a zone grid.
@@ -43,14 +32,9 @@ public class Location
 	 * @param y The y coordinate.
 	 */
 	public Location(int x, int y, Properties properties) {
-		diagonals = new LinkedList<>();
-		adjacentLocations = new LinkedList<>();
-		adjacentWalkableLocations = new LinkedList<>();
 		X_COORDINATE = x;
 		Y_COORDINATE = y;
 		this.locationProperties = properties;
-		objects = new HashSet<>();
-
 	}
 
 	/**
@@ -58,12 +42,6 @@ public class Location
 	 * @return The locationProperties of this location.
 	 */
 	public Properties getProperties() { return locationProperties; }
-
-	/**
-	 * Get the objects residing in this location, as an array.
-	 * @return An array containing all objects residing in this location.
-	 */
-	public Collection<WorldObject> getObjects() { return new ArrayList<>(objects); }
 
 	@Override
 	public int hashCode() {
@@ -87,83 +65,4 @@ public class Location
 	@Override
 	public String toString() { return "(" + X_COORDINATE + ", " + Y_COORDINATE + ")"; }
 
-	/**
-	 * Get a list of locations adjacent to this one, all of which can be walked to.
-	 * @return A list of adjacent, walkable locations.
-	 */
-	public List<Location> getAdjacentWalkableLocations() {
-		return new LinkedList<>(adjacentWalkableLocations);
-	}
-
-	/**
-	 * Get a list of all adjacent locations.
-	 * @return The list of adjacent locations.
-	 */
-	protected List<Location> getAdjacentLocations() { return new LinkedList<>(adjacentLocations); }
-
-	/**
-	 * Set the locations adjacent to this one.
-	 * @param zone The zone in which this location (or rather, the "adjacent" locations) lie.
-	 */
-	protected void setAdjacentLocations(Zone zone) {
-		if (adjacentsSet)
-		{
-			throw new IllegalStateException("Cannot set adjacent locations after they have already been set!");
-		}
-		adjacentsSet = true;
-		setCardinals(zone);
-		setOrdinals(zone);
-	}
-
-	/** Set the locations adjacent to this one which can be moved to while finding a path. */
-	protected void setAdjacentWalkableLocations() {
-		adjacentWalkableLocations.addAll(adjacentLocations);
-		Stream<Location> stream = adjacentLocations.stream();
-		Stream<Location> filtered = stream.filter(walkable ->
-			  "false".equals(walkable.getProperties().getProperty("walkable")));
-		filtered.forEach(walkable -> {
-			adjacentWalkableLocations.remove(walkable);
-			removeDiagonalsWithAdjacentUnwalkables(walkable);
-		});
-	}
-
-	private void setOrdinals(Zone zone) {
-		Location adjNorthEast = zone.getLocationOnGrid(X_COORDINATE + 1, Y_COORDINATE + 1);
-		Location adjNorthWest = zone.getLocationOnGrid(X_COORDINATE - 1, Y_COORDINATE + 1);
-		Location adjSouthEast = zone.getLocationOnGrid(X_COORDINATE + 1, Y_COORDINATE - 1);
-		Location adjSouthWest = zone.getLocationOnGrid(X_COORDINATE - 1, Y_COORDINATE - 1);
-		addAdjacentOrdinalLocation(adjNorthEast);
-		addAdjacentOrdinalLocation(adjNorthWest);
-		addAdjacentOrdinalLocation(adjSouthEast);
-		addAdjacentOrdinalLocation(adjSouthWest);
-	}
-
-	private void addAdjacentOrdinalLocation(Location adjacnt) {
-		if (adjacnt != null)
-		{
-			adjacentLocations.add(adjacnt);
-			diagonals.add(adjacnt);
-		}
-	}
-
-	private void setCardinals(Zone zone) {
-		Location adjNorth = zone.getLocationOnGrid(X_COORDINATE, Y_COORDINATE + 1);
-		Location adjSouth = zone.getLocationOnGrid(X_COORDINATE, Y_COORDINATE - 1);
-		Location adjEast = zone.getLocationOnGrid(X_COORDINATE + 1, Y_COORDINATE);
-		Location adjWest = zone.getLocationOnGrid(X_COORDINATE - 1, Y_COORDINATE);
-		addCardinalAdjacentLocation(adjNorth);
-		addCardinalAdjacentLocation(adjSouth);
-		addCardinalAdjacentLocation(adjEast);
-		addCardinalAdjacentLocation(adjWest);
-	}
-
-	private void addCardinalAdjacentLocation(Location adjacent) {
-		if (adjacent != null)
-			adjacentLocations.add(adjacent);
-	}
-
-	private void removeDiagonalsWithAdjacentUnwalkables(Location walkable) {
-		walkable.getAdjacentLocations().stream().filter(diagonals::contains).
-			  forEach(adjacentWalkableLocations::remove);
-	}
 }
