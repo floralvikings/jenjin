@@ -38,6 +38,14 @@ public class SightedObject extends WorldObject
 	public void setUp() {
 		super.setUp();
 		vectorBeforeUpdate = getVector2D();
+		setUpVisibleObjects();
+		if (!vectorBeforeUpdate.equals(vectorAfterUpdate))
+		{
+			resetVisibleLocations();
+		}
+	}
+
+	private void setUpVisibleObjects() {
 		newlyVisibleObjects.clear();
 		newlyInvisibleObjects.clear();
 		newlyInvisibleObjects.addAll(visibleBeforeUpdate.stream().filter(o ->
@@ -46,10 +54,6 @@ public class SightedObject extends WorldObject
 			  !visibleBeforeUpdate.contains(o)).forEach(newlyVisibleObjects::add);
 		visibleBeforeUpdate.clear();
 		visibleBeforeUpdate.addAll(getVisibleObjects().values());
-		if (!vectorBeforeUpdate.equals(vectorAfterUpdate))
-		{
-			resetVisibleLocations();
-		}
 	}
 
 	@Override
