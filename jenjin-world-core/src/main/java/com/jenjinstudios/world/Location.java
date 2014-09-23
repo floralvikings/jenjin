@@ -1,5 +1,6 @@
 package com.jenjinstudios.world;
 
+import javax.xml.bind.annotation.*;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -7,16 +8,23 @@ import java.util.Map;
  * Represents a location in the world's location grid.
  * @author Caleb Brinkman
  */
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(name = "message", namespace = "https://www.jenjinstudios.com")
 public class Location
 {
 	/** The size, int units, of each location. */
 	public static final int SIZE = 10;
 	/** The x coordinate of the location in it's zone's grid. */
-	private final int xCoordinate;
+	@XmlAttribute(name = "x", namespace = "https://www.jenjinstudios.com")
+	private int xCoordinate;
 	/** The y coordinate of the location in it's zone's grid. */
-	private final int yCoordinate;
+	@XmlAttribute(name = "y", namespace = "https://www.jenjinstudios.com")
+	private int yCoordinate;
 	/** The locationProperties of this location. */
-	private final Map<String, Object> locationProperties;
+	@XmlElementWrapper(name = "properties", namespace = "https://www.jenjinstudios.com")
+	private Map<String, Object> locationProperties;
+
+	public Location() { }
 
 	/**
 	 * Construct a new location at the given position in a zone grid.
@@ -40,7 +48,13 @@ public class Location
 	 * Get the locationProperties of this location.
 	 * @return The locationProperties of this location.
 	 */
-	public Map<String, Object> getProperties() { return locationProperties; }
+	public Map<String, Object> getProperties() {
+		if (locationProperties == null)
+		{
+			locationProperties = new HashMap<>();
+		}
+		return locationProperties;
+	}
 
 	/** The x coordinate of the location in it's zone's grid. */
 	public int getXCoordinate() { return xCoordinate; }

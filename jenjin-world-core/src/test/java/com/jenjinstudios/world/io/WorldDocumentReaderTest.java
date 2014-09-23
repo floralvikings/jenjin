@@ -17,14 +17,28 @@ public class WorldDocumentReaderTest
 	private static final String validWorldString =
 		  "<world>\n" +
 				"    <zone id=\"0\" xSize=\"15\" ySize=\"15\">\n" +
-				"       <location x=\"1\" y=\"1\" walkable=\"false\" />\n" +
+				"       <location x=\"1\" y=\"1\">\n" +
+				"			<properties>" +
+				"				<entry>" +
+				"					<key>walkable</key>" +
+				"					<value>false</value>" +
+				"				</entry>" +
+				"			</properties>" +
+				"		</location>\n" +
 				"    </zone>\n" +
 				"</world>";
 
 	private static final String invalidWorldString =
-		  "<world>ffooooBar<\n" +
+		  "<world>ffffooooooooooobar\n" +
 				"    <zone id=\"0\" xSize=\"15\" ySize=\"15\">\n" +
-				"       <location x=\"1\" y=\"1\" walkable=\"false\" />\n" +
+				"       <location x=\"1\" y=\"1\">\n" +
+				"			<properties>" +
+				"				<entry>" +
+				"					<key>walkable</key>" +
+				"					<value>false</value>" +
+				"				</entry>" +
+				"			</properties>" +
+				"		</location>\n" +
 				"    </zone>\n" +
 				"</world>";
 
