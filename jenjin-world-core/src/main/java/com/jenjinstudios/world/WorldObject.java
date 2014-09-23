@@ -53,11 +53,9 @@ public class WorldObject
 
 	public void setId(int id) { this.id = id; }
 
-	public Location getLocation() { return location; }
+	public HashMap<String, Object> getProperties() { return properties; }
 
-	public HashMap<String, Object> getProperties() {
-		return properties;
-	}
+	public Location getLocation() { return location; }
 
 	protected void setLocation(Location newLocation) {
 		Location oldLocation = location;
