@@ -61,7 +61,7 @@ public class WorldXmlBuilder
 		List<Integer> zoneIDs = world.getZoneIDs();
 		for (int id : zoneIDs)
 		{
-			Zone zone = world.getZone(id);
+			Zone zone = world.getZones().get(id);
 			Element zoneElement = createZoneElement(zone);
 			addLocationNodes(zone, zoneElement);
 			rootElement.appendChild(zoneElement);

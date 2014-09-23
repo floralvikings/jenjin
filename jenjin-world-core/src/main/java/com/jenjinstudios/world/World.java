@@ -6,6 +6,7 @@ import com.jenjinstudios.world.util.ZoneUtils;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.TreeMap;
 
 /**
@@ -25,9 +26,7 @@ public class World
 	private long lastUpdateStarted;
 
 	/** Construct a new World. */
-	public World() {
-		this(new Zone(0, new Dimension2D(DEFAULT_SIZE, DEFAULT_SIZE)));
-	}
+	public World() { this(new Zone(0, new Dimension2D(DEFAULT_SIZE, DEFAULT_SIZE))); }
 
 	/**
 	 * Construct a new world with the specified Zone array.
@@ -75,24 +74,9 @@ public class World
 	 * Get a list of all valid Zone IDs in this world.
 	 * @return A List of all IDs which are linked to a zone.
 	 */
-	public List<Integer> getZoneIDs() {
-		synchronized (zones)
-		{
-			return new LinkedList<>(zones.keySet());
-		}
-	}
+	public List<Integer> getZoneIDs() { return new LinkedList<>(zones.keySet()); }
 
-	/**
-	 * Get the zone with the given id.
-	 * @param id The id of the zone to retrieve.
-	 * @return The zone with the given id.
-	 */
-	public Zone getZone(int id) {
-		synchronized (zones)
-		{
-			return zones.get(id);
-		}
-	}
+	public Map<Integer, Zone> getZones() { return zones; }
 
 	/**
 	 * Get the time at which the most recent update completed.
@@ -106,15 +90,9 @@ public class World
 	 */
 	public long getLastUpdateStarted() { return lastUpdateStarted; }
 
-	private void resetObjects() {
-		worldObjects.forEach((Integer i, WorldObject o) -> o.reset());
-	}
+	private void resetObjects() { worldObjects.forEach((Integer i, WorldObject o) -> o.reset()); }
 
-	private void updateObjects() {
-		worldObjects.forEach((Integer i, WorldObject o) -> o.update());
-	}
+	private void updateObjects() { worldObjects.forEach((Integer i, WorldObject o) -> o.update()); }
 
-	private void setUpObjects() {
-		worldObjects.forEach((Integer i, WorldObject o) -> o.setUp());
-	}
+	private void setUpObjects() { worldObjects.forEach((Integer i, WorldObject o) -> o.setUp()); }
 }

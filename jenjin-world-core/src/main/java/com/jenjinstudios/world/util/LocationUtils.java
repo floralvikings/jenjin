@@ -16,7 +16,7 @@ public class LocationUtils
 		World world = worldObject.getWorld();
 		if (world != null)
 		{
-			Zone zone = world.getZone(worldObject.getZoneID());
+			Zone zone = world.getZones().get(worldObject.getZoneID());
 			if (zone != null)
 			{
 				loc = ZoneUtils.getLocationForCoordinates(zone, worldObject.getVector2D());

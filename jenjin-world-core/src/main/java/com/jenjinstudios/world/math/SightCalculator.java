@@ -28,7 +28,7 @@ public class SightCalculator
 		if (world != null)
 		{
 			int zoneId = worldObject.getZoneID();
-			Zone zone = world.getZone(zoneId);
+			Zone zone = world.getZones().get(zoneId);
 			if (zone != null)
 			{
 				Location location = ZoneUtils.getLocationForCoordinates(zone, worldObject.getVector2D());
