@@ -52,7 +52,6 @@ public class Location
 	public int hashCode() {
 		int result = xCoordinate;
 		result = 31 * result + yCoordinate;
-		result = 31 * result + locationProperties.hashCode();
 		return result;
 	}
 
@@ -63,8 +62,7 @@ public class Location
 
 		Location location = (Location) o;
 
-		return xCoordinate == location.xCoordinate && yCoordinate == location.yCoordinate &&
-			  locationProperties.equals(location.locationProperties);
+		return xCoordinate == location.xCoordinate && yCoordinate == location.yCoordinate;
 	}
 
 	@Override
