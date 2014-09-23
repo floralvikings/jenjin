@@ -28,7 +28,7 @@ public class WorldObjectMap
 
 	public void put(int key, WorldObject value) { worldObjects.put(key, value); }
 
-	public Collection<WorldObject> getWorldObjectCollection() { return worldObjects.values(); }
+	public Collection<WorldObject> getWorldObjectCollection() { return new LinkedList<>(worldObjects.values()); }
 
 	public int getAvailableId() {
 		// FIXME This really could be a O(log(n)) method.  Someone should get on that.

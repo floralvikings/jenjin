@@ -1,6 +1,7 @@
 package com.jenjinstudios.world.math;
 
 import com.jenjinstudios.world.SightedObject;
+import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.WorldObject;
 
 import java.util.Collection;
@@ -15,7 +16,8 @@ public class SightCalculator
 	public static final String VISION_RADIUS_PROPERTY = "visionRadius";
 	public static final double DEFAULT_VISION_RADIUS = 50d;
 
-	public static void updateVisibleObjects(Collection<WorldObject> worldObjects) {
+	public static void updateVisibleObjects(World world) {
+		Collection<WorldObject> worldObjects = world.getWorldObjects().getWorldObjectCollection();
 		clearVisibleObjects(worldObjects);
 		updateVisibility(worldObjects);
 	}
