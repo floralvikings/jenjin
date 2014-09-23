@@ -29,7 +29,7 @@ public class Zone
 		this.ySize = size.getYSize();
 
 		locationGrid = new HashSet<>();
-		constructLocations();
+		populateLocations();
 		for (Location l : specialLocations)
 		{
 			l.getProperties().forEach((k, v) -> locationGrid.stream().filter(loc ->
@@ -46,8 +46,8 @@ public class Zone
 
 	public int getYSize() { return ySize; }
 
-	private void constructLocations() { for (int x = 0; x < xSize; x++) { constructColumn(x); } }
+	private void populateLocations() { for (int x = 0; x < xSize; x++) { populateColumn(x); } }
 
-	private void constructColumn(int x) { for (int y = 0; y < ySize; y++) { locationGrid.add(new Location(x, y)); } }
+	private void populateColumn(int x) { for (int y = 0; y < ySize; y++) { locationGrid.add(new Location(x, y)); } }
 
 }
