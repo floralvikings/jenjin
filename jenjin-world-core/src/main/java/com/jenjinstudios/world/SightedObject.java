@@ -96,7 +96,7 @@ public class SightedObject extends WorldObject
 		}
 	}
 
-	public AbstractCollection<Location> getVisibleLocations() { return new LinkedList<>(visibleLocations); }
+	public Collection<Location> getVisibleLocations() { return new LinkedList<>(visibleLocations); }
 
 	private void resetVisibleLocations() {
 		synchronized (visibleLocations)
