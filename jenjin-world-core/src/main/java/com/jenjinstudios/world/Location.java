@@ -65,18 +65,6 @@ public class Location
 	 */
 	public Collection<WorldObject> getObjects() { return new ArrayList<>(objects); }
 
-	/**
-	 * Add the object to this location's object map.
-	 * @param object The object to add.
-	 */
-	public void addObject(WorldObject object) { objects.add(object); }
-
-	/**
-	 * Remove an object from this location's object map.
-	 * @param object The object to remove.
-	 */
-	public void removeObject(WorldObject object) { objects.remove(object); }
-
 	@Override
 	public int hashCode() {
 		int result = X_COORDINATE;
