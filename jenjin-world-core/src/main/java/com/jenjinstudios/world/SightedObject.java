@@ -34,12 +34,18 @@ public class SightedObject extends WorldObject
 	}
 
 	private void setUpVisibleObjects() {
-		newlyVisibleObjects.clear();
-		newlyInvisibleObjects.clear();
-		newlyInvisibleObjects.addAll(visibleLastSetUp.stream().filter(o ->
-			  !getVisibleObjects().containsKey(o.getId())).collect(Collectors.toList()));
-		getVisibleObjects().values().stream().filter(o ->
-			  !visibleLastSetUp.contains(o)).forEach(newlyVisibleObjects::add);
+		synchronized (newlyVisibleObjects)
+		{
+			newlyVisibleObjects.clear();
+			getVisibleObjects().values().stream().filter(o ->
+				  !visibleLastSetUp.contains(o)).forEach(newlyVisibleObjects::add);
+		}
+		synchronized (newlyInvisibleObjects)
+		{
+			newlyInvisibleObjects.clear();
+			newlyInvisibleObjects.addAll(visibleLastSetUp.stream().filter(o ->
+				  !getVisibleObjects().containsKey(o.getId())).collect(Collectors.toList()));
+		}
 		visibleLastSetUp.clear();
 		visibleLastSetUp.addAll(getVisibleObjects().values());
 	}
