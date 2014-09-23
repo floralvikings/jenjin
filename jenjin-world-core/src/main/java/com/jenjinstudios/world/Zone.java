@@ -1,10 +1,9 @@
 package com.jenjinstudios.world;
 
+import com.jenjinstudios.world.collections.LocationArrayList;
 import com.jenjinstudios.world.math.Dimension2D;
-import com.jenjinstudios.world.util.LocationUtils;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Collections;
 
 /**
  * The {@code Zone} class represents a grid of {@code Location} objects within the {@code World}.  Zones cannot be
@@ -16,7 +15,7 @@ public class Zone
 	private int id;
 	private int xSize;
 	private int ySize;
-	private Set<Location> locationGrid;
+	private LocationArrayList locationGrid;
 
 	/**
 	 * Construct a new zone with the given ID and size.
@@ -28,17 +27,19 @@ public class Zone
 		this.xSize = size.getXSize();
 		this.ySize = size.getYSize();
 
-		locationGrid = new HashSet<>();
+		locationGrid = new LocationArrayList();
 		populateLocations();
-		for (Location l : specialLocations)
-		{
-			l.getProperties().forEach((k, v) -> locationGrid.stream().filter(loc ->
-				  LocationUtils.coordinatesEqual(loc, l)).forEach(loc ->
-				  loc.getProperties().put(k, v)));
-		}
+		Collections.addAll(locationGrid, specialLocations);
 	}
 
-	public Set<Location> getLocationGrid() { return locationGrid; }
+	public LocationArrayList getLocationGrid() {
+		if (locationGrid == null)
+		{
+			locationGrid = new LocationArrayList();
+			populateLocations();
+		}
+		return locationGrid;
+	}
 
 	public int getId() { return id; }
 
