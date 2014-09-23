@@ -5,8 +5,6 @@ import com.jenjinstudios.world.math.Vector2D;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import java.util.Properties;
-
 public class SightedObjectTest
 {
 	@Test
@@ -25,20 +23,7 @@ public class SightedObjectTest
 
 	@Test
 	public void testGetVisibleLocations() {
-		Properties props = new Properties();
-		props.setProperty("blocksVision", "true");
-		Location[] locations = new Location[]{
-			  new Location(24, 23, props),
-			  new Location(24, 27, props),
-			  new Location(23, 26, props),
-			  new Location(23, 24, props),
-			  new Location(26, 23, props),
-			  new Location(26, 27, props),
-			  new Location(27, 24, props),
-			  new Location(27, 26, props),
-			  new Location(27, 27, props)
-		};
-		Zone zone = new Zone(0, new Dimension2D(50, 50), locations);
+		Zone zone = new Zone(0, new Dimension2D(50, 50));
 		World world = new World(zone);
 		SightedObject sightedObject = new SightedObject("SightedObject");
 		world.getWorldObjects().scheduleForAddition(sightedObject);
