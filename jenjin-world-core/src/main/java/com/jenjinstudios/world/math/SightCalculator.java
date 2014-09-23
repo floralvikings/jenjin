@@ -1,11 +1,10 @@
 package com.jenjinstudios.world.math;
 
-import com.jenjinstudios.world.SightedObject;
-import com.jenjinstudios.world.World;
-import com.jenjinstudios.world.WorldObject;
+import com.jenjinstudios.world.*;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.stream.Stream;
 
 /**
@@ -14,7 +13,7 @@ import java.util.stream.Stream;
 public class SightCalculator
 {
 	public static final String VISION_RADIUS_PROPERTY = "visionRadius";
-	public static final double DEFAULT_VISION_RADIUS = 50d;
+	public static final double DEFAULT_VISION_RADIUS = 100d;
 
 	public static void updateVisibleObjects(World world) {
 		Collection<WorldObject> worldObjects = world.getWorldObjects().getWorldObjectCollection();
@@ -22,17 +21,39 @@ public class SightCalculator
 		updateVisibility(worldObjects);
 	}
 
+	public static Collection<Location> getVisibleLocations(WorldObject worldObject) {
+		LinkedList<Location> locations = new LinkedList<>();
+		World world = worldObject.getWorld();
+		if (world != null)
+		{
+			int zoneId = worldObject.getZoneID();
+			Zone zone = world.getZone(zoneId);
+			if (zone != null)
+			{
+				Location location = zone.getLocationForCoordinates(worldObject.getVector2D());
+				int radius = (int) (calculateViewRadius(worldObject) / Location.SIZE);
+				FieldOfVisionCalculator fov = new FieldOfVisionCalculator(zone, location, radius);
+				locations.addAll(fov.scan());
+			}
+		}
+		return locations;
+	}
+
 	private static void updateVisibility(Collection<WorldObject> worldObjects) {
 		HashMap<Integer, Boolean> alreadyChecked = new HashMap<>();
 		for (WorldObject worldObject : worldObjects)
 		{
-			Object customRadius = worldObject.getProperties().get(VISION_RADIUS_PROPERTY);
-			double radius = customRadius == null ? DEFAULT_VISION_RADIUS : (double) customRadius;
+			double radius = calculateViewRadius(worldObject);
 			Stream<WorldObject> filter = worldObjects.stream().filter(o ->
 				  o != worldObject && !alreadyChecked.containsKey(o.getId()));
 			filter.forEach(visible -> determineVisibility(worldObject, visible, radius));
 			alreadyChecked.put(worldObject.getId(), true);
 		}
+	}
+
+	private static double calculateViewRadius(WorldObject worldObject) {
+		Object customRadius = worldObject.getProperties().get(VISION_RADIUS_PROPERTY);
+		return customRadius == null ? DEFAULT_VISION_RADIUS : (double) customRadius;
 	}
 
 	private static void clearVisibleObjects(Collection<WorldObject> worldObjects) {

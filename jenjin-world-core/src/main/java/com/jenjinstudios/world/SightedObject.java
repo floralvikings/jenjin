@@ -1,9 +1,9 @@
 package com.jenjinstudios.world;
 
-import com.jenjinstudios.world.math.FieldOfVisionCalculator;
-import com.jenjinstudios.world.math.Vector2D;
-
-import java.util.*;
+import java.util.AbstractMap;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 /**
@@ -14,51 +14,34 @@ import java.util.stream.Collectors;
  */
 public class SightedObject extends WorldObject
 {
-	/** The radius of the square of visible locations. */
-	private static final int VIEW_RADIUS = 11;
-	private final ArrayList<Location> visibleLocations;
 	private final TreeMap<Integer, WorldObject> visibleObjects;
 	private final Set<WorldObject> newlyVisibleObjects;
 	private final Set<WorldObject> newlyInvisibleObjects;
-	private final Set<WorldObject> visibleBeforeUpdate;
-	private Vector2D vectorBeforeUpdate;
-	private Vector2D vectorAfterUpdate;
+	private final Set<WorldObject> visibleLastSetUp;
 
 	public SightedObject(String name) {
 		super(name);
-		visibleBeforeUpdate = new HashSet<>();
+		visibleLastSetUp = new HashSet<>();
 		visibleObjects = new TreeMap<>();
-		visibleLocations = new ArrayList<>();
 		newlyVisibleObjects = new HashSet<>();
 		newlyInvisibleObjects = new HashSet<>();
-		vectorBeforeUpdate = getVector2D();
 	}
 
 	@Override
 	public void setUp() {
 		super.setUp();
-		vectorBeforeUpdate = getVector2D();
 		setUpVisibleObjects();
-		if (!vectorBeforeUpdate.equals(vectorAfterUpdate))
-		{
-			resetVisibleLocations();
-		}
 	}
 
 	private void setUpVisibleObjects() {
 		newlyVisibleObjects.clear();
 		newlyInvisibleObjects.clear();
-		newlyInvisibleObjects.addAll(visibleBeforeUpdate.stream().filter(o ->
+		newlyInvisibleObjects.addAll(visibleLastSetUp.stream().filter(o ->
 			  !getVisibleObjects().containsKey(o.getId())).collect(Collectors.toList()));
 		getVisibleObjects().values().stream().filter(o ->
-			  !visibleBeforeUpdate.contains(o)).forEach(newlyVisibleObjects::add);
-		visibleBeforeUpdate.clear();
-		visibleBeforeUpdate.addAll(getVisibleObjects().values());
-	}
-
-	@Override
-	public void reset() {
-		vectorAfterUpdate = getVector2D();
+			  !visibleLastSetUp.contains(o)).forEach(newlyVisibleObjects::add);
+		visibleLastSetUp.clear();
+		visibleLastSetUp.addAll(getVisibleObjects().values());
 	}
 
 	public AbstractMap<Integer, WorldObject> getVisibleObjects() {
@@ -95,23 +78,4 @@ public class SightedObject extends WorldObject
 			return new HashSet<>(newlyInvisibleObjects);
 		}
 	}
-
-	public Collection<Location> getVisibleLocations() { return new LinkedList<>(visibleLocations); }
-
-	private void resetVisibleLocations() {
-		synchronized (visibleLocations)
-		{
-			visibleLocations.clear();
-		}
-		if (getLocation() != null)
-		{
-			Zone zone = getWorld().getZone(getZoneID());
-			FieldOfVisionCalculator fov = new FieldOfVisionCalculator(zone, getLocation(), VIEW_RADIUS);
-			synchronized (visibleLocations)
-			{
-				visibleLocations.addAll(fov.scan());
-			}
-		}
-	}
-
 }

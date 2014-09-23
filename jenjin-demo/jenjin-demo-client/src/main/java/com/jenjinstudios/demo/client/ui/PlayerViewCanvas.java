@@ -3,6 +3,7 @@ package com.jenjinstudios.demo.client.ui;
 import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.Location;
 import com.jenjinstudios.world.WorldObject;
+import com.jenjinstudios.world.math.SightCalculator;
 import javafx.application.Platform;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -57,7 +58,8 @@ public class PlayerViewCanvas extends Canvas
 	protected void drawLocations() {
 		if (clientPlayer.getLocation() != null)
 		{
-			clientPlayer.getVisibleLocations().stream().filter(l -> l != null).forEach(this::drawLocation);
+			SightCalculator.getVisibleLocations(clientPlayer).stream().filter(l -> l != null).
+				  forEach(this::drawLocation);
 		}
 	}
 
