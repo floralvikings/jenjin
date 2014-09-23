@@ -3,6 +3,7 @@ package com.jenjinstudios.demo.client.ui;
 import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.Location;
 import com.jenjinstudios.world.WorldObject;
+import com.jenjinstudios.world.math.LocationCalculator;
 import com.jenjinstudios.world.math.SightCalculator;
 import javafx.application.Platform;
 import javafx.scene.canvas.Canvas;
@@ -56,7 +57,7 @@ public class PlayerViewCanvas extends Canvas
 	}
 
 	protected void drawLocations() {
-		if (clientPlayer.getLocation() != null)
+		if (LocationCalculator.getObjectLocation(clientPlayer) != null)
 		{
 			SightCalculator.getVisibleLocations(clientPlayer).stream().filter(l -> l != null).
 				  forEach(this::drawLocation);
@@ -64,7 +65,7 @@ public class PlayerViewCanvas extends Canvas
 	}
 
 	protected void drawLocation(Location location) {
-		Location pLoc = clientPlayer.getLocation();
+		Location pLoc = LocationCalculator.getObjectLocation(clientPlayer);
 		int xDiff = location.X_COORDINATE - pLoc.X_COORDINATE;
 		int yDiff = location.Y_COORDINATE - pLoc.Y_COORDINATE;//+ 1;
 		double xBuff = clientPlayer.getVector2D().getXCoordinate() % Location.SIZE;

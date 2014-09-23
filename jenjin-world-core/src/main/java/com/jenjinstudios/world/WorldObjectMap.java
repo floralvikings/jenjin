@@ -75,7 +75,6 @@ public class WorldObjectMap
 	protected void removeObject(WorldObject object) {
 		if (object != null)
 		{
-			object.setLocation(null);
 			removeObject(object.getId());
 		}
 	}

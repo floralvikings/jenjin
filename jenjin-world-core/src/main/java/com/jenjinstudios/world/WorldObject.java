@@ -17,7 +17,6 @@ public class WorldObject
 	private int resourceID;
 	private int id = Integer.MIN_VALUE;
 	private Angle angle;
-	private Location location;
 	private Vector2D vector2D;
 	private World world;
 	private boolean initialized;
@@ -37,12 +36,6 @@ public class WorldObject
 
 	public void setVector2D(Vector2D vector2D) {
 		this.vector2D = new Vector2D(vector2D);
-
-		if (world != null)
-		{
-			Location newLocation = world.getLocationForCoordinates(this.zoneID, this.vector2D);
-			setLocation(newLocation);
-		}
 	}
 
 	public int getResourceID() { return resourceID; }
@@ -54,21 +47,6 @@ public class WorldObject
 	public void setId(int id) { this.id = id; }
 
 	public HashMap<String, Object> getProperties() { return properties; }
-
-	public Location getLocation() { return location; }
-
-	protected void setLocation(Location newLocation) {
-		Location oldLocation = location;
-		location = newLocation;
-		if (oldLocation != location && oldLocation != null)
-		{
-			oldLocation.removeObject(this);
-		}
-		if (location != null)
-		{
-			location.addObject(this);
-		}
-	}
 
 	public World getWorld() { return world; }
 
