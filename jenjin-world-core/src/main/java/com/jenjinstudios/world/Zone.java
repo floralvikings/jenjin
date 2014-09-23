@@ -3,6 +3,7 @@ package com.jenjinstudios.world;
 import com.jenjinstudios.world.collections.LocationArrayList;
 import com.jenjinstudios.world.math.Dimension2D;
 
+import javax.xml.bind.annotation.*;
 import java.util.Collections;
 
 /**
@@ -10,11 +11,17 @@ import java.util.Collections;
  * accessed from other Zones.  Support for this feature is planned in a future release.
  * @author Caleb Brinkman
  */
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlRootElement(name = "zone", namespace = "https://www.jenjinstudios.com")
 public class Zone
 {
+	@XmlAttribute(name = "id", namespace = "https://www.jenjinstudios.com")
 	private int id;
+	@XmlAttribute(name = "xSize", namespace = "https://www.jenjinstudios.com")
 	private int xSize;
+	@XmlAttribute(name = "ySize", namespace = "https://www.jenjinstudios.com")
 	private int ySize;
+	@XmlElement(name = "location", namespace = "https://www.jenjinstudios.com")
 	private LocationArrayList locationGrid;
 
 	/**
