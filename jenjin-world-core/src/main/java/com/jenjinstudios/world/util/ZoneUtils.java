@@ -23,7 +23,7 @@ public class ZoneUtils
 
 	public static Location getLocationOnGrid(Zone zone, int x, int y) {
 		Location loc;
-		if (x < 0 || x >= zone.xSize || y < 0 || y >= zone.ySize)
+		if (x < 0 || x >= zone.getXSize() || y < 0 || y >= zone.getYSize())
 			loc = null;
 		else
 			loc = zone.getLocationGrid().stream().filter(l -> LocationUtils.coordinatesEqual(l, x,

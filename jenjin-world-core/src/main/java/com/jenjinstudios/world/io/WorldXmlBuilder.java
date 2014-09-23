@@ -77,9 +77,9 @@ public class WorldXmlBuilder
 	 */
 	private Element createZoneElement(Zone zone) {
 		Element zoneElement = worldDocument.createElement(ZONE_TAG_NAME);
-		zoneElement.setAttribute(ZONE_ID_ATTR, String.valueOf(zone.id));
-		zoneElement.setAttribute(ZONE_X_SIZE_ATTR, String.valueOf(zone.xSize));
-		zoneElement.setAttribute(ZONE_Y_SIZE_ATTR, String.valueOf(zone.ySize));
+		zoneElement.setAttribute(ZONE_ID_ATTR, String.valueOf(zone.getId()));
+		zoneElement.setAttribute(ZONE_X_SIZE_ATTR, String.valueOf(zone.getXSize()));
+		zoneElement.setAttribute(ZONE_Y_SIZE_ATTR, String.valueOf(zone.getYSize()));
 		return zoneElement;
 	}
 
@@ -89,14 +89,14 @@ public class WorldXmlBuilder
 	 * @param zoneElement The zone element.
 	 */
 	private void addLocationNodes(Zone zone, Element zoneElement) {
-		for (int x = 0; x < zone.xSize; x++)
+		for (int x = 0; x < zone.getXSize(); x++)
 		{
 			addRow(zone, x, zoneElement);
 		}
 	}
 
 	private void addRow(Zone zone, int row, Element zoneElement) {
-		for (int y = 0; y < zone.ySize; y++)
+		for (int y = 0; y < zone.getYSize(); y++)
 		{
 			Location location = ZoneUtils.getLocationOnGrid(zone, row, y);
 			Map<String, Object> locationProperties = location.getProperties();

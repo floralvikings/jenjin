@@ -37,7 +37,7 @@ public class World
 		this.zones = new TreeMap<>();
 		for (Zone z : zones)
 		{
-			this.zones.put(z.id, z);
+			this.zones.put(z.getId(), z);
 		}
 		worldObjects = new WorldObjectMap(this);
 

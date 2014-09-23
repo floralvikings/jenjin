@@ -3,8 +3,8 @@ package com.jenjinstudios.world;
 import com.jenjinstudios.world.math.Dimension2D;
 import com.jenjinstudios.world.util.LocationUtils;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * The {@code Zone} class represents a grid of {@code Location} objects within the {@code World}.  Zones cannot be
@@ -13,10 +13,10 @@ import java.util.List;
  */
 public class Zone
 {
-	public final int id;
-	public final int xSize;
-	public final int ySize;
-	private final List<Location> locationGrid;
+	private int id;
+	private int xSize;
+	private int ySize;
+	private Set<Location> locationGrid;
 
 	/**
 	 * Construct a new zone with the given ID and size.
@@ -28,7 +28,7 @@ public class Zone
 		this.xSize = size.getXSize();
 		this.ySize = size.getYSize();
 
-		locationGrid = new ArrayList<>();
+		locationGrid = new HashSet<>();
 		constructLocations();
 		for (Location l : specialLocations)
 		{
@@ -38,7 +38,13 @@ public class Zone
 		}
 	}
 
-	public List<Location> getLocationGrid() { return locationGrid; }
+	public Set<Location> getLocationGrid() { return locationGrid; }
+
+	public int getId() { return id; }
+
+	public int getXSize() { return xSize; }
+
+	public int getYSize() { return ySize; }
 
 	private void constructLocations() { for (int x = 0; x < xSize; x++) { constructColumn(x); } }
 
