@@ -1,7 +1,10 @@
 package com.jenjinstudios.world;
 
 import com.jenjinstudios.world.math.Dimension2D;
-import com.jenjinstudios.world.math.Vector2D;
+import com.jenjinstudios.world.util.LocationUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The {@code Zone} class represents a grid of {@code Location} objects within the {@code World}.  Zones cannot be
@@ -13,7 +16,7 @@ public class Zone
 	public final int id;
 	public final int xSize;
 	public final int ySize;
-	private final Location[][] locationGrid;
+	private final List<Location> locationGrid;
 
 	/**
 	 * Construct a new zone with the given ID and size.
@@ -25,36 +28,20 @@ public class Zone
 		this.xSize = size.getXSize();
 		this.ySize = size.getYSize();
 
-		locationGrid = new Location[size.getXSize()][size.getYSize()];
+		locationGrid = new ArrayList<>();
 		constructLocations();
-		addSpecialLocations(specialLocations);
+		for (Location l : specialLocations)
+		{
+			l.getProperties().forEach((k, v) -> locationGrid.stream().filter(loc ->
+				  LocationUtils.coordinatesEqual(loc, l)).forEach(loc ->
+				  loc.getProperties().put(k, v)));
+		}
 	}
 
-	public Location getLocationForCoordinates(Vector2D coordinates) {
-		double gridX = coordinates.getXCoordinate() / Location.SIZE;
-		double gridY = coordinates.getYCoordinate() / Location.SIZE;
-		gridX = gridX < 0 ? -1 : gridX;
-		gridY = gridY < 0 ? -1 : gridY;
-		return getLocationOnGrid((int) gridX, (int) gridY);
-	}
-
-	public Location getLocationOnGrid(int x, int y) {
-		Location loc;
-		if (x < 0 || x >= xSize || y < 0 || y >= ySize)
-			loc = null;
-		else
-			loc = locationGrid[x][y];
-		return loc;
-	}
-
-	private void addSpecialLocations(Location[] specialLocations) {
-		for (Location l : specialLocations) { locationGrid[l.getXCoordinate()][l.getYCoordinate()] = l; }
-	}
+	public List<Location> getLocationGrid() { return locationGrid; }
 
 	private void constructLocations() { for (int x = 0; x < xSize; x++) { constructColumn(x); } }
 
-	private void constructColumn(int x) {
-		for (int y = 0; y < ySize; y++) { locationGrid[x][y] = new Location(x, y); }
-	}
+	private void constructColumn(int x) { for (int y = 0; y < ySize; y++) { locationGrid.add(new Location(x, y)); } }
 
 }

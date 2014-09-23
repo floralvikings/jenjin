@@ -1,6 +1,7 @@
 package com.jenjinstudios.world.math;
 
 import com.jenjinstudios.world.*;
+import com.jenjinstudios.world.util.ZoneUtils;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -30,7 +31,7 @@ public class SightCalculator
 			Zone zone = world.getZone(zoneId);
 			if (zone != null)
 			{
-				Location location = zone.getLocationForCoordinates(worldObject.getVector2D());
+				Location location = ZoneUtils.getLocationForCoordinates(zone, worldObject.getVector2D());
 				int radius = (int) (calculateViewRadius(worldObject) / Location.SIZE);
 				FieldOfVisionCalculator fov = new FieldOfVisionCalculator(zone, location, radius);
 				locations.addAll(fov.scan());

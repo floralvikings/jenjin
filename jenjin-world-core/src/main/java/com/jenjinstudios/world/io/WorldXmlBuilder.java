@@ -3,6 +3,7 @@ package com.jenjinstudios.world.io;
 import com.jenjinstudios.world.Location;
 import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.Zone;
+import com.jenjinstudios.world.util.ZoneUtils;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -97,7 +98,7 @@ public class WorldXmlBuilder
 	private void addRow(Zone zone, int row, Element zoneElement) {
 		for (int y = 0; y < zone.ySize; y++)
 		{
-			Location location = zone.getLocationOnGrid(row, y);
+			Location location = ZoneUtils.getLocationOnGrid(zone, row, y);
 			Map<String, Object> locationProperties = location.getProperties();
 			if (locationProperties.size() > 0)
 			{

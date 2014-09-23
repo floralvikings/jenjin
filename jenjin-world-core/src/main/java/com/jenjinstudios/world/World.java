@@ -2,6 +2,7 @@ package com.jenjinstudios.world;
 
 import com.jenjinstudios.world.math.Dimension2D;
 import com.jenjinstudios.world.math.Vector2D;
+import com.jenjinstudios.world.util.ZoneUtils;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -52,7 +53,7 @@ public class World
 	 * @return The location that contains the specified vector2D.
 	 */
 	public Location getLocationForCoordinates(int zoneID, Vector2D vector2D) {
-		return zones.get(zoneID).getLocationForCoordinates(vector2D);
+		return ZoneUtils.getLocationForCoordinates(zones.get(zoneID), vector2D);
 	}
 
 	/** Update all objects in the world. */

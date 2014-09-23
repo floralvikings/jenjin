@@ -2,6 +2,7 @@ package com.jenjinstudios.world;
 
 import com.jenjinstudios.world.math.Dimension2D;
 import com.jenjinstudios.world.math.Vector2D;
+import com.jenjinstudios.world.util.ZoneUtils;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -21,7 +22,7 @@ public class ZoneTest
 
 		Zone zone = new Zone(0, new Dimension2D(20, 20), specialLocation);
 
-		Location actualLoc = zone.getLocationOnGrid(10, 10);
+		Location actualLoc = ZoneUtils.getLocationOnGrid(zone, 10, 10);
 		Assert.assertEquals(actualLoc, specialLocation);
 	}
 
@@ -29,7 +30,7 @@ public class ZoneTest
 	public void testGetLocationOnGrid() {
 		Zone zone = new Zone(0, new Dimension2D(20, 20));
 		Location expected = new Location(10, 10);
-		Location actual = zone.getLocationOnGrid(10, 10);
+		Location actual = ZoneUtils.getLocationOnGrid(zone, 10, 10);
 		Assert.assertEquals(actual, expected);
 	}
 
@@ -37,7 +38,7 @@ public class ZoneTest
 	public void testGetLocationForCoordinates() {
 		Zone zone = new Zone(0, new Dimension2D(20, 20));
 		Location expected = new Location(10, 10);
-		Location actual = zone.getLocationForCoordinates(new Vector2D(100, 100));
+		Location actual = ZoneUtils.getLocationForCoordinates(zone, new Vector2D(100, 100));
 		Assert.assertEquals(actual, expected);
 	}
 }

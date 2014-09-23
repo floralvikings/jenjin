@@ -2,7 +2,7 @@ package com.jenjinstudios.world.server.ai;
 
 import com.jenjinstudios.world.Location;
 import com.jenjinstudios.world.Zone;
-import com.jenjinstudios.world.util.LocationUtils;
+import com.jenjinstudios.world.util.ZoneUtils;
 
 import java.util.LinkedList;
 import java.util.Stack;
@@ -73,7 +73,7 @@ public class Pathfinder
 	}
 
 	private void addAdjacentToCorrectList(LinkedList<PathNode> open, LinkedList<PathNode> closed, PathNode selected) {
-		for (Location adjacentLocation : LocationUtils.getAdjacentWalkableLocations(zone, selected.location))
+		for (Location adjacentLocation : ZoneUtils.getAdjacentWalkableLocations(zone, selected.location))
 		{
 			PathNode adjacentPathNode = new PathNode(selected, adjacentLocation, end);
 			if (closed.contains(adjacentPathNode))

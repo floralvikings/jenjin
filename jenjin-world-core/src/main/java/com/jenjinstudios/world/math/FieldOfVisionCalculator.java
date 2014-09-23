@@ -2,6 +2,7 @@ package com.jenjinstudios.world.math;
 
 import com.jenjinstudios.world.Location;
 import com.jenjinstudios.world.Zone;
+import com.jenjinstudios.world.util.ZoneUtils;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -39,7 +40,7 @@ public class FieldOfVisionCalculator
 	private void addColumn(List<Location> visibles, int x) {
 		for (int y = centerY - radius; y < centerY + radius; y++)
 		{
-			Location current = zone.getLocationOnGrid(x, y);
+			Location current = ZoneUtils.getLocationOnGrid(zone, x, y);
 			if (current != null && inRange(current))
 			{
 				visibles.add(current);
