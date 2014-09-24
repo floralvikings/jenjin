@@ -1,6 +1,7 @@
 package com.jenjinstudios.world;
 
 import com.jenjinstudios.world.math.Vector2D;
+import com.jenjinstudios.world.util.WorldUtils;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -16,7 +17,7 @@ public class WorldTest
 		WorldObject obj0 = new WorldObject("Alice");
 		WorldObject obj1 = new WorldObject("Bob");
 		WorldObject obj2 = new WorldObject("Carol");
-		World world = new World();
+		World world = WorldUtils.createDefaultWorld();
 
 		world.getWorldObjects().scheduleForAddition(obj0);
 		world.getWorldObjects().scheduleForAddition(obj1);
@@ -28,13 +29,13 @@ public class WorldTest
 
 	@Test(expectedExceptions = IllegalArgumentException.class)
 	public void testAddNullObject() {
-		World world = new World();
+		World world = WorldUtils.createDefaultWorld();
 		world.getWorldObjects().scheduleForAddition(null);
 	}
 
 	@Test(expectedExceptions = IllegalArgumentException.class)
 	public void testAddOccupiedID() {
-		World world = new World();
+		World world = WorldUtils.createDefaultWorld();
 		world.getWorldObjects().scheduleForAddition(mock(WorldObject.class), 0);
 		world.getWorldObjects().scheduleForAddition(mock(WorldObject.class), 0);
 	}
@@ -42,7 +43,7 @@ public class WorldTest
 	@Test
 	public void testScheduleForRemoval() {
 		WorldObject worldObject = new WorldObject("Bob");
-		World world = new World();
+		World world = WorldUtils.createDefaultWorld();
 		world.getWorldObjects().scheduleForAddition(worldObject);
 		world.update();
 		world.getWorldObjects().scheduleForRemoval(worldObject);
@@ -54,7 +55,7 @@ public class WorldTest
 	public void testUpdate() {
 		WorldObject worldObject = mock(WorldObject.class);
 		when(worldObject.getVector2D()).thenReturn(Vector2D.ORIGIN);
-		World world = new World();
+		World world = WorldUtils.createDefaultWorld();
 		world.getWorldObjects().scheduleForAddition(worldObject);
 		world.update();
 		verify(worldObject, times(1)).setUp();
@@ -66,7 +67,7 @@ public class WorldTest
 	public void testGetObject() {
 		WorldObject obj0 = new WorldObject("Foo");
 		WorldObject obj1 = new WorldObject("Bar");
-		World world = new World();
+		World world = WorldUtils.createDefaultWorld();
 		world.getWorldObjects().scheduleForAddition(obj0, 0);
 		world.getWorldObjects().scheduleForAddition(obj1, 1);
 		world.update();

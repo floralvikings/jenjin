@@ -4,6 +4,7 @@ import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.math.Angle;
 import com.jenjinstudios.world.math.Vector2D;
+import com.jenjinstudios.world.util.WorldUtils;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -14,7 +15,7 @@ public class ClientPlayerTest
 {
 	@Test(timeOut = 5000)
 	public void testSetAngleNoUpdate() {
-		World world = new World();
+		World world = WorldUtils.createDefaultWorld();
 		Actor player = new Actor("ClientActor");
 		world.getWorldObjects().scheduleForAddition(player);
 		world.update();
@@ -25,7 +26,7 @@ public class ClientPlayerTest
 
 	@Test(timeOut = 5000)
 	public void testSetAngle() {
-		World world = new World();
+		World world = WorldUtils.createDefaultWorld();
 		Actor player = new Actor("ClientActor");
 		world.getWorldObjects().scheduleForAddition(player);
 		world.update();
@@ -37,7 +38,7 @@ public class ClientPlayerTest
 
 	@Test(timeOut = 5000)
 	public void testSetAngleToForcedPosition() {
-		World world = new World();
+		World world = WorldUtils.createDefaultWorld();
 		Actor player = new Actor("ClientActor");
 		world.getWorldObjects().scheduleForAddition(player);
 		world.update();
@@ -49,7 +50,7 @@ public class ClientPlayerTest
 
 	@Test(timeOut = 5000)
 	public void testForcePosition() {
-		World world = new World();
+		World world = WorldUtils.createDefaultWorld();
 		Actor player = new Actor("ClientActor");
 		player.setId(0);
 		world.getWorldObjects().scheduleForAddition(player);
@@ -60,7 +61,7 @@ public class ClientPlayerTest
 
 	@Test(timeOut = 5000)
 	public void testStep() throws InterruptedException {
-		World world = new World();
+		World world = WorldUtils.createDefaultWorld();
 		Actor player = new Actor("ClientActor");
 		world.getWorldObjects().scheduleForAddition(player);
 		world.update();

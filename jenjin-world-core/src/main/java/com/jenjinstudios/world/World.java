@@ -1,7 +1,5 @@
 package com.jenjinstudios.world;
 
-import com.jenjinstudios.world.math.Dimension2D;
-
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -13,31 +11,28 @@ import java.util.TreeMap;
  */
 public class World
 {
-	private static final int DEFAULT_SIZE = 50;
+
 	/** The list of in-world Zones. */
-	private final TreeMap<Integer, Zone> zones;
+	private final TreeMap<Integer, Zone> zones = new TreeMap<>();
 	/** The GameObjects contained in the world. */
-	private final WorldObjectMap worldObjects;
+	private final WorldObjectMap worldObjects = new WorldObjectMap(this);
 	/** The time at which the most recent update completed. */
 	private long lastUpdateCompleted;
 	/** The start time of the most recent update. */
 	private long lastUpdateStarted;
 
 	/** Construct a new World. */
-	public World() { this(new Zone(0, new Dimension2D(DEFAULT_SIZE, DEFAULT_SIZE))); }
+	public World() { }
 
 	/**
 	 * Construct a new world with the specified Zone array.
 	 * @param zones The zones used to create the world.
 	 */
 	public World(Zone... zones) {
-		this.zones = new TreeMap<>();
 		for (Zone z : zones)
 		{
 			this.zones.put(z.getId(), z);
 		}
-		worldObjects = new WorldObjectMap(this);
-
 		lastUpdateCompleted = lastUpdateStarted = System.currentTimeMillis();
 	}
 

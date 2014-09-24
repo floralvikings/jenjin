@@ -2,6 +2,7 @@ package com.jenjinstudios.world;
 
 import com.jenjinstudios.world.math.Angle;
 import com.jenjinstudios.world.math.Vector2D;
+import com.jenjinstudios.world.util.WorldUtils;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -10,7 +11,7 @@ import org.testng.annotations.Test;
  */
 public class ActorTest
 {
-	private static final World world = new World();
+	private static final World world = WorldUtils.createDefaultWorld();
 
 	@Test
 	public void testReset() {

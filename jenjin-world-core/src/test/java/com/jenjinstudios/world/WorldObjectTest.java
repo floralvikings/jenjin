@@ -3,6 +3,7 @@ package com.jenjinstudios.world;
 import com.jenjinstudios.world.math.Angle;
 import com.jenjinstudios.world.math.Vector2D;
 import com.jenjinstudios.world.util.LocationUtils;
+import com.jenjinstudios.world.util.WorldUtils;
 import com.jenjinstudios.world.util.ZoneUtils;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
@@ -41,7 +42,7 @@ public class WorldObjectTest
 		yCoordinate = 7.23f;
 		vector2D = new Vector2D(xCoordinate, yCoordinate);
 		id = 123;
-		world = new World();
+		world = WorldUtils.createDefaultWorld();
 		/* The zone used for testing. */
 		worldObject.setVector2D(vector2D);
 		world.getWorldObjects().scheduleForAddition(worldObject);

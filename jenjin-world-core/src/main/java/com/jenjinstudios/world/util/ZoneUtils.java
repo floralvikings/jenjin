@@ -3,6 +3,7 @@ package com.jenjinstudios.world.util;
 import com.jenjinstudios.world.Location;
 import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.Zone;
+import com.jenjinstudios.world.math.Dimension2D;
 import com.jenjinstudios.world.math.Vector2D;
 
 import java.util.Collections;
@@ -14,6 +15,8 @@ import java.util.List;
  */
 public class ZoneUtils
 {
+	private static final int DEFAULT_SIZE = 50;
+
 	public static Location getLocationForCoordinates(Zone zone, Vector2D coordinates) {
 		double gridX = coordinates.getXCoordinate() / Location.SIZE;
 		double gridY = coordinates.getYCoordinate() / Location.SIZE;
@@ -113,4 +116,6 @@ public class ZoneUtils
 	public static Location getLocationForCoordinates(World world, int zoneID, Vector2D vector2D) {
 		return getLocationForCoordinates(world.getZones().get(zoneID), vector2D);
 	}
+
+	static Zone createDefautZone() { return new Zone(0, new Dimension2D(DEFAULT_SIZE, DEFAULT_SIZE)); }
 }

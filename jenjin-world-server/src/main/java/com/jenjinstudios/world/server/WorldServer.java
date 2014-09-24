@@ -8,6 +8,7 @@ import com.jenjinstudios.world.io.WorldDocumentReader;
 import com.jenjinstudios.world.io.WorldDocumentWriter;
 import com.jenjinstudios.world.math.SightCalculator;
 import com.jenjinstudios.world.server.sql.WorldAuthenticator;
+import com.jenjinstudios.world.util.WorldUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -40,7 +41,7 @@ public class WorldServer<T extends WorldClientHandler> extends AuthServer<T>
 			this.world = reader.read();
 		} else
 		{
-			this.world = new World();
+			this.world = WorldUtils.createDefaultWorld();
 			WorldDocumentWriter writer = new WorldDocumentWriter(world);
 			ByteArrayOutputStream bos = new ByteArrayOutputStream();
 			writer.write(bos);

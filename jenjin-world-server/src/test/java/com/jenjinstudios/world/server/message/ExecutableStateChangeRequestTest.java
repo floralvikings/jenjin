@@ -7,6 +7,7 @@ import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.math.Angle;
 import com.jenjinstudios.world.server.WorldClientHandler;
 import com.jenjinstudios.world.server.WorldServer;
+import com.jenjinstudios.world.util.WorldUtils;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -23,7 +24,7 @@ public class ExecutableStateChangeRequestTest
 
 	@Test
 	public void testValidRequest() throws InterruptedException {
-		World world = new World();
+		World world = WorldUtils.createDefaultWorld();
 		Actor player = new Actor("FooBar");
 		world.getWorldObjects().scheduleForAddition(player);
 		world.update();
@@ -51,7 +52,7 @@ public class ExecutableStateChangeRequestTest
 
 	@Test
 	public void testInvalidRequestCoordinates() {
-		World world = new World();
+		World world = WorldUtils.createDefaultWorld();
 		Actor player = new Actor("FooBar");
 		world.getWorldObjects().scheduleForAddition(player);
 		world.update();
@@ -80,7 +81,7 @@ public class ExecutableStateChangeRequestTest
 	@Test
 	public void testInvalidRequestTime() {
 		// Functionally the same as testing excessive delay.
-		World world = new World();
+		World world = WorldUtils.createDefaultWorld();
 		Actor player = new Actor("FooBar");
 		world.getWorldObjects().scheduleForAddition(player);
 		world.update();
@@ -108,7 +109,7 @@ public class ExecutableStateChangeRequestTest
 
 	@Test
 	public void testExcessiveDelay() throws InterruptedException {
-		World world = new World();
+		World world = WorldUtils.createDefaultWorld();
 		Actor player = new Actor("FooBar");
 		world.getWorldObjects().scheduleForAddition(player);
 		world.update();

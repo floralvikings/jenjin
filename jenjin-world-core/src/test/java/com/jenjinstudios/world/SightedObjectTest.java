@@ -3,6 +3,7 @@ package com.jenjinstudios.world;
 import com.jenjinstudios.world.math.Dimension2D;
 import com.jenjinstudios.world.math.SightCalculator;
 import com.jenjinstudios.world.math.Vector2D;
+import com.jenjinstudios.world.util.WorldUtils;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -10,7 +11,7 @@ public class SightedObjectTest
 {
 	@Test
 	public void testGetVisibleObjects() {
-		World world = new World();
+		World world = WorldUtils.createDefaultWorld();
 		WorldObject visibleObject = new WorldObject("VisibleObject");
 		SightedObject sightedObject = new SightedObject("SightedObject");
 		world.getWorldObjects().scheduleForAddition(visibleObject);
@@ -39,7 +40,7 @@ public class SightedObjectTest
 
 	@Test
 	public void testGetNewlyVisibleObjects() {
-		World world = new World();
+		World world = WorldUtils.createDefaultWorld();
 		WorldObject visibleObject = new WorldObject("VisibleObject");
 		SightedObject sightedObject = new SightedObject("SightedObject");
 		world.getWorldObjects().scheduleForAddition(visibleObject);
@@ -55,7 +56,7 @@ public class SightedObjectTest
 
 	@Test
 	public void testGetNewlyInvisibleObjects() {
-		World world = new World();
+		World world = WorldUtils.createDefaultWorld();
 		WorldObject visibleObject = new WorldObject("VisibleObject");
 		SightedObject sightedObject = new SightedObject("SightedObject");
 		world.getWorldObjects().scheduleForAddition(visibleObject);
