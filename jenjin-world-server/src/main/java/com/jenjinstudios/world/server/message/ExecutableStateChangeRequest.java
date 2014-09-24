@@ -9,6 +9,7 @@ import com.jenjinstudios.world.math.MathUtil;
 import com.jenjinstudios.world.math.Vector2D;
 import com.jenjinstudios.world.server.WorldClientHandler;
 import com.jenjinstudios.world.state.MoveState;
+import com.jenjinstudios.world.util.ZoneUtils;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -78,7 +79,7 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage
 	private boolean locationWalkable(Actor player) {
 		World world = player.getWorld();
 		int zoneID = player.getZoneID();
-		Location location = world.getLocationForCoordinates(zoneID, position);
+		Location location = ZoneUtils.getLocationForCoordinates(world, zoneID, position);
 		boolean walkable = false;
 		if (location != null)
 		{

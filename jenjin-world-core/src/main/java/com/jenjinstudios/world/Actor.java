@@ -3,6 +3,7 @@ package com.jenjinstudios.world;
 import com.jenjinstudios.world.math.Angle;
 import com.jenjinstudios.world.math.Vector2D;
 import com.jenjinstudios.world.state.MoveState;
+import com.jenjinstudios.world.util.ZoneUtils;
 
 import java.util.LinkedList;
 
@@ -144,7 +145,7 @@ public class Actor extends SightedObject
 		if (getAngle().isNotIdle())
 		{
 			Vector2D newVector = getVector2D().getVectorInDirection(stepLength, getAngle().getStepAngle());
-			Location newLocation = getWorld().getLocationForCoordinates(getZoneID(), newVector);
+			Location newLocation = ZoneUtils.getLocationForCoordinates(getWorld(), getZoneID(), newVector);
 			if (newLocation != null)
 			{
 				boolean walkable = !"false".equals(newLocation.getProperties().get("walkable"));

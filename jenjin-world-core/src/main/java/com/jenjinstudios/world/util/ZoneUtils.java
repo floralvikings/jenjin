@@ -1,6 +1,7 @@
 package com.jenjinstudios.world.util;
 
 import com.jenjinstudios.world.Location;
+import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.Zone;
 import com.jenjinstudios.world.math.Vector2D;
 
@@ -100,5 +101,16 @@ public class ZoneUtils
 			adjacentWalkable.removeAll(unwalkable);
 		}
 		return adjacentWalkable;
+	}
+
+	/**
+	 * Get the location from the zone grid that contains the specified vector2D.
+	 * @param world The world in which the zone is contained
+	 * @param zoneID The ID of the zone in which to look for the location.
+	 * @param vector2D The vector2D.
+	 * @return The location that contains the specified vector2D.
+	 */
+	public static Location getLocationForCoordinates(World world, int zoneID, Vector2D vector2D) {
+		return getLocationForCoordinates(world.getZones().get(zoneID), vector2D);
 	}
 }
