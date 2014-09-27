@@ -1,4 +1,4 @@
-package com.jenjinstudios.world.io;
+package com.jenjinstudios.world.util;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;

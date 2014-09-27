@@ -2,6 +2,7 @@ package com.jenjinstudios.world.io;
 
 import com.google.gson.Gson;
 import com.jenjinstudios.world.World;
+import com.jenjinstudios.world.util.ChecksumUtil;
 
 import java.io.*;
 import java.security.NoSuchAlgorithmException;
