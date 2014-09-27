@@ -99,7 +99,7 @@ public class WorldXmlBuilder
 		for (int y = 0; y < zone.getYSize(); y++)
 		{
 			Location location = ZoneUtils.getLocationOnGrid(zone, row, y);
-			Map<String, Object> locationProperties = location.getProperties();
+			Map<String, String> locationProperties = location.getProperties();
 			if (locationProperties.size() > 0)
 			{
 				Element locationElement = createLocationElement(location);
@@ -115,15 +115,15 @@ public class WorldXmlBuilder
 	 */
 	private Element createLocationElement(Location location) {
 		Element locationElement = worldDocument.createElement(LOC_TAG_NAME);
-		locationElement.setAttribute(LOC_X_ATTR, String.valueOf(location.getXCoordinate()));
-		locationElement.setAttribute(LOC_Y_ATTR, String.valueOf(location.getYCoordinate()));
-		Map<String, Object> locationProperties = location.getProperties();
+		locationElement.setAttribute(LOC_X_ATTR, String.valueOf(location.getX()));
+		locationElement.setAttribute(LOC_Y_ATTR, String.valueOf(location.getY()));
+		Map<String, String> locationProperties = location.getProperties();
 		if (locationProperties.size() > 0)
 		{
 			Set<String> propertyNames = locationProperties.keySet();
 			for (String property : propertyNames)
 			{
-				String value = locationProperties.get(property).toString();
+				String value = locationProperties.get(property);
 				Attr locAttr = worldDocument.createAttribute(property);
 				locAttr.setValue(value);
 				locationElement.setAttributeNode(locAttr);

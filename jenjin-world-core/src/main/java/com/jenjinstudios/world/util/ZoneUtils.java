@@ -3,6 +3,7 @@ package com.jenjinstudios.world.util;
 import com.jenjinstudios.world.Location;
 import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.Zone;
+import com.jenjinstudios.world.collections.LocationCollection;
 import com.jenjinstudios.world.math.Dimension2D;
 import com.jenjinstudios.world.math.Vector2D;
 
@@ -30,8 +31,10 @@ public class ZoneUtils
 		if (x < 0 || x >= zone.getXSize() || y < 0 || y >= zone.getYSize())
 			loc = null;
 		else
-			loc = zone.getLocationGrid().stream().filter(l -> LocationUtils.coordinatesEqual(l, x,
-				  y)).findFirst().get();
+		{
+			LocationCollection locationGrid = zone.getLocationGrid();
+			loc = locationGrid.getLocationWithXY(x, y);
+		}
 		return loc;
 	}
 
@@ -39,8 +42,8 @@ public class ZoneUtils
 		List<Location> adjacents = new LinkedList<>();
 		if (zone != null)
 		{
-			int x = loc.getXCoordinate();
-			int y = loc.getYCoordinate();
+			int x = loc.getX();
+			int y = loc.getY();
 
 			Location adjNorthEast = getLocationOnGrid(zone, x + 1, y + 1);
 			Location adjNorthWest = getLocationOnGrid(zone, x - 1, y + 1);
@@ -70,8 +73,8 @@ public class ZoneUtils
 
 		if (zone != null)
 		{
-			int x = loc.getXCoordinate();
-			int y = loc.getYCoordinate();
+			int x = loc.getX();
+			int y = loc.getY();
 
 			Location adjNorthEast = getLocationOnGrid(zone, x + 1, y + 1);
 			Location adjNorthWest = getLocationOnGrid(zone, x - 1, y + 1);

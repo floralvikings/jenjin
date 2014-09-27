@@ -36,7 +36,7 @@ public class LocationTest
 
 	@Test
 	public void testGetAdjacentWalkableLocations() {
-		Map<String, Object> props = new HashMap<>();
+		Map<String, String> props = new HashMap<>();
 		props.put("walkable", "false");
 		Location special = new Location(5, 6, props);
 		Zone zone = new Zone(0, new Dimension2D(10, 10), special);

@@ -1,6 +1,5 @@
 package com.jenjinstudios.world;
 
-import javax.xml.bind.annotation.*;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -8,21 +7,16 @@ import java.util.Map;
  * Represents a location in the world's location grid.
  * @author Caleb Brinkman
  */
-@XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "message", namespace = "https://www.jenjinstudios.com")
 public class Location
 {
 	/** The size, int units, of each location. */
 	public static final int SIZE = 10;
 	/** The x coordinate of the location in it's zone's grid. */
-	@XmlAttribute(name = "x", namespace = "https://www.jenjinstudios.com")
-	private int xCoordinate;
+	private int x;
 	/** The y coordinate of the location in it's zone's grid. */
-	@XmlAttribute(name = "y", namespace = "https://www.jenjinstudios.com")
-	private int yCoordinate;
-	/** The locationProperties of this location. */
-	@XmlElementWrapper(name = "properties", namespace = "https://www.jenjinstudios.com")
-	private Map<String, Object> locationProperties;
+	private int y;
+	/** The properties of this location. */
+	private Map<String, String> properties;
 
 	public Location() { }
 
@@ -34,39 +28,39 @@ public class Location
 	public Location(int x, int y) { this(x, y, new HashMap<>()); }
 
 	/**
-	 * Construct a location with the given position and locationProperties.
+	 * Construct a location with the given position and properties.
 	 * @param x The x coordinate.
 	 * @param y The y coordinate.
 	 */
-	public Location(int x, int y, Map<String, Object> properties) {
-		xCoordinate = x;
-		yCoordinate = y;
-		this.locationProperties = new HashMap<>(properties);
+	public Location(int x, int y, Map<String, String> properties) {
+		this.x = x;
+		this.y = y;
+		this.properties = new HashMap<>(properties);
 	}
 
 	/**
-	 * Get the locationProperties of this location.
-	 * @return The locationProperties of this location.
+	 * Get the properties of this location.
+	 * @return The properties of this location.
 	 */
-	public Map<String, Object> getProperties() {
-		if (locationProperties == null)
+	public Map<String, String> getProperties() {
+		if (properties == null)
 		{
-			locationProperties = new HashMap<>();
+			properties = new HashMap<>();
 		}
-		return locationProperties;
+		return properties;
 	}
 
 	/** The x coordinate of the location in it's zone's grid. */
-	public int getXCoordinate() { return xCoordinate; }
+	public int getX() { return x; }
 
 	/** The y coordinate of the location in it's zone's grid. */
-	public int getYCoordinate() { return yCoordinate; }
+	public int getY() { return y; }
 
 	@Override
 	public int hashCode() {
-		int result = xCoordinate;
-		result = 31 * result + yCoordinate;
-		result = 31 * result + locationProperties.hashCode();
+		int result = x;
+		result = 31 * result + y;
+		result = 31 * result + properties.hashCode();
 		return result;
 	}
 
@@ -77,10 +71,10 @@ public class Location
 
 		Location location = (Location) o;
 
-		return xCoordinate == location.xCoordinate && yCoordinate == location.yCoordinate &&
-			  locationProperties.equals(location.locationProperties);
+		return x == location.x && y == location.y &&
+			  properties.equals(location.properties);
 	}
 
 	@Override
-	public String toString() { return "(" + xCoordinate + ", " + yCoordinate + ")"; }
+	public String toString() { return "(" + x + ", " + y + ")"; }
 }

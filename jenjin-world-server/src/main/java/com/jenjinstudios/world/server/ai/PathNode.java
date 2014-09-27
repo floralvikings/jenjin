@@ -24,14 +24,14 @@ class PathNode
 		this.parent = parent;
 		this.location = location;
 		/* The x coordinate of this node. */
-		int x = location.getXCoordinate();
+		int x = location.getX();
 		/* The y coordinate of this node. */
-		int y = location.getYCoordinate();
+		int y = location.getY();
 		boolean parentNull = this.parent == null;
-		boolean diagonal = !parentNull && (parent.location.getYCoordinate() == y || parent.location.getXCoordinate()
+		boolean diagonal = !parentNull && (parent.location.getY() == y || parent.location.getX()
 			  == x);
 		G = parentNull ? 0 : parent.G + (diagonal ? 10 : 14);
-		int h = 10 * (Math.abs(x - target.getXCoordinate()) + Math.abs(y - target.getYCoordinate()));
+		int h = 10 * (Math.abs(x - target.getX()) + Math.abs(y - target.getY()));
 		F = G + h;
 	}
 

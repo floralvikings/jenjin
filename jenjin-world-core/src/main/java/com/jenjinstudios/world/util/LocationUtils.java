@@ -30,23 +30,23 @@ public class LocationUtils
 	}
 
 	public static Vector2D getNorthEastCorner(Location location) {
-		return new Vector2D((location.getXCoordinate() + 1) * Location.SIZE - 1,
-			  (location.getYCoordinate() + 1) * Location.SIZE - 1);
+		return new Vector2D((location.getX() + 1) * Location.SIZE - 1,
+			  (location.getY() + 1) * Location.SIZE - 1);
 	}
 
 	public static Vector2D getNorthWestCorner(Location location) {
-		return new Vector2D(location.getXCoordinate() * Location.SIZE, (location.getYCoordinate() + 1) * Location.SIZE
+		return new Vector2D(location.getX() * Location.SIZE, (location.getY() + 1) * Location.SIZE
 			  - 1);
 	}
 
 	public static Vector2D getSouthEastCorner(Location location) {
-		return new Vector2D((location.getXCoordinate() + 1) * Location.SIZE - 1,
-			  location.getYCoordinate() * Location.SIZE);
+		return new Vector2D((location.getX() + 1) * Location.SIZE - 1,
+			  location.getY() * Location.SIZE);
 	}
 
 	public static Vector2D getSouthWestCorner(Location location) {
-		return new Vector2D(location.getXCoordinate() *
-			  Location.SIZE, location.getYCoordinate() * Location.SIZE);
+		return new Vector2D(location.getX() *
+			  Location.SIZE, location.getY() * Location.SIZE);
 	}
 
 	/**
@@ -54,16 +54,16 @@ public class LocationUtils
 	 * @return The Vector2D at the center of this location.
 	 */
 	public static Vector2D getCenter(Location location) {
-		return new Vector2D(location.getXCoordinate() * Location.SIZE + Location.SIZE / 2,
-			  location.getYCoordinate() * Location.SIZE + Location.SIZE / 2);
+		return new Vector2D(location.getX() * Location.SIZE + Location.SIZE / 2,
+			  location.getY() * Location.SIZE + Location.SIZE / 2);
 	}
 
 	public static boolean coordinatesEqual(Location location, Location otherLocation) {
 		return otherLocation != null && location != null
-			  && coordinatesEqual(location, otherLocation.getXCoordinate(), otherLocation.getYCoordinate());
+			  && coordinatesEqual(location, otherLocation.getX(), otherLocation.getY());
 	}
 
 	public static boolean coordinatesEqual(Location location, int xCoordinate, int yCoordinate) {
-		return location.getXCoordinate() == xCoordinate && location.getYCoordinate() == yCoordinate;
+		return location.getX() == xCoordinate && location.getY() == yCoordinate;
 	}
 }

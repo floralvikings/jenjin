@@ -23,8 +23,8 @@ public class FieldOfVisionCalculator
 		this.center = center;
 		this.radius = radius;
 		this.zone = zone;
-		this.centerX = center.getXCoordinate();
-		this.centerY = center.getYCoordinate();
+		this.centerX = center.getX();
+		this.centerY = center.getY();
 	}
 
 	public List<Location> scan() {
@@ -49,8 +49,8 @@ public class FieldOfVisionCalculator
 	}
 
 	protected boolean inRange(Location location) {
-		double deltaX = location.getXCoordinate() - centerX;
-		double deltaY = location.getYCoordinate() - centerY;
+		double deltaX = location.getX() - centerX;
+		double deltaY = location.getY() - centerY;
 		double distance = Math.sqrt((deltaX * deltaX) + (deltaY * deltaY));
 		return distance < radius;
 	}

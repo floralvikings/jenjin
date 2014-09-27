@@ -19,7 +19,7 @@ public class PathfinderTest
 {
 	@Test
 	public void testFindPath() {
-		Map<String, Object> properties = new HashMap<>();
+		Map<String, String> properties = new HashMap<>();
 		properties.put("walkable", "false");
 		Location[] obstacles = {
 			  new Location(0, 8, properties), new Location(1, 8, properties), new Location(2, 8, properties),

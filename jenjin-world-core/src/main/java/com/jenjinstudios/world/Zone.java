@@ -1,28 +1,19 @@
 package com.jenjinstudios.world;
 
-import com.jenjinstudios.world.collections.LocationArrayList;
+import com.jenjinstudios.world.collections.LocationCollection;
 import com.jenjinstudios.world.math.Dimension2D;
-
-import javax.xml.bind.annotation.*;
-import java.util.Collections;
 
 /**
  * The {@code Zone} class represents a grid of {@code Location} objects within the {@code World}.  Zones cannot be
  * accessed from other Zones.  Support for this feature is planned in a future release.
  * @author Caleb Brinkman
  */
-@XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "zone", namespace = "https://www.jenjinstudios.com")
 public class Zone
 {
-	@XmlAttribute(name = "id", namespace = "https://www.jenjinstudios.com")
 	private int id;
-	@XmlAttribute(name = "xSize", namespace = "https://www.jenjinstudios.com")
 	private int xSize;
-	@XmlAttribute(name = "ySize", namespace = "https://www.jenjinstudios.com")
 	private int ySize;
-	@XmlElement(name = "location", namespace = "https://www.jenjinstudios.com")
-	private LocationArrayList locationGrid;
+	private LocationCollection locationGrid;
 
 	/**
 	 * Construct a new zone with the given ID and size.
@@ -34,18 +25,20 @@ public class Zone
 		this.xSize = size.getXSize();
 		this.ySize = size.getYSize();
 
-		locationGrid = new LocationArrayList();
+		locationGrid = new LocationCollection();
 		populateLocations();
-		Collections.addAll(locationGrid, specialLocations);
+		locationGrid.addAll(specialLocations);
 	}
 
 	public Zone() { }
 
-	public LocationArrayList getLocationGrid() {
-		if (locationGrid == null)
+	public LocationCollection getLocationGrid() {
+		if (locationGrid != null && locationGrid.size() < xSize * ySize)
 		{
-			locationGrid = new LocationArrayList();
 			populateLocations();
+		} else if (locationGrid == null)
+		{
+			locationGrid = new LocationCollection();
 		}
 		return locationGrid;
 	}
@@ -58,6 +51,14 @@ public class Zone
 
 	private void populateLocations() { for (int x = 0; x < xSize; x++) { populateColumn(x); } }
 
-	private void populateColumn(int x) { for (int y = 0; y < ySize; y++) { locationGrid.add(new Location(x, y)); } }
+	private void populateColumn(int x) {
+		for (int y = 0; y < ySize; y++)
+		{
+			if (!locationGrid.containsLocationWithXY(x, y))
+			{
+				locationGrid.add(new Location(x, y));
+			}
+		}
+	}
 
 }

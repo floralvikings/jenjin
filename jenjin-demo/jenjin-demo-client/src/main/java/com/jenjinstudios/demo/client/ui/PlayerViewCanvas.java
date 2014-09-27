@@ -66,8 +66,8 @@ public class PlayerViewCanvas extends Canvas
 
 	protected void drawLocation(Location location) {
 		Location pLoc = LocationUtils.getObjectLocation(clientPlayer);
-		int xDiff = location.getXCoordinate() - pLoc.getXCoordinate();
-		int yDiff = location.getYCoordinate() - pLoc.getYCoordinate();//+ 1;
+		int xDiff = location.getX() - pLoc.getX();
+		int yDiff = location.getY() - pLoc.getY();//+ 1;
 		double xBuff = clientPlayer.getVector2D().getXCoordinate() % Location.SIZE;
 		double yBuff = clientPlayer.getVector2D().getYCoordinate() % Location.SIZE;
 
@@ -76,7 +76,7 @@ public class PlayerViewCanvas extends Canvas
 
 		GraphicsContext graphicsContext2D = getGraphicsContext2D();
 
-		Map<String, Object> properties = location.getProperties();
+		Map<String, String> properties = location.getProperties();
 		boolean walkable = !"false".equals(properties.get("walkable"));
 		boolean indoors = "true".equals(properties.get("indoors"));
 		if (!walkable)

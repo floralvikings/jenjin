@@ -16,7 +16,7 @@ public class ZoneTest
 {
 	@Test
 	public void testConstructor() {
-		Map<String, Object> properties = new HashMap<>();
+		Map<String, String> properties = new HashMap<>();
 		properties.put("blocksVision", "true");
 		Location specialLocation = new Location(10, 10, properties);
 
