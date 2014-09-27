@@ -7,8 +7,10 @@ import com.jenjinstudios.server.net.ClientHandler;
 import com.jenjinstudios.server.net.User;
 import com.jenjinstudios.server.sql.Authenticator;
 import com.jenjinstudios.server.sql.LoginException;
+import org.mockito.Mockito;
 import org.testng.annotations.Test;
 
+import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -30,8 +32,7 @@ public class ExecutableLoginRequestTest
 		user.setLoggedIn(true);
 		ClientHandler clientHandler = mock(ClientHandler.class);
 		AuthServer server = mock(AuthServer.class);
-		ServerMessageFactory serverMessageFactory = new ServerMessageFactory(
-		);
+		ServerMessageFactory serverMessageFactory = new ServerMessageFactory();
 		Authenticator authenticator = mock(Authenticator.class);
 		when(server.getAuthenticator()).thenReturn(authenticator);
 		when(server.getCycleStartTime()).thenReturn(12345l);
@@ -43,7 +44,7 @@ public class ExecutableLoginRequestTest
 		executableLoginRequest.runImmediate();
 		executableLoginRequest.runDelayed();
 
-		// TODO Add verification here
+		Mockito.verify(clientHandler).setLoggedInTime(anyLong());
 	}
 
 	@Test
@@ -59,8 +60,7 @@ public class ExecutableLoginRequestTest
 		user.setLoggedIn(true);
 		ClientHandler clientHandler = mock(ClientHandler.class);
 		AuthServer server = mock(AuthServer.class);
-		ServerMessageFactory serverMessageFactory = new ServerMessageFactory(
-		);
+		ServerMessageFactory serverMessageFactory = new ServerMessageFactory();
 		Authenticator authenticator = mock(Authenticator.class);
 		when(server.getAuthenticator()).thenReturn(authenticator);
 		when(server.getCycleStartTime()).thenReturn(12345l);
@@ -73,6 +73,6 @@ public class ExecutableLoginRequestTest
 		executableLoginRequest.runImmediate();
 		executableLoginRequest.runDelayed();
 
-		// TODO Add verification here.
+		Mockito.verify(clientHandler, Mockito.never()).setLoggedInTime(anyLong());
 	}
 }
