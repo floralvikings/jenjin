@@ -43,9 +43,9 @@ public class ExecutableStateChangeRequestTest
 		executableStateChangeRequest.runImmediate();
 		executableStateChangeRequest.runDelayed();
 
-		player.setUp();
+		player.preUpdate();
 		player.update();
-		player.reset();
+		player.postUpdate();
 
 		Assert.assertEquals(player.getAngle(), new Angle(0.0, Angle.FRONT));
 	}
@@ -71,9 +71,9 @@ public class ExecutableStateChangeRequestTest
 		executableStateChangeRequest.runImmediate();
 		executableStateChangeRequest.runDelayed();
 
-		player.setUp();
+		player.preUpdate();
 		player.update();
-		player.reset();
+		player.postUpdate();
 
 		Assert.assertEquals(player.getAngle(), new Angle(0.0, Angle.IDLE));
 	}
@@ -100,9 +100,9 @@ public class ExecutableStateChangeRequestTest
 		executableStateChangeRequest.runImmediate();
 		executableStateChangeRequest.runDelayed();
 
-		player.setUp();
+		player.preUpdate();
 		player.update();
-		player.reset();
+		player.postUpdate();
 
 		Assert.assertEquals(player.getAngle(), new Angle(0.0, Angle.IDLE));
 	}
@@ -128,9 +128,9 @@ public class ExecutableStateChangeRequestTest
 		ExecutableStateChangeRequest executableStateChangeRequest = new ExecutableStateChangeRequest(mock, request);
 		executableStateChangeRequest.runImmediate();
 		executableStateChangeRequest.runDelayed();
-		player.setUp();
+		player.preUpdate();
 		player.update();
-		player.reset();
+		player.postUpdate();
 
 		Assert.assertEquals(player.getAngle(), new Angle(0.0, Angle.IDLE));
 	}

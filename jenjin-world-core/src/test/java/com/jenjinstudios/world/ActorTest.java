@@ -20,7 +20,7 @@ public class ActorTest
 		world.update();
 		Angle angle = new Angle(0.0, Angle.FRONT);
 		actor.setAngle(angle);
-		actor.reset();
+		actor.postUpdate();
 		Assert.assertEquals(actor.getStateChanges().get(0).angle, angle);
 	}
 
@@ -32,7 +32,7 @@ public class ActorTest
 		Angle angle = new Angle(0.0, Angle.FRONT);
 		actor.setAngle(angle);
 		world.update();
-		actor.setUp();
+		actor.preUpdate();
 		Assert.assertEquals(actor.getStateChanges().size(), 0);
 	}
 

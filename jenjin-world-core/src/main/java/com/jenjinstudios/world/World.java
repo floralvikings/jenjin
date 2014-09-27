@@ -73,9 +73,9 @@ public class World
 	 */
 	public long getLastUpdateStarted() { return lastUpdateStarted; }
 
-	private void resetObjects() { worldObjects.forEach((Integer i, WorldObject o) -> o.reset()); }
+	private void resetObjects() { worldObjects.forEach((Integer i, WorldObject o) -> o.postUpdate()); }
 
 	private void updateObjects() { worldObjects.forEach((Integer i, WorldObject o) -> o.update()); }
 
-	private void setUpObjects() { worldObjects.forEach((Integer i, WorldObject o) -> o.setUp()); }
+	private void setUpObjects() { worldObjects.forEach((Integer i, WorldObject o) -> o.preUpdate()); }
 }

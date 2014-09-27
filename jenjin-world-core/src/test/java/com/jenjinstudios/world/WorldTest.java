@@ -58,9 +58,9 @@ public class WorldTest
 		World world = WorldUtils.createDefaultWorld();
 		world.getWorldObjects().scheduleForAddition(worldObject);
 		world.update();
-		verify(worldObject, times(1)).setUp();
+		verify(worldObject, times(1)).preUpdate();
 		verify(worldObject, times(1)).update();
-		verify(worldObject, times(1)).reset();
+		verify(worldObject, times(1)).postUpdate();
 	}
 
 	@Test

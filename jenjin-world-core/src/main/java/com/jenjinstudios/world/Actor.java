@@ -1,5 +1,6 @@
 package com.jenjinstudios.world;
 
+import com.jenjinstudios.world.actor.VisionOnPreUpdate;
 import com.jenjinstudios.world.math.Angle;
 import com.jenjinstudios.world.math.Vector2D;
 import com.jenjinstudios.world.state.MoveState;
@@ -23,7 +24,7 @@ import java.util.LinkedList;
  * forced.
  * @author Caleb Brinkman
  */
-public class Actor extends SightedObject
+public class Actor extends WorldObject
 {
 	public static double DEFAULT_MOVE_SPEED = 30.0d;
 	private final LinkedList<MoveState> stateChanges;
@@ -39,11 +40,12 @@ public class Actor extends SightedObject
 		newAngle = getAngle();
 		stateChanges = new LinkedList<>();
 		setMoveSpeed(DEFAULT_MOVE_SPEED);
+		addPreUpdateEvent(VisionOnPreUpdate.EVENT_NAME, new VisionOnPreUpdate());
 	}
 
 	@Override
-	public void setUp() {
-		super.setUp();
+	public void preUpdate() {
+		super.preUpdate();
 		vectorBeforeUpdate = getVector2D();
 		forcedState = null;
 		synchronized (stateChanges)
@@ -53,8 +55,8 @@ public class Actor extends SightedObject
 	}
 
 	@Override
-	public void reset() {
-		super.reset();
+	public void postUpdate() {
+		super.postUpdate();
 		if (vectorBeforeUpdate == null) vectorBeforeUpdate = getVector2D();
 		if (newState)
 		{

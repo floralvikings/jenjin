@@ -1,6 +1,11 @@
 package com.jenjinstudios.world.math;
 
-import com.jenjinstudios.world.*;
+import com.jenjinstudios.world.Location;
+import com.jenjinstudios.world.World;
+import com.jenjinstudios.world.WorldObject;
+import com.jenjinstudios.world.Zone;
+import com.jenjinstudios.world.actor.VisionOnPreUpdate;
+import com.jenjinstudios.world.event.PreUpdateEvent;
 import com.jenjinstudios.world.util.ZoneUtils;
 
 import java.util.Collection;
@@ -58,8 +63,10 @@ public class SightCalculator
 	}
 
 	private static void clearVisibleObjects(Collection<WorldObject> worldObjects) {
-		Stream<WorldObject> filter = worldObjects.stream().filter(o -> o instanceof SightedObject);
-		filter.forEach(o -> ((SightedObject) o).clearVisibleObjects());
+		Stream<WorldObject> filter = worldObjects.stream().filter(o ->
+			  o.getPreUpdateEvent(VisionOnPreUpdate.EVENT_NAME) != null);
+		filter.forEach(o -> ((VisionOnPreUpdate) o.getPreUpdateEvent(VisionOnPreUpdate.EVENT_NAME))
+			  .clearVisibleObjects());
 	}
 
 	private static void determineVisibility(WorldObject worldObject, WorldObject visible, double radius) {
@@ -73,13 +80,16 @@ public class SightCalculator
 	}
 
 	private static void addToEachVisibility(WorldObject worldObject, WorldObject visible) {
-		if (visible instanceof SightedObject)
+		PreUpdateEvent e1 = worldObject.getPreUpdateEvent(VisionOnPreUpdate.EVENT_NAME);
+		PreUpdateEvent e2 = visible.getPreUpdateEvent(VisionOnPreUpdate.EVENT_NAME);
+
+		if (e1 != null)
 		{
-			((SightedObject) visible).addVisibleObject(worldObject);
+			((VisionOnPreUpdate) e1).addVisibleObject(worldObject);
 		}
-		if (worldObject instanceof SightedObject)
+		if (e2 != null)
 		{
-			((SightedObject) worldObject).addVisibleObject(worldObject);
+			((VisionOnPreUpdate) e2).addVisibleObject(worldObject);
 		}
 	}
 }

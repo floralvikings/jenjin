@@ -21,8 +21,8 @@ public class ExecutableForceStateMessage extends WorldClientExecutableMessage
 	@Override
 	public void runDelayed() {
 		Actor player = getClient().getPlayer();
-		player.setAngle(angle);
 		player.setVector2D(vector2D);
+		player.setAngle(angle);
 		player.setLastStepTime(timeOfForce);
 
 		player.forcePosition();

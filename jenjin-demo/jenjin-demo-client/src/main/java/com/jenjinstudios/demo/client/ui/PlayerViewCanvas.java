@@ -3,6 +3,8 @@ package com.jenjinstudios.demo.client.ui;
 import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.Location;
 import com.jenjinstudios.world.WorldObject;
+import com.jenjinstudios.world.actor.VisionOnPreUpdate;
+import com.jenjinstudios.world.event.PreUpdateEvent;
 import com.jenjinstudios.world.math.SightCalculator;
 import com.jenjinstudios.world.util.LocationUtils;
 import javafx.application.Platform;
@@ -94,8 +96,13 @@ public class PlayerViewCanvas extends Canvas
 	}
 
 	protected void drawObjects() {
-		clientPlayer.getVisibleObjects().values().forEach(this::drawObject);
-		drawObject(clientPlayer);
+		PreUpdateEvent event = clientPlayer.getPreUpdateEvent(VisionOnPreUpdate.EVENT_NAME);
+		if (event != null)
+		{
+			VisionOnPreUpdate visionOnPreUpdate = (VisionOnPreUpdate) event;
+			visionOnPreUpdate.getVisibleObjects().values().forEach(this::drawObject);
+			drawObject(clientPlayer);
+		}
 	}
 
 	private void drawObject(WorldObject o) {

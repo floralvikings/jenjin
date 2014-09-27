@@ -1,35 +1,24 @@
-package com.jenjinstudios.world;
+package com.jenjinstudios.world.actor;
 
-import java.util.AbstractMap;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.TreeMap;
+import com.jenjinstudios.world.WorldObject;
+import com.jenjinstudios.world.event.PreUpdateEvent;
+
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * The {@code SightedObject} class is a {@code WorldObject} which maintains a range of locations which are visible to
- * it.  It also maintains a list of visible {@code WorldObject}s  which are visible to it.  This class is intended to be
- * used by a non-static WorldObject implementation.
  * @author Caleb Brinkman
  */
-public class SightedObject extends WorldObject
+public class VisionOnPreUpdate implements PreUpdateEvent
 {
-	private final TreeMap<Integer, WorldObject> visibleObjects;
-	private final Set<WorldObject> newlyVisibleObjects;
-	private final Set<WorldObject> newlyInvisibleObjects;
-	private final Set<WorldObject> visibleLastSetUp;
-
-	public SightedObject(String name) {
-		super(name);
-		visibleLastSetUp = new HashSet<>();
-		visibleObjects = new TreeMap<>();
-		newlyVisibleObjects = new HashSet<>();
-		newlyInvisibleObjects = new HashSet<>();
-	}
+	public static final String EVENT_NAME = "visibleEvent";
+	private final Map<Integer, WorldObject> visibleObjects = new TreeMap<>();
+	private final Set<WorldObject> newlyVisibleObjects = new HashSet<>();
+	private final Set<WorldObject> newlyInvisibleObjects = new HashSet<>();
+	private final Set<WorldObject> visibleLastSetUp = new HashSet<>();
 
 	@Override
-	public void setUp() {
-		super.setUp();
+	public void onPreUpdate() {
 		setUpVisibleObjects();
 	}
 

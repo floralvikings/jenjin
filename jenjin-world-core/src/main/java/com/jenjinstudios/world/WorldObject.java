@@ -1,5 +1,6 @@
 package com.jenjinstudios.world;
 
+import com.jenjinstudios.world.event.EventExecutor;
 import com.jenjinstudios.world.math.Angle;
 import com.jenjinstudios.world.math.Vector2D;
 
@@ -9,7 +10,7 @@ import java.util.HashMap;
  * Represents an object that exists in the game world.
  * @author Caleb Brinkman
  */
-public class WorldObject
+public class WorldObject extends EventExecutor
 {
 	private final HashMap<String, Object> properties;
 	private String name;
@@ -19,7 +20,6 @@ public class WorldObject
 	private Angle angle;
 	private Vector2D vector2D;
 	private World world;
-	private boolean initialized;
 
 	public WorldObject() { this("World Object"); }
 
@@ -65,24 +65,6 @@ public class WorldObject
 	public String getName() { return name; }
 
 	public void setName(String name) { this.name = name; }
-
-	protected void initialize() {
-		initialized = true;
-	}
-
-	/** Set up this WorldObject before updating. */
-	public void setUp() {
-		if (!initialized)
-		{
-			initialize();
-		}
-	}
-
-	/** Update this WorldObject. */
-	public void update() { }
-
-	/** Reset this WorldObject after updating. */
-	public void reset() { }
 
 	@Override
 	public String toString() { return name + ": " + id; }
