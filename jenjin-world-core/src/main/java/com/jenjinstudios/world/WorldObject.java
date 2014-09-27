@@ -21,6 +21,8 @@ public class WorldObject
 	private World world;
 	private boolean initialized;
 
+	public WorldObject() { this("World Object"); }
+
 	public WorldObject(String name) {
 		vector2D = Vector2D.ORIGIN;
 		this.name = name;

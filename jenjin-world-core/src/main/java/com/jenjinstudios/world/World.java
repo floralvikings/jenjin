@@ -15,11 +15,11 @@ public class World
 	/** The list of in-world Zones. */
 	private final TreeMap<Integer, Zone> zones = new TreeMap<>();
 	/** The GameObjects contained in the world. */
-	private final WorldObjectMap worldObjects = new WorldObjectMap(this);
+	private transient final WorldObjectMap worldObjects = new WorldObjectMap(this);
 	/** The time at which the most recent update completed. */
-	private long lastUpdateCompleted;
+	private transient long lastUpdateCompleted;
 	/** The start time of the most recent update. */
-	private long lastUpdateStarted;
+	private transient long lastUpdateStarted;
 
 	/** Construct a new World. */
 	public World() { }
