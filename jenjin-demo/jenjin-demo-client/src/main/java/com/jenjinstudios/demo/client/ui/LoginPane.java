@@ -62,7 +62,7 @@ public final class LoginPane extends GridPane
 
 	private static WorldClient createWorldClient(String address, int port, ClientUser clientUser) throws IOException {
 		String slash = File.separator;
-		File worldFile = new File(System.getProperty("user.home") + slash + ".jenjin-demo" + slash + "World.xml");
+		File worldFile = new File(System.getProperty("user.home") + slash + ".jenjin-demo" + slash + "World.json");
 		Socket socket = new Socket(address, port);
 		MessageInputStream messageInputStream = new MessageInputStream(socket.getInputStream());
 		MessageOutputStream messageOutputStream = new MessageOutputStream(socket.getOutputStream());
