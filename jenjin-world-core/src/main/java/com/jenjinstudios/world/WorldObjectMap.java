@@ -31,7 +31,6 @@ public class WorldObjectMap
 	public Collection<WorldObject> getWorldObjectCollection() { return new LinkedList<>(worldObjects.values()); }
 
 	public int getAvailableId() {
-		// FIXME This really could be a O(log(n)) method.  Someone should get on that.
 		int currentKey = 0;
 		boolean containsKey = worldObjects.get(currentKey) != null;
 		boolean keyReserved = reservedIds.contains(currentKey);
