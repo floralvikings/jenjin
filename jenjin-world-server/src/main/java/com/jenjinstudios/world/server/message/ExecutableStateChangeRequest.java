@@ -48,13 +48,13 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage
 		{
 			Angle pAngle = player.getAngle().asIdle();
 			Vector2D vector2D = player.getVectorBeforeUpdate();
-			MoveState forcedState = new MoveState(pAngle, vector2D, player.getLastUpdateFinished());
+			MoveState forcedState = new MoveState(pAngle, vector2D, player.getWorld().getLastUpdateCompleted());
 			player.setForcedState(forcedState);
 		} else if (!isCorrectionSafe(player))
 		{
 			Angle pAngle = player.getAngle();
 			Vector2D vector2D = player.getVectorBeforeUpdate();
-			MoveState forcedState = new MoveState(pAngle, vector2D, player.getLastUpdateFinished());
+			MoveState forcedState = new MoveState(pAngle, vector2D, player.getWorld().getLastUpdateCompleted());
 			player.setForcedState(forcedState);
 		} else
 		{
