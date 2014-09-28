@@ -31,7 +31,7 @@ public class Actor extends WorldObject
 	private double moveSpeed;
 	private boolean newState;
 	private MoveState forcedState;
-	private long lastStepTime;
+	private long lastUpdateFinished;
 	private Angle newAngle;
 	private Vector2D vectorBeforeUpdate;
 
@@ -65,7 +65,7 @@ public class Actor extends WorldObject
 			//Vector2D beforeStep = new Vector2D(vectorBeforeUpdate);
 			synchronized (stateChanges)
 			{
-				stateChanges.add(new MoveState(getAngle(), getVector2D(), getLastStepTime()));
+				stateChanges.add(new MoveState(getAngle(), getVector2D(), getLastUpdateFinished()));
 			}
 		}
 	}
@@ -89,12 +89,12 @@ public class Actor extends WorldObject
 
 	@Override
 	public void update() {
-		if (lastStepTime == 0)
+		if (lastUpdateFinished == 0)
 		{
-			lastStepTime = getWorld().getLastUpdateCompleted();
+			lastUpdateFinished = getWorld().getLastUpdateCompleted();
 		}
 		step();
-		lastStepTime = System.currentTimeMillis();
+		lastUpdateFinished = System.currentTimeMillis();
 	}
 
 	public LinkedList<MoveState> getStateChanges() {
@@ -107,7 +107,7 @@ public class Actor extends WorldObject
 
 	/** Mark that the actor has been forced to its current position. */
 	public void forcePosition() {
-		MoveState forcedMoveState = new MoveState(getAngle(), getVector2D(), getLastStepTime());
+		MoveState forcedMoveState = new MoveState(getAngle(), getVector2D(), getLastUpdateFinished());
 		setForcedState(forcedMoveState);
 		setVector2D(getVector2D());
 		setAngle(getAngle());
@@ -117,14 +117,14 @@ public class Actor extends WorldObject
 	@SuppressWarnings("WeakerAccess")
 	public void forceIdle() {
 		Angle idle = getAngle().asIdle();
-		MoveState forcedMoveState = new MoveState(idle, getVector2D(), getLastStepTime());
+		MoveState forcedMoveState = new MoveState(idle, getVector2D(), getLastUpdateFinished());
 		setForcedState(forcedMoveState);
 		setVector2D(getVector2D());
 		setAngle(idle);
 		newState = true;
 	}
 
-	public long getLastStepTime() { return lastStepTime; }
+	public long getLastUpdateFinished() { return lastUpdateFinished; }
 
 	public Vector2D getVectorBeforeUpdate() { return vectorBeforeUpdate; }
 
@@ -137,7 +137,7 @@ public class Actor extends WorldObject
 	}
 
 	protected double calcStepLength() {
-		return ((System.currentTimeMillis() - (double) getLastStepTime()) / 1000) * getMoveSpeed();
+		return ((System.currentTimeMillis() - (double) getLastUpdateFinished()) / 1000) * getMoveSpeed();
 	}
 
 	private boolean stepForward(double stepLength) {
@@ -168,7 +168,7 @@ public class Actor extends WorldObject
 		double stepLength = calcStepLength();
 		if (!stepForward(stepLength))
 		{
-			setForcedState(new MoveState(getAngle().asIdle(), getVector2D(), lastStepTime));
+			setForcedState(new MoveState(getAngle().asIdle(), getVector2D(), lastUpdateFinished));
 			setAngle(getAngle().asIdle());
 		}
 	}
