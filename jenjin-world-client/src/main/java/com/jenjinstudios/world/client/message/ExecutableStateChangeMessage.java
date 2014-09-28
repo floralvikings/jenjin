@@ -37,7 +37,6 @@ public class ExecutableStateChangeMessage extends WorldClientExecutableMessage
 			double dist = actor.getMoveSpeed() * ((double) (System.currentTimeMillis() - time) / 1000d);
 			Vector2D position = oldVector.getVectorInDirection(dist, angle.getStepAngle());
 			actor.setAngle(angle);
-			actor.setLastStepTime(System.currentTimeMillis());
 			actor.setVector2D(position);
 		}
 	}

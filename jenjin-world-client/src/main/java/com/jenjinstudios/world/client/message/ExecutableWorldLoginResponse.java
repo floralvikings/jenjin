@@ -50,6 +50,5 @@ public class ExecutableWorldLoginResponse extends WorldClientExecutableMessage
 		player.setId(id);
 		Vector2D vector2D = new Vector2D(xCoordinate, yCoordinate);
 		player.setVector2D(vector2D);
-		player.setLastStepTime((long) getMessage().getArgument("loginTime"));
 	}
 }

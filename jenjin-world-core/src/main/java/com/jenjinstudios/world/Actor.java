@@ -89,12 +89,12 @@ public class Actor extends WorldObject
 
 	@Override
 	public void update() {
-		if (getLastStepTime() == 0)
+		if (lastStepTime == 0)
 		{
-			setLastStepTime(getWorld().getLastUpdateCompleted());
+			lastStepTime = getWorld().getLastUpdateCompleted();
 		}
 		step();
-		setLastStepTime(System.currentTimeMillis());
+		lastStepTime = System.currentTimeMillis();
 	}
 
 	public LinkedList<MoveState> getStateChanges() {
@@ -125,8 +125,6 @@ public class Actor extends WorldObject
 	}
 
 	public long getLastStepTime() { return lastStepTime; }
-
-	public void setLastStepTime(long lastStepTime) { this.lastStepTime = lastStepTime; }
 
 	public Vector2D getVectorBeforeUpdate() { return vectorBeforeUpdate; }
 

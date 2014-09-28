@@ -12,8 +12,10 @@ public class EventExecutor
 	private final Map<String, PreUpdateEvent> preUpdateEvents = new HashMap<>();
 	private final Map<String, UpdateEvent> updateEvents = new HashMap<>();
 	private final Map<String, PostUpdateEvent> postUpdateEvents = new HashMap<>();
+	private final Map<String, EventStack> eventStacks = new HashMap<>();
 
 	private boolean initialized;
+
 
 	protected void initialize() {
 		synchronized (initializeEvents)
@@ -88,6 +90,13 @@ public class EventExecutor
 		}
 	}
 
+	public void addEventStack(String name, EventStack eventStack) {
+		synchronized (eventStacks)
+		{
+			eventStacks.put(name, eventStack);
+		}
+	}
+
 	public InitializeEvent getInitializeEvent(String name) {
 		synchronized (initializeEvents)
 		{
@@ -113,6 +122,13 @@ public class EventExecutor
 		synchronized (postUpdateEvents)
 		{
 			return postUpdateEvents.get(name);
+		}
+	}
+
+	public EventStack getEventStack(String name) {
+		synchronized (eventStacks)
+		{
+			return eventStacks.get(name);
 		}
 	}
 }
