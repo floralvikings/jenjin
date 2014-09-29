@@ -20,7 +20,6 @@ public class ExecutableWorldLoginRequest extends WorldExecutableMessage
 	private static final String X_COORD = "xCoord";
 	private static final String Y_COORD = "yCoord";
 	private static final String ZONE_ID = "zoneID";
-	private static final String USERNAME = "username";
 	private final WorldAuthenticator authenticator;
 	private Message loginResponse;
 	private Map<String, Object> playerData;
@@ -95,10 +94,10 @@ public class ExecutableWorldLoginRequest extends WorldExecutableMessage
 	private Actor setHandlerPlayerInfo() {
 		WorldClientHandler handler = getClientHandler();
 		Actor player = handler.getPlayer();
-		double x = (double) playerData.remove(X_COORD);
-		double y = (double) playerData.remove(Y_COORD);
-		int zoneId = (int) playerData.remove(ZONE_ID);
-		String username = (String) playerData.remove(USERNAME);
+		double x = Double.parseDouble((String) playerData.remove(X_COORD));
+		double y = Double.parseDouble((String) playerData.remove(Y_COORD));
+		int zoneId = Integer.parseInt((String) playerData.remove(ZONE_ID));
+		String username = user.getUsername();
 		Vector2D coordinates = new Vector2D(x, y);
 		player.setName(username);
 		player.setVector2D(coordinates);

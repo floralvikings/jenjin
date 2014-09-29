@@ -2,6 +2,8 @@ package com.jenjinstudios.world.client.message;
 
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.world.Actor;
+import com.jenjinstudios.world.World;
+import com.jenjinstudios.world.WorldObject;
 import com.jenjinstudios.world.client.WorldClient;
 import com.jenjinstudios.world.math.Angle;
 import com.jenjinstudios.world.math.Vector2D;
@@ -22,14 +24,18 @@ public class ExecutableActorVisibleMessage extends WorldClientExecutableMessage
 
 	@Override
 	public void runDelayed() {
+		int id = newlyVisible.getId();
+		World world = getClient().getWorld();
 		try
 		{
-			getClient().getWorld().getWorldObjects().scheduleForAddition(newlyVisible, newlyVisible.getId());
+			world.getWorldObjects().scheduleForAddition(newlyVisible, id);
 		} catch (Exception ex)
 		{
-			LOGGER.log(Level.WARNING, "Received message for already extant object ID:  {0}, {1}",
-				  new Object[]{newlyVisible.getId(), newlyVisible});
-			getClient().getWorld().getWorldObjects().scheduleForOverwrite(newlyVisible, newlyVisible.getId());
+			WorldObject existing = world.getWorldObjects().getObject(id);
+			LOGGER.log(Level.WARNING, "Received message for already extant object ID:  {0}, {1}; Current: {2}",
+				  new Object[]{id, newlyVisible, existing});
+
+			world.getWorldObjects().scheduleForOverwrite(newlyVisible, id);
 		}
 
 	}

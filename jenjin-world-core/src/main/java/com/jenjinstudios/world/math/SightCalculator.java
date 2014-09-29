@@ -85,7 +85,7 @@ public class SightCalculator
 
 		if (e1 != null)
 		{
-			((VisionOnPreUpdate) e1).addVisibleObject(worldObject);
+			((VisionOnPreUpdate) e1).addVisibleObject(visible);
 		}
 		if (e2 != null)
 		{
