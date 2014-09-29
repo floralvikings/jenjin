@@ -1,6 +1,6 @@
 package com.jenjinstudios.world;
 
-import com.jenjinstudios.world.actor.VisionOnPreUpdate;
+import com.jenjinstudios.world.actor.Vision;
 import com.jenjinstudios.world.math.Angle;
 import com.jenjinstudios.world.math.Vector2D;
 import com.jenjinstudios.world.state.MoveState;
@@ -39,7 +39,7 @@ public class Actor extends WorldObject
 		newAngle = getAngle();
 		stateChanges = new LinkedList<>();
 		setMoveSpeed(DEFAULT_MOVE_SPEED);
-		addPreUpdateEvent(VisionOnPreUpdate.EVENT_NAME, new VisionOnPreUpdate());
+		addPreUpdateEvent(Vision.EVENT_NAME, new Vision());
 	}
 
 	@Override

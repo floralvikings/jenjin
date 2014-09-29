@@ -5,6 +5,8 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.TreeMap;
 import java.util.function.BiConsumer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Used to store WorldObjects.
@@ -12,6 +14,7 @@ import java.util.function.BiConsumer;
  */
 public class WorldObjectMap
 {
+	private static final Logger LOGGER = Logger.getLogger(WorldObjectMap.class.getName());
 	private final TreeMap<Integer, WorldObject> worldObjects = new TreeMap<>();
 	private final HashSet<Integer> reservedIds = new HashSet<>();
 	private final World world;
@@ -49,6 +52,7 @@ public class WorldObjectMap
 	}
 
 	private void addObject(WorldObject object, int id) {
+		LOGGER.log(Level.FINER, "Adding object to world: {0} ({1})", new Object[]{id, object});
 		object.setId(id);
 		object.setWorld(world);
 		object.setVector2D(object.getVector2D());

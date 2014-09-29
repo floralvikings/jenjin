@@ -4,13 +4,15 @@ import com.jenjinstudios.world.Location;
 import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.WorldObject;
 import com.jenjinstudios.world.Zone;
-import com.jenjinstudios.world.actor.VisionOnPreUpdate;
+import com.jenjinstudios.world.actor.Vision;
 import com.jenjinstudios.world.event.PreUpdateEvent;
 import com.jenjinstudios.world.util.ZoneUtils;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Stream;
 
 /**
@@ -20,6 +22,7 @@ public class SightCalculator
 {
 	public static final String VISION_RADIUS_PROPERTY = "visionRadius";
 	public static final double DEFAULT_VISION_RADIUS = 100d;
+	private static final Logger LOGGER = Logger.getLogger(SightCalculator.class.getName());
 
 	public static void updateVisibleObjects(World world) {
 		Collection<WorldObject> worldObjects = world.getWorldObjects().getWorldObjectCollection();
@@ -64,8 +67,8 @@ public class SightCalculator
 
 	private static void clearVisibleObjects(Collection<WorldObject> worldObjects) {
 		Stream<WorldObject> filter = worldObjects.stream().filter(o ->
-			  o.getPreUpdateEvent(VisionOnPreUpdate.EVENT_NAME) != null);
-		filter.forEach(o -> ((VisionOnPreUpdate) o.getPreUpdateEvent(VisionOnPreUpdate.EVENT_NAME))
+			  o.getPreUpdateEvent(Vision.EVENT_NAME) != null);
+		filter.forEach(o -> ((Vision) o.getPreUpdateEvent(Vision.EVENT_NAME))
 			  .clearVisibleObjects());
 	}
 
@@ -79,17 +82,23 @@ public class SightCalculator
 		}
 	}
 
-	private static void addToEachVisibility(WorldObject worldObject, WorldObject visible) {
-		PreUpdateEvent e1 = worldObject.getPreUpdateEvent(VisionOnPreUpdate.EVENT_NAME);
-		PreUpdateEvent e2 = visible.getPreUpdateEvent(VisionOnPreUpdate.EVENT_NAME);
+	private static void addToEachVisibility(WorldObject seeing, WorldObject visible) {
+		addObjectToVisibility(seeing, visible);
+		addObjectToVisibility(visible, seeing);
+	}
 
-		if (e1 != null)
+	private static void addObjectToVisibility(WorldObject a, WorldObject b) {
+		PreUpdateEvent event = a.getPreUpdateEvent(Vision.EVENT_NAME);
+		// This event will exist if the Object can see
+		if (event != null)
 		{
-			((VisionOnPreUpdate) e1).addVisibleObject(visible);
-		}
-		if (e2 != null)
-		{
-			((VisionOnPreUpdate) e2).addVisibleObject(worldObject);
+			Vision vision = (Vision) event;
+			// Don't want to add the object to the visibility tree if it's already there
+			if (!vision.getVisibleObjects().containsKey(b.getId()))
+			{
+				LOGGER.log(Level.FINEST, "{0} can see {1}", new Object[]{a, b});
+				vision.addVisibleObject(b);
+			}
 		}
 	}
 }

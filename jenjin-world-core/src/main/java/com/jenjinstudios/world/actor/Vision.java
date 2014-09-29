@@ -9,9 +9,9 @@ import java.util.stream.Collectors;
 /**
  * @author Caleb Brinkman
  */
-public class VisionOnPreUpdate implements PreUpdateEvent
+public class Vision implements PreUpdateEvent
 {
-	public static final String EVENT_NAME = "visibleEvent";
+	public static final String EVENT_NAME = "visionEvent";
 	private final Map<Integer, WorldObject> visibleObjects = new TreeMap<>();
 	private final Set<WorldObject> newlyVisibleObjects = new HashSet<>();
 	private final Set<WorldObject> newlyInvisibleObjects = new HashSet<>();

@@ -27,9 +27,9 @@ public class ExecutableWorldLoginRequestTest
 	@SuppressWarnings("unchecked")
 	public void testSuccessfulLogin() throws Exception {
 		Map<String, Object> playerData = new HashMap<>();
-		playerData.put("xCoord", 0.0);
-		playerData.put("yCoord", 0.0);
-		playerData.put("zoneID", 0);
+		playerData.put("xCoord", "0.0");
+		playerData.put("yCoord", "0.0");
+		playerData.put("zoneID", "0");
 		playerData.put("username", "Foo");
 		Message message = Mockito.mock(Message.class);
 		WorldServerMessageFactory messageFactory = Mockito.mock(WorldServerMessageFactory.class);
