@@ -223,6 +223,7 @@ public class Authenticator
 
 	private static Set<Class<?>> getWrapperTypes() {
 		Set<Class<?>> ret = new HashSet<>();
+		ret.add(String.class);
 		ret.add(Boolean.class);
 		ret.add(Character.class);
 		ret.add(Byte.class);
