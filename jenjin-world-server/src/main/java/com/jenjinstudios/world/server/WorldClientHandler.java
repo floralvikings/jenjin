@@ -6,7 +6,6 @@ import com.jenjinstudios.server.net.ClientHandler;
 import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.WorldObject;
 import com.jenjinstudios.world.actor.Vision;
-import com.jenjinstudios.world.event.PreUpdateEvent;
 import com.jenjinstudios.world.server.message.WorldServerMessageFactory;
 import com.jenjinstudios.world.state.MoveState;
 
@@ -51,10 +50,10 @@ public class WorldClientHandler extends ClientHandler
 	protected void setPlayer(Actor player) { this.player = player; }
 
 	private void queueNewlyVisibleMessages() {
-		PreUpdateEvent event = player.getPreUpdateEvent(Vision.EVENT_NAME);
-		if (event != null)
+		Object o = player.getProperties().get(Vision.PROPERTY_NAME);
+		if (o != null && o instanceof Vision)
 		{
-			Vision vision = (Vision) event;
+			Vision vision = (Vision) o;
 			for (WorldObject object : vision.getNewlyVisibleObjects())
 			{
 				Message newlyVisibleMessage;
@@ -65,10 +64,10 @@ public class WorldClientHandler extends ClientHandler
 	}
 
 	private void queueNewlyInvisibleMessages() {
-		PreUpdateEvent event = player.getPreUpdateEvent(Vision.EVENT_NAME);
-		if (event != null)
+		Object o = player.getProperties().get(Vision.PROPERTY_NAME);
+		if (o != null && o instanceof Vision)
 		{
-			Vision vision = (Vision) event;
+			Vision vision = (Vision) o;
 			for (WorldObject object : vision.getNewlyInvisibleObjects())
 			{
 				Message newlyInvisibleMessage = getMessageFactory().generateNewlyInvisibleMessage(object);
@@ -78,10 +77,10 @@ public class WorldClientHandler extends ClientHandler
 	}
 
 	private void queueStateChangeMessages() {
-		PreUpdateEvent event = player.getPreUpdateEvent(Vision.EVENT_NAME);
-		if (event != null)
+		Object o = player.getProperties().get(Vision.PROPERTY_NAME);
+		if (o != null && o instanceof Vision)
 		{
-			Vision vision = (Vision) event;
+			Vision vision = (Vision) o;
 			Set<WorldObject> visibles = vision.getVisibleObjects();
 			visibles.stream().filter(object -> object instanceof Actor).forEach(object ->
 				  queueActorStateChangeMessages((Actor) object));

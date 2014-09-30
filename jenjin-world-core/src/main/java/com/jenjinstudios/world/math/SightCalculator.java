@@ -5,15 +5,11 @@ import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.WorldObject;
 import com.jenjinstudios.world.Zone;
 import com.jenjinstudios.world.actor.Vision;
-import com.jenjinstudios.world.event.PreUpdateEvent;
 import com.jenjinstudios.world.util.ZoneUtils;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedList;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Stream;
 
 /**
  * @author Caleb Brinkman
@@ -26,8 +22,20 @@ public class SightCalculator
 
 	public static void updateVisibleObjects(World world) {
 		Collection<WorldObject> worldObjects = world.getWorldObjects().getWorldObjectCollection();
-		clearVisibleObjects(worldObjects);
-		updateVisibility(worldObjects);
+		Map<WorldObject, Set<WorldObject>> visibleMap = determineVisibility(worldObjects);
+		setVisibleObjects(visibleMap);
+	}
+
+	private static void setVisibleObjects(Map<WorldObject, Set<WorldObject>> visibleMap) {
+		Set<WorldObject> keySet = visibleMap.keySet();
+		for (WorldObject key : keySet)
+		{
+			Object vision = key.getProperties().get(Vision.PROPERTY_NAME);
+			if (vision != null && vision instanceof Vision)
+			{
+				((Vision) vision).setVisibleObjects(visibleMap.get(key));
+			}
+		}
 	}
 
 	public static Collection<Location> getVisibleLocations(WorldObject worldObject) {
@@ -48,16 +56,28 @@ public class SightCalculator
 		return locations;
 	}
 
-	private static void updateVisibility(Collection<WorldObject> worldObjects) {
-		HashMap<Integer, Boolean> alreadyChecked = new HashMap<>();
-		for (WorldObject worldObject : worldObjects)
+	private static Map<WorldObject, Set<WorldObject>> determineVisibility(Collection<WorldObject> objects) {
+		Map<WorldObject, Set<WorldObject>> map = createVisibilityMap(objects);
+		HashSet<WorldObject> alreadyChecked = new HashSet<>();
+		for (WorldObject worldObject : objects)
 		{
 			double radius = calculateViewRadius(worldObject);
-			Stream<WorldObject> filter = worldObjects.stream().filter(o ->
-				  o != worldObject && !alreadyChecked.containsKey(o.getId()));
-			filter.forEach(visible -> determineVisibility(worldObject, visible, radius));
-			alreadyChecked.put(worldObject.getId(), true);
+			objects.stream().
+				  filter(o -> o != worldObject && !alreadyChecked.contains(o)).
+				  filter(v -> new Circle(worldObject, radius).contains(v)).
+				  forEach(v -> addToEachVisibility(worldObject, v, map));
+			alreadyChecked.add(worldObject);
 		}
+		return map;
+	}
+
+	private static Map<WorldObject, Set<WorldObject>> createVisibilityMap(Collection<WorldObject> objects) {
+		Map<WorldObject, Set<WorldObject>> map = new HashMap<>();
+		for (WorldObject o : objects)
+		{
+			map.put(o, new HashSet<>());
+		}
+		return map;
 	}
 
 	private static double calculateViewRadius(WorldObject worldObject) {
@@ -65,40 +85,37 @@ public class SightCalculator
 		return customRadius == null ? DEFAULT_VISION_RADIUS : (double) customRadius;
 	}
 
-	private static void clearVisibleObjects(Collection<WorldObject> worldObjects) {
-		Stream<WorldObject> filter = worldObjects.stream().filter(o ->
-			  o.getPreUpdateEvent(Vision.EVENT_NAME) != null);
-		filter.forEach(o -> ((Vision) o.getPreUpdateEvent(Vision.EVENT_NAME))
-			  .clearVisibleObjects());
+	private static void addToEachVisibility(WorldObject a, WorldObject b, Map<WorldObject, Set<WorldObject>> map) {
+		addObjectToVisibility(a, b, map);
+		addObjectToVisibility(b, a, map);
 	}
 
-	private static void determineVisibility(WorldObject worldObject, WorldObject visible, double radius) {
-		Vector2D objectVector = worldObject.getVector2D();
-		Vector2D visibleVector = visible.getVector2D();
-		double distance = objectVector.getDistanceToVector(visibleVector);
-		if (distance <= radius)
-		{
-			addToEachVisibility(worldObject, visible);
-		}
-	}
-
-	private static void addToEachVisibility(WorldObject seeing, WorldObject visible) {
-		addObjectToVisibility(seeing, visible);
-		addObjectToVisibility(visible, seeing);
-	}
-
-	private static void addObjectToVisibility(WorldObject a, WorldObject b) {
-		PreUpdateEvent event = a.getPreUpdateEvent(Vision.EVENT_NAME);
+	private static void addObjectToVisibility(WorldObject a, WorldObject b, Map<WorldObject, Set<WorldObject>> map) {
+		Object object = a.getProperties().get(Vision.PROPERTY_NAME);
 		// This event will exist if the Object can see
-		if (event != null)
+		if (object != null && object instanceof Vision)
 		{
-			Vision vision = (Vision) event;
+			Vision vision = (Vision) object;
 			// Don't want to add the object to the visibility tree if it's already there
 			if (!vision.getVisibleObjects().contains(b))
 			{
 				LOGGER.log(Level.FINEST, "{0} can see {1}", new Object[]{a, b});
-				vision.addVisibleObject(b);
+				map.get(a).add(b);
 			}
 		}
+	}
+
+	private static class Circle
+	{
+		private final Vector2D o;
+		private final double radius;
+
+		public Circle(WorldObject o, double radius) {
+			this.o = o.getVector2D();
+			this.radius = radius;
+		}
+
+		public boolean contains(WorldObject w) { return o.getDistanceToVector(w.getVector2D()) < radius; }
+
 	}
 }

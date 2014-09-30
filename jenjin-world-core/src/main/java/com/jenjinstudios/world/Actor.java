@@ -39,7 +39,7 @@ public class Actor extends WorldObject
 		newAngle = getAngle();
 		stateChanges = new LinkedList<>();
 		setMoveSpeed(DEFAULT_MOVE_SPEED);
-		addPreUpdateEvent(Vision.EVENT_NAME, new Vision());
+		getProperties().put(Vision.PROPERTY_NAME, new Vision());
 	}
 
 	@Override
