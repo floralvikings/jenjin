@@ -8,8 +8,6 @@ import com.jenjinstudios.world.actor.Vision;
 import com.jenjinstudios.world.util.ZoneUtils;
 
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * @author Caleb Brinkman
@@ -18,7 +16,6 @@ public class SightCalculator
 {
 	public static final String VISION_RADIUS_PROPERTY = "visionRadius";
 	public static final double DEFAULT_VISION_RADIUS = 100d;
-	private static final Logger LOGGER = Logger.getLogger(SightCalculator.class.getName());
 
 	public static void updateVisibleObjects(World world) {
 		Collection<WorldObject> worldObjects = world.getWorldObjects().getWorldObjectCollection();
@@ -93,16 +90,7 @@ public class SightCalculator
 	private static void addObjectToVisibility(WorldObject a, WorldObject b, Map<WorldObject, Set<WorldObject>> map) {
 		Object object = a.getProperties().get(Vision.PROPERTY_NAME);
 		// This event will exist if the Object can see
-		if (object != null && object instanceof Vision)
-		{
-			Vision vision = (Vision) object;
-			// Don't want to add the object to the visibility tree if it's already there
-			if (!vision.getVisibleObjects().contains(b))
-			{
-				LOGGER.log(Level.FINEST, "{0} can see {1}", new Object[]{a, b});
-				map.get(a).add(b);
-			}
-		}
+		if (object != null && object instanceof Vision) { map.get(a).add(b); }
 	}
 
 	private static class Circle
