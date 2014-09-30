@@ -142,8 +142,7 @@ public class Actor extends WorldObject
 			setVector2D(newVector);
 		} else
 		{
-			setForcedState(new MoveState(getAngle().asIdle(), getVector2D(), getWorld().getLastUpdateCompleted()));
-			setAngle(getAngle().asIdle());
+			forceIdle();
 		}
 	}
 }
