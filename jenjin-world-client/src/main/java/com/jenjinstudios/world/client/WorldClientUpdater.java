@@ -3,6 +3,7 @@ package com.jenjinstudios.world.client;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.client.message.WorldClientMessageFactory;
+import com.jenjinstudios.world.math.SightCalculator;
 import com.jenjinstudios.world.state.MoveState;
 
 import java.util.LinkedList;
@@ -30,6 +31,7 @@ public class WorldClientUpdater implements Runnable
 	@Override
 	public void run() {
 		worldClient.getWorld().update();
+		SightCalculator.updateVisibleObjects(worldClient.getWorld());
 		if (player != null)
 		{
 			LinkedList<MoveState> newStates = player.getStateChanges();
