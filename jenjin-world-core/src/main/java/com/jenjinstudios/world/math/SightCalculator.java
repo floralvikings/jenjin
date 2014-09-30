@@ -94,7 +94,7 @@ public class SightCalculator
 		{
 			Vision vision = (Vision) event;
 			// Don't want to add the object to the visibility tree if it's already there
-			if (!vision.getVisibleObjects().containsKey(b.getId()))
+			if (!vision.getVisibleObjects().contains(b))
 			{
 				LOGGER.log(Level.FINEST, "{0} can see {1}", new Object[]{a, b});
 				vision.addVisibleObject(b);

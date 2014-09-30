@@ -3,7 +3,8 @@ package com.jenjinstudios.world.actor;
 import com.jenjinstudios.world.WorldObject;
 import com.jenjinstudios.world.event.PreUpdateEvent;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -12,7 +13,7 @@ import java.util.stream.Collectors;
 public class Vision implements PreUpdateEvent
 {
 	public static final String EVENT_NAME = "visionEvent";
-	private final Map<Integer, WorldObject> visibleObjects = new TreeMap<>();
+	private final Set<WorldObject> visibleObjects = new HashSet<>();
 	private final Set<WorldObject> newlyVisibleObjects = new HashSet<>();
 	private final Set<WorldObject> newlyInvisibleObjects = new HashSet<>();
 	private final Set<WorldObject> visibleLastSetUp = new HashSet<>();
@@ -26,30 +27,29 @@ public class Vision implements PreUpdateEvent
 		synchronized (newlyVisibleObjects)
 		{
 			newlyVisibleObjects.clear();
-			getVisibleObjects().values().stream().filter(o ->
-				  !visibleLastSetUp.contains(o)).forEach(newlyVisibleObjects::add);
+			getVisibleObjects().stream().filter(o -> !visibleLastSetUp.contains(o)).forEach(newlyVisibleObjects::add);
 		}
 		synchronized (newlyInvisibleObjects)
 		{
 			newlyInvisibleObjects.clear();
 			newlyInvisibleObjects.addAll(visibleLastSetUp.stream().filter(o ->
-				  !getVisibleObjects().containsKey(o.getId())).collect(Collectors.toList()));
+				  !getVisibleObjects().contains(o)).collect(Collectors.toList()));
 		}
 		visibleLastSetUp.clear();
-		visibleLastSetUp.addAll(getVisibleObjects().values());
+		visibleLastSetUp.addAll(getVisibleObjects());
 	}
 
-	public AbstractMap<Integer, WorldObject> getVisibleObjects() {
+	public Set<WorldObject> getVisibleObjects() {
 		synchronized (visibleObjects)
 		{
-			return new TreeMap<>(visibleObjects);
+			return new HashSet<>(visibleObjects);
 		}
 	}
 
 	public void addVisibleObject(WorldObject visible) {
 		synchronized (visibleObjects)
 		{
-			visibleObjects.put(visible.getId(), visible);
+			visibleObjects.add(visible);
 		}
 	}
 

@@ -10,8 +10,8 @@ import com.jenjinstudios.world.event.PreUpdateEvent;
 import com.jenjinstudios.world.server.message.WorldServerMessageFactory;
 import com.jenjinstudios.world.state.MoveState;
 
-import java.util.AbstractMap;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Handles clients for a world server.
@@ -82,8 +82,8 @@ public class WorldClientHandler extends ClientHandler
 		if (event != null)
 		{
 			Vision vision = (Vision) event;
-			AbstractMap<Integer, WorldObject> visibles = vision.getVisibleObjects();
-			visibles.values().stream().filter(object -> object instanceof Actor).forEach(object ->
+			Set<WorldObject> visibles = vision.getVisibleObjects();
+			visibles.stream().filter(object -> object instanceof Actor).forEach(object ->
 				  queueActorStateChangeMessages((Actor) object));
 		}
 	}

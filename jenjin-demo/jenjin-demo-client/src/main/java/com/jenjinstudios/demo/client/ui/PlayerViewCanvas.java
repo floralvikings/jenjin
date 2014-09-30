@@ -100,7 +100,7 @@ public class PlayerViewCanvas extends Canvas
 		if (event != null)
 		{
 			Vision vision = (Vision) event;
-			vision.getVisibleObjects().values().forEach(this::drawObject);
+			vision.getVisibleObjects().forEach(this::drawObject);
 			drawObject(clientPlayer);
 		}
 	}

@@ -23,7 +23,7 @@ public class SightedObjectTest
 		SightCalculator.updateVisibleObjects(world);
 		world.update();
 		Vision vision = (Vision) sightedObject.getPreUpdateEvent(Vision.EVENT_NAME);
-		Assert.assertTrue(vision.getVisibleObjects().containsKey(visibleObject.getId()));
+		Assert.assertTrue(vision.getVisibleObjects().contains(visibleObject));
 	}
 
 	@Test
