@@ -4,7 +4,7 @@ import com.jenjinstudios.world.actor.Vision;
 import com.jenjinstudios.world.math.Angle;
 import com.jenjinstudios.world.math.Vector2D;
 import com.jenjinstudios.world.state.MoveState;
-import com.jenjinstudios.world.util.ZoneUtils;
+import com.jenjinstudios.world.util.ActorUtil;
 
 import java.util.LinkedList;
 
@@ -132,33 +132,15 @@ public class Actor extends WorldObject
 		return ((System.currentTimeMillis() - (double) getWorld().getLastUpdateCompleted()) / 1000) * getMoveSpeed();
 	}
 
-	private boolean stepForward(double stepLength) {
-		boolean didStep;
-		if (getAngle().isNotIdle())
-		{
-			Vector2D newVector = getVector2D().getVectorInDirection(stepLength, getAngle().getStepAngle());
-			Location newLocation = ZoneUtils.getLocationForCoordinates(getWorld(), getZoneID(), newVector);
-			if (newLocation != null)
-			{
-				boolean walkable = !"false".equals(newLocation.getProperties().get("walkable"));
-				if (walkable) { setVector2D(newVector); }
-				didStep = walkable;
-			} else
-			{
-				didStep = false;
-			}
-		} else
-		{
-			didStep = true;
-		}
-		return didStep;
-	}
-
 	private void resetAngles() { super.setAngle(newAngle); }
 
 	void step() {
 		double stepLength = calcStepLength();
-		if (!stepForward(stepLength))
+		if (ActorUtil.canStepForward(this, stepLength))
+		{
+			Vector2D newVector = getVector2D().getVectorInDirection(stepLength, getAngle().getStepAngle());
+			setVector2D(newVector);
+		} else
 		{
 			setForcedState(new MoveState(getAngle().asIdle(), getVector2D(), getWorld().getLastUpdateCompleted()));
 			setAngle(getAngle().asIdle());
