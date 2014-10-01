@@ -128,14 +128,10 @@ public class Actor extends WorldObject
 		this.moveSpeed = moveSpeed;
 	}
 
-	protected double calcStepLength() {
-		return ((System.currentTimeMillis() - (double) getWorld().getLastUpdateCompleted()) / 1000) * getMoveSpeed();
-	}
-
 	private void resetAngles() { super.setAngle(newAngle); }
 
 	void step() {
-		double stepLength = calcStepLength();
+		double stepLength = ActorUtil.calcStepLength(this);
 		if (ActorUtil.canStepForward(this, stepLength))
 		{
 			Vector2D newVector = getVector2D().getVectorInDirection(stepLength, getAngle().getStepAngle());

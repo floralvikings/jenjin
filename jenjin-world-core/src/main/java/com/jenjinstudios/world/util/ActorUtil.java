@@ -22,4 +22,11 @@ public class ActorUtil
 		}
 		return canStep;
 	}
+
+	public static double calcStepLength(Actor actor) {
+		double lastUpdateCompleted = (double) actor.getWorld().getLastUpdateCompleted();
+		double moveSpeed = actor.getMoveSpeed();
+		double timePastInSeconds = (System.currentTimeMillis() - lastUpdateCompleted) / 1000;
+		return timePastInSeconds * moveSpeed;
+	}
 }
