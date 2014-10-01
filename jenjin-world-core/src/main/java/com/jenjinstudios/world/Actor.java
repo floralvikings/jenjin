@@ -32,7 +32,6 @@ public class Actor extends WorldObject
 	private boolean newState;
 	private MoveState forcedState;
 	private Angle newAngle;
-	private Vector2D vectorBeforeUpdate;
 
 	public Actor(String name) {
 		super(name);
@@ -45,7 +44,6 @@ public class Actor extends WorldObject
 	@Override
 	public void preUpdate() {
 		super.preUpdate();
-		vectorBeforeUpdate = getVector2D();
 		forcedState = null;
 		synchronized (stateChanges)
 		{
@@ -56,7 +54,6 @@ public class Actor extends WorldObject
 	@Override
 	public void postUpdate() {
 		super.postUpdate();
-		if (vectorBeforeUpdate == null) vectorBeforeUpdate = getVector2D();
 		if (newState)
 		{
 			newState = false;
@@ -117,8 +114,6 @@ public class Actor extends WorldObject
 		setAngle(idle);
 		newState = true;
 	}
-
-	public Vector2D getVectorBeforeUpdate() { return vectorBeforeUpdate; }
 
 	public double getMoveSpeed() {
 		return moveSpeed;
