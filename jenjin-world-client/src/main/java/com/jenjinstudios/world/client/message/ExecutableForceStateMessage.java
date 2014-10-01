@@ -27,7 +27,7 @@ public class ExecutableForceStateMessage extends WorldClientExecutableMessage
 		player.setVector2D(corrected);
 		player.setAngle(angle);
 
-		player.forcePosition();
+		player.forceIdle();
 	}
 
 	@Override

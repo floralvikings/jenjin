@@ -18,6 +18,22 @@ public class EventExecutor
 
 
 	protected void initialize() {
+		runInitializeEvents();
+		runInitializeEventStacks();
+		initialized = true;
+	}
+
+	private void runInitializeEventStacks() {
+		synchronized (eventStacks)
+		{
+			for (String key : eventStacks.keySet())
+			{
+				eventStacks.get(key).onInitialize();
+			}
+		}
+	}
+
+	private void runInitializeEvents() {
 		synchronized (initializeEvents)
 		{
 			for (String key : initializeEvents.keySet())
@@ -25,7 +41,6 @@ public class EventExecutor
 				initializeEvents.get(key).onInitialize();
 			}
 		}
-		initialized = true;
 	}
 
 	public void preUpdate() {
@@ -33,6 +48,17 @@ public class EventExecutor
 		{
 			initialize();
 		}
+		runPreEvents();
+		synchronized (eventStacks)
+		{
+			for (String key : eventStacks.keySet())
+			{
+				eventStacks.get(key).onPreUpdate();
+			}
+		}
+	}
+
+	private void runPreEvents() {
 		synchronized (preUpdateEvents)
 		{
 			for (String key : preUpdateEvents.keySet())
@@ -43,6 +69,17 @@ public class EventExecutor
 	}
 
 	public void update() {
+		runUpdateEvents();
+		synchronized (eventStacks)
+		{
+			for (String key : eventStacks.keySet())
+			{
+				eventStacks.get(key).onUpdate();
+			}
+		}
+	}
+
+	private void runUpdateEvents() {
 		synchronized (updateEvents)
 		{
 			for (String key : updateEvents.keySet())
@@ -53,6 +90,17 @@ public class EventExecutor
 	}
 
 	public void postUpdate() {
+		runPostUpdateEvents();
+		synchronized (eventStacks)
+		{
+			for (String key : eventStacks.keySet())
+			{
+				eventStacks.get(key).onPostUpdate();
+			}
+		}
+	}
+
+	private void runPostUpdateEvents() {
 		synchronized (postUpdateEvents)
 		{
 			for (String key : postUpdateEvents.keySet())

@@ -14,17 +14,6 @@ import org.testng.annotations.Test;
 public class ClientPlayerTest
 {
 	@Test(timeOut = 5000)
-	public void testSetAngleNoUpdate() {
-		World world = WorldUtils.createDefaultWorld();
-		Actor player = new Actor("ClientActor");
-		world.getWorldObjects().scheduleForAddition(player);
-		world.update();
-		Angle angle = new Angle(Angle.LEFT, Angle.FRONT);
-		player.setAngle(angle);
-		Assert.assertNotEquals(player.getAngle(), angle);
-	}
-
-	@Test(timeOut = 5000)
 	public void testSetAngle() {
 		World world = WorldUtils.createDefaultWorld();
 		Actor player = new Actor("ClientActor");
@@ -42,7 +31,7 @@ public class ClientPlayerTest
 		Actor player = new Actor("ClientActor");
 		world.getWorldObjects().scheduleForAddition(player);
 		world.update();
-		player.forcePosition();
+		player.forceIdle();
 		Angle angle = player.getAngle();
 		player.setAngle(angle);
 		Assert.assertEquals(player.getAngle(), angle);
@@ -55,7 +44,7 @@ public class ClientPlayerTest
 		player.setId(0);
 		world.getWorldObjects().scheduleForAddition(player);
 		world.update();
-		player.forcePosition();
+		player.forceIdle();
 		Assert.assertNotNull(player.getForcedState());
 	}
 

@@ -1,5 +1,6 @@
 package com.jenjinstudios.world;
 
+import com.jenjinstudios.world.actor.StateChangeStack;
 import com.jenjinstudios.world.actor.Vision;
 import com.jenjinstudios.world.math.Angle;
 import com.jenjinstudios.world.math.Vector2D;
@@ -7,6 +8,7 @@ import com.jenjinstudios.world.state.MoveState;
 import com.jenjinstudios.world.util.ActorUtil;
 
 import java.util.LinkedList;
+import java.util.List;
 
 
 /**
@@ -29,22 +31,20 @@ public class Actor extends WorldObject
 	public static double DEFAULT_MOVE_SPEED = 30.0d;
 	private final LinkedList<MoveState> stateChanges;
 	private double moveSpeed;
-	private boolean newState;
 	private MoveState forcedState;
-	private Angle newAngle;
 
 	public Actor(String name) {
 		super(name);
-		newAngle = getAngle();
 		stateChanges = new LinkedList<>();
 		setMoveSpeed(DEFAULT_MOVE_SPEED);
 		getProperties().put(Vision.PROPERTY_NAME, new Vision());
+		addEventStack(StateChangeStack.STACK_NAME, new StateChangeStack(this));
 	}
 
 	@Override
 	public void preUpdate() {
 		super.preUpdate();
-		forcedState = null;
+		setForcedState(null);
 		synchronized (stateChanges)
 		{
 			stateChanges.clear();
@@ -52,78 +52,28 @@ public class Actor extends WorldObject
 	}
 
 	@Override
-	public void postUpdate() {
-		super.postUpdate();
-		if (newState)
-		{
-			newState = false;
-			resetAngles();
-			//Vector2D beforeStep = new Vector2D(vectorBeforeUpdate);
-			synchronized (stateChanges)
-			{
-				stateChanges.add(new MoveState(getAngle(), getVector2D(), getWorld().getLastUpdateCompleted()));
-			}
-		}
-	}
-
-	@Override
-	public void setAngle(Angle angle) {
-		boolean forcedStateMatch = getForcedState() != null && angle.equals(getForcedState().angle);
-		if ((newState || !getAngle().equals(angle)) && !forcedStateMatch)
-		{
-			setForcedState(null);
-			newState = true;
-			this.newAngle = angle;
-		}
-	}
-
-	@Override
-	public void initialize() {
-		super.initialize();
-		resetAngles();
-	}
-
-	@Override
 	public void update() {
+		super.update();
 		step();
 	}
 
-	public LinkedList<MoveState> getStateChanges() {
-		synchronized (stateChanges) { return new LinkedList<>(stateChanges); }
-	}
+	public List<MoveState> getStateChanges() { synchronized (stateChanges) { return new LinkedList<>(stateChanges); } }
 
 	public MoveState getForcedState() { return forcedState; }
 
 	public void setForcedState(MoveState forcedState) { this.forcedState = forcedState; }
 
-	/** Mark that the actor has been forced to its current position. */
-	public void forcePosition() {
-		MoveState forcedMoveState = new MoveState(getAngle(), getVector2D(), getWorld().getLastUpdateCompleted());
-		setForcedState(forcedMoveState);
-		setVector2D(getVector2D());
-		setAngle(getAngle());
-		newState = true;
-	}
-
-	@SuppressWarnings("WeakerAccess")
 	public void forceIdle() {
 		Angle idle = getAngle().asIdle();
 		MoveState forcedMoveState = new MoveState(idle, getVector2D(), getWorld().getLastUpdateCompleted());
 		setForcedState(forcedMoveState);
 		setVector2D(getVector2D());
 		setAngle(idle);
-		newState = true;
 	}
 
-	public double getMoveSpeed() {
-		return moveSpeed;
-	}
+	public double getMoveSpeed() { return moveSpeed; }
 
-	public void setMoveSpeed(double moveSpeed) {
-		this.moveSpeed = moveSpeed;
-	}
-
-	private void resetAngles() { super.setAngle(newAngle); }
+	public void setMoveSpeed(double moveSpeed) { this.moveSpeed = moveSpeed; }
 
 	void step() {
 		double stepLength = ActorUtil.calcStepLength(this);

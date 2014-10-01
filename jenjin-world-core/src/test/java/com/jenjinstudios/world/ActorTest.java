@@ -1,5 +1,7 @@
 package com.jenjinstudios.world;
 
+import com.jenjinstudios.world.actor.StateChangeStack;
+import com.jenjinstudios.world.event.EventStack;
 import com.jenjinstudios.world.math.Angle;
 import com.jenjinstudios.world.math.Vector2D;
 import com.jenjinstudios.world.util.WorldUtils;
@@ -21,7 +23,10 @@ public class ActorTest
 		Angle angle = new Angle(0.0, Angle.FRONT);
 		actor.setAngle(angle);
 		actor.postUpdate();
-		Assert.assertEquals(actor.getStateChanges().get(0).angle, angle);
+		EventStack stack = actor.getEventStack(StateChangeStack.STACK_NAME);
+		Assert.assertNotNull(stack);
+		Assert.assertTrue(stack instanceof StateChangeStack);
+		Assert.assertEquals(((StateChangeStack) stack).getStateChanges().get(0).angle, angle);
 	}
 
 	@Test

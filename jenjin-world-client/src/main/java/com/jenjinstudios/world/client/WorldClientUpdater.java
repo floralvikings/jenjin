@@ -6,7 +6,7 @@ import com.jenjinstudios.world.client.message.WorldClientMessageFactory;
 import com.jenjinstudios.world.math.SightCalculator;
 import com.jenjinstudios.world.state.MoveState;
 
-import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Responsible for updating the world.
@@ -34,10 +34,10 @@ public class WorldClientUpdater implements Runnable
 		SightCalculator.updateVisibleObjects(worldClient.getWorld());
 		if (player != null)
 		{
-			LinkedList<MoveState> newStates = player.getStateChanges();
+			List<MoveState> newStates = player.getStateChanges();
 			while (!newStates.isEmpty())
 			{
-				MoveState moveState = newStates.remove();
+				MoveState moveState = newStates.remove(0);
 				WorldClientMessageFactory messageFactory = worldClient.getMessageFactory();
 				Message stateChangeRequest = messageFactory.generateStateChangeRequest(moveState);
 				worldClient.queueOutgoingMessage(stateChangeRequest);
