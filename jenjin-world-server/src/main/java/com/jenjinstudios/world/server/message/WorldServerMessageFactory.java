@@ -4,6 +4,8 @@ import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.server.message.ServerMessageFactory;
 import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.WorldObject;
+import com.jenjinstudios.world.actor.StateChangeStack;
+import com.jenjinstudios.world.event.EventStack;
 import com.jenjinstudios.world.state.MoveState;
 
 import java.util.LinkedList;
@@ -29,16 +31,21 @@ public class WorldServerMessageFactory extends ServerMessageFactory
 
 	public List<Message> generateChangeStateMessages(Actor changedActor) {
 		List<Message> messages = new LinkedList<>();
-		for (MoveState m : changedActor.getStateChanges())
+		EventStack eventStack = changedActor.getEventStack(StateChangeStack.STACK_NAME);
+		if (eventStack != null && eventStack instanceof StateChangeStack)
 		{
-			Message newState = getMessageRegistry().createMessage("StateChangeMessage");
-			newState.setArgument("id", changedActor.getId());
-			newState.setArgument("relativeAngle", m.angle.getRelativeAngle());
-			newState.setArgument("absoluteAngle", m.angle.getAbsoluteAngle());
-			newState.setArgument("timeOfChange", m.timeOfChange);
-			newState.setArgument("xCoordinate", m.position.getXCoordinate());
-			newState.setArgument("yCoordinate", m.position.getYCoordinate());
-			messages.add(newState);
+			StateChangeStack stateChangeStack = (StateChangeStack) eventStack;
+			for (MoveState m : stateChangeStack.getStateChanges())
+			{
+				Message newState = getMessageRegistry().createMessage("StateChangeMessage");
+				newState.setArgument("id", changedActor.getId());
+				newState.setArgument("relativeAngle", m.angle.getRelativeAngle());
+				newState.setArgument("absoluteAngle", m.angle.getAbsoluteAngle());
+				newState.setArgument("timeOfChange", m.timeOfChange);
+				newState.setArgument("xCoordinate", m.position.getXCoordinate());
+				newState.setArgument("yCoordinate", m.position.getYCoordinate());
+				messages.add(newState);
+			}
 		}
 		return messages;
 	}

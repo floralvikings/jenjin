@@ -3,14 +3,16 @@ package com.jenjinstudios.world.util;
 import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.Location;
 import com.jenjinstudios.world.WorldObject;
+import com.jenjinstudios.world.math.Angle;
 import com.jenjinstudios.world.math.Vector2D;
+import com.jenjinstudios.world.state.MoveState;
 
 /**
  * @author Caleb Brinkman
  */
 public class ActorUtil
 {
-	public static boolean canStepForward(WorldObject o, double stepLength) {
+	private static boolean canStepForward(WorldObject o, double stepLength) {
 		boolean canStep;
 		if (o.getAngle().isNotIdle())
 		{
@@ -24,7 +26,7 @@ public class ActorUtil
 		return canStep;
 	}
 
-	public static double calcStepLength(Actor actor) {
+	private static double calcStepLength(Actor actor) {
 		double lastUpdateCompleted = (double) actor.getWorld().getLastUpdateCompleted();
 		double moveSpeed = actor.getMoveSpeed();
 		double timePastInSeconds = (System.currentTimeMillis() - lastUpdateCompleted) / 1000;
@@ -39,7 +41,17 @@ public class ActorUtil
 			actor.setVector2D(newVector);
 		} else
 		{
-			actor.forceIdle();
+			forceIdle(actor);
 		}
+	}
+
+	public static void forceIdle(Actor actor) {
+		Angle idle = actor.getAngle().asIdle();
+		Vector2D vector2D = actor.getVector2D();
+		long lastUpdateCompleted = actor.getWorld().getLastUpdateCompleted();
+		MoveState forcedMoveState = new MoveState(idle, vector2D, lastUpdateCompleted);
+		actor.setForcedState(forcedMoveState);
+		actor.setVector2D(vector2D);
+		actor.setAngle(idle);
 	}
 }

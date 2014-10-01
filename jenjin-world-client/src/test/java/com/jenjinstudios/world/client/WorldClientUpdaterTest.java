@@ -31,6 +31,5 @@ public class WorldClientUpdaterTest
 		}
 
 		verify(world, times(rand)).update();
-		verify(clientPlayer, times(rand)).getStateChanges();
 	}
 }

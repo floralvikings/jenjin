@@ -38,7 +38,8 @@ public class ActorTest
 		actor.setAngle(angle);
 		world.update();
 		actor.preUpdate();
-		Assert.assertEquals(actor.getStateChanges().size(), 0);
+		StateChangeStack stack = (StateChangeStack) actor.getEventStack(StateChangeStack.STACK_NAME);
+		Assert.assertEquals(stack.getStateChanges().size(), 0);
 	}
 
 	@Test

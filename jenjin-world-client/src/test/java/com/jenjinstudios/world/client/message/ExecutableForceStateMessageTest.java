@@ -33,6 +33,7 @@ public class ExecutableForceStateMessageTest
 		World world = mock(World.class);
 		when(clientPlayer.getWorld()).thenReturn(world);
 		when(worldClient.getPlayer()).thenReturn(clientPlayer);
+		when(clientPlayer.getAngle()).thenReturn(new Angle());
 
 		ExecutableForceStateMessage message = new ExecutableForceStateMessage(worldClient, forceStateMessage);
 		message.runImmediate();
@@ -40,6 +41,5 @@ public class ExecutableForceStateMessageTest
 
 		verify(clientPlayer).setAngle(eq(new Angle(PI, IDLE)));
 		verify(clientPlayer).setVector2D(eq(new Vector2D(PI, PI)));
-		verify(clientPlayer).forceIdle();
 	}
 }

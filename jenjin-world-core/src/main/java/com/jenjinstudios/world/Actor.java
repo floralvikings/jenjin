@@ -2,12 +2,8 @@ package com.jenjinstudios.world;
 
 import com.jenjinstudios.world.actor.StateChangeStack;
 import com.jenjinstudios.world.actor.Vision;
-import com.jenjinstudios.world.math.Angle;
 import com.jenjinstudios.world.state.MoveState;
 import com.jenjinstudios.world.util.ActorUtil;
-
-import java.util.LinkedList;
-import java.util.List;
 
 
 /**
@@ -28,13 +24,11 @@ import java.util.List;
 public class Actor extends WorldObject
 {
 	public static double DEFAULT_MOVE_SPEED = 30.0d;
-	private final LinkedList<MoveState> stateChanges;
 	private double moveSpeed;
 	private MoveState forcedState;
 
 	public Actor(String name) {
 		super(name);
-		stateChanges = new LinkedList<>();
 		setMoveSpeed(DEFAULT_MOVE_SPEED);
 		getProperties().put(Vision.PROPERTY_NAME, new Vision());
 		addEventStack(StateChangeStack.STACK_NAME, new StateChangeStack(this));
@@ -44,10 +38,6 @@ public class Actor extends WorldObject
 	public void preUpdate() {
 		super.preUpdate();
 		setForcedState(null);
-		synchronized (stateChanges)
-		{
-			stateChanges.clear();
-		}
 	}
 
 	@Override
@@ -56,19 +46,9 @@ public class Actor extends WorldObject
 		ActorUtil.stepForward(this);
 	}
 
-	public List<MoveState> getStateChanges() { synchronized (stateChanges) { return new LinkedList<>(stateChanges); } }
-
 	public MoveState getForcedState() { return forcedState; }
 
 	public void setForcedState(MoveState forcedState) { this.forcedState = forcedState; }
-
-	public void forceIdle() {
-		Angle idle = getAngle().asIdle();
-		MoveState forcedMoveState = new MoveState(idle, getVector2D(), getWorld().getLastUpdateCompleted());
-		setForcedState(forcedMoveState);
-		setVector2D(getVector2D());
-		setAngle(idle);
-	}
 
 	public double getMoveSpeed() { return moveSpeed; }
 
