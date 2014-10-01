@@ -2,6 +2,7 @@ package com.jenjinstudios.world.util;
 
 import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.Location;
+import com.jenjinstudios.world.WorldObject;
 import com.jenjinstudios.world.math.Vector2D;
 
 /**
@@ -9,12 +10,12 @@ import com.jenjinstudios.world.math.Vector2D;
  */
 public class ActorUtil
 {
-	public static boolean canStepForward(Actor actor, double stepLength) {
+	public static boolean canStepForward(WorldObject o, double stepLength) {
 		boolean canStep;
-		if (actor.getAngle().isNotIdle())
+		if (o.getAngle().isNotIdle())
 		{
-			Vector2D newVector = actor.getVector2D().getVectorInDirection(stepLength, actor.getAngle().getStepAngle());
-			Location newLocation = ZoneUtils.getLocationForCoordinates(actor.getWorld(), actor.getZoneID(), newVector);
+			Vector2D newVector = o.getVector2D().getVectorInDirection(stepLength, o.getAngle().getStepAngle());
+			Location newLocation = ZoneUtils.getLocationForCoordinates(o.getWorld(), o.getZoneID(), newVector);
 			canStep = newLocation != null && !"false".equals(newLocation.getProperties().get("walkable"));
 		} else
 		{
@@ -28,5 +29,17 @@ public class ActorUtil
 		double moveSpeed = actor.getMoveSpeed();
 		double timePastInSeconds = (System.currentTimeMillis() - lastUpdateCompleted) / 1000;
 		return timePastInSeconds * moveSpeed;
+	}
+
+	public static void stepForward(Actor actor) {
+		double stepLength = calcStepLength(actor);
+		if (canStepForward(actor, stepLength))
+		{
+			Vector2D newVector = actor.getVector2D().getVectorInDirection(stepLength, actor.getAngle().getStepAngle());
+			actor.setVector2D(newVector);
+		} else
+		{
+			actor.forceIdle();
+		}
 	}
 }

@@ -3,7 +3,6 @@ package com.jenjinstudios.world;
 import com.jenjinstudios.world.actor.StateChangeStack;
 import com.jenjinstudios.world.actor.Vision;
 import com.jenjinstudios.world.math.Angle;
-import com.jenjinstudios.world.math.Vector2D;
 import com.jenjinstudios.world.state.MoveState;
 import com.jenjinstudios.world.util.ActorUtil;
 
@@ -54,7 +53,7 @@ public class Actor extends WorldObject
 	@Override
 	public void update() {
 		super.update();
-		step();
+		ActorUtil.stepForward(this);
 	}
 
 	public List<MoveState> getStateChanges() { synchronized (stateChanges) { return new LinkedList<>(stateChanges); } }
@@ -75,15 +74,4 @@ public class Actor extends WorldObject
 
 	public void setMoveSpeed(double moveSpeed) { this.moveSpeed = moveSpeed; }
 
-	void step() {
-		double stepLength = ActorUtil.calcStepLength(this);
-		if (ActorUtil.canStepForward(this, stepLength))
-		{
-			Vector2D newVector = getVector2D().getVectorInDirection(stepLength, getAngle().getStepAngle());
-			setVector2D(newVector);
-		} else
-		{
-			forceIdle();
-		}
-	}
 }
