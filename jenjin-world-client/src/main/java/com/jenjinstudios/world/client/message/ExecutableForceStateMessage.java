@@ -5,7 +5,7 @@ import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.client.WorldClient;
 import com.jenjinstudios.world.math.Angle;
 import com.jenjinstudios.world.math.Vector2D;
-import com.jenjinstudios.world.util.ActorUtil;
+import com.jenjinstudios.world.util.ActorUtils;
 
 /**
  * Process a ForceStateMessage.
@@ -28,7 +28,7 @@ public class ExecutableForceStateMessage extends WorldClientExecutableMessage
 		player.setVector2D(corrected);
 		player.setAngle(angle);
 
-		ActorUtil.forceIdle(player);
+		ActorUtils.forceIdle(player);
 	}
 
 	@Override

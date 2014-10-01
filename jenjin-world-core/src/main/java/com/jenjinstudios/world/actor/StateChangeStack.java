@@ -32,13 +32,21 @@ public class StateChangeStack implements EventStack
 		{
 			stateChanges.clear();
 		}
-		preUpdateAngle = worldObject.getAngle();
 	}
 
 	@Override
 	public void onPostUpdate() {
 		Angle postAngle = worldObject.getAngle();
-		boolean stateChanged = preUpdateAngle == null ? postAngle != null : !preUpdateAngle.equals(postAngle);
+		boolean stateChanged;
+
+		if (preUpdateAngle == null)
+		{
+			stateChanged = postAngle != null;
+		} else
+		{
+			stateChanged = !preUpdateAngle.equals(postAngle);
+		}
+
 		if (stateChanged)
 		{
 			Vector2D vector2D = worldObject.getVector2D();
@@ -48,6 +56,8 @@ public class StateChangeStack implements EventStack
 				stateChanges.add(new MoveState(postAngle, vector2D, timeOfChange));
 			}
 		}
+
+		preUpdateAngle = worldObject.getAngle();
 	}
 
 	@Override

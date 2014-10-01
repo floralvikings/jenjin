@@ -3,7 +3,7 @@ package com.jenjinstudios.world;
 import com.jenjinstudios.world.actor.StateChangeStack;
 import com.jenjinstudios.world.actor.Vision;
 import com.jenjinstudios.world.state.MoveState;
-import com.jenjinstudios.world.util.ActorUtil;
+import com.jenjinstudios.world.util.ActorUtils;
 
 
 /**
@@ -43,7 +43,7 @@ public class Actor extends WorldObject
 	@Override
 	public void update() {
 		super.update();
-		ActorUtil.stepForward(this);
+		ActorUtils.stepForward(this);
 	}
 
 	public MoveState getForcedState() { return forcedState; }

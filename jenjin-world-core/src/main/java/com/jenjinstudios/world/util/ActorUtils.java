@@ -10,8 +10,9 @@ import com.jenjinstudios.world.state.MoveState;
 /**
  * @author Caleb Brinkman
  */
-public class ActorUtil
+public class ActorUtils
 {
+
 	private static boolean canStepForward(WorldObject o, double stepLength) {
 		boolean canStep;
 		if (o.getAngle().isNotIdle())

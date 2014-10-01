@@ -4,7 +4,7 @@ import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.math.Angle;
 import com.jenjinstudios.world.math.Vector2D;
-import com.jenjinstudios.world.util.ActorUtil;
+import com.jenjinstudios.world.util.ActorUtils;
 import com.jenjinstudios.world.util.WorldUtils;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -32,7 +32,7 @@ public class ClientPlayerTest
 		Actor player = new Actor("ClientActor");
 		world.getWorldObjects().scheduleForAddition(player);
 		world.update();
-		ActorUtil.forceIdle(player);
+		ActorUtils.forceIdle(player);
 		Angle angle = player.getAngle();
 		player.setAngle(angle);
 		Assert.assertEquals(player.getAngle(), angle);
@@ -45,7 +45,7 @@ public class ClientPlayerTest
 		player.setId(0);
 		world.getWorldObjects().scheduleForAddition(player);
 		world.update();
-		ActorUtil.forceIdle(player);
+		ActorUtils.forceIdle(player);
 		Assert.assertNotNull(player.getForcedState());
 	}
 
