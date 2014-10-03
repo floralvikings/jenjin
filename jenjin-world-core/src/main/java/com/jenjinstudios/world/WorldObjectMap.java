@@ -46,11 +46,6 @@ public class WorldObjectMap
 		return currentKey;
 	}
 
-	private void addObject(WorldObject object) {
-		int id = getAvailableId();
-		this.addObject(object, id);
-	}
-
 	private void addObject(WorldObject object, int id) {
 		LOGGER.log(Level.FINER, "Adding object to world: {0} ({1})", new Object[]{id, object});
 		object.setId(id);
@@ -60,6 +55,7 @@ public class WorldObjectMap
 		{
 			put(id, object);
 		}
+		reservedIds.remove(id);
 	}
 
 	public void forEach(BiConsumer<? super Integer, ? super WorldObject> action) { worldObjects.forEach(action); }
@@ -86,7 +82,7 @@ public class WorldObjectMap
 		WorldObject old = getObject(o.getId());
 		if (old != null)
 			removeObject(old);
-		addObject(o);
+		addObject(o, o.getId());
 	}
 
 	protected void removeScheduledObjects() {
