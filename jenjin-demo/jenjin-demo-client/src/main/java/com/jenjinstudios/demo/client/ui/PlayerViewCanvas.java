@@ -91,7 +91,7 @@ public class PlayerViewCanvas extends Canvas
 			graphicsContext2D.setFill(Color.GREEN);
 		}
 
-		graphicsContext2D.fillRect(x, y, SCALE, SCALE);
+		graphicsContext2D.fillRect(x, y, SCALE - 2, SCALE - 2);
 	}
 
 	protected void drawObjects() {

@@ -82,7 +82,7 @@ public class Vector2D
 	 * @return The new Vector2D;
 	 */
 	public Vector2D getVectorInDirection(double distance, double angle) {
-		Vector2D vector2D = new Vector2D(this);
+		Vector2D vector2D;
 		if (angle != Angle.IDLE)
 		{
 			double cos = Math.cos(angle);
@@ -90,6 +90,9 @@ public class Vector2D
 			double newX = MathUtil.round(xCoordinate + (distance * cos), 4);
 			double newY = MathUtil.round(yCoordinate + (distance * sin), 4);
 			vector2D = new Vector2D(newX, newY);
+		} else
+		{
+			vector2D = new Vector2D(this);
 		}
 		return vector2D;
 	}

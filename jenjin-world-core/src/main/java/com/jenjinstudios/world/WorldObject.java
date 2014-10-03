@@ -34,10 +34,10 @@ public class WorldObject extends EventExecutor
 
 	public void setAngle(Angle angle) { this.angle = angle; }
 
-	public Vector2D getVector2D() { return new Vector2D(vector2D); }
+	public Vector2D getVector2D() { return vector2D; }
 
 	public void setVector2D(Vector2D vector2D) {
-		this.vector2D = new Vector2D(vector2D);
+		this.vector2D = vector2D;
 	}
 
 	public int getResourceID() { return resourceID; }
