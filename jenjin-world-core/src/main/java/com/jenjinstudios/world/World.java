@@ -36,7 +36,6 @@ public class World
 
 	public WorldObjectMap getWorldObjects() { return worldObjects; }
 
-	/** Update all objects in the world. */
 	public void update() {
 		lastUpdateStarted = System.currentTimeMillis();
 		synchronized (worldObjects)
@@ -53,16 +52,8 @@ public class World
 
 	public Map<Integer, Zone> getZones() { return zones; }
 
-	/**
-	 * Get the time at which the most recent update completed.
-	 * @return The time at which the most recent update completed.
-	 */
 	public long getLastUpdateCompleted() { return lastUpdateCompleted; }
 
-	/**
-	 * Get the time at which the most recent update started.
-	 * @return The time at which the most recent update started.
-	 */
 	public long getLastUpdateStarted() { return lastUpdateStarted; }
 
 	private void resetObjects() { worldObjects.forEach((Integer i, WorldObject o) -> o.postUpdate()); }
