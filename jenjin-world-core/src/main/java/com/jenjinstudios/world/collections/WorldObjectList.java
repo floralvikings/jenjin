@@ -10,7 +10,29 @@ import java.util.*;
 public class WorldObjectList implements List<WorldObject>
 {
 	private final Map<Integer, WorldObject> objects = new HashMap<>();
+	private final Map<Integer, WorldObject> toAdd = new HashMap<>();
+	private final Map<Integer, WorldObject> toRemove = new HashMap<>();
 
+	public void refresh() {
+		synchronized (toRemove)
+		{
+			synchronized (objects)
+			{
+				toRemove.keySet().forEach(objects::remove);
+			}
+			toRemove.clear();
+		}
+		synchronized (toAdd)
+		{
+			synchronized (objects)
+			{
+				toAdd.entrySet().stream().
+					  filter(entry -> !objects.containsKey(entry.getKey())).
+					  forEach(entry -> objects.put(entry.getKey(), entry.getValue()));
+			}
+			toAdd.clear();
+		}
+	}
 
 	@Override
 	public int size() { synchronized (objects) { return objects.size(); } }
