@@ -1,5 +1,7 @@
 package com.jenjinstudios.world;
 
+import com.jenjinstudios.world.collections.WorldObjectMap;
+
 import java.util.Map;
 import java.util.TreeMap;
 

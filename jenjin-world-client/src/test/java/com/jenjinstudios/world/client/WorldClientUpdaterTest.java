@@ -2,7 +2,7 @@ package com.jenjinstudios.world.client;
 
 import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.World;
-import com.jenjinstudios.world.WorldObjectMap;
+import com.jenjinstudios.world.collections.WorldObjectMap;
 import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.*;

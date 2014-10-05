@@ -1,4 +1,7 @@
-package com.jenjinstudios.world;
+package com.jenjinstudios.world.collections;
+
+import com.jenjinstudios.world.World;
+import com.jenjinstudios.world.WorldObject;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -14,6 +17,7 @@ import java.util.logging.Logger;
  */
 public class WorldObjectMap
 {
+	// TODO This class needs to be refactored out of existence.  It's a monstrosity.
 	private static final Logger LOGGER = Logger.getLogger(WorldObjectMap.class.getName());
 	private final TreeMap<Integer, WorldObject> worldObjects = new TreeMap<>();
 	private final HashSet<Integer> reservedIds = new HashSet<>();
@@ -85,7 +89,7 @@ public class WorldObjectMap
 		addObject(o, o.getId());
 	}
 
-	protected void removeScheduledObjects() {
+	public void removeScheduledObjects() {
 		synchronized (scheduledForRemoval)
 		{
 			scheduledForRemoval.forEach(this::removeObject);
@@ -93,7 +97,7 @@ public class WorldObjectMap
 		}
 	}
 
-	protected void addScheduledObjects() {
+	public void addScheduledObjects() {
 		synchronized (scheduledForAddition)
 		{
 			scheduledForAddition.forEach(object -> addObject(object, object.getId()));
@@ -101,7 +105,7 @@ public class WorldObjectMap
 		}
 	}
 
-	protected void overwriteScheduledObjects() {
+	public void overwriteScheduledObjects() {
 		LinkedList<WorldObject> temp;
 		synchronized (scheduledForOverwrite)
 		{
@@ -116,13 +120,6 @@ public class WorldObjectMap
 		synchronized (scheduledForRemoval)
 		{
 			scheduledForRemoval.add(o);
-		}
-	}
-
-	public void scheduleForRemoval(WorldObject object) {
-		synchronized (scheduledForRemoval)
-		{
-			scheduledForRemoval.add(object);
 		}
 	}
 

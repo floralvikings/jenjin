@@ -33,7 +33,7 @@ public class ExecutableWorldLogoutRequest extends WorldExecutableMessage
 		// Multiple logout requests can cause Player to be null; have to check first.
 		if (clientActor != null)
 		{
-			clientActor.getWorld().getWorldObjects().scheduleForRemoval(clientActor);
+			clientActor.getWorld().getWorldObjects().scheduleForRemoval(clientActor.getId());
 		}
 	}
 

@@ -1,5 +1,6 @@
 package com.jenjinstudios.world;
 
+import com.jenjinstudios.world.collections.WorldObjectMap;
 import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;

@@ -46,7 +46,7 @@ public class WorldTest
 		World world = WorldUtils.createDefaultWorld();
 		world.getWorldObjects().scheduleForAddition(worldObject);
 		world.update();
-		world.getWorldObjects().scheduleForRemoval(worldObject);
+		world.getWorldObjects().scheduleForRemoval(worldObject.getId());
 		world.update();
 		Assert.assertEquals(world.getWorldObjects().getObjectCount(), 0);
 	}

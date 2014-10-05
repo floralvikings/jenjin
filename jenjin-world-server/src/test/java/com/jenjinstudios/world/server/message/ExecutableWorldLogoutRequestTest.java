@@ -6,7 +6,7 @@ import com.jenjinstudios.server.net.User;
 import com.jenjinstudios.server.sql.LoginException;
 import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.World;
-import com.jenjinstudios.world.WorldObjectMap;
+import com.jenjinstudios.world.collections.WorldObjectMap;
 import com.jenjinstudios.world.math.Vector2D;
 import com.jenjinstudios.world.server.WorldClientHandler;
 import com.jenjinstudios.world.server.WorldServer;
@@ -48,7 +48,7 @@ public class ExecutableWorldLogoutRequestTest
 		exec.runDelayed();
 
 		verify(handler).sendLogoutStatus(true);
-		verify(worldObjectMap).scheduleForRemoval(player);
+		verify(worldObjectMap).scheduleForRemoval(player.getId());
 	}
 
 	@Test

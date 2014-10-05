@@ -4,8 +4,8 @@ import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageRegistry;
 import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.World;
-import com.jenjinstudios.world.WorldObjectMap;
 import com.jenjinstudios.world.client.WorldClient;
+import com.jenjinstudios.world.collections.WorldObjectMap;
 import com.jenjinstudios.world.math.Angle;
 import org.testng.annotations.Test;
 

@@ -69,7 +69,7 @@ public class SightedObjectTest
 
 		world.update();
 		SightCalculator.updateVisibleObjects(world);
-		world.getWorldObjects().scheduleForRemoval(visibleObject);
+		world.getWorldObjects().scheduleForRemoval(visibleObject.getId());
 		world.update();
 		SightCalculator.updateVisibleObjects(world);
 
