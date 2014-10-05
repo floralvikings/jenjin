@@ -1,7 +1,5 @@
 package com.jenjinstudios.world;
 
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -52,12 +50,6 @@ public class World
 		}
 		lastUpdateCompleted = System.currentTimeMillis();
 	}
-
-	/**
-	 * Get a list of all valid Zone IDs in this world.
-	 * @return A List of all IDs which are linked to a zone.
-	 */
-	public List<Integer> getZoneIDs() { return new LinkedList<>(zones.keySet()); }
 
 	public Map<Integer, Zone> getZones() { return zones; }
 
