@@ -175,19 +175,12 @@ public class WorldObjectList implements List<WorldObject>
 		if (!(o instanceof WorldObject)) throw new IllegalArgumentException("o must be WorldObject");
 		WorldObject worldObject = (WorldObject) o;
 		int id = worldObject.getId();
-		boolean changed;
-		synchronized (objects)
-		{
-			changed = objects.containsKey(id);
-		}
+		boolean changed = objects.containsKey(id);
 		if (changed)
 		{
-			synchronized (toRemove)
-			{
 				toRemove.put(id, worldObject);
-			}
+
 		}
-		// TODO Should schedule for removal
 		return changed;
 	}
 
