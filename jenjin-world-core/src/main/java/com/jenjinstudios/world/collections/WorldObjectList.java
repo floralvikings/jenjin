@@ -15,25 +15,14 @@ public class WorldObjectList implements List<WorldObject>
 	private final Map<Integer, WorldObject> toRemove = new ConcurrentHashMap<>();
 
 	public void refresh() {
-		synchronized (toRemove)
-		{
-			synchronized (objects)
-			{
-				toRemove.keySet().forEach(objects::remove);
-			}
-			toRemove.clear();
-		}
-		synchronized (toAdd)
-		{
-			synchronized (objects)
-			{
-				toAdd.entrySet().stream().
-					  filter(entry -> !objects.containsKey(entry.getKey())).
-					  forEach(entry -> objects.put(entry.getKey(), entry.getValue()));
-			}
-			toAdd.clear();
-		}
+		toRemove.keySet().forEach(objects::remove);
+		toRemove.clear();
+		toAdd.entrySet().stream().
+			  filter(entry -> !objects.containsKey(entry.getKey())).
+			  forEach(entry -> objects.put(entry.getKey(), entry.getValue()));
+		toAdd.clear();
 	}
+
 
 	private int getUniqueId() {
 		int i = -1;
@@ -456,7 +445,7 @@ public class WorldObjectList implements List<WorldObject>
 	 * Returns a view of the portion of this list between the specified <tt>fromIndex</tt>, inclusive, and
 	 * <tt>toIndex</tt>, exclusive.  (If <tt>fromIndex</tt> and <tt>toIndex</tt> are equal,
 	 * the returned list is empty.)
-	 *  The returned list is backed by this list, so non-structural changes in the returned list are reflected in this
+	 * The returned list is backed by this list, so non-structural changes in the returned list are reflected in this
 	 * list, and vice-versa. The returned list supports all of the optional list operations supported by this list.<p>
 	 * <p>
 	 * This method eliminates the need for explicit range operations (of the sort that commonly exist for arrays).  Any
