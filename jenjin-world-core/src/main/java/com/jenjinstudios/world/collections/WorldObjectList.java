@@ -30,23 +30,7 @@ public class WorldObjectList implements List<WorldObject>
 		while (!unique)
 		{
 			i++;
-			synchronized (objects)
-			{
-				if (!objects.containsKey(i))
-				{
-					unique = true;
-				}
-			}
-			if (unique)
-			{
-				synchronized (toAdd)
-				{
-					if (toAdd.containsKey(i))
-					{
-						unique = false;
-					}
-				}
-			}
+			unique = !objects.containsKey(i) && !toAdd.containsKey(i);
 		}
 		return i;
 	}
