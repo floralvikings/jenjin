@@ -40,14 +40,14 @@ public class WorldObjectList implements List<WorldObject>
 	 * @return the number of elements in this list
 	 */
 	@Override
-	public int size() { synchronized (objects) { return objects.size(); } }
+	public int size() { return objects.size(); }
 
 	/**
 	 * Returns <tt>true</tt> if this list contains no elements.
 	 * @return <tt>true</tt> if this list contains no elements
 	 */
 	@Override
-	public boolean isEmpty() { synchronized (objects) { return objects.isEmpty(); } }
+	public boolean isEmpty() { return objects.isEmpty(); }
 
 	/**
 	 * Returns <tt>true</tt> if this list contains the specified element. More formally, returns <tt>true</tt> if and
@@ -71,14 +71,14 @@ public class WorldObjectList implements List<WorldObject>
 		return contains;
 	}
 
-	public boolean contains(int id) { synchronized (objects) { return objects.containsKey(id); } }
+	public boolean contains(int id) { return objects.containsKey(id); }
 
 	/**
 	 * Returns an iterator over the elements in this list in proper sequence.
 	 * @return an iterator over the elements in this list in proper sequence
 	 */
 	@Override
-	public Iterator<WorldObject> iterator() { synchronized (objects) { return objects.values().iterator(); } }
+	public Iterator<WorldObject> iterator() { return objects.values().iterator(); }
 
 	/**
 	 * Returns an array containing all of the elements in this list in proper sequence (from first to last element).
@@ -93,7 +93,7 @@ public class WorldObjectList implements List<WorldObject>
 	 * @see Arrays#asList(Object[])
 	 */
 	@Override
-	public Object[] toArray() { synchronized (objects) { return objects.values().toArray(); } }
+	public Object[] toArray() { return objects.values().toArray(); }
 
 	/**
 	 * Returns an array containing all of the elements in this list in proper sequence (from first to last element);
@@ -127,7 +127,7 @@ public class WorldObjectList implements List<WorldObject>
 	 * @throws NullPointerException if the specified array is null
 	 */
 	@Override
-	public <T> T[] toArray(T[] a) { synchronized (objects) { return objects.values().toArray(a); } }
+	public <T> T[] toArray(T[] a) { return objects.values().toArray(a); }
 
 	/**
 	 * Appends the specified element to the end of this list (optional operation).
@@ -178,8 +178,7 @@ public class WorldObjectList implements List<WorldObject>
 		boolean changed = objects.containsKey(id);
 		if (changed)
 		{
-				toRemove.put(id, worldObject);
-
+			toRemove.put(id, worldObject);
 		}
 		return changed;
 	}
@@ -197,7 +196,7 @@ public class WorldObjectList implements List<WorldObject>
 	 * @see #contains(Object)
 	 */
 	@Override
-	public boolean containsAll(Collection<?> c) { synchronized (objects) { return objects.values().containsAll(c); } }
+	public boolean containsAll(Collection<?> c) { return objects.values().containsAll(c); }
 
 	/**
 	 * Appends all of the elements in the specified collection to the end of this list, in the order that they are
@@ -245,8 +244,7 @@ public class WorldObjectList implements List<WorldObject>
 	 */
 	@Override
 	public boolean addAll(int index, Collection<? extends WorldObject> c) {
-		// TODO Should schedule for overwrite
-		return false;
+		throw new UnsupportedOperationException("WorldObjectList does not support adding collections at indices.");
 	}
 
 	/**
@@ -303,7 +301,7 @@ public class WorldObjectList implements List<WorldObject>
 	 * @throws IndexOutOfBoundsException if the index is out of range (<tt>index &lt; 0 || index &gt;= size()</tt>)
 	 */
 	@Override
-	public WorldObject get(int index) { synchronized (objects) { return objects.get(index); } }
+	public WorldObject get(int index) { return objects.get(index); }
 
 	/**
 	 * Replaces the element at the specified position in this list with the specified element (optional operation).
