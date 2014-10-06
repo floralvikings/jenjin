@@ -103,8 +103,24 @@ public class WorldObjectList implements List<WorldObject>
 
 	@Override
 	public boolean remove(Object o) {
+		if (o == null) throw new NullPointerException("Cannot remove null WorldObject");
+		if (!(o instanceof WorldObject)) throw new IllegalArgumentException("o must be WorldObject");
+		WorldObject worldObject = (WorldObject) o;
+		int id = worldObject.getId();
+		boolean changed;
+		synchronized (objects)
+		{
+			changed = objects.containsKey(id);
+		}
+		if (changed)
+		{
+			synchronized (toRemove)
+			{
+				toRemove.put(id, worldObject);
+			}
+		}
 		// TODO Should schedule for removal
-		return false;
+		return changed;
 	}
 
 	@Override
