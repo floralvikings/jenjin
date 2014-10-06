@@ -98,7 +98,7 @@ public class WorldObjectList implements List<WorldObject>
 		{
 			toAdd.put(uniqueId, worldObject);
 		}
-		return false;
+		return true;
 	}
 
 	@Override
