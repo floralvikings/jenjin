@@ -94,7 +94,10 @@ public class WorldObjectList implements List<WorldObject>
 		if (worldObject == null) throw new NullPointerException("Cannot add null WorldObject");
 		int uniqueId = getUniqueId();
 		worldObject.setId(uniqueId);
-		objects.put(uniqueId, worldObject);
+		synchronized (toAdd)
+		{
+			toAdd.put(uniqueId, worldObject);
+		}
 		return false;
 	}
 
