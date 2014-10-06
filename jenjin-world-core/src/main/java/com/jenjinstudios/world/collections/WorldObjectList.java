@@ -91,7 +91,10 @@ public class WorldObjectList implements List<WorldObject>
 
 	@Override
 	public boolean add(WorldObject worldObject) {
-		// TODO Should schedule for addition
+		if (worldObject == null) throw new NullPointerException("Cannot add null WorldObject");
+		int uniqueId = getUniqueId();
+		worldObject.setId(uniqueId);
+		objects.put(uniqueId, worldObject);
 		return false;
 	}
 
