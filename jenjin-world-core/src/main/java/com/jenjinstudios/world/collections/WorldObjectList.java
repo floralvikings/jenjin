@@ -34,6 +34,33 @@ public class WorldObjectList implements List<WorldObject>
 		}
 	}
 
+	private int getUniqueId() {
+		int i = -1;
+		boolean unique = false;
+		while (!unique)
+		{
+			i++;
+			synchronized (objects)
+			{
+				if (!objects.containsKey(i))
+				{
+					unique = true;
+				}
+			}
+			if (unique)
+			{
+				synchronized (toAdd)
+				{
+					if (toAdd.containsKey(i))
+					{
+						unique = false;
+					}
+				}
+			}
+		}
+		return i;
+	}
+
 	@Override
 	public int size() { synchronized (objects) { return objects.size(); } }
 
