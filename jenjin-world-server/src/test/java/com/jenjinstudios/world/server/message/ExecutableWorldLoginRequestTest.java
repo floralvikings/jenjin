@@ -4,7 +4,7 @@ import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.server.net.User;
 import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.World;
-import com.jenjinstudios.world.collections.WorldObjectMap;
+import com.jenjinstudios.world.collections.WorldObjectList;
 import com.jenjinstudios.world.math.Vector2D;
 import com.jenjinstudios.world.server.WorldClientHandler;
 import com.jenjinstudios.world.server.WorldServer;
@@ -39,7 +39,7 @@ public class ExecutableWorldLoginRequestTest
 		WorldAuthenticator authenticator = Mockito.mock(WorldAuthenticator.class);
 		WorldServer server = Mockito.mock(WorldServer.class);
 		WorldClientHandler wch = Mockito.mock(WorldClientHandler.class);
-		WorldObjectMap worldObjectMap = mock(WorldObjectMap.class);
+		WorldObjectList worldObjectMap = mock(WorldObjectList.class);
 		when(world.getWorldObjects()).thenReturn(worldObjectMap);
 		Mockito.when(user.isLoggedIn()).thenReturn(true);
 		Mockito.when(authenticator.logInUser(Mockito.anyString(), Mockito.anyString())).thenReturn(user);
@@ -55,6 +55,6 @@ public class ExecutableWorldLoginRequestTest
 		exec.runImmediate();
 		exec.runDelayed();
 
-		Mockito.verify(worldObjectMap).scheduleForAddition(Mockito.anyObject());
+		Mockito.verify(worldObjectMap).add(Mockito.anyObject());
 	}
 }

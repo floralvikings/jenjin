@@ -4,7 +4,7 @@ import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageRegistry;
 import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.client.WorldClient;
-import com.jenjinstudios.world.collections.WorldObjectMap;
+import com.jenjinstudios.world.collections.WorldObjectList;
 import com.jenjinstudios.world.math.Angle;
 import org.testng.annotations.Test;
 
@@ -31,7 +31,7 @@ public class ExecutableActorVisibleMessageTest
 
 		WorldClient worldClient = mock(WorldClient.class);
 		World world = mock(World.class);
-		WorldObjectMap worldObjectMap = mock(WorldObjectMap.class);
+		WorldObjectList worldObjectMap = mock(WorldObjectList.class);
 		when(world.getWorldObjects()).thenReturn(worldObjectMap);
 		when(worldClient.getWorld()).thenReturn(world);
 
@@ -39,6 +39,6 @@ public class ExecutableActorVisibleMessageTest
 		message.runImmediate();
 		message.runDelayed();
 
-		verify(worldObjectMap).scheduleForAddition(any(), eq(100));
+		verify(worldObjectMap).set(eq(100), any());
 	}
 }

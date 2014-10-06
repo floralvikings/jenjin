@@ -28,14 +28,14 @@ public class ExecutableActorVisibleMessage extends WorldClientExecutableMessage
 		World world = getClient().getWorld();
 		try
 		{
-			world.getWorldObjects().scheduleForAddition(newlyVisible, id);
+			world.getWorldObjects().set(id, newlyVisible);
 		} catch (Exception ex)
 		{
-			WorldObject existing = world.getWorldObjects().getObject(id);
+			WorldObject existing = world.getWorldObjects().get(id);
 			LOGGER.log(Level.WARNING, "Received message for already extant object ID:  {0}, {1}; Current: {2}",
 				  new Object[]{id, newlyVisible, existing});
 
-			world.getWorldObjects().scheduleForOverwrite(newlyVisible, id);
+			world.getWorldObjects().set(id, newlyVisible);
 		}
 
 	}

@@ -16,8 +16,8 @@ public class SightedObjectTest
 		WorldObject visibleObject = new WorldObject("VisibleObject");
 		WorldObject sightedObject = new WorldObject("SightedObject");
 		sightedObject.getProperties().put(Vision.PROPERTY_NAME, new Vision());
-		world.getWorldObjects().scheduleForAddition(visibleObject);
-		world.getWorldObjects().scheduleForAddition(sightedObject);
+		world.getWorldObjects().add(visibleObject);
+		world.getWorldObjects().add(sightedObject);
 
 		world.update();
 		SightCalculator.updateVisibleObjects(world);
@@ -32,7 +32,7 @@ public class SightedObjectTest
 		World world = new World(zone);
 		WorldObject sightedObject = new WorldObject("SightedObject");
 		sightedObject.getProperties().put(Vision.PROPERTY_NAME, new Vision());
-		world.getWorldObjects().scheduleForAddition(sightedObject);
+		world.getWorldObjects().add(sightedObject);
 		sightedObject.setVector2D(new Vector2D(55, 55));
 
 		world.update();
@@ -47,8 +47,8 @@ public class SightedObjectTest
 		WorldObject visibleObject = new WorldObject("VisibleObject");
 		WorldObject sightedObject = new WorldObject("SightedObject");
 		sightedObject.getProperties().put(Vision.PROPERTY_NAME, new Vision());
-		world.getWorldObjects().scheduleForAddition(visibleObject);
-		world.getWorldObjects().scheduleForAddition(sightedObject);
+		world.getWorldObjects().add(visibleObject);
+		world.getWorldObjects().add(sightedObject);
 
 		SightCalculator.updateVisibleObjects(world);
 		world.update();
@@ -64,12 +64,12 @@ public class SightedObjectTest
 		WorldObject visibleObject = new WorldObject("VisibleObject");
 		WorldObject sightedObject = new WorldObject("SightedObject");
 		sightedObject.getProperties().put(Vision.PROPERTY_NAME, new Vision());
-		world.getWorldObjects().scheduleForAddition(visibleObject);
-		world.getWorldObjects().scheduleForAddition(sightedObject);
+		world.getWorldObjects().add(visibleObject);
+		world.getWorldObjects().add(sightedObject);
 
 		world.update();
 		SightCalculator.updateVisibleObjects(world);
-		world.getWorldObjects().scheduleForRemoval(visibleObject.getId());
+		world.getWorldObjects().remove(visibleObject.getId());
 		world.update();
 		SightCalculator.updateVisibleObjects(world);
 

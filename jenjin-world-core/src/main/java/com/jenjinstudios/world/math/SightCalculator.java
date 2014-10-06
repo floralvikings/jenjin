@@ -18,7 +18,7 @@ public class SightCalculator
 	public static final double DEFAULT_VISION_RADIUS = 100d;
 
 	public static void updateVisibleObjects(World world) {
-		Collection<WorldObject> worldObjects = world.getWorldObjects().getWorldObjectCollection();
+		Collection<WorldObject> worldObjects = world.getWorldObjects();
 		Map<WorldObject, Set<WorldObject>> visibleMap = determineVisibility(worldObjects);
 		setVisibleObjects(visibleMap);
 	}

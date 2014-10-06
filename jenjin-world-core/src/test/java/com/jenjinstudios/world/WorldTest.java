@@ -19,36 +19,29 @@ public class WorldTest
 		WorldObject obj2 = new WorldObject("Carol");
 		World world = WorldUtils.createDefaultWorld();
 
-		world.getWorldObjects().scheduleForAddition(obj0);
-		world.getWorldObjects().scheduleForAddition(obj1);
-		world.getWorldObjects().scheduleForAddition(obj2);
+		world.getWorldObjects().add(obj0);
+		world.getWorldObjects().add(obj1);
+		world.getWorldObjects().add(obj2);
 		world.update();
 
 		Assert.assertEquals(obj2.getId(), 2);
 	}
 
-	@Test(expectedExceptions = IllegalArgumentException.class)
+	@Test(expectedExceptions = NullPointerException.class)
 	public void testAddNullObject() {
 		World world = WorldUtils.createDefaultWorld();
-		world.getWorldObjects().scheduleForAddition(null);
-	}
-
-	@Test(expectedExceptions = IllegalArgumentException.class)
-	public void testAddOccupiedID() {
-		World world = WorldUtils.createDefaultWorld();
-		world.getWorldObjects().scheduleForAddition(mock(WorldObject.class), 0);
-		world.getWorldObjects().scheduleForAddition(mock(WorldObject.class), 0);
+		world.getWorldObjects().add(null);
 	}
 
 	@Test
 	public void testScheduleForRemoval() {
 		WorldObject worldObject = new WorldObject("Bob");
 		World world = WorldUtils.createDefaultWorld();
-		world.getWorldObjects().scheduleForAddition(worldObject);
+		world.getWorldObjects().add(worldObject);
 		world.update();
-		world.getWorldObjects().scheduleForRemoval(worldObject.getId());
+		world.getWorldObjects().remove(worldObject.getId());
 		world.update();
-		Assert.assertEquals(world.getWorldObjects().getObjectCount(), 0);
+		Assert.assertEquals(world.getWorldObjects().size(), 0);
 	}
 
 	@Test
@@ -56,7 +49,7 @@ public class WorldTest
 		WorldObject worldObject = mock(WorldObject.class);
 		when(worldObject.getVector2D()).thenReturn(Vector2D.ORIGIN);
 		World world = WorldUtils.createDefaultWorld();
-		world.getWorldObjects().scheduleForAddition(worldObject);
+		world.getWorldObjects().add(worldObject);
 		world.update();
 		verify(worldObject, times(1)).preUpdate();
 		verify(worldObject, times(1)).update();
@@ -68,10 +61,10 @@ public class WorldTest
 		WorldObject obj0 = new WorldObject("Foo");
 		WorldObject obj1 = new WorldObject("Bar");
 		World world = WorldUtils.createDefaultWorld();
-		world.getWorldObjects().scheduleForAddition(obj0, 0);
-		world.getWorldObjects().scheduleForAddition(obj1, 1);
+		world.getWorldObjects().set(0, obj0);
+		world.getWorldObjects().set(1, obj1);
 		world.update();
-		WorldObject retrieved = world.getWorldObjects().getObject(0);
+		WorldObject retrieved = world.getWorldObjects().get(0);
 		Assert.assertEquals(retrieved, obj0);
 	}
 }

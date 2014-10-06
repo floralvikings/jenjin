@@ -1,9 +1,11 @@
 package com.jenjinstudios.world.collections;
 
+import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.WorldObject;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Consumer;
 
 /**
  * @author Caleb Brinkman
@@ -13,16 +15,28 @@ public class WorldObjectList implements List<WorldObject>
 	private final Map<Integer, WorldObject> objects = new ConcurrentHashMap<>();
 	private final Map<Integer, WorldObject> toAdd = new ConcurrentHashMap<>();
 	private final Map<Integer, WorldObject> toRemove = new ConcurrentHashMap<>();
+	private final World world;
+
+	public WorldObjectList(World world) {
+		this.world = world;
+	}
 
 	public void refresh() {
 		toRemove.keySet().forEach(objects::remove);
 		toRemove.clear();
 		toAdd.entrySet().stream().
 			  filter(entry -> !objects.containsKey(entry.getKey())).
-			  forEach(entry -> objects.put(entry.getKey(), entry.getValue()));
+			  forEach(entry -> {
+				  objects.put(entry.getKey(), entry.getValue());
+				  entry.getValue().setWorld(world);
+			  });
 		toAdd.clear();
 	}
 
+	@Override
+	public void forEach(Consumer<? super WorldObject> action) {
+		synchronized (objects) { objects.values().forEach(action); }
+	}
 
 	private int getUniqueId() {
 		int i = -1;
@@ -218,8 +232,8 @@ public class WorldObjectList implements List<WorldObject>
 	 */
 	@Override
 	public boolean addAll(Collection<? extends WorldObject> c) {
-		// TODO Should schedule for addition
-		return false;
+		c.forEach(this::add);
+		return true;
 	}
 
 	/**
@@ -262,8 +276,8 @@ public class WorldObjectList implements List<WorldObject>
 	 */
 	@Override
 	public boolean removeAll(Collection<?> c) {
-		// TODO Should schedule for removal
-		return false;
+		c.forEach(this::remove);
+		return true;
 	}
 
 	/**
@@ -281,8 +295,7 @@ public class WorldObjectList implements List<WorldObject>
 	 */
 	@Override
 	public boolean retainAll(Collection<?> c) {
-		// TODO Should schedule for removal
-		return false;
+		throw new UnsupportedOperationException("RetainAll is not supported in WorldObjectList");
 	}
 
 	/**
@@ -291,7 +304,9 @@ public class WorldObjectList implements List<WorldObject>
 	 */
 	@Override
 	public void clear() {
-		// TODO Should schedule for removal
+		objects.clear();
+		toAdd.clear();
+		toRemove.clear();
 	}
 
 	/**
@@ -317,7 +332,14 @@ public class WorldObjectList implements List<WorldObject>
 	 */
 	@Override
 	public WorldObject set(int index, WorldObject element) {
-		// TODO Should schedule for overwrite
+		if (objects.containsKey(index))
+		{
+			toRemove.put(index, element);
+			toAdd.put(index, element);
+		} else
+		{
+			toAdd.put(index, element);
+		}
 		return null;
 	}
 
@@ -335,7 +357,7 @@ public class WorldObjectList implements List<WorldObject>
 	 */
 	@Override
 	public void add(int index, WorldObject element) {
-		// TODO Should schedule for overwrite
+		throw new UnsupportedOperationException("This operation requires modifying existing IDs.");
 	}
 
 	/**
@@ -348,8 +370,12 @@ public class WorldObjectList implements List<WorldObject>
 	 */
 	@Override
 	public WorldObject remove(int index) {
-		// TODO Should schedule for removal
-		return null;
+		WorldObject worldObject = objects.get(index);
+		if (worldObject != null)
+		{
+			toRemove.put(index, worldObject);
+		}
+		return worldObject;
 	}
 
 	/**
@@ -402,7 +428,6 @@ public class WorldObjectList implements List<WorldObject>
 	 */
 	@Override
 	public ListIterator<WorldObject> listIterator() {
-		// TODO Not sure how this works
 		throw new UnsupportedOperationException("WorldObjectLists currently do not support list iterators.");
 	}
 
@@ -412,7 +437,6 @@ public class WorldObjectList implements List<WorldObject>
 	 */
 	@Override
 	public ListIterator<WorldObject> listIterator(int index) {
-		// TODO Not sure how this works
 		throw new UnsupportedOperationException("WorldObjectLists currently do not support list iterators.");
 	}
 

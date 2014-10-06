@@ -30,7 +30,7 @@ public class ExecutableStateChangeMessage extends WorldClientExecutableMessage
 
 	@Override
 	public void runDelayed() {
-		WorldObject obj = getClient().getWorld().getWorldObjects().getObject(actorID);
+		WorldObject obj = getClient().getWorld().getWorldObjects().get(actorID);
 		if (obj != null && obj instanceof Actor)
 		{
 			Actor actor = (Actor) obj;

@@ -40,7 +40,7 @@ public class ExecutableWorldLoginRequest extends WorldExecutableMessage
 		if (user != null)
 		{
 			handleLoginSuccess();
-			((WorldServer) getClientHandler().getServer()).getWorld().getWorldObjects().scheduleForAddition(
+			((WorldServer) getClientHandler().getServer()).getWorld().getWorldObjects().add(
 				  getClientHandler().getPlayer());
 			loginResponse.setArgument("id", getClientHandler().getPlayer().getId());
 		}

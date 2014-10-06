@@ -1,6 +1,6 @@
 package com.jenjinstudios.world;
 
-import com.jenjinstudios.world.collections.WorldObjectMap;
+import com.jenjinstudios.world.collections.WorldObjectList;
 
 import java.util.Map;
 import java.util.TreeMap;
@@ -15,7 +15,7 @@ public class World
 	/** The list of in-world Zones. */
 	private final TreeMap<Integer, Zone> zones = new TreeMap<>();
 	/** The GameObjects contained in the world. */
-	private transient final WorldObjectMap worldObjects = new WorldObjectMap(this);
+	private transient final WorldObjectList worldObjects = new WorldObjectList(this);
 	/** The time at which the most recent update completed. */
 	private transient long lastUpdateCompleted;
 	/** The start time of the most recent update. */
@@ -36,18 +36,16 @@ public class World
 		lastUpdateCompleted = lastUpdateStarted = System.currentTimeMillis();
 	}
 
-	public WorldObjectMap getWorldObjects() { return worldObjects; }
+	public WorldObjectList getWorldObjects() { return worldObjects; }
 
 	public void update() {
 		lastUpdateStarted = System.currentTimeMillis();
 		synchronized (worldObjects)
 		{
-			worldObjects.removeScheduledObjects();
-			worldObjects.addScheduledObjects();
-			worldObjects.overwriteScheduledObjects();
-			setUpObjects();
-			updateObjects();
-			resetObjects();
+			worldObjects.refresh();
+			worldObjects.forEach(WorldObject::preUpdate);
+			worldObjects.forEach(WorldObject::update);
+			worldObjects.forEach(WorldObject::postUpdate);
 		}
 		lastUpdateCompleted = System.currentTimeMillis();
 	}
@@ -57,10 +55,4 @@ public class World
 	public long getLastUpdateCompleted() { return lastUpdateCompleted; }
 
 	public long getLastUpdateStarted() { return lastUpdateStarted; }
-
-	private void resetObjects() { worldObjects.forEach((Integer i, WorldObject o) -> o.postUpdate()); }
-
-	private void updateObjects() { worldObjects.forEach((Integer i, WorldObject o) -> o.update()); }
-
-	private void setUpObjects() { worldObjects.forEach((Integer i, WorldObject o) -> o.preUpdate()); }
 }

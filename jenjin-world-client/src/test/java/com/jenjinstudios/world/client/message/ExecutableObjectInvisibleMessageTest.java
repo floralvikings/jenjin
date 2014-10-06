@@ -4,7 +4,7 @@ import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageRegistry;
 import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.client.WorldClient;
-import com.jenjinstudios.world.collections.WorldObjectMap;
+import com.jenjinstudios.world.collections.WorldObjectList;
 import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.*;
@@ -22,7 +22,7 @@ public class ExecutableObjectInvisibleMessageTest
 
 		WorldClient worldClient = mock(WorldClient.class);
 		World world = mock(World.class);
-		WorldObjectMap worldObjectMap = mock(WorldObjectMap.class);
+		WorldObjectList worldObjectMap = mock(WorldObjectList.class);
 		when(world.getWorldObjects()).thenReturn(worldObjectMap);
 		when(worldClient.getWorld()).thenReturn(world);
 
@@ -31,6 +31,6 @@ public class ExecutableObjectInvisibleMessageTest
 		message.runImmediate();
 		message.runDelayed();
 
-		verify(worldObjectMap).scheduleForRemoval(100);
+		verify(worldObjectMap).remove(100);
 	}
 }

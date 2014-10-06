@@ -2,7 +2,7 @@ package com.jenjinstudios.world.client;
 
 import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.World;
-import com.jenjinstudios.world.collections.WorldObjectMap;
+import com.jenjinstudios.world.collections.WorldObjectList;
 import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.*;
@@ -17,7 +17,7 @@ public class WorldClientUpdaterTest
 		WorldClient worldClient = mock(WorldClient.class);
 		Actor clientPlayer = mock(Actor.class);
 		World world = mock(World.class);
-		WorldObjectMap worldObjectMap = new WorldObjectMap(world);
+		WorldObjectList worldObjectMap = new WorldObjectList(world);
 		when(world.getWorldObjects()).thenReturn(worldObjectMap);
 
 		when(worldClient.getWorld()).thenReturn(world);

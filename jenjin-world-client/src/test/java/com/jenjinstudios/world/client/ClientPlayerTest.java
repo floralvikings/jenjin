@@ -18,7 +18,7 @@ public class ClientPlayerTest
 	public void testSetAngle() {
 		World world = WorldUtils.createDefaultWorld();
 		Actor player = new Actor("ClientActor");
-		world.getWorldObjects().scheduleForAddition(player);
+		world.getWorldObjects().add(player);
 		world.update();
 		Angle angle = new Angle(Angle.LEFT, Angle.FRONT);
 		player.setAngle(angle);
@@ -30,7 +30,7 @@ public class ClientPlayerTest
 	public void testSetAngleToForcedPosition() {
 		World world = WorldUtils.createDefaultWorld();
 		Actor player = new Actor("ClientActor");
-		world.getWorldObjects().scheduleForAddition(player);
+		world.getWorldObjects().add(player);
 		world.update();
 		ActorUtils.forceIdle(player);
 		Angle angle = player.getAngle();
@@ -43,7 +43,7 @@ public class ClientPlayerTest
 		World world = WorldUtils.createDefaultWorld();
 		Actor player = new Actor("ClientActor");
 		player.setId(0);
-		world.getWorldObjects().scheduleForAddition(player);
+		world.getWorldObjects().add(player);
 		world.update();
 		ActorUtils.forceIdle(player);
 		Assert.assertNotNull(player.getForcedState());
@@ -53,7 +53,7 @@ public class ClientPlayerTest
 	public void testStep() throws InterruptedException {
 		World world = WorldUtils.createDefaultWorld();
 		Actor player = new Actor("ClientActor");
-		world.getWorldObjects().scheduleForAddition(player);
+		world.getWorldObjects().add(player);
 		world.update();
 		Angle angle = new Angle(0, Angle.FRONT);
 		player.setAngle(angle);
