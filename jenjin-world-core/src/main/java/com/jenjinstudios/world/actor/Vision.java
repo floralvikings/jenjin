@@ -1,7 +1,7 @@
 package com.jenjinstudios.world.actor;
 
 import com.jenjinstudios.world.WorldObject;
-import com.jenjinstudios.world.event.PostUpdateEvent;
+import com.jenjinstudios.world.event.PreUpdateEvent;
 import com.jenjinstudios.world.math.SightCalculator;
 
 import java.util.Collection;
@@ -11,7 +11,7 @@ import java.util.Set;
 /**
  * @author Caleb Brinkman
  */
-public class Vision implements PostUpdateEvent
+public class Vision implements PreUpdateEvent
 {
 	public static final String EVENT_NAME = "visionEvent";
 	private transient final Set<WorldObject> visibleObjects = new HashSet<>();
@@ -67,7 +67,7 @@ public class Vision implements PostUpdateEvent
 	}
 
 	@Override
-	public void onPostUpdate() {
+	public void onPreUpdate() {
 		Collection<WorldObject> objects = SightCalculator.getVisibleObjects(worldObject);
 		setVisibleObjects(objects);
 	}

@@ -20,7 +20,7 @@ public class SightedObjectTest
 
 		world.update();
 		world.update();
-		Vision vision = (Vision) sightedObject.getPostUpdateEvent(Vision.EVENT_NAME);
+		Vision vision = (Vision) sightedObject.getPreUpdateEvent(Vision.EVENT_NAME);
 		Assert.assertTrue(vision.getVisibleObjects().contains(visibleObject));
 	}
 
@@ -29,7 +29,6 @@ public class SightedObjectTest
 		Zone zone = new Zone(0, new Dimension2D(50, 50));
 		World world = new World(zone);
 		WorldObject sightedObject = new WorldObject("SightedObject");
-		sightedObject.getProperties().put(Vision.EVENT_NAME, new Vision(sightedObject));
 		world.getWorldObjects().add(sightedObject);
 		sightedObject.setVector2D(new Vector2D(55, 55));
 
@@ -44,13 +43,12 @@ public class SightedObjectTest
 		World world = WorldUtils.createDefaultWorld();
 		WorldObject visibleObject = new WorldObject("VisibleObject");
 		WorldObject sightedObject = new Actor("SightedObject");
-		sightedObject.getProperties().put(Vision.EVENT_NAME, new Vision(sightedObject));
 		world.getWorldObjects().add(visibleObject);
 		world.getWorldObjects().add(sightedObject);
 
 		world.update();
 		//world.update();
-		Vision vision = (Vision) sightedObject.getPostUpdateEvent(Vision.EVENT_NAME);
+		Vision vision = (Vision) sightedObject.getPreUpdateEvent(Vision.EVENT_NAME);
 		Assert.assertTrue(vision.getNewlyVisibleObjects().contains(visibleObject));
 	}
 
@@ -59,7 +57,6 @@ public class SightedObjectTest
 		World world = WorldUtils.createDefaultWorld();
 		WorldObject visibleObject = new WorldObject("VisibleObject");
 		WorldObject sightedObject = new Actor("SightedObject");
-		sightedObject.getProperties().put(Vision.EVENT_NAME, new Vision(sightedObject));
 		world.getWorldObjects().add(visibleObject);
 		world.getWorldObjects().add(sightedObject);
 
@@ -67,7 +64,7 @@ public class SightedObjectTest
 		world.getWorldObjects().remove(visibleObject.getId());
 		world.update();
 
-		Vision vision = (Vision) sightedObject.getPostUpdateEvent(Vision.EVENT_NAME);
+		Vision vision = (Vision) sightedObject.getPreUpdateEvent(Vision.EVENT_NAME);
 		Assert.assertTrue(vision.getNewlyInvisibleObjects().contains(visibleObject));
 	}
 }
