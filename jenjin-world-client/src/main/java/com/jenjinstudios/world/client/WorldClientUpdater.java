@@ -5,7 +5,6 @@ import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.actor.StateChangeStack;
 import com.jenjinstudios.world.client.message.WorldClientMessageFactory;
 import com.jenjinstudios.world.event.EventStack;
-import com.jenjinstudios.world.math.SightCalculator;
 import com.jenjinstudios.world.state.MoveState;
 
 import java.util.List;
@@ -33,7 +32,6 @@ public class WorldClientUpdater implements Runnable
 	@Override
 	public void run() {
 		worldClient.getWorld().update();
-		SightCalculator.updateVisibleObjects(worldClient.getWorld());
 		if (player != null)
 		{
 			EventStack eventStack = player.getEventStack(StateChangeStack.STACK_NAME);

@@ -14,15 +14,13 @@ public class SightedObjectTest
 	public void testGetVisibleObjects() {
 		World world = WorldUtils.createDefaultWorld();
 		WorldObject visibleObject = new WorldObject("VisibleObject");
-		WorldObject sightedObject = new WorldObject("SightedObject");
-		sightedObject.getProperties().put(Vision.PROPERTY_NAME, new Vision());
+		Actor sightedObject = new Actor("SightedObject");
 		world.getWorldObjects().add(visibleObject);
 		world.getWorldObjects().add(sightedObject);
 
 		world.update();
-		SightCalculator.updateVisibleObjects(world);
 		world.update();
-		Vision vision = (Vision) sightedObject.getProperties().get(Vision.PROPERTY_NAME);
+		Vision vision = (Vision) sightedObject.getPostUpdateEvent(Vision.EVENT_NAME);
 		Assert.assertTrue(vision.getVisibleObjects().contains(visibleObject));
 	}
 
@@ -31,7 +29,7 @@ public class SightedObjectTest
 		Zone zone = new Zone(0, new Dimension2D(50, 50));
 		World world = new World(zone);
 		WorldObject sightedObject = new WorldObject("SightedObject");
-		sightedObject.getProperties().put(Vision.PROPERTY_NAME, new Vision());
+		sightedObject.getProperties().put(Vision.EVENT_NAME, new Vision(sightedObject));
 		world.getWorldObjects().add(sightedObject);
 		sightedObject.setVector2D(new Vector2D(55, 55));
 
@@ -45,16 +43,14 @@ public class SightedObjectTest
 	public void testGetNewlyVisibleObjects() {
 		World world = WorldUtils.createDefaultWorld();
 		WorldObject visibleObject = new WorldObject("VisibleObject");
-		WorldObject sightedObject = new WorldObject("SightedObject");
-		sightedObject.getProperties().put(Vision.PROPERTY_NAME, new Vision());
+		WorldObject sightedObject = new Actor("SightedObject");
+		sightedObject.getProperties().put(Vision.EVENT_NAME, new Vision(sightedObject));
 		world.getWorldObjects().add(visibleObject);
 		world.getWorldObjects().add(sightedObject);
 
-		SightCalculator.updateVisibleObjects(world);
 		world.update();
-		SightCalculator.updateVisibleObjects(world);
-		world.update();
-		Vision vision = (Vision) sightedObject.getProperties().get(Vision.PROPERTY_NAME);
+		//world.update();
+		Vision vision = (Vision) sightedObject.getPostUpdateEvent(Vision.EVENT_NAME);
 		Assert.assertTrue(vision.getNewlyVisibleObjects().contains(visibleObject));
 	}
 
@@ -62,18 +58,16 @@ public class SightedObjectTest
 	public void testGetNewlyInvisibleObjects() {
 		World world = WorldUtils.createDefaultWorld();
 		WorldObject visibleObject = new WorldObject("VisibleObject");
-		WorldObject sightedObject = new WorldObject("SightedObject");
-		sightedObject.getProperties().put(Vision.PROPERTY_NAME, new Vision());
+		WorldObject sightedObject = new Actor("SightedObject");
+		sightedObject.getProperties().put(Vision.EVENT_NAME, new Vision(sightedObject));
 		world.getWorldObjects().add(visibleObject);
 		world.getWorldObjects().add(sightedObject);
 
 		world.update();
-		SightCalculator.updateVisibleObjects(world);
 		world.getWorldObjects().remove(visibleObject.getId());
 		world.update();
-		SightCalculator.updateVisibleObjects(world);
 
-		Vision vision = (Vision) sightedObject.getProperties().get(Vision.PROPERTY_NAME);
+		Vision vision = (Vision) sightedObject.getPostUpdateEvent(Vision.EVENT_NAME);
 		Assert.assertTrue(vision.getNewlyInvisibleObjects().contains(visibleObject));
 	}
 }

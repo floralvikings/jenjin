@@ -50,7 +50,7 @@ public class WorldClientHandler extends ClientHandler
 	protected void setPlayer(Actor player) { this.player = player; }
 
 	private void queueNewlyVisibleMessages() {
-		Object o = player.getProperties().get(Vision.PROPERTY_NAME);
+		Object o = player.getProperties().get(Vision.EVENT_NAME);
 		if (o != null && o instanceof Vision)
 		{
 			Vision vision = (Vision) o;
@@ -64,7 +64,7 @@ public class WorldClientHandler extends ClientHandler
 	}
 
 	private void queueNewlyInvisibleMessages() {
-		Object o = player.getProperties().get(Vision.PROPERTY_NAME);
+		Object o = player.getProperties().get(Vision.EVENT_NAME);
 		if (o != null && o instanceof Vision)
 		{
 			Vision vision = (Vision) o;
@@ -77,7 +77,7 @@ public class WorldClientHandler extends ClientHandler
 	}
 
 	private void queueStateChangeMessages() {
-		Object o = player.getProperties().get(Vision.PROPERTY_NAME);
+		Object o = player.getProperties().get(Vision.EVENT_NAME);
 		if (o != null && o instanceof Vision)
 		{
 			Vision vision = (Vision) o;

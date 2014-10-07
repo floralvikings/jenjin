@@ -30,7 +30,7 @@ public class Actor extends WorldObject
 	public Actor(String name) {
 		super(name);
 		setMoveSpeed(DEFAULT_MOVE_SPEED);
-		getProperties().put(Vision.PROPERTY_NAME, new Vision());
+		addPostUpdateEvent(Vision.EVENT_NAME, new Vision(this));
 		addEventStack(StateChangeStack.STACK_NAME, new StateChangeStack(this));
 	}
 

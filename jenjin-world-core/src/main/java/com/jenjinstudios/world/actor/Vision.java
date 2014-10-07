@@ -1,19 +1,27 @@
 package com.jenjinstudios.world.actor;
 
 import com.jenjinstudios.world.WorldObject;
+import com.jenjinstudios.world.event.PostUpdateEvent;
+import com.jenjinstudios.world.math.SightCalculator;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
 /**
  * @author Caleb Brinkman
  */
-public class Vision
+public class Vision implements PostUpdateEvent
 {
-	public static final String PROPERTY_NAME = "visionEvent";
-	private final Set<WorldObject> visibleObjects = new HashSet<>();
-	private final Set<WorldObject> newlyVisibleObjects = new HashSet<>();
-	private final Set<WorldObject> newlyInvisibleObjects = new HashSet<>();
+	public static final String EVENT_NAME = "visionEvent";
+	private transient final Set<WorldObject> visibleObjects = new HashSet<>();
+	private transient final Set<WorldObject> newlyVisibleObjects = new HashSet<>();
+	private transient final Set<WorldObject> newlyInvisibleObjects = new HashSet<>();
+	private transient final WorldObject worldObject;
+
+	public Vision(WorldObject worldObject) {
+		this.worldObject = worldObject;
+	}
 
 	public Set<WorldObject> getVisibleObjects() {
 		synchronized (visibleObjects)
@@ -36,7 +44,7 @@ public class Vision
 		}
 	}
 
-	public void setVisibleObjects(Set<WorldObject> currentlyVisible) {
+	public void setVisibleObjects(Collection<WorldObject> currentlyVisible) {
 		synchronized (newlyVisibleObjects)
 		{
 			newlyVisibleObjects.clear();
@@ -58,4 +66,9 @@ public class Vision
 		}
 	}
 
+	@Override
+	public void onPostUpdate() {
+		Collection<WorldObject> objects = SightCalculator.getVisibleObjects(worldObject);
+		setVisibleObjects(objects);
+	}
 }

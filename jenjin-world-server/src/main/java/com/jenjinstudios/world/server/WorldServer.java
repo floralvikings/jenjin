@@ -6,7 +6,6 @@ import com.jenjinstudios.server.net.ServerInit;
 import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.io.WorldDocumentReader;
 import com.jenjinstudios.world.io.WorldDocumentWriter;
-import com.jenjinstudios.world.math.SightCalculator;
 import com.jenjinstudios.world.server.sql.WorldAuthenticator;
 import com.jenjinstudios.world.util.WorldUtils;
 
@@ -51,7 +50,6 @@ public class WorldServer<T extends WorldClientHandler> extends AuthServer<T>
 		worldFileBytes = reader.getWorldFileBytes();
 		worldFileChecksum = reader.getWorldFileChecksum();
 		addRepeatedTask(world::update);
-		addRepeatedTask(() -> SightCalculator.updateVisibleObjects(world));
 	}
 
 	public World getWorld() { return world; }

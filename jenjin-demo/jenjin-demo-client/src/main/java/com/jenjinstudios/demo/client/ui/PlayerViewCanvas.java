@@ -95,7 +95,7 @@ public class PlayerViewCanvas extends Canvas
 	}
 
 	protected void drawObjects() {
-		Object object = clientPlayer.getProperties().get(Vision.PROPERTY_NAME);
+		Object object = clientPlayer.getProperties().get(Vision.EVENT_NAME);
 		if (object != null && object instanceof Vision)
 		{
 			Vision vision = (Vision) object;
