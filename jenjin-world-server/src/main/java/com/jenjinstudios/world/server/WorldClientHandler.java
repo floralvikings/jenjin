@@ -64,7 +64,7 @@ public class WorldClientHandler extends ClientHandler
 	}
 
 	private void queueNewlyInvisibleMessages() {
-		Object o = player.getPostUpdateEvent(Vision.EVENT_NAME);
+		Object o = player.getPreUpdateEvent(Vision.EVENT_NAME);
 		if (o != null && o instanceof Vision)
 		{
 			Vision vision = (Vision) o;
@@ -77,7 +77,7 @@ public class WorldClientHandler extends ClientHandler
 	}
 
 	private void queueStateChangeMessages() {
-		Object o = player.getPostUpdateEvent(Vision.EVENT_NAME);
+		Object o = player.getPreUpdateEvent(Vision.EVENT_NAME);
 		if (o != null && o instanceof Vision)
 		{
 			Vision vision = (Vision) o;
