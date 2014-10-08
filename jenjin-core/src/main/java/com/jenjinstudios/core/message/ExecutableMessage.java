@@ -26,6 +26,12 @@ public abstract class ExecutableMessage
 	private static final Logger LOGGER = Logger.getLogger(ExecutableMessage.class.getName());
 	private final Message message;
 
+	/**
+	 * Construct a new ExecutableMessage; this should only ever be invoked reflectively, by a {@code Connection}'s
+	 * update cycle.
+	 *
+	 * @param message The message that caused this {@code ExecutableMessage} to be created.
+	 */
 	protected ExecutableMessage(Message message) {
 		this.message = message;
 	}
