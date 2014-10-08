@@ -41,6 +41,12 @@ public class MessageRegistry
 		registerXmlMessages();
 	}
 
+	/**
+	 * Get an immutable instance of this class.  This method only creates a new instance once; each time it is called
+	 * thereafter returns the same instance that has already been created.
+	 *
+	 * @return An immutable, static {@code MessageRegistry}.
+	 */
 	public static MessageRegistry getInstance() {
 		if (messageRegistry == null)
 		{
