@@ -86,9 +86,12 @@ public class Message
 	 */
 	public Object getArgument(String argumentName) { return argumentsByName.get(argumentName); }
 
-	public short getID() {
-		return id;
-	}
+	/**
+	 * Get the id of this type of Message.
+	 *
+	 * @return The id of this type of Message.
+	 */
+	public short getID() { return id; }
 
 	public final Object[] getArgs() {
 		if (isInvalid())
