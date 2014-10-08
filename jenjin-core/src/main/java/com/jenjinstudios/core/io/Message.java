@@ -79,10 +79,10 @@ public class Message
 		return argsArray;
 	}
 
-	@Override
-	public String toString() { return "Message " + id + " " + name; }
-
 	boolean isInvalid() {
 		return argumentsByName.size() != messageType.getArguments().size();
 	}
+
+	@Override
+	public String toString() { return "Message " + id + " " + name; }
 }
