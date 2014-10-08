@@ -14,6 +14,13 @@ import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+/**
+ * The MessageFileFinder class is used to discover Messages.xml files in the classpath and working directory.
+ * <p>
+ * This class is not mean to be referenced directly by your code.
+ *
+ * @author Caleb Brinkman
+ */
 public final class MessageFileFinder
 {
 	private static final String messageFileName = "Messages.xml";
