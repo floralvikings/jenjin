@@ -48,6 +48,12 @@ public class Message
 		argumentsByName = new TreeMap<>();
 	}
 
+	/**
+	 * Set the argument with the given name to the argument of the given value.
+	 * @param argumentName The name of the argument.
+	 * @param argument The value to be stored in the argument.
+	 * @throws java.lang.IllegalArgumentException If the name or type of of the argument is invalid.
+	 */
 	public void setArgument(String argumentName, Object argument) {
 		ArgumentType argType = null;
 		for (ArgumentType a : messageType.getArguments())
