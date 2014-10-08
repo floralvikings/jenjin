@@ -93,6 +93,11 @@ public class Message
 	 */
 	public short getID() { return id; }
 
+	/**
+	 * Get a copy of the array containing the arguments passed to this Message.
+	 *
+	 * @return A copy of the array containing the arguments passed to this Message.
+	 */
 	public final Object[] getArgs() {
 		if (isInvalid())
 			throw new IllegalStateException("Attempting to retrieve arguments while message is invalid. (Not all " +
@@ -105,9 +110,7 @@ public class Message
 		return argsArray;
 	}
 
-	boolean isInvalid() {
-		return argumentsByName.size() != messageType.getArguments().size();
-	}
+	boolean isInvalid() { return argumentsByName.size() != messageType.getArguments().size(); }
 
 	@Override
 	public String toString() { return "Message " + id + " " + name; }
