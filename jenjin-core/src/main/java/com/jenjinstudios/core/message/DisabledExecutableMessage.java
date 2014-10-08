@@ -6,6 +6,11 @@ import com.jenjinstudios.core.io.Message;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * Test class; not intended to be used from any production code.
+ *
+ * @author Caleb Brinkman
+ */
 public class DisabledExecutableMessage extends ExecutableMessage
 {
 	private static final Logger LOGGER = Logger.getLogger(DisabledExecutableMessage.class.getName());
