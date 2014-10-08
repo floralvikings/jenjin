@@ -7,6 +7,13 @@ import com.jenjinstudios.core.xml.MessageType;
 import java.util.Map;
 import java.util.TreeMap;
 
+/**
+ * The {@code Message} class is used in sending data to and receiving data from {@code Connection} objects.  Each
+ * Message has a unique {@code name}, a unique {@code id}, and a {@code Map} of arguments which are accessed with the
+ * {@code getArgument} and {@code setObject} methods. </p> Message arguments may consist of any primitive type, as well
+ * as {@code String} objects, and {@code String} and {@code byte} arrays.
+ * @author Caleb Brinkman
+ */
 public class Message
 {
 	public final String name;
