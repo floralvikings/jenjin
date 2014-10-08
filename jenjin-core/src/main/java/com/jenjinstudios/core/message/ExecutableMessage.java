@@ -109,6 +109,11 @@ public abstract class ExecutableMessage
 	 */
 	public abstract void runImmediate();
 
+	/**
+	 * Get the message for which this {@code ExecutableMessage} was created.
+	 *
+	 * @return The message for which this {@code ExecutableMessage} was created.
+	 */
 	public Message getMessage() {
 		return message;
 	}
