@@ -14,19 +14,11 @@ import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-/**
- * @author Caleb Brinkman
- */
 public class MessageFileFinder
 {
-	/** The file name of message registry classed. */
 	private static final String messageFileName = "Messages.xml";
 	private static final Logger LOGGER = Logger.getLogger(MessageFileFinder.class.getName());
 
-	/**
-	 * Find the Messages.xml ZipEntry objects in the classpath.
-	 * @return The list of found entries.
-	 */
 	private static LinkedList<String> findJarMessageEntries() {
 		LinkedList<String> jarMessageEntries = new LinkedList<>();
 		String classPath = System.getProperty("java.class.path");
@@ -73,19 +65,12 @@ public class MessageFileFinder
 		}
 	}
 
-	/**
-	 * Look for files that match the message registry format.
-	 * @return An ArrayList of message registry files.
-	 */
 	private static ArrayList<File> findMessageFiles() {
 		String rootDir = Paths.get("").toAbsolutePath().toString() + File.separator;
 		File rootFile = new File(rootDir);
 		return Files.search(rootFile, messageFileName);
 	}
 
-	/**
-	 * Add the Messages.xml entries in the working directory and add their InputStream to the given list.
-	 */
 	static LinkedList<InputStream> findMessageFileStreams() {
 		LinkedList<InputStream> inputStreams = new LinkedList<>();
 		ArrayList<File> messageFiles = findMessageFiles();
@@ -103,9 +88,6 @@ public class MessageFileFinder
 		return inputStreams;
 	}
 
-	/**
-	 * Add the Messages.xml entries in the classpath and add their InputStream to the given list.
-	 */
 	static LinkedList<InputStream> findMessageJarStreams() {
 		LinkedList<InputStream> inputStreams = new LinkedList<>();
 		LinkedList<String> jarMessageEntries = findJarMessageEntries();
