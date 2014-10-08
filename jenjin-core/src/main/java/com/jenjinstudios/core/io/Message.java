@@ -16,6 +16,7 @@ import java.util.TreeMap;
  */
 public class Message
 {
+	/** The unique name of this type of Message. */
 	public final String name;
 	private final MessageType messageType;
 	private final Map<String, Object> argumentsByName;
