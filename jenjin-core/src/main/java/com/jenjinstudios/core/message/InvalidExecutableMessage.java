@@ -6,6 +6,11 @@ import com.jenjinstudios.core.io.Message;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * Invoked when a {@code Connection} reveives notification that an invalid message was received,
+ *
+ * @author Caleb Brinkman
+ */
 public class InvalidExecutableMessage extends ExecutableMessage
 {
 	private static final Logger LOGGER = Logger.getLogger(InvalidExecutableMessage.class.getName());
