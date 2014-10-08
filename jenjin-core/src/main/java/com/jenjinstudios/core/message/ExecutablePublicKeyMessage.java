@@ -11,6 +11,11 @@ import java.security.spec.X509EncodedKeySpec;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * Used to set a {@code PublicKeyMessage} for a {@code MessageOutputStream}.
+ *
+ * @author Caleb Brinkman
+ */
 public class ExecutablePublicKeyMessage extends ExecutableMessage
 {
 	private static final Logger LOGGER = Logger.getLogger(ExecutablePublicKeyMessage.class.getName());
