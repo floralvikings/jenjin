@@ -36,6 +36,14 @@ public abstract class ExecutableMessage
 		this.message = message;
 	}
 
+	/**
+	 * Given a {@code Connection} and a {@code Message}, create and return an appropriate {@code ExecutableMessage}.
+	 *
+	 * @param connection The {@code Connection} creating this {@code ExecutableMessage}.
+	 * @param message The {@code Message} for which the {@code ExecutableMessage} is being created.
+	 *
+	 * @return The {@code ExecutableMessage} created for {@code connection} and {@code message}.
+	 */
 	public static ExecutableMessage getExecutableMessageFor(Connection connection, Message message) {
 		ExecutableMessage executableMessage = null;
 		Constructor execConstructor = getExecConstructor(connection, message);
