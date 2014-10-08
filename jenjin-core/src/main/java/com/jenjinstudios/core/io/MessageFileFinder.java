@@ -14,10 +14,12 @@ import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-public class MessageFileFinder
+public final class MessageFileFinder
 {
 	private static final String messageFileName = "Messages.xml";
 	private static final Logger LOGGER = Logger.getLogger(MessageFileFinder.class.getName());
+
+	private MessageFileFinder() { }
 
 	private static LinkedList<String> findJarMessageEntries() {
 		LinkedList<String> jarMessageEntries = new LinkedList<>();
