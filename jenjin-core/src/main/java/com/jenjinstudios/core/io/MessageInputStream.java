@@ -81,6 +81,11 @@ public class MessageInputStream extends DataInputStream
 		closed = true;
 	}
 
+	/**
+	 * Set the {@code PrivateKey} used by this stream to decrypt incoming messages.
+	 *
+	 * @param privateKey The private key.
+	 */
 	public void setPrivateKey(PrivateKey privateKey) {
 		try
 		{
