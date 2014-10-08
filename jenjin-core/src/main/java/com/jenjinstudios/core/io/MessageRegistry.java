@@ -55,6 +55,13 @@ public class MessageRegistry
 		return messageRegistry;
 	}
 
+	/**
+	 * Get the {@code MessageType} with the given unique name.
+	 *
+	 * @param name The name of the {@code MessageType}.
+	 *
+	 * @return The {@code MessageType} with the given unique name.
+	 */
 	public MessageType getMessageType(String name) {
 		synchronized (messageTypesByName)
 		{
