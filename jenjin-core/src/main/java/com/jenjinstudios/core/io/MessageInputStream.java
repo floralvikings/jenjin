@@ -43,6 +43,13 @@ public class MessageInputStream extends DataInputStream
 		this.messageRegistry = MessageRegistry.getInstance();
 	}
 
+	/**
+	 * Read a {@code Message} object from the stream.
+	 *
+	 * @return The read {@code Message} object.
+	 *
+	 * @throws IOException If there is an error reading from the stream.
+	 */
 	public Message readMessage() throws IOException {
 		// TODO Does this need to be here?  Why not just allow the normal IOException to be thrown?
 		if (closed)
