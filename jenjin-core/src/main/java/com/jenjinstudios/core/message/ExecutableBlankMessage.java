@@ -6,6 +6,11 @@ import com.jenjinstudios.core.io.Message;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * This class exists for testing purposes only, not meant to be used in production code.
+ *
+ * @author Caleb Brinkman
+ */
 public class ExecutableBlankMessage extends ExecutableMessage
 {
 	private static final Logger LOGGER = Logger.getLogger(ExecutableBlankMessage.class.getName());
