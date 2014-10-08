@@ -3,6 +3,8 @@ package com.jenjinstudios.core.io;
 import java.io.IOException;
 
 /**
+ * Used when a {@code MessageInputStream} reads a message that has not been registered.
+ *
  * @author Caleb Brinkman
  */
 public class MessageTypeException extends IOException
