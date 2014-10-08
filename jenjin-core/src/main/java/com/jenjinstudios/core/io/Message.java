@@ -12,6 +12,7 @@ import java.util.TreeMap;
  * Message has a unique {@code name}, a unique {@code id}, and a {@code Map} of arguments which are accessed with the
  * {@code getArgument} and {@code setObject} methods. </p> Message arguments may consist of any primitive type, as well
  * as {@code String} objects, and {@code String} and {@code byte} arrays.
+ *
  * @author Caleb Brinkman
  */
 public class Message
@@ -50,8 +51,10 @@ public class Message
 
 	/**
 	 * Set the argument with the given name to the argument of the given value.
+	 *
 	 * @param argumentName The name of the argument.
 	 * @param argument The value to be stored in the argument.
+	 *
 	 * @throws java.lang.IllegalArgumentException If the name or type of of the argument is invalid.
 	 */
 	public void setArgument(String argumentName, Object argument) {
@@ -75,7 +78,9 @@ public class Message
 
 	/**
 	 * Get the argument with the given name.
+	 *
 	 * @param argumentName The name of the argument.
+	 *
 	 * @return The value of the argument specified by {@code argumentName}, or null if the specified argument does not
 	 * exist.
 	 */
