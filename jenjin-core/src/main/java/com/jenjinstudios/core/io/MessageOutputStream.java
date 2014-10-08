@@ -18,6 +18,11 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * An implementation of a {@code DataOutputStream} used to write {@code Message} objects to an {@code OutputStream}.
+ *
+ * @author Caleb Brinkman
+ */
 public class MessageOutputStream extends DataOutputStream
 {
 	private static final Logger LOGGER = Logger.getLogger(MessageOutputStream.class.getName());
