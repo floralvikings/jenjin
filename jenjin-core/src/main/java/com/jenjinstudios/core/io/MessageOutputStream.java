@@ -40,6 +40,13 @@ public class MessageOutputStream extends DataOutputStream
 		this.messageRegistry = MessageRegistry.getInstance();
 	}
 
+	/**
+	 * Write the given {@code Message} to the output stream.
+	 *
+	 * @param message The {@code Message} to write.
+	 *
+	 * @throws IOException If there is an error writing to the output stream.
+	 */
 	public void writeMessage(Message message) throws IOException {
 		if (closed)
 		{
