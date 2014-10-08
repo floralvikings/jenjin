@@ -83,6 +83,13 @@ public class MessageRegistry
 		}
 	}
 
+	/**
+	 * Create a new "empty" {@code Message} that corresponds to the MessageType with the given name.
+	 *
+	 * @param name The name of the {@code MessageType} of which the return {@code Message} will be.
+	 *
+	 * @return A new "empty" {@code Message} of the type specified by {@code name}.
+	 */
 	public Message createMessage(String name) {
 		Message message = null;
 		MessageType messageType = getMessageType(name);
