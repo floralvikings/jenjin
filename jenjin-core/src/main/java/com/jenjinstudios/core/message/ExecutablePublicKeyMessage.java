@@ -21,6 +21,12 @@ public class ExecutablePublicKeyMessage extends ExecutableMessage
 	private static final Logger LOGGER = Logger.getLogger(ExecutablePublicKeyMessage.class.getName());
 	private final Connection connection;
 
+	/**
+	 * Construct a new {@code ExecutablePublicKeyMessage}.
+	 *
+	 * @param connection The connection invoking this executable message.
+	 * @param message The message which caused this executable message to be invoked.
+	 */
 	@SuppressWarnings("WeakerAccess")
 	public ExecutablePublicKeyMessage(Connection connection, Message message) {
 		super(message);
