@@ -7,7 +7,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Invoked when a {@code Connection} reveives notification that an invalid message was received,
+ * Invoked when a {@code Connection} reveives notification that an invalid message was received.
  *
  * @author Caleb Brinkman
  */
