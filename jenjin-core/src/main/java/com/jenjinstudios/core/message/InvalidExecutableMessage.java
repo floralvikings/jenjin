@@ -15,6 +15,12 @@ public class InvalidExecutableMessage extends ExecutableMessage
 {
 	private static final Logger LOGGER = Logger.getLogger(InvalidExecutableMessage.class.getName());
 
+	/**
+	 * Construct a new {@code InvalidExecutableMessage}.
+	 *
+	 * @param connection The connection invoking this executable message.
+	 * @param message The message which caused this executable message to be invoked.
+	 */
 	@SuppressWarnings("WeakerAccess")
 	public InvalidExecutableMessage(Connection connection, Message message) {
 		super(message);
