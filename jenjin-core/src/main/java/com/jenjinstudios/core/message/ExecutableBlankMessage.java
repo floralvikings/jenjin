@@ -16,6 +16,12 @@ public class ExecutableBlankMessage extends ExecutableMessage
 	private static final Logger LOGGER = Logger.getLogger(ExecutableBlankMessage.class.getName());
 	private final Connection connection;
 
+	/**
+	 * Construct a new ExecutableBlankMessage; not meant to be used in production code.
+	 *
+	 * @param connection The connection invoking this message.
+	 * @param message The message causing this to be invoked.
+	 */
 	@SuppressWarnings("WeakerAccess")
 	public ExecutableBlankMessage(Connection connection, Message message) {
 		super(message);
