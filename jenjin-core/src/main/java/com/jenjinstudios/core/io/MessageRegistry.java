@@ -69,6 +69,13 @@ public class MessageRegistry
 		}
 	}
 
+	/**
+	 * Get the {@code MessageType} with the given unique id.
+	 *
+	 * @param id The id of the {@code MessageType}.
+	 *
+	 * @return The {@code MessageType} with the given unique id.
+	 */
 	public MessageType getMessageType(short id) {
 		synchronized (messageTypesByID)
 		{
