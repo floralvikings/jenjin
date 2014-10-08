@@ -20,6 +20,12 @@ import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * The {@code MessageInputStream} class is an implementation of a {@code DataInputStream} used to read {@code Message}
+ * objects from a stream.
+ *
+ * @author Caleb Brinkman
+ */
 public class MessageInputStream extends DataInputStream
 {
 	private static final Logger LOGGER = Logger.getLogger(MessageInputStream.class.getName());
