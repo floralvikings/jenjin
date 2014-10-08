@@ -16,6 +16,20 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
 
+/**
+ * The {@code MessageRegistry} class is central to the Jenjin's dynamic messaging system.  An instance of the registry
+ * by calling {@code getInstance}; this method returns the same immutable instance each time it is called.  This
+ * instance can be used to retrieve "empty" {@code Message} objects, which are prepared to accept arguments and be
+ * written to a {@code MessageOutputStream}.
+ * <p>
+ * The first time the {@code getInstance} method is called, this class recursively searches for existing Messages.xml
+ * files in the working directory and the classpath, registering any files found.
+ * <p>
+ * The addition of a duplicate file is non-deterministic; the behavior is undefined if two message types with the same
+ * id are added to the registry.
+ *
+ * @author Caleb Brinkman
+ */
 public class MessageRegistry
 {
 	private static final Logger LOGGER = Logger.getLogger(MessageRegistry.class.getName());
