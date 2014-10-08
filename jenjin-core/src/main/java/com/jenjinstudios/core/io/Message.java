@@ -73,9 +73,13 @@ public class Message
 		argumentsByName.put(argumentName, argument);
 	}
 
-	public Object getArgument(String argumentName) {
-		return argumentsByName.get(argumentName);
-	}
+	/**
+	 * Get the argument with the given name.
+	 * @param argumentName The name of the argument.
+	 * @return The value of the argument specified by {@code argumentName}, or null if the specified argument does not
+	 * exist.
+	 */
+	public Object getArgument(String argumentName) { return argumentsByName.get(argumentName); }
 
 	public short getID() {
 		return id;
