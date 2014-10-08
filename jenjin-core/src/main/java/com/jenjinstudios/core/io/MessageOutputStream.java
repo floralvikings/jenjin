@@ -30,6 +30,11 @@ public class MessageOutputStream extends DataOutputStream
 	private Cipher encryptCipher;
 	private boolean closed;
 
+	/**
+	 * Construct a new {@code MessageOutputStream} from the given {@code OutputStream}.
+	 *
+	 * @param out The {@code OutputStream} to which to write messages.
+	 */
 	public MessageOutputStream(OutputStream out) {
 		super(out);
 		this.messageRegistry = MessageRegistry.getInstance();
