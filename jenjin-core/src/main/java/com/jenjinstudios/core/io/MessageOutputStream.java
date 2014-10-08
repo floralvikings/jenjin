@@ -70,6 +70,11 @@ public class MessageOutputStream extends DataOutputStream
 		return closed;
 	}
 
+	/**
+	 * Set the {@code PublicKey} used to encrypt message arguments which require it.
+	 *
+	 * @param publicKey The public key.
+	 */
 	public void setPublicKey(PublicKey publicKey) {
 		try
 		{
