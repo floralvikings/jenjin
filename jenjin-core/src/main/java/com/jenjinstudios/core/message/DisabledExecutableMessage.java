@@ -16,6 +16,12 @@ public class DisabledExecutableMessage extends ExecutableMessage
 {
 	private static final Logger LOGGER = Logger.getLogger(DisabledExecutableMessage.class.getName());
 
+	/**
+	 * Cosntruct a new {@code DisabledExecutableMessage}; not meant to be used in production code.
+	 *
+	 * @param connection The connection invoking this executable message.
+	 * @param message The message that caused this executable message to be invoked.
+	 */
 	public DisabledExecutableMessage(Connection connection, Message message) {
 		super(message);
 		LOGGER.log(Level.SEVERE, "DisabledExecutableMessage constructed in {0}", connection);
