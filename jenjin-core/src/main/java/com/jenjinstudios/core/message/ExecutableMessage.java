@@ -103,6 +103,10 @@ public abstract class ExecutableMessage
 	 */
 	public abstract void runDelayed();
 
+	/**
+	 * This method is invoked by a {@code Connection} when a message is received and the {@code ExecutableMessage} is
+	 * created, and should not be called directly.
+	 */
 	public abstract void runImmediate();
 
 	public Message getMessage() {
