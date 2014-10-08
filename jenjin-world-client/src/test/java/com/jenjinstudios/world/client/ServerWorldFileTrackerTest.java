@@ -15,7 +15,6 @@ import java.io.File;
  */
 public class ServerWorldFileTrackerTest
 {
-	// TODO Rewrite tests/classes to work without message spam.
 	@Test(timeOut = 5000)
 	public void testRequestWorldServerFileChecksum() throws Exception {
 		WorldClient worldClient = Mockito.mock(WorldClient.class);

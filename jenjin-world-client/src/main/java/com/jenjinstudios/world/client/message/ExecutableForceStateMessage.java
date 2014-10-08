@@ -5,6 +5,7 @@ import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.client.WorldClient;
 import com.jenjinstudios.world.math.Angle;
 import com.jenjinstudios.world.math.Vector2D;
+import com.jenjinstudios.world.util.ActorUtils;
 
 /**
  * Process a ForceStateMessage.
@@ -21,11 +22,12 @@ public class ExecutableForceStateMessage extends WorldClientExecutableMessage
 	@Override
 	public void runDelayed() {
 		Actor player = getClient().getPlayer();
+		double dist = ((player.getWorld().getLastUpdateCompleted() - timeOfForce) / 1000) * player.getMoveSpeed();
+		Vector2D corrected = vector2D.getVectorInDirection(dist, angle.getStepAngle());
+		player.setVector2D(corrected);
 		player.setAngle(angle);
-		player.setVector2D(vector2D);
-		player.setLastStepTime(timeOfForce);
 
-		player.forcePosition();
+		ActorUtils.forceIdle(player);
 	}
 
 	@Override

@@ -30,14 +30,13 @@ public class ExecutableStateChangeMessage extends WorldClientExecutableMessage
 
 	@Override
 	public void runDelayed() {
-		WorldObject obj = getClient().getWorld().getWorldObjects().getObject(actorID);
+		WorldObject obj = getClient().getWorld().getWorldObjects().get(actorID);
 		if (obj != null && obj instanceof Actor)
 		{
 			Actor actor = (Actor) obj;
 			double dist = actor.getMoveSpeed() * ((double) (System.currentTimeMillis() - time) / 1000d);
 			Vector2D position = oldVector.getVectorInDirection(dist, angle.getStepAngle());
 			actor.setAngle(angle);
-			actor.setLastStepTime(System.currentTimeMillis());
 			actor.setVector2D(position);
 		}
 	}

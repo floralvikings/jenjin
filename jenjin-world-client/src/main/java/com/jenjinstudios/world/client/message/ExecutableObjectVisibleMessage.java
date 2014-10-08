@@ -25,9 +25,7 @@ public class ExecutableObjectVisibleMessage extends WorldClientExecutableMessage
 	}
 
 	@Override
-	public void runDelayed() {
-		getClient().getWorld().getWorldObjects().scheduleForAddition(newlyVisible, newlyVisible.getId());
-	}
+	public void runDelayed() { getClient().getWorld().getWorldObjects().set(newlyVisible.getId(), newlyVisible); }
 
 	@Override
 	public void runImmediate() {

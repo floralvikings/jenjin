@@ -1,6 +1,8 @@
 package com.jenjinstudios.world.server.ai;
 
 import com.jenjinstudios.world.Location;
+import com.jenjinstudios.world.Zone;
+import com.jenjinstudios.world.util.ZoneUtils;
 
 import java.util.LinkedList;
 import java.util.Stack;
@@ -14,11 +16,12 @@ public class Pathfinder
 {
 	/** The maximum number of nodes to check before giving up and assuming the path cannot be found. */
 	private static final int NODE_LIMIT = 1000;
+	private final Zone zone;
 	private final Location start;
 	private final Location end;
 
-	public Pathfinder(Location start, Location end) {
-
+	public Pathfinder(Zone zone, Location start, Location end) {
+		this.zone = zone;
 		this.start = start;
 		this.end = end;
 	}
@@ -70,7 +73,7 @@ public class Pathfinder
 	}
 
 	private void addAdjacentToCorrectList(LinkedList<PathNode> open, LinkedList<PathNode> closed, PathNode selected) {
-		for (Location adjacentLocation : selected.location.getAdjacentWalkableLocations())
+		for (Location adjacentLocation : ZoneUtils.getAdjacentWalkableLocations(zone, selected.location))
 		{
 			PathNode adjacentPathNode = new PathNode(selected, adjacentLocation, end);
 			if (closed.contains(adjacentPathNode))

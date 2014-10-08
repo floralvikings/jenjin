@@ -9,6 +9,7 @@ import com.jenjinstudios.world.math.MathUtil;
 import com.jenjinstudios.world.math.Vector2D;
 import com.jenjinstudios.world.server.WorldClientHandler;
 import com.jenjinstudios.world.state.MoveState;
+import com.jenjinstudios.world.util.ZoneUtils;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -46,14 +47,14 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage
 		if (!locationWalkable(player))
 		{
 			Angle pAngle = player.getAngle().asIdle();
-			Vector2D vector2D = player.getVectorBeforeUpdate();
-			MoveState forcedState = new MoveState(pAngle, vector2D, player.getLastStepTime());
+			Vector2D vector2D = player.getVector2D();
+			MoveState forcedState = new MoveState(pAngle, vector2D, player.getWorld().getLastUpdateCompleted());
 			player.setForcedState(forcedState);
 		} else if (!isCorrectionSafe(player))
 		{
 			Angle pAngle = player.getAngle();
-			Vector2D vector2D = player.getVectorBeforeUpdate();
-			MoveState forcedState = new MoveState(pAngle, vector2D, player.getLastStepTime());
+			Vector2D vector2D = player.getVector2D();
+			MoveState forcedState = new MoveState(pAngle, vector2D, player.getWorld().getLastUpdateCompleted());
 			player.setForcedState(forcedState);
 		} else
 		{
@@ -78,11 +79,11 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage
 	private boolean locationWalkable(Actor player) {
 		World world = player.getWorld();
 		int zoneID = player.getZoneID();
-		Location location = world.getLocationForCoordinates(zoneID, position);
+		Location location = ZoneUtils.getLocationForCoordinates(world, zoneID, position);
 		boolean walkable = false;
 		if (location != null)
 		{
-			String prop = location.getProperties().getProperty("walkable");
+			String prop = location.getProperties().get("walkable");
 			walkable = !"false".equals(prop);
 		}
 		return walkable;

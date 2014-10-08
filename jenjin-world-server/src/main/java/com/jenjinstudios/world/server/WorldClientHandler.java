@@ -5,10 +5,12 @@ import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.server.net.ClientHandler;
 import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.WorldObject;
+import com.jenjinstudios.world.actor.Vision;
 import com.jenjinstudios.world.server.message.WorldServerMessageFactory;
 import com.jenjinstudios.world.state.MoveState;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * Handles clients for a world server.
@@ -48,25 +50,41 @@ public class WorldClientHandler extends ClientHandler
 	protected void setPlayer(Actor player) { this.player = player; }
 
 	private void queueNewlyVisibleMessages() {
-		for (WorldObject object : player.getNewlyVisibleObjects())
+		Object o = player.getPreUpdateEvent(Vision.EVENT_NAME);
+		if (o != null && o instanceof Vision)
 		{
-			Message newlyVisibleMessage;
-			newlyVisibleMessage = getMessageFactory().generateNewlyVisibleMessage(object);
-			queueOutgoingMessage(newlyVisibleMessage);
+			Vision vision = (Vision) o;
+			for (WorldObject object : vision.getNewlyVisibleObjects())
+			{
+				Message newlyVisibleMessage;
+				newlyVisibleMessage = getMessageFactory().generateNewlyVisibleMessage(object);
+				queueOutgoingMessage(newlyVisibleMessage);
+			}
 		}
 	}
 
 	private void queueNewlyInvisibleMessages() {
-		for (WorldObject object : player.getNewlyInvisibleObjects())
+		Object o = player.getPreUpdateEvent(Vision.EVENT_NAME);
+		if (o != null && o instanceof Vision)
 		{
-			Message newlyInvisibleMessage = getMessageFactory().generateNewlyInvisibleMessage(object);
-			queueOutgoingMessage(newlyInvisibleMessage);
+			Vision vision = (Vision) o;
+			for (WorldObject object : vision.getNewlyInvisibleObjects())
+			{
+				Message newlyInvisibleMessage = getMessageFactory().generateNewlyInvisibleMessage(object);
+				queueOutgoingMessage(newlyInvisibleMessage);
+			}
 		}
 	}
 
 	private void queueStateChangeMessages() {
-		player.getVisibleObjects().values().stream().filter(object -> object instanceof Actor).forEach(object ->
-			  queueActorStateChangeMessages((Actor) object));
+		Object o = player.getPreUpdateEvent(Vision.EVENT_NAME);
+		if (o != null && o instanceof Vision)
+		{
+			Vision vision = (Vision) o;
+			Set<WorldObject> visibles = vision.getVisibleObjects();
+			visibles.stream().filter(object -> object instanceof Actor).forEach(object ->
+				  queueActorStateChangeMessages((Actor) object));
+		}
 	}
 
 	private void queueActorStateChangeMessages(Actor object) {

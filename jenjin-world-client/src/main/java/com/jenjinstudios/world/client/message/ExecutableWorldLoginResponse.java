@@ -6,12 +6,16 @@ import com.jenjinstudios.world.client.WorldClient;
 import com.jenjinstudios.world.client.WorldClientUpdater;
 import com.jenjinstudios.world.math.Vector2D;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  * Handles login responses from the server.
  * @author Caleb Brinkman
  */
 public class ExecutableWorldLoginResponse extends WorldClientExecutableMessage
 {
+	private static final Logger LOGGER = Logger.getLogger(ExecutableWorldLoginResponse.class.getName());
 	/** The player created as indicated by the world login response. */
 	private Actor player;
 
@@ -31,11 +35,11 @@ public class ExecutableWorldLoginResponse extends WorldClientExecutableMessage
 		client.getLoginTracker().setLoggedIn(success);
 		if (success)
 		{
-
+			LOGGER.log(Level.INFO, "Logged in successfully; Player ID: " + player.getId());
 			client.getLoginTracker().setLoggedInTime((long) getMessage().getArgument("loginTime"));
 			client.setName(client.getUser().getUsername());
 			client.setPlayer(player);
-			client.getWorld().getWorldObjects().scheduleForAddition(player, player.getId());
+			client.getWorld().getWorldObjects().set(player.getId(), player);
 
 			client.addRepeatedTask(new WorldClientUpdater(client));
 		}
@@ -50,6 +54,5 @@ public class ExecutableWorldLoginResponse extends WorldClientExecutableMessage
 		player.setId(id);
 		Vector2D vector2D = new Vector2D(xCoordinate, yCoordinate);
 		player.setVector2D(vector2D);
-		player.setLastStepTime((long) getMessage().getArgument("loginTime"));
 	}
 }

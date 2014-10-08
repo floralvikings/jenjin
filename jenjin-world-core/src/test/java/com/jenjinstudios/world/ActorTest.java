@@ -1,7 +1,10 @@
 package com.jenjinstudios.world;
 
+import com.jenjinstudios.world.actor.StateChangeStack;
+import com.jenjinstudios.world.event.EventStack;
 import com.jenjinstudios.world.math.Angle;
 import com.jenjinstudios.world.math.Vector2D;
+import com.jenjinstudios.world.util.WorldUtils;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -10,35 +13,39 @@ import org.testng.annotations.Test;
  */
 public class ActorTest
 {
-	private static final World world = new World();
+	private static final World world = WorldUtils.createDefaultWorld();
 
 	@Test
 	public void testReset() {
 		Actor actor = new Actor("Actor");
-		world.getWorldObjects().scheduleForAddition(actor);
+		world.getWorldObjects().add(actor);
 		world.update();
 		Angle angle = new Angle(0.0, Angle.FRONT);
 		actor.setAngle(angle);
-		actor.reset();
-		Assert.assertEquals(actor.getStateChanges().get(0).angle, angle);
+		actor.postUpdate();
+		EventStack stack = actor.getEventStack(StateChangeStack.STACK_NAME);
+		Assert.assertNotNull(stack);
+		Assert.assertTrue(stack instanceof StateChangeStack);
+		Assert.assertEquals(((StateChangeStack) stack).getStateChanges().get(1).angle, angle);
 	}
 
 	@Test
 	public void testSetUp() {
 		Actor actor = new Actor("Actor");
-		world.getWorldObjects().scheduleForAddition(actor);
+		world.getWorldObjects().add(actor);
 		world.update();
 		Angle angle = new Angle(0.0, Angle.FRONT);
 		actor.setAngle(angle);
 		world.update();
-		actor.setUp();
-		Assert.assertEquals(actor.getStateChanges().size(), 0);
+		actor.preUpdate();
+		StateChangeStack stack = (StateChangeStack) actor.getEventStack(StateChangeStack.STACK_NAME);
+		Assert.assertEquals(stack.getStateChanges().size(), 0);
 	}
 
 	@Test
 	public void testStep() throws InterruptedException {
 		Actor actor = new Actor("Actor");
-		world.getWorldObjects().scheduleForAddition(actor);
+		world.getWorldObjects().add(actor);
 		world.update();
 		Angle angle = new Angle(0.0, Angle.FRONT);
 		actor.setAngle(angle);
@@ -54,7 +61,7 @@ public class ActorTest
 	@Test
 	public void testStepToNullLocation() throws InterruptedException {
 		Actor actor = new Actor("Actor");
-		world.getWorldObjects().scheduleForAddition(actor);
+		world.getWorldObjects().add(actor);
 		world.update();
 		Angle angle = new Angle(0.0, Angle.BACK);
 		actor.setAngle(angle);
@@ -68,7 +75,7 @@ public class ActorTest
 	@Test
 	public void testGetForcedState() throws InterruptedException {
 		Actor actor = new Actor("Actor");
-		world.getWorldObjects().scheduleForAddition(actor);
+		world.getWorldObjects().add(actor);
 		Angle angle = new Angle(0.0, Angle.BACK);
 		actor.setAngle(angle);
 		Thread.sleep(1000); // Sleep to move one DEFAULT_MOVE_SPEED backward

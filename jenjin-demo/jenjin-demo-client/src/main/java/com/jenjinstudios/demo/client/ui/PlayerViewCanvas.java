@@ -3,6 +3,9 @@ package com.jenjinstudios.demo.client.ui;
 import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.Location;
 import com.jenjinstudios.world.WorldObject;
+import com.jenjinstudios.world.actor.Vision;
+import com.jenjinstudios.world.math.SightCalculator;
+import com.jenjinstudios.world.util.LocationUtils;
 import javafx.application.Platform;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -11,7 +14,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.transform.Rotate;
 
 import java.io.InputStream;
-import java.util.Properties;
+import java.util.Map;
 
 /**
  * @author Caleb Brinkman
@@ -55,16 +58,17 @@ public class PlayerViewCanvas extends Canvas
 	}
 
 	protected void drawLocations() {
-		if (clientPlayer.getLocation() != null)
+		if (LocationUtils.getObjectLocation(clientPlayer) != null)
 		{
-			clientPlayer.getVisibleLocations().stream().filter(l -> l != null).forEach(this::drawLocation);
+			SightCalculator.getVisibleLocations(clientPlayer).stream().filter(l -> l != null).
+				  forEach(this::drawLocation);
 		}
 	}
 
 	protected void drawLocation(Location location) {
-		Location pLoc = clientPlayer.getLocation();
-		int xDiff = location.X_COORDINATE - pLoc.X_COORDINATE;
-		int yDiff = location.Y_COORDINATE - pLoc.Y_COORDINATE;//+ 1;
+		Location pLoc = LocationUtils.getObjectLocation(clientPlayer);
+		int xDiff = location.getX() - pLoc.getX();
+		int yDiff = location.getY() - pLoc.getY();//+ 1;
 		double xBuff = clientPlayer.getVector2D().getXCoordinate() % Location.SIZE;
 		double yBuff = clientPlayer.getVector2D().getYCoordinate() % Location.SIZE;
 
@@ -73,8 +77,8 @@ public class PlayerViewCanvas extends Canvas
 
 		GraphicsContext graphicsContext2D = getGraphicsContext2D();
 
-		Properties properties = location.getProperties();
-		boolean walkable = !"false".equals(properties.getProperty("walkable"));
+		Map<String, String> properties = location.getProperties();
+		boolean walkable = !"false".equals(properties.get("walkable"));
 		boolean indoors = "true".equals(properties.get("indoors"));
 		if (!walkable)
 		{
@@ -87,12 +91,17 @@ public class PlayerViewCanvas extends Canvas
 			graphicsContext2D.setFill(Color.GREEN);
 		}
 
-		graphicsContext2D.fillRect(x, y, SCALE, SCALE);
+		graphicsContext2D.fillRect(x, y, SCALE - 2, SCALE - 2);
 	}
 
 	protected void drawObjects() {
-		clientPlayer.getVisibleObjects().values().forEach(this::drawObject);
-		drawObject(clientPlayer);
+		Object object = clientPlayer.getPreUpdateEvent(Vision.EVENT_NAME);
+		if (object != null && object instanceof Vision)
+		{
+			Vision vision = (Vision) object;
+			vision.getVisibleObjects().forEach(this::drawObject);
+			drawObject(clientPlayer);
+		}
 	}
 
 	private void drawObject(WorldObject o) {

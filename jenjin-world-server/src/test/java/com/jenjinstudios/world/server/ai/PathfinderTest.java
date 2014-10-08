@@ -3,12 +3,14 @@ package com.jenjinstudios.world.server.ai;
 import com.jenjinstudios.world.Location;
 import com.jenjinstudios.world.Zone;
 import com.jenjinstudios.world.math.Dimension2D;
+import com.jenjinstudios.world.util.ZoneUtils;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.Properties;
+import java.util.Map;
 
 /**
  * @author Caleb Brinkman
@@ -17,8 +19,8 @@ public class PathfinderTest
 {
 	@Test
 	public void testFindPath() {
-		Properties properties = new Properties();
-		properties.setProperty("walkable", "false");
+		Map<String, String> properties = new HashMap<>();
+		properties.put("walkable", "false");
 		Location[] obstacles = {
 			  new Location(0, 8, properties), new Location(1, 8, properties), new Location(2, 8, properties),
 			  new Location(3, 8, properties), new Location(4, 8, properties), new Location(5, 8, properties),
@@ -35,9 +37,9 @@ public class PathfinderTest
 
 
 		Zone zone = new Zone(0, new Dimension2D(20, 20), obstacles);
-		Location start = zone.getLocationOnGrid(5, 5);
-		Location end = zone.getLocationOnGrid(5, 15);
-		Pathfinder pathfinder = new Pathfinder(start, end);
+		Location start = ZoneUtils.getLocationOnGrid(zone, 5, 5);
+		Location end = ZoneUtils.getLocationOnGrid(zone, 5, 15);
+		Pathfinder pathfinder = new Pathfinder(zone, start, end);
 		LinkedList<Location> actualPath = pathfinder.findPath();
 		Assert.assertEquals(actualPath, expectedPath);
 	}

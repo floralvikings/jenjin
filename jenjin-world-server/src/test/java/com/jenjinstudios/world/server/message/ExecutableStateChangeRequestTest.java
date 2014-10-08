@@ -7,6 +7,7 @@ import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.math.Angle;
 import com.jenjinstudios.world.server.WorldClientHandler;
 import com.jenjinstudios.world.server.WorldServer;
+import com.jenjinstudios.world.util.WorldUtils;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -23,9 +24,9 @@ public class ExecutableStateChangeRequestTest
 
 	@Test
 	public void testValidRequest() throws InterruptedException {
-		World world = new World();
+		World world = WorldUtils.createDefaultWorld();
 		Actor player = new Actor("FooBar");
-		world.getWorldObjects().scheduleForAddition(player);
+		world.getWorldObjects().add(player);
 		world.update();
 		WorldClientHandler mock = mock(WorldClientHandler.class);
 		when(mock.getPlayer()).thenReturn(player);
@@ -42,18 +43,18 @@ public class ExecutableStateChangeRequestTest
 		executableStateChangeRequest.runImmediate();
 		executableStateChangeRequest.runDelayed();
 
-		player.setUp();
+		player.preUpdate();
 		player.update();
-		player.reset();
+		player.postUpdate();
 
 		Assert.assertEquals(player.getAngle(), new Angle(0.0, Angle.FRONT));
 	}
 
 	@Test
 	public void testInvalidRequestCoordinates() {
-		World world = new World();
+		World world = WorldUtils.createDefaultWorld();
 		Actor player = new Actor("FooBar");
-		world.getWorldObjects().scheduleForAddition(player);
+		world.getWorldObjects().add(player);
 		world.update();
 		WorldClientHandler mock = mock(WorldClientHandler.class);
 		when(mock.getPlayer()).thenReturn(player);
@@ -70,9 +71,9 @@ public class ExecutableStateChangeRequestTest
 		executableStateChangeRequest.runImmediate();
 		executableStateChangeRequest.runDelayed();
 
-		player.setUp();
+		player.preUpdate();
 		player.update();
-		player.reset();
+		player.postUpdate();
 
 		Assert.assertEquals(player.getAngle(), new Angle(0.0, Angle.IDLE));
 	}
@@ -80,9 +81,9 @@ public class ExecutableStateChangeRequestTest
 	@Test
 	public void testInvalidRequestTime() {
 		// Functionally the same as testing excessive delay.
-		World world = new World();
+		World world = WorldUtils.createDefaultWorld();
 		Actor player = new Actor("FooBar");
-		world.getWorldObjects().scheduleForAddition(player);
+		world.getWorldObjects().add(player);
 		world.update();
 		WorldClientHandler mock = mock(WorldClientHandler.class);
 		when(mock.getPlayer()).thenReturn(player);
@@ -99,18 +100,18 @@ public class ExecutableStateChangeRequestTest
 		executableStateChangeRequest.runImmediate();
 		executableStateChangeRequest.runDelayed();
 
-		player.setUp();
+		player.preUpdate();
 		player.update();
-		player.reset();
+		player.postUpdate();
 
 		Assert.assertEquals(player.getAngle(), new Angle(0.0, Angle.IDLE));
 	}
 
 	@Test
 	public void testExcessiveDelay() throws InterruptedException {
-		World world = new World();
+		World world = WorldUtils.createDefaultWorld();
 		Actor player = new Actor("FooBar");
-		world.getWorldObjects().scheduleForAddition(player);
+		world.getWorldObjects().add(player);
 		world.update();
 		WorldClientHandler mock = mock(WorldClientHandler.class);
 		WorldServer worldServer = mock(WorldServer.class);
@@ -127,9 +128,9 @@ public class ExecutableStateChangeRequestTest
 		ExecutableStateChangeRequest executableStateChangeRequest = new ExecutableStateChangeRequest(mock, request);
 		executableStateChangeRequest.runImmediate();
 		executableStateChangeRequest.runDelayed();
-		player.setUp();
+		player.preUpdate();
 		player.update();
-		player.reset();
+		player.postUpdate();
 
 		Assert.assertEquals(player.getAngle(), new Angle(0.0, Angle.IDLE));
 	}

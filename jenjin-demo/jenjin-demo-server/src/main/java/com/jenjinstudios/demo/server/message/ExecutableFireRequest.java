@@ -28,7 +28,7 @@ public class ExecutableFireRequest extends WorldExecutableMessage
 		World world = ((WorldServer) getClientHandler().getServer()).getWorld();
 		Actor player = getClientHandler().getPlayer();
 		Bullet bullet = new Bullet(player);
-		world.getWorldObjects().scheduleForAddition(bullet);
+		world.getWorldObjects().add(bullet);
 	}
 
 	/** Run asynchronous portion of this message. */
