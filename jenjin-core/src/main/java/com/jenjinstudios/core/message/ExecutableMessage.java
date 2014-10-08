@@ -98,6 +98,9 @@ public abstract class ExecutableMessage
 		return correctConstructor;
 	}
 
+	/**
+	 * This method is invoked by the {@code Connection} execution timer, and should not be called directly.
+	 */
 	public abstract void runDelayed();
 
 	public abstract void runImmediate();
