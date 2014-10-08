@@ -10,32 +10,16 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- * The {@code ExecutableMessage} class should be extended to create self-handling messages on the server.
- * @author Caleb Brinkman
- */
 @SuppressWarnings("unused")
 public abstract class ExecutableMessage
 {
-	/** The logger for this class. */
 	private static final Logger LOGGER = Logger.getLogger(ExecutableMessage.class.getName());
-	/** The Message for this ExecutableMessage. */
 	private final Message message;
 
-	/**
-	 * Construct an ExecutableMessage with the given Message.
-	 * @param message The Message.
-	 */
 	protected ExecutableMessage(Message message) {
 		this.message = message;
 	}
 
-	/**
-	 * Get an executable message for the given connection and message.
-	 * @param connection The connection.
-	 * @param message The Message.
-	 * @return The ExecutableMessage appropriate to the given message.
-	 */
 	public static ExecutableMessage getExecutableMessageFor(Connection connection, Message message) {
 		ExecutableMessage executableMessage = null;
 		Constructor execConstructor = getExecConstructor(connection, message);
@@ -90,16 +74,10 @@ public abstract class ExecutableMessage
 		return correctConstructor;
 	}
 
-	/** Run the synced portion of this message. */
 	public abstract void runDelayed();
 
-	/** Run asynchronous portion of this message. */
 	public abstract void runImmediate();
 
-	/**
-	 * The Message for this ExecutableMessage.
-	 * @return The Message used by this ExecutableMessage
-	 */
 	public Message getMessage() {
 		return message;
 	}
