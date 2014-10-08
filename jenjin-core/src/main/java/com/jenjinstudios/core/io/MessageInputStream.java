@@ -33,6 +33,11 @@ public class MessageInputStream extends DataInputStream
 	private Cipher decryptCipher;
 	private boolean closed;
 
+	/**
+	 * Construct a new {@code MessageInputStream} which will read from the specified {@code InputStream}.
+	 *
+	 * @param inputStream The {@code InputStream} from which this {@code MessageInputStream} will read.
+	 */
 	public MessageInputStream(InputStream inputStream) {
 		super(inputStream);
 		this.messageRegistry = MessageRegistry.getInstance();
