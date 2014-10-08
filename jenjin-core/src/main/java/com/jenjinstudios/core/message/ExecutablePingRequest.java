@@ -12,6 +12,12 @@ public class ExecutablePingRequest extends ExecutableMessage
 {
 	private final Connection connection;
 
+	/**
+	 * Construct a new PingRequest.
+	 *
+	 * @param connection The connection invoking this executable message.
+	 * @param message The message which caused this executable message to be invoked.
+	 */
 	public ExecutablePingRequest(Connection connection, Message message) {
 		super(message);
 		this.connection = connection;
