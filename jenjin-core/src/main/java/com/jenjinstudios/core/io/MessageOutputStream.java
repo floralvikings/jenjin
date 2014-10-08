@@ -61,6 +61,11 @@ public class MessageOutputStream extends DataOutputStream
 			writeArgument(args[i], argumentTypes.get(i).isEncrypt());
 	}
 
+	/**
+	 * Return whether this stream has been closed.
+	 *
+	 * @return Whether this stream has been closed.
+	 */
 	public boolean isClosed() {
 		return closed;
 	}
