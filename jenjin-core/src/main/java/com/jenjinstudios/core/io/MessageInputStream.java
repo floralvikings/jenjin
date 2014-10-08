@@ -39,6 +39,7 @@ public class MessageInputStream extends DataInputStream
 	}
 
 	public Message readMessage() throws IOException {
+		// TODO Does this need to be here?  Why not just allow the normal IOException to be thrown?
 		if (closed)
 		{
 			throw new IOException("Stream closed");
