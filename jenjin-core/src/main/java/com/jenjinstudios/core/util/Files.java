@@ -3,6 +3,11 @@ package com.jenjinstudios.core.util;
 import java.io.File;
 import java.util.ArrayList;
 
+/**
+ * Utility class used for file searching.
+ *
+ * @author Caleb Brinkman
+ */
 public class Files
 {
 	private Files() { }
