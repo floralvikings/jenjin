@@ -31,6 +31,11 @@ public class ArgumentType
 	 */
 	public String getType() { return type; }
 
+	/**
+	 * Get the name of the argument.
+	 *
+	 * @return The name of the argument.
+	 */
 	public String getName() { return name; }
 
 	public Boolean isEncrypt() { return encrypt; }
