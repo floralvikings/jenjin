@@ -47,6 +47,11 @@ public class Messages
 		return this.disabledMessages;
 	}
 
+	/**
+	 * Add the specicied {@code Messages} object to this one.
+	 *
+	 * @param messages The {@code Messages} object to add.
+	 */
 	public void addAll(Messages messages) {
 		if (messages != null)
 		{
