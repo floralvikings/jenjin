@@ -18,6 +18,11 @@ public class DisabledMessageType
 	@XmlAttribute(name = "name")
 	private String name;
 
+	/**
+	 * Get the name of the {@code Message} to be disabled.
+	 *
+	 * @return The name of the {@code Message} to be disabled.
+	 */
 	public String getName() {
 		return name;
 	}
