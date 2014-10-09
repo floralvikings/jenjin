@@ -20,6 +20,8 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/simpleContent>
  * &lt;/complexType>
  * </pre>
+ *
+ * @author Caleb Brinkman
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "disabled_message", namespace = "https://www.jenjinstudios.com")
