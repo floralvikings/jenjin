@@ -42,6 +42,11 @@ public class MessageType
 		return this.arguments;
 	}
 
+	/**
+	 * Get the name of the class of the {@code ExecutableMessage} to be invoked when this message is received.
+	 *
+	 * @return The name of the class of the {@code ExecutableMessage} to be invoked when this message is received.
+	 */
 	public String getExecutable() { return executable; }
 
 	public String getName() { return name; }
