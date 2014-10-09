@@ -26,6 +26,14 @@ public class MessageType
 	@XmlAttribute(name = "id", required = true)
 	private short id;
 
+	/**
+	 * Get the {@code ArgumentType} objects containing the metadata of the arguments that the {@code Message} should
+	 * contain, in the order in which they should be read and written to a stream.
+	 *
+	 * @return The {@code ArgumentType} objects containing the metadata of the arguments that the {@code Message}
+	 * should
+	 * contain, in the order in which they should be read and written to a stream.
+	 */
 	public List<ArgumentType> getArguments() {
 		if (arguments == null)
 		{
