@@ -21,6 +21,11 @@ public class Messages
 	@XmlElement(name = "disabled_message", namespace = "https://www.jenjinstudios.com")
 	private List<DisabledMessageType> disabledMessages;
 
+	/**
+	 * Get the {@code MessageType} objects contained in this collection.
+	 *
+	 * @return The {@code MessageType} objects contained in this collection.
+	 */
 	public List<MessageType> getMessages() {
 		if (messages == null)
 		{
