@@ -4,6 +4,12 @@ import javax.xml.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Contains properties representing the metadata of a {@code Message} object, used to constuct a {@code Message} from a
+ * stream.
+ *
+ * @author Caleb Brinkman
+ */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "message", namespace = "https://www.jenjinstudios.com", propOrder = {
 	  "arguments",
