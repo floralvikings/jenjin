@@ -34,6 +34,11 @@ public class Messages
 		return this.messages;
 	}
 
+	/**
+	 * Get the {@code DisabledMessageType} objects contained in this collection.
+	 *
+	 * @return The {@code DisabledMessageType} objects contained in this collection.
+	 */
 	public List<DisabledMessageType> getDisabledMessages() {
 		if (disabledMessages == null)
 		{
