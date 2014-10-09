@@ -40,6 +40,14 @@ public class Hash
 		return hashedString;
 	}
 
+	/**
+	 * Get a SHA-256 hash of the {@code String} created by combining {@code salt} and {@code hash}.
+	 *
+	 * @param input The string to be salted and hashed.
+	 * @param salt The salt to prepend to the string before hashing.
+	 *
+	 * @return The hashed, salted string.
+	 */
 	public static String getHashedString(String input, String salt) {
 		return getHashedString(salt + input);
 	}
