@@ -23,6 +23,12 @@ public class ArgumentType
 	@XmlAttribute(name = "encrypt")
 	private boolean encrypt = false;
 
+	/**
+	 * Get the type of the argument.
+	 *
+	 * @return A String representation of the type of this object.  This can be converted to a Class object by the
+	 * {@code TypeMapper} class.
+	 */
 	public String getType() { return type; }
 
 	public String getName() { return name; }
