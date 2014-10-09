@@ -38,6 +38,11 @@ public class ArgumentType
 	 */
 	public String getName() { return name; }
 
+	/**
+	 * Get whether the argument should be encrypted.
+	 *
+	 * @return Whether the argument should be encrypted.
+	 */
 	public Boolean isEncrypt() { return encrypt; }
 
 	@Override
