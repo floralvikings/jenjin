@@ -4,6 +4,11 @@ import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+/**
+ * Utility class used to hash data.
+ *
+ * @author Caleb Brinkman
+ */
 public class Hash
 {
 	private static String getHashedString(String input) {
