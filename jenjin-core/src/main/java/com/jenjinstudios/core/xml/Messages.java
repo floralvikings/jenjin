@@ -7,7 +7,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 import java.util.ArrayList;
 import java.util.List;
 
-
+/**
+ * Represents a collection of {@code MessageType} and {@code DisabledMessageType} objects.
+ *
+ * @author Caleb Brinkman
+ */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "messages", namespace = "https://www.jenjinstudios.com")
 public class Messages
