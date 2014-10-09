@@ -11,6 +11,9 @@ import java.security.NoSuchAlgorithmException;
  */
 public class Hash
 {
+	// TODO Modify this method to use a Stream instead of a string.
+	// TODO Allow this method to throw a custom exception, instead of returning null
+	// TODO Rename to something that reflects that this function returns a SHA-256 hash.
 	private static String getHashedString(String input) {
 		String hashedString;
 		try
