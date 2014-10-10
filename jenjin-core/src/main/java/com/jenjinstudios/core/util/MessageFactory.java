@@ -55,7 +55,7 @@ public class MessageFactory
 	 * @return The generated PingResponse.
 	 */
 	public Message generatePingResponse(long requestTimeMillis) {
-		Message pingResponse = getMessageRegistry().createMessage("PingResponse");
+		Message pingResponse = MessageRegistry.getInstance().createMessage("PingResponse");
 		pingResponse.setArgument("requestTimeMillis", requestTimeMillis);
 		return pingResponse;
 	}
@@ -68,17 +68,9 @@ public class MessageFactory
 	 * @return The generated message.
 	 */
 	public Message generatePublicKeyMessage(PublicKey publicKey) {
-		Message publicKeyMessage = getMessageRegistry().createMessage("PublicKeyMessage");
+		Message publicKeyMessage = MessageRegistry.getInstance().createMessage("PublicKeyMessage");
 		publicKeyMessage.setArgument("publicKey", publicKey.getEncoded());
 		return publicKeyMessage;
 	}
-
-	/**
-	 * Get the message registry used by this class to generate messages.
-	 *
-	 * @return The message registry used by this class to generate messages.
-	 */
-	// TODO This method can be replaced with MessageRegistry.getInstance().
-	protected MessageRegistry getMessageRegistry() { return MessageRegistry.getInstance(); }
 
 }
