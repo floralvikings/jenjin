@@ -20,6 +20,12 @@ public class PingTracker
 		pingTimes = new LinkedList<>();
 	}
 
+	/**
+	 * Add a "ping" time to the list maintained by this object.  This should be the amount of time, in milliseconds, a
+	 * ping took to travel from one connection to another and back.
+	 *
+	 * @param pingTime The time taken for a ping to travel from one connection to another and back.
+	 */
 	public void addPingTime(long pingTime) { pingTimes.add(pingTime); }
 
 	public long getAveragePingTime() {
