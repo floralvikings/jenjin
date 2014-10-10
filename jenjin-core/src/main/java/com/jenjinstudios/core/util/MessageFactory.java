@@ -73,6 +73,7 @@ public class MessageFactory
 		return publicKeyMessage;
 	}
 
+	// TODO This method can be replaced with MessageRegistry.getInstance().
 	protected MessageRegistry getMessageRegistry() { return messageRegistry; }
 
 }
