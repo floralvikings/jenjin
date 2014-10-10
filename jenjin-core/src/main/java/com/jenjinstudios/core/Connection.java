@@ -130,6 +130,7 @@ public class Connection extends Thread
 		return keyPair;
 	}
 
+	// TODO Move this method into MessageIO
 	private void closeOutputStream() {
 		try
 		{
@@ -140,6 +141,7 @@ public class Connection extends Thread
 		}
 	}
 
+	// TODO Move this method into MessageIO
 	private void closeInputStream() {
 		try
 		{
