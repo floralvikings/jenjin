@@ -60,6 +60,13 @@ public class MessageFactory
 		return pingResponse;
 	}
 
+	/**
+	 * Generate a PublicKeyMessage for the given {@code PublicKey}.
+	 *
+	 * @param publicKey The {@code PublicKey} for which to generate a {@code Message}.
+	 *
+	 * @return The generated message.
+	 */
 	public Message generatePublicKeyMessage(PublicKey publicKey) {
 		Message publicKeyMessage = getMessageRegistry().createMessage("PublicKeyMessage");
 		publicKeyMessage.setArgument("publicKey", publicKey.getEncoded());
