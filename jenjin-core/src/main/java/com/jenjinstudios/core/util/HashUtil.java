@@ -52,6 +52,5 @@ public class HashUtil
 	 *
 	 * @return The hashed, salted string.
 	 */
-	// TODO Rename to reflect that this function uses SHA-256
 	public static String getSaltedSHA256String(String input, String salt) { return getSHA256String(salt + input); }
 }
