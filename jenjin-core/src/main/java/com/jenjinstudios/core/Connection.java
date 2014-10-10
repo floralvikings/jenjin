@@ -123,6 +123,11 @@ public class Connection extends Thread
 	// TODO This should really be a static class with Connections passed as parameters.
 	public MessageFactory getMessageFactory() { return messageFactory; }
 
+	/**
+	 * Get the PingTracker used by this connection to track latency.
+	 *
+	 * @return The PingTracker used by this connection to track latency.
+	 */
 	public PingTracker getPingTracker() { return pingTracker; }
 
 	public ExecutableMessageQueue getExecutableMessageQueue() { return executableMessageQueue; }
