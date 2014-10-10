@@ -120,6 +120,7 @@ public class Connection extends Thread
 	 * @return The {@code MessageFactory} to be used to generate the {@code Message} objects to be written by this
 	 * {@code Connection}.
 	 */
+	// TODO This should really be a static class with Connections passed as parameters.
 	public MessageFactory getMessageFactory() { return messageFactory; }
 
 	public PingTracker getPingTracker() { return pingTracker; }
