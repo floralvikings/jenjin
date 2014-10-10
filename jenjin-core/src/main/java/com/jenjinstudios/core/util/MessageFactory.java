@@ -46,7 +46,7 @@ public class MessageFactory
 	 *
 	 * @return The generated PingResponse.
 	 */
-	public Message generatePingResponse(long requestTimeMillis) {
+	public static Message generatePingResponse(long requestTimeMillis) {
 		Message pingResponse = MessageRegistry.getInstance().createMessage("PingResponse");
 		pingResponse.setArgument("requestTimeMillis", requestTimeMillis);
 		return pingResponse;
