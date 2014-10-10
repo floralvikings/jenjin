@@ -12,12 +12,11 @@ import java.security.NoSuchAlgorithmException;
 public class Hash
 {
 	// TODO Modify this method to use a Stream instead of a string.
-	// TODO Allow this method to throw a custom exception, instead of returning null
 	// TODO Rename to something that reflects that this function returns a SHA-256 hash.
 	private static String getHashedString(String input) {
-		String hashedString;
 		try
 		{
+			String hashedString;
 			//Convert the pass to an md5 hash string
 			byte[] passBytes = input.getBytes("UTF-8");
 			MessageDigest md = MessageDigest.getInstance("SHA-256");
@@ -33,11 +32,11 @@ public class Hash
 				hexString.append(hex);
 			}
 			hashedString = hexString.toString();
+			return hashedString;
 		} catch (NoSuchAlgorithmException | UnsupportedEncodingException ex)
 		{
-			hashedString = null;
+			throw new RuntimeException("Unable to find SHA-256 Algorithm");
 		}
-		return hashedString;
 	}
 
 	/**
