@@ -59,6 +59,7 @@ public class Connection extends Thread
 	 *
 	 * @param publicKey The public key.
 	 */
+	// TODO Move this method into the MessageIO class
 	public void setPublicKey(PublicKey publicKey) { messageIO.getOut().setPublicKey(publicKey); }
 
 	public void queueOutgoingMessage(Message message) {
