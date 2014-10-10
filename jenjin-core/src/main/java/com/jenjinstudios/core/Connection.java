@@ -3,11 +3,10 @@ package com.jenjinstudios.core;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageTypeException;
 import com.jenjinstudios.core.util.MessageFactory;
+import com.jenjinstudios.core.util.SecurityUtil;
 
 import java.io.IOException;
 import java.security.KeyPair;
-import java.security.KeyPairGenerator;
-import java.security.NoSuchAlgorithmException;
 import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -44,7 +43,7 @@ public class Connection extends Thread
 		executableMessageQueue = new ExecutableMessageQueue();
 		messageFactory = new MessageFactory();
 		messageExecutor = new MessageExecutor(this, messageIO.getIn());
-		KeyPair rsaKeyPair = generateRSAKeyPair();
+		KeyPair rsaKeyPair = SecurityUtil.generateRSAKeyPair();
 		if (rsaKeyPair != null)
 		{
 			messageIO.getIn().setPrivateKey(rsaKeyPair.getPrivate());
@@ -143,22 +142,6 @@ public class Connection extends Thread
 		running = false;
 		closeInputStream();
 		closeOutputStream();
-	}
-
-	// TODO Extract this method
-	private KeyPair generateRSAKeyPair() {
-		KeyPair keyPair = null;
-		try
-		{
-			KeyPairGenerator keyPairGenerator;
-			keyPairGenerator = KeyPairGenerator.getInstance("RSA");
-			keyPairGenerator.initialize(512);
-			keyPair = keyPairGenerator.generateKeyPair();
-		} catch (NoSuchAlgorithmException e)
-		{
-			LOGGER.log(Level.SEVERE, "Unable to create RSA key pair!", e);
-		}
-		return keyPair;
 	}
 
 	// TODO Move this method into MessageIO
