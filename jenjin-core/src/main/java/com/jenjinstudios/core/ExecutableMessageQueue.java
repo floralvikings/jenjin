@@ -5,12 +5,8 @@ import com.jenjinstudios.core.message.ExecutableMessage;
 import java.util.LinkedList;
 import java.util.List;
 
-/**
- * @author Caleb Brinkman
- */
 public class ExecutableMessageQueue
 {
-	/** The "one-shot" tasks to be executed in the current client loop. */
 	private final List<ExecutableMessage> queuedExecutableMessages;
 
 	public ExecutableMessageQueue() {
