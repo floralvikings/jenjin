@@ -11,8 +11,6 @@ import java.security.NoSuchAlgorithmException;
  */
 public class HashUtil
 {
-	// TODO Modify this method to be more flexible.
-	// TODO Rename to something that reflects that this function returns a SHA-256 hash.
 	private static String getSHA256String(String input) {
 		try
 		{
