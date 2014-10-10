@@ -9,9 +9,6 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- * @author Caleb Brinkman
- */
 public class MessageExecutor
 {
 	private static final Logger LOGGER = Logger.getLogger(MessageExecutor.class.getName());
