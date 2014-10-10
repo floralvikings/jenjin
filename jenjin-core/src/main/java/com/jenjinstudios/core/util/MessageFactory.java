@@ -59,7 +59,7 @@ public class MessageFactory
 	 *
 	 * @return The generated message.
 	 */
-	public Message generatePublicKeyMessage(PublicKey publicKey) {
+	public static Message generatePublicKeyMessage(PublicKey publicKey) {
 		Message publicKeyMessage = MessageRegistry.getInstance().createMessage("PublicKeyMessage");
 		publicKeyMessage.setArgument("publicKey", publicKey.getEncoded());
 		return publicKeyMessage;

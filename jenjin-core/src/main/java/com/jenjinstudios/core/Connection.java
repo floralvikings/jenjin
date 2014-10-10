@@ -49,7 +49,7 @@ public class Connection extends Thread
 		if (rsaKeyPair != null)
 		{
 			messageIO.getIn().setPrivateKey(rsaKeyPair.getPrivate());
-			Message message = messageFactory.generatePublicKeyMessage(rsaKeyPair.getPublic());
+			Message message = MessageFactory.generatePublicKeyMessage(rsaKeyPair.getPublic());
 			queueOutgoingMessage(message);
 		}
 	}
@@ -94,7 +94,8 @@ public class Connection extends Thread
 
 	@Override
 	// TODO Extract MessageReaderThread class; responsibility should really be split up.
-	public void run() {
+	public void run()
+	{
 		running = true;
 		while (running && invalidMsgCount < MAX_INVALID_MESSAGES && messageExecutor.processNextIncomingMessage())
 		{
@@ -107,8 +108,8 @@ public class Connection extends Thread
 	}
 
 	/**
-	 * Execute the {@code runDelayed} method of each {@code ExecutableMessage} in the queue,
-	 * in the order in which their
+	 * Execute the {@code runDelayed} method of each {@code ExecutableMessage} in the queue, in the order in which
+	 * their
 	 * {@code Message} objects were received.
 	 */
 	public void runQueuedExecutableMessages() { executableMessageQueue.runQueuedExecutableMessages(); }
