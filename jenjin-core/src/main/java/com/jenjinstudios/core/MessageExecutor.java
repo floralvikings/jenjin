@@ -20,7 +20,13 @@ public class MessageExecutor
 	private final Connection connection;
 	private final MessageInputStream inputStream;
 
-
+	/**
+	 * Construct a new {@code MessageExecutor} working for the given {@code Connection} reading from the given {@code
+	 * MessageInputStream}.
+	 *
+	 * @param connection The connection.
+	 * @param inputStream The message input stream.
+	 */
 	public MessageExecutor(Connection connection, MessageInputStream inputStream) {
 		this.connection = connection;
 		this.inputStream = inputStream;
