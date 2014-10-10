@@ -79,6 +79,9 @@ public class Connection extends Thread
 		}
 	}
 
+	/**
+	 * Write all the messages in the outgoing messages queue to the output stream.
+	 */
 	public void writeAllMessages() {
 		synchronized (outgoingMessages)
 		{
