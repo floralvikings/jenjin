@@ -3,6 +3,11 @@ package com.jenjinstudios.core;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * Used to track the average latency between two connections.
+ *
+ * @author Caleb Brinkman
+ */
 public class PingTracker
 {
 	private final List<Long> pingTimes;
