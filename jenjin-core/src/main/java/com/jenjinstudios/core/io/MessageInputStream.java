@@ -31,7 +31,6 @@ public class MessageInputStream extends DataInputStream
 	private static final Logger LOGGER = Logger.getLogger(MessageInputStream.class.getName());
 	private final MessageRegistry messageRegistry;
 	private Cipher decryptCipher;
-	private boolean closed;
 
 	/**
 	 * Construct a new {@code MessageInputStream} which will read from the specified {@code InputStream}.
@@ -51,11 +50,6 @@ public class MessageInputStream extends DataInputStream
 	 * @throws IOException If there is an error reading from the stream.
 	 */
 	public Message readMessage() throws IOException {
-		// TODO Does this need to be here?  Why not just allow the normal IOException to be thrown?
-		if (closed)
-		{
-			throw new IOException("Stream closed");
-		}
 		short id = readShort();
 		MessageType messageType = messageRegistry.getMessageType(id);
 		if (messageType == null)
@@ -78,7 +72,6 @@ public class MessageInputStream extends DataInputStream
 	@Override
 	public void close() throws IOException {
 		super.close();
-		closed = true;
 	}
 
 	/**
