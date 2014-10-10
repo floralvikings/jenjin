@@ -11,7 +11,6 @@ import java.util.logging.Logger;
  *
  * @author Caleb Brinkman
  */
-// TODO Can this class be moved to the test directory?
 public class DisabledExecutableMessage extends ExecutableMessage
 {
 	private static final Logger LOGGER = Logger.getLogger(DisabledExecutableMessage.class.getName());
