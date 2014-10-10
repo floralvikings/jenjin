@@ -14,6 +14,9 @@ public class ExecutableMessageQueue
 {
 	private final List<ExecutableMessage> queuedExecutableMessages;
 
+	/**
+	 * Construct a new ExecutableMessageQueue.
+	 */
 	public ExecutableMessageQueue() {
 		queuedExecutableMessages = new LinkedList<>();
 	}
