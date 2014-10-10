@@ -3,6 +3,8 @@ package com.jenjinstudios.core;
 import com.jenjinstudios.core.io.MessageInputStream;
 import com.jenjinstudios.core.io.MessageOutputStream;
 
+import java.security.PublicKey;
+
 /**
  * Used to contain a {@code MessageInputStream} and {@code MessageOutputStream}.
  *
@@ -37,5 +39,12 @@ public class MessageIO
 	 * @return The {@code MessageOutputStream} managed by this {@code MessageIO}.
 	 */
 	MessageOutputStream getOut() { return out; }
+
+	/**
+	 * Set the public key used to encrypt relevant messages.
+	 *
+	 * @param publicKey The public key.
+	 */
+	public void setPublicKey(PublicKey publicKey) { getOut().setPublicKey(publicKey); }
 
 }

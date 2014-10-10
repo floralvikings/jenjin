@@ -44,7 +44,7 @@ public class ExecutablePublicKeyMessage extends ExecutableMessage
 		try
 		{
 			PublicKey publicKey = KeyFactory.getInstance("RSA").generatePublic(new X509EncodedKeySpec(keyBytes));
-			connection.setPublicKey(publicKey);
+			connection.getMessageIO().setPublicKey(publicKey);
 		} catch (InvalidKeySpecException | NoSuchAlgorithmException e)
 		{
 			LOGGER.log(Level.INFO, "Unable to instantiate public key; messages will not be encrypted!", e);

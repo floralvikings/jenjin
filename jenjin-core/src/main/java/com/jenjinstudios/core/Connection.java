@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
-import java.security.PublicKey;
 import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -56,17 +55,10 @@ public class Connection extends Thread
 
 	/**
 	 * Get the MessageIO containing the keys and streams used by this connection.
+	 *
 	 * @return The MessageIO containing the keys and streams used by this connection.
 	 */
 	public MessageIO getMessageIO() { return messageIO; }
-
-	/**
-	 * Set the public key used to encrypt relevant messages.
-	 *
-	 * @param publicKey The public key.
-	 */
-	// TODO Move this method into the MessageIO class
-	public void setPublicKey(PublicKey publicKey) { getMessageIO().getOut().setPublicKey(publicKey); }
 
 	/**
 	 * Add the specified {@code Message} to the queue of outgoing messages.  This queue is written when {@code
