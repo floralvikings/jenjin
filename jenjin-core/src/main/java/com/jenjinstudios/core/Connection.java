@@ -104,11 +104,13 @@ public class Connection extends Thread
 
 	public ExecutableMessageQueue getExecutableMessageQueue() { return executableMessageQueue; }
 
+	// TODO Write test for this method.
 	protected void shutdown() {
 		running = false;
 		closeLink();
 	}
 
+	// TODO Inline this method.
 	protected void closeLink() {
 		closeInputStream();
 		closeOutputStream();
