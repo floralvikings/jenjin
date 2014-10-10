@@ -15,6 +15,7 @@ public class PingTracker
 	/**
 	 * Construct a new PingTracker.
 	 */
+	// TODO This constructor can be refactored away.
 	public PingTracker() {
 		pingTimes = new LinkedList<>();
 	}
