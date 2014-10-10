@@ -13,14 +13,6 @@ import java.security.PublicKey;
 // TODO Make all of these methods static.
 public class MessageFactory
 {
-	// TODO There's no reason to maintain an instance of this.
-	private final MessageRegistry messageRegistry;
-
-	/**
-	 * Construct a new {@code MessageFactory}.
-	 */
-	public MessageFactory() { this.messageRegistry = MessageRegistry.getInstance(); }
-
 	/**
 	 * Generate a PingRequest message.
 	 *
@@ -41,7 +33,7 @@ public class MessageFactory
 	 * @return The generated InvalidMessage object.
 	 */
 	public Message generateInvalidMessage(short id, String name) {
-		Message invalid = messageRegistry.createMessage("InvalidMessage");
+		Message invalid = MessageRegistry.getInstance().createMessage("InvalidMessage");
 		invalid.setArgument("messageName", name);
 		invalid.setArgument("messageID", id);
 		return invalid;
