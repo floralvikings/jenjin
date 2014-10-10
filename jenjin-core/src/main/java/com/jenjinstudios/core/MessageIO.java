@@ -13,6 +13,12 @@ public class MessageIO
 	private final MessageInputStream in;
 	private final MessageOutputStream out;
 
+	/**
+	 * Construct a new {@code MessageIO} from the given message input and output streams.
+	 *
+	 * @param in The input stream.
+	 * @param out The output stream.
+	 */
 	public MessageIO(MessageInputStream in, MessageOutputStream out) {
 		this.in = in;
 		this.out = out;
