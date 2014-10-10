@@ -17,6 +17,7 @@ public class ExecutableMessageQueue
 	/**
 	 * Construct a new ExecutableMessageQueue.
 	 */
+	// TODO This constructor can be refactored away.
 	public ExecutableMessageQueue() {
 		queuedExecutableMessages = new LinkedList<>();
 	}
