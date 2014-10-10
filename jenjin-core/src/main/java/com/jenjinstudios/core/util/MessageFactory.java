@@ -47,6 +47,13 @@ public class MessageFactory
 		return invalid;
 	}
 
+	/**
+	 * Generate a PingResponse with the given time of request.
+	 *
+	 * @param requestTimeMillis The time at which the request for this response was made.
+	 *
+	 * @return The generated PingResponse.
+	 */
 	public Message generatePingResponse(long requestTimeMillis) {
 		Message pingResponse = getMessageRegistry().createMessage("PingResponse");
 		pingResponse.setArgument("requestTimeMillis", requestTimeMillis);
