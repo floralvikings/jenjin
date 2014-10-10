@@ -31,6 +31,11 @@ public class MessageIO
 	 */
 	public MessageInputStream getIn() { return in; }
 
+	/**
+	 * Get the {@code MessageOutputStream} managed by this {@code MessageIO}.
+	 *
+	 * @return The {@code MessageOutputStream} managed by this {@code MessageIO}.
+	 */
 	public MessageOutputStream getOut() { return out; }
 
 }
