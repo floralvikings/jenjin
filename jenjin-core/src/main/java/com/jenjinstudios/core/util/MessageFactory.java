@@ -7,6 +7,7 @@ import java.security.PublicKey;
 
 public class MessageFactory
 {
+	// TODO There's no reason to maintain an instance of this.
 	private final MessageRegistry messageRegistry;
 
 	public MessageFactory() { this.messageRegistry = MessageRegistry.getInstance(); }
