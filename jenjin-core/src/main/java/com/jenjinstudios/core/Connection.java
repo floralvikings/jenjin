@@ -140,30 +140,8 @@ public class Connection extends Thread
 	 */
 	protected void shutdown() {
 		running = false;
-		closeInputStream();
-		closeOutputStream();
-	}
-
-	// TODO Move this method into MessageIO
-	private void closeOutputStream() {
-		try
-		{
-			messageIO.getOut().close();
-		} catch (IOException e)
-		{
-			LOGGER.log(Level.INFO, "Issue closing output stream.", e);
-		}
-	}
-
-	// TODO Move this method into MessageIO
-	private void closeInputStream() {
-		try
-		{
-			messageIO.getIn().close();
-		} catch (IOException e)
-		{
-			LOGGER.log(Level.INFO, "Issue closing input stream.", e);
-		}
+		messageIO.closeInputStream();
+		messageIO.closeOutputStream();
 	}
 
 	void writeMessage(Message o) {

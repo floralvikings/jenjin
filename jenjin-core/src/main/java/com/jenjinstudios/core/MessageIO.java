@@ -3,7 +3,10 @@ package com.jenjinstudios.core;
 import com.jenjinstudios.core.io.MessageInputStream;
 import com.jenjinstudios.core.io.MessageOutputStream;
 
+import java.io.IOException;
 import java.security.PublicKey;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Used to contain a {@code MessageInputStream} and {@code MessageOutputStream}.
@@ -12,6 +15,7 @@ import java.security.PublicKey;
  */
 public class MessageIO
 {
+	private static final Logger LOGGER = Logger.getLogger(MessageIO.class.getName());
 	private final MessageInputStream in;
 	private final MessageOutputStream out;
 
@@ -47,4 +51,23 @@ public class MessageIO
 	 */
 	public void setPublicKey(PublicKey publicKey) { getOut().setPublicKey(publicKey); }
 
+	void closeOutputStream() {
+		try
+		{
+			getOut().close();
+		} catch (IOException e)
+		{
+			LOGGER.log(Level.INFO, "Error closing output stream.", e);
+		}
+	}
+
+	void closeInputStream() {
+		try
+		{
+			getIn().close();
+		} catch (IOException e)
+		{
+			LOGGER.log(Level.INFO, "Error closing input stream.", e);
+		}
+	}
 }
