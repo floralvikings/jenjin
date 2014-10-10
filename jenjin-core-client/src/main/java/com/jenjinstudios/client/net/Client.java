@@ -3,6 +3,7 @@ package com.jenjinstudios.client.net;
 import com.jenjinstudios.client.message.ClientMessageFactory;
 import com.jenjinstudios.core.Connection;
 import com.jenjinstudios.core.MessageIO;
+import com.jenjinstudios.core.util.MessageFactory;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -10,6 +11,7 @@ import java.util.Timer;
 
 /**
  * The base class for any client.  This class uses a similar system to the JGSA.
+ *
  * @author Caleb Brinkman
  */
 public class Client extends Connection
@@ -32,6 +34,7 @@ public class Client extends Connection
 
 	/**
 	 * Add a task to the repeated queue of this client.  Should be called to extend client functionality.
+	 *
 	 * @param r The task to be performed.
 	 */
 	public void addRepeatedTask(Runnable r) {
@@ -56,7 +59,7 @@ public class Client extends Connection
 		int period = 1000 / 60;
 
 		// Finally, send a ping request to establish latency.
-		queueOutgoingMessage(messageFactory.generatePingRequest());
+		queueOutgoingMessage(MessageFactory.generatePingRequest());
 
 		sendMessagesTimer = new Timer("Client Update Loop", false);
 		sendMessagesTimer.scheduleAtFixedRate(new ClientLoop(this), 0, period);

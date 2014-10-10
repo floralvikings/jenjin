@@ -26,7 +26,7 @@ public class MessageFactory
 	 *
 	 * @return The generated message.
 	 */
-	public Message generatePingRequest() {
+	public static Message generatePingRequest() {
 		Message pingRequest = MessageRegistry.getInstance().createMessage("PingRequest");
 		pingRequest.setArgument("requestTimeMillis", System.currentTimeMillis());
 		return pingRequest;
