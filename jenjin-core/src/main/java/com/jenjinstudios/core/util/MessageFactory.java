@@ -5,6 +5,11 @@ import com.jenjinstudios.core.io.MessageRegistry;
 
 import java.security.PublicKey;
 
+/**
+ * This class is used to create {@code Message} objects; these are merely convenience methods.
+ *
+ * @author Caleb Brinkman
+ */
 public class MessageFactory
 {
 	// TODO There's no reason to maintain an instance of this.
