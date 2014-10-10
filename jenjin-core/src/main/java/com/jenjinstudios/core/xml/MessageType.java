@@ -56,6 +56,11 @@ public class MessageType
 	 */
 	public String getName() { return name; }
 
+	/**
+	 * Set the name of the {@code Message}.
+	 *
+	 * @param value The new name.
+	 */
 	public void setName(String value) { this.name = value; }
 
 	public short getId() { return id; }
