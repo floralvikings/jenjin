@@ -54,6 +54,11 @@ public class Connection extends Thread
 		}
 	}
 
+	/**
+	 * Set the public key used to encrypt relevant messages.
+	 *
+	 * @param publicKey The public key.
+	 */
 	public void setPublicKey(PublicKey publicKey) { messageIO.getOut().setPublicKey(publicKey); }
 
 	public void queueOutgoingMessage(Message message) {
