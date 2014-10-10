@@ -5,6 +5,11 @@ import com.jenjinstudios.core.message.ExecutableMessage;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * This class is used to store and execute ExecutableMessages.
+ *
+ * @author Caleb Brinkman
+ */
 public class ExecutableMessageQueue
 {
 	private final List<ExecutableMessage> queuedExecutableMessages;
