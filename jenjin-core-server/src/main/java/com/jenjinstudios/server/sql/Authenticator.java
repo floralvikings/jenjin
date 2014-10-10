@@ -69,7 +69,7 @@ public class Authenticator
 		User user = lookUpUser(username);
 		if (user.isLoggedIn())
 			throw new LoginException("User " + username + " is already logged in.");
-		String hashedPassword = HashUtil.getHashedString(password, user.getSalt());
+		String hashedPassword = HashUtil.getSaltedSHA256String(password, user.getSalt());
 		boolean passwordCorrect = hashedPassword != null && hashedPassword.equalsIgnoreCase(user.getPassword());
 		if (!passwordCorrect)
 			throw new LoginException("User " + username + " provided incorrect password.");
