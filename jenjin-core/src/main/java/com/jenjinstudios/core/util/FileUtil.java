@@ -8,9 +8,9 @@ import java.util.ArrayList;
  *
  * @author Caleb Brinkman
  */
-public class Files
+public class FileUtil
 {
-	private Files() { }
+	private FileUtil() { }
 
 	/**
 	 * Recursively search the given directory for files that exactly matches the file with the given name.

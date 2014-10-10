@@ -1,6 +1,6 @@
 package com.jenjinstudios.core.io;
 
-import com.jenjinstudios.core.util.Files;
+import com.jenjinstudios.core.util.FileUtil;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -77,7 +77,7 @@ public final class MessageFileFinder
 	private static ArrayList<File> findMessageFiles() {
 		String rootDir = Paths.get("").toAbsolutePath().toString() + File.separator;
 		File rootFile = new File(rootDir);
-		return Files.search(rootFile, messageFileName);
+		return FileUtil.search(rootFile, messageFileName);
 	}
 
 	static LinkedList<InputStream> findMessageFileStreams() {
