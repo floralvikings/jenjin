@@ -73,6 +73,11 @@ public class MessageFactory
 		return publicKeyMessage;
 	}
 
+	/**
+	 * Get the message registry used by this class to generate messages.
+	 *
+	 * @return The message registry used by this class to generate messages.
+	 */
 	// TODO This method can be replaced with MessageRegistry.getInstance().
 	protected MessageRegistry getMessageRegistry() { return messageRegistry; }
 
