@@ -49,6 +49,11 @@ public class MessageType
 	 */
 	public String getExecutable() { return executable; }
 
+	/**
+	 * Get the unique name of the {@code Message}.
+	 *
+	 * @return The unique name of the {@code Message}.
+	 */
 	public String getName() { return name; }
 
 	public void setName(String value) { this.name = value; }
