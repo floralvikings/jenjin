@@ -13,10 +13,7 @@ import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- * The communicator class is the superclass for any classes that communicate over socket.
- * @author Caleb Brinkman
- */
+
 public class Connection extends Thread
 {
 	private static final int MAX_INVALID_MESSAGES = 10;
