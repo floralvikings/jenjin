@@ -93,6 +93,7 @@ public class Connection extends Thread
 	}
 
 	@Override
+	// TODO Extract MessageReaderThread class; responsibility should really be split up.
 	public void run() {
 		running = true;
 		while (running && invalidMsgCount < MAX_INVALID_MESSAGES && messageExecutor.processNextIncomingMessage())
