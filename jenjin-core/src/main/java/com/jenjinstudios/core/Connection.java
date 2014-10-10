@@ -130,6 +130,11 @@ public class Connection extends Thread
 	 */
 	public PingTracker getPingTracker() { return pingTracker; }
 
+	/**
+	 * Get the {@code ExecutableMessageQueue} maintained by this connection.
+	 *
+	 * @return The {@code ExecutableMessageQueue} maintained by this connection.
+	 */
 	public ExecutableMessageQueue getExecutableMessageQueue() { return executableMessageQueue; }
 
 	// TODO Write test for this method.
