@@ -32,6 +32,14 @@ public class MessageFactory
 		return pingRequest;
 	}
 
+	/**
+	 * Generate an InvalidMessage message for the given invalid ID and message name.
+	 *
+	 * @param id The ID of the invalid message.
+	 * @param name The Name of the invalid message.
+	 *
+	 * @return The generated InvalidMessage object.
+	 */
 	public Message generateInvalidMessage(short id, String name) {
 		Message invalid = messageRegistry.createMessage("InvalidMessage");
 		invalid.setArgument("messageName", name);
