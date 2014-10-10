@@ -137,12 +137,18 @@ public class Connection extends Thread
 	 */
 	public ExecutableMessageQueue getExecutableMessageQueue() { return executableMessageQueue; }
 
+	/**
+	 * End this connection's execution loop and close any streams.
+	 */
 	// TODO Write test for this method.
 	protected void shutdown() {
 		running = false;
 		closeLink();
 	}
 
+	/**
+	 * Close the streams used by this connection.
+	 */
 	// TODO Inline this method.
 	protected void closeLink() {
 		closeInputStream();
