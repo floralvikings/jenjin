@@ -38,6 +38,7 @@ public class ExecutableMessageQueue
 	 * Execute the {@code runDelayed} method of each {@code ExecutableMessage} in the queue, in the order in which they
 	 * were added.  After this method is called, the queue will be empty.
 	 */
+	// TODO Maybe should separate the clear operation out of this method?
 	protected void runQueuedExecutableMessages() {
 		synchronized (queuedExecutableMessages)
 		{
