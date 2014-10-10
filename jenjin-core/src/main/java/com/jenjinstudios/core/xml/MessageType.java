@@ -70,6 +70,11 @@ public class MessageType
 	 */
 	public short getId() { return id; }
 
+	/**
+	 * Set the ID of the {@code Message}.
+	 *
+	 * @param value The ID of the {@code Message}.
+	 */
 	public void setId(short value) { this.id = value; }
 
 }
