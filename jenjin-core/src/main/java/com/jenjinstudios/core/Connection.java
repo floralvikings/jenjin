@@ -106,6 +106,11 @@ public class Connection extends Thread
 		}
 	}
 
+	/**
+	 * Execute the {@code runDelayed} method of each {@code ExecutableMessage} in the queue,
+	 * in the order in which their
+	 * {@code Message} objects were received.
+	 */
 	public void runQueuedExecutableMessages() { executableMessageQueue.runQueuedExecutableMessages(); }
 
 	public MessageFactory getMessageFactory() { return messageFactory; }
