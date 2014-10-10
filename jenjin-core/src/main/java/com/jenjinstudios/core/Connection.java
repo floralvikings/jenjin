@@ -100,6 +100,7 @@ public class Connection extends Thread
 		closeOutputStream();
 	}
 
+	// TODO Extract this method
 	private KeyPair generateRSAKeyPair() {
 		KeyPair keyPair = null;
 		try
