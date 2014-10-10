@@ -10,6 +10,7 @@ import java.security.PublicKey;
  *
  * @author Caleb Brinkman
  */
+// TODO Make all of these methods static.
 public class MessageFactory
 {
 	// TODO There's no reason to maintain an instance of this.
