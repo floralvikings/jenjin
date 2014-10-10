@@ -63,6 +63,11 @@ public class MessageType
 	 */
 	public void setName(String value) { this.name = value; }
 
+	/**
+	 * Get the unique ID of the {@code Message}.
+	 *
+	 * @return The unique ID of the {@code Message}.
+	 */
 	public short getId() { return id; }
 
 	public void setId(short value) { this.id = value; }
