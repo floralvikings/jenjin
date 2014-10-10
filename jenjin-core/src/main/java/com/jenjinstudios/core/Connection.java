@@ -33,6 +33,11 @@ public class Connection extends Thread
 	private int invalidMsgCount;
 	private boolean running;
 
+	/**
+	 * Construct a new {@code Connection} that utilizes the specified {@code MessageIO} to read and write messages.
+	 *
+	 * @param streams The {@code MessageIO} containing streams used to read and write messages.
+	 */
 	protected Connection(MessageIO streams) {
 		this.messageIO = streams;
 		outgoingMessages = new LinkedList<>();
