@@ -62,6 +62,12 @@ public class Connection extends Thread
 	// TODO Move this method into the MessageIO class
 	public void setPublicKey(PublicKey publicKey) { messageIO.getOut().setPublicKey(publicKey); }
 
+	/**
+	 * Add the specified {@code Message} to the queue of outgoing messages.  This queue is written when {@code
+	 * writeAllMessages} is called.
+	 *
+	 * @param message The {@code Message} to write.
+	 */
 	public void queueOutgoingMessage(Message message) {
 		if (messageIO.getOut().isClosed())
 		{
