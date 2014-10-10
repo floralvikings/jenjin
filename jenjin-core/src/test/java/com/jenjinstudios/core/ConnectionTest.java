@@ -47,7 +47,7 @@ public class ConnectionTest
 	}
 
 	@Test(expectedExceptions = MessageQueueException.class)
-	public void testCloseLink() throws Exception {
+	public void testShutDown() throws Exception {
 		DataInputStreamMock dataInputStreamMock = new DataInputStreamMock();
 		InputStream in = dataInputStreamMock.getIn();
 		dataInputStreamMock.mockReadShort((short) -255);
@@ -57,7 +57,7 @@ public class ConnectionTest
 		MessageOutputStream messageOutputStream = new MessageOutputStream(bos);
 		MessageIO messageIO = new MessageIO(messageInputStream, messageOutputStream);
 		Connection connection = new Connection(messageIO);
-		connection.closeLink();
+		connection.shutdown();
 
 		Message msg = mr.createMessage("InvalidMessage");
 		msg.setArgument("messageName", "FooBar");
