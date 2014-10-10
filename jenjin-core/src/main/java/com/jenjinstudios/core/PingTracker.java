@@ -28,6 +28,11 @@ public class PingTracker
 	 */
 	public void addPingTime(long pingTime) { pingTimes.add(pingTime); }
 
+	/**
+	 * Get the average of all ping times added to this tracker.
+	 *
+	 * @return The average of all ping times added to this tracer.
+	 */
 	public long getAveragePingTime() {
 		long total = 0;
 		int num;
