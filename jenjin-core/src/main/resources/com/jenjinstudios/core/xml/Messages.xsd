@@ -13,8 +13,8 @@
     </xs:complexType>
 
     <xs:complexType name="messagesType">
-        <xs:choice>
-            <xs:element type="jen:messageType" name="message" maxOccurs="unbounded" minOccurs="0" xmlns:jen="https://www.jenjinstudios.com" />
+        <xs:choice maxOccurs="unbounded">
+        <xs:element type="jen:messageType" name="message" maxOccurs="unbounded" minOccurs="0" xmlns:jen="https://www.jenjinstudios.com" />
             <xs:element type="jen:disabled_messageType" name="disabled_message" xmlns:jen="https://www.jenjinstudios.com" />
         </xs:choice>
     </xs:complexType>
