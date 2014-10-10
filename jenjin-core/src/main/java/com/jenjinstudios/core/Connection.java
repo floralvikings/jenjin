@@ -208,7 +208,7 @@ public class Connection extends Thread
 
 	void reportInvalidMessage(MessageTypeException e) {
 		LOGGER.log(Level.WARNING, "Input stream reported invalid message receipt.");
-		Message unknown = messageFactory.generateInvalidMessage(e.getId(), "Unknown");
+		Message unknown = MessageFactory.generateInvalidMessage(e.getId(), "Unknown");
 		queueOutgoingMessage(unknown);
 		invalidMsgCount++;
 	}

@@ -32,7 +32,7 @@ public class MessageFactory
 	 *
 	 * @return The generated InvalidMessage object.
 	 */
-	public Message generateInvalidMessage(short id, String name) {
+	public static Message generateInvalidMessage(short id, String name) {
 		Message invalid = MessageRegistry.getInstance().createMessage("InvalidMessage");
 		invalid.setArgument("messageName", name);
 		invalid.setArgument("messageID", id);

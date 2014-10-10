@@ -4,6 +4,7 @@ import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageInputStream;
 import com.jenjinstudios.core.io.MessageTypeException;
 import com.jenjinstudios.core.message.ExecutableMessage;
+import com.jenjinstudios.core.util.MessageFactory;
 
 import java.io.IOException;
 import java.util.logging.Level;
@@ -62,7 +63,7 @@ public class MessageExecutor
 	}
 
 	private void processInvalidMessage(Message message) {
-		Message invalid = connection.getMessageFactory().generateInvalidMessage(message.getID(), message.name);
+		Message invalid = MessageFactory.generateInvalidMessage(message.getID(), message.name);
 		connection.queueOutgoingMessage(invalid);
 	}
 
