@@ -3,7 +3,11 @@ package com.jenjinstudios.core;
 import com.jenjinstudios.core.io.MessageInputStream;
 import com.jenjinstudios.core.io.MessageOutputStream;
 
-
+/**
+ * Used to contain a {@code MessageInputStream} and {@code MessageOutputStream}.
+ *
+ * @author Caleb Brinkman
+ */
 public class MessageIO
 {
 	private final MessageInputStream in;
