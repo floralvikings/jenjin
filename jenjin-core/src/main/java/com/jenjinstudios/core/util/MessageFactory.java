@@ -21,6 +21,11 @@ public class MessageFactory
 	 */
 	public MessageFactory() { this.messageRegistry = MessageRegistry.getInstance(); }
 
+	/**
+	 * Generate a PingRequest message.
+	 *
+	 * @return The generated message.
+	 */
 	public Message generatePingRequest() {
 		Message pingRequest = MessageRegistry.getInstance().createMessage("PingRequest");
 		pingRequest.setArgument("requestTimeMillis", System.currentTimeMillis());
