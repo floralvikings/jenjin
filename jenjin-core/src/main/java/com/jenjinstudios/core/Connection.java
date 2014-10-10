@@ -113,6 +113,13 @@ public class Connection extends Thread
 	 */
 	public void runQueuedExecutableMessages() { executableMessageQueue.runQueuedExecutableMessages(); }
 
+	/**
+	 * Get the {@code MessageFactory} to be used to generate the {@code Message} objects to be written by this {@code
+	 * Connection}.
+	 *
+	 * @return The {@code MessageFactory} to be used to generate the {@code Message} objects to be written by this
+	 * {@code Connection}.
+	 */
 	public MessageFactory getMessageFactory() { return messageFactory; }
 
 	public PingTracker getPingTracker() { return pingTracker; }
