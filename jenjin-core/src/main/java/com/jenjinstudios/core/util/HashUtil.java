@@ -9,7 +9,7 @@ import java.security.NoSuchAlgorithmException;
  *
  * @author Caleb Brinkman
  */
-public class Hash
+public class HashUtil
 {
 	// TODO Modify this method to use a Stream instead of a string.
 	// TODO Rename to something that reflects that this function returns a SHA-256 hash.
