@@ -12,6 +12,9 @@ public class PingTracker
 {
 	private final List<Long> pingTimes;
 
+	/**
+	 * Construct a new PingTracker.
+	 */
 	public PingTracker() {
 		pingTimes = new LinkedList<>();
 	}
