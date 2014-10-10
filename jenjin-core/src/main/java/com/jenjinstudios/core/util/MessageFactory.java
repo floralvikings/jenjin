@@ -15,6 +15,9 @@ public class MessageFactory
 	// TODO There's no reason to maintain an instance of this.
 	private final MessageRegistry messageRegistry;
 
+	/**
+	 * Construct a new {@code MessageFactory}.
+	 */
 	public MessageFactory() { this.messageRegistry = MessageRegistry.getInstance(); }
 
 	public Message generatePingRequest() {
