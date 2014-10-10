@@ -24,6 +24,11 @@ public class MessageIO
 		this.out = out;
 	}
 
+	/**
+	 * Get the {@code MessageInputStream} managed by this {@code MessageIO}.
+	 *
+	 * @return The {@code MessageInputStream} managed by this {@code MessageIO}.
+	 */
 	public MessageInputStream getIn() { return in; }
 
 	public MessageOutputStream getOut() { return out; }
