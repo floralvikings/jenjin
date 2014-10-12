@@ -10,7 +10,6 @@ import java.security.PublicKey;
  *
  * @author Caleb Brinkman
  */
-// TODO Make all of these methods static.
 public class MessageFactory
 {
 	/**
