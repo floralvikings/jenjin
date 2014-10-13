@@ -12,15 +12,8 @@ import java.util.List;
  */
 public class ExecutableMessageQueue
 {
-	private final List<ExecutableMessage> queuedExecutableMessages;
-
-	/**
-	 * Construct a new ExecutableMessageQueue.
-	 */
-	// TODO This constructor can be refactored away.
-	public ExecutableMessageQueue() {
-		queuedExecutableMessages = new LinkedList<>();
-	}
+	private final List<ExecutableMessage> queuedExecutableMessages = new LinkedList<>();
+	;
 
 	/**
 	 * Add an {@code ExecutableMessage} to the end of the queue.
