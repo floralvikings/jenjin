@@ -62,7 +62,7 @@ public class ConnectionTest
 		Message msg = mr.createMessage("InvalidMessage");
 		msg.setArgument("messageName", "FooBar");
 		msg.setArgument("messageID", (short) -255);
-		connection.queueOutgoingMessage(msg);
+		connection.getMessageIO().queueOutgoingMessage(msg);
 		connection.writeAllMessages();
 	}
 

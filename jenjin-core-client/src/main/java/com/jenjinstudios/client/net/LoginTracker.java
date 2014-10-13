@@ -34,7 +34,7 @@ public class LoginTracker
 	protected void sendLoginRequest() {
 		waitingForResponse = true;
 		Message message = ((ClientMessageFactory) client.getMessageFactory()).generateLoginRequest(client.getUser());
-		client.queueOutgoingMessage(message);
+		client.getMessageIO().queueOutgoingMessage(message);
 	}
 
 	public boolean sendLoginRequestAndWaitForResponse() {
@@ -59,7 +59,7 @@ public class LoginTracker
 	private void sendLogoutRequest() {
 		waitingForResponse = true;
 		Message message = ((ClientMessageFactory) client.getMessageFactory()).generateLogoutRequest();
-		client.queueOutgoingMessage(message);
+		client.getMessageIO().queueOutgoingMessage(message);
 	}
 
 	private void waitTenMillis() {

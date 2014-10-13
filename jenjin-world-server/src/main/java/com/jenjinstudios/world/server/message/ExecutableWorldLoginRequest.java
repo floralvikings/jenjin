@@ -13,6 +13,7 @@ import java.util.Map;
 
 /**
  * Handles requests to login to the world.
+ *
  * @author Caleb Brinkman
  */
 public class ExecutableWorldLoginRequest extends WorldExecutableMessage
@@ -27,6 +28,7 @@ public class ExecutableWorldLoginRequest extends WorldExecutableMessage
 
 	/**
 	 * Construct a new ExecutableMessage.  Must be implemented by subclasses.
+	 *
 	 * @param handler The handler using this ExecutableMessage.
 	 * @param message The message.
 	 */
@@ -44,7 +46,7 @@ public class ExecutableWorldLoginRequest extends WorldExecutableMessage
 				  getClientHandler().getPlayer());
 			loginResponse.setArgument("id", getClientHandler().getPlayer().getId());
 		}
-		getClientHandler().queueOutgoingMessage(loginResponse);
+		getClientHandler().getMessageIO().queueOutgoingMessage(loginResponse);
 	}
 
 	@Override

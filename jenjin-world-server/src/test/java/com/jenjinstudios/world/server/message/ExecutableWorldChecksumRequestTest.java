@@ -1,5 +1,6 @@
 package com.jenjinstudios.world.server.message;
 
+import com.jenjinstudios.core.MessageIO;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageRegistry;
 import com.jenjinstudios.world.server.WorldClientHandler;
@@ -23,15 +24,17 @@ public class ExecutableWorldChecksumRequestTest
 		WorldClientHandler clientHandler = mock(WorldClientHandler.class);
 		WorldServer server = mock(WorldServer.class);
 		WorldServerMessageFactory messageFactory = mock(WorldServerMessageFactory.class);
+		MessageIO messageIO = mock(MessageIO.class);
 		when(messageFactory.generateWorldChecksumResponse(any())).thenReturn(response);
 		when(server.getWorldFileChecksum()).thenReturn(checksum);
 		when(clientHandler.getMessageFactory()).thenReturn(messageFactory);
 		when(clientHandler.getServer()).thenReturn(server);
+		when(clientHandler.getMessageIO()).thenReturn(messageIO);
 
 		ExecutableWorldChecksumRequest exec = new ExecutableWorldChecksumRequest(clientHandler, message);
 		exec.runImmediate();
 		exec.runDelayed();
 
-		verify(clientHandler).queueOutgoingMessage(response);
+		verify(messageIO).queueOutgoingMessage(response);
 	}
 }

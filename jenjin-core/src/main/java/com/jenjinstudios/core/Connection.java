@@ -7,7 +7,6 @@ import com.jenjinstudios.core.util.SecurityUtil;
 
 import java.io.IOException;
 import java.security.KeyPair;
-import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -23,7 +22,6 @@ public class Connection extends Thread
 	private static final int MAX_INVALID_MESSAGES = 10;
 	private static final Logger LOGGER = Logger.getLogger(Connection.class.getName());
 	private final PingTracker pingTracker;
-	private final LinkedList<Message> outgoingMessages;
 	private final ExecutableMessageQueue executableMessageQueue;
 	private final MessageFactory messageFactory;
 	private final MessageIO messageIO;
@@ -38,7 +36,6 @@ public class Connection extends Thread
 	 */
 	protected Connection(MessageIO streams) {
 		this.messageIO = streams;
-		outgoingMessages = new LinkedList<>();
 		pingTracker = new PingTracker();
 		executableMessageQueue = new ExecutableMessageQueue();
 		messageFactory = new MessageFactory();
@@ -48,7 +45,7 @@ public class Connection extends Thread
 		{
 			messageIO.getIn().setPrivateKey(rsaKeyPair.getPrivate());
 			Message message = MessageFactory.generatePublicKeyMessage(rsaKeyPair.getPublic());
-			queueOutgoingMessage(message);
+			getMessageIO().queueOutgoingMessage(message);
 		}
 	}
 
@@ -60,32 +57,15 @@ public class Connection extends Thread
 	public MessageIO getMessageIO() { return messageIO; }
 
 	/**
-	 * Add the specified {@code Message} to the queue of outgoing messages.  This queue is written when {@code
-	 * writeAllMessages} is called.
-	 *
-	 * @param message The {@code Message} to write.
-	 */
-	public void queueOutgoingMessage(Message message) {
-		if (messageIO.getOut().isClosed())
-		{
-			throw new MessageQueueException(message);
-		}
-		synchronized (outgoingMessages)
-		{
-			outgoingMessages.add(message);
-		}
-	}
-
-	/**
 	 * Write all the messages in the outgoing messages queue to the output stream.
 	 */
 	public void writeAllMessages() {
-		synchronized (outgoingMessages)
+		try
 		{
-			while (!outgoingMessages.isEmpty())
-			{
-				writeMessage(outgoingMessages.remove());
-			}
+			getMessageIO().writeAllMessages();
+		} catch (IOException e)
+		{
+			shutdown();
 		}
 	}
 
@@ -144,23 +124,10 @@ public class Connection extends Thread
 		messageIO.closeOutputStream();
 	}
 
-	// TODO Move this method into the MessageIO class
-	void writeMessage(Message o) {
-		try
-		{
-			LOGGER.log(Level.FINEST, "Connection {0} writing message {1}", new Object[]{getName(), o});
-			messageIO.getOut().writeMessage(o);
-		} catch (IOException e)
-		{
-			LOGGER.log(Level.SEVERE, "Unable to write message " + o + " to socket, shutting down.", e);
-			shutdown();
-		}
-	}
-
 	void reportInvalidMessage(MessageTypeException e) {
 		LOGGER.log(Level.WARNING, "Input stream reported invalid message receipt.");
 		Message unknown = MessageFactory.generateInvalidMessage(e.getId(), "Unknown");
-		queueOutgoingMessage(unknown);
+		getMessageIO().queueOutgoingMessage(unknown);
 		invalidMsgCount++;
 	}
 }

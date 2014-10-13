@@ -64,7 +64,7 @@ public class MessageExecutor
 
 	private void processInvalidMessage(Message message) {
 		Message invalid = MessageFactory.generateInvalidMessage(message.getID(), message.name);
-		connection.queueOutgoingMessage(invalid);
+		connection.getMessageIO().queueOutgoingMessage(invalid);
 	}
 
 	private void processExecutableMessage(ExecutableMessage exec) {

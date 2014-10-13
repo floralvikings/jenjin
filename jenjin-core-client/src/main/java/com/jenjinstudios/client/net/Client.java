@@ -59,7 +59,7 @@ public class Client extends Connection
 		int period = 1000 / 60;
 
 		// Finally, send a ping request to establish latency.
-		queueOutgoingMessage(MessageFactory.generatePingRequest());
+		getMessageIO().queueOutgoingMessage(MessageFactory.generatePingRequest());
 
 		sendMessagesTimer = new Timer("Client Update Loop", false);
 		sendMessagesTimer.scheduleAtFixedRate(new ClientLoop(this), 0, period);

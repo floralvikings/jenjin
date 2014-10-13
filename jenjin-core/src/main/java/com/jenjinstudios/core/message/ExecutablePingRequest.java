@@ -34,7 +34,7 @@ public class ExecutablePingRequest extends ExecutableMessage
 
 		Message pingResponse = MessageFactory
 			  .generatePingResponse(requestTimeNanos);
-		connection.queueOutgoingMessage(pingResponse);
+		connection.getMessageIO().queueOutgoingMessage(pingResponse);
 
 	}
 

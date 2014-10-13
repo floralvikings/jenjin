@@ -11,6 +11,7 @@ import java.util.List;
 
 /**
  * Responsible for updating the world.
+ *
  * @author Caleb Brinkman
  */
 public class WorldClientUpdater implements Runnable
@@ -22,6 +23,7 @@ public class WorldClientUpdater implements Runnable
 
 	/**
 	 * Construct a new {@code WorldClientUpdater} for the given client.
+	 *
 	 * @param wc The world client.
 	 */
 	public WorldClientUpdater(WorldClient wc) {
@@ -44,7 +46,7 @@ public class WorldClientUpdater implements Runnable
 					MoveState moveState = newStates.remove(0);
 					WorldClientMessageFactory messageFactory = worldClient.getMessageFactory();
 					Message stateChangeRequest = messageFactory.generateStateChangeRequest(moveState);
-					worldClient.queueOutgoingMessage(stateChangeRequest);
+					worldClient.getMessageIO().queueOutgoingMessage(stateChangeRequest);
 				}
 			}
 		}

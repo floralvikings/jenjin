@@ -1,5 +1,6 @@
 package com.jenjinstudios.world.server.message;
 
+import com.jenjinstudios.core.MessageIO;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.server.net.User;
 import com.jenjinstudios.world.Actor;
@@ -40,6 +41,7 @@ public class ExecutableWorldLoginRequestTest
 		WorldServer server = Mockito.mock(WorldServer.class);
 		WorldClientHandler wch = Mockito.mock(WorldClientHandler.class);
 		WorldObjectList worldObjectMap = mock(WorldObjectList.class);
+		MessageIO messageIO = Mockito.mock(MessageIO.class);
 		when(world.getWorldObjects()).thenReturn(worldObjectMap);
 		Mockito.when(user.isLoggedIn()).thenReturn(true);
 		Mockito.when(authenticator.logInUser(Mockito.anyString(), Mockito.anyString())).thenReturn(user);
@@ -51,6 +53,7 @@ public class ExecutableWorldLoginRequestTest
 		Mockito.when(wch.getMessageFactory()).thenReturn(messageFactory);
 		Mockito.when(messageFactory.generateWorldLoginResponse()).thenReturn(message);
 		Mockito.when(player.getVector2D()).thenReturn(Vector2D.ORIGIN);
+		Mockito.when(wch.getMessageIO()).thenReturn(messageIO);
 		ExecutableWorldLoginRequest exec = new ExecutableWorldLoginRequest(wch, message);
 		exec.runImmediate();
 		exec.runDelayed();
