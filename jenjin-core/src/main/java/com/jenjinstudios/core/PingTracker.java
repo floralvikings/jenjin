@@ -10,15 +10,7 @@ import java.util.List;
  */
 public class PingTracker
 {
-	private final List<Long> pingTimes;
-
-	/**
-	 * Construct a new PingTracker.
-	 */
-	// TODO This constructor can be refactored away.
-	public PingTracker() {
-		pingTimes = new LinkedList<>();
-	}
+	private final List<Long> pingTimes = new LinkedList<>();
 
 	/**
 	 * Add a "ping" time to the list maintained by this object.  This should be the amount of time, in milliseconds, a
