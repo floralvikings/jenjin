@@ -144,6 +144,7 @@ public class Connection extends Thread
 		messageIO.closeOutputStream();
 	}
 
+	// TODO Move this method into the MessageIO class
 	void writeMessage(Message o) {
 		try
 		{
