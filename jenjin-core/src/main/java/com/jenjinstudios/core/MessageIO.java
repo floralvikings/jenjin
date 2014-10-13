@@ -42,18 +42,11 @@ public class MessageIO
 	MessageInputStream getIn() { return in; }
 
 	/**
-	 * Get the {@code MessageOutputStream} managed by this {@code MessageIO}.
-	 *
-	 * @return The {@code MessageOutputStream} managed by this {@code MessageIO}.
-	 */
-	MessageOutputStream getOut() { return out; }
-
-	/**
 	 * Set the public key used to encrypt relevant messages.
 	 *
 	 * @param publicKey The public key.
 	 */
-	public void setPublicKey(PublicKey publicKey) { getOut().setPublicKey(publicKey); }
+	public void setPublicKey(PublicKey publicKey) { out.setPublicKey(publicKey); }
 
 	/**
 	 * Add the specified {@code Message} to the queue of outgoing messages.  This queue is written when {@code
@@ -62,7 +55,7 @@ public class MessageIO
 	 * @param message The {@code Message} to write.
 	 */
 	public void queueOutgoingMessage(Message message) {
-		if (getOut().isClosed())
+		if (out.isClosed())
 		{
 			throw new MessageQueueException(message);
 		}
@@ -87,12 +80,12 @@ public class MessageIO
 		}
 	}
 
-	void writeMessage(Message o) throws IOException { getOut().writeMessage(o); }
+	void writeMessage(Message o) throws IOException { out.writeMessage(o); }
 
 	void closeOutputStream() {
 		try
 		{
-			getOut().close();
+			out.close();
 		} catch (IOException e)
 		{
 			LOGGER.log(Level.INFO, "Error closing output stream.", e);
