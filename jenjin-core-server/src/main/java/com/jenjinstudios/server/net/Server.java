@@ -77,7 +77,15 @@ public class Server<T extends ClientHandler> extends Thread
 	public void broadcast() {
 		synchronized (clientHandlers)
 		{
-			clientHandlers.values().stream().filter(current -> current != null).forEach(Connection::writeAllMessages);
+			clientHandlers.values().stream().filter(current -> current != null).forEach(c -> {
+				try
+				{
+					c.getMessageIO().writeAllMessages();
+				} catch (IOException e)
+				{
+					c.shutdown();
+				}
+			});
 		}
 	}
 

@@ -7,6 +7,7 @@ import org.testng.annotations.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 
 /**
@@ -35,7 +36,13 @@ public class ConnectionTest
 		connection.start();
 		Thread.sleep(100);
 		connection.runQueuedExecutableMessages();
-		connection.writeAllMessages();
+		try
+		{
+			connection.getMessageIO().writeAllMessages();
+		} catch (IOException e)
+		{
+			connection.shutdown();
+		}
 		connection.shutdown();
 
 		// The connection should execute the InvalidExecutableMessage,
@@ -63,7 +70,13 @@ public class ConnectionTest
 		msg.setArgument("messageName", "FooBar");
 		msg.setArgument("messageID", (short) -255);
 		connection.getMessageIO().queueOutgoingMessage(msg);
-		connection.writeAllMessages();
+		try
+		{
+			connection.getMessageIO().writeAllMessages();
+		} catch (IOException e)
+		{
+			connection.shutdown();
+		}
 	}
 
 	@Test
@@ -83,7 +96,13 @@ public class ConnectionTest
 		connection.start();
 		Thread.sleep(100);
 		connection.runQueuedExecutableMessages();
-		connection.writeAllMessages();
+		try
+		{
+			connection.getMessageIO().writeAllMessages();
+		} catch (IOException e)
+		{
+			connection.shutdown();
+		}
 		connection.shutdown();
 
 		// The connection should execute the InvalidExecutableMessage,
@@ -117,7 +136,13 @@ public class ConnectionTest
 		Thread.sleep(100);
 		// Again, normally an implementation would schedule this, but that's excessive for testing purposes
 		connection.runQueuedExecutableMessages();
-		connection.writeAllMessages();
+		try
+		{
+			connection.getMessageIO().writeAllMessages();
+		} catch (IOException e)
+		{
+			connection.shutdown();
+		}
 		connection.shutdown();
 
 		// Ping time should be extremely close to 0, but taking into account wonkiness with tests, I'll allow

@@ -6,6 +6,8 @@ import com.jenjinstudios.core.io.MessageOutputStream;
 import com.jenjinstudios.server.sql.Authenticator;
 import org.testng.annotations.Test;
 
+import java.io.IOException;
+
 import static org.mockito.Mockito.*;
 import static org.testng.Assert.assertEquals;
 
@@ -25,7 +27,13 @@ public class ClientHandlerTest
 
 		ClientHandler clientHandler = new ClientHandler(server, messageIO);
 		clientHandler.sendLogoutStatus(true);
-		clientHandler.writeAllMessages();
+		try
+		{
+			clientHandler.getMessageIO().writeAllMessages();
+		} catch (IOException e)
+		{
+			clientHandler.shutdown();
+		}
 
 		verify(mos, times(2)).writeMessage(any());
 	}

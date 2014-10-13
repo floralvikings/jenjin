@@ -5,7 +5,6 @@ import com.jenjinstudios.core.io.MessageTypeException;
 import com.jenjinstudios.core.util.MessageFactory;
 import com.jenjinstudios.core.util.SecurityUtil;
 
-import java.io.IOException;
 import java.security.KeyPair;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -56,19 +55,6 @@ public class Connection extends Thread
 	 */
 	public MessageIO getMessageIO() { return messageIO; }
 
-	/**
-	 * Write all the messages in the outgoing messages queue to the output stream.
-	 */
-	public void writeAllMessages() {
-		try
-		{
-			getMessageIO().writeAllMessages();
-		} catch (IOException e)
-		{
-			shutdown();
-		}
-	}
-
 	@Override
 	// TODO Extract MessageReaderThread class; responsibility should really be split up.
 	public void run()
@@ -118,7 +104,7 @@ public class Connection extends Thread
 	/**
 	 * End this connection's execution loop and close any streams.
 	 */
-	protected void shutdown() {
+	public void shutdown() {
 		running = false;
 		messageIO.closeInputStream();
 		messageIO.closeOutputStream();
