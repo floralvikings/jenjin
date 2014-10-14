@@ -26,7 +26,6 @@ public class Connection extends Thread
 	private final MessageIO messageIO;
 	private final MessageExecutor messageExecutor;
 	private int invalidMsgCount;
-	private boolean running;
 
 	/**
 	 * Construct a new {@code Connection} that utilizes the specified {@code MessageIO} to read and write messages.
@@ -38,7 +37,7 @@ public class Connection extends Thread
 		pingTracker = new PingTracker();
 		executableMessageQueue = new ExecutableMessageQueue();
 		messageFactory = new MessageFactory();
-		messageExecutor = new MessageExecutor(this, messageIO.getIn());
+		messageExecutor = new MessageExecutor(this);
 		KeyPair rsaKeyPair = SecurityUtil.generateRSAKeyPair();
 		if (rsaKeyPair != null)
 		{
@@ -59,15 +58,11 @@ public class Connection extends Thread
 	// TODO Extract MessageReaderThread class; responsibility should really be split up.
 	public void run()
 	{
-		running = true;
-		while (running && invalidMsgCount < MAX_INVALID_MESSAGES && messageExecutor.processNextIncomingMessage())
+		while (invalidMsgCount < MAX_INVALID_MESSAGES && messageExecutor.processNextIncomingMessage())
 		{
 			Thread.yield();
 		}
-		if (running)
-		{
-			shutdown();
-		}
+		shutdown();
 	}
 
 	/**
@@ -105,7 +100,6 @@ public class Connection extends Thread
 	 * End this connection's execution loop and close any streams.
 	 */
 	public void shutdown() {
-		running = false;
 		messageIO.closeInputStream();
 		messageIO.closeOutputStream();
 	}
