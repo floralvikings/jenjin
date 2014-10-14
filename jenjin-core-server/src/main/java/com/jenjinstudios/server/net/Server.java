@@ -1,7 +1,5 @@
 package com.jenjinstudios.server.net;
 
-import com.jenjinstudios.core.Connection;
-
 import java.io.IOException;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -69,7 +67,9 @@ public class Server<T extends ClientHandler> extends Thread
 		synchronized (clientHandlers)
 		{
 			Collection<T> handlers = clientHandlers.values();
-			handlers.stream().filter(current -> current != null).forEach(Connection::runQueuedExecutableMessages);
+			handlers.stream().
+				  filter(current -> current != null).
+				  forEach(c -> c.getExecutableMessageQueue().runQueuedExecutableMessages());
 		}
 	}
 

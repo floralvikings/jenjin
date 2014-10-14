@@ -57,13 +57,6 @@ public class Connection
 	public MessageIO getMessageIO() { return messageIO; }
 
 	/**
-	 * Execute the {@code runDelayed} method of each {@code ExecutableMessage} in the queue,
-	 * in the order in which their
-	 * {@code Message} objects were received.
-	 */
-	public void runQueuedExecutableMessages() { executableMessageQueue.runQueuedExecutableMessages(); }
-
-	/**
 	 * Get the {@code MessageFactory} to be used to generate the {@code Message} objects to be written by this {@code
 	 * Connection}.
 	 *

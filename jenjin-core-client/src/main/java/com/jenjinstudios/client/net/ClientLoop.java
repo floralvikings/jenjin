@@ -26,7 +26,7 @@ class ClientLoop extends TimerTask
 	@Override
 	public void run() {
 		client.runRepeatedTasks();
-		client.runQueuedExecutableMessages();
+		client.getExecutableMessageQueue().runQueuedExecutableMessages();
 		try
 		{
 			client.getMessageIO().writeAllMessages();

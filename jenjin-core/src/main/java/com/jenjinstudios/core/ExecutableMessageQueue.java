@@ -31,7 +31,7 @@ public class ExecutableMessageQueue
 	 * were added.  After this method is called, the queue will be empty.
 	 */
 	// TODO Maybe should separate the clear operation out of this method?
-	protected void runQueuedExecutableMessages() {
+	public void runQueuedExecutableMessages() {
 		synchronized (queuedExecutableMessages)
 		{
 			for (ExecutableMessage executableMessage : queuedExecutableMessages)

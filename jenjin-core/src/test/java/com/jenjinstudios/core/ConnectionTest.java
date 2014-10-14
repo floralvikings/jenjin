@@ -35,7 +35,7 @@ public class ConnectionTest
 		Connection connection = new Connection(messageIO);
 		connection.start();
 		Thread.sleep(100);
-		connection.runQueuedExecutableMessages();
+		connection.getExecutableMessageQueue().runQueuedExecutableMessages();
 		try
 		{
 			connection.getMessageIO().writeAllMessages();
@@ -95,7 +95,7 @@ public class ConnectionTest
 		Connection connection = new Connection(messageIO);
 		connection.start();
 		Thread.sleep(100);
-		connection.runQueuedExecutableMessages();
+		connection.getExecutableMessageQueue().runQueuedExecutableMessages();
 		try
 		{
 			connection.getMessageIO().writeAllMessages();
@@ -135,7 +135,7 @@ public class ConnectionTest
 		connection.start();
 		Thread.sleep(100);
 		// Again, normally an implementation would schedule this, but that's excessive for testing purposes
-		connection.runQueuedExecutableMessages();
+		connection.getExecutableMessageQueue().runQueuedExecutableMessages();
 		try
 		{
 			connection.getMessageIO().writeAllMessages();
