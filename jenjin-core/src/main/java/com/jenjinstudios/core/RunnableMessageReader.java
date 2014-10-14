@@ -24,7 +24,8 @@ public class RunnableMessageReader implements Runnable
 	private int invalidMsgCount;
 
 	/**
-	 * Construct a new {@code MessageReader} working for the given Connection.
+	 * Construct a new {@code RunnableMessageReader} working for the given Connection.
+	 *
 	 * @param connection The {@code Connection} managing this reader.
 	 */
 	public RunnableMessageReader(Connection connection) {
