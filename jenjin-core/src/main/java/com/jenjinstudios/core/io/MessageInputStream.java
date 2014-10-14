@@ -69,11 +69,6 @@ public class MessageInputStream extends DataInputStream
 
 	}
 
-	@Override
-	public void close() throws IOException {
-		super.close();
-	}
-
 	/**
 	 * Set the {@code PrivateKey} used by this stream to decrypt incoming messages.
 	 *
