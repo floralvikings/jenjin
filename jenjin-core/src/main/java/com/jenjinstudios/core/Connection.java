@@ -1,13 +1,10 @@
 package com.jenjinstudios.core;
 
 import com.jenjinstudios.core.io.Message;
-import com.jenjinstudios.core.io.MessageTypeException;
 import com.jenjinstudios.core.util.MessageFactory;
 import com.jenjinstudios.core.util.SecurityUtil;
 
 import java.security.KeyPair;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * The {@code Connection} class is a subclass of the {@code Thread} class; it will loop indefinitely until the {@code
@@ -16,16 +13,14 @@ import java.util.logging.Logger;
  *
  * @author Caleb Brinkman
  */
-public class Connection extends Thread
+public class Connection
 {
-	private static final int MAX_INVALID_MESSAGES = 10;
-	private static final Logger LOGGER = Logger.getLogger(Connection.class.getName());
 	private final PingTracker pingTracker;
 	private final ExecutableMessageQueue executableMessageQueue;
 	private final MessageFactory messageFactory;
 	private final MessageIO messageIO;
-	private final MessageExecutor messageExecutor;
-	private int invalidMsgCount;
+	private final Thread messageReaderThread;
+	private String name = "Connection";
 
 	/**
 	 * Construct a new {@code Connection} that utilizes the specified {@code MessageIO} to read and write messages.
@@ -37,7 +32,7 @@ public class Connection extends Thread
 		pingTracker = new PingTracker();
 		executableMessageQueue = new ExecutableMessageQueue();
 		messageFactory = new MessageFactory();
-		messageExecutor = new MessageExecutor(this);
+		messageReaderThread = new Thread(new RunnableMessageReader(this));
 		KeyPair rsaKeyPair = SecurityUtil.generateRSAKeyPair();
 		if (rsaKeyPair != null)
 		{
@@ -48,26 +43,22 @@ public class Connection extends Thread
 	}
 
 	/**
+	 * Start the message reader thread managed by this connection.
+	 */
+	public void start() {
+		messageReaderThread.start();
+	}
+
+	/**
 	 * Get the MessageIO containing the keys and streams used by this connection.
 	 *
 	 * @return The MessageIO containing the keys and streams used by this connection.
 	 */
 	public MessageIO getMessageIO() { return messageIO; }
 
-	@Override
-	// TODO Extract MessageReaderThread class; responsibility should really be split up.
-	public void run()
-	{
-		while (invalidMsgCount < MAX_INVALID_MESSAGES && messageExecutor.processNextIncomingMessage())
-		{
-			Thread.yield();
-		}
-		shutdown();
-	}
-
 	/**
-	 * Execute the {@code runDelayed} method of each {@code ExecutableMessage} in the queue, in the order in which
-	 * their
+	 * Execute the {@code runDelayed} method of each {@code ExecutableMessage} in the queue,
+	 * in the order in which their
 	 * {@code Message} objects were received.
 	 */
 	public void runQueuedExecutableMessages() { executableMessageQueue.runQueuedExecutableMessages(); }
@@ -104,10 +95,17 @@ public class Connection extends Thread
 		messageIO.closeOutputStream();
 	}
 
-	void reportInvalidMessage(MessageTypeException e) {
-		LOGGER.log(Level.WARNING, "Input stream reported invalid message receipt.");
-		Message unknown = MessageFactory.generateInvalidMessage(e.getId(), "Unknown");
-		getMessageIO().queueOutgoingMessage(unknown);
-		invalidMsgCount++;
-	}
+	/**
+	 * Get the name of this {@code Connection}.
+	 *
+	 * @return The name of this {@code Connection}.
+	 */
+	public String getName() { return name; }
+
+	/**
+	 * Set the name of this {@code Connection}.
+	 *
+	 * @param name The name of this {@code Connection}.
+	 */
+	public void setName(String name) { this.name = name; }
 }

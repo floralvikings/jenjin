@@ -1,47 +1,57 @@
 package com.jenjinstudios.core;
 
 import com.jenjinstudios.core.io.Message;
-import com.jenjinstudios.core.io.MessageInputStream;
 import com.jenjinstudios.core.io.MessageTypeException;
 import com.jenjinstudios.core.message.ExecutableMessage;
 import com.jenjinstudios.core.util.MessageFactory;
 
 import java.io.IOException;
+import java.net.SocketException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Used to process incoming {@code Message} objects, and invoke the appropriate {@code ExecutableMessage}.
+ * This class is used to continuously read {@code Message} objects from a {@code MessageInputStream}, invoke the
+ * appropriate {@code ExecutableMessage}, and store it so that the {@code runeDelayed} method may be called later.
  *
  * @author Caleb Brinkman
  */
-public class MessageExecutor
+public class RunnableMessageReader implements Runnable
 {
-	private static final Logger LOGGER = Logger.getLogger(MessageExecutor.class.getName());
+	private static final int MAX_INVALID_MESSAGES = 10;
+	private static final Logger LOGGER = Logger.getLogger(RunnableMessageReader.class.getName());
 	private final Connection connection;
-	private final MessageInputStream inputStream;
+	private int invalidMsgCount;
 
 	/**
-	 * Construct a new {@code MessageExecutor} working for the given {@code Connection} reading from the given {@code
-	 * MessageInputStream}.
-	 *  @param connection The connection.
-	 *
+	 * Construct a new {@code MessageReader} working for the given Connection.
+	 * @param connection The {@code Connection} managing this reader.
 	 */
-	public MessageExecutor(Connection connection) {
+	public RunnableMessageReader(Connection connection) {
 		this.connection = connection;
-		this.inputStream = connection.getMessageIO().getIn();
+	}
+
+	@Override
+	public void run() {
+		while (invalidMsgCount < MAX_INVALID_MESSAGES && processNextIncomingMessage())
+		{
+			Thread.yield();
+		}
 	}
 
 	boolean processNextIncomingMessage() {
 		boolean success = true;
 		try
 		{
-			Message currentMessage = inputStream.readMessage();
+			Message currentMessage = connection.getMessageIO().getIn().readMessage();
 			LOGGER.log(Level.FINEST, "Reading message: {0}", currentMessage);
 			executeMessage(currentMessage);
 		} catch (MessageTypeException e)
 		{
-			connection.reportInvalidMessage(e);
+			reportInvalidMessage(e);
+		} catch (SocketException e)
+		{
+			LOGGER.log(Level.FINER, "Connection closed: " + connection, e);
 		} catch (IOException e)
 		{
 			LOGGER.log(Level.FINE, "IOException when attempting to read from stream.", e);
@@ -71,4 +81,10 @@ public class MessageExecutor
 		connection.getExecutableMessageQueue().queueExecutableMessage(exec);
 	}
 
+	void reportInvalidMessage(MessageTypeException e) {
+		LOGGER.log(Level.WARNING, "Input stream reported invalid message receipt.");
+		Message unknown = MessageFactory.generateInvalidMessage(e.getId(), "Unknown");
+		connection.getMessageIO().queueOutgoingMessage(unknown);
+		invalidMsgCount++;
+	}
 }

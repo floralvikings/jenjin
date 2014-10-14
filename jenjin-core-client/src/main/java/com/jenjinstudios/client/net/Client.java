@@ -55,7 +55,7 @@ public class Client extends Connection
 	}
 
 	@Override
-	public void run() {
+	public void start() {
 		int period = 1000 / 60;
 
 		// Finally, send a ping request to establish latency.
@@ -64,7 +64,7 @@ public class Client extends Connection
 		sendMessagesTimer = new Timer("Client Update Loop", false);
 		sendMessagesTimer.scheduleAtFixedRate(new ClientLoop(this), 0, period);
 
-		super.run();
+		super.start();
 	}
 
 	/** Run the repeated synchronized tasks. */
