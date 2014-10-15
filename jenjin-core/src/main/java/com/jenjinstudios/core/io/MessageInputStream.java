@@ -85,57 +85,102 @@ public class MessageInputStream extends DataInputStream
 		}
 	}
 
-	@SuppressWarnings({"OverlyLongMethod", "OverlyComplexMethod"})
 	private Object[] readMessageArgs(LinkedList<Class> classes) throws IOException {
 		Object[] args = new Object[classes.size()];
 
 		for (int i = 0; i < args.length; i++)
 		{
 			String currentClass = classes.pop().getName();
-			switch (currentClass)
-			{
-				case "java.lang.String":
-					args[i] = readString();
-					break;
-				case "int":
-				case "java.lang.Integer":
-					args[i] = readInt();
-					break;
-				case "java.lang.Long":
-				case "long":
-					args[i] = readLong();
-					break;
-				case "double":
-				case "java.lang.Double":
-					args[i] = readDouble();
-					break;
-				case "float":
-				case "java.lang.Float":
-					args[i] = readFloat();
-					break;
-				case "short":
-				case "java.lang.Short":
-					args[i] = readShort();
-					break;
-				case "boolean":
-				case "java.lang.Boolean":
-					args[i] = readBoolean();
-					break;
-				case "byte":
-				case "java.lang.Byte":
-					args[i] = readByte();
-					break;
-				case "[Ljava.lang.Byte;":
-				case "[B":
-					args[i] = readByteArray();
-					break;
-				case "[Ljava.lang.String;":
-					args[i] = readStringArray();
-					break;
-			}
+			String simple = simplifyClassName(currentClass);
+			Object currentArg = readArgument(simple);
+			args[i] = currentArg;
 		}
 
 		return args;
+	}
+
+	private String simplifyClassName(String complexName) {
+		String simple = "";
+		switch (complexName)
+		{
+			case "java.lang.Integer":
+				simple = "int";
+				break;
+			case "java.lang.Long":
+				simple = "long";
+				break;
+			case "java.lang.Double":
+				simple = "double";
+				break;
+			case "java.lang.Float":
+				simple = "float";
+				break;
+			case "java.lang.Short":
+				simple = "short";
+				break;
+			case "java.lang.Boolean":
+				simple = "boolean";
+				break;
+			case "java.lang.Byte":
+				simple = "byte";
+				break;
+			case "[Ljava.lang.Byte;":
+				simple = "[B";
+		}
+		return simple;
+	}
+
+	private Object readArgument(String currentClass) throws IOException {
+		Object currentArg = null;
+
+		if (currentClass.startsWith("["))
+		{
+			currentArg = readArray(currentClass);
+		} else
+		{
+			switch (currentClass)
+			{
+				case "java.lang.String":
+					currentArg = readString();
+					break;
+				case "int":
+					currentArg = readInt();
+					break;
+				case "long":
+					currentArg = readLong();
+					break;
+				case "double":
+					currentArg = readDouble();
+					break;
+				case "float":
+					currentArg = readFloat();
+					break;
+				case "short":
+					currentArg = readShort();
+					break;
+				case "boolean":
+					currentArg = readBoolean();
+					break;
+				case "byte":
+					currentArg = readByte();
+					break;
+			}
+		}
+		return currentArg;
+	}
+
+	private Object readArray(String currentClass) throws IOException {
+		Object currentArg = null;
+		switch (currentClass)
+		{
+			case "[Ljava.lang.String;":
+				currentArg = readStringArray();
+				break;
+			case "[B":
+				currentArg = readByteArray();
+				break;
+		}
+		return currentArg;
 	}
 
 	private String[] readStringArray() throws IOException {
