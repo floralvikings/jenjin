@@ -12,6 +12,7 @@ import java.io.InputStream;
 
 /**
  * Test the {@code Connection} class.
+ *
  * @author Caleb Brinkman
  */
 public class ConnectionTest
@@ -61,6 +62,7 @@ public class ConnectionTest
 
 	/**
 	 * Test the {@code shutdown} method.
+	 *
 	 * @throws Exception If there's an exception.
 	 */
 	@Test(expectedExceptions = MessageQueueException.class)
@@ -91,6 +93,7 @@ public class ConnectionTest
 
 	/**
 	 * Test the ping request functionality.
+	 *
 	 * @throws Exception If there's an exception.
 	 */
 	@Test
@@ -129,6 +132,7 @@ public class ConnectionTest
 
 	/**
 	 * Test the ping response functionality.
+	 *
 	 * @throws Exception If there's an exception.
 	 */
 	@Test
