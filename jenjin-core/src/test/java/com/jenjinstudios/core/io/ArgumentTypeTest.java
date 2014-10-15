@@ -6,10 +6,14 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 /**
+ * Test the {@code ArgumentType} class.
  * @author Caleb Brinkman
  */
 public class ArgumentTypeTest
 {
+	/**
+	 * Test the {@code toString} method.
+	 */
 	@Test
 	public void testToString() {
 		MessageRegistry mr = MessageRegistry.getInstance();
