@@ -11,12 +11,18 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
+ * Test the {@code Connection} class.
  * @author Caleb Brinkman
  */
 public class ConnectionTest
 {
 	private static final MessageRegistry mr = MessageRegistry.getInstance();
 
+	/**
+	 * Test the {@code processMessage} method.
+	 *
+	 * @throws Exception If there's an exception.
+	 */
 	@Test
 	public void testProcessMessage() throws Exception {
 		// Spoof an invalid message
@@ -53,6 +59,10 @@ public class ConnectionTest
 		Assert.assertEquals(msg.getArgument("messageName"), "Unknown");
 	}
 
+	/**
+	 * Test the {@code shutdown} method.
+	 * @throws Exception If there's an exception.
+	 */
 	@Test(expectedExceptions = MessageQueueException.class)
 	public void testShutDown() throws Exception {
 		DataInputStreamMock dataInputStreamMock = new DataInputStreamMock();
@@ -79,6 +89,10 @@ public class ConnectionTest
 		}
 	}
 
+	/**
+	 * Test the ping request functionality.
+	 * @throws Exception If there's an exception.
+	 */
 	@Test
 	public void testPingRequest() throws Exception {
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -113,6 +127,10 @@ public class ConnectionTest
 		Assert.assertEquals(msg.name, "PingResponse");
 	}
 
+	/**
+	 * Test the ping response functionality.
+	 * @throws Exception If there's an exception.
+	 */
 	@Test
 	public void testPingResponse() throws Exception {
 		// Spoof an invalid message
