@@ -100,7 +100,7 @@ public class MessageInputStream extends DataInputStream
 	}
 
 	private String simplifyClassName(String complexName) {
-		String simple = "";
+		String simple = complexName;
 		switch (complexName)
 		{
 			case "java.lang.Integer":
