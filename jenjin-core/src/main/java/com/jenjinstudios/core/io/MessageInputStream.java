@@ -65,7 +65,7 @@ public class MessageInputStream extends DataInputStream
 		Class<?>[] classArray = new Class[classes.size()];
 		classes.toArray(classArray);
 		Object[] args = readMessageArgs(classes);
-		return new Message(messageRegistry, id, args);
+		return new Message(id, args);
 
 	}
 

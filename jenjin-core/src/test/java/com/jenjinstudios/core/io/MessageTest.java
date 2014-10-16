@@ -5,6 +5,7 @@ import org.testng.annotations.Test;
 
 /**
  * Tests the {@code Message class}.
+ *
  * @author Caleb Brinkman
  */
 public class MessageTest
@@ -60,6 +61,6 @@ public class MessageTest
 	 */
 	@Test(expectedExceptions = IllegalStateException.class)
 	public void testStreamConstructor() {
-		new Message(mr, (short) 0, "Bob"); // Expect Exception
+		new Message((short) 0, "Bob"); // Expect Exception
 	}
 }
