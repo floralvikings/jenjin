@@ -52,7 +52,8 @@ public class RunnableMessageReader implements Runnable
 			reportInvalidMessage(e);
 		} catch (SocketException e)
 		{
-			LOGGER.log(Level.FINER, "Connection closed: " + connection, e);
+			LOGGER.log(Level.FINER, "Connection closed: " + connection);
+			success = false;
 		} catch (IOException e)
 		{
 			LOGGER.log(Level.FINE, "IOException when attempting to read from stream.", e);
