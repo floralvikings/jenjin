@@ -1,11 +1,9 @@
 package com.jenjinstudios.demo.client.ui;
 
 import com.jenjinstudios.world.client.WorldClient;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
+import javafx.animation.AnimationTimer;
 import javafx.geometry.Dimension2D;
 import javafx.scene.layout.GridPane;
-import javafx.util.Duration;
 
 /**
  * @author Caleb Brinkman
@@ -19,10 +17,14 @@ public class ClientPane extends GridPane
 		canvas.setOnKeyReleased(playerControlKeyHandler);
 		add(canvas, 0, 0);
 
-		final Duration oneFrameAmt = Duration.millis(1000 / (float) 60);
-		final KeyFrame oneFrame = new KeyFrame(oneFrameAmt, event -> canvas.drawWorld());
-		Timeline timeline = new Timeline(oneFrame);
-		timeline.setCycleCount(Timeline.INDEFINITE);
-		timeline.play();
+		AnimationTimer animationTimer = new AnimationTimer()
+		{
+			@Override
+			public void handle(long now) {
+				canvas.drawWorld();
+			}
+		};
+
+		animationTimer.start();
 	}
 }
