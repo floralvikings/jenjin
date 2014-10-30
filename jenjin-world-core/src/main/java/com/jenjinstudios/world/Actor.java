@@ -1,7 +1,6 @@
 package com.jenjinstudios.world;
 
 import com.jenjinstudios.world.actor.StateChangeStack;
-import com.jenjinstudios.world.actor.Vision;
 import com.jenjinstudios.world.state.MoveState;
 import com.jenjinstudios.world.util.ActorUtils;
 
@@ -19,6 +18,7 @@ import com.jenjinstudios.world.util.ActorUtils;
  * will always be facing the angle of the most recently added move state (even if the state causes an illegal move) and
  * IDLE. The "steps until change" value is determined from the number of steps that were taken until the state was
  * forced.
+ *
  * @author Caleb Brinkman
  */
 public class Actor extends WorldObject
@@ -30,7 +30,6 @@ public class Actor extends WorldObject
 	public Actor(String name) {
 		super(name);
 		setMoveSpeed(DEFAULT_MOVE_SPEED);
-		addPreUpdateEvent(Vision.EVENT_NAME, new Vision(this));
 		addEventStack(StateChangeStack.STACK_NAME, new StateChangeStack(this));
 	}
 

@@ -4,6 +4,7 @@ import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.Location;
 import com.jenjinstudios.world.WorldObject;
 import com.jenjinstudios.world.actor.Vision;
+import com.jenjinstudios.world.client.WorldClient;
 import com.jenjinstudios.world.math.SightCalculator;
 import com.jenjinstudios.world.util.LocationUtils;
 import javafx.application.Platform;
@@ -11,6 +12,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.scene.transform.Rotate;
 
 import java.io.InputStream;
@@ -30,10 +32,12 @@ public class PlayerViewCanvas extends Canvas
 	private final Actor clientPlayer;
 	private final double yOrig = getHeight() / 2;
 	private final double xOrig = getWidth() / 2;
+	private final WorldClient worldClient;
 
-	public PlayerViewCanvas(Actor clientPlayer, double width, double height) {
+	public PlayerViewCanvas(WorldClient client, double width, double height) {
 		super(width, height);
-		this.clientPlayer = clientPlayer;
+		this.worldClient = client;
+		this.clientPlayer = client.getPlayer();
 		Platform.runLater(this::requestFocus);
 
 		String tankImageFile = "com/jenjinstudios/demo/client/images/tank.png";
@@ -49,6 +53,27 @@ public class PlayerViewCanvas extends Canvas
 		clearBackground();
 		drawLocations();
 		drawObjects();
+		drawHUD();
+	}
+
+	private void drawHUD() {
+		int fontSize = 14;
+		GraphicsContext graphicsContext2D = getGraphicsContext2D();
+		graphicsContext2D.setFill(Color.WHITE);
+		graphicsContext2D.setFont(Font.font("Arial", fontSize));
+
+		String[] hudStrings = {
+			  "UPS: " + String.valueOf(worldClient.getAverageUPS()),
+			  "Visible Object Count: " + ((Vision) clientPlayer.getPreUpdateEvent(Vision.EVENT_NAME)).
+					getVisibleObjects().size(),
+			  clientPlayer.getName(),
+			  clientPlayer.getVector2D().toString()
+		};
+
+		for (int i = 0; i < hudStrings.length; i++)
+		{
+			graphicsContext2D.fillText(hudStrings[i], 0, 12 + (i * fontSize * 1.5));
+		}
 	}
 
 	protected void clearBackground() {

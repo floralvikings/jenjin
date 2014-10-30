@@ -23,10 +23,11 @@ public class SightCalculator
 		Collection<WorldObject> worldObjects = new LinkedList<>();
 		Vector2D vector2D = object.getVector2D();
 		double radius = calculateViewRadius(object);
+		radius *= radius;
 		for (WorldObject visible : world.getWorldObjects())
 		{
 			Vector2D otherVector = visible.getVector2D();
-			if (visible != object && otherVector.getDistanceToVector(vector2D) <= radius)
+			if (visible != object && otherVector.getSquaredDistanceToVector(vector2D) <= radius)
 			{
 				worldObjects.add(visible);
 			}

@@ -58,8 +58,11 @@ public class Server<T extends ClientHandler> extends Thread
 
 	private void addClientHandler(T h) {
 		int nullIndex = 0;
-		while (clientHandlers.containsKey(nullIndex)) nullIndex++;
-		clientHandlers.put(nullIndex, h);
+		synchronized (clientHandlers)
+		{
+			while (clientHandlers.containsKey(nullIndex)) nullIndex++;
+			clientHandlers.put(nullIndex, h);
+		}
 		h.setHandlerId(nullIndex);
 	}
 
@@ -77,13 +80,16 @@ public class Server<T extends ClientHandler> extends Thread
 	public void broadcast() {
 		synchronized (clientHandlers)
 		{
-			clientHandlers.values().stream().filter(current -> current != null).forEach(c -> {
-				try
+			clientHandlers.values().stream().forEach(c -> {
+				if (c != null)
 				{
-					c.getMessageIO().writeAllMessages();
-				} catch (IOException e)
-				{
-					c.shutdown();
+					try
+					{
+						c.getMessageIO().writeAllMessages();
+					} catch (IOException e)
+					{
+						c.shutdown();
+					}
 				}
 			});
 		}
@@ -110,7 +116,7 @@ public class Server<T extends ClientHandler> extends Thread
 	protected void shutdown() throws IOException {
 		synchronized (clientHandlers)
 		{
-			clientHandlers.values().stream().filter(h -> h != null).forEach(ClientHandler::shutdown);
+			clientHandlers.values().stream().forEach(h -> { if (h != null) h.shutdown(); });
 		}
 		clientListener.stopListening();
 	}

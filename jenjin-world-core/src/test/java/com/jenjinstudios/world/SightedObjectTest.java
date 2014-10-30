@@ -15,6 +15,7 @@ public class SightedObjectTest
 		World world = WorldUtils.createDefaultWorld();
 		WorldObject visibleObject = new WorldObject("VisibleObject");
 		Actor sightedObject = new Actor("SightedObject");
+		sightedObject.addPreUpdateEvent(Vision.EVENT_NAME, new Vision(sightedObject));
 		world.getWorldObjects().add(visibleObject);
 		world.getWorldObjects().add(sightedObject);
 
@@ -43,6 +44,7 @@ public class SightedObjectTest
 		World world = WorldUtils.createDefaultWorld();
 		WorldObject visibleObject = new WorldObject("VisibleObject");
 		WorldObject sightedObject = new Actor("SightedObject");
+		sightedObject.addPreUpdateEvent(Vision.EVENT_NAME, new Vision(sightedObject));
 		world.getWorldObjects().add(visibleObject);
 		world.getWorldObjects().add(sightedObject);
 
@@ -57,6 +59,7 @@ public class SightedObjectTest
 		World world = WorldUtils.createDefaultWorld();
 		WorldObject visibleObject = new WorldObject("VisibleObject");
 		WorldObject sightedObject = new Actor("SightedObject");
+		sightedObject.addPreUpdateEvent(Vision.EVENT_NAME, new Vision(sightedObject));
 		world.getWorldObjects().add(visibleObject);
 		world.getWorldObjects().add(sightedObject);
 

@@ -119,8 +119,13 @@ public class Vector2D
 	 * @return The distance.
 	 */
 	public double getDistanceToVector(Vector2D vector2D) {
+		double squaredDistance = getSquaredDistanceToVector(vector2D);
+		return MathUtil.round(java.lang.Math.sqrt(squaredDistance), 4);
+	}
+
+	public double getSquaredDistanceToVector(Vector2D vector2D) {
 		double xSquare = java.lang.Math.pow(vector2D.getXCoordinate() - xCoordinate, 2);
 		double ySquare = java.lang.Math.pow(vector2D.getYCoordinate() - yCoordinate, 2);
-		return MathUtil.round(java.lang.Math.sqrt(xSquare + ySquare), 4);
+		return xSquare + ySquare;
 	}
 }

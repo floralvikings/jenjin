@@ -11,7 +11,7 @@ import javafx.scene.layout.GridPane;
 public class ClientPane extends GridPane
 {
 	public ClientPane(WorldClient worldClient, Dimension2D size) {
-		PlayerViewCanvas canvas = new PlayerViewCanvas(worldClient.getPlayer(), size.getWidth(), size.getHeight());
+		PlayerViewCanvas canvas = new PlayerViewCanvas(worldClient, size.getWidth(), size.getHeight());
 		PlayerControlKeyHandler playerControlKeyHandler = new PlayerControlKeyHandler(worldClient);
 		canvas.setOnKeyPressed(playerControlKeyHandler);
 		canvas.setOnKeyReleased(playerControlKeyHandler);
