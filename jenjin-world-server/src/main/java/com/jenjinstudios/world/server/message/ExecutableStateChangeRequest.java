@@ -16,6 +16,7 @@ import java.util.logging.Logger;
 
 /**
  * Process a StateChangeRequest.
+ *
  * @author Caleb Brinkman
  */
 @SuppressWarnings("WeakerAccess")
@@ -32,6 +33,7 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage
 
 	/**
 	 * Construct a new ExecutableMessage.  Must be implemented by subclasses.
+	 *
 	 * @param handler The handler using this ExecutableMessage.
 	 * @param message The message.
 	 */
@@ -92,7 +94,7 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage
 	}
 
 	private boolean isCorrectionSafe(Actor player) {
-		double tolerance = player.getMoveSpeed() * 0.1;
+		double tolerance = player.getMoveSpeed();
 		Vector2D proposedPlayerOrigin = getPlayerOrigin(player);
 		double distance = uncorrectedPosition.getDistanceToVector(proposedPlayerOrigin);
 		boolean distanceWithinTolerance = distance < tolerance;
