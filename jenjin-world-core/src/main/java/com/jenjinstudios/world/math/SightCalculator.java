@@ -22,12 +22,21 @@ public class SightCalculator
 		if (world == null) throw new IllegalStateException("WorldObject " + object + " does not have a set World.");
 		Collection<WorldObject> worldObjects = new LinkedList<>();
 		Vector2D vector2D = object.getVector2D();
-		double radius = calculateViewRadius(object);
-		radius *= radius;
+		double rad = calculateViewRadius(object);
+		double r2 = rad * rad;
+		double minX = vector2D.getXCoordinate() - rad;
+		double maxX = vector2D.getXCoordinate() + rad;
+		double minY = vector2D.getYCoordinate() - rad;
+		double maxY = vector2D.getYCoordinate() + rad;
 		for (WorldObject visible : world.getWorldObjects())
 		{
 			Vector2D otherVector = visible.getVector2D();
-			if (visible != object && otherVector.getSquaredDistanceToVector(vector2D) <= radius)
+			double otherX = otherVector.getXCoordinate();
+			double otherY = otherVector.getYCoordinate();
+			if (visible != object &&
+				  otherX >= minX && otherX <= maxX &&
+				  otherY >= minY && otherY <= maxY &&
+				  otherVector.getSquaredDistanceToVector(vector2D) <= r2)
 			{
 				worldObjects.add(visible);
 			}
