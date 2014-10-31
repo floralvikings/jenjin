@@ -1,10 +1,7 @@
 package com.jenjinstudios.server.net;
 
 import java.io.IOException;
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -116,7 +113,15 @@ public class Server<T extends ClientHandler> extends Thread
 	protected void shutdown() throws IOException {
 		synchronized (clientHandlers)
 		{
-			clientHandlers.values().stream().forEach(h -> { if (h != null) h.shutdown(); });
+			Set<Integer> integers = clientHandlers.keySet();
+			for (int i : integers)
+			{
+				ClientHandler t = clientHandlers.get(i);
+				if (t != null)
+				{
+					t.shutdown();
+				}
+			}
 		}
 		clientListener.stopListening();
 	}
