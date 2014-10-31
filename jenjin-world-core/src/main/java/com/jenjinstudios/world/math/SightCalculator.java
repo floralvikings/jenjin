@@ -24,24 +24,28 @@ public class SightCalculator
 		Vector2D vector2D = object.getVector2D();
 		double rad = calculateViewRadius(object);
 		double r2 = rad * rad;
-		double minX = vector2D.getXCoordinate() - rad;
-		double maxX = vector2D.getXCoordinate() + rad;
-		double minY = vector2D.getYCoordinate() - rad;
-		double maxY = vector2D.getYCoordinate() + rad;
 		for (WorldObject visible : world.getWorldObjects())
 		{
 			Vector2D otherVector = visible.getVector2D();
-			double otherX = otherVector.getXCoordinate();
-			double otherY = otherVector.getYCoordinate();
-			if (visible != object &&
-				  otherX >= minX && otherX <= maxX &&
-				  otherY >= minY && otherY <= maxY &&
+			if (visible != object && isRoughlyVisible(object, visible, rad) &&
 				  otherVector.getSquaredDistanceToVector(vector2D) <= r2)
 			{
 				worldObjects.add(visible);
 			}
 		}
 		return worldObjects;
+	}
+
+	public static boolean isRoughlyVisible(WorldObject object, WorldObject visible, double rad) {
+		Vector2D vector2D = object.getVector2D();
+		Vector2D otherVector = visible.getVector2D();
+		double minX = vector2D.getXCoordinate() - rad;
+		double maxX = vector2D.getXCoordinate() + rad;
+		double minY = vector2D.getYCoordinate() - rad;
+		double maxY = vector2D.getYCoordinate() + rad;
+		double otherX = otherVector.getXCoordinate();
+		double otherY = otherVector.getYCoordinate();
+		return otherX >= minX && otherX <= maxX && otherY >= minY && otherY <= maxY;
 	}
 
 	public static Collection<Location> getVisibleLocations(WorldObject worldObject) {
