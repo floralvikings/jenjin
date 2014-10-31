@@ -96,7 +96,15 @@ public class Server<T extends ClientHandler> extends Thread
 	public void update() {
 		synchronized (clientHandlers)
 		{
-			clientHandlers.values().stream().filter(current -> current != null).forEach(ClientHandler::update);
+			Set<Integer> integers = clientHandlers.keySet();
+			for (int i : integers)
+			{
+				ClientHandler t = clientHandlers.get(i);
+				if (t != null)
+				{
+					t.update();
+				}
+			}
 		}
 	}
 
