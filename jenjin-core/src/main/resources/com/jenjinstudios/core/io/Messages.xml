@@ -1,52 +1,26 @@
 <?xml version="1.0" ?>
 
-<messages>
-    <message name="TestAllTypesMessage" id="-4">
-        <argument type="String" name="testString" />
-        <argument type="int" name="testInt" />
-        <argument type="long" name="testLong" />
-        <argument type="double" name="testDouble" />
-        <argument type="float" name="testFloat" />
-        <argument type="short" name="testShort" />
-        <argument type="boolean" name="testBoolean" />
-        <argument type="byte" name="testByte" />
-        <argument type="byte[]" name="testByteArray" />
-        <argument type="String[]" name="testStringArray" />
-    </message>
+<messages xmlns="https://www.jenjinstudios.com">
 
-    <message name="TestEncryptedMessage" id="-3">
-        <argument type="String" encrypt="true" name="encryptedString" />
-    </message>
-
-    <message name="DisabledMessage" id="-2">
-        <executable language="java">com.jenjinstudios.core.message.DisabledExecutableMessage</executable>
-    </message>
-
-    <message name="InvalidMessage" id="-1">
-        <argument type="String" name="messageName" />
+    <message name="InvalidMessage" id="0">
+    <argument type="String" name="messageName" />
         <argument type="short" name="messageID" />
-        <executable language="java">com.jenjinstudios.core.message.InvalidExecutableMessage</executable>
-    </message>
-
-    <message name="BlankMessage" id="0">
-        <executable language="java">com.jenjinstudios.core.message.ExecutableBlankMessage</executable>
+        <executable>com.jenjinstudios.core.message.InvalidExecutableMessage</executable>
     </message>
 
     <message name="PingRequest" id="1">
         <argument type="long" name="requestTimeMillis" />
-        <executable language="java">com.jenjinstudios.core.message.ExecutablePingRequest</executable>
+        <executable>com.jenjinstudios.core.message.ExecutablePingRequest</executable>
     </message>
 
     <message name="PingResponse" id="2">
         <argument type="long" name="requestTimeMillis" />
-        <executable language="java">com.jenjinstudios.core.message.ExecutablePingResponse</executable>
+        <executable>com.jenjinstudios.core.message.ExecutablePingResponse</executable>
     </message>
 
     <message name="PublicKeyMessage" id="3">
         <argument type="byte[]" name="publicKey" />
-        <executable language="java">com.jenjinstudios.core.message.ExecutablePublicKeyMessage</executable>
+        <executable>com.jenjinstudios.core.message.ExecutablePublicKeyMessage</executable>
     </message>
-
-    <disabled_message name="DisabledMessage" />
 
 </messages>

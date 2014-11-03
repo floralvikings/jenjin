@@ -9,6 +9,7 @@ import org.testng.annotations.Test;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Statement;
+import java.util.Map;
 
 /**
  * @author Caleb Brinkman
@@ -33,21 +34,26 @@ public class AuthenticatorTest
 			  "  `password` CHAR(64) NOT NULL," +
 			  "  `salt` CHAR(48) NOT NULL," +
 			  "  `loggedin` TINYINT NOT NULL DEFAULT '0'," +
-			  "  `xcoord` DOUBLE NOT NULL DEFAULT '0'," +
-			  "  `ycoord` DOUBLE NOT NULL DEFAULT '0'," +
-			  "  `zoneid` INT(11) NOT NULL DEFAULT '0'," +
 			  "  PRIMARY KEY (username)" +
 			  ")");
+		statement.executeUpdate("CREATE TABLE jenjin_user_properties (" +
+			  " `username` VARCHAR(64) NOT NULL," +
+			  " `propertyName` VARCHAR(64) NOT NULL," +
+			  " `propertyValue` VARCHAR(64)," +
+			  " PRIMARY KEY (`username`, `propertyName`))");
 		for (int i = 1; i < 10; i++)
 		{
 			statement.executeUpdate(
 				  "INSERT INTO jenjin_users " +
-						"(`username`, `password`, `salt`, `loggedin`, `xcoord`, `ycoord`, `zoneid`)" +
+						"(`username`, `password`, `salt`, `loggedin`)" +
 						" VALUES " +
 						"('TestAccount" + i + "', " +
 						"'650f00f552d4df0147d236e240ccfc490444f4b358c4ff1d79f5fd90f57243bd', " +
 						"'e3c42b85a183d3f654a3d2bb3bc5ea607d0fb529d9b890d3', " +
-						"'0', '0', '0', '0')");
+						"'0')");
+			statement.executeUpdate("INSERT INTO jenjin_user_properties (`username`, `propertyName`, " +
+				  "`propertyValue`) " +
+				  "VALUES ('TestAccount" + i + "', 'Foo', 'Bar')");
 		}
 		connectionNumber++;
 		return testConnection;
@@ -119,5 +125,43 @@ public class AuthenticatorTest
 		String password = "incorrectPassword";
 		connector.logInUser(username, password);
 
+	}
+
+	@Test
+	public void testLookUpUserProperties() throws Exception {
+		Authenticator authenticator = new Authenticator(connection);
+		String username = "TestAccount1";
+		Map<String, Object> properties = authenticator.lookUpUserProperties(username);
+		Assert.assertEquals(properties.get("Foo"), "Bar");
+	}
+
+	@Test
+	public void testLookUpUserProperty() throws Exception {
+		Authenticator authenticator = new Authenticator(connection);
+		String username = "TestAccount1";
+		Object foo = authenticator.lookUpUserProperty(username, "Foo");
+		Assert.assertEquals(foo, "Bar");
+	}
+
+	@Test
+	public void testInsertNewProperty() throws Exception {
+		Authenticator authenticator = new Authenticator(connection);
+		User user = authenticator.lookUpUser("TestAccount1");
+		user.getProperties().put("Donkey", "Hotey");
+		authenticator.updateUserProperties(user);
+
+		Object o = authenticator.lookUpUserProperty("TestAccount1", "Donkey");
+		Assert.assertEquals(o, "Hotey");
+	}
+
+	@Test
+	public void testUpdateProperty() throws Exception {
+		Authenticator authenticator = new Authenticator(connection);
+		User user = authenticator.lookUpUser("TestAccount1");
+		user.getProperties().put("Foo", "Hotey");
+		authenticator.updateUserProperties(user);
+
+		Object o = authenticator.lookUpUserProperty("TestAccount1", "Foo");
+		Assert.assertEquals(o, "Hotey");
 	}
 }

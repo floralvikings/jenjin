@@ -1,5 +1,7 @@
 package com.jenjinstudios.world;
 
+import com.jenjinstudios.world.math.Vector2D;
+import com.jenjinstudios.world.util.WorldUtils;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -12,63 +14,57 @@ public class WorldTest
 {
 	@Test
 	public void testAddObject() {
-		WorldObject obj0 = mock(WorldObject.class);
-		WorldObject obj1 = mock(WorldObject.class);
-		WorldObject obj2 = new WorldObject("Bob");
-		World world = new World();
+		WorldObject obj0 = new WorldObject("Alice");
+		WorldObject obj1 = new WorldObject("Bob");
+		WorldObject obj2 = new WorldObject("Carol");
+		World world = WorldUtils.createDefaultWorld();
 
-		world.getWorldObjects().scheduleForAddition(obj0);
-		world.getWorldObjects().scheduleForAddition(obj1);
-		world.getWorldObjects().scheduleForAddition(obj2);
+		world.getWorldObjects().add(obj0);
+		world.getWorldObjects().add(obj1);
+		world.getWorldObjects().add(obj2);
 		world.update();
 
 		Assert.assertEquals(obj2.getId(), 2);
 	}
 
-	@Test(expectedExceptions = IllegalArgumentException.class)
+	@Test(expectedExceptions = NullPointerException.class)
 	public void testAddNullObject() {
-		World world = new World();
-		world.getWorldObjects().scheduleForAddition(null);
-	}
-
-	@Test(expectedExceptions = IllegalArgumentException.class)
-	public void testAddOccupiedID() {
-		World world = new World();
-		world.getWorldObjects().scheduleForAddition(mock(WorldObject.class), 0);
-		world.getWorldObjects().scheduleForAddition(mock(WorldObject.class), 0);
+		World world = WorldUtils.createDefaultWorld();
+		world.getWorldObjects().add(null);
 	}
 
 	@Test
 	public void testScheduleForRemoval() {
 		WorldObject worldObject = new WorldObject("Bob");
-		World world = new World();
-		world.getWorldObjects().scheduleForAddition(worldObject);
+		World world = WorldUtils.createDefaultWorld();
+		world.getWorldObjects().add(worldObject);
 		world.update();
-		world.getWorldObjects().scheduleForRemoval(worldObject);
+		world.getWorldObjects().remove(worldObject.getId());
 		world.update();
-		Assert.assertEquals(world.getWorldObjects().getObjectCount(), 0);
+		Assert.assertEquals(world.getWorldObjects().size(), 0);
 	}
 
 	@Test
 	public void testUpdate() {
 		WorldObject worldObject = mock(WorldObject.class);
-		World world = new World();
-		world.getWorldObjects().scheduleForAddition(worldObject);
+		when(worldObject.getVector2D()).thenReturn(Vector2D.ORIGIN);
+		World world = WorldUtils.createDefaultWorld();
+		world.getWorldObjects().add(worldObject);
 		world.update();
-		verify(worldObject, times(1)).setUp();
+		verify(worldObject, times(1)).preUpdate();
 		verify(worldObject, times(1)).update();
-		verify(worldObject, times(1)).reset();
+		verify(worldObject, times(1)).postUpdate();
 	}
 
 	@Test
 	public void testGetObject() {
 		WorldObject obj0 = new WorldObject("Foo");
 		WorldObject obj1 = new WorldObject("Bar");
-		World world = new World();
-		world.getWorldObjects().scheduleForAddition(obj0, 0);
-		world.getWorldObjects().scheduleForAddition(obj1, 1);
+		World world = WorldUtils.createDefaultWorld();
+		world.getWorldObjects().set(0, obj0);
+		world.getWorldObjects().set(1, obj1);
 		world.update();
-		WorldObject retrieved = world.getWorldObjects().getObject(0);
+		WorldObject retrieved = world.getWorldObjects().get(0);
 		Assert.assertEquals(retrieved, obj0);
 	}
 }

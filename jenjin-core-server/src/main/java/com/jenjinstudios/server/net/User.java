@@ -1,10 +1,14 @@
 package com.jenjinstudios.server.net;
 
+import java.util.HashMap;
+
 /**
  * @author Caleb Brinkman
  */
 public class User
 {
+	/** The Hash table of custom properties of this user. */
+	private final HashMap<String, Object> properties = new HashMap<>();
 	private String salt;
 	private boolean loggedIn;
 	private String username;
@@ -34,4 +38,6 @@ public class User
 	public boolean isLoggedIn() { return loggedIn; }
 
 	public void setLoggedIn(boolean loggedIn) { this.loggedIn = loggedIn; }
+
+	public HashMap<String, Object> getProperties() { return properties; }
 }

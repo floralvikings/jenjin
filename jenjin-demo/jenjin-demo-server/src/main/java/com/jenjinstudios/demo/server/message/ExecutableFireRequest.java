@@ -2,8 +2,8 @@ package com.jenjinstudios.demo.server.message;
 
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.demo.server.Bullet;
+import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.World;
-import com.jenjinstudios.world.server.Player;
 import com.jenjinstudios.world.server.WorldClientHandler;
 import com.jenjinstudios.world.server.WorldServer;
 import com.jenjinstudios.world.server.message.WorldExecutableMessage;
@@ -26,9 +26,9 @@ public class ExecutableFireRequest extends WorldExecutableMessage
 	@Override
 	public void runDelayed() {
 		World world = ((WorldServer) getClientHandler().getServer()).getWorld();
-		Player player = getClientHandler().getPlayer();
+		Actor player = getClientHandler().getPlayer();
 		Bullet bullet = new Bullet(player);
-		world.getWorldObjects().scheduleForAddition(bullet);
+		world.getWorldObjects().add(bullet);
 	}
 
 	/** Run asynchronous portion of this message. */

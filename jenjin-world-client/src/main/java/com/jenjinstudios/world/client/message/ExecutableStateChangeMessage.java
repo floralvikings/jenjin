@@ -1,8 +1,8 @@
 package com.jenjinstudios.world.client.message;
 
 import com.jenjinstudios.core.io.Message;
+import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.WorldObject;
-import com.jenjinstudios.world.client.ClientActor;
 import com.jenjinstudios.world.client.WorldClient;
 import com.jenjinstudios.world.math.Angle;
 import com.jenjinstudios.world.math.Vector2D;
@@ -30,14 +30,13 @@ public class ExecutableStateChangeMessage extends WorldClientExecutableMessage
 
 	@Override
 	public void runDelayed() {
-		WorldObject obj = getClient().getWorld().getWorldObjects().getObject(actorID);
-		if (obj != null && obj instanceof ClientActor)
+		WorldObject obj = getClient().getWorld().getWorldObjects().get(actorID);
+		if (obj != null && obj instanceof Actor)
 		{
-			ClientActor actor = (ClientActor) obj;
+			Actor actor = (Actor) obj;
 			double dist = actor.getMoveSpeed() * ((double) (System.currentTimeMillis() - time) / 1000d);
 			Vector2D position = oldVector.getVectorInDirection(dist, angle.getStepAngle());
 			actor.setAngle(angle);
-			actor.setLastStepTime(System.currentTimeMillis());
 			actor.setVector2D(position);
 		}
 	}

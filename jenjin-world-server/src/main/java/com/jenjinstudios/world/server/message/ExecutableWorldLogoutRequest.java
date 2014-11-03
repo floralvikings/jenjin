@@ -33,7 +33,7 @@ public class ExecutableWorldLogoutRequest extends WorldExecutableMessage
 		// Multiple logout requests can cause Player to be null; have to check first.
 		if (clientActor != null)
 		{
-			clientActor.getWorld().getWorldObjects().scheduleForRemoval(clientActor);
+			clientActor.getWorld().getWorldObjects().remove(clientActor.getId());
 		}
 	}
 
@@ -54,7 +54,7 @@ public class ExecutableWorldLogoutRequest extends WorldExecutableMessage
 		WorldClientHandler handler = getClientHandler();
 		if (authenticator != null && handler.getUser() != null)
 		{
-			authenticator.updatePlayer(handler.getPlayer());
+			authenticator.updatePlayer(handler);
 			authenticator.logOutUser(handler.getUser().getUsername());
 		} else throw new LoginException("Missing ClientHandler username or Authenticator.");
 	}

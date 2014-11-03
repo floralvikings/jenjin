@@ -1,8 +1,11 @@
 package com.jenjinstudios.world.client;
 
+import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.math.Angle;
 import com.jenjinstudios.world.math.Vector2D;
+import com.jenjinstudios.world.util.ActorUtils;
+import com.jenjinstudios.world.util.WorldUtils;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -12,21 +15,10 @@ import org.testng.annotations.Test;
 public class ClientPlayerTest
 {
 	@Test(timeOut = 5000)
-	public void testSetAngleNoUpdate() {
-		World world = new World();
-		ClientPlayer player = new ClientPlayer(0, "ClientActor");
-		world.getWorldObjects().scheduleForAddition(player);
-		world.update();
-		Angle angle = new Angle(Angle.LEFT, Angle.FRONT);
-		player.setAngle(angle);
-		Assert.assertNotEquals(player.getAngle(), angle);
-	}
-
-	@Test(timeOut = 5000)
 	public void testSetAngle() {
-		World world = new World();
-		ClientPlayer player = new ClientPlayer(0, "ClientActor");
-		world.getWorldObjects().scheduleForAddition(player);
+		World world = WorldUtils.createDefaultWorld();
+		Actor player = new Actor("ClientActor");
+		world.getWorldObjects().add(player);
 		world.update();
 		Angle angle = new Angle(Angle.LEFT, Angle.FRONT);
 		player.setAngle(angle);
@@ -36,11 +28,11 @@ public class ClientPlayerTest
 
 	@Test(timeOut = 5000)
 	public void testSetAngleToForcedPosition() {
-		World world = new World();
-		ClientPlayer player = new ClientPlayer(0, "ClientActor");
-		world.getWorldObjects().scheduleForAddition(player);
+		World world = WorldUtils.createDefaultWorld();
+		Actor player = new Actor("ClientActor");
+		world.getWorldObjects().add(player);
 		world.update();
-		player.forcePosition();
+		ActorUtils.forceIdle(player);
 		Angle angle = player.getAngle();
 		player.setAngle(angle);
 		Assert.assertEquals(player.getAngle(), angle);
@@ -48,19 +40,20 @@ public class ClientPlayerTest
 
 	@Test(timeOut = 5000)
 	public void testForcePosition() {
-		World world = new World();
-		ClientPlayer player = new ClientPlayer(0, "ClientActor");
-		world.getWorldObjects().scheduleForAddition(player);
+		World world = WorldUtils.createDefaultWorld();
+		Actor player = new Actor("ClientActor");
+		player.setId(0);
+		world.getWorldObjects().add(player);
 		world.update();
-		player.forcePosition();
+		ActorUtils.forceIdle(player);
 		Assert.assertNotNull(player.getForcedState());
 	}
 
 	@Test(timeOut = 5000)
 	public void testStep() throws InterruptedException {
-		World world = new World();
-		ClientPlayer player = new ClientPlayer(0, "ClientActor");
-		world.getWorldObjects().scheduleForAddition(player);
+		World world = WorldUtils.createDefaultWorld();
+		Actor player = new Actor("ClientActor");
+		world.getWorldObjects().add(player);
 		world.update();
 		Angle angle = new Angle(0, Angle.FRONT);
 		player.setAngle(angle);

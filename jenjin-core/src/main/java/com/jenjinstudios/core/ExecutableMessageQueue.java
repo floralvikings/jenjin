@@ -6,17 +6,19 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
+ * This class is used to store and execute ExecutableMessages.
+ *
  * @author Caleb Brinkman
  */
 public class ExecutableMessageQueue
 {
-	/** The "one-shot" tasks to be executed in the current client loop. */
-	private final List<ExecutableMessage> queuedExecutableMessages;
+	private final List<ExecutableMessage> queuedExecutableMessages = new LinkedList<>();
 
-	public ExecutableMessageQueue() {
-		queuedExecutableMessages = new LinkedList<>();
-	}
-
+	/**
+	 * Add an {@code ExecutableMessage} to the end of the queue.
+	 *
+	 * @param executableMessage The {@code ExecutableMessage} to add.
+	 */
 	protected void queueExecutableMessage(ExecutableMessage executableMessage) {
 		synchronized (queuedExecutableMessages)
 		{
@@ -24,7 +26,12 @@ public class ExecutableMessageQueue
 		}
 	}
 
-	protected void runQueuedExecutableMessages() {
+	/**
+	 * Execute the {@code runDelayed} method of each {@code ExecutableMessage} in the queue, in the order in which they
+	 * were added.  After this method is called, the queue will be empty.
+	 */
+	// TODO Maybe should separate the clear operation out of this method?
+	public void runQueuedExecutableMessages() {
 		synchronized (queuedExecutableMessages)
 		{
 			for (ExecutableMessage executableMessage : queuedExecutableMessages)

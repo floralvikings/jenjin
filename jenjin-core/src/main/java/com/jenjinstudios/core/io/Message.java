@@ -1,43 +1,38 @@
 package com.jenjinstudios.core.io;
 
+import com.jenjinstudios.core.util.TypeMapper;
+import com.jenjinstudios.core.xml.ArgumentType;
+import com.jenjinstudios.core.xml.MessageType;
+
 import java.util.Map;
 import java.util.TreeMap;
 
 /**
- * The Message class is used for fast-and-loose serialization for efficient transport of data over socket.
+ * The {@code Message} class is used in sending data to and receiving data from {@code Connection} objects.  Each
+ * Message has a unique {@code name}, a unique {@code id}, and a {@code Map} of arguments which are accessed with the
+ * {@code getArgument} and {@code setObject} methods. </p> Message arguments may consist of any primitive type, as well
+ * as {@code String} objects, and {@code String} and {@code byte} arrays.
+ *
  * @author Caleb Brinkman
  */
 public class Message
 {
-	/** The name of this message. */
+	/** The unique name of this type of Message. */
 	public final String name;
-	/** The message type of this message. */
 	private final MessageType messageType;
-	/** The arguments for this message by name. */
 	private final Map<String, Object> argumentsByName;
-	/** The ID of this message. */
 	private final short id;
 
-	/**
-	 * Construct a new Message with the given ID and arguments. This is intended <b>only</b> for use in
-	 * MessageInputStream. You should <b>not</b> use this constructor in your code.  If, for some reason, you decide to
-	 * (and you really, really shouldn't) the arguments you pass <b>must</b> fill every available argument and be
-	 * passed
-	 * in the order in which they appear in the XML file.
-	 * @param messageRegistry The Connection creating this message.
-	 * @param id The ID of the message type for this message.
-	 * @param args The arguments of this message.  This <b>must</b> fill every available argument for the message.
-	 */
-	Message(MessageRegistry messageRegistry, short id, Object... args) {
+	Message(short id, Object... args) {
 		this.id = id;
-		messageType = messageRegistry.getMessageType(id);
-		name = messageType.name;
+		messageType = MessageRegistry.getInstance().getMessageType(id);
+		name = messageType.getName();
 		argumentsByName = new TreeMap<>();
-		for (int i = 0; i < messageType.argumentTypes.length; i++)
+		for (int i = 0; i < messageType.getArguments().size(); i++)
 		{
 			try
 			{
-				setArgument(messageType.argumentTypes[i].name, args[i]);
+				setArgument(messageType.getArguments().get(i).getName(), args[i]);
 			} catch (ArrayIndexOutOfBoundsException ex)
 			{
 				throw new IllegalStateException(
@@ -47,79 +42,76 @@ public class Message
 		}
 	}
 
-	/**
-	 * Construct a new Message using the MessageType specified by the given name; every argument in this message
-	 * must be
-	 * set using the {@code setArgument} method before it can be sent properly over socket.
-	 */
 	Message(MessageType messageType) {
 		this.messageType = messageType;
-		this.name = messageType.name;
-		id = messageType.id;
+		this.name = messageType.getName();
+		id = messageType.getId();
 		argumentsByName = new TreeMap<>();
 	}
 
 	/**
-	 * Set the argument of the given name to the given value.
-	 * @param argumentName The name of the argument.  If this is not a valid name, an {@code IllegalArgumentException}
-	 * will be thrown.
-	 * @param argument The value to set to the argument.  If the type of this object is incorrect, an {@code
-	 * IllegalArgumentException} will be thrown.
+	 * Set the argument with the given name to the argument of the given value.
+	 *
+	 * @param argumentName The name of the argument.
+	 * @param argument The value to be stored in the argument.
+	 *
+	 * @throws java.lang.IllegalArgumentException If the name or type of of the argument is invalid.
 	 */
 	public void setArgument(String argumentName, Object argument) {
-		ArgumentType argType = messageType.getArgumentType(argumentName);
+		ArgumentType argType = null;
+		for (ArgumentType a : messageType.getArguments())
+		{
+			if (argumentName.equals(a.getName()))
+			{
+				argType = a;
+			}
+		}
 		if (argType == null)
 			throw new IllegalArgumentException("Invalid argument name for Message: " + argumentName +
-				  " (Message type: " + messageType.name + ")");
-		if (!argType.type.isInstance(argument))
+				  " (Message type: " + messageType.getName() + ")");
+		Class c = TypeMapper.getTypeForName(argType.getType());
+		if (!c.isInstance(argument))
 			throw new IllegalArgumentException("Invalid argument type for Message: " + argument +
-				  " (Expected " + argType.type + ", got " + argument.getClass() + ")");
+				  " (Expected " + argType.getType() + ", got " + argument.getClass() + ")");
 		argumentsByName.put(argumentName, argument);
 	}
 
 	/**
 	 * Get the argument with the given name.
+	 *
 	 * @param argumentName The name of the argument.
-	 * @return The argument with the specified name.
+	 *
+	 * @return The value of the argument specified by {@code argumentName}, or null if the specified argument does not
+	 * exist.
 	 */
-	public Object getArgument(String argumentName) {
-		return argumentsByName.get(argumentName);
-	}
+	public Object getArgument(String argumentName) { return argumentsByName.get(argumentName); }
 
 	/**
-	 * Get the ID of the MessageType created by this message.
-	 * @return The ID of the MessageType of this message.
+	 * Get the id of this type of Message.
+	 *
+	 * @return The id of this type of Message.
 	 */
-	public short getID() {
-		return id;
-	}
+	public short getID() { return id; }
 
 	/**
-	 * Get the arguments of this message, in the order in which they should be sent over socket, assuming this message
-	 * has been validly filled.
-	 * @return An array of objects specifying the arguments of the message, in the order in which they should be sent
-	 * over socket.
+	 * Get a copy of the array containing the arguments passed to this Message.
+	 *
+	 * @return A copy of the array containing the arguments passed to this Message.
 	 */
 	public final Object[] getArgs() {
 		if (isInvalid())
 			throw new IllegalStateException("Attempting to retrieve arguments while message is invalid. (Not all " +
 				  "arguments have been set.)");
-		Object[] argsArray = new Object[messageType.argumentTypes.length];
-		for (int i = 0; i < messageType.argumentTypes.length; i++)
+		Object[] argsArray = new Object[messageType.getArguments().size()];
+		for (int i = 0; i < messageType.getArguments().size(); i++)
 		{
-			argsArray[i] = argumentsByName.get(messageType.argumentTypes[i].name);
+			argsArray[i] = argumentsByName.get(messageType.getArguments().get(i).getName());
 		}
 		return argsArray;
 	}
 
+	boolean isInvalid() { return argumentsByName.size() != messageType.getArguments().size(); }
+
 	@Override
 	public String toString() { return "Message " + id + " " + name; }
-
-	/**
-	 * Determine whether this message is valid, which is to say that all arguments have been correctly set.
-	 * @return true if all arguments have been set, and correctly.
-	 */
-	boolean isInvalid() {
-		return argumentsByName.size() != messageType.argumentTypes.length;
-	}
 }

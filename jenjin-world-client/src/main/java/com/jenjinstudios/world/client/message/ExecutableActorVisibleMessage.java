@@ -1,7 +1,9 @@
 package com.jenjinstudios.world.client.message;
 
 import com.jenjinstudios.core.io.Message;
-import com.jenjinstudios.world.client.ClientActor;
+import com.jenjinstudios.world.Actor;
+import com.jenjinstudios.world.World;
+import com.jenjinstudios.world.WorldObject;
 import com.jenjinstudios.world.client.WorldClient;
 import com.jenjinstudios.world.math.Angle;
 import com.jenjinstudios.world.math.Vector2D;
@@ -16,20 +18,24 @@ import java.util.logging.Logger;
 public class ExecutableActorVisibleMessage extends WorldClientExecutableMessage
 {
 	private static final Logger LOGGER = Logger.getLogger(ExecutableActorVisibleMessage.class.getName());
-	private ClientActor newlyVisible;
+	private Actor newlyVisible;
 
 	public ExecutableActorVisibleMessage(WorldClient client, Message message) { super(client, message); }
 
 	@Override
 	public void runDelayed() {
+		int id = newlyVisible.getId();
+		World world = getClient().getWorld();
 		try
 		{
-			getClient().getWorld().getWorldObjects().scheduleForAddition(newlyVisible, newlyVisible.getId());
+			world.getWorldObjects().set(id, newlyVisible);
 		} catch (Exception ex)
 		{
-			LOGGER.log(Level.WARNING, "Received message for already extant object ID:  {0}, {1}",
-				  new Object[]{newlyVisible.getId(), newlyVisible});
-			getClient().getWorld().getWorldObjects().scheduleForOverwrite(newlyVisible, newlyVisible.getId());
+			WorldObject existing = world.getWorldObjects().get(id);
+			LOGGER.log(Level.WARNING, "Received message for already extant object ID:  {0}, {1}; Current: {2}",
+				  new Object[]{id, newlyVisible, existing});
+
+			world.getWorldObjects().set(id, newlyVisible);
 		}
 
 	}
@@ -47,7 +53,8 @@ public class ExecutableActorVisibleMessage extends WorldClientExecutableMessage
 		long timeOfVisibility = (long) message.getArgument("timeOfVisibility");
 		double moveSpeed = (double) message.getArgument("moveSpeed");
 
-		newlyVisible = new ClientActor(id, name);
+		newlyVisible = new Actor(name);
+		newlyVisible.setId(id);
 		newlyVisible.setResourceID(resourceID);
 		double dist = moveSpeed * ((double) (System.currentTimeMillis() - timeOfVisibility) / 1000d);
 		Angle angle = new Angle(absoluteAngle, relativeAngle);

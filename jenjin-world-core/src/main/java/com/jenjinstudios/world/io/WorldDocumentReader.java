@@ -1,21 +1,11 @@
 package com.jenjinstudios.world.io;
 
-import com.jenjinstudios.world.Location;
+import com.google.gson.Gson;
 import com.jenjinstudios.world.World;
-import com.jenjinstudios.world.Zone;
-import com.jenjinstudios.world.math.Dimension2D;
-import org.w3c.dom.*;
-import org.xml.sax.SAXException;
+import com.jenjinstudios.world.util.ChecksumUtil;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.security.NoSuchAlgorithmException;
-import java.util.Properties;
 
 /**
  * This class handles the reading of and construction from world xml files.
@@ -23,8 +13,6 @@ import java.util.Properties;
  */
 public class WorldDocumentReader
 {
-	private static final String ZONE_TAG_NAME = "zone";
-	private static final String LOCATION_TAG_NAME = "location";
 	private final InputStream inputStream;
 	private byte[] worldFileChecksum;
 	private byte[] worldFileBytes;
@@ -38,14 +26,7 @@ public class WorldDocumentReader
 
 		ByteArrayInputStream bis = new ByteArrayInputStream(worldFileBytes);
 
-		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-		DocumentBuilder builder = getDocumentBuilder(factory);
-		Document worldDocument = parseWoldDocument(bis, builder);
-
-		NodeList zoneNodes = worldDocument.getElementsByTagName(ZONE_TAG_NAME);
-		Zone[] zones = parseZoneNodes(zoneNodes);
-
-		return new World(zones);
+		return new Gson().fromJson(new InputStreamReader(bis), World.class);
 	}
 
 	private ByteArrayOutputStream toByteArrayOutputStream(InputStream inputStream) throws WorldDocumentException {
@@ -75,78 +56,7 @@ public class WorldDocumentReader
 		}
 	}
 
-	private Document parseWoldDocument(InputStream inputStream, DocumentBuilder builder) throws WorldDocumentException {
-		try
-		{
-			Document worldDocument = builder.parse(inputStream);
-			worldDocument.normalize();
-			return worldDocument;
-		} catch (SAXException | IOException e)
-		{
-			throw new WorldDocumentException("Unable to parse WorldDocument from input stream", e);
-		}
-	}
-
-	private static DocumentBuilder getDocumentBuilder(DocumentBuilderFactory factory) throws WorldDocumentException {
-		DocumentBuilder builder;
-		try
-		{
-			builder = factory.newDocumentBuilder();
-		} catch (ParserConfigurationException e)
-		{
-			throw new WorldDocumentException("Unable to configure document builder.", e);
-		}
-		return builder;
-	}
-
 	public byte[] getWorldFileChecksum() { return worldFileChecksum; }
 
 	public byte[] getWorldFileBytes() { return worldFileBytes; }
-
-	private Zone[] parseZoneNodes(NodeList zoneNodes) {
-		Zone[] zones = new Zone[zoneNodes.getLength()];
-
-		for (int i = 0; i < zoneNodes.getLength(); i++)
-		{
-			Element currentZoneElement = (Element) zoneNodes.item(i);
-			NodeList locationNodes = currentZoneElement.getElementsByTagName(LOCATION_TAG_NAME);
-			int id = Integer.parseInt(zoneNodes.item(i).getAttributes().getNamedItem("id").getTextContent());
-			int xSize = Integer.parseInt(zoneNodes.item(i).getAttributes().getNamedItem("xSize").getTextContent());
-			int ySize = Integer.parseInt(zoneNodes.item(i).getAttributes().getNamedItem("ySize").getTextContent());
-
-			zones[i] = new Zone(id, new Dimension2D(xSize, ySize), parseLocationNodes(locationNodes));
-		}
-
-		return zones;
-	}
-
-	private Location[] parseLocationNodes(NodeList locationNodes) {
-		Location[] locations = new Location[locationNodes.getLength()];
-		for (int i = 0; i < locationNodes.getLength(); i++)
-		{
-			Node currentLocationNode = locationNodes.item(i);
-			NamedNodeMap attributes = currentLocationNode.getAttributes();
-			int x = Integer.parseInt(attributes.getNamedItem("x").getTextContent());
-			int y = Integer.parseInt(attributes.getNamedItem("y").getTextContent());
-			Properties properties = getLocationProperties(attributes);
-			locations[i] = new Location(x, y, properties);
-		}
-		return locations;
-	}
-
-	private Properties getLocationProperties(NamedNodeMap attributes) {
-		Properties properties = new Properties();
-		for (int j = 0; j < attributes.getLength(); j++)
-		{
-			Attr item = (Attr) attributes.item(j);
-			if (item != null && !"x".equals(item.getName()) && !"y".equals(item.getName()))
-			{
-				String name = item.getName();
-				String value = item.getValue();
-				properties.setProperty(name, value);
-			}
-		}
-		return properties;
-	}
-
 }

@@ -1,42 +1,52 @@
 package com.jenjinstudios.core.io;
 
-import com.jenjinstudios.core.util.Files;
+import com.jenjinstudios.core.xml.ArgumentType;
+import com.jenjinstudios.core.xml.DisabledMessageType;
+import com.jenjinstudios.core.xml.MessageType;
+import com.jenjinstudios.core.xml.Messages;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Unmarshaller;
 import java.io.InputStream;
-import java.nio.file.Paths;
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
 
 /**
- * Handles the registration of message classes and the information on how to reconstruct them from raw data.
+ * The {@code MessageRegistry} class is central to the Jenjin's dynamic messaging system.  An instance of the registry
+ * by calling {@code getInstance}; this method returns the same immutable instance each time it is called.  This
+ * instance can be used to retrieve "empty" {@code Message} objects, which are prepared to accept arguments and be
+ * written to a {@code MessageOutputStream}.
+ * <p>
+ * The first time the {@code getInstance} method is called, this class recursively searches for existing Messages.xml
+ * files in the working directory and the classpath, registering any files found.
+ * <p>
+ * The addition of a duplicate file is non-deterministic; the behavior is undefined if two message types with the same
+ * id are added to the registry.
+ *
  * @author Caleb Brinkman
  */
 public class MessageRegistry
 {
-	/** The logger for this class. */
 	private static final Logger LOGGER = Logger.getLogger(MessageRegistry.class.getName());
-	/** The file name of message registry classed. */
-	private static final String messageFileName = "Messages.xml";
 	private static MessageRegistry messageRegistry;
-	/** A map that stores messages types sorted by ID. */
 	private final Map<Short, MessageType> messageTypesByID = new TreeMap<>();
-	/** A map that stores message types sorted by name. */
 	private final Map<String, MessageType> messageTypesByName = new TreeMap<>();
 
-	/**
-	 * Construct a new MessageRegistry.
-	 */
 	private MessageRegistry() {
 		registerXmlMessages();
 	}
 
+	/**
+	 * Get an immutable instance of this class.  This method only creates a new instance once; each time it is called
+	 * thereafter returns the same instance that has already been created.
+	 *
+	 * @return An immutable, static {@code MessageRegistry}.
+	 */
 	public static MessageRegistry getInstance() {
 		if (messageRegistry == null)
 		{
@@ -46,69 +56,11 @@ public class MessageRegistry
 	}
 
 	/**
-	 * Find the Messages.xml ZipEntry objects in the classpath.
-	 * @return The list of found entries.
-	 */
-	private static LinkedList<String> findJarMessageEntries() {
-		LinkedList<String> jarMessageEntries = new LinkedList<>();
-		String classPath = System.getProperty("java.class.path");
-		String[] pathElements = classPath.split(System.getProperty("path.separator"));
-		for (String fileName : pathElements)
-		{
-			if (isCoreJar(fileName))
-			{
-				continue;
-			}
-			seachJarFile(jarMessageEntries, fileName);
-		}
-		return jarMessageEntries;
-	}
-
-	private static boolean isCoreJar(String fileName) {
-		String javaHome = System.getProperty("java.home");
-		return fileName.contains(javaHome);
-	}
-
-	private static void seachJarFile(LinkedList<String> jarMessageEntries, String fileName) {
-		File file = new File(fileName);
-		if (!file.isDirectory() && file.exists())
-		{
-			try (FileInputStream inputStream = new FileInputStream(file);
-				 ZipInputStream zip = new ZipInputStream(inputStream))
-			{
-				searchZipEntries(jarMessageEntries, zip);
-				inputStream.close();
-				zip.close();
-			} catch (IOException ex)
-			{
-				LOGGER.log(Level.WARNING, "Unable to read JAR entry " + fileName, ex);
-			}
-		}
-	}
-
-	private static void searchZipEntries(LinkedList<String> jarMessageEntries, ZipInputStream zip) throws IOException {
-		ZipEntry ze;
-		while ((ze = zip.getNextEntry()) != null)
-		{
-			String entryName = ze.getName();
-			if (entryName.endsWith("Messages.xml")) { jarMessageEntries.add(entryName); }
-		}
-	}
-
-	/**
-	 * Look for files that match the message registry format.
-	 * @return An ArrayList of message registry files.
-	 */
-	private static ArrayList<File> findMessageFiles() {
-		String rootDir = Paths.get("").toAbsolutePath().toString() + File.separator;
-		File rootFile = new File(rootDir);
-		return Files.search(rootFile, messageFileName);
-	}
-
-	/**
-	 * Get the message type with the given name.
-	 * @param name The name of the message type.
-	 * @return The MessageType with the given name.
+	 * Get the {@code MessageType} with the given unique name.
+	 *
+	 * @param name The name of the {@code MessageType}.
+	 *
+	 * @return The {@code MessageType} with the given unique name.
 	 */
 	public MessageType getMessageType(String name) {
 		synchronized (messageTypesByName)
@@ -118,9 +70,11 @@ public class MessageRegistry
 	}
 
 	/**
-	 * Get the MessageType with the given ID.
-	 * @param id The id.
-	 * @return The MessageType with the given ID.
+	 * Get the {@code MessageType} with the given unique id.
+	 *
+	 * @param id The id of the {@code MessageType}.
+	 *
+	 * @return The {@code MessageType} with the given unique id.
 	 */
 	public MessageType getMessageType(short id) {
 		synchronized (messageTypesByID)
@@ -130,29 +84,12 @@ public class MessageRegistry
 	}
 
 	/**
-	 * Get the class names of argumentTypes for the class with the given registration ID.
-	 * @param id The ID to lookup.
-	 * @return A LinkedList of class names.
+	 * Create a new "empty" {@code Message} that corresponds to the MessageType with the given name.
+	 *
+	 * @param name The name of the {@code MessageType} of which the return {@code Message} will be.
+	 *
+	 * @return A new "empty" {@code Message} of the type specified by {@code name}.
 	 */
-	public LinkedList<Class> getArgumentClasses(short id) throws MessageTypeException {
-		LinkedList<Class> temp = new LinkedList<>();
-		MessageType type;
-		synchronized (messageTypesByID)
-		{
-			type = messageTypesByID.get(id);
-		}
-		if (type == null)
-		{
-			throw new MessageTypeException(id);
-		} else
-		{
-			for (int i = 0; i < type.argumentTypes.length; i++)
-				temp.add(type.argumentTypes[i].type);
-		}
-
-		return temp;
-	}
-
 	public Message createMessage(String name) {
 		Message message = null;
 		MessageType messageType = getMessageType(name);
@@ -173,101 +110,57 @@ public class MessageRegistry
 		return message;
 	}
 
-	/** Register all messages found in registry files.  Also checks the JAR file. */
 	private void registerXmlMessages() {
 		LinkedList<InputStream> streamsToRead = new LinkedList<>();
-		addJarMessageEntries(streamsToRead);
-		addMessageFiles(streamsToRead);
+		streamsToRead.addAll(MessageFileFinder.findMessageJarStreams());
+		streamsToRead.addAll(MessageFileFinder.findMessageFileStreams());
 		readXmlStreams(streamsToRead);
 	}
 
-	/**
-	 * Parse the XML streams and register the discovered MessageTypes.
-	 * @param streamsToRead The streams containing the XML data to be parsed.
-	 */
 	private void readXmlStreams(Iterable<InputStream> streamsToRead) {
-		LinkedList<String> disabled = new LinkedList<>();
+		Messages messages = new Messages();
 		for (InputStream inputStream : streamsToRead)
 		{
 			try
 			{
-				MessageXmlReader reader = new MessageXmlReader(inputStream);
-				addAllMessages(reader.readMessageTypes());
-				disabled.addAll(reader.readDisabledMessages());
-				inputStream.close();
+				JAXBContext jaxbContext = JAXBContext.newInstance(Messages.class);
+				Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+				Messages collection = (Messages) jaxbUnmarshaller.unmarshal(inputStream);
+				messages.addAll(collection);
+				addAllMessages(collection.getMessages());
 			} catch (Exception ex)
 			{
 				LOGGER.log(Level.INFO, "Unable to parse XML file", ex);
 			}
 		}
-		disableExecutableMessages(disabled);
+		messages.getDisabledMessages().forEach(this::disableExecutableMessage);
 	}
 
-	private void disableExecutableMessages(LinkedList<String> disabled) {
-		disabled.forEach(this::disableExecutableMessage);
-	}
-
-	/**
-	 * Add the Messages.xml entries in the working directory and add their InputStream to the given list.
-	 * @param streamsToRead The list to which to add the input streams.
-	 */
-	private void addMessageFiles(List<InputStream> streamsToRead) {
-		ArrayList<File> messageFiles = findMessageFiles();
-		for (File f : messageFiles)
-		{
-			LOGGER.log(Level.INFO, "Registering XML file {0}", f);
-			try
-			{
-				streamsToRead.add(new FileInputStream(f));
-			} catch (IOException ex)
-			{
-				LOGGER.log(Level.WARNING, "Unable to create input stream for " + f, ex);
-			}
-		}
-	}
-
-	/**
-	 * Add the Messages.xml entries in the classpath and add their InputStream to the given list.
-	 * @param streamsToRead The list to which to add the input streams.
-	 */
-	private void addJarMessageEntries(List<InputStream> streamsToRead) {
-		LinkedList<String> jarMessageEntries = findJarMessageEntries();
-		for (String entry : jarMessageEntries)
-		{
-			LOGGER.log(Level.INFO, "Registering XML entry {0}", entry);
-			streamsToRead.add(getClass().getClassLoader().getResourceAsStream(entry));
-		}
-	}
-
-	/**
-	 * Register all message types within the given list.
-	 * @param messageTypes The list of message types to add.
-	 */
 	private void addAllMessages(List<MessageType> messageTypes) {
 		Stream<MessageType> stream = messageTypes.stream();
 		Stream<MessageType> filter = stream.filter(messageType -> messageType != null &&
-			  !messageTypesByID.containsKey(messageType.id) && !messageTypesByName.containsKey(messageType.name));
+			  !messageTypesByID.containsKey(messageType.getId()) && !messageTypesByName.containsKey(messageType
+			  .getName()));
 		filter.forEach(messageType -> {
-			messageTypesByID.put(messageType.id, messageType);
-			messageTypesByName.put(messageType.name, messageType);
+			messageTypesByID.put(messageType.getId(), messageType);
+			messageTypesByName.put(messageType.getName(), messageType);
 		});
 	}
 
-	/**
-	 * Disable the ExecutableMessage invoked by the message with the given name.
-	 * @param messageName The name of the message.
-	 */
-	void disableExecutableMessage(String messageName) {
+	void disableExecutableMessage(DisabledMessageType disabledMessageType) {
+		String messageName = disabledMessageType.getName();
 		LOGGER.log(Level.INFO, "Disabling message: {0}", messageName);
 		MessageType type;
 		synchronized (messageTypesByName)
 		{
 			type = messageTypesByName.get(messageName);
 		}
-		short id = type.id;
-		ArgumentType[] argumentTypes = type.argumentTypes;
-		MessageInfo info = new MessageInfo(id, messageName, argumentTypes);
-		MessageType newMessageType = new MessageType(info);
+		short id = type.getId();
+		List<ArgumentType> argumentTypes = type.getArguments();
+		MessageType newMessageType = new MessageType();
+		newMessageType.setId(id);
+		newMessageType.setName(messageName);
+		newMessageType.getArguments().addAll(argumentTypes);
 		messageTypesByName.put(messageName, newMessageType);
 		messageTypesByID.put(id, newMessageType);
 

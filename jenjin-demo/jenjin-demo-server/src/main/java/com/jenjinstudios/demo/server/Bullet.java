@@ -1,13 +1,11 @@
 package com.jenjinstudios.demo.server;
 
+import com.jenjinstudios.demo.server.event.Collision;
 import com.jenjinstudios.world.Actor;
-import com.jenjinstudios.world.Location;
 import com.jenjinstudios.world.WorldObject;
 import com.jenjinstudios.world.math.Angle;
 import com.jenjinstudios.world.math.Vector2D;
-import com.jenjinstudios.world.server.Player;
-
-import java.util.Collection;
+import com.jenjinstudios.world.state.MoveState;
 
 import static com.jenjinstudios.world.math.Angle.FRONT;
 
@@ -16,62 +14,46 @@ import static com.jenjinstudios.world.math.Angle.FRONT;
  */
 public class Bullet extends Actor
 {
-	private static final double MAX_RANGE = 250;
-	private final Player playerFiring;
+	public static final double RANGE = 100;
 	private final Vector2D startVector;
 
-	public Bullet(Player playerFiring) {
+	public Bullet(Actor actorFiring) {
 		super("Bullet");
-		this.playerFiring = playerFiring;
-		setVector2D(playerFiring.getVector2D());
-		startVector = getVector2D();
-		double targetAngle = playerFiring.getAngle().getAbsoluteAngle();
+		getProperties().put(Collision.SIZE_PROPERTY, 1.0);
+		setVector2D(actorFiring.getVector2D());
+		double targetAngle = actorFiring.getAngle().getAbsoluteAngle();
 		setAngle(new Angle(targetAngle, FRONT));
 		setMoveSpeed(Actor.DEFAULT_MOVE_SPEED * 3);
 		setResourceID(1);
-		setZoneID(playerFiring.getZoneID());
-	}
+		setZoneID(actorFiring.getZoneID());
+		startVector = getVector2D();
 
-	@Override
-	public void update() {
-		super.update();
-		checkForHit();
-	}
-
-	protected void hitActor(Actor actor) {
-		actor.setVector2D(Vector2D.ORIGIN);
-		actor.forceIdle();
-		getWorld().getWorldObjects().scheduleForRemoval(this);
-	}
-
-	private void checkForHit() {
-		Location loc = getLocation();
-		if (loc != null)
+		addPostUpdateEvent("Collision", new Collision(this)
 		{
-			Collection<WorldObject> objects = loc.getObjects();
-			if (objects.size() > 1)
-			{
-				tryHitActor(objects);
+			@Override
+			public void onCollision(WorldObject collided) {
+				if (!(collided instanceof Bullet) && collided instanceof Actor && collided != actorFiring)
+				{
+					Actor actor = (Actor) collided;
+					Angle idle = new Angle();
+					if (idle.getAbsoluteAngle() == collided.getAngle().getAbsoluteAngle())
+					{
+						idle = idle.reverseAbsoluteAngle();
+					}
+					long forceTime = collided.getWorld().getLastUpdateCompleted();
+					actor.setVector2D(Vector2D.ORIGIN);
+					actor.setForcedState(new MoveState(idle, Vector2D.ORIGIN, forceTime));
+					getWorld().getWorldObjects().remove(Bullet.this);
+				}
 			}
-		}
-		double distance = getVector2D().getDistanceToVector(startVector);
-		if (getAngle().getRelativeAngle() == Angle.IDLE)
-		{
-			getWorld().getWorldObjects().scheduleForRemoval(this);
-		} else if (distance > MAX_RANGE)
-		{
-			getWorld().getWorldObjects().scheduleForRemoval(this);
-		}
-	}
+		});
 
-	private void tryHitActor(Collection<WorldObject> objects) {
-		for (WorldObject object : objects)
-		{
-			if (object != this && object instanceof Actor && !(object instanceof Bullet) && object != playerFiring)
+		addPreUpdateEvent("RangeStop", () -> {
+			if (!getAngle().isNotIdle() || startVector.getDistanceToVector(getVector2D()) > RANGE)
 			{
-				hitActor((Actor) object);
-				break;
+				getWorld().getWorldObjects().remove(Bullet.this);
 			}
-		}
+		});
+
 	}
 }

@@ -6,56 +6,62 @@ import com.jenjinstudios.core.io.MessageRegistry;
 import java.security.PublicKey;
 
 /**
- * Used to generate messages to be passed between client and server.
+ * This class is used to create {@code Message} objects; these are merely convenience methods.
+ *
  * @author Caleb Brinkman
  */
 public class MessageFactory
 {
-	private final MessageRegistry messageRegistry;
-
 	/**
-	 * Construct a new MessageFactory working for the given connection.
+	 * Generate a PingRequest message.
+	 *
+	 * @return The generated message.
 	 */
-	public MessageFactory() { this.messageRegistry = MessageRegistry.getInstance(); }
-
-	/**
-	 * Generate a "ping" request.
-	 * @return A "PintRequest" message.
-	 */
-	public Message generatePingRequest() {
+	public static Message generatePingRequest() {
 		Message pingRequest = MessageRegistry.getInstance().createMessage("PingRequest");
 		pingRequest.setArgument("requestTimeMillis", System.currentTimeMillis());
 		return pingRequest;
 	}
 
 	/**
-	 * Generate an "InvalidMessage" message.
-	 * @return The "InvalidMessage" message.
+	 * Generate an InvalidMessage message for the given invalid ID and message name.
+	 *
+	 * @param id The ID of the invalid message.
+	 * @param name The Name of the invalid message.
+	 *
+	 * @return The generated InvalidMessage object.
 	 */
-	public Message generateInvalidMessage(short id, String name) {
-		Message invalid = messageRegistry.createMessage("InvalidMessage");
+	public static Message generateInvalidMessage(short id, String name) {
+		Message invalid = MessageRegistry.getInstance().createMessage("InvalidMessage");
 		invalid.setArgument("messageName", name);
 		invalid.setArgument("messageID", id);
 		return invalid;
 	}
 
 	/**
-	 * Generate a response to a PingRequest.
-	 * @param requestTimeMillis The time at which the ping request was made.
-	 * @return The PingResponse message.
+	 * Generate a PingResponse with the given time of request.
+	 *
+	 * @param requestTimeMillis The time at which the request for this response was made.
+	 *
+	 * @return The generated PingResponse.
 	 */
-	public Message generatePingResponse(long requestTimeMillis) {
-		Message pingResponse = getMessageRegistry().createMessage("PingResponse");
+	public static Message generatePingResponse(long requestTimeMillis) {
+		Message pingResponse = MessageRegistry.getInstance().createMessage("PingResponse");
 		pingResponse.setArgument("requestTimeMillis", requestTimeMillis);
 		return pingResponse;
 	}
 
-	public Message generatePublicKeyMessage(PublicKey publicKey) {
-		Message publicKeyMessage = getMessageRegistry().createMessage("PublicKeyMessage");
+	/**
+	 * Generate a PublicKeyMessage for the given {@code PublicKey}.
+	 *
+	 * @param publicKey The {@code PublicKey} for which to generate a {@code Message}.
+	 *
+	 * @return The generated message.
+	 */
+	public static Message generatePublicKeyMessage(PublicKey publicKey) {
+		Message publicKeyMessage = MessageRegistry.getInstance().createMessage("PublicKeyMessage");
 		publicKeyMessage.setArgument("publicKey", publicKey.getEncoded());
 		return publicKeyMessage;
 	}
-
-	protected MessageRegistry getMessageRegistry() { return messageRegistry; }
 
 }

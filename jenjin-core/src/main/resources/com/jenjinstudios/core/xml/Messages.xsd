@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="https://www.jenjinstudios.com" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:element name="messages" type="jen:messagesType" xmlns:jen="https://www.jenjinstudios.com" />
+
+    <xs:complexType name="argumentType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="type" use="optional" />
+                <xs:attribute type="xs:string" name="name" use="optional" />
+                <xs:attribute type="xs:string" name="encrypt" use="optional" />
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="messagesType">
+        <xs:choice maxOccurs="unbounded">
+        <xs:element type="jen:messageType" name="message" maxOccurs="unbounded" minOccurs="0" xmlns:jen="https://www.jenjinstudios.com" />
+            <xs:element type="jen:disabled_messageType" name="disabled_message" xmlns:jen="https://www.jenjinstudios.com" />
+        </xs:choice>
+    </xs:complexType>
+
+    <xs:complexType name="disabled_messageType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="name" />
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="messageType">
+        <xs:choice maxOccurs="unbounded">
+            <xs:element type="jen:argumentType" name="argument" maxOccurs="unbounded" minOccurs="0" xmlns:jen="https://www.jenjinstudios.com" />
+            <xs:element name="executable" minOccurs="0" maxOccurs="1" />
+        </xs:choice>
+        <xs:attribute type="xs:string" name="name" use="optional" />
+        <xs:attribute type="xs:short" name="id" use="optional" />
+    </xs:complexType>
+</xs:schema>

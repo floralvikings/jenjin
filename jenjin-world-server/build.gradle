@@ -1,4 +1,4 @@
-description = ''
+description = 'Basic Jenjin-Based MMO Server'
 
 dependencies {
     testCompile 'com.h2database:h2:1.4.178'

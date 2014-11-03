@@ -2,19 +2,19 @@ package com.jenjinstudios.world.server.message;
 
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.world.Actor;
-import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.WorldObject;
+import com.jenjinstudios.world.actor.StateChangeStack;
 import com.jenjinstudios.world.math.Angle;
 import com.jenjinstudios.world.math.Vector2D;
 import com.jenjinstudios.world.server.WorldClientHandler;
 import com.jenjinstudios.world.server.WorldServer;
 import com.jenjinstudios.world.state.MoveState;
+import com.jenjinstudios.world.util.WorldUtils;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 
 import static org.mockito.Mockito.mock;
@@ -55,7 +55,7 @@ public class WorldServerMessageFactoryTest
 		when(actor.getName()).thenReturn("Foo");
 		when(actor.getVector2D()).thenReturn(Vector2D.ORIGIN);
 		when(actor.getAngle()).thenReturn(new Angle());
-		when(actor.getWorld()).thenReturn(new World());
+		when(actor.getWorld()).thenReturn(WorldUtils.createDefaultWorld());
 
 		Message message = worldServerMessageFactory.generateNewlyVisibleMessage(actor);
 		assertEquals(message.name, "ActorVisibleMessage");
@@ -66,11 +66,12 @@ public class WorldServerMessageFactoryTest
 	@Test
 	public void testGenerateStateChangeMesage() {
 		Actor actor = mock(Actor.class);
+		StateChangeStack stack = mock(StateChangeStack.class);
 		MoveState m = new MoveState(new Angle(), Vector2D.ORIGIN, 0);
-		LinkedList<MoveState> stateChanges = new LinkedList<>(Arrays.asList(m));
-		when(actor.getStateChanges()).thenReturn(stateChanges);
-
+		when(stack.getStateChanges()).thenReturn(Arrays.asList(m));
+		when(actor.getEventStack(StateChangeStack.STACK_NAME)).thenReturn(stack);
 		List<Message> messages = worldServerMessageFactory.generateChangeStateMessages(actor);
+
 		Message newState = messages.get(0);
 		assertEquals(newState.getArgument("id"), actor.getId());
 		assertEquals(newState.getArgument("relativeAngle"), m.angle.getRelativeAngle());

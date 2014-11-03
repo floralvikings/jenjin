@@ -14,6 +14,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
+ * Test the {@code MessageOutputStream} class.
+ *
  * @author Caleb Brinkman
  */
 public class MessageOutputStreamTest
@@ -21,6 +23,11 @@ public class MessageOutputStreamTest
 	private static final MessageRegistry mr = MessageRegistry.getInstance();
 	private static final Logger LOGGER = Logger.getLogger(MessageOutputStreamTest.class.getName());
 
+	/**
+	 * Test writing a message to the stream.
+	 *
+	 * @throws Exception If there's an exception.
+	 */
 	@Test
 	public void testWriteMessage() throws Exception {
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -40,8 +47,13 @@ public class MessageOutputStreamTest
 		Assert.assertEquals(readMsg.getArgs(), msg.getArgs());
 	}
 
+	/**
+	 * Test writing an encrypted message with no key sent.
+	 *
+	 * @throws Exception If there's an exception.
+	 */
 	@Test(expectedExceptions = {IOException.class})
-	public void testEncryptedMessageNoAESKey() throws Exception {
+	public void testEncryptedMessageNoPublicKey() throws Exception {
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		MessageOutputStream mos = new MessageOutputStream(bos);
 
@@ -51,6 +63,11 @@ public class MessageOutputStreamTest
 		mos.writeMessage(msg);
 	}
 
+	/**
+	 * Test sending a correct encrypted message.
+	 *
+	 * @throws Exception If there's an exception.
+	 */
 	@Test
 	public void testEncryptedMessage() throws Exception {
 
@@ -78,6 +95,11 @@ public class MessageOutputStreamTest
 
 	}
 
+	/**
+	 * Test writing a message with each type of argument.
+	 *
+	 * @throws Exception If there's an exception.
+	 */
 	@Test
 	public void testAllTypesMessage() throws Exception {
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();

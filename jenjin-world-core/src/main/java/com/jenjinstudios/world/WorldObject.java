@@ -1,44 +1,43 @@
 package com.jenjinstudios.world;
 
+import com.jenjinstudios.world.event.EventExecutor;
 import com.jenjinstudios.world.math.Angle;
 import com.jenjinstudios.world.math.Vector2D;
+
+import java.util.HashMap;
 
 /**
  * Represents an object that exists in the game world.
  * @author Caleb Brinkman
  */
-public class WorldObject
+public class WorldObject extends EventExecutor
 {
+	private final HashMap<String, Object> properties;
 	private String name;
 	private int zoneID;
 	private int resourceID;
 	private int id = Integer.MIN_VALUE;
 	private Angle angle;
-	private Location location;
 	private Vector2D vector2D;
 	private World world;
-	private boolean initialized;
+
+	public WorldObject() { this("World Object"); }
 
 	public WorldObject(String name) {
 		vector2D = Vector2D.ORIGIN;
 		this.name = name;
 		angle = new Angle();
+		properties = new HashMap<>();
 	}
 
 	public Angle getAngle() { return angle; }
 
 	public void setAngle(Angle angle) { this.angle = angle; }
 
-	public Vector2D getVector2D() { return new Vector2D(vector2D); }
+	public Vector2D getVector2D() { return vector2D; }
 
 	public void setVector2D(Vector2D vector2D) {
-		this.vector2D = new Vector2D(vector2D);
-
-		if (world != null)
-		{
-			Location newLocation = world.getLocationForCoordinates(this.zoneID, this.vector2D);
-			setLocation(newLocation);
-		}
+		this.vector2D = vector2D;
 	}
 
 	public int getResourceID() { return resourceID; }
@@ -49,20 +48,7 @@ public class WorldObject
 
 	public void setId(int id) { this.id = id; }
 
-	public Location getLocation() { return location; }
-
-	protected void setLocation(Location newLocation) {
-		Location oldLocation = location;
-		location = newLocation;
-		if (oldLocation != location && oldLocation != null)
-		{
-			oldLocation.removeObject(this);
-		}
-		if (location != null)
-		{
-			location.addObject(this);
-		}
-	}
+	public HashMap<String, Object> getProperties() { return properties; }
 
 	public World getWorld() { return world; }
 
@@ -79,24 +65,6 @@ public class WorldObject
 	public String getName() { return name; }
 
 	public void setName(String name) { this.name = name; }
-
-	protected void initialize() {
-		initialized = true;
-	}
-
-	/** Set up this WorldObject before updating. */
-	public void setUp() {
-		if (!initialized)
-		{
-			initialize();
-		}
-	}
-
-	/** Update this WorldObject. */
-	public void update() { }
-
-	/** Reset this WorldObject after updating. */
-	public void reset() { }
 
 	@Override
 	public String toString() { return name + ": " + id; }

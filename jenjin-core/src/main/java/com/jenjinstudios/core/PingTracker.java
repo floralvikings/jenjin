@@ -4,26 +4,26 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
+ * Used to track the average latency between two connections.
+ *
  * @author Caleb Brinkman
  */
 public class PingTracker
 {
-	/** The list of collected ping times. */
-	private final List<Long> pingTimes;
-
-	public PingTracker() {
-		pingTimes = new LinkedList<>();
-	}
+	private final List<Long> pingTimes = new LinkedList<>();
 
 	/**
-	 * Add a ping time to the list.
-	 * @param pingTime The time of the ping, in nanoseconds.
+	 * Add a "ping" time to the list maintained by this object.  This should be the amount of time, in milliseconds, a
+	 * ping took to travel from one connection to another and back.
+	 *
+	 * @param pingTime The time taken for a ping to travel from one connection to another and back.
 	 */
 	public void addPingTime(long pingTime) { pingTimes.add(pingTime); }
 
 	/**
-	 * Get the average ping time, in nanoseconds.
-	 * @return The average ping time between client and server, in nanoseconds.
+	 * Get the average of all ping times added to this tracker.
+	 *
+	 * @return The average of all ping times added to this tracer.
 	 */
 	public long getAveragePingTime() {
 		long total = 0;

@@ -7,15 +7,23 @@ import org.testng.annotations.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 
 /**
+ * Test the {@code Connection} class.
+ *
  * @author Caleb Brinkman
  */
 public class ConnectionTest
 {
 	private static final MessageRegistry mr = MessageRegistry.getInstance();
 
+	/**
+	 * Test the {@code processMessage} method.
+	 *
+	 * @throws Exception If there's an exception.
+	 */
 	@Test
 	public void testProcessMessage() throws Exception {
 		// Spoof an invalid message
@@ -34,8 +42,14 @@ public class ConnectionTest
 		Connection connection = new Connection(messageIO);
 		connection.start();
 		Thread.sleep(100);
-		connection.runQueuedExecutableMessages();
-		connection.writeAllMessages();
+		connection.getExecutableMessageQueue().runQueuedExecutableMessages();
+		try
+		{
+			connection.getMessageIO().writeAllMessages();
+		} catch (IOException e)
+		{
+			connection.shutdown();
+		}
 		connection.shutdown();
 
 		// The connection should execute the InvalidExecutableMessage,
@@ -46,8 +60,13 @@ public class ConnectionTest
 		Assert.assertEquals(msg.getArgument("messageName"), "Unknown");
 	}
 
+	/**
+	 * Test the {@code shutdown} method.
+	 *
+	 * @throws Exception If there's an exception.
+	 */
 	@Test(expectedExceptions = MessageQueueException.class)
-	public void testCloseLink() throws Exception {
+	public void testShutDown() throws Exception {
 		DataInputStreamMock dataInputStreamMock = new DataInputStreamMock();
 		InputStream in = dataInputStreamMock.getIn();
 		dataInputStreamMock.mockReadShort((short) -255);
@@ -57,15 +76,26 @@ public class ConnectionTest
 		MessageOutputStream messageOutputStream = new MessageOutputStream(bos);
 		MessageIO messageIO = new MessageIO(messageInputStream, messageOutputStream);
 		Connection connection = new Connection(messageIO);
-		connection.closeLink();
+		connection.shutdown();
 
 		Message msg = mr.createMessage("InvalidMessage");
 		msg.setArgument("messageName", "FooBar");
 		msg.setArgument("messageID", (short) -255);
-		connection.queueOutgoingMessage(msg);
-		connection.writeAllMessages();
+		connection.getMessageIO().queueOutgoingMessage(msg);
+		try
+		{
+			connection.getMessageIO().writeAllMessages();
+		} catch (IOException e)
+		{
+			connection.shutdown();
+		}
 	}
 
+	/**
+	 * Test the ping request functionality.
+	 *
+	 * @throws Exception If there's an exception.
+	 */
 	@Test
 	public void testPingRequest() throws Exception {
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -82,8 +112,14 @@ public class ConnectionTest
 		Connection connection = new Connection(messageIO);
 		connection.start();
 		Thread.sleep(100);
-		connection.runQueuedExecutableMessages();
-		connection.writeAllMessages();
+		connection.getExecutableMessageQueue().runQueuedExecutableMessages();
+		try
+		{
+			connection.getMessageIO().writeAllMessages();
+		} catch (IOException e)
+		{
+			connection.shutdown();
+		}
 		connection.shutdown();
 
 		// The connection should execute the InvalidExecutableMessage,
@@ -94,6 +130,11 @@ public class ConnectionTest
 		Assert.assertEquals(msg.name, "PingResponse");
 	}
 
+	/**
+	 * Test the ping response functionality.
+	 *
+	 * @throws Exception If there's an exception.
+	 */
 	@Test
 	public void testPingResponse() throws Exception {
 		// Spoof an invalid message
@@ -116,8 +157,14 @@ public class ConnectionTest
 		connection.start();
 		Thread.sleep(100);
 		// Again, normally an implementation would schedule this, but that's excessive for testing purposes
-		connection.runQueuedExecutableMessages();
-		connection.writeAllMessages();
+		connection.getExecutableMessageQueue().runQueuedExecutableMessages();
+		try
+		{
+			connection.getMessageIO().writeAllMessages();
+		} catch (IOException e)
+		{
+			connection.shutdown();
+		}
 		connection.shutdown();
 
 		// Ping time should be extremely close to 0, but taking into account wonkiness with tests, I'll allow

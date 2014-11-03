@@ -1,7 +1,7 @@
 package com.jenjinstudios.world.client.message;
 
 import com.jenjinstudios.core.io.Message;
-import com.jenjinstudios.world.client.ClientActor;
+import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.client.WorldClient;
 
 /**
@@ -27,6 +27,6 @@ public class ExecutableActorMoveSpeedMessage extends WorldClientExecutableMessag
 	/** Run asynchronous portion of this message. */
 	@Override
 	public void runImmediate() {
-		ClientActor.MOVE_SPEED = (double) getMessage().getArgument("moveSpeed");
+		Actor.DEFAULT_MOVE_SPEED = (double) getMessage().getArgument("moveSpeed");
 	}
 }

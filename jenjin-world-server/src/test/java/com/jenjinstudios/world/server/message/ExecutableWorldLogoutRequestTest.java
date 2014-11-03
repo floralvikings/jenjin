@@ -4,10 +4,10 @@ import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageRegistry;
 import com.jenjinstudios.server.net.User;
 import com.jenjinstudios.server.sql.LoginException;
+import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.World;
-import com.jenjinstudios.world.WorldObjectMap;
+import com.jenjinstudios.world.collections.WorldObjectList;
 import com.jenjinstudios.world.math.Vector2D;
-import com.jenjinstudios.world.server.Player;
 import com.jenjinstudios.world.server.WorldClientHandler;
 import com.jenjinstudios.world.server.WorldServer;
 import com.jenjinstudios.world.server.sql.WorldAuthenticator;
@@ -28,11 +28,11 @@ public class ExecutableWorldLogoutRequestTest
 		Message logOutRequest = messageRegistry.createMessage("WorldLogoutRequest");
 
 		World world = mock(World.class);
-		Player player = mock(Player.class);
+		Actor player = mock(Actor.class);
 		WorldClientHandler handler = mock(WorldClientHandler.class);
 		WorldServer worldServer = mock(WorldServer.class);
 		WorldAuthenticator authenticator = mock(WorldAuthenticator.class);
-		WorldObjectMap worldObjectMap = mock(WorldObjectMap.class);
+		WorldObjectList worldObjectMap = mock(WorldObjectList.class);
 		when(world.getWorldObjects()).thenReturn(worldObjectMap);
 		when(worldServer.getAuthenticator()).thenReturn(authenticator);
 		when(worldServer.getWorld()).thenReturn(world);
@@ -48,7 +48,7 @@ public class ExecutableWorldLogoutRequestTest
 		exec.runDelayed();
 
 		verify(handler).sendLogoutStatus(true);
-		verify(worldObjectMap).scheduleForRemoval(player);
+		verify(worldObjectMap).remove(player.getId());
 	}
 
 	@Test
@@ -56,7 +56,7 @@ public class ExecutableWorldLogoutRequestTest
 		Message logOutRequest = messageRegistry.createMessage("WorldLogoutRequest");
 
 		World world = mock(World.class);
-		Player player = mock(Player.class);
+		Actor player = mock(Actor.class);
 		WorldClientHandler handler = mock(WorldClientHandler.class);
 		WorldServer worldServer = mock(WorldServer.class);
 		WorldAuthenticator authenticator = mock(WorldAuthenticator.class);
@@ -79,7 +79,7 @@ public class ExecutableWorldLogoutRequestTest
 		Message logOutRequest = messageRegistry.createMessage("WorldLogoutRequest");
 
 		World world = mock(World.class);
-		Player player = mock(Player.class);
+		Actor player = mock(Actor.class);
 		WorldClientHandler handler = mock(WorldClientHandler.class);
 		WorldServer worldServer = mock(WorldServer.class);
 		WorldAuthenticator authenticator = mock(WorldAuthenticator.class);

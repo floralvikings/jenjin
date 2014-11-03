@@ -1,9 +1,12 @@
 package com.jenjinstudios.world.server.message;
 
 import com.jenjinstudios.core.io.Message;
+import com.jenjinstudios.core.io.MessageRegistry;
 import com.jenjinstudios.server.message.ServerMessageFactory;
 import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.WorldObject;
+import com.jenjinstudios.world.actor.StateChangeStack;
+import com.jenjinstudios.world.event.EventStack;
 import com.jenjinstudios.world.state.MoveState;
 
 import java.util.LinkedList;
@@ -11,6 +14,7 @@ import java.util.List;
 
 /**
  * Used to generate Message objects that are relevant to the World and WorldClientHandler classes.
+ *
  * @author Caleb Brinkman
  */
 public class WorldServerMessageFactory extends ServerMessageFactory
@@ -29,22 +33,27 @@ public class WorldServerMessageFactory extends ServerMessageFactory
 
 	public List<Message> generateChangeStateMessages(Actor changedActor) {
 		List<Message> messages = new LinkedList<>();
-		for (MoveState m : changedActor.getStateChanges())
+		EventStack eventStack = changedActor.getEventStack(StateChangeStack.STACK_NAME);
+		if (eventStack != null && eventStack instanceof StateChangeStack)
 		{
-			Message newState = getMessageRegistry().createMessage("StateChangeMessage");
-			newState.setArgument("id", changedActor.getId());
-			newState.setArgument("relativeAngle", m.angle.getRelativeAngle());
-			newState.setArgument("absoluteAngle", m.angle.getAbsoluteAngle());
-			newState.setArgument("timeOfChange", m.timeOfChange);
-			newState.setArgument("xCoordinate", m.position.getXCoordinate());
-			newState.setArgument("yCoordinate", m.position.getYCoordinate());
-			messages.add(newState);
+			StateChangeStack stateChangeStack = (StateChangeStack) eventStack;
+			for (MoveState m : stateChangeStack.getStateChanges())
+			{
+				Message newState = MessageRegistry.getInstance().createMessage("StateChangeMessage");
+				newState.setArgument("id", changedActor.getId());
+				newState.setArgument("relativeAngle", m.angle.getRelativeAngle());
+				newState.setArgument("absoluteAngle", m.angle.getAbsoluteAngle());
+				newState.setArgument("timeOfChange", m.timeOfChange);
+				newState.setArgument("xCoordinate", m.position.getXCoordinate());
+				newState.setArgument("yCoordinate", m.position.getYCoordinate());
+				messages.add(newState);
+			}
 		}
 		return messages;
 	}
 
 	public Message generateForcedStateMessage(MoveState forcedState) {
-		Message forcedStateMessage = getMessageRegistry().createMessage("ForceStateMessage");
+		Message forcedStateMessage = MessageRegistry.getInstance().createMessage("ForceStateMessage");
 		forcedStateMessage.setArgument("relativeAngle", forcedState.angle.getRelativeAngle());
 		forcedStateMessage.setArgument("absoluteAngle", forcedState.angle.getAbsoluteAngle());
 		forcedStateMessage.setArgument("xCoordinate", forcedState.position.getXCoordinate());
@@ -54,36 +63,36 @@ public class WorldServerMessageFactory extends ServerMessageFactory
 	}
 
 	public Message generateActorMoveSpeedMessage(double moveSpeed) {
-		Message stepLengthMessage = getMessageRegistry().createMessage("ActorMoveSpeed");
+		Message stepLengthMessage = MessageRegistry.getInstance().createMessage("ActorMoveSpeed");
 		stepLengthMessage.setArgument("moveSpeed", moveSpeed);
 		return stepLengthMessage;
 	}
 
 	public Message generateNewlyInvisibleMessage(WorldObject object) {
-		Message newlyInvisibleMessage = getMessageRegistry().createMessage("ObjectInvisibleMessage");
+		Message newlyInvisibleMessage = MessageRegistry.getInstance().createMessage("ObjectInvisibleMessage");
 		newlyInvisibleMessage.setArgument("id", object.getId());
 		return newlyInvisibleMessage;
 	}
 
 	public Message generateWorldLoginResponse() {
-		return getMessageRegistry().createMessage("WorldLoginResponse");
+		return MessageRegistry.getInstance().createMessage("WorldLoginResponse");
 	}
 
 	public Message generateWorldFileResponse(byte[] worldFileBytes) {
-		Message response = getMessageRegistry().createMessage("WorldFileResponse");
+		Message response = MessageRegistry.getInstance().createMessage("WorldFileResponse");
 		response.setArgument("fileBytes", worldFileBytes);
 		return response;
 	}
 
 	public Message generateWorldChecksumResponse(byte[] checkSum) {
-		Message response = getMessageRegistry().createMessage("WorldChecksumResponse");
+		Message response = MessageRegistry.getInstance().createMessage("WorldChecksumResponse");
 		response.setArgument("checksum", checkSum);
 		return response;
 	}
 
 	private Message generateActorVisibleMessage(Actor newlyVisible) {
 		Message newlyVisibleMessage;
-		newlyVisibleMessage = getMessageRegistry().createMessage("ActorVisibleMessage");
+		newlyVisibleMessage = MessageRegistry.getInstance().createMessage("ActorVisibleMessage");
 		newlyVisibleMessage.setArgument("name", newlyVisible.getName());
 		newlyVisibleMessage.setArgument("id", newlyVisible.getId());
 		newlyVisibleMessage.setArgument("resourceID", newlyVisible.getResourceID());
@@ -98,7 +107,7 @@ public class WorldServerMessageFactory extends ServerMessageFactory
 
 	private Message generateObjectVisibleMessage(WorldObject object) {
 		Message newlyVisibleMessage;
-		newlyVisibleMessage = getMessageRegistry().createMessage("ObjectVisibleMessage");
+		newlyVisibleMessage = MessageRegistry.getInstance().createMessage("ObjectVisibleMessage");
 		newlyVisibleMessage.setArgument("name", object.getName());
 		newlyVisibleMessage.setArgument("id", object.getId());
 		newlyVisibleMessage.setArgument("resourceID", object.getResourceID());

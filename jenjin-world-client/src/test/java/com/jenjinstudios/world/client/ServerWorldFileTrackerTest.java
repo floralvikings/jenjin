@@ -1,5 +1,6 @@
 package com.jenjinstudios.world.client;
 
+import com.jenjinstudios.core.MessageIO;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.world.client.message.ExecutableWorldChecksumResponse;
 import com.jenjinstudios.world.client.message.ExecutableWorldFileResponse;
@@ -15,16 +16,17 @@ import java.io.File;
  */
 public class ServerWorldFileTrackerTest
 {
-	// TODO Rewrite tests/classes to work without message spam.
 	@Test(timeOut = 5000)
 	public void testRequestWorldServerFileChecksum() throws Exception {
 		WorldClient worldClient = Mockito.mock(WorldClient.class);
 		WorldClientMessageFactory messageFactory = Mockito.mock(WorldClientMessageFactory.class);
 		File worldFile = Mockito.mock(File.class);
 		Message message = Mockito.mock(Message.class);
+		MessageIO messageIO = Mockito.mock(MessageIO.class);
 		Mockito.when(worldClient.getMessageFactory()).thenReturn(messageFactory);
 		Mockito.when(message.getArgument("checksum")).thenReturn("abc123".getBytes());
 		Mockito.when(messageFactory.generateWorldChecksumRequest()).thenReturn(message);
+		Mockito.when(worldClient.getMessageIO()).thenReturn(messageIO);
 
 		ServerWorldFileTracker serverWorldFileTracker = new ServerWorldFileTracker(worldClient, worldFile);
 		Mockito.when(worldClient.getServerWorldFileTracker()).thenReturn(serverWorldFileTracker);
@@ -47,9 +49,11 @@ public class ServerWorldFileTrackerTest
 		WorldClientMessageFactory messageFactory = Mockito.mock(WorldClientMessageFactory.class);
 		File worldFile = Mockito.mock(File.class);
 		Message message = Mockito.mock(Message.class);
+		MessageIO messageIO = Mockito.mock(MessageIO.class);
 		Mockito.when(worldClient.getMessageFactory()).thenReturn(messageFactory);
 		Mockito.when(message.getArgument("fileBytes")).thenReturn("abc123".getBytes());
 		Mockito.when(messageFactory.generateWorldChecksumRequest()).thenReturn(message);
+		Mockito.when(worldClient.getMessageIO()).thenReturn(messageIO);
 
 		ServerWorldFileTracker serverWorldFileTracker = new ServerWorldFileTracker(worldClient, worldFile);
 		Mockito.when(worldClient.getServerWorldFileTracker()).thenReturn(serverWorldFileTracker);

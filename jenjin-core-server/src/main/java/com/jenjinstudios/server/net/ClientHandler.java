@@ -11,6 +11,7 @@ import java.util.logging.Logger;
 
 /**
  * The {@code ClientHandler} class is used to communicate with an individual client.
+ *
  * @author Caleb Brinkman
  */
 public class ClientHandler extends Connection
@@ -30,6 +31,7 @@ public class ClientHandler extends Connection
 	 * Construct a new Client Handler using the given socket.  When constructing a new ClientHandler,
 	 * it is necessary to
 	 * send the client a FirstConnectResponse message with the server's UPS
+	 *
 	 * @param s The server for which this handler works.
 	 */
 	public ClientHandler(AuthServer<? extends ClientHandler> s, MessageIO messageIO) {
@@ -42,6 +44,7 @@ public class ClientHandler extends Connection
 
 	/**
 	 * Set the id for this handler.
+	 *
 	 * @param id The new id number for the handler.
 	 */
 	public void setHandlerId(int id) {
@@ -73,21 +76,24 @@ public class ClientHandler extends Connection
 
 	/**
 	 * The server.
+	 *
 	 * @return The server for which this client handler works.
 	 */
 	public AuthServer<? extends ClientHandler> getServer() { return server; }
 
 	/**
 	 * Queue a message indicating the success or failure of a logout attempt.
+	 *
 	 * @param success Whether the attempt was successful.
 	 */
 	public void sendLogoutStatus(boolean success) {
 		Message logoutResponse = getMessageFactory().generateLogoutResponse(success);
-		queueOutgoingMessage(logoutResponse);
+		getMessageIO().queueOutgoingMessage(logoutResponse);
 	}
 
 	/**
 	 * Get the time at which this client was successfully logged in.
+	 *
 	 * @return The time at which this client was successfully logged in.
 	 */
 	public long getLoggedInTime() { return loggedInTime; }
@@ -99,6 +105,7 @@ public class ClientHandler extends Connection
 
 	/**
 	 * Get the ClientHandler ID for this client handler.
+	 *
 	 * @return The ID of this client handler.
 	 */
 	public int getHandlerId() { return handlerId; }

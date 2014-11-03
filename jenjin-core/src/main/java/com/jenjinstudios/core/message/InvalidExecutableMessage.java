@@ -7,6 +7,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
+ * Invoked when a {@code Connection} reveives notification that an invalid message was received.
+ *
  * @author Caleb Brinkman
  */
 public class InvalidExecutableMessage extends ExecutableMessage
@@ -14,8 +16,10 @@ public class InvalidExecutableMessage extends ExecutableMessage
 	private static final Logger LOGGER = Logger.getLogger(InvalidExecutableMessage.class.getName());
 
 	/**
-	 * Construct an ExecutableMessage with the given Message.
-	 * @param message The Message.
+	 * Construct a new {@code InvalidExecutableMessage}.
+	 *
+	 * @param connection The connection invoking this executable message.
+	 * @param message The message which caused this executable message to be invoked.
 	 */
 	@SuppressWarnings("WeakerAccess")
 	public InvalidExecutableMessage(Connection connection, Message message) {
@@ -23,17 +27,16 @@ public class InvalidExecutableMessage extends ExecutableMessage
 		LOGGER.log(Level.INFO, "InvalidExecutableMessage created for connection {0}", connection);
 	}
 
-	/** Run the synced portion of this message. */
 	@Override
 	public void runDelayed() {
 	}
 
-	/** Run asynchronous portion of this message. */
 	@Override
 	public void runImmediate() {
 		String messageName = (String) getMessage().getArgument("messageName");
 		short messageID = (short) getMessage().getArgument("messageID");
-		String reportMessage = "Connection reported invalid sent message: " + messageName + " (ID:  " + messageID + ")";
+		String reportMessage = "Connection reported invalid sent message: " + messageName + " (ID:  " + messageID +
+			  ")";
 		LOGGER.log(Level.SEVERE, reportMessage);
 	}
 }

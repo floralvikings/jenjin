@@ -1,20 +1,22 @@
 package com.jenjinstudios.world.server.message;
 
 import com.jenjinstudios.core.io.Message;
+import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.Location;
 import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.math.Angle;
 import com.jenjinstudios.world.math.MathUtil;
 import com.jenjinstudios.world.math.Vector2D;
-import com.jenjinstudios.world.server.Player;
 import com.jenjinstudios.world.server.WorldClientHandler;
 import com.jenjinstudios.world.state.MoveState;
+import com.jenjinstudios.world.util.ZoneUtils;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
  * Process a StateChangeRequest.
+ *
  * @author Caleb Brinkman
  */
 @SuppressWarnings("WeakerAccess")
@@ -31,6 +33,7 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage
 
 	/**
 	 * Construct a new ExecutableMessage.  Must be implemented by subclasses.
+	 *
 	 * @param handler The handler using this ExecutableMessage.
 	 * @param message The message.
 	 */
@@ -40,27 +43,28 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage
 
 	@Override
 	public void runDelayed() {
-		Player player = getClientHandler().getPlayer();
+		Actor player = getClientHandler().getPlayer();
 		double distance = MathUtil.round(player.getMoveSpeed() * ((double) timePast / 1000d), 2);
 		position = uncorrectedPosition.getVectorInDirection(distance, angle.getStepAngle());
 		if (!locationWalkable(player))
 		{
 			Angle pAngle = player.getAngle().asIdle();
-			Vector2D vector2D = player.getVectorBeforeUpdate();
-			MoveState forcedState = new MoveState(pAngle, vector2D, player.getLastStepTime());
-			player.setForcedState(forcedState);
+			forcePlayerToAngle(player, pAngle);
 		} else if (!isCorrectionSafe(player))
 		{
 			Angle pAngle = player.getAngle();
-			Vector2D vector2D = player.getVectorBeforeUpdate();
-			MoveState forcedState = new MoveState(pAngle, vector2D, player.getLastStepTime());
-			player.setForcedState(forcedState);
+			forcePlayerToAngle(player, pAngle);
 		} else
 		{
-			player.setPendingAngle(angle);
 			player.setAngle(angle);
 			player.setVector2D(position);
 		}
+	}
+
+	private void forcePlayerToAngle(Actor player, Angle pAngle) {
+		Vector2D vector2D = player.getVector2D();
+		MoveState forcedState = new MoveState(pAngle, vector2D, player.getWorld().getLastUpdateCompleted());
+		player.setForcedState(forcedState);
 	}
 
 	@Override
@@ -76,21 +80,21 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage
 
 	}
 
-	private boolean locationWalkable(Player player) {
+	private boolean locationWalkable(Actor player) {
 		World world = player.getWorld();
 		int zoneID = player.getZoneID();
-		Location location = world.getLocationForCoordinates(zoneID, position);
+		Location location = ZoneUtils.getLocationForCoordinates(world, zoneID, position);
 		boolean walkable = false;
 		if (location != null)
 		{
-			String prop = location.getProperties().getProperty("walkable");
+			String prop = location.getProperties().get("walkable");
 			walkable = !"false".equals(prop);
 		}
 		return walkable;
 	}
 
-	private boolean isCorrectionSafe(Player player) {
-		double tolerance = player.getMoveSpeed() * 0.1;
+	private boolean isCorrectionSafe(Actor player) {
+		double tolerance = player.getMoveSpeed();
 		Vector2D proposedPlayerOrigin = getPlayerOrigin(player);
 		double distance = uncorrectedPosition.getDistanceToVector(proposedPlayerOrigin);
 		boolean distanceWithinTolerance = distance < tolerance;
@@ -113,9 +117,9 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage
 
 	}
 
-	private Vector2D getPlayerOrigin(Player player) {
+	private Vector2D getPlayerOrigin(Actor player) {
 		double originDistance = player.getVector2D().getDistanceToVector(uncorrectedPosition);
-		double playerReverseAngle = player.getPendingAngle().reverseStepAngle();
+		double playerReverseAngle = angle.reverseStepAngle();
 		return player.getVector2D().getVectorInDirection(originDistance, playerReverseAngle);
 	}
 }

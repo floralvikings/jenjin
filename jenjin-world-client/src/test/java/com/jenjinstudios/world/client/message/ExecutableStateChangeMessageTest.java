@@ -2,10 +2,10 @@ package com.jenjinstudios.world.client.message;
 
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageRegistry;
+import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.World;
-import com.jenjinstudios.world.WorldObjectMap;
-import com.jenjinstudios.world.client.ClientActor;
 import com.jenjinstudios.world.client.WorldClient;
+import com.jenjinstudios.world.collections.WorldObjectList;
 import com.jenjinstudios.world.math.Angle;
 import org.testng.annotations.Test;
 
@@ -31,17 +31,17 @@ public class ExecutableStateChangeMessageTest
 
 		WorldClient worldClient = mock(WorldClient.class);
 		World world = mock(World.class);
-		WorldObjectMap worldObjectMap = mock(WorldObjectMap.class);
+		WorldObjectList worldObjectMap = mock(WorldObjectList.class);
 		when(world.getWorldObjects()).thenReturn(worldObjectMap);
-		ClientActor clientActor = mock(ClientActor.class);
+		Actor clientActor = mock(Actor.class);
 		when(worldClient.getWorld()).thenReturn(world);
-		when(worldObjectMap.getObject(100)).thenReturn(clientActor);
+		when(worldObjectMap.get(100)).thenReturn(clientActor);
 
 		ExecutableStateChangeMessage message = new ExecutableStateChangeMessage(worldClient, stateChangeMessage);
 		message.runImmediate();
 		message.runDelayed();
 
-		verify(worldObjectMap).getObject(100);
+		verify(worldObjectMap).get(100);
 		verify(clientActor).setAngle(eq(new Angle(PI)));
 	}
 }

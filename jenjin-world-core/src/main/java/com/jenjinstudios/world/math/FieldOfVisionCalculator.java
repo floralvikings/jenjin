@@ -2,6 +2,7 @@ package com.jenjinstudios.world.math;
 
 import com.jenjinstudios.world.Location;
 import com.jenjinstudios.world.Zone;
+import com.jenjinstudios.world.util.ZoneUtils;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -22,8 +23,8 @@ public class FieldOfVisionCalculator
 		this.center = center;
 		this.radius = radius;
 		this.zone = zone;
-		this.centerX = center.X_COORDINATE;
-		this.centerY = center.Y_COORDINATE;
+		this.centerX = center.getX();
+		this.centerY = center.getY();
 	}
 
 	public List<Location> scan() {
@@ -39,7 +40,7 @@ public class FieldOfVisionCalculator
 	private void addColumn(List<Location> visibles, int x) {
 		for (int y = centerY - radius; y < centerY + radius; y++)
 		{
-			Location current = zone.getLocationOnGrid(x, y);
+			Location current = ZoneUtils.getLocationOnGrid(zone, x, y);
 			if (current != null && inRange(current))
 			{
 				visibles.add(current);
@@ -48,8 +49,8 @@ public class FieldOfVisionCalculator
 	}
 
 	protected boolean inRange(Location location) {
-		double deltaX = location.X_COORDINATE - centerX;
-		double deltaY = location.Y_COORDINATE - centerY;
+		double deltaX = location.getX() - centerX;
+		double deltaY = location.getY() - centerY;
 		double distance = Math.sqrt((deltaX * deltaX) + (deltaY * deltaY));
 		return distance < radius;
 	}

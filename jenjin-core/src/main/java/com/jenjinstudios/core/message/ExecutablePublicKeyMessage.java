@@ -12,6 +12,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
+ * Used to set a {@code PublicKeyMessage} for a {@code MessageOutputStream}.
+ *
  * @author Caleb Brinkman
  */
 public class ExecutablePublicKeyMessage extends ExecutableMessage
@@ -20,8 +22,10 @@ public class ExecutablePublicKeyMessage extends ExecutableMessage
 	private final Connection connection;
 
 	/**
-	 * Construct an ExecutableMessage with the given Message.
-	 * @param message The Message.
+	 * Construct a new {@code ExecutablePublicKeyMessage}.
+	 *
+	 * @param connection The connection invoking this executable message.
+	 * @param message The message which caused this executable message to be invoked.
 	 */
 	@SuppressWarnings("WeakerAccess")
 	public ExecutablePublicKeyMessage(Connection connection, Message message) {
@@ -29,20 +33,18 @@ public class ExecutablePublicKeyMessage extends ExecutableMessage
 		this.connection = connection;
 	}
 
-	/** Run the synced portion of this message. */
 	@Override
 	public void runDelayed() {
 
 	}
 
-	/** Run asynchronous portion of this message. */
 	@Override
 	public void runImmediate() {
 		byte[] keyBytes = (byte[]) getMessage().getArgument("publicKey");
 		try
 		{
 			PublicKey publicKey = KeyFactory.getInstance("RSA").generatePublic(new X509EncodedKeySpec(keyBytes));
-			connection.setPublicKey(publicKey);
+			connection.getMessageIO().setPublicKey(publicKey);
 		} catch (InvalidKeySpecException | NoSuchAlgorithmException e)
 		{
 			LOGGER.log(Level.INFO, "Unable to instantiate public key; messages will not be encrypted!", e);

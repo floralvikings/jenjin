@@ -2,7 +2,8 @@ package com.jenjinstudios.world.client.message;
 
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageRegistry;
-import com.jenjinstudios.world.client.ClientPlayer;
+import com.jenjinstudios.world.Actor;
+import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.client.WorldClient;
 import com.jenjinstudios.world.math.Angle;
 import com.jenjinstudios.world.math.Vector2D;
@@ -28,8 +29,11 @@ public class ExecutableForceStateMessageTest
 		forceStateMessage.setArgument("timeOfForce", 12345l);
 
 		WorldClient worldClient = mock(WorldClient.class);
-		ClientPlayer clientPlayer = mock(ClientPlayer.class);
+		Actor clientPlayer = mock(Actor.class);
+		World world = mock(World.class);
+		when(clientPlayer.getWorld()).thenReturn(world);
 		when(worldClient.getPlayer()).thenReturn(clientPlayer);
+		when(clientPlayer.getAngle()).thenReturn(new Angle());
 
 		ExecutableForceStateMessage message = new ExecutableForceStateMessage(worldClient, forceStateMessage);
 		message.runImmediate();
@@ -37,6 +41,5 @@ public class ExecutableForceStateMessageTest
 
 		verify(clientPlayer).setAngle(eq(new Angle(PI, IDLE)));
 		verify(clientPlayer).setVector2D(eq(new Vector2D(PI, PI)));
-		verify(clientPlayer).forcePosition();
 	}
 }
