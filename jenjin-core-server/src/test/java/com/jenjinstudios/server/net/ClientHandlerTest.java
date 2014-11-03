@@ -6,6 +6,8 @@ import com.jenjinstudios.core.io.MessageOutputStream;
 import com.jenjinstudios.server.sql.Authenticator;
 import org.testng.annotations.Test;
 
+import java.io.IOException;
+
 import static org.mockito.Mockito.*;
 import static org.testng.Assert.assertEquals;
 
@@ -18,28 +20,30 @@ public class ClientHandlerTest
 
 	@Test
 	public void testSendLogoutStatus() throws Exception {
-		MessageIO messageIO = mock(MessageIO.class);
 		AuthServer server = mock(AuthServer.class);
 		MessageInputStream mis = mock(MessageInputStream.class);
 		MessageOutputStream mos = mock(MessageOutputStream.class);
-		when(messageIO.getIn()).thenReturn(mis);
-		when(messageIO.getOut()).thenReturn(mos);
+		MessageIO messageIO = new MessageIO(mis, mos);
 
 		ClientHandler clientHandler = new ClientHandler(server, messageIO);
 		clientHandler.sendLogoutStatus(true);
-		clientHandler.writeAllMessages();
+		try
+		{
+			clientHandler.getMessageIO().writeAllMessages();
+		} catch (IOException e)
+		{
+			clientHandler.shutdown();
+		}
 
 		verify(mos, times(2)).writeMessage(any());
 	}
 
 	@Test
 	public void testSetID() throws Exception {
-		MessageIO messageIO = mock(MessageIO.class);
 		AuthServer server = mock(AuthServer.class);
 		MessageInputStream mis = mock(MessageInputStream.class);
 		MessageOutputStream mos = mock(MessageOutputStream.class);
-		when(messageIO.getIn()).thenReturn(mis);
-		when(messageIO.getOut()).thenReturn(mos);
+		MessageIO messageIO = new MessageIO(mis, mos);
 
 		ClientHandler clientHandler = new ClientHandler(server, messageIO);
 		clientHandler.setHandlerId(123);
@@ -52,12 +56,10 @@ public class ClientHandlerTest
 	public void testShutDown() throws Exception {
 		Authenticator authenticator = mock(Authenticator.class);
 		User user = mock(User.class);
-		MessageIO messageIO = mock(MessageIO.class);
 		AuthServer server = mock(AuthServer.class);
 		MessageInputStream mis = mock(MessageInputStream.class);
 		MessageOutputStream mos = mock(MessageOutputStream.class);
-		when(messageIO.getIn()).thenReturn(mis);
-		when(messageIO.getOut()).thenReturn(mos);
+		MessageIO messageIO = new MessageIO(mis, mos);
 		when(server.getAuthenticator()).thenReturn(authenticator);
 
 		ClientHandler clientHandler = new ClientHandler(server, messageIO);
@@ -70,12 +72,10 @@ public class ClientHandlerTest
 
 	@Test
 	public void testLoggedInTime() {
-		MessageIO messageIO = mock(MessageIO.class);
 		AuthServer server = mock(AuthServer.class);
 		MessageInputStream mis = mock(MessageInputStream.class);
 		MessageOutputStream mos = mock(MessageOutputStream.class);
-		when(messageIO.getIn()).thenReturn(mis);
-		when(messageIO.getOut()).thenReturn(mos);
+		MessageIO messageIO = new MessageIO(mis, mos);
 		ClientHandler clientHandler = new ClientHandler(server, messageIO);
 		clientHandler.setLoggedInTime(12345l);
 		assertEquals(clientHandler.getLoggedInTime(), 12345l);

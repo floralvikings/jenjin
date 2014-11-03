@@ -11,30 +11,38 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * The {@code ExecutableMessage} class should be extended to create self-handling messages on the server.
+ * The {@code ExecutableMessage} class is one of the most important classes of the Jenjin dynamic messaging system.  A
+ * subclass of the {@code ExecutableMessage} class is constructed reflectively by a {@code Connection} when it received
+ * a message, based on information in the {@code MessageRegistry}.  After constructing the message, the {@code
+ * runImmediate} method is (immediately) invoked.  After it finishes executing, the {@code ExecutableMessage} is added
+ * to a queue in the {@code Connection}'s execution timer, and is later executed in a synchronous fashion with the other
+ * events in the connection's execution timer.
+ *
  * @author Caleb Brinkman
  */
 @SuppressWarnings("unused")
 public abstract class ExecutableMessage
 {
-	/** The logger for this class. */
 	private static final Logger LOGGER = Logger.getLogger(ExecutableMessage.class.getName());
-	/** The Message for this ExecutableMessage. */
 	private final Message message;
 
 	/**
-	 * Construct an ExecutableMessage with the given Message.
-	 * @param message The Message.
+	 * Construct a new ExecutableMessage; this should only ever be invoked reflectively, by a {@code Connection}'s
+	 * update cycle.
+	 *
+	 * @param message The message that caused this {@code ExecutableMessage} to be created.
 	 */
 	protected ExecutableMessage(Message message) {
 		this.message = message;
 	}
 
 	/**
-	 * Get an executable message for the given connection and message.
-	 * @param connection The connection.
-	 * @param message The Message.
-	 * @return The ExecutableMessage appropriate to the given message.
+	 * Given a {@code Connection} and a {@code Message}, create and return an appropriate {@code ExecutableMessage}.
+	 *
+	 * @param connection The {@code Connection} creating this {@code ExecutableMessage}.
+	 * @param message The {@code Message} for which the {@code ExecutableMessage} is being created.
+	 *
+	 * @return The {@code ExecutableMessage} created for {@code connection} and {@code message}.
 	 */
 	public static ExecutableMessage getExecutableMessageFor(Connection connection, Message message) {
 		ExecutableMessage executableMessage = null;
@@ -79,7 +87,6 @@ public abstract class ExecutableMessage
 	}
 
 	private static Constructor getAppropriateConstructor(Connection connection, Constructor[] execConstructors) {
-		// TODO Make this more specific.
 		Constructor correctConstructor = null;
 		for (Constructor constructor : execConstructors)
 		{
@@ -90,15 +97,21 @@ public abstract class ExecutableMessage
 		return correctConstructor;
 	}
 
-	/** Run the synced portion of this message. */
+	/**
+	 * This method is invoked by the {@code Connection} execution timer, and should not be called directly.
+	 */
 	public abstract void runDelayed();
 
-	/** Run asynchronous portion of this message. */
+	/**
+	 * This method is invoked by a {@code Connection} when a message is received and the {@code ExecutableMessage} is
+	 * created, and should not be called directly.
+	 */
 	public abstract void runImmediate();
 
 	/**
-	 * The Message for this ExecutableMessage.
-	 * @return The Message used by this ExecutableMessage
+	 * Get the message for which this {@code ExecutableMessage} was created.
+	 *
+	 * @return The message for which this {@code ExecutableMessage} was created.
 	 */
 	public Message getMessage() {
 		return message;

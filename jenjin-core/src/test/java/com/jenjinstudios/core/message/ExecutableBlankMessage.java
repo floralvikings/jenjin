@@ -7,6 +7,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
+ * This class exists for testing purposes only, not meant to be used in production code.
+ *
  * @author Caleb Brinkman
  */
 public class ExecutableBlankMessage extends ExecutableMessage
@@ -15,8 +17,10 @@ public class ExecutableBlankMessage extends ExecutableMessage
 	private final Connection connection;
 
 	/**
-	 * Construct an ExecutableMessage with the given Message.
-	 * @param message The Message.
+	 * Construct a new ExecutableBlankMessage; not meant to be used in production code.
+	 *
+	 * @param connection The connection invoking this message.
+	 * @param message The message causing this to be invoked.
 	 */
 	@SuppressWarnings("WeakerAccess")
 	public ExecutableBlankMessage(Connection connection, Message message) {
@@ -24,13 +28,11 @@ public class ExecutableBlankMessage extends ExecutableMessage
 		this.connection = connection;
 	}
 
-	/** Run the synced portion of this message. */
 	@Override
 	public void runDelayed() {
 
 	}
 
-	/** Run asynchronous portion of this message. */
 	@Override
 	public void runImmediate() {
 		LOGGER.log(Level.FINEST, "{0} received blank message.", connection.getName());

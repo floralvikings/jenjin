@@ -4,26 +4,11 @@ import javax.xml.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 
-
 /**
- * <p>Java class for messageType complex type.
- * <p>
- * <p>The following schema fragment specifies the expected content contained within this class.
- * <p>
- * <pre>
- * &lt;complexType name="messageType">
- *   &lt;complexContent>
- *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *       &lt;sequence>
- *         &lt;element name="arguments" type="{}argumentType" maxOccurs="unbounded" minOccurs="0"/>
- *         &lt;element name="executable" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
- *       &lt;/sequence>
- *       &lt;attribute name="name" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
- *       &lt;attribute name="id" use="required" type="{http://www.w3.org/2001/XMLSchema}byte" />
- *     &lt;/restriction>
- *   &lt;/complexContent>
- * &lt;/complexType>
- * </pre>
+ * Contains properties representing the metadata of a {@code Message} object, used to constuct a {@code Message} from a
+ * stream.
+ *
+ * @author Caleb Brinkman
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "message", namespace = "https://www.jenjinstudios.com", propOrder = {
@@ -42,23 +27,12 @@ public class MessageType
 	private short id;
 
 	/**
-	 * Gets the value of the arguments property.
-	 * <p>
-	 * <p>
-	 * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you
-	 * make to
-	 * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
-	 * the arguments property.
-	 * <p>
-	 * <p>
-	 * For example, to add a new item, do as follows:
-	 * <pre>
-	 *    getArguments().add(newItem);
-	 * </pre>
-	 * <p>
-	 * <p>
-	 * <p>
-	 * Objects of the following type(s) are allowed in the list {@link ArgumentType }
+	 * Get the {@code ArgumentType} objects containing the metadata of the arguments that the {@code Message} should
+	 * contain, in the order in which they should be read and written to a stream.
+	 *
+	 * @return The {@code ArgumentType} objects containing the metadata of the arguments that the {@code Message}
+	 * should
+	 * contain, in the order in which they should be read and written to a stream.
 	 */
 	public List<ArgumentType> getArguments() {
 		if (arguments == null)
@@ -69,30 +43,37 @@ public class MessageType
 	}
 
 	/**
-	 * Gets the value of the executable property.
-	 * @return possible object is {@link String }
+	 * Get the name of the class of the {@code ExecutableMessage} to be invoked when this message is received.
+	 *
+	 * @return The name of the class of the {@code ExecutableMessage} to be invoked when this message is received.
 	 */
 	public String getExecutable() { return executable; }
 
 	/**
-	 * Gets the value of the name property.
-	 * @return possible object is {@link String }
+	 * Get the unique name of the {@code Message}.
+	 *
+	 * @return The unique name of the {@code Message}.
 	 */
 	public String getName() { return name; }
 
 	/**
-	 * Sets the value of the name property.
-	 * @param value allowed object is {@link String }
+	 * Set the name of the {@code Message}.
+	 *
+	 * @param value The new name.
 	 */
 	public void setName(String value) { this.name = value; }
 
 	/**
-	 * Gets the value of the id property.
+	 * Get the unique ID of the {@code Message}.
+	 *
+	 * @return The unique ID of the {@code Message}.
 	 */
 	public short getId() { return id; }
 
 	/**
-	 * Sets the value of the id property.
+	 * Set the ID of the {@code Message}.
+	 *
+	 * @param value The ID of the {@code Message}.
 	 */
 	public void setId(short value) { this.id = value; }
 

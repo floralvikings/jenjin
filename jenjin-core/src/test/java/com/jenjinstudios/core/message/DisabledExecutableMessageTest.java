@@ -9,10 +9,15 @@ import org.testng.annotations.Test;
 import static org.mockito.Mockito.mock;
 
 /**
+ * Test the DisabledExecutableMessage class.
+ *
  * @author Caleb Brinkman
  */
 public class DisabledExecutableMessageTest
 {
+	/**
+	 * Ensure that a message can be properly disabled.
+	 */
 	@Test
 	public void testMessageIsDisabled() {
 		Message disabledMessage = MessageRegistry.getInstance().createMessage("DisabledMessage");
@@ -22,6 +27,9 @@ public class DisabledExecutableMessageTest
 		Assert.assertNull(message);
 	}
 
+	/**
+	 * Ensure that the DisabledMessage cannot be invoked.
+	 */
 	@Test(expectedExceptions = IllegalStateException.class)
 	public void testMessageExecution() {
 		Connection connection = mock(Connection.class);
@@ -31,6 +39,9 @@ public class DisabledExecutableMessageTest
 		disabledExecutableMessage.runImmediate();
 	}
 
+	/**
+	 * Ensure that the DisabledMessage cannot be invoked.
+	 */
 	@Test(expectedExceptions = IllegalStateException.class)
 	public void testMessageExecutionDelayed() {
 		Connection connection = mock(Connection.class);

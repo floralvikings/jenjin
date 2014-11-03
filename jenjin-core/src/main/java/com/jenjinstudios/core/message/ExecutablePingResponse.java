@@ -4,18 +4,19 @@ import com.jenjinstudios.core.Connection;
 import com.jenjinstudios.core.io.Message;
 
 /**
- * Used to process a ping response message.
+ * Used to determine the time taken to send a "ping" to a connection.
+ *
  * @author Caleb Brinkman
  */
 public class ExecutablePingResponse extends ExecutableMessage
 {
-	/** The connection. */
 	private final Connection connection;
 
 	/**
-	 * Construct an ExecutableMessage with the given Message.
-	 * @param connection The client invoking this message.
-	 * @param message The Message.
+	 * Construct a new {@code PingResponse}.
+	 *
+	 * @param connection The connection invoking this executable message.
+	 * @param message The message which caused this executable message to be invoked.
 	 */
 	public ExecutablePingResponse(Connection connection, Message message) {
 		super(message);
@@ -23,14 +24,12 @@ public class ExecutablePingResponse extends ExecutableMessage
 		this.connection = connection;
 	}
 
-	/** Run the synced portion of this message. */
 	@Override
 	public void runDelayed() {
 		long requestTime = (long) getMessage().getArgument("requestTimeMillis");
 		connection.getPingTracker().addPingTime((System.currentTimeMillis() - requestTime));
 	}
 
-	/** Run asynchronous portion of this message. */
 	@Override
 	public void runImmediate() {
 

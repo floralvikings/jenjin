@@ -5,38 +5,12 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for argumentType complex type.
- * <p>
- * <p>The following schema fragment specifies the expected content contained within this class.
- * <p>
- * <pre>
- * &lt;complexType name="argumentType">
- *   &lt;simpleContent>
- *     &lt;extension base="&lt;http://www.w3.org/2001/XMLSchema>string">
- *       &lt;attribute name="type" use="required">
- *         &lt;simpleType>
- *           &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string">
- *             &lt;enumeration value="byte[]"/>
- *             &lt;enumeration value="String[]"/>
- *             &lt;enumeration value="boolean"/>
- *             &lt;enumeration value="byte"/>
- *             &lt;enumeration value="short"/>
- *             &lt;enumeration value="int"/>
- *             &lt;enumeration value="long"/>
- *             &lt;enumeration value="float"/>
- *             &lt;enumeration value="double"/>
- *             &lt;enumeration value="String"/>
- *           &lt;/restriction>
- *         &lt;/simpleType>
- *       &lt;/attribute>
- *       &lt;attribute name="name" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
- *       &lt;attribute name="encrypt" type="{http://www.w3.org/2001/XMLSchema}boolean" />
- *     &lt;/extension>
- *   &lt;/simpleContent>
- * &lt;/complexType>
- * </pre>
+ * The {@code ArgumentType} class is used to represent a type of argument in a {@code MessageType}.  It contains
+ * properties used to indicate the {@code Class} of the argument (represened as a {@code String}), the name of the
+ * argument, and whether or not the value of the argument should be encrypted.
+ *
+ * @author Caleb Brinkman
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "argument", namespace = "https://www.jenjinstudios.com")
@@ -50,20 +24,24 @@ public class ArgumentType
 	private boolean encrypt = false;
 
 	/**
-	 * Gets the value of the type property.
-	 * @return possible object is {@link String }
+	 * Get the type of the argument.
+	 *
+	 * @return A String representation of the type of this object.  This can be converted to a Class object by the
+	 * {@code TypeMapper} class.
 	 */
 	public String getType() { return type; }
 
 	/**
-	 * Gets the value of the name property.
-	 * @return possible object is {@link String }
+	 * Get the name of the argument.
+	 *
+	 * @return The name of the argument.
 	 */
 	public String getName() { return name; }
 
 	/**
-	 * Gets the value of the encrypt property.
-	 * @return possible object is {@link Boolean }
+	 * Get whether the argument should be encrypted.
+	 *
+	 * @return Whether the argument should be encrypted.
 	 */
 	public Boolean isEncrypt() { return encrypt; }
 

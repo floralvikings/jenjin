@@ -22,13 +22,18 @@ public class MessageInputStreamTest
 
 	private static final Logger LOGGER = Logger.getLogger(MessageInputStreamTest.class.getName());
 
+	/**
+	 * Test the ability to read a valid message.
+	 *
+	 * @throws IOException If there's an IOException.
+	 */
 	@Test
 	public void testReadValidMessage() throws IOException {
 		DataInputStreamMock dataInputStreamMock = new DataInputStreamMock();
-		dataInputStreamMock.mockReadShort((short) -1);
+		dataInputStreamMock.mockReadShort((short) 0);
 		dataInputStreamMock.mockReadBoolean(false);
 		dataInputStreamMock.mockReadUtf("FooBar");
-		dataInputStreamMock.mockReadShort((short) -1);
+		dataInputStreamMock.mockReadShort((short) 0);
 
 		InputStream inputStream = dataInputStreamMock.getIn();
 
@@ -39,6 +44,10 @@ public class MessageInputStreamTest
 		Assert.assertEquals((String) message.getArgument("messageName"), "FooBar");
 	}
 
+	/**
+	 * Test reading an invalid message.
+	 * @throws IOException If there's an (unexpected) IOException.
+	 */
 	@Test(expectedExceptions = MessageTypeException.class)
 	public void testReadInvalidMessage() throws IOException {
 		DataInputStreamMock mock = new DataInputStreamMock();
@@ -53,8 +62,12 @@ public class MessageInputStreamTest
 		mis.readMessage();
 	}
 
+	/**
+	 * Test sending an encrypted message with no key.
+	 * @throws IOException If there's an IOException
+	 */
 	@Test
-	public void testEncryptedMessageNoAESKey() throws IOException {
+	public void testEncryptedMessageNoKey() throws IOException {
 		DataInputStreamMock mock = new DataInputStreamMock();
 		mock.mockReadShort((short) -3);
 		mock.mockReadBoolean(true);
@@ -68,6 +81,10 @@ public class MessageInputStreamTest
 		Assert.assertEquals(msg.getArgument("encryptedString"), "FooBar");
 	}
 
+	/**
+	 * Test the proper reading of an encrypted string.
+	 * @throws Exception If there's an exception.
+	 */
 	@Test
 	public void testEncryptedMessage() throws Exception {
 		DataInputStreamMock mock = new DataInputStreamMock();
@@ -94,6 +111,10 @@ public class MessageInputStreamTest
 		Assert.assertEquals(msg.getArgument("encryptedString"), "FooBar");
 	}
 
+	/**
+	 * Test each type of message argument.
+	 * @throws Exception If there's an Exception.
+	 */
 	@Test
 	public void testAllTypesMessage() throws Exception {
 		DataInputStreamMock mock = new DataInputStreamMock();

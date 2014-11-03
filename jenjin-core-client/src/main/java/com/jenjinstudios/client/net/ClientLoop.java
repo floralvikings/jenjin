@@ -1,9 +1,11 @@
 package com.jenjinstudios.client.net;
 
+import java.io.IOException;
 import java.util.TimerTask;
 
 /**
  * The ClientLoop class is essentially what amounts to the output thread.
+ *
  * @author Caleb Brinkman
  */
 
@@ -14,6 +16,7 @@ class ClientLoop extends TimerTask
 
 	/**
 	 * Construct a ClientLoop for the given client.
+	 *
 	 * @param client The client for this ClientLoop
 	 */
 	public ClientLoop(Client client) {
@@ -23,8 +26,14 @@ class ClientLoop extends TimerTask
 	@Override
 	public void run() {
 		client.runRepeatedTasks();
-		client.runQueuedExecutableMessages();
-		client.writeAllMessages();
+		client.getExecutableMessageQueue().runQueuedExecutableMessages();
+		try
+		{
+			client.getMessageIO().writeAllMessages();
+		} catch (IOException e)
+		{
+			client.shutdown();
+		}
 	}
 
 }

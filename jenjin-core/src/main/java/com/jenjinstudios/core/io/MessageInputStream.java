@@ -21,22 +21,21 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Reads messages registered with the MessageRegistry class from stream.
+ * The {@code MessageInputStream} class is an implementation of a {@code DataInputStream} used to read {@code Message}
+ * objects from a stream.
+ *
  * @author Caleb Brinkman
  */
 public class MessageInputStream extends DataInputStream
 {
-	/** The Logger for this class. */
 	private static final Logger LOGGER = Logger.getLogger(MessageInputStream.class.getName());
-	/** The Connection using this stream. */
 	private final MessageRegistry messageRegistry;
-	/** The cipher used to decrypt messages. */
 	private Cipher decryptCipher;
-	private boolean closed;
 
 	/**
-	 * Construct a new {@code MessageInputStream} from the given InputStream.
-	 * @param inputStream The InputStream from which messages will be read.
+	 * Construct a new {@code MessageInputStream} which will read from the specified {@code InputStream}.
+	 *
+	 * @param inputStream The {@code InputStream} from which this {@code MessageInputStream} will read.
 	 */
 	public MessageInputStream(InputStream inputStream) {
 		super(inputStream);
@@ -44,14 +43,13 @@ public class MessageInputStream extends DataInputStream
 	}
 
 	/**
-	 * Read a Message or subclass from the DataStream.
-	 * @return The Message constructed form the data stream.
+	 * Read a {@code Message} object from the stream.
+	 *
+	 * @return The read {@code Message} object.
+	 *
+	 * @throws IOException If there is an error reading from the stream.
 	 */
 	public Message readMessage() throws IOException {
-		if (closed)
-		{
-			throw new IOException("Stream closed");
-		}
 		short id = readShort();
 		MessageType messageType = messageRegistry.getMessageType(id);
 		if (messageType == null)
@@ -67,20 +65,15 @@ public class MessageInputStream extends DataInputStream
 		Class<?>[] classArray = new Class[classes.size()];
 		classes.toArray(classArray);
 		Object[] args = readMessageArgs(classes);
-		return new Message(messageRegistry, id, args);
+		return new Message(id, args);
 
 	}
 
 	/**
-	 * Close the input stream.
-	 * @throws java.io.IOException If there is an IO error.
+	 * Set the {@code PrivateKey} used by this stream to decrypt incoming messages.
+	 *
+	 * @param privateKey The private key.
 	 */
-	@Override
-	public void close() throws IOException {
-		super.close();
-		closed = true;
-	}
-
 	public void setPrivateKey(PrivateKey privateKey) {
 		try
 		{
@@ -92,70 +85,104 @@ public class MessageInputStream extends DataInputStream
 		}
 	}
 
-	/**
-	 * Read from the DataInputStream an array of Objects to be passed as argumentTypes to a message.
-	 * @param classes The class names of the argumentTypes to be read.
-	 * @return An Object[] containing the message argumentTypes.
-	 * @throws IOException If there is an IO error
-	 */
-	@SuppressWarnings({"OverlyLongMethod", "OverlyComplexMethod"})
 	private Object[] readMessageArgs(LinkedList<Class> classes) throws IOException {
 		Object[] args = new Object[classes.size()];
 
 		for (int i = 0; i < args.length; i++)
 		{
 			String currentClass = classes.pop().getName();
-			switch (currentClass)
-			{
-				case "java.lang.String":
-					args[i] = readString();
-					break;
-				case "int":
-				case "java.lang.Integer":
-					args[i] = readInt();
-					break;
-				case "java.lang.Long":
-				case "long":
-					args[i] = readLong();
-					break;
-				case "double":
-				case "java.lang.Double":
-					args[i] = readDouble();
-					break;
-				case "float":
-				case "java.lang.Float":
-					args[i] = readFloat();
-					break;
-				case "short":
-				case "java.lang.Short":
-					args[i] = readShort();
-					break;
-				case "boolean":
-				case "java.lang.Boolean":
-					args[i] = readBoolean();
-					break;
-				case "byte":
-				case "java.lang.Byte":
-					args[i] = readByte();
-					break;
-				case "[Ljava.lang.Byte;":
-				case "[B":
-					args[i] = readByteArray();
-					break;
-				case "[Ljava.lang.String;":
-					args[i] = readStringArray();
-					break;
-			}
+			String simple = simplifyClassName(currentClass);
+			Object currentArg = readArgument(simple);
+			args[i] = currentArg;
 		}
 
 		return args;
 	}
 
-	/**
-	 * Read an array of strings from the DataInputStream.
-	 * @return The read array of strings.
-	 * @throws IOException If there is an error reading an array of strings.
-	 */
+	private String simplifyClassName(String complexName) {
+		String simple = complexName;
+		switch (complexName)
+		{
+			case "java.lang.Integer":
+				simple = "int";
+				break;
+			case "java.lang.Long":
+				simple = "long";
+				break;
+			case "java.lang.Double":
+				simple = "double";
+				break;
+			case "java.lang.Float":
+				simple = "float";
+				break;
+			case "java.lang.Short":
+				simple = "short";
+				break;
+			case "java.lang.Boolean":
+				simple = "boolean";
+				break;
+			case "java.lang.Byte":
+				simple = "byte";
+				break;
+			case "[Ljava.lang.Byte;":
+				simple = "[B";
+		}
+		return simple;
+	}
+
+	private Object readArgument(String currentClass) throws IOException {
+		Object currentArg = null;
+
+		if (currentClass.startsWith("["))
+		{
+			currentArg = readArray(currentClass);
+		} else
+		{
+			switch (currentClass)
+			{
+				case "java.lang.String":
+					currentArg = readString();
+					break;
+				case "int":
+					currentArg = readInt();
+					break;
+				case "long":
+					currentArg = readLong();
+					break;
+				case "double":
+					currentArg = readDouble();
+					break;
+				case "float":
+					currentArg = readFloat();
+					break;
+				case "short":
+					currentArg = readShort();
+					break;
+				case "boolean":
+					currentArg = readBoolean();
+					break;
+				case "byte":
+					currentArg = readByte();
+					break;
+			}
+		}
+		return currentArg;
+	}
+
+	private Object readArray(String currentClass) throws IOException {
+		Object currentArg = null;
+		switch (currentClass)
+		{
+			case "[Ljava.lang.String;":
+				currentArg = readStringArray();
+				break;
+			case "[B":
+				currentArg = readByteArray();
+				break;
+		}
+		return currentArg;
+	}
+
 	private String[] readStringArray() throws IOException {
 		String[] strings;
 		int size = readInt();
@@ -165,11 +192,6 @@ public class MessageInputStream extends DataInputStream
 		return strings;
 	}
 
-	/**
-	 * Read an array of bytes from the DataInputStream.
-	 * @return The read array of bytes.
-	 * @throws IOException If there is an error reading an array of bytes.
-	 */
 	private byte[] readByteArray() throws IOException {
 		byte[] bytes;
 		int size = readInt();
@@ -184,11 +206,6 @@ public class MessageInputStream extends DataInputStream
 		return bytes;
 	}
 
-	/**
-	 * Read a string from the input stream, determining if it is encrypted and decrypting it if necessary.
-	 * @return The read, decrypted string.
-	 * @throws IOException If there is an IO error.
-	 */
 	private String readString() throws IOException {
 		boolean encrypted = readBoolean();
 		String received = readUTF();

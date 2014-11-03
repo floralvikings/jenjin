@@ -1,6 +1,6 @@
 package com.jenjinstudios.server.sql;
 
-import com.jenjinstudios.core.util.Hash;
+import com.jenjinstudios.core.util.HashUtil;
 import com.jenjinstudios.server.net.User;
 
 import java.sql.Connection;
@@ -16,6 +16,7 @@ import static java.sql.ResultSet.*;
 
 /**
  * The SQLHandler class is responsible for connecting to and querying the SQL database associated with a given Server.
+ *
  * @author Caleb Brinkman
  */
 @SuppressWarnings("SameParameterValue")
@@ -52,6 +53,7 @@ public class Authenticator
 	 * <p>
 	 * This method should be overwritten by implementations, or called from super if they still wish to use the
 	 * "loggedIn" column.
+	 *
 	 * @return true if the user was logged in successfully, false if the user was already logged in or the update to
 	 * the
 	 * database failed.
@@ -67,7 +69,7 @@ public class Authenticator
 		User user = lookUpUser(username);
 		if (user.isLoggedIn())
 			throw new LoginException("User " + username + " is already logged in.");
-		String hashedPassword = Hash.getHashedString(password, user.getSalt());
+		String hashedPassword = HashUtil.getSaltedSHA256String(password, user.getSalt());
 		boolean passwordCorrect = hashedPassword != null && hashedPassword.equalsIgnoreCase(user.getPassword());
 		if (!passwordCorrect)
 			throw new LoginException("User " + username + " provided incorrect password.");
@@ -119,7 +121,9 @@ public class Authenticator
 	 * Attempt to log out the user with the given username.  Note that if a user is already logged out,
 	 * this method will
 	 * have no affect.
+	 *
 	 * @param username The username of the user to be logged out.
+	 *
 	 * @return The user that was logged out.
 	 */
 	public User logOutUser(String username) throws LoginException {
@@ -134,8 +138,11 @@ public class Authenticator
 
 	/**
 	 * Query the database for user info.
+	 *
 	 * @param username The username of the user we're looking for.
+	 *
 	 * @return The ResultSet returned by the query.
+	 *
 	 * @throws SQLException If there is a SQL error.
 	 */
 	protected ResultSet makeUserQuery(String username) throws SQLException {
@@ -162,8 +169,10 @@ public class Authenticator
 
 	/**
 	 * Update the loggedin column to reflect the supplied boolean.
+	 *
 	 * @param username The user being queried.
 	 * @param status The new status of the loggedin column.
+	 *
 	 * @throws com.jenjinstudios.server.sql.LoginException If there is a SQL error.
 	 */
 	protected void updateLoggedinColumn(String username, boolean status) throws LoginException {

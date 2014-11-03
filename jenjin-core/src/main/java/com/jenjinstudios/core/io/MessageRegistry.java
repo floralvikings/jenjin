@@ -17,26 +17,36 @@ import java.util.logging.Logger;
 import java.util.stream.Stream;
 
 /**
- * Handles the registration of message classes and the information on how to reconstruct them from raw data.
+ * The {@code MessageRegistry} class is central to the Jenjin's dynamic messaging system.  An instance of the registry
+ * by calling {@code getInstance}; this method returns the same immutable instance each time it is called.  This
+ * instance can be used to retrieve "empty" {@code Message} objects, which are prepared to accept arguments and be
+ * written to a {@code MessageOutputStream}.
+ * <p>
+ * The first time the {@code getInstance} method is called, this class recursively searches for existing Messages.xml
+ * files in the working directory and the classpath, registering any files found.
+ * <p>
+ * The addition of a duplicate file is non-deterministic; the behavior is undefined if two message types with the same
+ * id are added to the registry.
+ *
  * @author Caleb Brinkman
  */
 public class MessageRegistry
 {
-	/** The logger for this class. */
 	private static final Logger LOGGER = Logger.getLogger(MessageRegistry.class.getName());
 	private static MessageRegistry messageRegistry;
-	/** A map that stores messages types sorted by ID. */
 	private final Map<Short, MessageType> messageTypesByID = new TreeMap<>();
-	/** A map that stores message types sorted by name. */
 	private final Map<String, MessageType> messageTypesByName = new TreeMap<>();
 
-	/**
-	 * Construct a new MessageRegistry.
-	 */
 	private MessageRegistry() {
 		registerXmlMessages();
 	}
 
+	/**
+	 * Get an immutable instance of this class.  This method only creates a new instance once; each time it is called
+	 * thereafter returns the same instance that has already been created.
+	 *
+	 * @return An immutable, static {@code MessageRegistry}.
+	 */
 	public static MessageRegistry getInstance() {
 		if (messageRegistry == null)
 		{
@@ -46,9 +56,11 @@ public class MessageRegistry
 	}
 
 	/**
-	 * Get the message type with the given name.
-	 * @param name The name of the message type.
-	 * @return The MessageType with the given name.
+	 * Get the {@code MessageType} with the given unique name.
+	 *
+	 * @param name The name of the {@code MessageType}.
+	 *
+	 * @return The {@code MessageType} with the given unique name.
 	 */
 	public MessageType getMessageType(String name) {
 		synchronized (messageTypesByName)
@@ -58,9 +70,11 @@ public class MessageRegistry
 	}
 
 	/**
-	 * Get the MessageType with the given ID.
-	 * @param id The id.
-	 * @return The MessageType with the given ID.
+	 * Get the {@code MessageType} with the given unique id.
+	 *
+	 * @param id The id of the {@code MessageType}.
+	 *
+	 * @return The {@code MessageType} with the given unique id.
 	 */
 	public MessageType getMessageType(short id) {
 		synchronized (messageTypesByID)
@@ -69,6 +83,13 @@ public class MessageRegistry
 		}
 	}
 
+	/**
+	 * Create a new "empty" {@code Message} that corresponds to the MessageType with the given name.
+	 *
+	 * @param name The name of the {@code MessageType} of which the return {@code Message} will be.
+	 *
+	 * @return A new "empty" {@code Message} of the type specified by {@code name}.
+	 */
 	public Message createMessage(String name) {
 		Message message = null;
 		MessageType messageType = getMessageType(name);
@@ -89,7 +110,6 @@ public class MessageRegistry
 		return message;
 	}
 
-	/** Register all messages found in registry files.  Also checks the JAR file. */
 	private void registerXmlMessages() {
 		LinkedList<InputStream> streamsToRead = new LinkedList<>();
 		streamsToRead.addAll(MessageFileFinder.findMessageJarStreams());
@@ -97,10 +117,6 @@ public class MessageRegistry
 		readXmlStreams(streamsToRead);
 	}
 
-	/**
-	 * Parse the XML streams and register the discovered MessageTypes.
-	 * @param streamsToRead The streams containing the XML data to be parsed.
-	 */
 	private void readXmlStreams(Iterable<InputStream> streamsToRead) {
 		Messages messages = new Messages();
 		for (InputStream inputStream : streamsToRead)
@@ -120,10 +136,6 @@ public class MessageRegistry
 		messages.getDisabledMessages().forEach(this::disableExecutableMessage);
 	}
 
-	/**
-	 * Register all message types within the given list.
-	 * @param messageTypes The list of message types to add.
-	 */
 	private void addAllMessages(List<MessageType> messageTypes) {
 		Stream<MessageType> stream = messageTypes.stream();
 		Stream<MessageType> filter = stream.filter(messageType -> messageType != null &&
@@ -135,9 +147,6 @@ public class MessageRegistry
 		});
 	}
 
-	/**
-	 * Disable the ExecutableMessage invoked by the message with the given name.
-	 */
 	void disableExecutableMessage(DisabledMessageType disabledMessageType) {
 		String messageName = disabledMessageType.getName();
 		LOGGER.log(Level.INFO, "Disabling message: {0}", messageName);

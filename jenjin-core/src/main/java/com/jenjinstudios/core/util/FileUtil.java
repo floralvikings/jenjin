@@ -4,18 +4,21 @@ import java.io.File;
 import java.util.ArrayList;
 
 /**
- * The {@code Files} is used to get the MD5 hash checksum from a file.
+ * Utility class used for file searching.
+ *
  * @author Caleb Brinkman
  */
-public class Files
+public class FileUtil
 {
-	private Files() { }
+	private FileUtil() { }
 
 	/**
-	 * Search a directory and subdirectories for files with the given name.
-	 * @param dir The directory in which to start looking.
-	 * @param fileName The name of the file(s) for which to look.
-	 * @return An ArrayList of files in the given directory or a subdirectory, with the supplied file name.
+	 * Recursively search the given directory for files that exactly matches the file with the given name.
+	 *
+	 * @param dir The root directory in which to begin the search.
+	 * @param fileName The name of the file for which to search.  Note that the filenames must match <i>exactly.</i>
+	 *
+	 * @return A list of all discovered files that match {@code fileName}.
 	 */
 	public static ArrayList<File> search(File dir, String fileName) {
 		ArrayList<File> files = new ArrayList<>();

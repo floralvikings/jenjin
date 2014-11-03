@@ -14,6 +14,7 @@ import java.util.Set;
 
 /**
  * Handles clients for a world server.
+ *
  * @author Caleb Brinkman
  */
 public class WorldClientHandler extends ClientHandler
@@ -33,7 +34,8 @@ public class WorldClientHandler extends ClientHandler
 		super.update();
 		if (!hasSentActorStepMessage)
 		{
-			queueOutgoingMessage(getMessageFactory().generateActorMoveSpeedMessage(player.getMoveSpeed()));
+			getMessageIO().queueOutgoingMessage(getMessageFactory().generateActorMoveSpeedMessage(player.getMoveSpeed
+				  ()));
 			hasSentActorStepMessage = true;
 		}
 		queueForcesStateMessage();
@@ -58,7 +60,7 @@ public class WorldClientHandler extends ClientHandler
 			{
 				Message newlyVisibleMessage;
 				newlyVisibleMessage = getMessageFactory().generateNewlyVisibleMessage(object);
-				queueOutgoingMessage(newlyVisibleMessage);
+				getMessageIO().queueOutgoingMessage(newlyVisibleMessage);
 			}
 		}
 	}
@@ -71,7 +73,7 @@ public class WorldClientHandler extends ClientHandler
 			for (WorldObject object : vision.getNewlyInvisibleObjects())
 			{
 				Message newlyInvisibleMessage = getMessageFactory().generateNewlyInvisibleMessage(object);
-				queueOutgoingMessage(newlyInvisibleMessage);
+				getMessageIO().queueOutgoingMessage(newlyInvisibleMessage);
 			}
 		}
 	}
@@ -89,12 +91,12 @@ public class WorldClientHandler extends ClientHandler
 
 	private void queueActorStateChangeMessages(Actor object) {
 		List<Message> newState = getMessageFactory().generateChangeStateMessages(object);
-		newState.forEach(this::queueOutgoingMessage);
+		newState.forEach(getMessageIO()::queueOutgoingMessage);
 	}
 
 	private void queueForcesStateMessage() {
 		MoveState forcedState = player.getForcedState();
 		if (forcedState != null)
-			queueOutgoingMessage(getMessageFactory().generateForcedStateMessage(forcedState));
+			getMessageIO().queueOutgoingMessage(getMessageFactory().generateForcedStateMessage(forcedState));
 	}
 }

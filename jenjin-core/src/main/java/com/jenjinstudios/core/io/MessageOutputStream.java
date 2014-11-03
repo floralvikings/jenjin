@@ -19,24 +19,21 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Handles the sending and reception of messages registered in the MessageRegistry class.
+ * An implementation of a {@code DataOutputStream} used to write {@code Message} objects to an {@code OutputStream}.
+ *
  * @author Caleb Brinkman
  */
 public class MessageOutputStream extends DataOutputStream
 {
-	/** The Logger for this class. */
 	private static final Logger LOGGER = Logger.getLogger(MessageOutputStream.class.getName());
-	/** The messageRegistry using this stream. */
 	private final MessageRegistry messageRegistry;
-	/** The AES cipher. */
 	private Cipher encryptCipher;
 	private boolean closed;
 
 	/**
-	 * Creates a new message output stream to write data to the specified underlying output stream. The counter {@code
-	 * written} is set to zero.
-	 * @param out the underlying output stream, to be saved for later use.
-	 * @see java.io.FilterOutputStream#out
+	 * Construct a new {@code MessageOutputStream} from the given {@code OutputStream}.
+	 *
+	 * @param out The {@code OutputStream} to which to write messages.
 	 */
 	public MessageOutputStream(OutputStream out) {
 		super(out);
@@ -45,8 +42,10 @@ public class MessageOutputStream extends DataOutputStream
 
 	/**
 	 * Write the given {@code Message} to the output stream.
-	 * @param message The Message to be written to the stream.
-	 * @throws IOException If there is an IO error.
+	 *
+	 * @param message The {@code Message} to write.
+	 *
+	 * @throws IOException If there is an error writing to the output stream.
 	 */
 	public void writeMessage(Message message) throws IOException {
 		if (closed)
@@ -62,10 +61,20 @@ public class MessageOutputStream extends DataOutputStream
 			writeArgument(args[i], argumentTypes.get(i).isEncrypt());
 	}
 
+	/**
+	 * Return whether this stream has been closed.
+	 *
+	 * @return Whether this stream has been closed.
+	 */
 	public boolean isClosed() {
 		return closed;
 	}
 
+	/**
+	 * Set the {@code PublicKey} used to encrypt message arguments which require it.
+	 *
+	 * @param publicKey The public key.
+	 */
 	public void setPublicKey(PublicKey publicKey) {
 		try
 		{
@@ -77,12 +86,6 @@ public class MessageOutputStream extends DataOutputStream
 		}
 	}
 
-	/**
-	 * Write an argument to the data stream, properly cast.
-	 * @param arg The argument to be written.
-	 * @param encryptStrings Whether to encryptPublic strings in this message.
-	 * @throws IOException If there is an IO error.
-	 */
 	@SuppressWarnings("OverlyComplexMethod")
 	private void writeArgument(Object arg, boolean encryptStrings) throws IOException {
 		if (arg instanceof String) writeString((String) arg, encryptStrings);
@@ -98,13 +101,6 @@ public class MessageOutputStream extends DataOutputStream
 		else throw new IOException("Invalid argument type passed to MessageOutputStream: " + arg.getClass().getName());
 	}
 
-	/**
-	 * Write a string to the output stream, specifying whether the string should be encrypted with this stream's public
-	 * key.
-	 * @param s The string to write.
-	 * @param encrypt Whether the string should be encrypted.
-	 * @throws IOException If there is an IO error.
-	 */
 	void writeString(String s, boolean encrypt) throws IOException {
 		if (encrypt)
 		{
@@ -134,33 +130,18 @@ public class MessageOutputStream extends DataOutputStream
 
 	}
 
-	/**
-	 * Write an array of strings to the output stream, preceded by the array length.
-	 * @param strings The array of string strings.
-	 * @param encryptStrings Whether the strings being written should be encrypted.
-	 * @throws IOException If there is an IO error.
-	 */
 	private void writeStringArray(String[] strings, boolean encryptStrings) throws IOException {
 		int stringsLength = strings.length;
 		writeInt(stringsLength);
 		for (String string : strings) writeString(string, encryptStrings);
 	}
 
-	/**
-	 * Write an array of bytes to the output stream, preceded by the array length.
-	 * @param bytes The array of byte bytes.
-	 * @throws IOException If there is an IO error.
-	 */
 	private void writeByteArray(byte[] bytes) throws IOException {
 		int bytesLength = bytes.length;
 		writeInt(bytesLength);
 		write(bytes);
 	}
 
-	/**
-	 * Close the output stream.
-	 * @throws IOException If there is an IO error.
-	 */
 	@Override
 	public void close() throws IOException {
 		super.close();

@@ -11,6 +11,7 @@ import java.util.logging.Logger;
 
 /**
  * Executes the necessary actions to deal with a login response.
+ *
  * @author Caleb Brinkman
  */
 @SuppressWarnings("unused")
@@ -22,6 +23,7 @@ public class ExecutableLoginRequest extends ServerExecutableMessage
 
 	/**
 	 * Construct a new ExecutableLoginRequest.
+	 *
 	 * @param clientHandler The handler which created this executable message.
 	 * @param loginRequest The request sent by the client.
 	 */
@@ -55,14 +57,14 @@ public class ExecutableLoginRequest extends ServerExecutableMessage
 
 	private void queueLoginSuccessResponse(long loggedInTime) {
 		Message loginResponse = getClientHandler().getMessageFactory().generateLoginResponse(true, loggedInTime);
-		getClientHandler().queueOutgoingMessage(loginResponse);
+		getClientHandler().getMessageIO().queueOutgoingMessage(loginResponse);
 	}
 
 	private void queueLoginFailureResponse() {
 		ClientHandler clientHandler = getClientHandler();
 		ServerMessageFactory messageFactory = clientHandler.getMessageFactory();
 		Message loginResponse = messageFactory.generateLoginResponse(false, 0);
-		clientHandler.queueOutgoingMessage(loginResponse);
+		clientHandler.getMessageIO().queueOutgoingMessage(loginResponse);
 	}
 
 }
