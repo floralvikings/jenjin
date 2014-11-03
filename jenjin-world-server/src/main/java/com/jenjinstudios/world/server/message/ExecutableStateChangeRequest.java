@@ -16,6 +16,7 @@ import java.util.logging.Logger;
 
 /**
  * Process a StateChangeRequest.
+ *
  * @author Caleb Brinkman
  */
 @SuppressWarnings("WeakerAccess")
@@ -32,6 +33,7 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage
 
 	/**
 	 * Construct a new ExecutableMessage.  Must be implemented by subclasses.
+	 *
 	 * @param handler The handler using this ExecutableMessage.
 	 * @param message The message.
 	 */
@@ -47,20 +49,22 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage
 		if (!locationWalkable(player))
 		{
 			Angle pAngle = player.getAngle().asIdle();
-			Vector2D vector2D = player.getVector2D();
-			MoveState forcedState = new MoveState(pAngle, vector2D, player.getWorld().getLastUpdateCompleted());
-			player.setForcedState(forcedState);
+			forcePlayerToAngle(player, pAngle);
 		} else if (!isCorrectionSafe(player))
 		{
 			Angle pAngle = player.getAngle();
-			Vector2D vector2D = player.getVector2D();
-			MoveState forcedState = new MoveState(pAngle, vector2D, player.getWorld().getLastUpdateCompleted());
-			player.setForcedState(forcedState);
+			forcePlayerToAngle(player, pAngle);
 		} else
 		{
 			player.setAngle(angle);
 			player.setVector2D(position);
 		}
+	}
+
+	private void forcePlayerToAngle(Actor player, Angle pAngle) {
+		Vector2D vector2D = player.getVector2D();
+		MoveState forcedState = new MoveState(pAngle, vector2D, player.getWorld().getLastUpdateCompleted());
+		player.setForcedState(forcedState);
 	}
 
 	@Override
@@ -90,7 +94,7 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage
 	}
 
 	private boolean isCorrectionSafe(Actor player) {
-		double tolerance = player.getMoveSpeed() * 0.1;
+		double tolerance = player.getMoveSpeed();
 		Vector2D proposedPlayerOrigin = getPlayerOrigin(player);
 		double distance = uncorrectedPosition.getDistanceToVector(proposedPlayerOrigin);
 		boolean distanceWithinTolerance = distance < tolerance;

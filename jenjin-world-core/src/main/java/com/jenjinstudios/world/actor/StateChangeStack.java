@@ -1,5 +1,6 @@
 package com.jenjinstudios.world.actor;
 
+import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.WorldObject;
 import com.jenjinstudios.world.event.EventStack;
 import com.jenjinstudios.world.math.Angle;
@@ -45,6 +46,14 @@ public class StateChangeStack implements EventStack
 		} else
 		{
 			stateChanged = !preUpdateAngle.equals(postAngle);
+		}
+
+		if (worldObject instanceof Actor)
+		{
+			if (((Actor) worldObject).getForcedState() != null)
+			{
+				stateChanged = true;
+			}
 		}
 
 		if (stateChanged)

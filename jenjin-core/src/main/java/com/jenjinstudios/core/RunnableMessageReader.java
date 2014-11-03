@@ -5,6 +5,7 @@ import com.jenjinstudios.core.io.MessageTypeException;
 import com.jenjinstudios.core.message.ExecutableMessage;
 import com.jenjinstudios.core.util.MessageFactory;
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.net.SocketException;
 import java.util.logging.Level;
@@ -50,7 +51,7 @@ public class RunnableMessageReader implements Runnable
 		} catch (MessageTypeException e)
 		{
 			reportInvalidMessage(e);
-		} catch (SocketException e)
+		} catch (EOFException | SocketException e)
 		{
 			LOGGER.log(Level.FINER, "Connection closed: " + connection);
 			success = false;

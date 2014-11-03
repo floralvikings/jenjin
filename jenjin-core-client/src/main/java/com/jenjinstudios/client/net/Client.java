@@ -22,6 +22,7 @@ public class Client extends Connection
 	private final ClientMessageFactory messageFactory;
 	/** The timer that manages the update loop. */
 	private Timer sendMessagesTimer;
+	private ClientLoop clientLoop = new ClientLoop(this);
 
 	/**
 	 * Construct a new client and attempt to connect to the server over the specified port.
@@ -57,12 +58,11 @@ public class Client extends Connection
 	@Override
 	public void start() {
 		int period = 1000 / 60;
-
 		// Finally, send a ping request to establish latency.
 		getMessageIO().queueOutgoingMessage(MessageFactory.generatePingRequest());
 
 		sendMessagesTimer = new Timer("Client Update Loop", false);
-		sendMessagesTimer.scheduleAtFixedRate(new ClientLoop(this), 0, period);
+		sendMessagesTimer.scheduleAtFixedRate(clientLoop, 0, period);
 
 		super.start();
 	}
@@ -75,4 +75,6 @@ public class Client extends Connection
 				r.run();
 		}
 	}
+
+	public double getAverageUPS() { return 1d / clientLoop.getAverageRunTime(); }
 }

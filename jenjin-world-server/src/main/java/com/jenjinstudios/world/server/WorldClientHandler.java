@@ -27,6 +27,7 @@ public class WorldClientHandler extends ClientHandler
 		super(s, messageIO);
 		this.messageFactory = new WorldServerMessageFactory();
 		setPlayer(new Actor("PLAYER"));
+		getPlayer().addPreUpdateEvent(Vision.EVENT_NAME, new Vision(getPlayer()));
 	}
 
 	@Override

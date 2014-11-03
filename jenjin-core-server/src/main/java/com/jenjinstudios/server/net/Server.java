@@ -1,10 +1,7 @@
 package com.jenjinstudios.server.net;
 
 import java.io.IOException;
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -58,8 +55,11 @@ public class Server<T extends ClientHandler> extends Thread
 
 	private void addClientHandler(T h) {
 		int nullIndex = 0;
-		while (clientHandlers.containsKey(nullIndex)) nullIndex++;
-		clientHandlers.put(nullIndex, h);
+		synchronized (clientHandlers)
+		{
+			while (clientHandlers.containsKey(nullIndex)) nullIndex++;
+			clientHandlers.put(nullIndex, h);
+		}
 		h.setHandlerId(nullIndex);
 	}
 
@@ -77,13 +77,16 @@ public class Server<T extends ClientHandler> extends Thread
 	public void broadcast() {
 		synchronized (clientHandlers)
 		{
-			clientHandlers.values().stream().filter(current -> current != null).forEach(c -> {
-				try
+			clientHandlers.values().stream().forEach(c -> {
+				if (c != null)
 				{
-					c.getMessageIO().writeAllMessages();
-				} catch (IOException e)
-				{
-					c.shutdown();
+					try
+					{
+						c.getMessageIO().writeAllMessages();
+					} catch (IOException e)
+					{
+						c.shutdown();
+					}
 				}
 			});
 		}
@@ -93,7 +96,15 @@ public class Server<T extends ClientHandler> extends Thread
 	public void update() {
 		synchronized (clientHandlers)
 		{
-			clientHandlers.values().stream().filter(current -> current != null).forEach(ClientHandler::update);
+			Set<Integer> integers = clientHandlers.keySet();
+			for (int i : integers)
+			{
+				ClientHandler t = clientHandlers.get(i);
+				if (t != null)
+				{
+					t.update();
+				}
+			}
 		}
 	}
 
@@ -110,7 +121,15 @@ public class Server<T extends ClientHandler> extends Thread
 	protected void shutdown() throws IOException {
 		synchronized (clientHandlers)
 		{
-			clientHandlers.values().stream().filter(h -> h != null).forEach(ClientHandler::shutdown);
+			Set<Integer> integers = clientHandlers.keySet();
+			for (int i : integers)
+			{
+				ClientHandler t = clientHandlers.get(i);
+				if (t != null)
+				{
+					t.shutdown();
+				}
+			}
 		}
 		clientListener.stopListening();
 	}

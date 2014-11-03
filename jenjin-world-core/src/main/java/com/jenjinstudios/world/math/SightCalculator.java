@@ -22,16 +22,30 @@ public class SightCalculator
 		if (world == null) throw new IllegalStateException("WorldObject " + object + " does not have a set World.");
 		Collection<WorldObject> worldObjects = new LinkedList<>();
 		Vector2D vector2D = object.getVector2D();
-		double radius = calculateViewRadius(object);
+		double rad = calculateViewRadius(object);
+		double r2 = rad * rad;
 		for (WorldObject visible : world.getWorldObjects())
 		{
 			Vector2D otherVector = visible.getVector2D();
-			if (visible != object && otherVector.getDistanceToVector(vector2D) <= radius)
+			if (visible != object && isRoughlyVisible(object, visible, rad) &&
+				  otherVector.getSquaredDistanceToVector(vector2D) <= r2)
 			{
 				worldObjects.add(visible);
 			}
 		}
 		return worldObjects;
+	}
+
+	public static boolean isRoughlyVisible(WorldObject object, WorldObject visible, double rad) {
+		Vector2D vector2D = object.getVector2D();
+		Vector2D otherVector = visible.getVector2D();
+		double minX = vector2D.getXCoordinate() - rad;
+		double maxX = vector2D.getXCoordinate() + rad;
+		double minY = vector2D.getYCoordinate() - rad;
+		double maxY = vector2D.getYCoordinate() + rad;
+		double otherX = otherVector.getXCoordinate();
+		double otherY = otherVector.getYCoordinate();
+		return otherX >= minX && otherX <= maxX && otherY >= minY && otherY <= maxY;
 	}
 
 	public static Collection<Location> getVisibleLocations(WorldObject worldObject) {

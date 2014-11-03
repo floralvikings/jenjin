@@ -89,4 +89,8 @@ public class Angle
 	public String toString() {
 		return "(" + relativeAngle + ", " + absoluteAngle + ")";
 	}
+
+	public Angle reverseAbsoluteAngle() {
+		return new Angle((absoluteAngle + (Math.PI) / 2) % Math.PI);
+	}
 }

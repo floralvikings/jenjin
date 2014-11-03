@@ -2,6 +2,7 @@ package com.jenjinstudios.world.client.message;
 
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.world.Actor;
+import com.jenjinstudios.world.actor.Vision;
 import com.jenjinstudios.world.client.WorldClient;
 import com.jenjinstudios.world.client.WorldClientUpdater;
 import com.jenjinstudios.world.math.Vector2D;
@@ -11,6 +12,7 @@ import java.util.logging.Logger;
 
 /**
  * Handles login responses from the server.
+ *
  * @author Caleb Brinkman
  */
 public class ExecutableWorldLoginResponse extends WorldClientExecutableMessage
@@ -21,6 +23,7 @@ public class ExecutableWorldLoginResponse extends WorldClientExecutableMessage
 
 	/**
 	 * Construct an ExecutableMessage with the given Message.
+	 *
 	 * @param client The client invoking this message.
 	 * @param message The Message.
 	 */
@@ -51,6 +54,7 @@ public class ExecutableWorldLoginResponse extends WorldClientExecutableMessage
 		double xCoordinate = (double) getMessage().getArgument("xCoordinate");
 		double yCoordinate = (double) getMessage().getArgument("yCoordinate");
 		player = new Actor(getClient().getUser().getUsername());
+		player.addPreUpdateEvent(Vision.EVENT_NAME, new Vision(player));
 		player.setId(id);
 		Vector2D vector2D = new Vector2D(xCoordinate, yCoordinate);
 		player.setVector2D(vector2D);
