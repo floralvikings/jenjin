@@ -1,4 +1,4 @@
-description = ''
+description = 'Basic Game Functionality Module'
 
 dependencies {
     compile 'com.google.code.gson:gson:2.3'
