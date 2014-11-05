@@ -2,6 +2,7 @@ package com.jenjinstudios.core.xml;
 
 import javax.xml.bind.annotation.*;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -13,14 +14,14 @@ import java.util.List;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "message", namespace = "https://www.jenjinstudios.com", propOrder = {
 	  "arguments",
-	  "executable"
+	  "executables"
 })
 public class MessageType
 {
 	@XmlElement(name = "argument", namespace = "https://www.jenjinstudios.com")
 	private List<ArgumentType> arguments;
 	@XmlElement(name = "executable", namespace = "https://www.jenjinstudios.com")
-	private String executable;
+	private List<String> executables;
 	@XmlAttribute(name = "name", required = true)
 	private String name;
 	@XmlAttribute(name = "id", required = true)
@@ -47,7 +48,13 @@ public class MessageType
 	 *
 	 * @return The name of the class of the {@code ExecutableMessage} to be invoked when this message is received.
 	 */
-	public String getExecutable() { return executable; }
+	public List<String> getExecutables() {
+		if (executables == null)
+		{
+			executables = new LinkedList<>();
+		}
+		return executables;
+	}
 
 	/**
 	 * Get the unique name of the {@code Message}.

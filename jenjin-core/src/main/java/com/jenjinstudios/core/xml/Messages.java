@@ -5,6 +5,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -18,8 +19,8 @@ public class Messages
 {
 	@XmlElement(name = "message", namespace = "https://www.jenjinstudios.com")
 	private List<MessageType> messages;
-	@XmlElement(name = "disabled_message", namespace = "https://www.jenjinstudios.com")
-	private List<DisabledMessageType> disabledMessages;
+	@XmlElement(name = "executable_override", namespace = "https://www.jenjinstudios.com")
+	private List<ExecutableOverride> overrides;
 
 	/**
 	 * Get the {@code MessageType} objects contained in this collection.
@@ -35,29 +36,16 @@ public class Messages
 	}
 
 	/**
-	 * Get the {@code DisabledMessageType} objects contained in this collection.
+	 * Get the executable message override groups.
 	 *
-	 * @return The {@code DisabledMessageType} objects contained in this collection.
+	 * @return The executable message override groups.
 	 */
-	public List<DisabledMessageType> getDisabledMessages() {
-		if (disabledMessages == null)
+	public List<ExecutableOverride> getOverrides() {
+		if (overrides == null)
 		{
-			disabledMessages = new ArrayList<>();
+			overrides = new LinkedList<>();
 		}
-		return this.disabledMessages;
-	}
-
-	/**
-	 * Add the specicied {@code Messages} object to this one.
-	 *
-	 * @param messages The {@code Messages} object to add.
-	 */
-	public void addAll(Messages messages) {
-		if (messages != null)
-		{
-			getMessages().addAll(messages.getMessages());
-			getDisabledMessages().addAll(messages.getDisabledMessages());
-		}
+		return overrides;
 	}
 
 }

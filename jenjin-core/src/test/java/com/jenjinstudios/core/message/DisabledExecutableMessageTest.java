@@ -6,6 +6,8 @@ import com.jenjinstudios.core.io.MessageRegistry;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import java.util.List;
+
 import static org.mockito.Mockito.mock;
 
 /**
@@ -22,9 +24,8 @@ public class DisabledExecutableMessageTest
 	public void testMessageIsDisabled() {
 		Message disabledMessage = MessageRegistry.getInstance().createMessage("DisabledMessage");
 		Connection connection = mock(Connection.class);
-		ExecutableMessage message =
-			  ExecutableMessage.getExecutableMessageFor(connection, disabledMessage);
-		Assert.assertNull(message);
+		List<ExecutableMessage> message = ExecutableMessage.getExecutableMessagesFor(connection, disabledMessage);
+		Assert.assertTrue(message.isEmpty());
 	}
 
 	/**

@@ -8,6 +8,7 @@ import com.jenjinstudios.core.util.MessageFactory;
 import java.io.EOFException;
 import java.io.IOException;
 import java.net.SocketException;
+import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -64,13 +65,16 @@ public class RunnableMessageReader implements Runnable
 	}
 
 	void executeMessage(Message message) {
-		ExecutableMessage exec = ExecutableMessage.getExecutableMessageFor(connection, message);
-		if (exec != null)
+		Collection<ExecutableMessage> execs = ExecutableMessage.getExecutableMessagesFor(connection, message);
+		for (ExecutableMessage exec : execs)
 		{
-			processExecutableMessage(exec);
-		} else
-		{
-			processInvalidMessage(message);
+			if (exec != null)
+			{
+				processExecutableMessage(exec);
+			} else
+			{
+				processInvalidMessage(message);
+			}
 		}
 	}
 

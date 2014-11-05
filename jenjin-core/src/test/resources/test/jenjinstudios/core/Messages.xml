@@ -27,6 +27,6 @@
         <executable>com.jenjinstudios.core.message.ExecutableBlankMessage</executable>
     </message>
 
-    <disabled_message name="DisabledMessage" />
+    <executable_override id="-2" mode="Disable">com.jenjinstudios.core.message.DisabledExecutableMessage</executable_override>
 
 </messages>

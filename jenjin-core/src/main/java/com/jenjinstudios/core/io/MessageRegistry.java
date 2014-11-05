@@ -1,20 +1,10 @@
 package com.jenjinstudios.core.io;
 
-import com.jenjinstudios.core.xml.ArgumentType;
-import com.jenjinstudios.core.xml.DisabledMessageType;
-import com.jenjinstudios.core.xml.MessageType;
-import com.jenjinstudios.core.xml.Messages;
+import com.jenjinstudios.core.xml.*;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.Unmarshaller;
-import java.io.InputStream;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Stream;
 
 /**
  * The {@code MessageRegistry} class is central to the Jenjin's dynamic messaging system.  An instance of the registry
@@ -36,6 +26,7 @@ public class MessageRegistry
 	private static MessageRegistry messageRegistry;
 	private final Map<Short, MessageType> messageTypesByID = new TreeMap<>();
 	private final Map<String, MessageType> messageTypesByName = new TreeMap<>();
+	private final List<Short> finalOverrides = new LinkedList<>();
 
 	private MessageRegistry() {
 		registerXmlMessages();
@@ -111,40 +102,68 @@ public class MessageRegistry
 	}
 
 	private void registerXmlMessages() {
-		LinkedList<InputStream> streamsToRead = new LinkedList<>();
-		streamsToRead.addAll(MessageFileFinder.findMessageJarStreams());
-		streamsToRead.addAll(MessageFileFinder.findMessageFileStreams());
-		readXmlStreams(streamsToRead);
-	}
+		Collection<Messages> foundMessages = MessageFileFinder.findXmlRegistries();
 
-	private void readXmlStreams(Iterable<InputStream> streamsToRead) {
-		Messages messages = new Messages();
-		for (InputStream inputStream : streamsToRead)
+		for (Messages currentMessageCollection : foundMessages)
 		{
-			try
-			{
-				JAXBContext jaxbContext = JAXBContext.newInstance(Messages.class);
-				Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-				Messages collection = (Messages) jaxbUnmarshaller.unmarshal(inputStream);
-				messages.addAll(collection);
-				addAllMessages(collection.getMessages());
-			} catch (Exception ex)
-			{
-				LOGGER.log(Level.INFO, "Unable to parse XML file", ex);
-			}
+			currentMessageCollection.getMessages().forEach(this::registerMessageType);
+			currentMessageCollection.getOverrides().forEach(this::registerOverride);
 		}
-		messages.getDisabledMessages().forEach(this::disableExecutableMessage);
 	}
 
-	private void addAllMessages(List<MessageType> messageTypes) {
-		Stream<MessageType> stream = messageTypes.stream();
-		Stream<MessageType> filter = stream.filter(messageType -> messageType != null &&
-			  !messageTypesByID.containsKey(messageType.getId()) && !messageTypesByName.containsKey(messageType
-			  .getName()));
-		filter.forEach(messageType -> {
+	private void registerOverride(ExecutableOverride override) {
+		MessageType messageType;
+		if (finalOverrides.contains(override.getId()))
+		{
+			throw new IllegalArgumentException("Cannot overwrite final message executable: " + override.getId());
+		}
+		switch (override.getMode())
+		{
+			case "Override":
+				synchronized (messageTypesByID)
+				{
+					messageType = messageTypesByID.get(override.getId());
+				}
+				messageType.getExecutables().clear();
+				messageType.getExecutables().add(override.getExecutable());
+				break;
+			case "Disable":
+				synchronized (messageTypesByID)
+				{
+					messageType = messageTypesByID.get(override.getId());
+				}
+				List<String> executables = messageType.getExecutables();
+				executables.remove(override.getExecutable());
+				break;
+			case "Final":
+				finalOverrides.add(override.getId());
+				synchronized (messageTypesByID)
+				{
+					messageType = messageTypesByID.get(override.getId());
+				}
+				messageType.getExecutables().clear();
+				messageType.getExecutables().add(override.getExecutable());
+				break;
+		}
+	}
+
+	private void registerMessageType(MessageType messageType) {
+		if (messageType == null)
+		{
+			LOGGER.log(Level.INFO, "Attempted to register null reference type.");
+		} else if (messageTypesByID.containsKey(messageType.getId()))
+		{
+			LOGGER.log(Level.WARNING, "Unable to register message type: " + messageType.getName() + ". ID already " +
+				  "registered.");
+		} else if (messageTypesByName.containsKey(messageType.getName()))
+		{
+			LOGGER.log(Level.WARNING, "Unable to register message type: " + messageType.getId() + ". Name already " +
+				  "registered.");
+		} else
+		{
 			messageTypesByID.put(messageType.getId(), messageType);
 			messageTypesByName.put(messageType.getName(), messageType);
-		});
+		}
 	}
 
 	void disableExecutableMessage(DisabledMessageType disabledMessageType) {
