@@ -1,4 +1,4 @@
-Jenjin ![Build Status](https://travis-ci.org/floralvikings/jenjin.svg?branch=jenjin-184)
+Jenjin ![Build Status](https://travis-ci.org/floralvikings/jenjin.svg?branch=master)
 =====
 
 The Jenjin is a flexible server architecture designed for use in MMORPGs.
@@ -46,7 +46,7 @@ the Travis automated building is helping with that a great deal.
 
 Special thanks go out to:
 
-* [This blog](http://seamless-pixels.blogspot.co.uk/), which supplied all the textures used in the demo application.  These
+* [This blog](http://seamless-pixels.blogspot.co.uk/), which supplied all the textures used in early testing versions of the demo application.  These
 textures are high-resolution, tileable, and very, very nice.  They are completely free but there is an option to download the entire
 archive for as little as $1.99 should you desire to support an open-source artist. (You should.)
 
@@ -58,3 +58,4 @@ The Jenjin itself does not use any third party dependencies; however, the tests 
 
 * The Jenjin uses [TestNG](http://testng.org/doc/index.html) for unit tests. ([License](http://testng.org/license/))
 * For database integration tests, [H2Database](http://h2database.com/html/main.html) is used. ([License](http://h2database.com/html/license.html))
+* The Jenjin World modules make use of [Gson](https://code.google.com/p/google-gson/). ([License](http://www.apache.org/licenses/LICENSE-2.0))

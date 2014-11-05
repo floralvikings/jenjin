@@ -2,12 +2,11 @@ allprojects {
     apply plugin: 'maven'
 
     group = 'com.jenjinstudios'
-    version = '0.6.0-alpha'
+    version = '0.7.0-alpha'
 }
 
 subprojects {
     apply plugin: 'java'
-    //apply plugin: 'jacoco'
 
     repositories {
         mavenLocal()

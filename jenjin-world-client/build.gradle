@@ -1,4 +1,4 @@
-description = ''
+description = 'Basic Jenjin-Based MMO Client'
 
 dependencies {
     compile project(':jenjin-core-client')
