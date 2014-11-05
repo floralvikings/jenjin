@@ -17,14 +17,14 @@ public class ServerUpdateTaskTest
 	@Test
 	public void testGetAverageUPS() throws Exception {
 		AuthServer authServer = Mockito.mock(AuthServer.class);
-		Mockito.when(authServer.getUps()).thenReturn(10);
+		Mockito.when(authServer.getUps()).thenReturn(5);
 		Mockito.when(authServer.getSyncedTasks()).thenReturn(new LinkedList());
 		Mockito.when(authServer.getRepeatedTasks()).thenReturn(new LinkedList());
 		ServerUpdateTask serverUpdateTask = new ServerUpdateTask(authServer);
 		ScheduledExecutorService loopTimer = Executors.newSingleThreadScheduledExecutor();
-		loopTimer.scheduleAtFixedRate(serverUpdateTask, 0, 100, TimeUnit.MILLISECONDS);
-		Thread.sleep(5000);
+		loopTimer.scheduleAtFixedRate(serverUpdateTask, 0, 200, TimeUnit.MILLISECONDS);
+		Thread.sleep(2000);
 		loopTimer.shutdownNow();
-		Assert.assertEquals(serverUpdateTask.getAverageUPS(), 10, 1);
+		Assert.assertEquals(serverUpdateTask.getAverageUPS(), 5, 1);
 	}
 }
