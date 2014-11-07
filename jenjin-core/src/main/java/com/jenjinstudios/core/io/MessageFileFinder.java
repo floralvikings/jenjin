@@ -1,7 +1,7 @@
 package com.jenjinstudios.core.io;
 
 import com.jenjinstudios.core.util.FileUtil;
-import com.jenjinstudios.core.xml.Messages;
+import com.jenjinstudios.core.xml.MessageGroup;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -110,7 +110,7 @@ public final class MessageFileFinder
 		return inputStreams;
 	}
 
-	static Collection<Messages> findXmlRegistries() {
+	static Collection<MessageGroup> findXmlRegistries() {
 		LinkedList<InputStream> streamsToRead = new LinkedList<>();
 		streamsToRead.addAll(findMessageJarStreams());
 		streamsToRead.addAll(findMessageFileStreams());

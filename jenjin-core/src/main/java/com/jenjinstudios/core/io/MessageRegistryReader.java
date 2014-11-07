@@ -1,6 +1,6 @@
 package com.jenjinstudios.core.io;
 
-import com.jenjinstudios.core.xml.Messages;
+import com.jenjinstudios.core.xml.MessageGroup;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
@@ -19,15 +19,15 @@ public class MessageRegistryReader
 {
 	private static final Logger LOGGER = Logger.getLogger(MessageRegistryReader.class.getName());
 
-	static Collection<Messages> readXmlStreams(Iterable<InputStream> streamsToRead) {
-		Collection<Messages> foundMessages = new LinkedList<>();
+	static Collection<MessageGroup> readXmlStreams(Iterable<InputStream> streamsToRead) {
+		Collection<MessageGroup> foundMessages = new LinkedList<>();
 		for (InputStream inputStream : streamsToRead)
 		{
 			try
 			{
-				JAXBContext jaxbContext = JAXBContext.newInstance(Messages.class);
+				JAXBContext jaxbContext = JAXBContext.newInstance(MessageGroup.class);
 				Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-				Messages collection = (Messages) jaxbUnmarshaller.unmarshal(inputStream);
+				MessageGroup collection = (MessageGroup) jaxbUnmarshaller.unmarshal(inputStream);
 				foundMessages.add(collection);
 			} catch (Exception ex)
 			{

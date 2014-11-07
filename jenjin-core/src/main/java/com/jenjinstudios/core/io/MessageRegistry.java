@@ -1,6 +1,8 @@
 package com.jenjinstudios.core.io;
 
-import com.jenjinstudios.core.xml.*;
+import com.jenjinstudios.core.xml.ExecutableOverride;
+import com.jenjinstudios.core.xml.MessageGroup;
+import com.jenjinstudios.core.xml.MessageType;
 
 import java.util.*;
 import java.util.logging.Level;
@@ -102,9 +104,9 @@ public class MessageRegistry
 	}
 
 	private void registerXmlMessages() {
-		Collection<Messages> foundMessages = MessageFileFinder.findXmlRegistries();
+		Collection<MessageGroup> foundMessages = MessageFileFinder.findXmlRegistries();
 
-		for (Messages currentMessageCollection : foundMessages)
+		for (MessageGroup currentMessageCollection : foundMessages)
 		{
 			currentMessageCollection.getMessages().forEach(this::registerMessageType);
 			currentMessageCollection.getOverrides().forEach(this::registerOverride);
@@ -166,22 +168,4 @@ public class MessageRegistry
 		}
 	}
 
-	void disableExecutableMessage(DisabledMessageType disabledMessageType) {
-		String messageName = disabledMessageType.getName();
-		LOGGER.log(Level.INFO, "Disabling message: {0}", messageName);
-		MessageType type;
-		synchronized (messageTypesByName)
-		{
-			type = messageTypesByName.get(messageName);
-		}
-		short id = type.getId();
-		List<ArgumentType> argumentTypes = type.getArguments();
-		MessageType newMessageType = new MessageType();
-		newMessageType.setId(id);
-		newMessageType.setName(messageName);
-		newMessageType.getArguments().addAll(argumentTypes);
-		messageTypesByName.put(messageName, newMessageType);
-		messageTypesByID.put(id, newMessageType);
-
-	}
 }

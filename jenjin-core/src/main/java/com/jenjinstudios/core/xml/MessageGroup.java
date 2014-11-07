@@ -15,7 +15,7 @@ import java.util.List;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "messages", namespace = "https://www.jenjinstudios.com")
-public class Messages
+public class MessageGroup
 {
 	@XmlElement(name = "message", namespace = "https://www.jenjinstudios.com")
 	private List<MessageType> messages;
