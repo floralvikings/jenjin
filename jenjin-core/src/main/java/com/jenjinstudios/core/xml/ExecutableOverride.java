@@ -1,6 +1,8 @@
 package com.jenjinstudios.core.xml;
 
 import javax.xml.bind.annotation.*;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Stores the mode and name of an executable message to be overridden.
@@ -12,25 +14,24 @@ import javax.xml.bind.annotation.*;
 public class ExecutableOverride
 {
 	@XmlValue
-	private String executable;
+	private List<String> executables;
 	@XmlAttribute(name = "id", required = true)
 	private short id;
 	@XmlAttribute(name = "mode", required = true)
 	private String mode;
 
 	/**
-	 * Get the name of the ExecutableMessage to be used.
+	 * Get the names of the ExecutableMessages to be used.
 	 *
-	 * @return The name of the class of the ExecutableMessage to be used.
+	 * @return The names of the class of the ExecutableMessages to be used.
 	 */
-	public String getExecutable() { return executable; }
-
-	/**
-	 * Set the executable message to override the existing one.
-	 *
-	 * @param executable The name of the class of the new executable message.
-	 */
-	public void setExecutable(String executable) { this.executable = executable; }
+	public List<String> getExecutables() {
+		if (executables == null)
+		{
+			executables = new LinkedList<>();
+		}
+		return executables;
+	}
 
 	/**
 	 * Get the override mode.

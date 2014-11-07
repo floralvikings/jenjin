@@ -4,7 +4,7 @@
 
     <xs:complexType name="messagesType">
         <xs:choice maxOccurs="unbounded">
-            <xs:element type="jen:messageType" name="message" maxOccurs="unbounded" minOccurs="0" xmlns:jen="https://www.jenjinstudios.com" />
+            <xs:element type="jen:message" name="message" maxOccurs="unbounded" minOccurs="0" xmlns:jen="https://www.jenjinstudios.com" />
             <xs:element type="jen:executableOverride" name="executable_override" xmlns:jen="https://www.jenjinstudios.com" />
         </xs:choice>
     </xs:complexType>
@@ -19,9 +19,9 @@
         </xs:simpleContent>
     </xs:complexType>
 
-    <xs:complexType name="messageType">
+    <xs:complexType name="message">
         <xs:choice maxOccurs="unbounded">
-            <xs:element type="jen:argumentType" name="argument" maxOccurs="unbounded" minOccurs="0" xmlns:jen="https://www.jenjinstudios.com" />
+        <xs:element type="jen:argumentType" name="argument" maxOccurs="unbounded" minOccurs="0" xmlns:jen="https://www.jenjinstudios.com" />
             <xs:element name="executable" minOccurs="0" maxOccurs="unbounded" />
         </xs:choice>
         <xs:attribute type="xs:string" name="name" use="optional" />
@@ -29,12 +29,11 @@
     </xs:complexType>
 
     <xs:complexType name="executableOverride">
-        <xs:simpleContent>
-            <xs:extension base="xs:string">
-                <xs:attribute name="mode" use="required" type="jen:mode" xmlns:jen="https://www.jenjinstudios.com" />
-                <xs:attribute type="xs:short" name="id" use="required" />
-            </xs:extension>
-        </xs:simpleContent>
+        <xs:choice maxOccurs="unbounded">
+            <xs:element name="executable" maxOccurs="unbounded" minOccurs="0" xmlns:jen="https://www.jenjinstudios.com" />
+        </xs:choice>
+        <xs:attribute name="mode" use="required" type="jen:mode" xmlns:jen="https://www.jenjinstudios.com" />
+        <xs:attribute type="xs:short" name="id" use="required" />
     </xs:complexType>
 
     <xs:simpleType name="mode" xmlns:jen="https://www.jenjinstudios.com">

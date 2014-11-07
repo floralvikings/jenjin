@@ -127,7 +127,7 @@ public class MessageRegistry
 					messageType = messageTypesByID.get(override.getId());
 				}
 				messageType.getExecutables().clear();
-				messageType.getExecutables().add(override.getExecutable());
+				messageType.getExecutables().addAll(override.getExecutables());
 				break;
 			case "Disable":
 				synchronized (messageTypesByID)
@@ -135,7 +135,7 @@ public class MessageRegistry
 					messageType = messageTypesByID.get(override.getId());
 				}
 				List<String> executables = messageType.getExecutables();
-				executables.remove(override.getExecutable());
+				executables.removeAll(override.getExecutables());
 				break;
 			case "Final":
 				finalOverrides.add(override.getId());
@@ -144,7 +144,7 @@ public class MessageRegistry
 					messageType = messageTypesByID.get(override.getId());
 				}
 				messageType.getExecutables().clear();
-				messageType.getExecutables().add(override.getExecutable());
+				messageType.getExecutables().addAll(override.getExecutables());
 				break;
 		}
 	}
