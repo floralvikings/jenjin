@@ -13,7 +13,7 @@ import java.util.List;
 @XmlType(name = "executable_override", namespace = "https://www.jenjinstudios.com")
 public class ExecutableOverride
 {
-	@XmlValue
+	@XmlElement(name = "executable", namespace = "https://www.jenjinstudios.com")
 	private List<String> executables;
 	@XmlAttribute(name = "id", required = true)
 	private short id;

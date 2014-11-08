@@ -30,7 +30,7 @@
 
     <xs:complexType name="executableOverride">
         <xs:choice maxOccurs="unbounded">
-            <xs:element name="executable" maxOccurs="unbounded" minOccurs="0" xmlns:jen="https://www.jenjinstudios.com" />
+            <xs:element name="executable" maxOccurs="unbounded" minOccurs="0" />
         </xs:choice>
         <xs:attribute name="mode" use="required" type="jen:mode" xmlns:jen="https://www.jenjinstudios.com" />
         <xs:attribute type="xs:short" name="id" use="required" />
