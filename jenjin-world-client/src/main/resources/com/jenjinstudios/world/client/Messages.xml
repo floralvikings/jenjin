@@ -61,9 +61,9 @@
         <executable>com.jenjinstudios.world.server.message.ExecutableWorldLoginRequest</executable>
     </executable_override>
 
-    <message name="WorldLogoutRequest" id="208">
-        <executable>com.jenjinstudios.world.server.message.ExecutableWorldLogoutRequest</executable>
-    </message>
+    <executable_override mode="Override" id="103">
+    <executable>com.jenjinstudios.world.server.message.ExecutableWorldLogoutRequest</executable>
+    </executable_override>
 
     <message name="WorldLoginResponse" id="209">
         <argument type="int" name="id" />
@@ -75,10 +75,9 @@
         <executable>com.jenjinstudios.world.client.message.ExecutableWorldLoginResponse</executable>
     </message>
 
-    <message name="WorldLogoutResponse" id="210">
-        <argument type="boolean" name="success" />
-        <executable>com.jenjinstudios.world.client.message.ExecutableWorldLogoutResponse</executable>
-    </message>
+    <executable_override mode="Override" id="104">
+    <executable>com.jenjinstudios.world.client.message.ExecutableWorldLogoutResponse</executable>
+    </executable_override>
 
     <message name="ActorMoveSpeed" id="211">
         <argument type="double" name="moveSpeed" />

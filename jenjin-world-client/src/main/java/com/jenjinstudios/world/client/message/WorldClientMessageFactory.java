@@ -31,14 +31,6 @@ public class WorldClientMessageFactory extends ClientMessageFactory
 	}
 
 	/**
-	 * Generate a world logout request.
-	 *
-	 * @return The world logout request.
-	 */
-	@Override
-	public Message generateLogoutRequest() { return MessageRegistry.getInstance().createMessage("WorldLogoutRequest");}
-
-	/**
 	 * Generate a world file request.
 	 *
 	 * @return The file request.
