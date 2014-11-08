@@ -57,11 +57,9 @@
         <argument type="long" name="timeOfForce" />
     </message>
 
-    <message name="WorldLoginRequest" id="207">
-        <executable>com.jenjinstudios.world.server.message.ExecutableWorldLoginRequest</executable>
-        <argument type="String" name="username" encrypt="true" />
-        <argument type="String" name="password" encrypt="true" />
-    </message>
+    <executable_override mode="Override" id="101">
+    <executable>com.jenjinstudios.world.server.message.ExecutableWorldLoginRequest</executable>
+    </executable_override>
 
     <message name="WorldLogoutRequest" id="208">
         <executable>com.jenjinstudios.world.server.message.ExecutableWorldLogoutRequest</executable>
