@@ -2,6 +2,13 @@
 <xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="https://www.jenjinstudios.com" xmlns:xs="http://www.w3.org/2001/XMLSchema">
     <xs:element name="messages" type="jen:messagesType" xmlns:jen="https://www.jenjinstudios.com" />
 
+    <xs:complexType name="messagesType">
+        <xs:choice maxOccurs="unbounded">
+            <xs:element type="jen:message" name="message" maxOccurs="unbounded" minOccurs="0" xmlns:jen="https://www.jenjinstudios.com" />
+            <xs:element type="jen:executableOverride" name="executable_override" xmlns:jen="https://www.jenjinstudios.com" />
+        </xs:choice>
+    </xs:complexType>
+
     <xs:complexType name="argumentType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
@@ -12,27 +19,29 @@
         </xs:simpleContent>
     </xs:complexType>
 
-    <xs:complexType name="messagesType">
+    <xs:complexType name="message">
         <xs:choice maxOccurs="unbounded">
-        <xs:element type="jen:messageType" name="message" maxOccurs="unbounded" minOccurs="0" xmlns:jen="https://www.jenjinstudios.com" />
-            <xs:element type="jen:disabled_messageType" name="disabled_message" xmlns:jen="https://www.jenjinstudios.com" />
-        </xs:choice>
-    </xs:complexType>
-
-    <xs:complexType name="disabled_messageType">
-        <xs:simpleContent>
-            <xs:extension base="xs:string">
-                <xs:attribute type="xs:string" name="name" />
-            </xs:extension>
-        </xs:simpleContent>
-    </xs:complexType>
-
-    <xs:complexType name="messageType">
-        <xs:choice maxOccurs="unbounded">
-            <xs:element type="jen:argumentType" name="argument" maxOccurs="unbounded" minOccurs="0" xmlns:jen="https://www.jenjinstudios.com" />
-            <xs:element name="executable" minOccurs="0" maxOccurs="1" />
+        <xs:element type="jen:argumentType" name="argument" maxOccurs="unbounded" minOccurs="0" xmlns:jen="https://www.jenjinstudios.com" />
+            <xs:element name="executable" minOccurs="0" maxOccurs="unbounded" />
         </xs:choice>
         <xs:attribute type="xs:string" name="name" use="optional" />
         <xs:attribute type="xs:short" name="id" use="optional" />
     </xs:complexType>
+
+    <xs:complexType name="executableOverride">
+        <xs:choice maxOccurs="unbounded">
+            <xs:element name="executable" maxOccurs="unbounded" minOccurs="0" />
+        </xs:choice>
+        <xs:attribute name="mode" use="required" type="jen:mode" xmlns:jen="https://www.jenjinstudios.com" />
+        <xs:attribute type="xs:short" name="id" use="required" />
+    </xs:complexType>
+
+    <xs:simpleType name="mode" xmlns:jen="https://www.jenjinstudios.com">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="Final" />
+            <xs:enumeration value="Override" />
+            <xs:enumeration value="Disable" />
+        </xs:restriction>
+    </xs:simpleType>
+
 </xs:schema>

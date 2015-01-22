@@ -1,6 +1,7 @@
 package com.jenjinstudios.core.io;
 
 import com.jenjinstudios.core.util.FileUtil;
+import com.jenjinstudios.core.xml.MessageGroup;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -8,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -106,5 +108,12 @@ public final class MessageFileFinder
 			inputStreams.add(MessageFileFinder.class.getClassLoader().getResourceAsStream(entry));
 		}
 		return inputStreams;
+	}
+
+	static Collection<MessageGroup> findXmlRegistries() {
+		LinkedList<InputStream> streamsToRead = new LinkedList<>();
+		streamsToRead.addAll(findMessageJarStreams());
+		streamsToRead.addAll(findMessageFileStreams());
+		return MessageRegistryReader.readXmlStreams(streamsToRead);
 	}
 }
