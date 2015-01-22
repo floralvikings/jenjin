@@ -64,6 +64,9 @@ public class Server<T extends ClientHandler> extends Thread
 		h.setHandlerId(nullIndex);
 	}
 
+	/**
+	 * Run all messages currently waiting in ClientHandler queues.
+	 */
 	public void runClientHandlerQueuedMessages() {
 		synchronized (clientHandlers)
 		{
