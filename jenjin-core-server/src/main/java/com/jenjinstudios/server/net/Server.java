@@ -26,6 +26,7 @@ public class Server<T extends ClientHandler> extends Thread
 
 	/**
 	 * Construct a new Server without a SQLHandler.
+	 * @param initInfo The initialization object to use when constructing the server.
 	 * @throws java.io.IOException If there is an IO Error initializing the server.
 	 * @throws NoSuchMethodException If there is no appropriate constructor for the specified ClientHandler
 	 * constructor.
