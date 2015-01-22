@@ -33,19 +33,19 @@ public class Connection
 		executableMessageQueue = new ExecutableMessageQueue();
 		messageFactory = new MessageFactory();
 		messageReaderThread = new Thread(new RunnableMessageReader(this));
-		KeyPair rsaKeyPair = SecurityUtil.generateRSAKeyPair();
-		if (rsaKeyPair != null)
-		{
-			messageIO.getIn().setPrivateKey(rsaKeyPair.getPrivate());
-			Message message = MessageFactory.generatePublicKeyMessage(rsaKeyPair.getPublic());
-			getMessageIO().queueOutgoingMessage(message);
-		}
 	}
 
 	/**
 	 * Start the message reader thread managed by this connection.
 	 */
 	public void start() {
+		KeyPair rsaKeyPair = SecurityUtil.generateRSAKeyPair();
+		if (rsaKeyPair != null)
+		{
+			getMessageIO().getIn().setPrivateKey(rsaKeyPair.getPrivate());
+			Message message = MessageFactory.generatePublicKeyMessage(rsaKeyPair.getPublic());
+			getMessageIO().queueOutgoingMessage(message);
+		}
 		messageReaderThread.start();
 	}
 
