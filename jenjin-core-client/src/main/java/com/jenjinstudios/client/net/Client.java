@@ -3,7 +3,9 @@ package com.jenjinstudios.client.net;
 import com.jenjinstudios.core.Connection;
 import com.jenjinstudios.core.MessageIO;
 import com.jenjinstudios.core.util.MessageFactory;
+import com.jenjinstudios.core.util.SecurityUtil;
 
+import java.security.KeyPair;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Timer;
@@ -55,6 +57,9 @@ public class Client extends Connection
 
 	@Override
 	public void start() {
+		KeyPair rsaKeyPair = SecurityUtil.generateRSAKeyPair();
+		setRSAKeyPair(rsaKeyPair);
+
 		int period = 1000 / 60;
 		// Finally, send a ping request to establish latency.
 		getMessageIO().queueOutgoingMessage(MessageFactory.generatePingRequest());
