@@ -48,7 +48,7 @@ public class Connection
 	 *
 	 * @param rsaKeyPair The keypair to use for encryption/decrytion.
 	 */
-	protected void setRSAKeyPair(KeyPair rsaKeyPair) {
+	public void setRSAKeyPair(KeyPair rsaKeyPair) {
 		if (rsaKeyPair != null)
 		{
 			getMessageIO().getIn().setPrivateKey(rsaKeyPair.getPrivate());
