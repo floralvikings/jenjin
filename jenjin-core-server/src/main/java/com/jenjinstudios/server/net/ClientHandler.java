@@ -33,6 +33,7 @@ public class ClientHandler extends Connection
 	 * send the client a FirstConnectResponse message with the server's UPS
 	 *
 	 * @param s The server for which this handler works.
+	 * @param messageIO The MessageIO used to send and receive messages.
 	 */
 	public ClientHandler(AuthServer<? extends ClientHandler> s, MessageIO messageIO) {
 		super(messageIO);
