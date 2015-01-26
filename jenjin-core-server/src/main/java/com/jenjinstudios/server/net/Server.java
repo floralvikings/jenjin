@@ -1,6 +1,9 @@
 package com.jenjinstudios.server.net;
 
+import com.jenjinstudios.core.util.SecurityUtil;
+
 import java.io.IOException;
+import java.security.KeyPair;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -23,6 +26,7 @@ public class Server<T extends ClientHandler> extends Thread
 	private final ClientListener<T> clientListener;
 	/** The list of {@code ClientHandler}s working for this server. */
 	private final Map<Integer, T> clientHandlers;
+	private final KeyPair rsaKeyPair = SecurityUtil.generateRSAKeyPair();
 
 	/**
 	 * Construct a new Server without a SQLHandler.
@@ -62,6 +66,7 @@ public class Server<T extends ClientHandler> extends Thread
 			clientHandlers.put(nullIndex, h);
 		}
 		h.setHandlerId(nullIndex);
+		h.setRSAKeyPair(rsaKeyPair);
 	}
 
 	/**
