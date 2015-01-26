@@ -2,7 +2,7 @@
 
 <messages xmlns="https://www.jenjinstudios.com">
 
-<message name="StateChangeRequest" id="201">
+    <message name="StateChangeRequest" id="201">
         <executable>com.jenjinstudios.world.server.message.ExecutableStateChangeRequest</executable>
         <argument type="double" name="relativeAngle" />
         <argument type="double" name="absoluteAngle" />
@@ -57,15 +57,13 @@
         <argument type="long" name="timeOfForce" />
     </message>
 
-    <message name="WorldLoginRequest" id="207">
+    <executable_override mode="Override" id="101">
         <executable>com.jenjinstudios.world.server.message.ExecutableWorldLoginRequest</executable>
-        <argument type="String" name="username" encrypt="true" />
-        <argument type="String" name="password" encrypt="true" />
-    </message>
+    </executable_override>
 
-    <message name="WorldLogoutRequest" id="208">
-        <executable>com.jenjinstudios.world.server.message.ExecutableWorldLogoutRequest</executable>
-    </message>
+    <executable_override mode="Override" id="103">
+    <executable>com.jenjinstudios.world.server.message.ExecutableWorldLogoutRequest</executable>
+    </executable_override>
 
     <message name="WorldLoginResponse" id="209">
         <argument type="int" name="id" />
@@ -77,10 +75,9 @@
         <executable>com.jenjinstudios.world.client.message.ExecutableWorldLoginResponse</executable>
     </message>
 
-    <message name="WorldLogoutResponse" id="210">
-        <argument type="boolean" name="success" />
-        <executable>com.jenjinstudios.world.client.message.ExecutableWorldLogoutResponse</executable>
-    </message>
+    <executable_override mode="Override" id="104">
+    <executable>com.jenjinstudios.world.client.message.ExecutableWorldLogoutResponse</executable>
+    </executable_override>
 
     <message name="ActorMoveSpeed" id="211">
         <argument type="double" name="moveSpeed" />
