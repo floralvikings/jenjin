@@ -1,6 +1,5 @@
 package com.jenjinstudios.client.net;
 
-import com.jenjinstudios.client.message.ClientMessageFactory;
 import com.jenjinstudios.core.Connection;
 import com.jenjinstudios.core.MessageIO;
 import com.jenjinstudios.core.util.MessageFactory;
