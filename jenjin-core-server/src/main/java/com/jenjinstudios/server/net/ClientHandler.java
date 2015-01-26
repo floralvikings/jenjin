@@ -45,13 +45,6 @@ public class ClientHandler extends Connection
 		this.messageFactory = new ServerMessageFactory();
 	}
 
-	@Override
-	public void start() {
-		KeyPair rsaKeyPair = SecurityUtil.generateRSAKeyPair();
-		setRSAKeyPair(rsaKeyPair);
-		super.start();
-	}
-
 	/**
 	 * Set the id for this handler.
 	 *
