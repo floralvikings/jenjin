@@ -101,6 +101,8 @@ public class ClientHandler extends Connection
 
 	/**
 	 * Queue a message indicating the success or failure of a login attempt.
+	 *
+	 * @param loggedInTime The time at which this client handler has been authenticated.
 	 */
 	public void setLoggedInTime(long loggedInTime) { this.loggedInTime = loggedInTime; }
 
