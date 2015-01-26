@@ -3,9 +3,11 @@ package com.jenjinstudios.server.net;
 import com.jenjinstudios.core.Connection;
 import com.jenjinstudios.core.MessageIO;
 import com.jenjinstudios.core.io.Message;
+import com.jenjinstudios.core.util.SecurityUtil;
 import com.jenjinstudios.server.message.ServerMessageFactory;
 import com.jenjinstudios.server.sql.LoginException;
 
+import java.security.KeyPair;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -37,6 +39,8 @@ public class ClientHandler extends Connection
 	 */
 	public ClientHandler(AuthServer<? extends ClientHandler> s, MessageIO messageIO) {
 		super(messageIO);
+		KeyPair rsaKeyPair = SecurityUtil.generateRSAKeyPair();
+		setRSAKeyPair(rsaKeyPair);
 		setName("ClientHandler with unset ID");
 		server = s;
 
@@ -120,5 +124,10 @@ public class ClientHandler extends Connection
 	 */
 	public User getUser() { return user; }
 
+	/**
+	 * Set the User associated with this ClientHandler.
+	 *
+	 * @param user The User associated with this ClientHandler.
+	 */
 	public void setUser(User user) { this.user = user; }
 }
