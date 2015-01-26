@@ -39,12 +39,17 @@ public class ClientHandler extends Connection
 	 */
 	public ClientHandler(AuthServer<? extends ClientHandler> s, MessageIO messageIO) {
 		super(messageIO);
-		KeyPair rsaKeyPair = SecurityUtil.generateRSAKeyPair();
-		setRSAKeyPair(rsaKeyPair);
 		setName("ClientHandler with unset ID");
 		server = s;
 
 		this.messageFactory = new ServerMessageFactory();
+	}
+
+	@Override
+	public void start() {
+		KeyPair rsaKeyPair = SecurityUtil.generateRSAKeyPair();
+		setRSAKeyPair(rsaKeyPair);
+		super.start();
 	}
 
 	/**
