@@ -18,8 +18,6 @@ public class Client extends Connection
 {
 	/** The list of tasks that this client will execute each update cycle. */
 	private final List<Runnable> repeatedTasks;
-	/** The message factory used by this client. */
-	private final ClientMessageFactory messageFactory;
 	/** The timer that manages the update loop. */
 	private Timer sendMessagesTimer;
 	private ClientLoop clientLoop = new ClientLoop(this);
@@ -30,7 +28,7 @@ public class Client extends Connection
 	protected Client(MessageIO messageIO) {
 		super(messageIO);
 		repeatedTasks = new LinkedList<>();
-		this.messageFactory = new ClientMessageFactory();
+		/* The message factory used by this client. */
 	}
 
 	/**
