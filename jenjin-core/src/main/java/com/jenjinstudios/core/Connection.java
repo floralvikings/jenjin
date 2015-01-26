@@ -39,8 +39,6 @@ public class Connection
 	 * Start the message reader thread managed by this connection.
 	 */
 	public void start() {
-		KeyPair rsaKeyPair = SecurityUtil.generateRSAKeyPair();
-		setRSAKeyPair(rsaKeyPair);
 		messageReaderThread.start();
 	}
 

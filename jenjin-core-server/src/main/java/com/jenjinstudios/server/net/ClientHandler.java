@@ -113,6 +113,11 @@ public class ClientHandler extends Connection
 	 */
 	public int getHandlerId() { return handlerId; }
 
+	/**
+	 * Get the User associated with this ClientHandler.
+	 *
+	 * @return The User associated with this ClientHandler.
+	 */
 	public User getUser() { return user; }
 
 	public void setUser(User user) { this.user = user; }
