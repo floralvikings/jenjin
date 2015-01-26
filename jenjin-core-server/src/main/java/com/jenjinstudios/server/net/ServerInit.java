@@ -1,6 +1,10 @@
 package com.jenjinstudios.server.net;
 
+import java.security.KeyPair;
+
 /**
+ * Used to initialize Server objects.
+ *
  * @author Caleb Brinkman
  */
 public class ServerInit<T extends ClientHandler>
@@ -8,6 +12,7 @@ public class ServerInit<T extends ClientHandler>
 	private final int ups;
 	private final Class<T> handlerClass;
 	private final int port;
+	private KeyPair keyPair;
 
 	public ServerInit(int ups, Class<T> handlerClass, int port) {
 		this.ups = ups;
@@ -21,4 +26,7 @@ public class ServerInit<T extends ClientHandler>
 
 	public int getUps() { return ups; }
 
+	public KeyPair getKeyPair() { return keyPair; }
+
+	public void setKeyPair(KeyPair keyPair) { this.keyPair = keyPair; }
 }
