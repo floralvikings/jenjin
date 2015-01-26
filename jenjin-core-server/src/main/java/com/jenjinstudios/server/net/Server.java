@@ -26,7 +26,7 @@ public class Server<T extends ClientHandler> extends Thread
 	private final ClientListener<T> clientListener;
 	/** The list of {@code ClientHandler}s working for this server. */
 	private final Map<Integer, T> clientHandlers;
-	private final KeyPair rsaKeyPair = SecurityUtil.generateRSAKeyPair();
+	private final KeyPair rsaKeyPair;
 
 	/**
 	 * Construct a new Server without a SQLHandler.
@@ -43,6 +43,7 @@ public class Server<T extends ClientHandler> extends Thread
 		PERIOD = 1000 / UPS;
 		clientListener = new ClientListener<>(getClass(), initInfo.getHandlerClass(), initInfo.getPort());
 		clientHandlers = new TreeMap<>();
+		rsaKeyPair = initInfo.getKeyPair() == null ? SecurityUtil.generateRSAKeyPair() : initInfo.getKeyPair();
 	}
 
 	/**
