@@ -29,7 +29,6 @@ public class Client extends Connection
 	protected Client(MessageIO messageIO) {
 		super(messageIO);
 		repeatedTasks = new LinkedList<>();
-		/* The message factory used by this client. */
 	}
 
 	/**
