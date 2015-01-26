@@ -40,13 +40,23 @@ public class Connection
 	 */
 	public void start() {
 		KeyPair rsaKeyPair = SecurityUtil.generateRSAKeyPair();
+		setRSAKeyPair(rsaKeyPair);
+		messageReaderThread.start();
+	}
+
+	/**
+	 * Set the RSA public/private key pair used to encrypt outgoing and decrypt incoming messages, and queue a message
+	 * containing the public key.
+	 *
+	 * @param rsaKeyPair The keypair to use for encryption/decrytion.
+	 */
+	protected void setRSAKeyPair(KeyPair rsaKeyPair) {
 		if (rsaKeyPair != null)
 		{
 			getMessageIO().getIn().setPrivateKey(rsaKeyPair.getPrivate());
 			Message message = MessageFactory.generatePublicKeyMessage(rsaKeyPair.getPublic());
 			getMessageIO().queueOutgoingMessage(message);
 		}
-		messageReaderThread.start();
 	}
 
 	/**
