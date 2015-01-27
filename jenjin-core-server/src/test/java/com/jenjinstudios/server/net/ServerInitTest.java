@@ -4,6 +4,9 @@ import org.testng.annotations.Test;
 
 import static org.testng.Assert.*;
 
+/**
+ * Test the ServerInit class.
+ */
 public class ServerInitTest
 {
 
