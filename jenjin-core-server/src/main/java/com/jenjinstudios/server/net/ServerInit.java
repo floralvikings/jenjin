@@ -22,12 +22,6 @@ public class ServerInit<T extends ClientHandler> implements Cloneable
 
 	}
 
-	public ServerInit(int ups, Class<T> handlerClass, int port) {
-		this.ups = ups;
-		this.handlerClass = handlerClass;
-		this.port = port;
-	}
-
 	public Class<T> getHandlerClass() { return handlerClass; }
 
 	public void setHandlerClass(Class<T> handlerClass) { this.handlerClass = handlerClass; }
