@@ -22,6 +22,8 @@ public class ServerInit<T extends ClientHandler>
 
 	public Class<T> getHandlerClass() { return handlerClass; }
 
+	public void setHandlerClass(Class<T> handlerClass) { this.handlerClass = handlerClass; }
+
 	public int getPort() { return port; }
 
 	public int getUps() { return ups; }
