@@ -30,6 +30,8 @@ public class ServerInit<T extends ClientHandler>
 
 	public int getUps() { return ups; }
 
+	public void setUps(int ups) { this.ups = ups; }
+
 	public KeyPair getKeyPair() { return keyPair; }
 
 	public void setKeyPair(KeyPair keyPair) { this.keyPair = keyPair; }
