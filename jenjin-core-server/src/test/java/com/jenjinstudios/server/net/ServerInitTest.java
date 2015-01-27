@@ -11,11 +11,6 @@ public class ServerInitTest
 {
 
 	@Test
-	public void testReadFromFile() throws Exception {
-
-	}
-
-	@Test
 	public void testReadFromStream() throws Exception {
 
 	}
