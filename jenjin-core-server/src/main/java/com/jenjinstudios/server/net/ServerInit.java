@@ -9,9 +9,9 @@ import java.security.KeyPair;
  */
 public class ServerInit<T extends ClientHandler>
 {
-	private final int ups;
-	private final Class<T> handlerClass;
-	private final int port;
+	private int ups;
+	private Class<T> handlerClass;
+	private int port;
 	private KeyPair keyPair;
 
 	public ServerInit(int ups, Class<T> handlerClass, int port) {
