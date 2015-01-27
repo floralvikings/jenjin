@@ -3,11 +3,9 @@ package com.jenjinstudios.server.net;
 import com.jenjinstudios.core.Connection;
 import com.jenjinstudios.core.MessageIO;
 import com.jenjinstudios.core.io.Message;
-import com.jenjinstudios.core.util.SecurityUtil;
 import com.jenjinstudios.server.message.ServerMessageFactory;
 import com.jenjinstudios.server.sql.LoginException;
 
-import java.security.KeyPair;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -20,7 +18,7 @@ public class ClientHandler extends Connection
 {
 	private static final Logger LOGGER = Logger.getLogger(ClientHandler.class.getName());
 	/** The server. */
-	private final AuthServer<? extends ClientHandler> server;
+	private final AuthServer server;
 	/** The message factory used by this ClientHandler. */
 	private final ServerMessageFactory messageFactory;
 	/** The id of the client handler. */
@@ -37,7 +35,7 @@ public class ClientHandler extends Connection
 	 * @param s The server for which this handler works.
 	 * @param messageIO The MessageIO used to send and receive messages.
 	 */
-	public ClientHandler(AuthServer<? extends ClientHandler> s, MessageIO messageIO) {
+	public ClientHandler(AuthServer s, MessageIO messageIO) {
 		super(messageIO);
 		setName("ClientHandler with unset ID");
 		server = s;
@@ -82,7 +80,7 @@ public class ClientHandler extends Connection
 	 *
 	 * @return The server for which this client handler works.
 	 */
-	public AuthServer<? extends ClientHandler> getServer() { return server; }
+	public AuthServer getServer() { return server; }
 
 	/**
 	 * Queue a message indicating the success or failure of a logout attempt.

@@ -8,7 +8,7 @@ import java.security.KeyPair;
  *
  * @author Caleb Brinkman
  */
-public class ServerInit<T extends ClientHandler> implements Cloneable
+public class ServerInit implements Cloneable
 {
 	/** The default number of updates per second. */
 	public static final int DEFAULT_UPS = 50;
@@ -18,7 +18,7 @@ public class ServerInit<T extends ClientHandler> implements Cloneable
 	public static final int DEFAULT_PORT = 51015;
 
 	private int ups;
-	private Class<T> handlerClass;
+	private Class<? extends ClientHandler> handlerClass;
 	private int port;
 	private KeyPair keyPair;
 
@@ -32,9 +32,9 @@ public class ServerInit<T extends ClientHandler> implements Cloneable
 		port = DEFAULT_PORT;
 	}
 
-	public Class<T> getHandlerClass() { return handlerClass; }
+	public Class<? extends ClientHandler> getHandlerClass() { return handlerClass; }
 
-	public void setHandlerClass(Class<T> handlerClass) { this.handlerClass = handlerClass; }
+	public void setHandlerClass(Class<? extends ClientHandler> handlerClass) { this.handlerClass = handlerClass; }
 
 	public int getPort() { return port; }
 
@@ -49,7 +49,7 @@ public class ServerInit<T extends ClientHandler> implements Cloneable
 	public void setKeyPair(KeyPair keyPair) { this.keyPair = keyPair; }
 
 	@Override
-	public ServerInit<T> clone() {
+	public ServerInit clone() {
 		return null;
 	}
 

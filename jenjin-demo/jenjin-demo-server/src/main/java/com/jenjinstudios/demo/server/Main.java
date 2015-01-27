@@ -17,7 +17,7 @@ public class Main
 {
 	public static void main(String[] args) throws Exception {
 		Scanner input = new Scanner(System.in);
-		WorldServer<WorldClientHandler> demoServer;
+		WorldServer demoServer;
 
 		demoServer = createWorldServer();
 		demoServer.start();
@@ -32,14 +32,12 @@ public class Main
 		demoServer.shutdown();
 	}
 
-	private static WorldServer<WorldClientHandler> createWorldServer() throws Exception {
-		ServerInit<WorldClientHandler> serverInit = new ServerInit<>();
-		serverInit.setUps(50);
+	private static WorldServer createWorldServer() throws Exception {
+		ServerInit serverInit = new ServerInit();
 		serverInit.setHandlerClass(WorldClientHandler.class);
-		serverInit.setPort(51015);
 		Connection sqlConnection = createDemoConnection();
 		WorldAuthenticator worldAuthenticator = new WorldAuthenticator(sqlConnection);
-		return new WorldServer<>(serverInit, worldAuthenticator, null);
+		return new WorldServer(serverInit, worldAuthenticator, null);
 	}
 
 	private static Connection createDemoConnection() throws Exception {

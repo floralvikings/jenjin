@@ -5,7 +5,6 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 /**
  * @author Caleb Brinkman
@@ -15,13 +14,10 @@ public class AuthServerTest
 {
 	@Test
 	public void testConstructor() throws Exception {
-		ServerInit<ClientHandler> serverInit = mock(ServerInit.class);
+		ServerInit serverInit = new ServerInit();
 		Authenticator authenticator = mock(Authenticator.class);
-		when(serverInit.getUps()).thenReturn(1);
-		when(serverInit.getPort()).thenReturn(51016);
-		when(serverInit.getHandlerClass()).thenReturn(ClientHandler.class);
 
-		AuthServer<ClientHandler> authServer = new AuthServer<>(serverInit, authenticator);
+		AuthServer authServer = new AuthServer(serverInit, authenticator);
 		authServer.shutdown();
 
 		Assert.assertEquals(authServer.getAuthenticator(), authenticator);

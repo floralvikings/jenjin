@@ -8,7 +8,7 @@ import java.io.IOException;
  * A Server with access to a SqlHandler and MySql database.
  * @author Caleb Brinkman
  */
-public class AuthServer<T extends ClientHandler> extends TaskedServer<T>
+public class AuthServer extends TaskedServer
 {
 	/** The SQLHandler used by this Server. */
 	private Authenticator authenticator;
@@ -20,7 +20,7 @@ public class AuthServer<T extends ClientHandler> extends TaskedServer<T>
 	 * @throws NoSuchMethodException If there is no appropriate constructor for the specified ClientHandler
 	 * constructor.
 	 */
-	public AuthServer(ServerInit<T> initInfo, Authenticator authenticator) throws IOException, NoSuchMethodException {
+	public AuthServer(ServerInit initInfo, Authenticator authenticator) throws IOException, NoSuchMethodException {
 		super(initInfo);
 		this.authenticator = authenticator;
 	}

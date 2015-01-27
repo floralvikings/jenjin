@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit;
  * A server which executes runnable tasks.
  * @author Caleb Brinkman
  */
-public class TaskedServer<T extends ClientHandler> extends Server<T>
+public class TaskedServer extends Server
 {
 	/** Tasks to be repeated in the main loop. */
 	private final List<Runnable> repeatedTasks;
@@ -29,7 +29,7 @@ public class TaskedServer<T extends ClientHandler> extends Server<T>
 	 * @throws NoSuchMethodException If there is no appropriate constructor for the specified ClientHandler
 	 * constructor.
 	 */
-	protected TaskedServer(ServerInit<T> initInfo) throws IOException, NoSuchMethodException {
+	protected TaskedServer(ServerInit initInfo) throws IOException, NoSuchMethodException {
 		super(initInfo);
 		repeatedTasks = new LinkedList<>();
 		syncedTasks = new LinkedList<>();
