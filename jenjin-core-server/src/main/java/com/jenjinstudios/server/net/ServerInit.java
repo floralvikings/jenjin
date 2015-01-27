@@ -33,6 +33,18 @@ public class ServerInit implements Cloneable
 	}
 
 	/**
+	 * Construct a copy of the given ServerInit.
+	 *
+	 * @param s The ServerInit to copy.
+	 */
+	public ServerInit(ServerInit s) {
+		setUps(s.getUps());
+		setPort(s.getPort());
+		setHandlerClass(s.getHandlerClass());
+		setKeyPair(s.getKeyPair());
+	}
+
+	/**
 	 * Get the class of ClientHandler to be used by the server.
 	 *
 	 * @return The class of ClientHandler to be used by the server.
