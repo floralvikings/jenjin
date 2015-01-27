@@ -1,5 +1,6 @@
 package com.jenjinstudios.server.net;
 
+import java.io.InputStream;
 import java.security.KeyPair;
 
 /**
@@ -37,6 +38,10 @@ public class ServerInit<T extends ClientHandler>
 	public void setKeyPair(KeyPair keyPair) { this.keyPair = keyPair; }
 
 	public static ServerInit readFromFile(String filename) {
+		return null;
+	}
+
+	public static ServerInit readFromStream(InputStream stream) {
 		return null;
 	}
 }
