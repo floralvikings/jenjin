@@ -88,11 +88,6 @@ public class ServerInit implements Cloneable
 	 */
 	public void setKeyPair(KeyPair keyPair) { this.keyPair = keyPair; }
 
-	@Override
-	public ServerInit clone() {
-		return null;
-	}
-
 	public static ServerInit readFromFile(String filename) {
 		return null;
 	}
