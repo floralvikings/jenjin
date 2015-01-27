@@ -46,6 +46,11 @@ public class ServerInit implements Cloneable
 	 */
 	public void setHandlerClass(Class<? extends ClientHandler> handlerClass) { this.handlerClass = handlerClass; }
 
+	/**
+	 * Get the port number on which the server will listen.
+	 *
+	 * @return The port number on which the server will listen.
+	 */
 	public int getPort() { return port; }
 
 	public void setPort(int port) { this.port = port; }
