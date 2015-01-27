@@ -10,6 +10,13 @@ import java.security.KeyPair;
  */
 public class ServerInit<T extends ClientHandler> implements Cloneable
 {
+	/** The default number of updates per second. */
+	public static final int DEFAULT_UPS = 50;
+	/** The default client handler class. */
+	public static final Class DEFAULT_CLASS = ClientHandler.class;
+	/** The default port number on which to listen. */
+	public static final int DEFAULT_PORT = 51015;
+
 	private int ups;
 	private Class<T> handlerClass;
 	private int port;
@@ -19,7 +26,9 @@ public class ServerInit<T extends ClientHandler> implements Cloneable
 	 * Construct a new {@code ServerInit}.
 	 */
 	public ServerInit() {
-
+		ups = DEFAULT_UPS;
+		handlerClass = DEFAULT_CLASS;
+		port = DEFAULT_PORT;
 	}
 
 	public Class<T> getHandlerClass() { return handlerClass; }
