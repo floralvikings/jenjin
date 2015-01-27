@@ -74,6 +74,11 @@ public class ServerInit implements Cloneable
 	 */
 	public void setUps(int ups) { this.ups = ups; }
 
+	/**
+	 * Get the KeyPair used by the server to encrypt and decrypt messages.
+	 *
+	 * @return The KeyPair used by the server to encrypt and decrypt messages.
+	 */
 	public KeyPair getKeyPair() { return keyPair; }
 
 	public void setKeyPair(KeyPair keyPair) { this.keyPair = keyPair; }
