@@ -67,6 +67,11 @@ public class ServerInit implements Cloneable
 	 */
 	public int getUps() { return ups; }
 
+	/**
+	 * Set the number of updates per second that the server will run.
+	 *
+	 * @param ups The number of updates per second that the server will run.
+	 */
 	public void setUps(int ups) { this.ups = ups; }
 
 	public KeyPair getKeyPair() { return keyPair; }
