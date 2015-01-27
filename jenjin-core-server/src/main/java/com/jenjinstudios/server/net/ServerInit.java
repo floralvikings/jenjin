@@ -15,6 +15,9 @@ public class ServerInit<T extends ClientHandler> implements Cloneable
 	private int port;
 	private KeyPair keyPair;
 
+	/**
+	 * Construct a new {@code ServerInit}.
+	 */
 	public ServerInit() {
 
 	}
