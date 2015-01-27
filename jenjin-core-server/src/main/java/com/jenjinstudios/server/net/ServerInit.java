@@ -53,6 +53,11 @@ public class ServerInit implements Cloneable
 	 */
 	public int getPort() { return port; }
 
+	/**
+	 * Set the port number on which the server will listen.
+	 *
+	 * @param port The port number on which the server will listen.
+	 */
 	public void setPort(int port) { this.port = port; }
 
 	public int getUps() { return ups; }
