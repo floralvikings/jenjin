@@ -33,7 +33,10 @@ public class Main
 	}
 
 	private static WorldServer<WorldClientHandler> createWorldServer() throws Exception {
-		ServerInit<WorldClientHandler> serverInit = new ServerInit<>(50, WorldClientHandler.class, 51015);
+		ServerInit<WorldClientHandler> serverInit = new ServerInit<>();
+		serverInit.setUps(50);
+		serverInit.setHandlerClass(WorldClientHandler.class);
+		serverInit.setPort(51015);
 		Connection sqlConnection = createDemoConnection();
 		WorldAuthenticator worldAuthenticator = new WorldAuthenticator(sqlConnection);
 		return new WorldServer<>(serverInit, worldAuthenticator, null);
