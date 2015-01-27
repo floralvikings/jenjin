@@ -60,6 +60,11 @@ public class ServerInit implements Cloneable
 	 */
 	public void setPort(int port) { this.port = port; }
 
+	/**
+	 * Get the number of updates per second that the server will run.
+	 *
+	 * @return The number of updates per second that the server will run.
+	 */
 	public int getUps() { return ups; }
 
 	public void setUps(int ups) { this.ups = ups; }
