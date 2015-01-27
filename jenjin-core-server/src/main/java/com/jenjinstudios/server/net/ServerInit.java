@@ -25,6 +25,7 @@ public class ServerInit<T extends ClientHandler> implements Cloneable
 	/**
 	 * Construct a new {@code ServerInit}.
 	 */
+	@SuppressWarnings("unchecked")
 	public ServerInit() {
 		ups = DEFAULT_UPS;
 		handlerClass = DEFAULT_CLASS;
