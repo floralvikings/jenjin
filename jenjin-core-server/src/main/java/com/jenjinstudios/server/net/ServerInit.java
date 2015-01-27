@@ -8,7 +8,7 @@ import java.security.KeyPair;
  *
  * @author Caleb Brinkman
  */
-public class ServerInit<T extends ClientHandler>
+public class ServerInit<T extends ClientHandler> implements Cloneable
 {
 	private int ups;
 	private Class<T> handlerClass;
@@ -36,6 +36,11 @@ public class ServerInit<T extends ClientHandler>
 	public KeyPair getKeyPair() { return keyPair; }
 
 	public void setKeyPair(KeyPair keyPair) { this.keyPair = keyPair; }
+
+	@Override
+	public ServerInit<T> clone() {
+		return null;
+	}
 
 	public static ServerInit readFromFile(String filename) {
 		return null;
