@@ -81,6 +81,11 @@ public class ServerInit implements Cloneable
 	 */
 	public KeyPair getKeyPair() { return keyPair; }
 
+	/**
+	 * Set the KeyPair used by the server to encrypt and decrypt messages.
+	 *
+	 * @param keyPair The KeyPair used by the server to encrypt and decrypt messages.
+	 */
 	public void setKeyPair(KeyPair keyPair) { this.keyPair = keyPair; }
 
 	@Override
