@@ -32,6 +32,11 @@ public class ServerInit implements Cloneable
 		port = DEFAULT_PORT;
 	}
 
+	/**
+	 * Get the class of ClientHandler to be used by the server.
+	 *
+	 * @return The class of ClientHandler to be used by the server.
+	 */
 	public Class<? extends ClientHandler> getHandlerClass() { return handlerClass; }
 
 	public void setHandlerClass(Class<? extends ClientHandler> handlerClass) { this.handlerClass = handlerClass; }
