@@ -15,6 +15,10 @@ public class ServerInit<T extends ClientHandler> implements Cloneable
 	private int port;
 	private KeyPair keyPair;
 
+	public ServerInit() {
+
+	}
+
 	public ServerInit(int ups, Class<T> handlerClass, int port) {
 		this.ups = ups;
 		this.handlerClass = handlerClass;
