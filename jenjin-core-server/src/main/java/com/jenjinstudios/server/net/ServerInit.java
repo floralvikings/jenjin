@@ -35,4 +35,8 @@ public class ServerInit<T extends ClientHandler>
 	public KeyPair getKeyPair() { return keyPair; }
 
 	public void setKeyPair(KeyPair keyPair) { this.keyPair = keyPair; }
+
+	public static ServerInit readFromFile(String filename) {
+		return null;
+	}
 }
