@@ -33,7 +33,7 @@ public class MessageInputStream extends DataInputStream
 	private static final Logger LOGGER = Logger.getLogger(MessageInputStream.class.getName());
 	private final MessageRegistry messageRegistry;
 	private Cipher decryptCipher;
-	private List<MessageReceivedListener> messageReceivedListeners = new LinkedList<>();
+	private final List<MessageReceivedListener> messageReceivedListeners = new LinkedList<>();
 
 	/**
 	 * Construct a new {@code MessageInputStream} which will read from the specified {@code InputStream}.
