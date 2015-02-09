@@ -23,6 +23,9 @@ import static org.mockito.Mockito.*;
  */
 public class ExecutablePublicKeyMessageTest
 {
+	/**
+	 * Test key verification.
+	 */
 	@Test
 	public void testVerification() {
 		KeyPair rsaKeyPair = SecurityUtil.generateRSAKeyPair();
@@ -44,6 +47,9 @@ public class ExecutablePublicKeyMessageTest
 		verify(messageIO).setPublicKey(rsaKeyPair.getPublic());
 	}
 
+	/**
+	 * Test verification bypass when no verified keys are present.
+	 */
 	@Test
 	public void testVerificationNoKeys() {
 		KeyPair rsaKeyPair = SecurityUtil.generateRSAKeyPair();
@@ -64,6 +70,9 @@ public class ExecutablePublicKeyMessageTest
 		verify(messageIO).setPublicKey(rsaKeyPair.getPublic());
 	}
 
+	/**
+	 * Test failed key verification due to invalid key.
+	 */
 	@Test
 	public void testVerificationInvalidKey() {
 		KeyPair rsaKeyPair = SecurityUtil.generateRSAKeyPair();
@@ -86,6 +95,9 @@ public class ExecutablePublicKeyMessageTest
 		verify(messageIO, times(0)).setPublicKey(any());
 	}
 
+	/**
+	 * Test invalid key verification due to unknown host.
+	 */
 	@Test
 	public void testVerificationNoAddress() {
 		KeyPair rsaKeyPair = SecurityUtil.generateRSAKeyPair();
