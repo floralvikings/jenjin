@@ -47,7 +47,6 @@ public class RunnableMessageReader implements Runnable
 		try
 		{
 			Message currentMessage = connection.getMessageIO().getIn().readMessage();
-			LOGGER.log(Level.FINEST, "Reading message: {0}", currentMessage);
 			executeMessage(currentMessage);
 		} catch (MessageTypeException e)
 		{
