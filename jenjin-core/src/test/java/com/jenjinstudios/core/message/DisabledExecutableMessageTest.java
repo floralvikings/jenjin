@@ -3,6 +3,7 @@ package com.jenjinstudios.core.message;
 import com.jenjinstudios.core.Connection;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageRegistry;
+import com.jenjinstudios.core.util.ExecutableMessageFactory;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -24,7 +25,8 @@ public class DisabledExecutableMessageTest
 	public void testMessageIsDisabled() {
 		Message disabledMessage = MessageRegistry.getInstance().createMessage("DisabledMessage");
 		Connection connection = mock(Connection.class);
-		List<ExecutableMessage> message = ExecutableMessage.getExecutableMessagesFor(connection, disabledMessage);
+		List<ExecutableMessage> message = ExecutableMessageFactory.getExecutableMessagesFor(connection,
+			  disabledMessage);
 		Assert.assertTrue(message.isEmpty());
 	}
 

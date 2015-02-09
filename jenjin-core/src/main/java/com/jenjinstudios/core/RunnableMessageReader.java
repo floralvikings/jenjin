@@ -3,6 +3,7 @@ package com.jenjinstudios.core;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageTypeException;
 import com.jenjinstudios.core.message.ExecutableMessage;
+import com.jenjinstudios.core.util.ExecutableMessageFactory;
 import com.jenjinstudios.core.util.MessageFactory;
 
 import java.io.EOFException;
@@ -64,7 +65,7 @@ public class RunnableMessageReader implements Runnable
 	}
 
 	void executeMessage(Message message) {
-		Collection<ExecutableMessage> execs = ExecutableMessage.getExecutableMessagesFor(connection, message);
+		Collection<ExecutableMessage> execs = ExecutableMessageFactory.getExecutableMessagesFor(connection, message);
 		for (ExecutableMessage exec : execs)
 		{
 			if (exec != null)
