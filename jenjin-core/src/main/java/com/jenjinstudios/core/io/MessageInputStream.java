@@ -69,15 +69,17 @@ public class MessageInputStream extends DataInputStream
 		classes.toArray(classArray);
 		Object[] args = readMessageArgs(classes);
 		Message message = new Message(id, args);
+		nofityMessageReceivedListeners(message);
+		return message;
 
+	}
+
+	private void nofityMessageReceivedListeners(Message message) {
 		// TODO Handle in event dispatch thread.
 		for (MessageReceivedListener listener : messageReceivedListeners)
 		{
 			listener.onMessageReceived(message);
 		}
-
-		return message;
-
 	}
 
 	/**
