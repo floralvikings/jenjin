@@ -5,10 +5,10 @@ import com.jenjinstudios.core.MessageIO;
 import com.jenjinstudios.core.util.MessageFactory;
 import com.jenjinstudios.core.util.SecurityUtil;
 
-import java.net.InetAddress;
-import java.security.Key;
 import java.security.KeyPair;
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Timer;
 
 /**
  * The base class for any client.  This class uses a similar system to the JGSA.
