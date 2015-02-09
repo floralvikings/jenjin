@@ -9,5 +9,10 @@ import com.jenjinstudios.core.io.Message;
  */
 public interface MessageReceivedListener extends EventListener
 {
+	/**
+	 * Called when a message has been received.
+	 *
+	 * @param message The message that was received.
+	 */
 	public void onMessageReceived(Message message);
 }
