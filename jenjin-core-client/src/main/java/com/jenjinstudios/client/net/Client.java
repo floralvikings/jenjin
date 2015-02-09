@@ -21,7 +21,6 @@ public class Client extends Connection
 	private final List<Runnable> repeatedTasks;
 	/** The timer that manages the update loop. */
 	private Timer sendMessagesTimer;
-	private Map<InetAddress, Key> verifiedKeys = new HashMap<>();
 	private ClientLoop clientLoop = new ClientLoop(this);
 
 	/**
@@ -69,15 +68,6 @@ public class Client extends Connection
 		sendMessagesTimer.scheduleAtFixedRate(clientLoop, 0, period);
 
 		super.start();
-	}
-
-	/**
-	 * Get the map of domains and verified keys for this client.
-	 *
-	 * @return The map of domains and verified keys for this client.
-	 */
-	public Map<InetAddress, Key> getVerifiedKeys() {
-		return verifiedKeys;
 	}
 
 	/** Run the repeated synchronized tasks. */

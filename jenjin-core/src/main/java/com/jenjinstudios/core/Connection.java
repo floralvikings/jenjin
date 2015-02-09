@@ -4,7 +4,11 @@ import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.util.MessageFactory;
 import com.jenjinstudios.core.util.SecurityUtil;
 
+import java.net.InetAddress;
+import java.security.Key;
 import java.security.KeyPair;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * The {@code Connection} class is a subclass of the {@code Thread} class; it will loop indefinitely until the {@code
@@ -21,6 +25,7 @@ public class Connection
 	private final MessageIO messageIO;
 	private final Thread messageReaderThread;
 	private String name = "Connection";
+	private Map<InetAddress, Key> verifiedKeys = new HashMap<>();
 
 	/**
 	 * Construct a new {@code Connection} that utilizes the specified {@code MessageIO} to read and write messages.
@@ -109,4 +114,13 @@ public class Connection
 	 * @param name The name of this {@code Connection}.
 	 */
 	public void setName(String name) { this.name = name; }
+
+	/**
+	 * Get the map of domains and verified keys for this client.
+	 *
+	 * @return The map of domains and verified keys for this client.
+	 */
+	public Map<InetAddress, Key> getVerifiedKeys() {
+		return verifiedKeys;
+	}
 }
