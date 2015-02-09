@@ -1,6 +1,5 @@
 package com.jenjinstudios.server.net;
 
-import java.io.InputStream;
 import java.security.KeyPair;
 
 /**
