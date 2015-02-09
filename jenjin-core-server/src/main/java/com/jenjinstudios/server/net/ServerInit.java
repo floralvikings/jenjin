@@ -100,7 +100,4 @@ public class ServerInit implements Cloneable
 	 */
 	public void setKeyPair(KeyPair keyPair) { this.keyPair = keyPair; }
 
-	public static ServerInit readFromStream(InputStream stream) {
-		return null;
-	}
 }
