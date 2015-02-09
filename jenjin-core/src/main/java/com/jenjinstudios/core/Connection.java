@@ -24,7 +24,7 @@ public class Connection
 	private final MessageIO messageIO;
 	private final Thread messageReaderThread;
 	private String name = "Connection";
-	private Map<InetAddress, Key> verifiedKeys = new HashMap<>();
+	private final Map<InetAddress, Key> verifiedKeys = new HashMap<>();
 
 	/**
 	 * Construct a new {@code Connection} that utilizes the specified {@code MessageIO} to read and write messages.
