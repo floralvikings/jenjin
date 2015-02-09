@@ -2,7 +2,6 @@ package com.jenjinstudios.core;
 
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.util.MessageFactory;
-import com.jenjinstudios.core.util.SecurityUtil;
 
 import java.net.InetAddress;
 import java.security.Key;
