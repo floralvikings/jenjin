@@ -5,10 +5,10 @@ import com.jenjinstudios.core.MessageIO;
 import com.jenjinstudios.core.util.MessageFactory;
 import com.jenjinstudios.core.util.SecurityUtil;
 
+import java.net.InetAddress;
+import java.security.Key;
 import java.security.KeyPair;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Timer;
+import java.util.*;
 
 /**
  * The base class for any client.  This class uses a similar system to the JGSA.
@@ -21,6 +21,7 @@ public class Client extends Connection
 	private final List<Runnable> repeatedTasks;
 	/** The timer that manages the update loop. */
 	private Timer sendMessagesTimer;
+	private Map<InetAddress, Key> verifiedKeys = new HashMap<>();
 	private ClientLoop clientLoop = new ClientLoop(this);
 
 	/**
@@ -68,6 +69,15 @@ public class Client extends Connection
 		sendMessagesTimer.scheduleAtFixedRate(clientLoop, 0, period);
 
 		super.start();
+	}
+
+	/**
+	 * Get the map of domains and verified keys for this client.
+	 *
+	 * @return The map of domains and verified keys for this client.
+	 */
+	public Map<InetAddress, Key> getVerifiedKeys() {
+		return verifiedKeys;
 	}
 
 	/** Run the repeated synchronized tasks. */
