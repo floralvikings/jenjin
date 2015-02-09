@@ -3,6 +3,8 @@ package com.jenjinstudios.core.message;
 import com.jenjinstudios.core.Connection;
 import com.jenjinstudios.core.io.Message;
 
+import java.net.InetAddress;
+import java.security.Key;
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
@@ -43,11 +45,40 @@ public class ExecutablePublicKeyMessage extends ExecutableMessage
 		byte[] keyBytes = (byte[]) getMessage().getArgument("publicKey");
 		try
 		{
-			PublicKey publicKey = KeyFactory.getInstance("RSA").generatePublic(new X509EncodedKeySpec(keyBytes));
-			connection.getMessageIO().setPublicKey(publicKey);
+			PublicKey suppliedKey = KeyFactory.getInstance("RSA").generatePublic(new X509EncodedKeySpec(keyBytes));
+			if (verifyKey(suppliedKey))
+			{
+				connection.getMessageIO().setPublicKey(suppliedKey);
+			}
 		} catch (InvalidKeySpecException | NoSuchAlgorithmException e)
 		{
 			LOGGER.log(Level.INFO, "Unable to instantiate public key; messages will not be encrypted!", e);
 		}
+	}
+
+	private boolean verifyKey(Key suppliedKey) {
+		boolean verified = false;
+		if (!connection.getVerifiedKeys().isEmpty())
+		{
+			InetAddress address = connection.getMessageIO().getAddress();
+			if (address != null)
+			{
+				Key key = connection.getVerifiedKeys().get(address);
+				if (key == null || !key.equals(suppliedKey))
+				{
+					LOGGER.log(Level.SEVERE, "Unable to verify public key; supplied key does not match registry.");
+				} else
+				{
+					verified = true;
+				}
+			} else
+			{
+				LOGGER.log(Level.SEVERE, "Unable to verify public key; connection address unknown.");
+			}
+		} else
+		{
+			verified = true;
+		}
+		return verified;
 	}
 }
