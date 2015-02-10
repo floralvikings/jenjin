@@ -48,7 +48,7 @@ public final class MessageFileFinder
 		return jarMessageEntries;
 	}
 
-    private boolean isCoreJar(String fileName) {
+    private static boolean isCoreJar(String fileName) {
         String javaHome = System.getProperty("java.home");
 		return fileName.contains(javaHome);
 	}
@@ -70,7 +70,7 @@ public final class MessageFileFinder
 		}
 	}
 
-    private void searchZipEntries(Collection<String> jarMessageEntries, ZipInputStream zip) throws IOException {
+    private static void searchZipEntries(Collection<String> jarMessageEntries, ZipInputStream zip) throws IOException {
         ZipEntry ze;
 		while ((ze = zip.getNextEntry()) != null)
 		{
