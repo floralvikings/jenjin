@@ -28,7 +28,7 @@ public class MessageRegistry
     private static final MessageRegistry messageRegistry = new MessageRegistry();
     private final Map<Short, MessageType> messageTypesByID = new TreeMap<>();
 	private final Map<String, MessageType> messageTypesByName = new TreeMap<>();
-	private final List<Short> finalOverrides = new LinkedList<>();
+    private final Collection<Short> finalOverrides = new LinkedList<>();
 
 	private MessageRegistry() {
 		registerXmlMessages();
