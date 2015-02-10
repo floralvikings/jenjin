@@ -59,8 +59,8 @@ public class MessageTest
 	/**
 	 * Test constructor used in streams.
 	 */
-	@Test(expectedExceptions = IllegalStateException.class)
-	public void testStreamConstructor() {
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void testStreamConstructor() {
 		new Message((short) 0, "Bob"); // Expect Exception
 	}
 }
