@@ -46,8 +46,8 @@ public class ExecutablePublicKeyMessage extends ExecutableMessage
 		try
 		{
 			PublicKey suppliedKey = KeyFactory.getInstance("RSA").generatePublic(new X509EncodedKeySpec(keyBytes));
-			if (verifyKey(suppliedKey))
-			{
+            if (isKeyValid(suppliedKey))
+            {
 				connection.getMessageIO().setPublicKey(suppliedKey);
 			}
 		} catch (InvalidKeySpecException | NoSuchAlgorithmException e)
@@ -56,8 +56,8 @@ public class ExecutablePublicKeyMessage extends ExecutableMessage
 		}
 	}
 
-	private boolean verifyKey(Key suppliedKey) {
-		boolean verified = false;
+    private boolean isKeyValid(Key suppliedKey) {
+        boolean verified = false;
 		if (!connection.getVerifiedKeys().isEmpty())
 		{
 			InetAddress address = connection.getMessageIO().getAddress();
