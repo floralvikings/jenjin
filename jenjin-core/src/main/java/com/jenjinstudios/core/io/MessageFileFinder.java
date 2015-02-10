@@ -35,7 +35,7 @@ public final class MessageFileFinder
      * find Message files.
      */
     public MessageFileFinder() {
-        this.rootDir = Paths.get("").toAbsolutePath().toString() + File.separator;
+        this.rootDir = Paths.get("").toAbsolutePath() + File.separator;
     }
 
     private Iterable<String> findJarMessageEntries() {
