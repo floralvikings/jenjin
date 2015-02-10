@@ -68,8 +68,8 @@ public class Message
                   " (Message type: " + messageType.getName() + ")");
         }
         @SuppressWarnings("rawtypes")
-        Class c = TypeMapper.getTypeForName(argType.getType());
-		if (!c.isInstance(argument))
+        Class argumentClass = TypeMapper.getTypeForName(argType.getType());
+        if (!argumentClass.isInstance(argument))
         {
             throw new IllegalArgumentException("Invalid argument type for Message: " + argument +
                   " (Expected " + argType.getType() + ", got " + argument.getClass() + ")");
