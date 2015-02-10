@@ -28,17 +28,13 @@ public class Message
 		messageType = MessageRegistry.getInstance().getMessageType(id);
 		name = messageType.getName();
 		argumentsByName = new TreeMap<>();
-		for (int i = 0; i < messageType.getArguments().size(); i++)
+        if (args.length != messageType.getArguments().size())
+        {
+            throw new IllegalArgumentException("Incorrect number of arguments provided for Message");
+        }
+        for (int i = 0; i < messageType.getArguments().size(); i++)
 		{
-			try
-			{
-				setArgument(messageType.getArguments().get(i).getName(), args[i]);
-			} catch (ArrayIndexOutOfBoundsException ex)
-			{
-				throw new IllegalStateException(
-					  "Not enough arguments provided for Message", ex);
-			}
-
+			setArgument(messageType.getArguments().get(i).getName(), args[i]);
 		}
 	}
 
