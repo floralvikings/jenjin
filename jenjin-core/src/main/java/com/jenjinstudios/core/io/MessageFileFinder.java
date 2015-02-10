@@ -11,6 +11,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
@@ -74,7 +75,7 @@ public final class MessageFileFinder
 		}
 	}
 
-    private void searchZipEntries(LinkedList<String> jarMessageEntries, ZipInputStream zip) throws IOException {
+    private void searchZipEntries(List<String> jarMessageEntries, ZipInputStream zip) throws IOException {
         ZipEntry ze;
 		while ((ze = zip.getNextEntry()) != null)
 		{
@@ -88,10 +89,10 @@ public final class MessageFileFinder
 		return FileUtil.search(rootFile, messageFileName);
 	}
 
-    private LinkedList<InputStream> findMessageFileStreams() {
+    private Collection<InputStream> findMessageFileStreams() {
         LinkedList<InputStream> inputStreams = new LinkedList<>();
-		ArrayList<File> messageFiles = findMessageFiles();
-		for (File f : messageFiles)
+        Iterable<File> messageFiles = findMessageFiles();
+        for (File f : messageFiles)
 		{
 			LOGGER.log(Level.INFO, "Registering XML file {0}", f);
 			try
@@ -105,10 +106,10 @@ public final class MessageFileFinder
 		return inputStreams;
 	}
 
-    private LinkedList<InputStream> findMessageJarStreams() {
+    private Collection<InputStream> findMessageJarStreams() {
         LinkedList<InputStream> inputStreams = new LinkedList<>();
-		LinkedList<String> jarMessageEntries = findJarMessageEntries();
-		for (String entry : jarMessageEntries)
+        Iterable<String> jarMessageEntries = findJarMessageEntries();
+        for (String entry : jarMessageEntries)
 		{
 			LOGGER.log(Level.INFO, "Registering XML entry {0}", entry);
 			inputStreams.add(MessageFileFinder.class.getClassLoader().getResourceAsStream(entry));
@@ -117,8 +118,8 @@ public final class MessageFileFinder
 	}
 
     Collection<MessageGroup> findXmlRegistries() {
-        LinkedList<InputStream> streamsToRead = new LinkedList<>();
-		streamsToRead.addAll(findMessageJarStreams());
+        Collection<InputStream> streamsToRead = new LinkedList<>();
+        streamsToRead.addAll(findMessageJarStreams());
 		streamsToRead.addAll(findMessageFileStreams());
 		return MessageRegistryReader.readXmlStreams(streamsToRead);
 	}
