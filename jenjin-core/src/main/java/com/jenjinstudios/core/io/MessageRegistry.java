@@ -114,34 +114,26 @@ public class MessageRegistry
         {
 			throw new IllegalArgumentException("Cannot overwrite final message executable: " + override.getId());
 		}
-        MessageType messageType;
+        List<String> executables;
+        synchronized (messageTypesByID)
+        {
+            MessageType messageType = messageTypesByID.get(override.getId());
+            executables = messageType.getExecutables();
+        }
         switch (override.getMode())
         {
 			case "Override":
-				synchronized (messageTypesByID)
-				{
-					messageType = messageTypesByID.get(override.getId());
-				}
-				messageType.getExecutables().clear();
-				messageType.getExecutables().addAll(override.getExecutables());
-				break;
+                executables.clear();
+                executables.addAll(override.getExecutables());
+                break;
 			case "Disable":
-				synchronized (messageTypesByID)
-				{
-					messageType = messageTypesByID.get(override.getId());
-				}
-				List<String> executables = messageType.getExecutables();
 				executables.removeAll(override.getExecutables());
 				break;
 			case "Final":
 				finalOverrides.add(override.getId());
-				synchronized (messageTypesByID)
-				{
-					messageType = messageTypesByID.get(override.getId());
-				}
-				messageType.getExecutables().clear();
-				messageType.getExecutables().addAll(override.getExecutables());
-				break;
+                executables.clear();
+                executables.addAll(override.getExecutables());
+                break;
             default:
                 throw new IllegalArgumentException("Invalid Override Mode: " + override.getMode());
         }
