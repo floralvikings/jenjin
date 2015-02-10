@@ -142,7 +142,9 @@ public class MessageRegistry
 				messageType.getExecutables().clear();
 				messageType.getExecutables().addAll(override.getExecutables());
 				break;
-		}
+            default:
+                throw new IllegalArgumentException("Invalid Override Mode: " + override.getMode());
+        }
 	}
 
 	private void registerMessageType(MessageType messageType) {
