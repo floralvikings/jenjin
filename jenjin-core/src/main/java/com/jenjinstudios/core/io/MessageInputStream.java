@@ -127,7 +127,10 @@ public class MessageInputStream extends DataInputStream
 				break;
 			case "[Ljava.lang.Byte;":
 				simple = "[B";
-		}
+                break;
+            default:
+                throw new IllegalArgumentException("Illegal argument type: " + complexName);
+        }
 		return simple;
 	}
 
