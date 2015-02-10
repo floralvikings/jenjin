@@ -35,8 +35,27 @@ public class MessageGroup
 		return this.messages;
 	}
 
-	/**
-	 * Get the executable message override groups.
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof MessageGroup)) return false;
+
+        MessageGroup messageGroup = (MessageGroup) o;
+
+        if (!messages.equals(messageGroup.messages)) return false;
+        return overrides.equals(messageGroup.overrides);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = messages.hashCode();
+        result = 31 * result + overrides.hashCode();
+        return result;
+    }
+
+    /**
+     * Get the executable message override groups.
 	 *
 	 * @return The executable message override groups.
 	 */
@@ -44,7 +63,8 @@ public class MessageGroup
 		if (overrides == null)
 		{
 			overrides = new LinkedList<>();
-		}
+
+        }
 		return overrides;
 	}
 

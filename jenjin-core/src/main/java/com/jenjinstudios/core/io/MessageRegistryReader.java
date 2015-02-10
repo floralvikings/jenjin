@@ -31,7 +31,13 @@ public class MessageRegistryReader
 				JAXBContext jaxbContext = JAXBContext.newInstance(MessageGroup.class);
 				Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
 				MessageGroup collection = (MessageGroup) jaxbUnmarshaller.unmarshal(inputStream);
-				foundMessages.add(collection);
+                if (foundMessages.contains(collection))
+                {
+                    LOGGER.log(Level.FINE, "Found duplicate message file; ignoring.");
+                } else
+                {
+                    foundMessages.add(collection);
+                }
             } catch (JAXBException | RuntimeException ex)
             {
                 LOGGER.log(Level.INFO, "Unable to parse XML file", ex);

@@ -70,9 +70,34 @@ public class MessageType
 	 */
 	public void setName(String value) { this.name = value; }
 
-	/**
-	 * Get the unique ID of the {@code Message}.
-	 *
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof MessageType)) return false;
+
+        MessageType that = (MessageType) o;
+
+        if (id != that.id) return false;
+        if (!arguments.equals(that.arguments)) return false;
+        if (!executables.equals(that.executables)) return false;
+        if (!name.equals(that.name)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = arguments.hashCode();
+        result = 31 * result + executables.hashCode();
+        result = 31 * result + name.hashCode();
+        result = 31 * result + (int) id;
+        return result;
+    }
+
+    /**
+     * Get the unique ID of the {@code Message}.
+
+     *
 	 * @return The unique ID of the {@code Message}.
 	 */
 	public short getId() { return id; }

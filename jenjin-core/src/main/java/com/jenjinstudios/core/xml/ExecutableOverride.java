@@ -60,4 +60,27 @@ public class ExecutableOverride
 	 * @param id The ID of the message being overridden.
 	 */
 	public void setId(short id) { this.id = id; }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ExecutableOverride)) return false;
+
+        ExecutableOverride override = (ExecutableOverride) o;
+
+        if (id != override.id) return false;
+        if ((executables != null) ? !executables.equals(override.executables) : (override.executables != null))
+            return false;
+        if ((mode != null) ? !mode.equals(override.mode) : (override.mode != null)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = (executables != null) ? executables.hashCode() : 0;
+        result = 31 * result + id;
+        result = 31 * result + ((mode != null) ? mode.hashCode() : 0);
+        return result;
+    }
 }

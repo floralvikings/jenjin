@@ -47,4 +47,26 @@ public class ArgumentType
 
 	@Override
 	public String toString() { return name + ", " + type + ", encrypt: " + encrypt; }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ArgumentType)) return false;
+
+        ArgumentType that = (ArgumentType) o;
+
+        if (encrypt != that.encrypt) return false;
+        if (name != null ? !name.equals(that.name) : that.name != null) return false;
+        if (type != null ? !type.equals(that.type) : that.type != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = type != null ? type.hashCode() : 0;
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (encrypt ? 1 : 0);
+        return result;
+    }
 }
