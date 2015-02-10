@@ -33,7 +33,7 @@ public final class MessageFileFinder
         this.rootDir = Paths.get("").toAbsolutePath() + File.separator;
     }
 
-    private Iterable<String> findJarMessageEntries() {
+    private static Iterable<String> findJarMessageEntries() {
         Collection<String> jarMessageEntries = new LinkedList<>();
         String classPath = System.getProperty("java.class.path");
 		String[] pathElements = classPath.split(System.getProperty("path.separator"));
@@ -53,7 +53,7 @@ public final class MessageFileFinder
 		return fileName.contains(javaHome);
 	}
 
-    private void seachJarFile(Collection<String> jarMessageEntries, String fileName) {
+    private static void seachJarFile(Collection<String> jarMessageEntries, String fileName) {
         File file = new File(fileName);
 		if (!file.isDirectory() && file.exists())
 		{
@@ -102,7 +102,7 @@ public final class MessageFileFinder
         return inputStreams;
 	}
 
-    private Collection<InputStream> findMessageJarStreams() {
+    private static Collection<InputStream> findMessageJarStreams() {
         Collection<InputStream> inputStreams = new LinkedList<>();
         Iterable<String> jarMessageEntries = findJarMessageEntries();
         for (String entry : jarMessageEntries)
