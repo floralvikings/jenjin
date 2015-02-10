@@ -25,8 +25,8 @@ import java.util.logging.Logger;
 public class MessageRegistry
 {
 	private static final Logger LOGGER = Logger.getLogger(MessageRegistry.class.getName());
-	private static MessageRegistry messageRegistry;
-	private final Map<Short, MessageType> messageTypesByID = new TreeMap<>();
+    private static final MessageRegistry messageRegistry = new MessageRegistry();
+    private final Map<Short, MessageType> messageTypesByID = new TreeMap<>();
 	private final Map<String, MessageType> messageTypesByName = new TreeMap<>();
 	private final List<Short> finalOverrides = new LinkedList<>();
 
@@ -41,12 +41,8 @@ public class MessageRegistry
 	 * @return An immutable, static {@code MessageRegistry}.
 	 */
 	public static MessageRegistry getInstance() {
-		if (messageRegistry == null)
-		{
-			messageRegistry = new MessageRegistry();
-		}
-		return messageRegistry;
-	}
+        return messageRegistry;
+    }
 
 	/**
 	 * Get the {@code MessageType} with the given unique name.
