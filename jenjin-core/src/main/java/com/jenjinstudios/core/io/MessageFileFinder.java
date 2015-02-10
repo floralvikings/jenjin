@@ -5,10 +5,8 @@ import com.jenjinstudios.core.xml.MessageGroup;
 
 import java.io.*;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
@@ -23,8 +21,8 @@ import java.util.zip.ZipInputStream;
  */
 public final class MessageFileFinder
 {
-	private static final String messageFileName = "Messages.xml";
-	private static final Logger LOGGER = Logger.getLogger(MessageFileFinder.class.getName());
+    private static final String MESSAGE_FILE_NAME = "Messages.xml";
+    private static final Logger LOGGER = Logger.getLogger(MessageFileFinder.class.getName());
     private final String rootDir;
 
     /**
@@ -83,8 +81,8 @@ public final class MessageFileFinder
 
     private Iterable<File> findMessageFiles() {
         File rootFile = new File(rootDir);
-		return FileUtil.search(rootFile, messageFileName);
-	}
+        return FileUtil.search(rootFile, MESSAGE_FILE_NAME);
+    }
 
     private Collection<InputStream> findMessageFileStreams() {
         Collection<InputStream> inputStreams = new LinkedList<>();
