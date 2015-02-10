@@ -67,9 +67,11 @@ public class Message
 			}
 		}
 		if (argType == null)
-			throw new IllegalArgumentException("Invalid argument name for Message: " + argumentName +
-				  " (Message type: " + messageType.getName() + ")");
-		Class c = TypeMapper.getTypeForName(argType.getType());
+        {
+            throw new IllegalArgumentException("Invalid argument name for Message: " + argumentName +
+                  " (Message type: " + messageType.getName() + ")");
+        }
+        Class c = TypeMapper.getTypeForName(argType.getType());
 		if (!c.isInstance(argument))
 			throw new IllegalArgumentException("Invalid argument type for Message: " + argument +
 				  " (Expected " + argType.getType() + ", got " + argument.getClass() + ")");
