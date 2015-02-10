@@ -65,14 +65,14 @@ public class Message
 		if (argType == null)
         {
             throw new IllegalArgumentException("Invalid argument name for Message: " + argumentName +
-                  " (Message type: " + messageType.getName() + ")");
+                  " (Message type: " + messageType.getName() + ')');
         }
         @SuppressWarnings("rawtypes")
         Class argumentClass = TypeMapper.getTypeForName(argType.getType());
         if (!argumentClass.isInstance(argument))
         {
             throw new IllegalArgumentException("Invalid argument type for Message: " + argument +
-                  " (Expected " + argType.getType() + ", got " + argument.getClass() + ")");
+                  " (Expected " + argType.getType() + ", got " + argument.getClass() + ')');
         }
         argumentsByName.put(argumentName, argument);
 	}
@@ -116,5 +116,5 @@ public class Message
 	boolean isInvalid() { return argumentsByName.size() != messageType.getArguments().size(); }
 
 	@Override
-	public String toString() { return "Message " + id + " " + name; }
+    public String toString() { return "Message " + id + ' ' + name; }
 }
