@@ -80,17 +80,17 @@ public class MessageRegistry
 	 * @return A new "empty" {@code Message} of the type specified by {@code name}.
 	 */
 	public Message createMessage(String name) {
-		Message message = null;
-		MessageType messageType = getMessageType(name);
-		if (messageType == null)
+        MessageType messageType = getMessageType(name);
+        if (messageType == null)
 		{
 			LOGGER.log(Level.INFO, "Requested non-existant message {0}, refreshing XML registry", name);
 			// Try again after re-registering XML files
 			registerXmlMessages();
 			messageType = getMessageType(name);
 		}
-		if (messageType != null)
-		{
+        Message message = null;
+        if (messageType != null)
+        {
 			message = new Message(messageType);
 		} else
 		{
