@@ -202,11 +202,10 @@ public class MessageInputStream extends DataInputStream
 	}
 
 	private byte[] readByteArray() throws IOException {
-		byte[] bytes;
-		int size = readInt();
-		bytes = new byte[size];
-		int numBytesRead = 0;
-		while (numBytesRead < size)
+        int size = readInt();
+        byte[] bytes = new byte[size];
+        int numBytesRead = 0;
+        while (numBytesRead < size)
 		{
 			numBytesRead += read(bytes, numBytesRead, size - numBytesRead);
 		}
