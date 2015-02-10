@@ -189,8 +189,10 @@ public class MessageInputStream extends DataInputStream
 		int size = readInt();
 		strings = new String[size];
 		for (int i = 0; i < strings.length; i++)
-			strings[i] = readString();
-		return strings;
+        {
+            strings[i] = readString();
+        }
+        return strings;
 	}
 
 	private byte[] readByteArray() throws IOException {
