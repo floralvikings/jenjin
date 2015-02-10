@@ -192,10 +192,9 @@ public class MessageInputStream extends DataInputStream
 	}
 
 	private String[] readStringArray() throws IOException {
-		String[] strings;
-		int size = readInt();
-		strings = new String[size];
-		for (int i = 0; i < strings.length; i++)
+        int size = readInt();
+        String[] strings = new String[size];
+        for (int i = 0; i < strings.length; i++)
         {
             strings[i] = readString();
         }
