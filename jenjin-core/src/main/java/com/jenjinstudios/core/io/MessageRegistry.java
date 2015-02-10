@@ -110,52 +110,60 @@ public class MessageRegistry
 	}
 
 	private void registerOverride(ExecutableOverride override) {
-        if (finalOverrides.contains(override.getId()))
+        short overrideId = override.getId();
+        List<String> overrides = override.getExecutables();
+        String overrideMode = override.getMode();
+        if (finalOverrides.contains(overrideId))
         {
-			throw new IllegalArgumentException("Cannot overwrite final message executable: " + override.getId());
-		}
+            throw new IllegalArgumentException("Cannot overwrite final message executable: " + overrideId);
+        }
         List<String> executables;
         synchronized (messageTypesByID)
         {
-            MessageType messageType = messageTypesByID.get(override.getId());
-            executables = messageType.getExecutables();
+            MessageType messageType = messageTypesByID.get(overrideId);
+            executables = messageType != null ? messageType.getExecutables() : new LinkedList<>();
         }
-        switch (override.getMode())
+        switch (overrideMode)
         {
 			case "Override":
                 executables.clear();
-                executables.addAll(override.getExecutables());
+                executables.addAll(overrides);
                 break;
 			case "Disable":
-				executables.removeAll(override.getExecutables());
-				break;
+                executables.removeAll(overrides);
+                break;
 			case "Final":
-				finalOverrides.add(override.getId());
+                finalOverrides.add(overrideId);
                 executables.clear();
-                executables.addAll(override.getExecutables());
+                executables.addAll(overrides);
                 break;
             default:
-                throw new IllegalArgumentException("Invalid Override Mode: " + override.getMode());
+                throw new IllegalArgumentException("Invalid Override Mode: " + overrideMode);
         }
 	}
 
 	private void registerMessageType(MessageType messageType) {
-		if (messageType == null)
-		{
+        if (messageType == null)
+        {
 			LOGGER.log(Level.INFO, "Attempted to register null reference type.");
-		} else if (messageTypesByID.containsKey(messageType.getId()))
-		{
-			LOGGER.log(Level.WARNING, "Unable to register message type: " + messageType.getName() + ". ID already " +
-				  "registered.");
-		} else if (messageTypesByName.containsKey(messageType.getName()))
-		{
-			LOGGER.log(Level.WARNING, "Unable to register message type: " + messageType.getId() + ". Name already " +
-				  "registered.");
 		} else
-		{
-			messageTypesByID.put(messageType.getId(), messageType);
-			messageTypesByName.put(messageType.getName(), messageType);
-		}
-	}
+        {
+            short id = messageType.getId();
+            String name = messageType.getName();
+            if (messageTypesByID.containsKey(id))
+            {
+                LOGGER.log(Level.WARNING, "Unable to register message type: " + name + ". ID already " +
+                      "registered.");
+            } else if (messageTypesByName.containsKey(name))
+            {
+                LOGGER.log(Level.WARNING, "Unable to register message type: " + id + ". Name already " +
+                      "registered.");
+            } else
+            {
+                messageTypesByID.put(id, messageType);
+                messageTypesByName.put(name, messageType);
+            }
+        }
+    }
 
 }
