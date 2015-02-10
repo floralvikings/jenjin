@@ -129,7 +129,7 @@ public class MessageInputStream extends DataInputStream
 				simple = "[B";
                 break;
             default:
-                throw new IllegalArgumentException("Illegal argument type: " + complexName);
+                LOGGER.log(Level.WARNING, "Illegal argument type: " + complexName);
         }
 		return simple;
 	}
@@ -169,7 +169,7 @@ public class MessageInputStream extends DataInputStream
 					currentArg = readByte();
 					break;
                 default:
-                    throw new IllegalArgumentException("Illegal argument type: " + currentClass);
+                    LOGGER.log(Level.WARNING, "Illegal argument type: " + currentClass);
             }
 		}
 		return currentArg;
@@ -186,7 +186,7 @@ public class MessageInputStream extends DataInputStream
 				currentArg = readByteArray();
 				break;
             default:
-                throw new IllegalArgumentException("Illegal Array Type: " + currentClass);
+                LOGGER.log(Level.WARNING, "Illegal Array Type: " + currentClass);
         }
 		return currentArg;
 	}
