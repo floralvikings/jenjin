@@ -4,4 +4,4 @@ dependencies {
     compile project(':jenjin-world-client')
 }
 
-mainClassName = 'com.jenjinstudios.demo.client.JenjinDemoApp'
+mainClassName = 'com.jenjinstudios.demo.client.Main'
