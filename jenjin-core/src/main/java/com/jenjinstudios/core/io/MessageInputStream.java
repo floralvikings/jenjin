@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
+import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.util.LinkedList;
@@ -74,11 +75,11 @@ public class MessageInputStream extends DataInputStream
 	 *
 	 * @param privateKey The private key.
 	 */
-	public void setPrivateKey(PrivateKey privateKey) {
-		try
+    public void setPrivateKey(Key privateKey) {
+        try
 		{
-			decryptCipher = Cipher.getInstance("RSA");
-			decryptCipher.init(Cipher.DECRYPT_MODE, privateKey);
+            decryptCipher = Cipher.getInstance(privateKey.getAlgorithm());
+            decryptCipher.init(Cipher.DECRYPT_MODE, privateKey);
 		} catch (InvalidKeyException | NoSuchAlgorithmException | NoSuchPaddingException e)
 		{
 			LOGGER.log(Level.SEVERE, "Unable to create cipher, messages will not be decrypted.", e);
