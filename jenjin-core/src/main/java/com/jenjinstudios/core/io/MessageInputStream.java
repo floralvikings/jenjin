@@ -168,7 +168,9 @@ public class MessageInputStream extends DataInputStream
 				case "byte":
 					currentArg = readByte();
 					break;
-			}
+                default:
+                    throw new IllegalArgumentException("Illegal argument type: " + currentClass);
+            }
 		}
 		return currentArg;
 	}
