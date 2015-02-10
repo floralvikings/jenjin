@@ -3,10 +3,7 @@ package com.jenjinstudios.core.io;
 import com.jenjinstudios.core.util.FileUtil;
 import com.jenjinstudios.core.xml.MessageGroup;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -98,12 +95,12 @@ public final class MessageFileFinder
 			try
 			{
 				inputStreams.add(new FileInputStream(f));
-			} catch (IOException ex)
-			{
-				LOGGER.log(Level.WARNING, "Unable to create input stream for " + f, ex);
-			}
-		}
-		return inputStreams;
+            } catch (FileNotFoundException ex)
+            {
+                LOGGER.log(Level.WARNING, "Unable to create input stream for " + f, ex);
+            }
+        }
+        return inputStreams;
 	}
 
     private Collection<InputStream> findMessageJarStreams() {
