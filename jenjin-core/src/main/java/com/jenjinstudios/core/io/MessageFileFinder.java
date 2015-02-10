@@ -87,15 +87,15 @@ public final class MessageFileFinder
     private Collection<InputStream> findMessageFileStreams() {
         Collection<InputStream> inputStreams = new LinkedList<>();
         Iterable<File> messageFiles = findMessageFiles();
-        for (File f : messageFiles)
-		{
-			LOGGER.log(Level.INFO, "Registering XML file {0}", f);
-			try
+        for (File file : messageFiles)
+        {
+            LOGGER.log(Level.INFO, "Registering XML file {0}", file);
+            try
 			{
-				inputStreams.add(new FileInputStream(f));
+                inputStreams.add(new FileInputStream(file));
             } catch (FileNotFoundException ex)
             {
-                LOGGER.log(Level.WARNING, "Unable to create input stream for " + f, ex);
+                LOGGER.log(Level.WARNING, "Unable to create input stream for " + file, ex);
             }
         }
         return inputStreams;
