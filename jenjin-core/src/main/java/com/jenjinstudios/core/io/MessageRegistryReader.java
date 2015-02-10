@@ -3,7 +3,10 @@ package com.jenjinstudios.core.io;
 import com.jenjinstudios.core.xml.MessageGroup;
 
 import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
+import java.io.Closeable;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -29,11 +32,24 @@ public class MessageRegistryReader
 				Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
 				MessageGroup collection = (MessageGroup) jaxbUnmarshaller.unmarshal(inputStream);
 				foundMessages.add(collection);
-			} catch (Exception ex)
-			{
-				LOGGER.log(Level.INFO, "Unable to parse XML file", ex);
-			}
-		}
-		return foundMessages;
+            } catch (JAXBException | RuntimeException ex)
+            {
+                LOGGER.log(Level.INFO, "Unable to parse XML file", ex);
+            } finally
+            {
+                closeQuietly(inputStream);
+            }
+        }
+        return foundMessages;
 	}
+
+    private static void closeQuietly(Closeable inputStream) {
+        try
+        {
+            inputStream.close();
+        } catch (IOException ex)
+        {
+            LOGGER.log(Level.INFO, "Unable to close stream", ex);
+        }
+    }
 }
