@@ -27,17 +27,24 @@ public final class MessageFileFinder
 {
 	private static final String messageFileName = "Messages.xml";
 	private static final Logger LOGGER = Logger.getLogger(MessageFileFinder.class.getName());
+    private final String rootDir;
 
-	private MessageFileFinder() { }
+    /**
+     * Construct a new MessageFileFinder, which works recursively from the current working directory and classpath to
+     * find Message files.
+     */
+    public MessageFileFinder() {
+        this.rootDir = Paths.get("").toAbsolutePath().toString() + File.separator;
+    }
 
-	private static LinkedList<String> findJarMessageEntries() {
-		LinkedList<String> jarMessageEntries = new LinkedList<>();
+    private LinkedList<String> findJarMessageEntries() {
+        LinkedList<String> jarMessageEntries = new LinkedList<>();
 		String classPath = System.getProperty("java.class.path");
 		String[] pathElements = classPath.split(System.getProperty("path.separator"));
 		for (String fileName : pathElements)
 		{
-			if (isCoreJar(fileName))
-			{
+            if (!isCoreJar(fileName))
+            {
 				continue;
 			}
 			seachJarFile(jarMessageEntries, fileName);
@@ -45,13 +52,13 @@ public final class MessageFileFinder
 		return jarMessageEntries;
 	}
 
-	private static boolean isCoreJar(String fileName) {
-		String javaHome = System.getProperty("java.home");
+    private boolean isCoreJar(String fileName) {
+        String javaHome = System.getProperty("java.home");
 		return fileName.contains(javaHome);
 	}
 
-	private static void seachJarFile(LinkedList<String> jarMessageEntries, String fileName) {
-		File file = new File(fileName);
+    private void seachJarFile(LinkedList<String> jarMessageEntries, String fileName) {
+        File file = new File(fileName);
 		if (!file.isDirectory() && file.exists())
 		{
 			try (FileInputStream inputStream = new FileInputStream(file);
@@ -67,8 +74,8 @@ public final class MessageFileFinder
 		}
 	}
 
-	private static void searchZipEntries(LinkedList<String> jarMessageEntries, ZipInputStream zip) throws IOException {
-		ZipEntry ze;
+    private void searchZipEntries(LinkedList<String> jarMessageEntries, ZipInputStream zip) throws IOException {
+        ZipEntry ze;
 		while ((ze = zip.getNextEntry()) != null)
 		{
 			String entryName = ze.getName();
@@ -76,14 +83,13 @@ public final class MessageFileFinder
 		}
 	}
 
-	private static ArrayList<File> findMessageFiles() {
-		String rootDir = Paths.get("").toAbsolutePath().toString() + File.separator;
-		File rootFile = new File(rootDir);
+    private ArrayList<File> findMessageFiles() {
+        File rootFile = new File(rootDir);
 		return FileUtil.search(rootFile, messageFileName);
 	}
 
-	private static LinkedList<InputStream> findMessageFileStreams() {
-		LinkedList<InputStream> inputStreams = new LinkedList<>();
+    private LinkedList<InputStream> findMessageFileStreams() {
+        LinkedList<InputStream> inputStreams = new LinkedList<>();
 		ArrayList<File> messageFiles = findMessageFiles();
 		for (File f : messageFiles)
 		{
@@ -99,8 +105,8 @@ public final class MessageFileFinder
 		return inputStreams;
 	}
 
-	private static LinkedList<InputStream> findMessageJarStreams() {
-		LinkedList<InputStream> inputStreams = new LinkedList<>();
+    private LinkedList<InputStream> findMessageJarStreams() {
+        LinkedList<InputStream> inputStreams = new LinkedList<>();
 		LinkedList<String> jarMessageEntries = findJarMessageEntries();
 		for (String entry : jarMessageEntries)
 		{
@@ -110,8 +116,8 @@ public final class MessageFileFinder
 		return inputStreams;
 	}
 
-	static Collection<MessageGroup> findXmlRegistries() {
-		LinkedList<InputStream> streamsToRead = new LinkedList<>();
+    Collection<MessageGroup> findXmlRegistries() {
+        LinkedList<InputStream> streamsToRead = new LinkedList<>();
 		streamsToRead.addAll(findMessageJarStreams());
 		streamsToRead.addAll(findMessageFileStreams());
 		return MessageRegistryReader.readXmlStreams(streamsToRead);

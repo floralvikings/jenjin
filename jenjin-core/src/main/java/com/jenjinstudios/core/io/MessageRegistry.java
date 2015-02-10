@@ -100,7 +100,8 @@ public class MessageRegistry
 	}
 
 	private void registerXmlMessages() {
-		Collection<MessageGroup> foundMessages = MessageFileFinder.findXmlRegistries();
+        MessageFileFinder fileFinder = new MessageFileFinder();
+        Collection<MessageGroup> foundMessages = fileFinder.findXmlRegistries();
 
 		for (MessageGroup currentMessageCollection : foundMessages)
 		{
