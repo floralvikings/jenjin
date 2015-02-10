@@ -39,7 +39,7 @@ public final class MessageFileFinder
     }
 
     private Iterable<String> findJarMessageEntries() {
-        List<String> jarMessageEntries = new LinkedList<>();
+        Collection<String> jarMessageEntries = new LinkedList<>();
         String classPath = System.getProperty("java.class.path");
 		String[] pathElements = classPath.split(System.getProperty("path.separator"));
 		for (String fileName : pathElements)
@@ -58,7 +58,7 @@ public final class MessageFileFinder
 		return fileName.contains(javaHome);
 	}
 
-    private void seachJarFile(List<String> jarMessageEntries, String fileName) {
+    private void seachJarFile(Collection<String> jarMessageEntries, String fileName) {
         File file = new File(fileName);
 		if (!file.isDirectory() && file.exists())
 		{
@@ -75,7 +75,7 @@ public final class MessageFileFinder
 		}
 	}
 
-    private void searchZipEntries(List<String> jarMessageEntries, ZipInputStream zip) throws IOException {
+    private void searchZipEntries(Collection<String> jarMessageEntries, ZipInputStream zip) throws IOException {
         ZipEntry ze;
 		while ((ze = zip.getNextEntry()) != null)
 		{
@@ -90,7 +90,7 @@ public final class MessageFileFinder
 	}
 
     private Collection<InputStream> findMessageFileStreams() {
-        List<InputStream> inputStreams = new LinkedList<>();
+        Collection<InputStream> inputStreams = new LinkedList<>();
         Iterable<File> messageFiles = findMessageFiles();
         for (File f : messageFiles)
 		{
@@ -107,7 +107,7 @@ public final class MessageFileFinder
 	}
 
     private Collection<InputStream> findMessageJarStreams() {
-        List<InputStream> inputStreams = new LinkedList<>();
+        Collection<InputStream> inputStreams = new LinkedList<>();
         Iterable<String> jarMessageEntries = findJarMessageEntries();
         for (String entry : jarMessageEntries)
 		{
