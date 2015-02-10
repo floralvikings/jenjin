@@ -92,6 +92,7 @@ public final class MessageFileFinder
             LOGGER.log(Level.INFO, "Registering XML file {0}", file);
             try
 			{
+                //noinspection ObjectAllocationInLoop
                 inputStreams.add(new FileInputStream(file));
             } catch (FileNotFoundException ex)
             {
