@@ -46,10 +46,10 @@ public final class MessageFileFinder
 		{
             if (!isCoreJar(fileName))
             {
-				continue;
-			}
-			seachJarFile(jarMessageEntries, fileName);
-		}
+                seachJarFile(jarMessageEntries, fileName);
+            }
+
+        }
 		return jarMessageEntries;
 	}
 
