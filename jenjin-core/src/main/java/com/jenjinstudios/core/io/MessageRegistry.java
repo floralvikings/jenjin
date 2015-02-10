@@ -110,13 +110,13 @@ public class MessageRegistry
 	}
 
 	private void registerOverride(ExecutableOverride override) {
-		MessageType messageType;
-		if (finalOverrides.contains(override.getId()))
-		{
+        if (finalOverrides.contains(override.getId()))
+        {
 			throw new IllegalArgumentException("Cannot overwrite final message executable: " + override.getId());
 		}
-		switch (override.getMode())
-		{
+        MessageType messageType;
+        switch (override.getMode())
+        {
 			case "Override":
 				synchronized (messageTypesByID)
 				{
