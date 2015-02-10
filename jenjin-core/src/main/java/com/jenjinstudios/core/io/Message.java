@@ -104,9 +104,11 @@ public class Message
 	 */
 	public final Object[] getArgs() {
 		if (isInvalid())
-			throw new IllegalStateException("Attempting to retrieve arguments while message is invalid. (Not all " +
-				  "arguments have been set.)");
-		Object[] argsArray = new Object[messageType.getArguments().size()];
+        {
+            throw new IllegalStateException("Attempting to retrieve arguments while message is invalid. (Not all " +
+                  "arguments have been set.)");
+        }
+        Object[] argsArray = new Object[messageType.getArguments().size()];
 		for (int i = 0; i < messageType.getArguments().size(); i++)
 		{
 			argsArray[i] = argumentsByName.get(messageType.getArguments().get(i).getName());
