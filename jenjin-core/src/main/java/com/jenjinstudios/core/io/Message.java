@@ -67,6 +67,7 @@ public class Message
             throw new IllegalArgumentException("Invalid argument name for Message: " + argumentName +
                   " (Message type: " + messageType.getName() + ")");
         }
+        @SuppressWarnings("rawtypes")
         Class c = TypeMapper.getTypeForName(argType.getType());
 		if (!c.isInstance(argument))
         {
