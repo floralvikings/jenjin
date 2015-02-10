@@ -39,8 +39,8 @@ public final class MessageFileFinder
     }
 
     private Iterable<String> findJarMessageEntries() {
-        LinkedList<String> jarMessageEntries = new LinkedList<>();
-		String classPath = System.getProperty("java.class.path");
+        List<String> jarMessageEntries = new LinkedList<>();
+        String classPath = System.getProperty("java.class.path");
 		String[] pathElements = classPath.split(System.getProperty("path.separator"));
 		for (String fileName : pathElements)
 		{
