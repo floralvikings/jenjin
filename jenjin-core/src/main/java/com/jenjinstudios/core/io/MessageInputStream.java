@@ -185,7 +185,9 @@ public class MessageInputStream extends DataInputStream
 			case "[B":
 				currentArg = readByteArray();
 				break;
-		}
+            default:
+                throw new IllegalArgumentException("Illegal Array Type: " + currentClass);
+        }
 		return currentArg;
 	}
 
