@@ -55,7 +55,6 @@ public class ConnectionTest
 		// The connection should execute the InvalidExecutableMessage,
 		byte[] bytes = bos.toByteArray();
 		MessageInputStream mis = new MessageInputStream(new ByteArrayInputStream(bytes));
-		mis.readMessage();
 		Message msg = mis.readMessage();
 		Assert.assertEquals(msg.getArgument("messageName"), "Unknown");
 	}
@@ -125,7 +124,6 @@ public class ConnectionTest
 		// The connection should execute the InvalidExecutableMessage,
 		byte[] bytes = bos.toByteArray();
 		MessageInputStream mis = new MessageInputStream(new ByteArrayInputStream(bytes));
-		mis.readMessage(); // Read the public key message
 		Message msg = mis.readMessage();
 		Assert.assertEquals(msg.name, "PingResponse");
 	}

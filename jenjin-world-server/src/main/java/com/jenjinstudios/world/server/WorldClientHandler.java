@@ -23,7 +23,7 @@ public class WorldClientHandler extends ClientHandler
 	private Actor player;
 	private boolean hasSentActorStepMessage;
 
-	public WorldClientHandler(WorldServer<? extends WorldClientHandler> s, MessageIO messageIO) {
+	public WorldClientHandler(WorldServer s, MessageIO messageIO) {
 		super(s, messageIO);
 		this.messageFactory = new WorldServerMessageFactory();
 		setPlayer(new Actor("PLAYER"));

@@ -35,7 +35,7 @@ public class ClientHandlerTest
 			clientHandler.shutdown();
 		}
 
-		verify(mos, times(2)).writeMessage(any());
+		verify(mos, times(1)).writeMessage(any());
 	}
 
 	@Test

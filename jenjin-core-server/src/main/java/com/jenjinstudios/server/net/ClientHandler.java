@@ -18,7 +18,7 @@ public class ClientHandler extends Connection
 {
 	private static final Logger LOGGER = Logger.getLogger(ClientHandler.class.getName());
 	/** The server. */
-	private final AuthServer<? extends ClientHandler> server;
+	private final AuthServer server;
 	/** The message factory used by this ClientHandler. */
 	private final ServerMessageFactory messageFactory;
 	/** The id of the client handler. */
@@ -33,8 +33,9 @@ public class ClientHandler extends Connection
 	 * send the client a FirstConnectResponse message with the server's UPS
 	 *
 	 * @param s The server for which this handler works.
+	 * @param messageIO The MessageIO used to send and receive messages.
 	 */
-	public ClientHandler(AuthServer<? extends ClientHandler> s, MessageIO messageIO) {
+	public ClientHandler(AuthServer s, MessageIO messageIO) {
 		super(messageIO);
 		setName("ClientHandler with unset ID");
 		server = s;
@@ -79,7 +80,7 @@ public class ClientHandler extends Connection
 	 *
 	 * @return The server for which this client handler works.
 	 */
-	public AuthServer<? extends ClientHandler> getServer() { return server; }
+	public AuthServer getServer() { return server; }
 
 	/**
 	 * Queue a message indicating the success or failure of a logout attempt.
@@ -100,6 +101,8 @@ public class ClientHandler extends Connection
 
 	/**
 	 * Queue a message indicating the success or failure of a login attempt.
+	 *
+	 * @param loggedInTime The time at which this client handler has been authenticated.
 	 */
 	public void setLoggedInTime(long loggedInTime) { this.loggedInTime = loggedInTime; }
 
@@ -110,7 +113,17 @@ public class ClientHandler extends Connection
 	 */
 	public int getHandlerId() { return handlerId; }
 
+	/**
+	 * Get the User associated with this ClientHandler.
+	 *
+	 * @return The User associated with this ClientHandler.
+	 */
 	public User getUser() { return user; }
 
+	/**
+	 * Set the User associated with this ClientHandler.
+	 *
+	 * @param user The User associated with this ClientHandler.
+	 */
 	public void setUser(User user) { this.user = user; }
 }

@@ -1,5 +1,6 @@
 package com.jenjinstudios.core.io;
 
+import com.jenjinstudios.core.event.MessageReceivedListener;
 import com.jenjinstudios.core.util.TypeMapper;
 import com.jenjinstudios.core.xml.ArgumentType;
 import com.jenjinstudios.core.xml.MessageType;
@@ -17,6 +18,7 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -31,6 +33,7 @@ public class MessageInputStream extends DataInputStream
 	private static final Logger LOGGER = Logger.getLogger(MessageInputStream.class.getName());
 	private final MessageRegistry messageRegistry;
 	private Cipher decryptCipher;
+	private final List<MessageReceivedListener> messageReceivedListeners = new LinkedList<>();
 
 	/**
 	 * Construct a new {@code MessageInputStream} which will read from the specified {@code InputStream}.
@@ -65,8 +68,18 @@ public class MessageInputStream extends DataInputStream
 		Class<?>[] classArray = new Class[classes.size()];
 		classes.toArray(classArray);
 		Object[] args = readMessageArgs(classes);
-		return new Message(id, args);
+		Message message = new Message(id, args);
+		nofityMessageReceivedListeners(message);
+		return message;
 
+	}
+
+	private void nofityMessageReceivedListeners(Message message) {
+		// TODO Handle in event dispatch thread.
+		for (MessageReceivedListener listener : messageReceivedListeners)
+		{
+			listener.onMessageReceived(message);
+		}
 	}
 
 	/**
@@ -236,4 +249,10 @@ public class MessageInputStream extends DataInputStream
 		return decrypted;
 	}
 
+	/**
+	 * Get the MessageReceivedListeners listening for messages on this stream.
+	 *
+	 * @return The MessageReceivedListeners listening for messages on this stream.
+	 */
+	public List<MessageReceivedListener> getMessageReceivedListeners() { return messageReceivedListeners; }
 }

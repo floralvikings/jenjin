@@ -2,6 +2,7 @@ description = 'Jenjin Core Server'
 
 
 dependencies {
+    compile 'com.google.code.gson:gson:2.3'
     testCompile 'com.h2database:h2:1.4.178'
     compile project(':jenjin-core')
 }

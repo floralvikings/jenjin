@@ -82,7 +82,7 @@ public final class MessageFileFinder
 		return FileUtil.search(rootFile, messageFileName);
 	}
 
-	static LinkedList<InputStream> findMessageFileStreams() {
+	private static LinkedList<InputStream> findMessageFileStreams() {
 		LinkedList<InputStream> inputStreams = new LinkedList<>();
 		ArrayList<File> messageFiles = findMessageFiles();
 		for (File f : messageFiles)
@@ -99,7 +99,7 @@ public final class MessageFileFinder
 		return inputStreams;
 	}
 
-	static LinkedList<InputStream> findMessageJarStreams() {
+	private static LinkedList<InputStream> findMessageJarStreams() {
 		LinkedList<InputStream> inputStreams = new LinkedList<>();
 		LinkedList<String> jarMessageEntries = findJarMessageEntries();
 		for (String entry : jarMessageEntries)

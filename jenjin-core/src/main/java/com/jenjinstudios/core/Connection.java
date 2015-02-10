@@ -2,9 +2,12 @@ package com.jenjinstudios.core;
 
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.util.MessageFactory;
-import com.jenjinstudios.core.util.SecurityUtil;
 
+import java.net.InetAddress;
+import java.security.Key;
 import java.security.KeyPair;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * The {@code Connection} class is a subclass of the {@code Thread} class; it will loop indefinitely until the {@code
@@ -21,6 +24,7 @@ public class Connection
 	private final MessageIO messageIO;
 	private final Thread messageReaderThread;
 	private String name = "Connection";
+	private final Map<InetAddress, Key> verifiedKeys = new HashMap<>();
 
 	/**
 	 * Construct a new {@code Connection} that utilizes the specified {@code MessageIO} to read and write messages.
@@ -33,13 +37,6 @@ public class Connection
 		executableMessageQueue = new ExecutableMessageQueue();
 		messageFactory = new MessageFactory();
 		messageReaderThread = new Thread(new RunnableMessageReader(this));
-		KeyPair rsaKeyPair = SecurityUtil.generateRSAKeyPair();
-		if (rsaKeyPair != null)
-		{
-			messageIO.getIn().setPrivateKey(rsaKeyPair.getPrivate());
-			Message message = MessageFactory.generatePublicKeyMessage(rsaKeyPair.getPublic());
-			getMessageIO().queueOutgoingMessage(message);
-		}
 	}
 
 	/**
@@ -47,6 +44,21 @@ public class Connection
 	 */
 	public void start() {
 		messageReaderThread.start();
+	}
+
+	/**
+	 * Set the RSA public/private key pair used to encrypt outgoing and decrypt incoming messages, and queue a message
+	 * containing the public key.
+	 *
+	 * @param rsaKeyPair The keypair to use for encryption/decrytion.
+	 */
+	public void setRSAKeyPair(KeyPair rsaKeyPair) {
+		if (rsaKeyPair != null)
+		{
+			getMessageIO().getIn().setPrivateKey(rsaKeyPair.getPrivate());
+			Message message = MessageFactory.generatePublicKeyMessage(rsaKeyPair.getPublic());
+			getMessageIO().queueOutgoingMessage(message);
+		}
 	}
 
 	/**
@@ -101,4 +113,13 @@ public class Connection
 	 * @param name The name of this {@code Connection}.
 	 */
 	public void setName(String name) { this.name = name; }
+
+	/**
+	 * Get the map of domains and verified keys for this client.
+	 *
+	 * @return The map of domains and verified keys for this client.
+	 */
+	public Map<InetAddress, Key> getVerifiedKeys() {
+		return verifiedKeys;
+	}
 }

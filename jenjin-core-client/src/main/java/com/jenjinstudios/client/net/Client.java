@@ -1,10 +1,11 @@
 package com.jenjinstudios.client.net;
 
-import com.jenjinstudios.client.message.ClientMessageFactory;
 import com.jenjinstudios.core.Connection;
 import com.jenjinstudios.core.MessageIO;
 import com.jenjinstudios.core.util.MessageFactory;
+import com.jenjinstudios.core.util.SecurityUtil;
 
+import java.security.KeyPair;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Timer;
@@ -18,19 +19,18 @@ public class Client extends Connection
 {
 	/** The list of tasks that this client will execute each update cycle. */
 	private final List<Runnable> repeatedTasks;
-	/** The message factory used by this client. */
-	private final ClientMessageFactory messageFactory;
 	/** The timer that manages the update loop. */
 	private Timer sendMessagesTimer;
 	private ClientLoop clientLoop = new ClientLoop(this);
 
 	/**
 	 * Construct a new client and attempt to connect to the server over the specified port.
+	 *
+	 * @param messageIO The MessageIO used to send and recieve messages.
 	 */
 	protected Client(MessageIO messageIO) {
 		super(messageIO);
 		repeatedTasks = new LinkedList<>();
-		this.messageFactory = new ClientMessageFactory();
 	}
 
 	/**
@@ -57,6 +57,9 @@ public class Client extends Connection
 
 	@Override
 	public void start() {
+		KeyPair rsaKeyPair = SecurityUtil.generateRSAKeyPair();
+		setRSAKeyPair(rsaKeyPair);
+
 		int period = 1000 / 60;
 		// Finally, send a ping request to establish latency.
 		getMessageIO().queueOutgoingMessage(MessageFactory.generatePingRequest());
@@ -76,5 +79,10 @@ public class Client extends Connection
 		}
 	}
 
+	/**
+	 * Get the average number of updates per second that this client is executing.
+	 *
+	 * @return The average number of updates per second that this client is executing.
+	 */
 	public double getAverageUPS() { return 1d / clientLoop.getAverageRunTime(); }
 }

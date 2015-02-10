@@ -5,6 +5,7 @@ import com.jenjinstudios.core.io.MessageInputStream;
 import com.jenjinstudios.core.io.MessageOutputStream;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.security.PublicKey;
 import java.util.LinkedList;
 import java.util.logging.Level;
@@ -20,6 +21,7 @@ public class MessageIO
 	private static final Logger LOGGER = Logger.getLogger(MessageIO.class.getName());
 	private final MessageInputStream in;
 	private final MessageOutputStream out;
+	private final InetAddress address;
 	private final LinkedList<Message> outgoingMessages;
 
 	/**
@@ -29,10 +31,29 @@ public class MessageIO
 	 * @param out The output stream.
 	 */
 	public MessageIO(MessageInputStream in, MessageOutputStream out) {
+		this(in, out, null);
+	}
+
+	/**
+	 * Construct a new {@code MessageIO} from the given message input and output streams.
+	 *
+	 * @param in The input stream.
+	 * @param out The output stream.
+	 * @param address The Internet Address of the complementary connection.
+	 */
+	public MessageIO(MessageInputStream in, MessageOutputStream out, InetAddress address) {
 		this.in = in;
 		this.out = out;
+		this.address = address;
 		outgoingMessages = new LinkedList<>();
 	}
+
+	/**
+	 * Get the address of the complementary connection, if it exists.  Returns null if no address is known.
+	 *
+	 * @return The address of the complementary connection, null if unknown.
+	 */
+	public InetAddress getAddress() { return address; }
 
 	/**
 	 * Get the {@code MessageInputStream} managed by this {@code MessageIO}.

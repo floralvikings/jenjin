@@ -18,14 +18,14 @@ import java.util.logging.Logger;
  * Listens for incoming client connections on behalf of a Server.
  * @author Caleb Brinkman
  */
-class ClientListener<T extends ClientHandler> implements Runnable
+class ClientListener implements Runnable
 {
 	/** The Logger for this class. */
 	private static final Logger LOGGER = Logger.getLogger(ClientListener.class.getName());
 	/** The port on which this object listens. */
 	private final int PORT;
 	/** The list of new clients. */
-	private final LinkedList<T> newClientHandlers;
+	private final LinkedList<ClientHandler> newClientHandlers;
 	/** Flags whether this should be listening. */
 	private volatile boolean listening;
 	/** The server socket. */
@@ -33,7 +33,7 @@ class ClientListener<T extends ClientHandler> implements Runnable
 	/** The server. */
 	private Server server;
 	/** The constructor called to create new handlers. */
-	private Constructor<T> handlerConstructor;
+	private Constructor<? extends ClientHandler> handlerConstructor;
 
 	/**
 	 * Construct a new ClientListener for the given server on the given port.
@@ -42,7 +42,8 @@ class ClientListener<T extends ClientHandler> implements Runnable
 	 * @throws NoSuchMethodException If there is no appropriate constructor for the specified ClientHandler
 	 * constructor.
 	 */
-	public ClientListener(Class<? extends Server> serverClass, Class<T> handlerClass, int port) throws IOException,
+	public ClientListener(Class<? extends Server> serverClass, Class<? extends ClientHandler> handlerClass,
+						  int port) throws IOException,
 		  NoSuchMethodException
 	{
 		PORT = port;
@@ -66,8 +67,8 @@ class ClientListener<T extends ClientHandler> implements Runnable
 	 * Get the new clients accrued since the last check.
 	 * @return A {@code LinkedList} containing the new clients.
 	 */
-	public LinkedList<T> getNewClients() {
-		LinkedList<T> temp = new LinkedList<>();
+	public LinkedList<ClientHandler> getNewClients() {
+		LinkedList<ClientHandler> temp = new LinkedList<>();
 		synchronized (newClientHandlers)
 		{
 			if (!newClientHandlers.isEmpty())
@@ -93,7 +94,7 @@ class ClientListener<T extends ClientHandler> implements Runnable
 	 * Listen for clients in a new thread. If already listening this method does nothing.
 	 * @param tServer The server
 	 */
-	public void startListening(Server<T> tServer) {
+	public void startListening(Server tServer) {
 		if (!listening)
 		{
 			this.server = tServer;
@@ -106,7 +107,7 @@ class ClientListener<T extends ClientHandler> implements Runnable
 	 * Add a new client to the list of new clients.
 	 * @param h The handler for the new client.
 	 */
-	void addNewClient(T h) {
+	void addNewClient(ClientHandler h) {
 		synchronized (newClientHandlers)
 		{
 			newClientHandlers.add(h);
@@ -120,7 +121,7 @@ class ClientListener<T extends ClientHandler> implements Runnable
 		try
 		{
 			MessageIO messageIO = new MessageIO(in, out);
-			T newHandler = handlerConstructor.newInstance(server, messageIO);
+			ClientHandler newHandler = handlerConstructor.newInstance(server, messageIO);
 			addNewClient(newHandler);
 		} catch (InstantiationException | IllegalAccessException e)
 		{
