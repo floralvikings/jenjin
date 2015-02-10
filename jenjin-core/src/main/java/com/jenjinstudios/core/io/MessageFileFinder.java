@@ -38,7 +38,7 @@ public final class MessageFileFinder
         this.rootDir = Paths.get("").toAbsolutePath().toString() + File.separator;
     }
 
-    private LinkedList<String> findJarMessageEntries() {
+    private Iterable<String> findJarMessageEntries() {
         LinkedList<String> jarMessageEntries = new LinkedList<>();
 		String classPath = System.getProperty("java.class.path");
 		String[] pathElements = classPath.split(System.getProperty("path.separator"));
@@ -58,7 +58,7 @@ public final class MessageFileFinder
 		return fileName.contains(javaHome);
 	}
 
-    private void seachJarFile(LinkedList<String> jarMessageEntries, String fileName) {
+    private void seachJarFile(List<String> jarMessageEntries, String fileName) {
         File file = new File(fileName);
 		if (!file.isDirectory() && file.exists())
 		{
@@ -84,13 +84,13 @@ public final class MessageFileFinder
 		}
 	}
 
-    private ArrayList<File> findMessageFiles() {
+    private Iterable<File> findMessageFiles() {
         File rootFile = new File(rootDir);
 		return FileUtil.search(rootFile, messageFileName);
 	}
 
     private Collection<InputStream> findMessageFileStreams() {
-        LinkedList<InputStream> inputStreams = new LinkedList<>();
+        List<InputStream> inputStreams = new LinkedList<>();
         Iterable<File> messageFiles = findMessageFiles();
         for (File f : messageFiles)
 		{
@@ -107,7 +107,7 @@ public final class MessageFileFinder
 	}
 
     private Collection<InputStream> findMessageJarStreams() {
-        LinkedList<InputStream> inputStreams = new LinkedList<>();
+        List<InputStream> inputStreams = new LinkedList<>();
         Iterable<String> jarMessageEntries = findJarMessageEntries();
         for (String entry : jarMessageEntries)
 		{
