@@ -3,6 +3,7 @@ package com.jenjinstudios.core.message;
 import com.jenjinstudios.core.Connection;
 import com.jenjinstudios.core.MessageIO;
 import com.jenjinstudios.core.io.Message;
+import com.jenjinstudios.core.io.MessageOutputStream;
 import org.testng.annotations.Test;
 
 import java.net.InetAddress;
@@ -33,7 +34,9 @@ public class ExecutablePublicKeyMessageTest
 
         Connection connection = mock(Connection.class);
         MessageIO messageIO = mock(MessageIO.class);
+        MessageOutputStream out = mock(MessageOutputStream.class);
 
+        when(messageIO.getOut()).thenReturn(out);
         when(messageIO.getAddress()).thenReturn(address);
         when(connection.getMessageIO()).thenReturn(messageIO);
         when(connection.getVerifiedKeys()).thenReturn(keys);
@@ -41,7 +44,7 @@ public class ExecutablePublicKeyMessageTest
         ExecutablePublicKeyMessage executable = new ExecutablePublicKeyMessage(connection, message);
         executable.runImmediate();
 
-        verify(messageIO).getOut().setPublicKey(rsaKeyPair.getPublic());
+        verify(out).setPublicKey(rsaKeyPair.getPublic());
     }
 
     /**
@@ -56,7 +59,9 @@ public class ExecutablePublicKeyMessageTest
 
         Connection connection = mock(Connection.class);
         MessageIO messageIO = mock(MessageIO.class);
+        MessageOutputStream out = mock(MessageOutputStream.class);
 
+        when(messageIO.getOut()).thenReturn(out);
         when(messageIO.getAddress()).thenReturn(address);
         when(connection.getMessageIO()).thenReturn(messageIO);
         when(connection.getVerifiedKeys()).thenReturn(keys);
@@ -64,7 +69,7 @@ public class ExecutablePublicKeyMessageTest
         ExecutablePublicKeyMessage executable = new ExecutablePublicKeyMessage(connection, message);
         executable.runImmediate();
 
-        verify(messageIO).getOut().setPublicKey(rsaKeyPair.getPublic());
+        verify(out).setPublicKey(rsaKeyPair.getPublic());
     }
 
     /**
@@ -81,7 +86,9 @@ public class ExecutablePublicKeyMessageTest
 
         Connection connection = mock(Connection.class);
         MessageIO messageIO = mock(MessageIO.class);
+        MessageOutputStream out = mock(MessageOutputStream.class);
 
+        when(messageIO.getOut()).thenReturn(out);
         when(messageIO.getAddress()).thenReturn(address);
         when(connection.getMessageIO()).thenReturn(messageIO);
         when(connection.getVerifiedKeys()).thenReturn(keys);
@@ -89,7 +96,7 @@ public class ExecutablePublicKeyMessageTest
         ExecutablePublicKeyMessage executable = new ExecutablePublicKeyMessage(connection, message);
         executable.runImmediate();
 
-        verify(messageIO, times(0)).getOut().setPublicKey(any());
+        verify(out, times(0)).setPublicKey(any());
     }
 
     /**
@@ -106,13 +113,15 @@ public class ExecutablePublicKeyMessageTest
 
         Connection connection = mock(Connection.class);
         MessageIO messageIO = mock(MessageIO.class);
+        MessageOutputStream out = mock(MessageOutputStream.class);
 
+        when(messageIO.getOut()).thenReturn(out);
         when(connection.getMessageIO()).thenReturn(messageIO);
         when(connection.getVerifiedKeys()).thenReturn(keys);
 
         ExecutablePublicKeyMessage executable = new ExecutablePublicKeyMessage(connection, message);
         executable.runImmediate();
 
-        verify(messageIO, times(0)).getOut().setPublicKey(any());
+        verify(out, times(0)).setPublicKey(any());
     }
 }
