@@ -1,6 +1,5 @@
 package com.jenjinstudios.core.io;
 
-import com.jenjinstudios.core.util.FileUtil;
 import com.jenjinstudios.core.xml.MessageGroup;
 
 import javax.xml.bind.JAXBContext;
@@ -8,6 +7,8 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import java.io.*;
 import java.nio.file.Paths;
+import java.util.AbstractList;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.logging.Level;
@@ -119,9 +120,32 @@ public final class MessageFileFinder
         }
     }
 
+    /**
+     * Recursively search the given directory for files that exactly matches the file with the given name.
+     *
+     * @param dir The root directory in which to begin the search.
+     * @param fileName The name of the file for which to search.  Note that the filenames must match <i>exactly.</i>
+     *
+     * @return A list of all discovered files that match {@code fileName}.
+     */
+    public static Collection<File> search(File dir, String fileName) {
+        AbstractList<File> files = new ArrayList<>(10);
+        File[] contents = dir.listFiles();
+        if (contents != null)
+            for (File f : contents)
+            {
+                if (f.isDirectory())
+                    files.addAll(search(f, fileName));
+                if (f.getName().equals(fileName))
+                    files.add(f);
+            }
+
+        return files;
+    }
+
     private Iterable<File> findMessageFiles() {
         File rootFile = new File(rootDir);
-        return FileUtil.search(rootFile, MESSAGE_FILE_NAME);
+        return search(rootFile, MESSAGE_FILE_NAME);
     }
 
     private Collection<InputStream> findMessageFileStreams() {
