@@ -16,114 +16,112 @@ import java.util.logging.Logger;
  */
 public class ClientHandler extends Connection
 {
-	private static final Logger LOGGER = Logger.getLogger(ClientHandler.class.getName());
-	/** The server. */
-	private final AuthServer server;
-	/** The message factory used by this ClientHandler. */
-	private final ServerMessageFactory messageFactory;
-	/** The id of the client handler. */
-	private int handlerId = -1;
-	/** The time at which this client was successfully logged in. */
-	private long loggedInTime;
-	private User user;
+    private static final Logger LOGGER = Logger.getLogger(ClientHandler.class.getName());
+    /** The server. */
+    private final AuthServer server;
+    /** The message factory used by this ClientHandler. */
+    private final ServerMessageFactory messageFactory;
+    /** The id of the client handler. */
+    private int handlerId = -1;
+    /** The time at which this client was successfully logged in. */
+    private long loggedInTime;
+    private User user;
 
-	/**
-	 * Construct a new Client Handler using the given socket.  When constructing a new ClientHandler,
-	 * it is necessary to
-	 * send the client a FirstConnectResponse message with the server's UPS
-	 *
-	 * @param s The server for which this handler works.
-	 * @param messageIO The MessageIO used to send and receive messages.
-	 */
-	public ClientHandler(AuthServer s, MessageIO messageIO) {
-		super(messageIO);
-		setName("ClientHandler with unset ID");
-		server = s;
+    /**
+     * Construct a new Client Handler using the given socket.  When constructing a new ClientHandler, it is necessary to
+     * send the client a FirstConnectResponse message with the server's UPS
+     *
+     * @param s The server for which this handler works.
+     * @param messageIO The MessageIO used to send and receive messages.
+     */
+    public ClientHandler(AuthServer s, MessageIO messageIO) {
+        super(messageIO);
+        setName("ClientHandler with unset ID");
+        server = s;
 
-		this.messageFactory = new ServerMessageFactory();
-	}
+        this.messageFactory = new ServerMessageFactory();
+    }
 
-	/**
-	 * Set the id for this handler.
-	 *
-	 * @param id The new id number for the handler.
-	 */
-	public void setHandlerId(int id) {
-		handlerId = id;
-		super.setName("Client Handler " + handlerId);
-	}
+    /**
+     * Set the id for this handler.
+     *
+     * @param id The new id number for the handler.
+     */
+    public void setHandlerId(int id) {
+        handlerId = id;
+        super.setName("Client Handler " + handlerId);
+    }
 
-	/** Update anything that needs to be taken care of before sendAllMessages. */
-	public void update() { }
+    /** Update anything that needs to be taken care of before sendAllMessages. */
+    public void update() { }
 
-	/** Shut down the client handler. */
-	@Override
-	public void shutdown() {
-		if (getUser() != null)
-		{
-			try
-			{
-				server.getAuthenticator().logOutUser(user.getUsername());
-			} catch (LoginException e)
-			{
-				LOGGER.log(Level.WARNING, "Unable to perform emergency logout.", e);
-			}
-		}
-		getServer().removeClient(this);
-	}
+    /** Shut down the client handler. */
+    @Override
+    public void shutdown() {
+        if (getUser() != null)
+        {
+            try
+            {
+                server.getAuthenticator().logOutUser(user.getUsername());
+            } catch (LoginException e)
+            {
+                LOGGER.log(Level.WARNING, "Unable to perform emergency logout.", e);
+            }
+        }
+        getServer().removeClient(this);
+    }
 
-	@Override
-	public ServerMessageFactory getMessageFactory() { return messageFactory; }
+    public ServerMessageFactory getMessageFactory() { return messageFactory; }
 
-	/**
-	 * The server.
-	 *
-	 * @return The server for which this client handler works.
-	 */
-	public AuthServer getServer() { return server; }
+    /**
+     * The server.
+     *
+     * @return The server for which this client handler works.
+     */
+    public AuthServer getServer() { return server; }
 
-	/**
-	 * Queue a message indicating the success or failure of a logout attempt.
-	 *
-	 * @param success Whether the attempt was successful.
-	 */
-	public void sendLogoutStatus(boolean success) {
-		Message logoutResponse = getMessageFactory().generateLogoutResponse(success);
-		getMessageIO().queueOutgoingMessage(logoutResponse);
-	}
+    /**
+     * Queue a message indicating the success or failure of a logout attempt.
+     *
+     * @param success Whether the attempt was successful.
+     */
+    public void sendLogoutStatus(boolean success) {
+        Message logoutResponse = getMessageFactory().generateLogoutResponse(success);
+        getMessageIO().queueOutgoingMessage(logoutResponse);
+    }
 
-	/**
-	 * Get the time at which this client was successfully logged in.
-	 *
-	 * @return The time at which this client was successfully logged in.
-	 */
-	public long getLoggedInTime() { return loggedInTime; }
+    /**
+     * Get the time at which this client was successfully logged in.
+     *
+     * @return The time at which this client was successfully logged in.
+     */
+    public long getLoggedInTime() { return loggedInTime; }
 
-	/**
-	 * Queue a message indicating the success or failure of a login attempt.
-	 *
-	 * @param loggedInTime The time at which this client handler has been authenticated.
-	 */
-	public void setLoggedInTime(long loggedInTime) { this.loggedInTime = loggedInTime; }
+    /**
+     * Queue a message indicating the success or failure of a login attempt.
+     *
+     * @param loggedInTime The time at which this client handler has been authenticated.
+     */
+    public void setLoggedInTime(long loggedInTime) { this.loggedInTime = loggedInTime; }
 
-	/**
-	 * Get the ClientHandler ID for this client handler.
-	 *
-	 * @return The ID of this client handler.
-	 */
-	public int getHandlerId() { return handlerId; }
+    /**
+     * Get the ClientHandler ID for this client handler.
+     *
+     * @return The ID of this client handler.
+     */
+    public int getHandlerId() { return handlerId; }
 
-	/**
-	 * Get the User associated with this ClientHandler.
-	 *
-	 * @return The User associated with this ClientHandler.
-	 */
-	public User getUser() { return user; }
+    /**
+     * Get the User associated with this ClientHandler.
+     *
+     * @return The User associated with this ClientHandler.
+     */
+    public User getUser() { return user; }
 
-	/**
-	 * Set the User associated with this ClientHandler.
-	 *
-	 * @param user The User associated with this ClientHandler.
-	 */
-	public void setUser(User user) { this.user = user; }
+    /**
+     * Set the User associated with this ClientHandler.
+     *
+     * @param user The User associated with this ClientHandler.
+     */
+    public void setUser(User user) { this.user = user; }
 }

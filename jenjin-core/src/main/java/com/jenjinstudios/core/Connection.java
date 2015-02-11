@@ -83,16 +83,6 @@ public class Connection
     public MessageIO getMessageIO() { return messageIO; }
 
     /**
-     * Get the {@code MessageFactory} to be used to generate the {@code Message} objects to be written by this {@code
-     * Connection}.
-     *
-     * @return The {@code MessageFactory} to be used to generate the {@code Message} objects to be written by this
-     * {@code Connection}.
-     */
-    // TODO This should really be a static class with Connections passed as parameters.
-    public MessageFactory getMessageFactory() { return messageFactory; }
-
-    /**
      * Get the PingTracker used by this connection to track latency.
      *
      * @return The PingTracker used by this connection to track latency.
