@@ -69,7 +69,10 @@ public class TypeMapper
 			case "String":
 				type = String.class;
 				break;
-		}
+            default:
+                type = Object.class;
+                break;
+        }
 		return type;
 	}
 }
