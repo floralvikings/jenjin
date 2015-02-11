@@ -13,6 +13,7 @@ import java.util.List;
  *
  * @author Caleb Brinkman
  */
+@SuppressWarnings("ALL")
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "messages", namespace = "https://www.jenjinstudios.com")
 public class MessageGroup

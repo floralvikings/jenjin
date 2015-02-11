@@ -9,6 +9,7 @@ import java.util.List;
  *
  * @author Caleb Brinkman
  */
+@SuppressWarnings("ALL")
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "executable_override", namespace = "https://www.jenjinstudios.com")
 public class ExecutableOverride

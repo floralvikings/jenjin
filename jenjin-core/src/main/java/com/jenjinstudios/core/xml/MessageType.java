@@ -11,6 +11,7 @@ import java.util.List;
  *
  * @author Caleb Brinkman
  */
+@SuppressWarnings("ALL")
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "message", namespace = "https://www.jenjinstudios.com", propOrder = {
 	  "arguments",
