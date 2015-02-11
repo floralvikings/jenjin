@@ -5,6 +5,8 @@ import com.jenjinstudios.core.xml.MessageType;
 
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * The {@code Message} class is used in sending data to and receiving data from {@code Connection} objects.  Each
@@ -16,6 +18,7 @@ import java.util.TreeMap;
  */
 public class Message
 {
+    private static final Logger LOGGER = Logger.getLogger(Message.class.getName());
     /** The unique name of this type of Message. */
     public final String name;
     private final MessageType messageType;
@@ -59,8 +62,9 @@ public class Message
             try
             {
                 type = Class.forName(name);
-            } catch (ClassNotFoundException e)
+            } catch (ClassNotFoundException ex)
             {
+                LOGGER.log(Level.WARNING, "Unknown Primitive Type", ex);
                 type = Object.class;
             }
         }
