@@ -104,20 +104,16 @@ public final class MessageFileFinder
                 LOGGER.log(Level.INFO, "Unable to parse XML file", ex);
             } finally
             {
-                closeQuietly(inputStream);
+                try
+                {
+                    inputStream.close();
+                } catch (IOException ex)
+                {
+                    LOGGER.log(Level.INFO, "Unable to close stream", ex);
+                }
             }
         }
         return foundMessages;
-    }
-
-    private static void closeQuietly(Closeable inputStream) {
-        try
-        {
-            inputStream.close();
-        } catch (IOException ex)
-        {
-            LOGGER.log(Level.INFO, "Unable to close stream", ex);
-        }
     }
 
     /**
