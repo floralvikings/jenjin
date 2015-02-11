@@ -58,9 +58,9 @@ public class DataInputStreamMock
 	public void mockReadUtf(String s) throws IOException {
 		byte[] bytes = ByteBuffer.allocate(2).putShort((short) s.length()).array();
 		when = when.thenReturn(bytes[0] & 0xff).thenReturn(bytes[1] & 0xff);
-		bytes = s.getBytes("UTF-8");
-		for (byte b : bytes)
-		{
+        byte[] encodedBytes = s.getBytes("UTF-8");
+        for (byte b : encodedBytes)
+        {
 			when = when.thenReturn((int) b);
 		}
 	}
