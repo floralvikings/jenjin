@@ -11,8 +11,11 @@ import java.security.NoSuchAlgorithmException;
  */
 public class HashUtil
 {
-	private static String getSHA256String(String input) {
-		try
+
+    public static final int HEX_CONVERSION_CONSTANT = 0xff;
+
+    private static String getSHA256String(String input) {
+        try
 		{
 			//Convert the pass to an md5 hash string
 			return getFullHexString(getSHA256Hash(input));
@@ -33,8 +36,8 @@ public class HashUtil
 		StringBuilder hexString = new StringBuilder();
 		for (byte anEncryption : bytes)
 		{ // Convert back to a string, making sure to include leading zeros.
-			String hex = Integer.toHexString(0xff & anEncryption);
-			if (hex.length() == 1)
+            String hex = Integer.toHexString(HEX_CONVERSION_CONSTANT & anEncryption);
+            if (hex.length() == 1)
 			{
 				hexString.append('0');
 			}
