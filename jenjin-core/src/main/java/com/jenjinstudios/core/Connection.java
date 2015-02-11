@@ -21,7 +21,6 @@ public class Connection
 {
     private final PingTracker pingTracker;
     private final ExecutableMessageQueue executableMessageQueue;
-    private final MessageFactory messageFactory;
     private final MessageIO messageIO;
     private final Thread messageReaderThread;
     private String name = "Connection";
@@ -36,7 +35,6 @@ public class Connection
         this.messageIO = streams;
         pingTracker = new PingTracker();
         executableMessageQueue = new ExecutableMessageQueue();
-        messageFactory = new MessageFactory();
         messageReaderThread = new Thread(new RunnableMessageReader(this));
     }
 
