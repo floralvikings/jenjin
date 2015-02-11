@@ -29,7 +29,7 @@ public class ExecutablePublicKeyMessageTest
         KeyPair rsaKeyPair = Connection.generateRSAKeyPair();
         Message message = Connection.generatePublicKeyMessage(rsaKeyPair.getPublic());
         InetAddress address = InetAddress.getLoopbackAddress();
-        Map<InetAddress, Key> keys = new HashMap<>();
+        Map<InetAddress, Key> keys = new HashMap<>(10);
         keys.put(address, rsaKeyPair.getPublic());
 
         Connection connection = mock(Connection.class);
@@ -55,7 +55,7 @@ public class ExecutablePublicKeyMessageTest
         KeyPair rsaKeyPair = Connection.generateRSAKeyPair();
         Message message = Connection.generatePublicKeyMessage(rsaKeyPair.getPublic());
         InetAddress address = InetAddress.getLoopbackAddress();
-        Map<InetAddress, Key> keys = new HashMap<>();
+        Map<InetAddress, Key> keys = new HashMap<>(10);
 
         Connection connection = mock(Connection.class);
         MessageIO messageIO = mock(MessageIO.class);
@@ -81,7 +81,7 @@ public class ExecutablePublicKeyMessageTest
         KeyPair invalidKeyPair = Connection.generateRSAKeyPair();
         Message message = Connection.generatePublicKeyMessage(invalidKeyPair.getPublic());
         InetAddress address = InetAddress.getLoopbackAddress();
-        Map<InetAddress, Key> keys = new HashMap<>();
+        Map<InetAddress, Key> keys = new HashMap<>(10);
         keys.put(address, rsaKeyPair.getPublic());
 
         Connection connection = mock(Connection.class);
@@ -108,7 +108,7 @@ public class ExecutablePublicKeyMessageTest
         KeyPair invalidKeyPair = Connection.generateRSAKeyPair();
         Message message = Connection.generatePublicKeyMessage(invalidKeyPair.getPublic());
         InetAddress address = InetAddress.getLoopbackAddress();
-        Map<InetAddress, Key> keys = new HashMap<>();
+        Map<InetAddress, Key> keys = new HashMap<>(10);
         keys.put(address, rsaKeyPair.getPublic());
 
         Connection connection = mock(Connection.class);
