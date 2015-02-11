@@ -99,7 +99,7 @@ public class MessageInputStream extends DataInputStream
         return args;
     }
 
-    private String simplifyClassName(String complexName) {
+    private static String simplifyClassName(String complexName) {
         String simple = complexName;
         switch (complexName)
         {
