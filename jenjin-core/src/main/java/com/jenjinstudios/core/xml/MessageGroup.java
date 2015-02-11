@@ -41,17 +41,18 @@ public class MessageGroup
         if (this == o) return true;
         if (!(o instanceof MessageGroup)) return false;
 
-        MessageGroup messageGroup = (MessageGroup) o;
+        MessageGroup that = (MessageGroup) o;
 
-        if (!messages.equals(messageGroup.messages)) return false;
-        return overrides.equals(messageGroup.overrides);
+        if (messages != null ? !messages.equals(that.messages) : that.messages != null) return false;
+        if (overrides != null ? !overrides.equals(that.overrides) : that.overrides != null) return false;
 
+        return true;
     }
 
     @Override
     public int hashCode() {
-        int result = messages.hashCode();
-        result = 31 * result + overrides.hashCode();
+        int result = messages != null ? messages.hashCode() : 0;
+        result = 31 * result + (overrides != null ? overrides.hashCode() : 0);
         return result;
     }
 
