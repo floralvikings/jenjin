@@ -122,8 +122,8 @@ public class MessageOutputStream extends DataOutputStream
 				} catch (IllegalBlockSizeException | BadPaddingException | IllegalStateException e)
 				{
 					LOGGER.log(Level.SEVERE, "Error encrypting string, will use unencrypted.", e);
-					throw new IOException("Unable to encrypt sensitive data.");
-				}
+                    throw new IOException("Unable to encrypt sensitive data.", e);
+                }
 			}
 		} else
 		{
