@@ -16,6 +16,7 @@ import java.util.logging.Logger;
  *
  * @author Caleb Brinkman
  */
+@SuppressWarnings("ClassWithTooManyDependents")
 public class Message
 {
     private static final Logger LOGGER = Logger.getLogger(Message.class.getName());
