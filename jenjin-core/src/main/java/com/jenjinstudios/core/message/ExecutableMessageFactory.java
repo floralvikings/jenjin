@@ -67,9 +67,9 @@ public class ExecutableMessageFactory
             {
                 Class execClass = Class.forName(className);
                 execConstructors = execClass.getConstructors();
-            } catch (ClassNotFoundException | NullPointerException e)
+            } catch (ClassNotFoundException ex)
             {
-                LOGGER.log(Level.WARNING, "Could not find class: {0}", className);
+                LOGGER.log(Level.WARNING, "Could not find class: " + className, ex);
             }
             constructors.add(getAppropriateConstructor(execConstructors));
         }
