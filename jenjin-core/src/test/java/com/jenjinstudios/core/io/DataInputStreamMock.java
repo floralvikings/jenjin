@@ -16,7 +16,7 @@ import static org.mockito.Mockito.*;
  */
 public class DataInputStreamMock
 {
-    public static final int HEX_CONVERSION_CONSTANT = 0xff;
+    private static final int HEX_CONVERSION_CONSTANT = 0xff;
     private final InputStream in = mock(InputStream.class);
     private OngoingStubbing<Integer> when;
 
