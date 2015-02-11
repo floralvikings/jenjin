@@ -25,10 +25,10 @@ import java.util.logging.Logger;
 public class MessageRegistry
 {
 	private static final Logger LOGGER = Logger.getLogger(MessageRegistry.class.getName());
-	private static MessageRegistry messageRegistry;
-	private final Map<Short, MessageType> messageTypesByID = new TreeMap<>();
+    private static final MessageRegistry MESSAGE_REGISTRY = new MessageRegistry();
+    private final Map<Short, MessageType> messageTypesByID = new TreeMap<>();
 	private final Map<String, MessageType> messageTypesByName = new TreeMap<>();
-	private final List<Short> finalOverrides = new LinkedList<>();
+    private final Collection<Short> finalOverrides = new LinkedList<>();
 
 	private MessageRegistry() {
 		registerXmlMessages();
@@ -41,12 +41,8 @@ public class MessageRegistry
 	 * @return An immutable, static {@code MessageRegistry}.
 	 */
 	public static MessageRegistry getInstance() {
-		if (messageRegistry == null)
-		{
-			messageRegistry = new MessageRegistry();
-		}
-		return messageRegistry;
-	}
+        return MESSAGE_REGISTRY;
+    }
 
 	/**
 	 * Get the {@code MessageType} with the given unique name.
@@ -84,17 +80,17 @@ public class MessageRegistry
 	 * @return A new "empty" {@code Message} of the type specified by {@code name}.
 	 */
 	public Message createMessage(String name) {
-		Message message = null;
-		MessageType messageType = getMessageType(name);
-		if (messageType == null)
+        MessageType messageType = getMessageType(name);
+        if (messageType == null)
 		{
 			LOGGER.log(Level.INFO, "Requested non-existant message {0}, refreshing XML registry", name);
 			// Try again after re-registering XML files
 			registerXmlMessages();
 			messageType = getMessageType(name);
 		}
-		if (messageType != null)
-		{
+        Message message = null;
+        if (messageType != null)
+        {
 			message = new Message(messageType);
 		} else
 		{
@@ -104,68 +100,71 @@ public class MessageRegistry
 	}
 
 	private void registerXmlMessages() {
-		Collection<MessageGroup> foundMessages = MessageFileFinder.findXmlRegistries();
+        MessageFileFinder fileFinder = new MessageFileFinder();
+        Collection<MessageGroup> foundMessages = fileFinder.findXmlRegistries();
 
-		for (MessageGroup currentMessageCollection : foundMessages)
-		{
-			currentMessageCollection.getMessages().forEach(this::registerMessageType);
-			currentMessageCollection.getOverrides().forEach(this::registerOverride);
-		}
+        for (MessageGroup messageGroup : foundMessages)
+        {
+            messageGroup.getMessages().forEach(this::registerMessageType);
+            messageGroup.getOverrides().forEach(this::registerOverride);
+        }
 	}
 
 	private void registerOverride(ExecutableOverride override) {
-		MessageType messageType;
-		if (finalOverrides.contains(override.getId()))
-		{
-			throw new IllegalArgumentException("Cannot overwrite final message executable: " + override.getId());
-		}
-		switch (override.getMode())
-		{
+        short overrideId = override.getId();
+        List<String> overrides = override.getExecutables();
+        String overrideMode = override.getMode();
+        if (finalOverrides.contains(overrideId))
+        {
+            throw new IllegalArgumentException("Cannot overwrite final message executable: " + overrideId);
+        }
+        List<String> executables;
+        synchronized (messageTypesByID)
+        {
+            MessageType messageType = messageTypesByID.get(overrideId);
+            executables = messageType != null ? messageType.getExecutables() : new LinkedList<>();
+        }
+        switch (overrideMode)
+        {
 			case "Override":
-				synchronized (messageTypesByID)
-				{
-					messageType = messageTypesByID.get(override.getId());
-				}
-				messageType.getExecutables().clear();
-				messageType.getExecutables().addAll(override.getExecutables());
-				break;
+                executables.clear();
+                executables.addAll(overrides);
+                break;
 			case "Disable":
-				synchronized (messageTypesByID)
-				{
-					messageType = messageTypesByID.get(override.getId());
-				}
-				List<String> executables = messageType.getExecutables();
-				executables.removeAll(override.getExecutables());
-				break;
+                executables.removeAll(overrides);
+                break;
 			case "Final":
-				finalOverrides.add(override.getId());
-				synchronized (messageTypesByID)
-				{
-					messageType = messageTypesByID.get(override.getId());
-				}
-				messageType.getExecutables().clear();
-				messageType.getExecutables().addAll(override.getExecutables());
-				break;
-		}
+                finalOverrides.add(overrideId);
+                executables.clear();
+                executables.addAll(overrides);
+                break;
+            default:
+                throw new IllegalArgumentException("Invalid Override Mode: " + overrideMode);
+        }
 	}
 
 	private void registerMessageType(MessageType messageType) {
-		if (messageType == null)
-		{
+        if (messageType == null)
+        {
 			LOGGER.log(Level.INFO, "Attempted to register null reference type.");
-		} else if (messageTypesByID.containsKey(messageType.getId()))
-		{
-			LOGGER.log(Level.WARNING, "Unable to register message type: " + messageType.getName() + ". ID already " +
-				  "registered.");
-		} else if (messageTypesByName.containsKey(messageType.getName()))
-		{
-			LOGGER.log(Level.WARNING, "Unable to register message type: " + messageType.getId() + ". Name already " +
-				  "registered.");
 		} else
-		{
-			messageTypesByID.put(messageType.getId(), messageType);
-			messageTypesByName.put(messageType.getName(), messageType);
-		}
-	}
+        {
+            short id = messageType.getId();
+            String name = messageType.getName();
+            if (messageTypesByID.containsKey(id))
+            {
+                LOGGER.log(Level.WARNING, "Unable to register message type: " + name + ". ID already " +
+                      "registered.");
+            } else if (messageTypesByName.containsKey(name))
+            {
+                LOGGER.log(Level.WARNING, "Unable to register message type: " + id + ". Name already " +
+                      "registered.");
+            } else
+            {
+                messageTypesByID.put(id, messageType);
+                messageTypesByName.put(name, messageType);
+            }
+        }
+    }
 
 }

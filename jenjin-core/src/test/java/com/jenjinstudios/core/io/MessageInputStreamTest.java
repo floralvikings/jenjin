@@ -17,6 +17,7 @@ import java.util.logging.Logger;
  * Test the MessageInputStream class.
  * @author Caleb Brinkman
  */
+@SuppressWarnings({"NumericCastThatLosesPrecision", "MagicNumber"})
 public class MessageInputStreamTest
 {
 
@@ -41,8 +42,8 @@ public class MessageInputStreamTest
 		Message message = messageInputStream.readMessage();
 		messageInputStream.close();
 
-		Assert.assertEquals((String) message.getArgument("messageName"), "FooBar");
-	}
+        Assert.assertEquals((String) message.getArgument("messageName"), "FooBar", "Argument names do not match.");
+    }
 
 	/**
 	 * Test reading an invalid message.
@@ -78,8 +79,8 @@ public class MessageInputStreamTest
 		Message msg = mis.readMessage();
 		mis.close();
 
-		Assert.assertEquals(msg.getArgument("encryptedString"), "FooBar");
-	}
+        Assert.assertEquals(msg.getArgument("encryptedString"), "FooBar", "Arguments do not match.");
+    }
 
 	/**
 	 * Test the proper reading of an encrypted string.
@@ -97,7 +98,7 @@ public class MessageInputStreamTest
 		byte[] sBytes = "FooBar".getBytes("UTF-8");
 		String encryptedString = DatatypeConverter.printHexBinary(encryptCipher.doFinal(sBytes));
 
-		Assert.assertNotEquals("FooBar", encryptedString);
+        Assert.assertNotEquals(encryptedString, "FooBar", "Value was not encrypted.");
 
 		mock.mockReadBoolean(true);
 		mock.mockReadUtf(encryptedString);
@@ -108,8 +109,8 @@ public class MessageInputStreamTest
 		Message msg = mis.readMessage();
 		mis.close();
 
-		Assert.assertEquals(msg.getArgument("encryptedString"), "FooBar");
-	}
+        Assert.assertEquals(msg.getArgument("encryptedString"), "FooBar", "Argument not properly decrypted.");
+    }
 
 	/**
 	 * Test each type of message argument.
@@ -147,17 +148,16 @@ public class MessageInputStreamTest
 		Message msg = mis.readMessage();
 		mis.close();
 
-		Assert.assertEquals(((String[]) msg.getArgument("testStringArray"))[1], "A");
-	}
+        Assert.assertEquals(((String[]) msg.getArgument("testStringArray"))[1], "A", "String array contents incorrect");
+    }
 
-	private KeyPair generateRSAKeyPair() {
-		KeyPair keyPair = null;
+    private static KeyPair generateRSAKeyPair() {
+        KeyPair keyPair = null;
 		try
 		{
-			KeyPairGenerator keyPairGenerator;
-			keyPairGenerator = KeyPairGenerator.getInstance("RSA");
-			keyPairGenerator.initialize(512);
-			keyPair = keyPairGenerator.generateKeyPair();
+            KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
+            keyPairGenerator.initialize(512);
+            keyPair = keyPairGenerator.generateKeyPair();
 		} catch (NoSuchAlgorithmException e)
 		{
 			LOGGER.log(Level.SEVERE, "Unable to create RSA key pair!", e);

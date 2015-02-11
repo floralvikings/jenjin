@@ -13,6 +13,7 @@ import java.util.List;
  *
  * @author Caleb Brinkman
  */
+@SuppressWarnings("ALL")
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "messages", namespace = "https://www.jenjinstudios.com")
 public class MessageGroup
@@ -35,8 +36,28 @@ public class MessageGroup
 		return this.messages;
 	}
 
-	/**
-	 * Get the executable message override groups.
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof MessageGroup)) return false;
+
+        MessageGroup that = (MessageGroup) o;
+
+        if (messages != null ? !messages.equals(that.messages) : that.messages != null) return false;
+        if (overrides != null ? !overrides.equals(that.overrides) : that.overrides != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = messages != null ? messages.hashCode() : 0;
+        result = 31 * result + (overrides != null ? overrides.hashCode() : 0);
+        return result;
+    }
+
+    /**
+     * Get the executable message override groups.
 	 *
 	 * @return The executable message override groups.
 	 */
@@ -44,7 +65,8 @@ public class MessageGroup
 		if (overrides == null)
 		{
 			overrides = new LinkedList<>();
-		}
+
+        }
 		return overrides;
 	}
 

@@ -1,7 +1,7 @@
 package com.jenjinstudios.core;
 
+import java.util.Collection;
 import java.util.LinkedList;
-import java.util.List;
 
 /**
  * Used to track the average latency between two connections.
@@ -10,7 +10,7 @@ import java.util.List;
  */
 public class PingTracker
 {
-	private final List<Long> pingTimes = new LinkedList<>();
+    private final Collection<Long> pingTimes = new LinkedList<>();
 
 	/**
 	 * Add a "ping" time to the list maintained by this object.  This should be the amount of time, in milliseconds, a
@@ -33,6 +33,6 @@ public class PingTracker
 			num = pingTimes.size();
 			for (long l : pingTimes) total += l;
 		}
-		return total / (num > 0 ? num : 1);
-	}
+        return total / ((num > 0) ? num : 1);
+    }
 }

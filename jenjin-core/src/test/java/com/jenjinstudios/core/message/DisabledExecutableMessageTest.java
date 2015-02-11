@@ -1,9 +1,9 @@
 package com.jenjinstudios.core.message;
 
 import com.jenjinstudios.core.Connection;
+import com.jenjinstudios.core.ExecutableMessage;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageRegistry;
-import com.jenjinstudios.core.util.ExecutableMessageFactory;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -18,40 +18,40 @@ import static org.mockito.Mockito.mock;
  */
 public class DisabledExecutableMessageTest
 {
-	/**
-	 * Ensure that a message can be properly disabled.
-	 */
-	@Test
-	public void testMessageIsDisabled() {
-		Message disabledMessage = MessageRegistry.getInstance().createMessage("DisabledMessage");
-		Connection connection = mock(Connection.class);
-		List<ExecutableMessage> message = ExecutableMessageFactory.getExecutableMessagesFor(connection,
-			  disabledMessage);
-		Assert.assertTrue(message.isEmpty());
-	}
+    /**
+     * Ensure that a message can be properly disabled.
+     */
+    @Test
+    public void testMessageIsDisabled() {
+        Message disabledMessage = MessageRegistry.getInstance().createMessage("DisabledMessage");
+        Connection connection = mock(Connection.class);
+        Connection.ExecutableMessageFactory messageFactory = new Connection.ExecutableMessageFactory(connection);
+        List<ExecutableMessage> message = messageFactory.getExecutableMessagesFor(disabledMessage);
+        Assert.assertTrue(message.isEmpty(), "Mesage list not empty.");
+    }
 
-	/**
-	 * Ensure that the DisabledMessage cannot be invoked.
-	 */
-	@Test(expectedExceptions = IllegalStateException.class)
-	public void testMessageExecution() {
-		Connection connection = mock(Connection.class);
-		Message message = mock(Message.class);
+    /**
+     * Ensure that the DisabledMessage cannot be invoked.
+     */
+    @Test(expectedExceptions = IllegalStateException.class)
+    public void testMessageExecution() {
+        Connection connection = mock(Connection.class);
+        Message message = mock(Message.class);
 
-		DisabledExecutableMessage disabledExecutableMessage = new DisabledExecutableMessage(connection, message);
-		disabledExecutableMessage.runImmediate();
-	}
+        DisabledExecutableMessage executableMessage = new DisabledExecutableMessage(connection, message);
+        executableMessage.runImmediate();
+    }
 
-	/**
-	 * Ensure that the DisabledMessage cannot be invoked.
-	 */
-	@Test(expectedExceptions = IllegalStateException.class)
-	public void testMessageExecutionDelayed() {
-		Connection connection = mock(Connection.class);
-		Message message = mock(Message.class);
+    /**
+     * Ensure that the DisabledMessage cannot be invoked.
+     */
+    @Test(expectedExceptions = IllegalStateException.class)
+    public void testMessageExecutionDelayed() {
+        Connection connection = mock(Connection.class);
+        Message message = mock(Message.class);
 
-		DisabledExecutableMessage disabledExecutableMessage = new DisabledExecutableMessage(connection, message);
-		disabledExecutableMessage.runDelayed();
+        DisabledExecutableMessage executableMessage = new DisabledExecutableMessage(connection, message);
+        executableMessage.runDelayed();
 
-	}
+    }
 }

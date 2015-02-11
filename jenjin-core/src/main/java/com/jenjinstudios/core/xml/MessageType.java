@@ -11,6 +11,7 @@ import java.util.List;
  *
  * @author Caleb Brinkman
  */
+@SuppressWarnings("ALL")
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "message", namespace = "https://www.jenjinstudios.com", propOrder = {
 	  "arguments",
@@ -70,9 +71,34 @@ public class MessageType
 	 */
 	public void setName(String value) { this.name = value; }
 
-	/**
-	 * Get the unique ID of the {@code Message}.
-	 *
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof MessageType)) return false;
+
+        MessageType that = (MessageType) o;
+
+        if (id != that.id) return false;
+        if (arguments != null ? !arguments.equals(that.arguments) : that.arguments != null) return false;
+        if (executables != null ? !executables.equals(that.executables) : that.executables != null) return false;
+        if (name != null ? !name.equals(that.name) : that.name != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = arguments != null ? arguments.hashCode() : 0;
+        result = 31 * result + (executables != null ? executables.hashCode() : 0);
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (int) id;
+        return result;
+    }
+
+    /**
+     * Get the unique ID of the {@code Message}.
+
+     *
 	 * @return The unique ID of the {@code Message}.
 	 */
 	public short getId() { return id; }

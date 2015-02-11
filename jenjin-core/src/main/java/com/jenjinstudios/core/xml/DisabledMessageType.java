@@ -10,6 +10,7 @@ import javax.xml.bind.annotation.XmlType;
  *
  * @author Caleb Brinkman
  */
+@SuppressWarnings("ALL")
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "disabled_message", namespace = "https://www.jenjinstudios.com")
 public class DisabledMessageType
@@ -27,4 +28,20 @@ public class DisabledMessageType
 		return name;
 	}
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof DisabledMessageType)) return false;
+
+        DisabledMessageType that = (DisabledMessageType) o;
+
+        if ((name != null) ? !name.equals(that.name) : (that.name != null)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return (name != null) ? name.hashCode() : 0;
+    }
 }

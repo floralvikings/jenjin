@@ -2,40 +2,39 @@ package com.jenjinstudios.server.message;
 
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageRegistry;
-import com.jenjinstudios.core.util.MessageFactory;
 
 /**
  * Used to generate messages for the Jenjin core server.
  *
  * @author Caleb Brinkman
  */
-public class ServerMessageFactory extends MessageFactory
+public class ServerMessageFactory
 {
-	/**
-	 * Generate a LogoutResponse.
-	 *
-	 * @param success Whether the logout attempt was successful.
-	 *
-	 * @return The LogoutResponse.
-	 */
-	public Message generateLogoutResponse(boolean success) {
-		Message logoutResponse = MessageRegistry.getInstance().createMessage("LogoutResponse");
-		logoutResponse.setArgument("success", success);
-		return logoutResponse;
-	}
+    /**
+     * Generate a LogoutResponse.
+     *
+     * @param success Whether the logout attempt was successful.
+     *
+     * @return The LogoutResponse.
+     */
+    public Message generateLogoutResponse(boolean success) {
+        Message logoutResponse = MessageRegistry.getInstance().createMessage("LogoutResponse");
+        logoutResponse.setArgument("success", success);
+        return logoutResponse;
+    }
 
-	/**
-	 * Generate a response to a login attempt.
-	 *
-	 * @param success Whether the login attempt was successful.
-	 * @param loggedInTime The time of the successful login.
-	 *
-	 * @return The LoginResponse message.
-	 */
-	public Message generateLoginResponse(boolean success, long loggedInTime) {
-		Message loginResponse = MessageRegistry.getInstance().createMessage("LoginResponse");
-		loginResponse.setArgument("success", success);
-		loginResponse.setArgument("loginTime", loggedInTime);
-		return loginResponse;
-	}
+    /**
+     * Generate a response to a login attempt.
+     *
+     * @param success Whether the login attempt was successful.
+     * @param loggedInTime The time of the successful login.
+     *
+     * @return The LoginResponse message.
+     */
+    public Message generateLoginResponse(boolean success, long loggedInTime) {
+        Message loginResponse = MessageRegistry.getInstance().createMessage("LoginResponse");
+        loginResponse.setArgument("success", success);
+        loginResponse.setArgument("loginTime", loggedInTime);
+        return loginResponse;
+    }
 }

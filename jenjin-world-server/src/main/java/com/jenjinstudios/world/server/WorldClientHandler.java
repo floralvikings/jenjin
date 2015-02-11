@@ -19,85 +19,84 @@ import java.util.Set;
  */
 public class WorldClientHandler extends ClientHandler
 {
-	private final WorldServerMessageFactory messageFactory;
-	private Actor player;
-	private boolean hasSentActorStepMessage;
+    private final WorldServerMessageFactory messageFactory;
+    private Actor player;
+    private boolean hasSentActorStepMessage;
 
-	public WorldClientHandler(WorldServer s, MessageIO messageIO) {
-		super(s, messageIO);
-		this.messageFactory = new WorldServerMessageFactory();
-		setPlayer(new Actor("PLAYER"));
-		getPlayer().addPreUpdateEvent(Vision.EVENT_NAME, new Vision(getPlayer()));
-	}
+    public WorldClientHandler(WorldServer s, MessageIO messageIO) {
+        super(s, messageIO);
+        this.messageFactory = new WorldServerMessageFactory();
+        setPlayer(new Actor("PLAYER"));
+        getPlayer().addPreUpdateEvent(Vision.EVENT_NAME, new Vision(getPlayer()));
+    }
 
-	@Override
-	public void update() {
-		super.update();
-		if (!hasSentActorStepMessage)
-		{
-			getMessageIO().queueOutgoingMessage(getMessageFactory().generateActorMoveSpeedMessage(player.getMoveSpeed
-				  ()));
-			hasSentActorStepMessage = true;
-		}
-		queueForcesStateMessage();
-		queueNewlyVisibleMessages();
-		queueNewlyInvisibleMessages();
-		queueStateChangeMessages();
-	}
+    @Override
+    public void update() {
+        super.update();
+        if (!hasSentActorStepMessage)
+        {
+            getMessageIO().queueOutgoingMessage(getMessageFactory().generateActorMoveSpeedMessage(player.getMoveSpeed
+                  ()));
+            hasSentActorStepMessage = true;
+        }
+        queueForcesStateMessage();
+        queueNewlyVisibleMessages();
+        queueNewlyInvisibleMessages();
+        queueStateChangeMessages();
+    }
 
-	@Override
-	public WorldServerMessageFactory getMessageFactory() { return messageFactory; }
+    public WorldServerMessageFactory getMessageFactory() { return messageFactory; }
 
-	public Actor getPlayer() { return player; }
+    public Actor getPlayer() { return player; }
 
-	protected void setPlayer(Actor player) { this.player = player; }
+    protected void setPlayer(Actor player) { this.player = player; }
 
-	private void queueNewlyVisibleMessages() {
-		Object o = player.getPreUpdateEvent(Vision.EVENT_NAME);
-		if (o != null && o instanceof Vision)
-		{
-			Vision vision = (Vision) o;
-			for (WorldObject object : vision.getNewlyVisibleObjects())
-			{
-				Message newlyVisibleMessage;
-				newlyVisibleMessage = getMessageFactory().generateNewlyVisibleMessage(object);
-				getMessageIO().queueOutgoingMessage(newlyVisibleMessage);
-			}
-		}
-	}
+    private void queueNewlyVisibleMessages() {
+        Object o = player.getPreUpdateEvent(Vision.EVENT_NAME);
+        if (o != null && o instanceof Vision)
+        {
+            Vision vision = (Vision) o;
+            for (WorldObject object : vision.getNewlyVisibleObjects())
+            {
+                Message newlyVisibleMessage;
+                newlyVisibleMessage = getMessageFactory().generateNewlyVisibleMessage(object);
+                getMessageIO().queueOutgoingMessage(newlyVisibleMessage);
+            }
+        }
+    }
 
-	private void queueNewlyInvisibleMessages() {
-		Object o = player.getPreUpdateEvent(Vision.EVENT_NAME);
-		if (o != null && o instanceof Vision)
-		{
-			Vision vision = (Vision) o;
-			for (WorldObject object : vision.getNewlyInvisibleObjects())
-			{
-				Message newlyInvisibleMessage = getMessageFactory().generateNewlyInvisibleMessage(object);
-				getMessageIO().queueOutgoingMessage(newlyInvisibleMessage);
-			}
-		}
-	}
+    private void queueNewlyInvisibleMessages() {
+        Object o = player.getPreUpdateEvent(Vision.EVENT_NAME);
+        if (o != null && o instanceof Vision)
+        {
+            Vision vision = (Vision) o;
+            for (WorldObject object : vision.getNewlyInvisibleObjects())
+            {
+                Message newlyInvisibleMessage = getMessageFactory().generateNewlyInvisibleMessage(object);
+                getMessageIO().queueOutgoingMessage(newlyInvisibleMessage);
+            }
+        }
+    }
 
-	private void queueStateChangeMessages() {
-		Object o = player.getPreUpdateEvent(Vision.EVENT_NAME);
-		if (o != null && o instanceof Vision)
-		{
-			Vision vision = (Vision) o;
-			Set<WorldObject> visibles = vision.getVisibleObjects();
-			visibles.stream().filter(object -> object instanceof Actor).forEach(object ->
-				  queueActorStateChangeMessages((Actor) object));
-		}
-	}
+    private void queueStateChangeMessages() {
+        Object o = player.getPreUpdateEvent(Vision.EVENT_NAME);
+        if (o != null && o instanceof Vision)
+        {
+            Vision vision = (Vision) o;
+            Set<WorldObject> visibles = vision.getVisibleObjects();
+            visibles.stream().filter(object -> object instanceof Actor).forEach(object ->
+                  queueActorStateChangeMessages((Actor) object));
+        }
+    }
 
-	private void queueActorStateChangeMessages(Actor object) {
-		List<Message> newState = getMessageFactory().generateChangeStateMessages(object);
-		newState.forEach(getMessageIO()::queueOutgoingMessage);
-	}
+    private void queueActorStateChangeMessages(Actor object) {
+        List<Message> newState = getMessageFactory().generateChangeStateMessages(object);
+        newState.forEach(getMessageIO()::queueOutgoingMessage);
+    }
 
-	private void queueForcesStateMessage() {
-		MoveState forcedState = player.getForcedState();
-		if (forcedState != null)
-			getMessageIO().queueOutgoingMessage(getMessageFactory().generateForcedStateMessage(forcedState));
-	}
+    private void queueForcesStateMessage() {
+        MoveState forcedState = player.getForcedState();
+        if (forcedState != null)
+            getMessageIO().queueOutgoingMessage(getMessageFactory().generateForcedStateMessage(forcedState));
+    }
 }

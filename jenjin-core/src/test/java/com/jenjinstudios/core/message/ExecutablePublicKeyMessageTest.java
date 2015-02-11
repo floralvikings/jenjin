@@ -3,8 +3,8 @@ package com.jenjinstudios.core.message;
 import com.jenjinstudios.core.Connection;
 import com.jenjinstudios.core.MessageIO;
 import com.jenjinstudios.core.io.Message;
-import com.jenjinstudios.core.util.MessageFactory;
-import com.jenjinstudios.core.util.SecurityUtil;
+import com.jenjinstudios.core.io.MessageInputStream;
+import com.jenjinstudios.core.io.MessageOutputStream;
 import org.testng.annotations.Test;
 
 import java.net.InetAddress;
@@ -22,99 +22,107 @@ import static org.mockito.Mockito.*;
  */
 public class ExecutablePublicKeyMessageTest
 {
-	/**
-	 * Test key verification.
-	 */
-	@Test
-	public void testVerification() {
-		KeyPair rsaKeyPair = SecurityUtil.generateRSAKeyPair();
-		Message message = MessageFactory.generatePublicKeyMessage(rsaKeyPair.getPublic());
-		InetAddress address = InetAddress.getLoopbackAddress();
-		Map<InetAddress, Key> keys = new HashMap<>();
-		keys.put(address, rsaKeyPair.getPublic());
+    /**
+     * Test key verification.
+     */
+    @Test
+    public void testVerification() {
+        KeyPair rsaKeyPair = Connection.generateRSAKeyPair();
+        Message message = Connection.generatePublicKeyMessage(rsaKeyPair.getPublic());
+        InetAddress address = InetAddress.getLoopbackAddress();
+        Map<InetAddress, Key> keys = new HashMap<>(10);
+        keys.put(address, rsaKeyPair.getPublic());
 
-		Connection connection = mock(Connection.class);
-		MessageIO messageIO = mock(MessageIO.class);
+        Connection connection = mock(Connection.class);
+        MessageInputStream in = mock(MessageInputStream.class);
+        MessageOutputStream out = mock(MessageOutputStream.class);
 
-		when(messageIO.getAddress()).thenReturn(address);
-		when(connection.getMessageIO()).thenReturn(messageIO);
-		when(connection.getVerifiedKeys()).thenReturn(keys);
+        MessageIO messageIO = new MessageIO(in, out, address);
 
-		ExecutablePublicKeyMessage executable = new ExecutablePublicKeyMessage(connection, message);
-		executable.runImmediate();
+        when(connection.getMessageIO()).thenReturn(messageIO);
+        when(connection.getVerifiedKeys()).thenReturn(keys);
 
-		verify(messageIO).setPublicKey(rsaKeyPair.getPublic());
-	}
+        ExecutablePublicKeyMessage executable = new ExecutablePublicKeyMessage(connection, message);
+        executable.runImmediate();
 
-	/**
-	 * Test verification bypass when no verified keys are present.
-	 */
-	@Test
-	public void testVerificationNoKeys() {
-		KeyPair rsaKeyPair = SecurityUtil.generateRSAKeyPair();
-		Message message = MessageFactory.generatePublicKeyMessage(rsaKeyPair.getPublic());
-		InetAddress address = InetAddress.getLoopbackAddress();
-		Map<InetAddress, Key> keys = new HashMap<>();
+        verify(out).setPublicKey(rsaKeyPair.getPublic());
+    }
 
-		Connection connection = mock(Connection.class);
-		MessageIO messageIO = mock(MessageIO.class);
+    /**
+     * Test verification bypass when no verified keys are present.
+     */
+    @Test
+    public void testVerificationNoKeys() {
+        KeyPair rsaKeyPair = Connection.generateRSAKeyPair();
+        Message message = Connection.generatePublicKeyMessage(rsaKeyPair.getPublic());
+        InetAddress address = InetAddress.getLoopbackAddress();
+        Map<InetAddress, Key> keys = new HashMap<>(10);
 
-		when(messageIO.getAddress()).thenReturn(address);
-		when(connection.getMessageIO()).thenReturn(messageIO);
-		when(connection.getVerifiedKeys()).thenReturn(keys);
+        Connection connection = mock(Connection.class);
+        MessageIO messageIO = mock(MessageIO.class);
+        MessageOutputStream out = mock(MessageOutputStream.class);
 
-		ExecutablePublicKeyMessage executable = new ExecutablePublicKeyMessage(connection, message);
-		executable.runImmediate();
+        when(messageIO.getOut()).thenReturn(out);
+        when(messageIO.getAddress()).thenReturn(address);
+        when(connection.getMessageIO()).thenReturn(messageIO);
+        when(connection.getVerifiedKeys()).thenReturn(keys);
 
-		verify(messageIO).setPublicKey(rsaKeyPair.getPublic());
-	}
+        ExecutablePublicKeyMessage executable = new ExecutablePublicKeyMessage(connection, message);
+        executable.runImmediate();
 
-	/**
-	 * Test failed key verification due to invalid key.
-	 */
-	@Test
-	public void testVerificationInvalidKey() {
-		KeyPair rsaKeyPair = SecurityUtil.generateRSAKeyPair();
-		KeyPair invalidKeyPair = SecurityUtil.generateRSAKeyPair();
-		Message message = MessageFactory.generatePublicKeyMessage(invalidKeyPair.getPublic());
-		InetAddress address = InetAddress.getLoopbackAddress();
-		Map<InetAddress, Key> keys = new HashMap<>();
-		keys.put(address, rsaKeyPair.getPublic());
+        verify(out).setPublicKey(rsaKeyPair.getPublic());
+    }
 
-		Connection connection = mock(Connection.class);
-		MessageIO messageIO = mock(MessageIO.class);
+    /**
+     * Test failed key verification due to invalid key.
+     */
+    @Test
+    public void testVerificationInvalidKey() {
+        KeyPair rsaKeyPair = Connection.generateRSAKeyPair();
+        KeyPair invalidKeyPair = Connection.generateRSAKeyPair();
+        Message message = Connection.generatePublicKeyMessage(invalidKeyPair.getPublic());
+        InetAddress address = InetAddress.getLoopbackAddress();
+        Map<InetAddress, Key> keys = new HashMap<>(10);
+        keys.put(address, rsaKeyPair.getPublic());
 
-		when(messageIO.getAddress()).thenReturn(address);
-		when(connection.getMessageIO()).thenReturn(messageIO);
-		when(connection.getVerifiedKeys()).thenReturn(keys);
+        Connection connection = mock(Connection.class);
+        MessageIO messageIO = mock(MessageIO.class);
+        MessageOutputStream out = mock(MessageOutputStream.class);
 
-		ExecutablePublicKeyMessage executable = new ExecutablePublicKeyMessage(connection, message);
-		executable.runImmediate();
+        when(messageIO.getOut()).thenReturn(out);
+        when(messageIO.getAddress()).thenReturn(address);
+        when(connection.getMessageIO()).thenReturn(messageIO);
+        when(connection.getVerifiedKeys()).thenReturn(keys);
 
-		verify(messageIO, times(0)).setPublicKey(any());
-	}
+        ExecutablePublicKeyMessage executable = new ExecutablePublicKeyMessage(connection, message);
+        executable.runImmediate();
 
-	/**
-	 * Test invalid key verification due to unknown host.
-	 */
-	@Test
-	public void testVerificationNoAddress() {
-		KeyPair rsaKeyPair = SecurityUtil.generateRSAKeyPair();
-		KeyPair invalidKeyPair = SecurityUtil.generateRSAKeyPair();
-		Message message = MessageFactory.generatePublicKeyMessage(invalidKeyPair.getPublic());
-		InetAddress address = InetAddress.getLoopbackAddress();
-		Map<InetAddress, Key> keys = new HashMap<>();
-		keys.put(address, rsaKeyPair.getPublic());
+        verify(out, times(0)).setPublicKey(any());
+    }
 
-		Connection connection = mock(Connection.class);
-		MessageIO messageIO = mock(MessageIO.class);
+    /**
+     * Test invalid key verification due to unknown host.
+     */
+    @Test
+    public void testVerificationNoAddress() {
+        KeyPair rsaKeyPair = Connection.generateRSAKeyPair();
+        KeyPair invalidKeyPair = Connection.generateRSAKeyPair();
+        Message message = Connection.generatePublicKeyMessage(invalidKeyPair.getPublic());
+        InetAddress address = InetAddress.getLoopbackAddress();
+        Map<InetAddress, Key> keys = new HashMap<>(10);
+        keys.put(address, rsaKeyPair.getPublic());
 
-		when(connection.getMessageIO()).thenReturn(messageIO);
-		when(connection.getVerifiedKeys()).thenReturn(keys);
+        Connection connection = mock(Connection.class);
+        MessageIO messageIO = mock(MessageIO.class);
+        MessageOutputStream out = mock(MessageOutputStream.class);
 
-		ExecutablePublicKeyMessage executable = new ExecutablePublicKeyMessage(connection, message);
-		executable.runImmediate();
+        when(messageIO.getOut()).thenReturn(out);
+        when(connection.getMessageIO()).thenReturn(messageIO);
+        when(connection.getVerifiedKeys()).thenReturn(keys);
 
-		verify(messageIO, times(0)).setPublicKey(any());
-	}
+        ExecutablePublicKeyMessage executable = new ExecutablePublicKeyMessage(connection, message);
+        executable.runImmediate();
+
+        verify(out, times(0)).setPublicKey(any());
+    }
 }

@@ -1,7 +1,6 @@
 package com.jenjinstudios.core;
 
 import com.jenjinstudios.core.io.*;
-import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -10,17 +9,22 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import static org.mockito.Mockito.*;
+
 /**
  * Test the {@code Connection} class.
  *
  * @author Caleb Brinkman
  */
+@SuppressWarnings("OverlyCoupledClass")
 public class ConnectionTest
 {
-	private static final MessageRegistry mr = MessageRegistry.getInstance();
+    private static final MessageRegistry MESSAGE_REGISTRY = MessageRegistry.getInstance();
+    private static final int INVALID_MESSAGE_ID = -255;
+    private static final long REQUEST_TIME_SPOOF = 123456789L;
 
-	/**
-	 * Test the {@code processMessage} method.
+    /**
+     * Test the {@code processMessage} method.
 	 *
 	 * @throws Exception If there's an exception.
 	 */
@@ -28,8 +32,8 @@ public class ConnectionTest
 	public void testProcessMessage() throws Exception {
 		// Spoof an invalid message
 		DataInputStreamMock dataInputStreamMock = new DataInputStreamMock();
-		dataInputStreamMock.mockReadShort((short) -255);
-		dataInputStreamMock.mockReadShort((short) -1);
+        dataInputStreamMock.mockReadShort((short) INVALID_MESSAGE_ID);
+        dataInputStreamMock.mockReadShort((short) -1);
 		dataInputStreamMock.mockReadBoolean(false);
 		dataInputStreamMock.mockReadUtf("FooBar");
 		dataInputStreamMock.mockReadShort((short) -1);
@@ -56,8 +60,8 @@ public class ConnectionTest
 		byte[] bytes = bos.toByteArray();
 		MessageInputStream mis = new MessageInputStream(new ByteArrayInputStream(bytes));
 		Message msg = mis.readMessage();
-		Assert.assertEquals(msg.getArgument("messageName"), "Unknown");
-	}
+        Assert.assertEquals(msg.getArgument("messageName"), "Unknown", "Argument does not match");
+    }
 
 	/**
 	 * Test the {@code shutdown} method.
@@ -68,8 +72,8 @@ public class ConnectionTest
 	public void testShutDown() throws Exception {
 		DataInputStreamMock dataInputStreamMock = new DataInputStreamMock();
 		InputStream in = dataInputStreamMock.getIn();
-		dataInputStreamMock.mockReadShort((short) -255);
-		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        dataInputStreamMock.mockReadShort((short) INVALID_MESSAGE_ID);
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
 
 		MessageInputStream messageInputStream = new MessageInputStream(in);
 		MessageOutputStream messageOutputStream = new MessageOutputStream(bos);
@@ -77,10 +81,10 @@ public class ConnectionTest
 		Connection connection = new Connection(messageIO);
 		connection.shutdown();
 
-		Message msg = mr.createMessage("InvalidMessage");
-		msg.setArgument("messageName", "FooBar");
-		msg.setArgument("messageID", (short) -255);
-		connection.getMessageIO().queueOutgoingMessage(msg);
+        Message msg = MESSAGE_REGISTRY.createMessage("InvalidMessage");
+        msg.setArgument("messageName", "FooBar");
+        msg.setArgument("messageID", (short) INVALID_MESSAGE_ID);
+        connection.getMessageIO().queueOutgoingMessage(msg);
 		try
 		{
 			connection.getMessageIO().writeAllMessages();
@@ -99,14 +103,14 @@ public class ConnectionTest
 	public void testPingRequest() throws Exception {
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 
-		MessageInputStream messageInputStream = Mockito.mock(MessageInputStream.class);
-		MessageOutputStream messageOutputStream = new MessageOutputStream(bos);
+        MessageInputStream messageInputStream = mock(MessageInputStream.class);
+        MessageOutputStream messageOutputStream = new MessageOutputStream(bos);
 
-		Message pingRequest = mr.createMessage("PingRequest");
-		pingRequest.setArgument("requestTimeMillis", 123456789l);
+        Message pingRequest = MESSAGE_REGISTRY.createMessage("PingRequest");
+        pingRequest.setArgument("requestTimeMillis", REQUEST_TIME_SPOOF);
 
-		Mockito.when(messageInputStream.readMessage()).thenReturn(pingRequest).thenReturn(mr.createMessage
-			  ("BlankMessage"));
+        when(messageInputStream.readMessage()).thenReturn(pingRequest).thenReturn(MESSAGE_REGISTRY.createMessage
+              ("BlankMessage"));
 		MessageIO messageIO = new MessageIO(messageInputStream, messageOutputStream);
 		Connection connection = new Connection(messageIO);
 		connection.start();
@@ -125,8 +129,8 @@ public class ConnectionTest
 		byte[] bytes = bos.toByteArray();
 		MessageInputStream mis = new MessageInputStream(new ByteArrayInputStream(bytes));
 		Message msg = mis.readMessage();
-		Assert.assertEquals(msg.name, "PingResponse");
-	}
+        Assert.assertEquals(msg.name, "PingResponse", "Message not PingResponse");
+    }
 
 	/**
 	 * Test the ping response functionality.
@@ -167,6 +171,7 @@ public class ConnectionTest
 
 		// Ping time should be extremely close to 0, but taking into account wonkiness with tests, I'll allow
 		// up to 1000
-		Assert.assertEquals(connection.getPingTracker().getAveragePingTime(), 0, 1000);
-	}
+        Assert.assertEquals(connection.getPingTracker().getAveragePingTime(), 0, 1000, "Ping response too high\n" +
+              "this may be a one off, try running again before digging too deeply.");
+    }
 }
