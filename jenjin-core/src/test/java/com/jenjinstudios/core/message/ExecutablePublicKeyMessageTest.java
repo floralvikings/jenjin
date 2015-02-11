@@ -41,7 +41,7 @@ public class ExecutablePublicKeyMessageTest
         ExecutablePublicKeyMessage executable = new ExecutablePublicKeyMessage(connection, message);
         executable.runImmediate();
 
-        verify(messageIO).out.setPublicKey(rsaKeyPair.getPublic());
+        verify(messageIO).getOut().setPublicKey(rsaKeyPair.getPublic());
     }
 
     /**
@@ -64,7 +64,7 @@ public class ExecutablePublicKeyMessageTest
         ExecutablePublicKeyMessage executable = new ExecutablePublicKeyMessage(connection, message);
         executable.runImmediate();
 
-        verify(messageIO).out.setPublicKey(rsaKeyPair.getPublic());
+        verify(messageIO).getOut().setPublicKey(rsaKeyPair.getPublic());
     }
 
     /**
@@ -89,7 +89,7 @@ public class ExecutablePublicKeyMessageTest
         ExecutablePublicKeyMessage executable = new ExecutablePublicKeyMessage(connection, message);
         executable.runImmediate();
 
-        verify(messageIO, times(0)).out.setPublicKey(any());
+        verify(messageIO, times(0)).getOut().setPublicKey(any());
     }
 
     /**
@@ -113,6 +113,6 @@ public class ExecutablePublicKeyMessageTest
         ExecutablePublicKeyMessage executable = new ExecutablePublicKeyMessage(connection, message);
         executable.runImmediate();
 
-        verify(messageIO, times(0)).out.setPublicKey(any());
+        verify(messageIO, times(0)).getOut().setPublicKey(any());
     }
 }
