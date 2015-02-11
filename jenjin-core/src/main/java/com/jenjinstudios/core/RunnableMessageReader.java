@@ -4,7 +4,7 @@ import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageTypeException;
 import com.jenjinstudios.core.message.ExecutableMessage;
 import com.jenjinstudios.core.message.ExecutableMessageFactory;
-import com.jenjinstudios.core.util.MessageFactory;
+import com.jenjinstudios.core.message.MessageFactory;
 
 import java.io.EOFException;
 import java.io.IOException;

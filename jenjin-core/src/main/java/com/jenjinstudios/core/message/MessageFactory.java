@@ -1,4 +1,4 @@
-package com.jenjinstudios.core.util;
+package com.jenjinstudios.core.message;
 
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageRegistry;
