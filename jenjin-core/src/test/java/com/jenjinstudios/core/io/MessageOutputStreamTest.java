@@ -42,7 +42,7 @@ public class MessageOutputStreamTest
         ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
         MessageInputStream mis = new MessageInputStream(bis);
         Message readMsg = mis.readMessage();
-        Assert.assertEquals(readMsg.getArgs(), msg.getArgs());
+        Assert.assertEquals(readMsg.getArgs(), msg.getArgs(), "Message arguments not equal.");
     }
 
     /**
