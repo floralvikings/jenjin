@@ -135,7 +135,7 @@ public class MessageOutputStream extends DataOutputStream
     private void writeStringArray(String[] strings, boolean encryptStrings) throws IOException {
         int stringsLength = strings.length;
         writeInt(stringsLength);
-        for (String string : strings) writeString(string, encryptStrings);
+        for (String s : strings) writeString(s, encryptStrings);
     }
 
     private void writeByteArray(byte... bytes) throws IOException {
