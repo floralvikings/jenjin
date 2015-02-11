@@ -128,12 +128,12 @@ public final class MessageFileFinder
         AbstractList<File> files = new ArrayList<>(10);
         File[] contents = dir.listFiles();
         if (contents != null)
-            for (File f : contents)
+            for (File file : contents)
             {
-                if (f.isDirectory())
-                    files.addAll(search(f, fileName));
-                if (f.getName().equals(fileName))
-                    files.add(f);
+                if (file.isDirectory())
+                    files.addAll(search(file, fileName));
+                if (file.getName().equals(fileName))
+                    files.add(file);
             }
 
         return files;
