@@ -52,31 +52,27 @@ public class RunnableMessageReader implements Runnable
 
     @Override
     public void run() {
-        while ((invalidMsgCount < MAX_INVALID_MESSAGES) && didProcessNextIncomingMessage())
+        boolean success = true;
+        while ((invalidMsgCount < MAX_INVALID_MESSAGES) && success)
         {
+            try
+            {
+                Message currentMessage = connection.getMessageIO().getIn().readMessage();
+                executeMessage(currentMessage);
+            } catch (MessageTypeException e)
+            {
+                reportInvalidMessage(e);
+            } catch (EOFException | SocketException e)
+            {
+                LOGGER.log(Level.FINER, "Connection closed: " + connection.getName(), e);
+                success = false;
+            } catch (IOException e)
+            {
+                LOGGER.log(Level.FINE, "IOException when attempting to read from stream.", e);
+                success = false;
+            }
             Thread.yield();
         }
-    }
-
-    boolean didProcessNextIncomingMessage() {
-        boolean success = true;
-        try
-        {
-            Message currentMessage = connection.getMessageIO().getIn().readMessage();
-            executeMessage(currentMessage);
-        } catch (MessageTypeException e)
-        {
-            reportInvalidMessage(e);
-        } catch (EOFException | SocketException e)
-        {
-            LOGGER.log(Level.FINER, "Connection closed: " + connection.getName(), e);
-            success = false;
-        } catch (IOException e)
-        {
-            LOGGER.log(Level.FINE, "IOException when attempting to read from stream.", e);
-            success = false;
-        }
-        return success;
     }
 
     void executeMessage(Message message) {
