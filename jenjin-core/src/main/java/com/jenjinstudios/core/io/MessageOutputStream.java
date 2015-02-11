@@ -12,6 +12,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.security.InvalidKeyException;
+import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
 import java.util.List;
@@ -75,12 +76,12 @@ public class MessageOutputStream extends DataOutputStream
 	 *
 	 * @param publicKey The public key.
 	 */
-	public void setPublicKey(PublicKey publicKey) {
-		try
-		{
-			encryptCipher = Cipher.getInstance("RSA");
-			encryptCipher.init(Cipher.ENCRYPT_MODE, publicKey);
-		} catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException e)
+    public void setPublicKey(Key publicKey) {
+        try
+        {
+            encryptCipher = Cipher.getInstance(publicKey.getAlgorithm());
+            encryptCipher.init(Cipher.ENCRYPT_MODE, publicKey);
+        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException e)
 		{
 			LOGGER.log(Level.SEVERE, "Unable to create cipher, messages will not be decrypted.", e);
 		}
