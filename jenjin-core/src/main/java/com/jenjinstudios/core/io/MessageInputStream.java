@@ -59,8 +59,8 @@ public class MessageInputStream extends DataInputStream
         LinkedList<Class> classes = new LinkedList<>();
         for (ArgumentType argumentType : messageType.getArguments())
         {
-            Class c = TypeMapper.getTypeForName(argumentType.getType());
-            classes.add(c);
+            Class typeForName = TypeMapper.getTypeForName(argumentType.getType());
+            classes.add(typeForName);
         }
         Class<?>[] classArray = new Class[classes.size()];
         classes.toArray(classArray);
