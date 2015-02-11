@@ -17,10 +17,11 @@ import java.io.InputStream;
  */
 public class ConnectionTest
 {
-	private static final MessageRegistry mr = MessageRegistry.getInstance();
+    private static final MessageRegistry mr = MessageRegistry.getInstance();
+    public static final int INVALID_MESSAGE_ID = -255;
 
-	/**
-	 * Test the {@code processMessage} method.
+    /**
+     * Test the {@code processMessage} method.
 	 *
 	 * @throws Exception If there's an exception.
 	 */
@@ -28,8 +29,8 @@ public class ConnectionTest
 	public void testProcessMessage() throws Exception {
 		// Spoof an invalid message
 		DataInputStreamMock dataInputStreamMock = new DataInputStreamMock();
-		dataInputStreamMock.mockReadShort((short) -255);
-		dataInputStreamMock.mockReadShort((short) -1);
+        dataInputStreamMock.mockReadShort((short) INVALID_MESSAGE_ID);
+        dataInputStreamMock.mockReadShort((short) -1);
 		dataInputStreamMock.mockReadBoolean(false);
 		dataInputStreamMock.mockReadUtf("FooBar");
 		dataInputStreamMock.mockReadShort((short) -1);
