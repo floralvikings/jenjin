@@ -13,10 +13,11 @@ import java.util.logging.Logger;
  */
 public class SecurityUtil
 {
-	private static final Logger LOGGER = Logger.getLogger(SecurityUtil.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(SecurityUtil.class.getName());
+    public static final int KEYSIZE = 512;
 
-	/**
-	 * Generate an RSA-512 Public-Private Key Pair.
+    /**
+     * Generate an RSA-512 Public-Private Key Pair.
 	 *
 	 * @return The generated {@code KeyPair}, or null if the KeyPair could not be created.
 	 */
@@ -26,8 +27,8 @@ public class SecurityUtil
 		{
 			KeyPairGenerator keyPairGenerator;
 			keyPairGenerator = KeyPairGenerator.getInstance("RSA");
-			keyPairGenerator.initialize(512);
-			keyPair = keyPairGenerator.generateKeyPair();
+            keyPairGenerator.initialize(KEYSIZE);
+            keyPair = keyPairGenerator.generateKeyPair();
 		} catch (NoSuchAlgorithmException e)
 		{
 			LOGGER.log(Level.SEVERE, "Unable to create RSA key pair!", e);
