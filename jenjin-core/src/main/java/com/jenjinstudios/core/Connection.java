@@ -29,7 +29,7 @@ public class Connection
     private final MessageIO messageIO;
     private final Thread messageReaderThread;
     private String name = "Connection";
-    private final Map<InetAddress, Key> verifiedKeys = new HashMap<>();
+    private final Map<InetAddress, Key> verifiedKeys = new HashMap<>(10);
 
     /**
      * Construct a new {@code Connection} that utilizes the specified {@code MessageIO} to read and write messages.
