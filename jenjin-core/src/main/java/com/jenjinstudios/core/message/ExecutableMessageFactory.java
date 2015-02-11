@@ -87,7 +87,7 @@ public class ExecutableMessageFactory
         return executableMessage;
     }
 
-    private Constructor getAppropriateConstructor(Constructor[] execConstructors) {
+    private Constructor getAppropriateConstructor(Constructor... execConstructors) {
         Constructor correctConstructor = null;
         for (Constructor constructor : execConstructors)
         {
