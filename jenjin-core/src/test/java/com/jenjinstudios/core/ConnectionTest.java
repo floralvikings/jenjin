@@ -19,7 +19,7 @@ import static org.mockito.Mockito.*;
 @SuppressWarnings("OverlyCoupledClass")
 public class ConnectionTest
 {
-    private static final MessageRegistry mr = MessageRegistry.getInstance();
+    private static final MessageRegistry MESSAGE_REGISTRY = MessageRegistry.getInstance();
     public static final int INVALID_MESSAGE_ID = -255;
     public static final long REQUEST_TIME_SPOOF = 123456789l;
 
@@ -81,8 +81,8 @@ public class ConnectionTest
 		Connection connection = new Connection(messageIO);
 		connection.shutdown();
 
-		Message msg = mr.createMessage("InvalidMessage");
-		msg.setArgument("messageName", "FooBar");
+        Message msg = MESSAGE_REGISTRY.createMessage("InvalidMessage");
+        msg.setArgument("messageName", "FooBar");
         msg.setArgument("messageID", (short) INVALID_MESSAGE_ID);
         connection.getMessageIO().queueOutgoingMessage(msg);
 		try
@@ -106,10 +106,10 @@ public class ConnectionTest
         MessageInputStream messageInputStream = mock(MessageInputStream.class);
         MessageOutputStream messageOutputStream = new MessageOutputStream(bos);
 
-		Message pingRequest = mr.createMessage("PingRequest");
+        Message pingRequest = MESSAGE_REGISTRY.createMessage("PingRequest");
         pingRequest.setArgument("requestTimeMillis", REQUEST_TIME_SPOOF);
 
-        when(messageInputStream.readMessage()).thenReturn(pingRequest).thenReturn(mr.createMessage
+        when(messageInputStream.readMessage()).thenReturn(pingRequest).thenReturn(MESSAGE_REGISTRY.createMessage
               ("BlankMessage"));
 		MessageIO messageIO = new MessageIO(messageInputStream, messageOutputStream);
 		Connection connection = new Connection(messageIO);
