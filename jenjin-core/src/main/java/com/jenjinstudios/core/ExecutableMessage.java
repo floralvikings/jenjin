@@ -1,4 +1,4 @@
-package com.jenjinstudios.core.message;
+package com.jenjinstudios.core;
 
 import com.jenjinstudios.core.io.Message;
 

@@ -3,7 +3,6 @@ package com.jenjinstudios.core;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageRegistry;
 import com.jenjinstudios.core.io.MessageTypeException;
-import com.jenjinstudios.core.message.ExecutableMessage;
 import com.jenjinstudios.core.xml.MessageType;
 
 import java.io.EOFException;

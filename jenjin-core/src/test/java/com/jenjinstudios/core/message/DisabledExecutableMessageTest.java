@@ -1,6 +1,7 @@
 package com.jenjinstudios.core.message;
 
 import com.jenjinstudios.core.Connection;
+import com.jenjinstudios.core.ExecutableMessage;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageRegistry;
 import org.testng.Assert;
