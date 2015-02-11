@@ -58,27 +58,27 @@ public class ExecutablePublicKeyMessage extends ExecutableMessage
 
     private boolean isKeyValid(Key suppliedKey) {
         boolean verified = false;
-		if (!connection.getVerifiedKeys().isEmpty())
-		{
-			InetAddress address = connection.getMessageIO().getAddress();
-			if (address != null)
-			{
-				Key key = connection.getVerifiedKeys().get(address);
+        if (connection.getVerifiedKeys().isEmpty())
+        {
+            verified = true;
+        } else
+        {
+            InetAddress address = connection.getMessageIO().getAddress();
+            if (address != null)
+            {
+                Key key = connection.getVerifiedKeys().get(address);
                 if ((key == null) || !key.equals(suppliedKey))
                 {
-					LOGGER.log(Level.SEVERE, "Unable to verify public key; supplied key does not match registry.");
-				} else
-				{
-					verified = true;
-				}
-			} else
-			{
-				LOGGER.log(Level.SEVERE, "Unable to verify public key; connection address unknown.");
-			}
-		} else
-		{
-			verified = true;
-		}
-		return verified;
+                    LOGGER.log(Level.SEVERE, "Unable to verify public key; supplied key does not match registry.");
+                } else
+                {
+                    verified = true;
+                }
+            } else
+            {
+                LOGGER.log(Level.SEVERE, "Unable to verify public key; connection address unknown.");
+            }
+        }
+        return verified;
 	}
 }
