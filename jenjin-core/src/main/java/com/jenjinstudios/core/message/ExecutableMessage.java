@@ -1,16 +1,7 @@
 package com.jenjinstudios.core.message;
 
-import com.jenjinstudios.core.Connection;
 import com.jenjinstudios.core.io.Message;
-import com.jenjinstudios.core.io.MessageRegistry;
-import com.jenjinstudios.core.xml.MessageType;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -26,36 +17,36 @@ import java.util.logging.Logger;
 @SuppressWarnings("unused")
 public abstract class ExecutableMessage
 {
-	private static final Logger LOGGER = Logger.getLogger(ExecutableMessage.class.getName());
-	private final Message message;
+    private static final Logger LOGGER = Logger.getLogger(ExecutableMessage.class.getName());
+    private final Message message;
 
-	/**
-	 * Construct a new ExecutableMessage; this should only ever be invoked reflectively, by a {@code Connection}'s
-	 * update cycle.
-	 *
-	 * @param message The message that caused this {@code ExecutableMessage} to be created.
-	 */
-	protected ExecutableMessage(Message message) {
-		this.message = message;
-	}
+    /**
+     * Construct a new ExecutableMessage; this should only ever be invoked reflectively, by a {@code Connection}'s
+     * update cycle.
+     *
+     * @param message The message that caused this {@code ExecutableMessage} to be created.
+     */
+    protected ExecutableMessage(Message message) {
+        this.message = message;
+    }
 
-	/**
-	 * This method is invoked by the {@code Connection} execution timer, and should not be called directly.
-	 */
-	public abstract void runDelayed();
+    /**
+     * This method is invoked by the {@code Connection} execution timer, and should not be called directly.
+     */
+    public abstract void runDelayed();
 
-	/**
-	 * This method is invoked by a {@code Connection} when a message is received and the {@code ExecutableMessage} is
-	 * created, and should not be called directly.
-	 */
-	public abstract void runImmediate();
+    /**
+     * This method is invoked by a {@code Connection} when a message is received and the {@code ExecutableMessage} is
+     * created, and should not be called directly.
+     */
+    public abstract void runImmediate();
 
-	/**
-	 * Get the message for which this {@code ExecutableMessage} was created.
-	 *
-	 * @return The message for which this {@code ExecutableMessage} was created.
-	 */
-	public Message getMessage() {
-		return message;
-	}
+    /**
+     * Get the message for which this {@code ExecutableMessage} was created.
+     *
+     * @return The message for which this {@code ExecutableMessage} was created.
+     */
+    public Message getMessage() {
+        return message;
+    }
 }
