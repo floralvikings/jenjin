@@ -223,27 +223,27 @@ public class MessageInputStream extends DataInputStream
         String received = readUTF();
         if (encrypted)
         {
-            if (decryptCipher != null)
-            {
-                received = decryptString(received);
-            } else
-            {
-                LOGGER.log(Level.SEVERE, "AES key not properly set, unable to decrypt messages.");
-            }
+            received = decryptString(received);
         }
         return received;
     }
 
     private String decryptString(String encrypted) throws UnsupportedEncodingException {
         String decrypted = encrypted;
-        try
+        if (decryptCipher != null)
         {
-            byte[] encBytes = DatatypeConverter.parseHexBinary(encrypted);
-            byte[] decBytes = decryptCipher.doFinal(encBytes);
-            decrypted = new String(decBytes, "UTF-8");
-        } catch (IllegalBlockSizeException | BadPaddingException e)
+            try
+            {
+                byte[] encBytes = DatatypeConverter.parseHexBinary(encrypted);
+                byte[] decBytes = decryptCipher.doFinal(encBytes);
+                decrypted = new String(decBytes, "UTF-8");
+            } catch (IllegalBlockSizeException | BadPaddingException e)
+            {
+                LOGGER.log(Level.WARNING, "Unable to decrypt message: ", e);
+            }
+        } else
         {
-            LOGGER.log(Level.WARNING, "Unable to decrypt message: ", e);
+            LOGGER.log(Level.SEVERE, "AES key not properly set, unable to decrypt messages.");
         }
         return decrypted;
     }
