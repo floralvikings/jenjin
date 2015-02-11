@@ -124,7 +124,7 @@ public final class MessageFileFinder
      *
      * @return A list of all discovered files that match {@code fileName}.
      */
-    public static Collection<File> search(File dir, String fileName) {
+    private static Collection<File> search(File dir, String fileName) {
         AbstractList<File> files = new ArrayList<>(10);
         File[] contents = dir.listFiles();
         if (contents != null)
