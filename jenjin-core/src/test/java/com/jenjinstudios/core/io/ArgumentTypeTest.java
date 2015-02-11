@@ -26,9 +26,9 @@ public class ArgumentTypeTest
 				argumentType = a;
 			}
 		}
-		Assert.assertNotNull(argumentType);
-		String actual = argumentType.toString();
+        Assert.assertNotNull(argumentType, "Argument type was null.");
+        String actual = argumentType.toString();
 		String expected = "messageName, String, encrypt: false";
-		Assert.assertEquals(actual, expected);
-	}
+        Assert.assertEquals(actual, expected, "Argument types not equal");
+    }
 }
