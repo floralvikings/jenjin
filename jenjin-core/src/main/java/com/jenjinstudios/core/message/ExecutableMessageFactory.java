@@ -21,7 +21,7 @@ import java.util.logging.Logger;
 public class ExecutableMessageFactory
 {
     private static final Logger LOGGER = Logger.getLogger(ExecutableMessageFactory.class.getName());
-    public static final Constructor[] EMPTY_CONSTRUCTOR_ARRAY = new Constructor[0];
+    private static final Constructor[] EMPTY_CONSTRUCTOR_ARRAY = new Constructor[0];
     private final Connection connection;
 
     /**
