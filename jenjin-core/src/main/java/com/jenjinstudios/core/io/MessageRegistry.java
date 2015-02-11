@@ -103,11 +103,11 @@ public class MessageRegistry
         MessageFileFinder fileFinder = new MessageFileFinder();
         Collection<MessageGroup> foundMessages = fileFinder.findXmlRegistries();
 
-		for (MessageGroup currentMessageCollection : foundMessages)
-		{
-			currentMessageCollection.getMessages().forEach(this::registerMessageType);
-			currentMessageCollection.getOverrides().forEach(this::registerOverride);
-		}
+        for (MessageGroup messageGroup : foundMessages)
+        {
+            messageGroup.getMessages().forEach(this::registerMessageType);
+            messageGroup.getOverrides().forEach(this::registerOverride);
+        }
 	}
 
 	private void registerOverride(ExecutableOverride override) {
