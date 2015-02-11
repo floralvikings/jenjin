@@ -3,7 +3,7 @@ package com.jenjinstudios.core;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageTypeException;
 import com.jenjinstudios.core.message.ExecutableMessage;
-import com.jenjinstudios.core.util.ExecutableMessageFactory;
+import com.jenjinstudios.core.message.ExecutableMessageFactory;
 import com.jenjinstudios.core.util.MessageFactory;
 
 import java.io.EOFException;
@@ -21,77 +21,77 @@ import java.util.logging.Logger;
  */
 public class RunnableMessageReader implements Runnable
 {
-	private static final int MAX_INVALID_MESSAGES = 10;
-	private static final Logger LOGGER = Logger.getLogger(RunnableMessageReader.class.getName());
-	private final Connection connection;
-	private int invalidMsgCount;
+    private static final int MAX_INVALID_MESSAGES = 10;
+    private static final Logger LOGGER = Logger.getLogger(RunnableMessageReader.class.getName());
+    private final Connection connection;
+    private int invalidMsgCount;
 
-	/**
-	 * Construct a new {@code RunnableMessageReader} working for the given Connection.
-	 *
-	 * @param connection The {@code Connection} managing this reader.
-	 */
-	public RunnableMessageReader(Connection connection) {
-		this.connection = connection;
-	}
+    /**
+     * Construct a new {@code RunnableMessageReader} working for the given Connection.
+     *
+     * @param connection The {@code Connection} managing this reader.
+     */
+    public RunnableMessageReader(Connection connection) {
+        this.connection = connection;
+    }
 
-	@Override
-	public void run() {
-		while (invalidMsgCount < MAX_INVALID_MESSAGES && processNextIncomingMessage())
-		{
-			Thread.yield();
-		}
-	}
+    @Override
+    public void run() {
+        while (invalidMsgCount < MAX_INVALID_MESSAGES && processNextIncomingMessage())
+        {
+            Thread.yield();
+        }
+    }
 
-	boolean processNextIncomingMessage() {
-		boolean success = true;
-		try
-		{
-			Message currentMessage = connection.getMessageIO().getIn().readMessage();
-			executeMessage(currentMessage);
-		} catch (MessageTypeException e)
-		{
-			reportInvalidMessage(e);
-		} catch (EOFException | SocketException e)
-		{
-			LOGGER.log(Level.FINER, "Connection closed: " + connection);
-			success = false;
-		} catch (IOException e)
-		{
-			LOGGER.log(Level.FINE, "IOException when attempting to read from stream.", e);
-			success = false;
-		}
-		return success;
-	}
+    boolean processNextIncomingMessage() {
+        boolean success = true;
+        try
+        {
+            Message currentMessage = connection.getMessageIO().getIn().readMessage();
+            executeMessage(currentMessage);
+        } catch (MessageTypeException e)
+        {
+            reportInvalidMessage(e);
+        } catch (EOFException | SocketException e)
+        {
+            LOGGER.log(Level.FINER, "Connection closed: " + connection);
+            success = false;
+        } catch (IOException e)
+        {
+            LOGGER.log(Level.FINE, "IOException when attempting to read from stream.", e);
+            success = false;
+        }
+        return success;
+    }
 
-	void executeMessage(Message message) {
-		Collection<ExecutableMessage> execs = ExecutableMessageFactory.getExecutableMessagesFor(connection, message);
-		for (ExecutableMessage exec : execs)
-		{
-			if (exec != null)
-			{
-				processExecutableMessage(exec);
-			} else
-			{
-				processInvalidMessage(message);
-			}
-		}
-	}
+    void executeMessage(Message message) {
+        Collection<ExecutableMessage> execs = ExecutableMessageFactory.getExecutableMessagesFor(connection, message);
+        for (ExecutableMessage exec : execs)
+        {
+            if (exec != null)
+            {
+                processExecutableMessage(exec);
+            } else
+            {
+                processInvalidMessage(message);
+            }
+        }
+    }
 
-	private void processInvalidMessage(Message message) {
-		Message invalid = MessageFactory.generateInvalidMessage(message.getID(), message.name);
-		connection.getMessageIO().queueOutgoingMessage(invalid);
-	}
+    private void processInvalidMessage(Message message) {
+        Message invalid = MessageFactory.generateInvalidMessage(message.getID(), message.name);
+        connection.getMessageIO().queueOutgoingMessage(invalid);
+    }
 
-	private void processExecutableMessage(ExecutableMessage exec) {
-		exec.runImmediate();
-		connection.getExecutableMessageQueue().queueExecutableMessage(exec);
-	}
+    private void processExecutableMessage(ExecutableMessage exec) {
+        exec.runImmediate();
+        connection.getExecutableMessageQueue().queueExecutableMessage(exec);
+    }
 
-	void reportInvalidMessage(MessageTypeException e) {
-		LOGGER.log(Level.WARNING, "Input stream reported invalid message receipt.");
-		Message unknown = MessageFactory.generateInvalidMessage(e.getId(), "Unknown");
-		connection.getMessageIO().queueOutgoingMessage(unknown);
-		invalidMsgCount++;
-	}
+    void reportInvalidMessage(MessageTypeException e) {
+        LOGGER.log(Level.WARNING, "Input stream reported invalid message receipt.");
+        Message unknown = MessageFactory.generateInvalidMessage(e.getId(), "Unknown");
+        connection.getMessageIO().queueOutgoingMessage(unknown);
+        invalidMsgCount++;
+    }
 }
