@@ -25,8 +25,7 @@ public class SecurityUtil
 		KeyPair keyPair = null;
 		try
 		{
-			KeyPairGenerator keyPairGenerator;
-			keyPairGenerator = KeyPairGenerator.getInstance("RSA");
+            KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
             keyPairGenerator.initialize(KEYSIZE);
             keyPair = keyPairGenerator.generateKeyPair();
 		} catch (NoSuchAlgorithmException e)
