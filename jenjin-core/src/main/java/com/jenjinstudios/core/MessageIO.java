@@ -6,6 +6,7 @@ import com.jenjinstudios.core.io.MessageOutputStream;
 
 import java.io.IOException;
 import java.net.InetAddress;
+import java.security.Key;
 import java.security.PublicKey;
 import java.util.LinkedList;
 import java.util.logging.Level;
@@ -67,7 +68,7 @@ public class MessageIO
 	 *
 	 * @param publicKey The public key.
 	 */
-	public void setPublicKey(PublicKey publicKey) { out.setPublicKey(publicKey); }
+    public void setPublicKey(Key publicKey) { out.setPublicKey(publicKey); }
 
 	/**
 	 * Add the specified {@code Message} to the queue of outgoing messages.  This queue is written when {@code
