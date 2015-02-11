@@ -24,19 +24,6 @@ public class MessageFactory
     }
 
     /**
-     * Generate a PingResponse with the given time of request.
-     *
-     * @param requestTimeMillis The time at which the request for this response was made.
-     *
-     * @return The generated PingResponse.
-     */
-    public static Message generatePingResponse(long requestTimeMillis) {
-        Message pingResponse = MessageRegistry.getInstance().createMessage("PingResponse");
-        pingResponse.setArgument("requestTimeMillis", requestTimeMillis);
-        return pingResponse;
-    }
-
-    /**
      * Generate a PublicKeyMessage for the given {@code PublicKey}.
      *
      * @param publicKey The {@code PublicKey} for which to generate a {@code Message}.

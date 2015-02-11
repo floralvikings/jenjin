@@ -2,6 +2,7 @@ package com.jenjinstudios.core.message;
 
 import com.jenjinstudios.core.Connection;
 import com.jenjinstudios.core.io.Message;
+import com.jenjinstudios.core.io.MessageRegistry;
 
 /**
  * Used to determine the time taken to send a "ping" to a connection.
@@ -23,6 +24,19 @@ public class ExecutablePingRequest extends ExecutableMessage
         this.connection = connection;
     }
 
+    /**
+     * Generate a PingResponse with the given time of request.
+     *
+     * @param requestTimeMillis The time at which the request for this response was made.
+     *
+     * @return The generated PingResponse.
+     */
+    public static Message generatePingResponse(long requestTimeMillis) {
+        Message pingResponse = MessageRegistry.getInstance().createMessage("PingResponse");
+        pingResponse.setArgument("requestTimeMillis", requestTimeMillis);
+        return pingResponse;
+    }
+
     @Override
     public void runDelayed() {
     }
@@ -31,8 +45,8 @@ public class ExecutablePingRequest extends ExecutableMessage
     public void runImmediate() {
         long requestTimeNanos = (long) getMessage().getArgument("requestTimeMillis");
 
-        Message pingResponse = MessageFactory
-              .generatePingResponse(requestTimeNanos);
+        Message pingResponse =
+              generatePingResponse(requestTimeNanos);
         connection.getMessageIO().queueOutgoingMessage(pingResponse);
 
     }
