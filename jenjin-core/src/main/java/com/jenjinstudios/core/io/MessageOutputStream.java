@@ -89,8 +89,10 @@ public class MessageOutputStream extends DataOutputStream
 
 	@SuppressWarnings("OverlyComplexMethod")
 	private void writeArgument(Object arg, boolean encryptStrings) throws IOException {
-		if (arg instanceof String) writeString((String) arg, encryptStrings);
-		else if (arg instanceof Integer) writeInt((int) arg);
+        // Shh... Just look away.  It's better this way.
+        //noinspection IfStatementWithTooManyBranches
+        if (arg instanceof String) writeString((String) arg, encryptStrings);
+        else if (arg instanceof Integer) writeInt((int) arg);
 		else if (arg instanceof Short) writeShort((short) arg);
 		else if (arg instanceof Long) writeLong((long) arg);
 		else if (arg instanceof Float) writeFloat((float) arg);
