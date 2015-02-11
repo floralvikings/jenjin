@@ -18,8 +18,8 @@ import java.util.logging.Logger;
 @SuppressWarnings("MagicNumber")
 public class MessageOutputStreamTest
 {
-	private static final MessageRegistry mr = MessageRegistry.getInstance();
-	private static final Logger LOGGER = Logger.getLogger(MessageOutputStreamTest.class.getName());
+    private static final MessageRegistry MESSAGE_REGISTRY = MessageRegistry.getInstance();
+    private static final Logger LOGGER = Logger.getLogger(MessageOutputStreamTest.class.getName());
 
 	/**
 	 * Test writing a message to the stream.
@@ -31,8 +31,8 @@ public class MessageOutputStreamTest
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		MessageOutputStream mos = new MessageOutputStream(bos);
 
-		Message msg = mr.createMessage("InvalidMessage");
-		msg.setArgument("messageID", (short) -255);
+        Message msg = MESSAGE_REGISTRY.createMessage("InvalidMessage");
+        msg.setArgument("messageID", (short) -255);
 		msg.setArgument("messageName", "FooBar");
 
 		mos.writeMessage(msg);
@@ -55,8 +55,8 @@ public class MessageOutputStreamTest
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		MessageOutputStream mos = new MessageOutputStream(bos);
 
-		Message msg = mr.createMessage("TestEncryptedMessage");
-		msg.setArgument("encryptedString", "FooBar");
+        Message msg = MESSAGE_REGISTRY.createMessage("TestEncryptedMessage");
+        msg.setArgument("encryptedString", "FooBar");
 
 		mos.writeMessage(msg);
 	}
@@ -75,8 +75,8 @@ public class MessageOutputStreamTest
 		MessageOutputStream mos = new MessageOutputStream(bos);
 		mos.setPublicKey(keyPair.getPublic());
 
-		Message msg = mr.createMessage("TestEncryptedMessage");
-		msg.setArgument("encryptedString", "FooBar");
+        Message msg = MESSAGE_REGISTRY.createMessage("TestEncryptedMessage");
+        msg.setArgument("encryptedString", "FooBar");
 
 		mos.writeMessage(msg);
 		byte[] bytes = bos.toByteArray();
@@ -102,8 +102,8 @@ public class MessageOutputStreamTest
 	public void testAllTypesMessage() throws Exception {
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		MessageOutputStream mos = new MessageOutputStream(bos);
-		Message msg = mr.createMessage("TestAllTypesMessage");
-		msg.setArgument("testString", "SNAFU");
+        Message msg = MESSAGE_REGISTRY.createMessage("TestAllTypesMessage");
+        msg.setArgument("testString", "SNAFU");
 		msg.setArgument("testInt", 123);
 		msg.setArgument("testLong", 456l);
 		msg.setArgument("testDouble", 4.567);
