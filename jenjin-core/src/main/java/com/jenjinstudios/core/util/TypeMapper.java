@@ -42,8 +42,8 @@ public class TypeMapper
 	}
 
 	private static Class getPrimitiveClass(String name) {
-		Class type = null;
-		switch (name)
+        Class type;
+        switch (name)
 		{
 			case "boolean":
 				type = Boolean.class;
@@ -70,7 +70,7 @@ public class TypeMapper
 				type = String.class;
 				break;
             default:
-                type = Object.class;
+                type = null;
                 break;
         }
 		return type;
