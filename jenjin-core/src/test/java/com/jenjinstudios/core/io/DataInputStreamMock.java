@@ -58,6 +58,7 @@ public class DataInputStreamMock
      * @throws UnsupportedEncodingException If there's an exception.
      */
     public void mockReadUtf(String s) throws UnsupportedEncodingException {
+        //noinspection NumericCastThatLosesPrecision
         byte[] bytes = ByteBuffer.allocate(2).putShort((short) s.length()).array();
         when = when.thenReturn(bytes[0] & HEX_CONVERSION_CONSTANT).thenReturn(bytes[1] & HEX_CONVERSION_CONSTANT);
         byte[] encodedBytes = s.getBytes("UTF-8");
