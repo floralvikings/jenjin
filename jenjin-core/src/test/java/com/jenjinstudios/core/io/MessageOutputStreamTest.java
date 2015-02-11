@@ -89,7 +89,7 @@ public class MessageOutputStreamTest
 
         Assert.assertEquals(id, msg.getID(), "Message IDs not equal");
         Assert.assertTrue(encrypted, "Message not encrypted.");
-        Assert.assertNotEquals(encStr, msg.getArgument("encryptedString"));
+        Assert.assertNotEquals(encStr, msg.getArgument("encryptedString"), "Encrypted strings do not match.");
 
     }
 
