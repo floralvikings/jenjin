@@ -105,7 +105,7 @@ public class MessageOutputStreamTest
         Message msg = MESSAGE_REGISTRY.createMessage("TestAllTypesMessage");
         msg.setArgument("testString", "SNAFU");
         msg.setArgument("testInt", 123);
-        msg.setArgument("testLong", 456l);
+        msg.setArgument("testLong", 456L);
         msg.setArgument("testDouble", 4.567);
         msg.setArgument("testFloat", 0.123f);
         msg.setArgument("testShort", (short) 789);
