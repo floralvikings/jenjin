@@ -91,9 +91,9 @@ public class Connection
     public void setRSAKeyPair(KeyPair rsaKeyPair) {
         if (rsaKeyPair != null)
         {
-            getMessageIO().getIn().setPrivateKey(rsaKeyPair.getPrivate());
+            messageIO.getIn().setPrivateKey(rsaKeyPair.getPrivate());
             Message message = generatePublicKeyMessage(rsaKeyPair.getPublic());
-            getMessageIO().queueOutgoingMessage(message);
+            messageIO.queueOutgoingMessage(message);
         }
     }
 
