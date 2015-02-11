@@ -20,8 +20,8 @@ import static org.mockito.Mockito.*;
 public class ConnectionTest
 {
     private static final MessageRegistry MESSAGE_REGISTRY = MessageRegistry.getInstance();
-    public static final int INVALID_MESSAGE_ID = -255;
-    public static final long REQUEST_TIME_SPOOF = 123456789l;
+    private static final int INVALID_MESSAGE_ID = -255;
+    private static final long REQUEST_TIME_SPOOF = 123456789l;
 
     /**
      * Test the {@code processMessage} method.
