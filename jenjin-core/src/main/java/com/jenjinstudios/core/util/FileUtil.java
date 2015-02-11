@@ -1,7 +1,9 @@
 package com.jenjinstudios.core.util;
 
 import java.io.File;
+import java.util.AbstractList;
 import java.util.ArrayList;
+import java.util.Collection;
 
 /**
  * Utility class used for file searching.
@@ -20,9 +22,9 @@ public class FileUtil
 	 *
 	 * @return A list of all discovered files that match {@code fileName}.
 	 */
-	public static ArrayList<File> search(File dir, String fileName) {
-		ArrayList<File> files = new ArrayList<>();
-		File[] contents = dir.listFiles();
+    public static Collection<File> search(File dir, String fileName) {
+        AbstractList<File> files = new ArrayList<>();
+        File[] contents = dir.listFiles();
 		if (contents != null)
 			for (File f : contents)
 			{
