@@ -50,8 +50,8 @@ public class MessageOutputStreamTest
 	 *
 	 * @throws Exception If there's an exception.
 	 */
-	@Test(expectedExceptions = {IOException.class})
-	public void testEncryptedMessageNoPublicKey() throws Exception {
+    @Test(expectedExceptions = IOException.class)
+    public void testEncryptedMessageNoPublicKey() throws Exception {
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		MessageOutputStream mos = new MessageOutputStream(bos);
 
