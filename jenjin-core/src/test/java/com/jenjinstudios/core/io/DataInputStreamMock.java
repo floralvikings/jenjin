@@ -4,6 +4,7 @@ import org.mockito.stubbing.OngoingStubbing;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 
 import static org.mockito.Mockito.*;
@@ -52,9 +53,9 @@ public class DataInputStreamMock
      *
      * @param s The string to mock.
      *
-     * @throws IOException If there's an exception.
+     * @throws UnsupportedEncodingException If there's an exception.
      */
-    public void mockReadUtf(String s) throws IOException {
+    public void mockReadUtf(String s) throws UnsupportedEncodingException {
         byte[] bytes = ByteBuffer.allocate(2).putShort((short) s.length()).array();
         when = when.thenReturn(bytes[0] & 0xff).thenReturn(bytes[1] & 0xff);
         byte[] encodedBytes = s.getBytes("UTF-8");
