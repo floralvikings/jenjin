@@ -3,10 +3,7 @@ package com.jenjinstudios.core.io;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.DataInputStream;
-import java.io.IOException;
+import java.io.*;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
@@ -85,8 +82,8 @@ public class MessageOutputStreamTest
 		byte[] bytes = bos.toByteArray();
 		mos.close();
 
-		DataInputStream dis = new DataInputStream(new ByteArrayInputStream(bytes));
-		short id = dis.readShort();
+        DataInput dis = new DataInputStream(new ByteArrayInputStream(bytes));
+        short id = dis.readShort();
 		boolean encrypted = dis.readBoolean();
 		String encStr = dis.readUTF();
 
