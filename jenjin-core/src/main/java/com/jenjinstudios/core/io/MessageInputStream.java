@@ -133,6 +133,8 @@ public class MessageInputStream extends DataInputStream
         return simple;
     }
 
+    // A Necessary Evil
+    @SuppressWarnings({"OverlyComplexMethod", "OverlyLongMethod"})
     private Object readArgument(String currentClass) throws IOException {
         Object currentArg = null;
 
