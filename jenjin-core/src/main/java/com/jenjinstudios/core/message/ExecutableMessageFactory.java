@@ -42,11 +42,11 @@ public class ExecutableMessageFactory
         List<ExecutableMessage> executableMessages = new LinkedList<>();
         Collection<Constructor> execConstructors = getExecConstructors(message);
 
-        for (Constructor c : execConstructors)
+        for (Constructor constructor : execConstructors)
         {
-            if (c != null)
+            if (constructor != null)
             {
-                executableMessages.add(createExec(message, c));
+                executableMessages.add(createExec(message, constructor));
             } else
             {
                 Object[] args = {connection.getClass().getName(), message.name};
