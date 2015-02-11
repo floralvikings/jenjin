@@ -52,13 +52,13 @@ public class RunnableMessageReader implements Runnable
 
     @Override
     public void run() {
-        while ((invalidMsgCount < MAX_INVALID_MESSAGES) && processNextIncomingMessage())
+        while ((invalidMsgCount < MAX_INVALID_MESSAGES) && didProcessNextIncomingMessage())
         {
             Thread.yield();
         }
     }
 
-    boolean processNextIncomingMessage() {
+    boolean didProcessNextIncomingMessage() {
         boolean success = true;
         try
         {
