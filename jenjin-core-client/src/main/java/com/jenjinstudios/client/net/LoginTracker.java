@@ -58,8 +58,8 @@ public class LoginTracker
 
 	private void sendLogoutRequest() {
 		waitingForResponse = true;
-		Message message = ((ClientMessageFactory) client.getMessageFactory()).generateLogoutRequest();
-		client.getMessageIO().queueOutgoingMessage(message);
+        Message message = ClientMessageFactory.generateLogoutRequest();
+        client.getMessageIO().queueOutgoingMessage(message);
 	}
 
 	private void waitTenMillis() {

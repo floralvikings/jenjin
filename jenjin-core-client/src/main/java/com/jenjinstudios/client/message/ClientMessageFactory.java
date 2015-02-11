@@ -18,7 +18,8 @@ public class ClientMessageFactory extends MessageFactory
      *
      * @return The LogoutRequestMessage.
      */
-    public Message generateLogoutRequest() { return MessageRegistry.getInstance().createMessage("LogoutRequest");}
+    public static Message generateLogoutRequest() { return MessageRegistry.getInstance().createMessage
+          ("LogoutRequest");}
 
     /**
      * Generate a LoginRequest message.  This message will be encrypted if possible.
