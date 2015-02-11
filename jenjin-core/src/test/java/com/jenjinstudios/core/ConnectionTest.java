@@ -60,8 +60,8 @@ public class ConnectionTest
 		byte[] bytes = bos.toByteArray();
 		MessageInputStream mis = new MessageInputStream(new ByteArrayInputStream(bytes));
 		Message msg = mis.readMessage();
-		Assert.assertEquals(msg.getArgument("messageName"), "Unknown");
-	}
+        Assert.assertEquals(msg.getArgument("messageName"), "Unknown", "Argument does not match");
+    }
 
 	/**
 	 * Test the {@code shutdown} method.
@@ -129,8 +129,8 @@ public class ConnectionTest
 		byte[] bytes = bos.toByteArray();
 		MessageInputStream mis = new MessageInputStream(new ByteArrayInputStream(bytes));
 		Message msg = mis.readMessage();
-		Assert.assertEquals(msg.name, "PingResponse");
-	}
+        Assert.assertEquals(msg.name, "PingResponse", "Message not PingResponse");
+    }
 
 	/**
 	 * Test the ping response functionality.
@@ -171,6 +171,7 @@ public class ConnectionTest
 
 		// Ping time should be extremely close to 0, but taking into account wonkiness with tests, I'll allow
 		// up to 1000
-		Assert.assertEquals(connection.getPingTracker().getAveragePingTime(), 0, 1000);
-	}
+        Assert.assertEquals(connection.getPingTracker().getAveragePingTime(), 0, 1000, "Ping response too high\n" +
+              "this may be a one off, try running again before digging too deeply.");
+    }
 }
