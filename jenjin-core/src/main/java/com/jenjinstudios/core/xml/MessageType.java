@@ -79,18 +79,18 @@ public class MessageType
         MessageType that = (MessageType) o;
 
         if (id != that.id) return false;
-        if (!arguments.equals(that.arguments)) return false;
-        if (!executables.equals(that.executables)) return false;
-        if (!name.equals(that.name)) return false;
+        if (arguments != null ? !arguments.equals(that.arguments) : that.arguments != null) return false;
+        if (executables != null ? !executables.equals(that.executables) : that.executables != null) return false;
+        if (name != null ? !name.equals(that.name) : that.name != null) return false;
 
         return true;
     }
 
     @Override
     public int hashCode() {
-        int result = arguments.hashCode();
-        result = 31 * result + executables.hashCode();
-        result = 31 * result + name.hashCode();
+        int result = arguments != null ? arguments.hashCode() : 0;
+        result = 31 * result + (executables != null ? executables.hashCode() : 0);
+        result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (int) id;
         return result;
     }
