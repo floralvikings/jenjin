@@ -25,7 +25,7 @@ public class ClientMessageFactory extends MessageFactory
      *
      * @return The LoginRequest message.
      */
-    public Message generateLoginRequest(ClientUser user) {// Create the login request.
+    public static Message generateLoginRequest(ClientUser user) {// Create the login request.
         Message loginRequest = MessageRegistry.getInstance().createMessage("LoginRequest");
         loginRequest.setArgument("username", user.getUsername());
         loginRequest.setArgument("password", user.getPassword());
