@@ -63,6 +63,13 @@ public class MessageIO
     MessageInputStream getIn() { return in; }
 
     /**
+     * Get the {@code MessageOutputStream} managed by this {@code MessageIO}.
+     *
+     * @return The {@code MessageOutputStream} managed by this {@code MessageIO}.
+     */
+    public MessageOutputStream getOut() { return out; }
+
+    /**
      * Set the public key used to encrypt relevant messages.
      *
      * @param publicKey The public key.
@@ -96,12 +103,10 @@ public class MessageIO
         {
             while (!outgoingMessages.isEmpty())
             {
-                writeMessage(outgoingMessages.remove());
+                out.writeMessage(outgoingMessages.remove());
             }
         }
     }
-
-    void writeMessage(Message o) throws IOException { out.writeMessage(o); }
 
     void closeOutputStream() {
         try
