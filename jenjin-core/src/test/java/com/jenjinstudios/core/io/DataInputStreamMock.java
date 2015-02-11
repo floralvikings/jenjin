@@ -16,6 +16,7 @@ import static org.mockito.Mockito.*;
  */
 public class DataInputStreamMock
 {
+    public static final int HEX_CONVERSION_CONSTANT = 0xff;
     private final InputStream in = mock(InputStream.class);
     private OngoingStubbing<Integer> when;
 
@@ -36,7 +37,7 @@ public class DataInputStreamMock
      */
     public void mockReadShort(short s) {
         byte[] bytes = ByteBuffer.allocate(2).putShort(s).array();
-        when = when.thenReturn(bytes[0] & 0xff).thenReturn(bytes[1] & 0xff);
+        when = when.thenReturn(bytes[0] & HEX_CONVERSION_CONSTANT).thenReturn(bytes[1] & HEX_CONVERSION_CONSTANT);
     }
 
     /**
@@ -57,7 +58,7 @@ public class DataInputStreamMock
      */
     public void mockReadUtf(String s) throws UnsupportedEncodingException {
         byte[] bytes = ByteBuffer.allocate(2).putShort((short) s.length()).array();
-        when = when.thenReturn(bytes[0] & 0xff).thenReturn(bytes[1] & 0xff);
+        when = when.thenReturn(bytes[0] & HEX_CONVERSION_CONSTANT).thenReturn(bytes[1] & HEX_CONVERSION_CONSTANT);
         byte[] encodedBytes = s.getBytes("UTF-8");
         for (byte b : encodedBytes)
         {
@@ -73,8 +74,8 @@ public class DataInputStreamMock
     public void mockReadInt(int i) {
         byte[] bytes = ByteBuffer.allocate(4).putInt(i).array();
 
-        when = when.thenReturn(bytes[0] & 0xff).thenReturn(bytes[1] & 0xff).
-              thenReturn(bytes[2] & 0xff).thenReturn(bytes[3] & 0xff);
+        when = when.thenReturn(bytes[0] & HEX_CONVERSION_CONSTANT).thenReturn(bytes[1] & HEX_CONVERSION_CONSTANT).
+              thenReturn(bytes[2] & HEX_CONVERSION_CONSTANT).thenReturn(bytes[3] & HEX_CONVERSION_CONSTANT);
     }
 
     /**
@@ -84,10 +85,10 @@ public class DataInputStreamMock
      */
     public void mockReadLong(long l) {
         byte[] bytes = ByteBuffer.allocate(8).putLong(l).array();
-        when = when.thenReturn(bytes[0] & 0xff).thenReturn(bytes[1] & 0xff).
-              thenReturn(bytes[2] & 0xff).thenReturn(bytes[3] & 0xff).
-              thenReturn(bytes[4] & 0xff).thenReturn(bytes[5] & 0xff).
-              thenReturn(bytes[6] & 0xff).thenReturn(bytes[7] & 0xff);
+        when = when.thenReturn(bytes[0] & HEX_CONVERSION_CONSTANT).thenReturn(bytes[1] & HEX_CONVERSION_CONSTANT).
+              thenReturn(bytes[2] & HEX_CONVERSION_CONSTANT).thenReturn(bytes[3] & HEX_CONVERSION_CONSTANT).
+              thenReturn(bytes[4] & HEX_CONVERSION_CONSTANT).thenReturn(bytes[5] & HEX_CONVERSION_CONSTANT).
+              thenReturn(bytes[6] & HEX_CONVERSION_CONSTANT).thenReturn(bytes[7] & HEX_CONVERSION_CONSTANT);
     }
 
     /**
@@ -97,10 +98,10 @@ public class DataInputStreamMock
      */
     public void mockReadDouble(double d) {
         byte[] bytes = ByteBuffer.allocate(8).putDouble(d).array();
-        when = when.thenReturn(bytes[0] & 0xff).thenReturn(bytes[1] & 0xff).
-              thenReturn(bytes[2] & 0xff).thenReturn(bytes[3] & 0xff).
-              thenReturn(bytes[4] & 0xff).thenReturn(bytes[5] & 0xff).
-              thenReturn(bytes[6] & 0xff).thenReturn(bytes[7] & 0xff);
+        when = when.thenReturn(bytes[0] & HEX_CONVERSION_CONSTANT).thenReturn(bytes[1] & HEX_CONVERSION_CONSTANT).
+              thenReturn(bytes[2] & HEX_CONVERSION_CONSTANT).thenReturn(bytes[3] & HEX_CONVERSION_CONSTANT).
+              thenReturn(bytes[4] & HEX_CONVERSION_CONSTANT).thenReturn(bytes[5] & HEX_CONVERSION_CONSTANT).
+              thenReturn(bytes[6] & HEX_CONVERSION_CONSTANT).thenReturn(bytes[7] & HEX_CONVERSION_CONSTANT);
     }
 
     /**
@@ -111,8 +112,8 @@ public class DataInputStreamMock
     public void mockReadFloat(float f) {
         byte[] bytes = ByteBuffer.allocate(4).putFloat(f).array();
 
-        when = when.thenReturn(bytes[0] & 0xff).thenReturn(bytes[1] & 0xff).
-              thenReturn(bytes[2] & 0xff).thenReturn(bytes[3] & 0xff);
+        when = when.thenReturn(bytes[0] & HEX_CONVERSION_CONSTANT).thenReturn(bytes[1] & HEX_CONVERSION_CONSTANT).
+              thenReturn(bytes[2] & HEX_CONVERSION_CONSTANT).thenReturn(bytes[3] & HEX_CONVERSION_CONSTANT);
     }
 
     /**
@@ -121,7 +122,7 @@ public class DataInputStreamMock
      * @param b The byte to mock.
      */
     public void mockReadByte(byte b) {
-        when = when.thenReturn(b & 0xff);
+        when = when.thenReturn(b & HEX_CONVERSION_CONSTANT);
     }
 
     /**
