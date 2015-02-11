@@ -33,10 +33,10 @@ public class DataInputStreamMock
     /**
      * Mock reading a short from the stream.
      *
-     * @param s The short to mock.
+     * @param value The short to mock.
      */
-    public void mockReadShort(short s) {
-        byte[] bytes = ByteBuffer.allocate(2).putShort(s).array();
+    public void mockReadShort(short value) {
+        byte[] bytes = ByteBuffer.allocate(2).putShort(value).array();
         when = when.thenReturn(bytes[0] & HEX_CONVERSION_CONSTANT).thenReturn(bytes[1] & HEX_CONVERSION_CONSTANT);
     }
 
