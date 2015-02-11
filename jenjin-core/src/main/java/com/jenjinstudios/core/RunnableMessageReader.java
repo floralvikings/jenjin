@@ -43,7 +43,7 @@ public class RunnableMessageReader implements Runnable
      *
      * @return The generated InvalidMessage object.
      */
-    public static Message generateInvalidMessage(short id, String name) {
+    private static Message generateInvalidMessage(short id, String name) {
         Message invalid = MessageRegistry.getInstance().createMessage("InvalidMessage");
         invalid.setArgument("messageName", name);
         invalid.setArgument("messageID", id);
