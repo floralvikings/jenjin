@@ -70,13 +70,6 @@ public class MessageIO
     public MessageOutputStream getOut() { return out; }
 
     /**
-     * Set the public key used to encrypt relevant messages.
-     *
-     * @param publicKey The public key.
-     */
-    public void setPublicKey(Key publicKey) { out.setPublicKey(publicKey); }
-
-    /**
      * Add the specified {@code Message} to the queue of outgoing messages.  This queue is written when {@code
      * writeAllMessages} is called.
      *

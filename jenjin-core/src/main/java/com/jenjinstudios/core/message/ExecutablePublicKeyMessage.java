@@ -20,41 +20,41 @@ import java.util.logging.Logger;
  */
 public class ExecutablePublicKeyMessage extends ExecutableMessage
 {
-	private static final Logger LOGGER = Logger.getLogger(ExecutablePublicKeyMessage.class.getName());
-	private final Connection connection;
+    private static final Logger LOGGER = Logger.getLogger(ExecutablePublicKeyMessage.class.getName());
+    private final Connection connection;
 
-	/**
-	 * Construct a new {@code ExecutablePublicKeyMessage}.
-	 *
-	 * @param connection The connection invoking this executable message.
-	 * @param message The message which caused this executable message to be invoked.
-	 */
-	@SuppressWarnings("WeakerAccess")
-	public ExecutablePublicKeyMessage(Connection connection, Message message) {
-		super(message);
-		this.connection = connection;
-	}
+    /**
+     * Construct a new {@code ExecutablePublicKeyMessage}.
+     *
+     * @param connection The connection invoking this executable message.
+     * @param message The message which caused this executable message to be invoked.
+     */
+    @SuppressWarnings("WeakerAccess")
+    public ExecutablePublicKeyMessage(Connection connection, Message message) {
+        super(message);
+        this.connection = connection;
+    }
 
-	@Override
-	public void runDelayed() {
+    @Override
+    public void runDelayed() {
 
-	}
+    }
 
-	@Override
-	public void runImmediate() {
-		byte[] keyBytes = (byte[]) getMessage().getArgument("publicKey");
-		try
-		{
-			PublicKey suppliedKey = KeyFactory.getInstance("RSA").generatePublic(new X509EncodedKeySpec(keyBytes));
+    @Override
+    public void runImmediate() {
+        byte[] keyBytes = (byte[]) getMessage().getArgument("publicKey");
+        try
+        {
+            PublicKey suppliedKey = KeyFactory.getInstance("RSA").generatePublic(new X509EncodedKeySpec(keyBytes));
             if (isKeyValid(suppliedKey))
             {
-				connection.getMessageIO().setPublicKey(suppliedKey);
-			}
-		} catch (InvalidKeySpecException | NoSuchAlgorithmException e)
-		{
-			LOGGER.log(Level.INFO, "Unable to instantiate public key; messages will not be encrypted!", e);
-		}
-	}
+                connection.getMessageIO().out.setPublicKey(suppliedKey);
+            }
+        } catch (InvalidKeySpecException | NoSuchAlgorithmException e)
+        {
+            LOGGER.log(Level.INFO, "Unable to instantiate public key; messages will not be encrypted!", e);
+        }
+    }
 
     private boolean isKeyValid(Key suppliedKey) {
         boolean verified = false;
@@ -80,5 +80,5 @@ public class ExecutablePublicKeyMessage extends ExecutableMessage
             }
         }
         return verified;
-	}
+    }
 }
