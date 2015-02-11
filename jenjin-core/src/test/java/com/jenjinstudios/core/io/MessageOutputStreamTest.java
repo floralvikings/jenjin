@@ -18,6 +18,7 @@ import java.util.logging.Logger;
  *
  * @author Caleb Brinkman
  */
+@SuppressWarnings("MagicNumber")
 public class MessageOutputStreamTest
 {
 	private static final MessageRegistry mr = MessageRegistry.getInstance();
