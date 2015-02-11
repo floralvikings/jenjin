@@ -1,6 +1,7 @@
 package com.jenjinstudios.core;
 
 import com.jenjinstudios.core.io.Message;
+import com.jenjinstudios.core.io.MessageRegistry;
 import com.jenjinstudios.core.message.MessageFactory;
 
 import java.net.InetAddress;
@@ -40,6 +41,19 @@ public class Connection
     }
 
     /**
+     * Generate a PublicKeyMessage for the given {@code PublicKey}.
+     *
+     * @param publicKey The {@code PublicKey} for which to generate a {@code Message}.
+     *
+     * @return The generated message.
+     */
+    public static Message generatePublicKeyMessage(Key publicKey) {
+        Message publicKeyMessage = MessageRegistry.getInstance().createMessage("PublicKeyMessage");
+        publicKeyMessage.setArgument("publicKey", publicKey.getEncoded());
+        return publicKeyMessage;
+    }
+
+    /**
      * Start the message reader thread managed by this connection.
      */
     public void start() {
@@ -56,7 +70,7 @@ public class Connection
         if (rsaKeyPair != null)
         {
             getMessageIO().getIn().setPrivateKey(rsaKeyPair.getPrivate());
-            Message message = MessageFactory.generatePublicKeyMessage(rsaKeyPair.getPublic());
+            Message message = generatePublicKeyMessage(rsaKeyPair.getPublic());
             getMessageIO().queueOutgoingMessage(message);
         }
     }

@@ -23,17 +23,4 @@ public class MessageFactory
         return pingRequest;
     }
 
-    /**
-     * Generate a PublicKeyMessage for the given {@code PublicKey}.
-     *
-     * @param publicKey The {@code PublicKey} for which to generate a {@code Message}.
-     *
-     * @return The generated message.
-     */
-    public static Message generatePublicKeyMessage(Key publicKey) {
-        Message publicKeyMessage = MessageRegistry.getInstance().createMessage("PublicKeyMessage");
-        publicKeyMessage.setArgument("publicKey", publicKey.getEncoded());
-        return publicKeyMessage;
-    }
-
 }

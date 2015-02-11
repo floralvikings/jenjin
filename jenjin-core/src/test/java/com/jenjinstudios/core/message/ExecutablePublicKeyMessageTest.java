@@ -27,7 +27,7 @@ public class ExecutablePublicKeyMessageTest
     @Test
     public void testVerification() {
         KeyPair rsaKeyPair = SecurityUtil.generateRSAKeyPair();
-        Message message = MessageFactory.generatePublicKeyMessage(rsaKeyPair.getPublic());
+        Message message = Connection.generatePublicKeyMessage(rsaKeyPair.getPublic());
         InetAddress address = InetAddress.getLoopbackAddress();
         Map<InetAddress, Key> keys = new HashMap<>();
         keys.put(address, rsaKeyPair.getPublic());
@@ -51,7 +51,7 @@ public class ExecutablePublicKeyMessageTest
     @Test
     public void testVerificationNoKeys() {
         KeyPair rsaKeyPair = SecurityUtil.generateRSAKeyPair();
-        Message message = MessageFactory.generatePublicKeyMessage(rsaKeyPair.getPublic());
+        Message message = Connection.generatePublicKeyMessage(rsaKeyPair.getPublic());
         InetAddress address = InetAddress.getLoopbackAddress();
         Map<InetAddress, Key> keys = new HashMap<>();
 
@@ -75,7 +75,7 @@ public class ExecutablePublicKeyMessageTest
     public void testVerificationInvalidKey() {
         KeyPair rsaKeyPair = SecurityUtil.generateRSAKeyPair();
         KeyPair invalidKeyPair = SecurityUtil.generateRSAKeyPair();
-        Message message = MessageFactory.generatePublicKeyMessage(invalidKeyPair.getPublic());
+        Message message = Connection.generatePublicKeyMessage(invalidKeyPair.getPublic());
         InetAddress address = InetAddress.getLoopbackAddress();
         Map<InetAddress, Key> keys = new HashMap<>();
         keys.put(address, rsaKeyPair.getPublic());
@@ -100,7 +100,7 @@ public class ExecutablePublicKeyMessageTest
     public void testVerificationNoAddress() {
         KeyPair rsaKeyPair = SecurityUtil.generateRSAKeyPair();
         KeyPair invalidKeyPair = SecurityUtil.generateRSAKeyPair();
-        Message message = MessageFactory.generatePublicKeyMessage(invalidKeyPair.getPublic());
+        Message message = Connection.generatePublicKeyMessage(invalidKeyPair.getPublic());
         InetAddress address = InetAddress.getLoopbackAddress();
         Map<InetAddress, Key> keys = new HashMap<>();
         keys.put(address, rsaKeyPair.getPublic());
