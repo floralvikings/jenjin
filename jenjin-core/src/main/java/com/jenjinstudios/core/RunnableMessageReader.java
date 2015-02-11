@@ -71,7 +71,6 @@ public class RunnableMessageReader implements Runnable
                 LOGGER.log(Level.FINE, "IOException when attempting to read from stream.", e);
                 success = false;
             }
-            Thread.yield();
         }
     }
 
