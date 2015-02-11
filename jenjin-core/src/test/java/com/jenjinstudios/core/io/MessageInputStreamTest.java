@@ -17,7 +17,7 @@ import java.util.logging.Logger;
  * Test the MessageInputStream class.
  * @author Caleb Brinkman
  */
-@SuppressWarnings("NumericCastThatLosesPrecision")
+@SuppressWarnings({"NumericCastThatLosesPrecision", "MagicNumber"})
 public class MessageInputStreamTest
 {
 
