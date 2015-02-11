@@ -117,8 +117,8 @@ public class MessageIO
 	void closeInputStream() {
 		try
 		{
-			getIn().close();
-		} catch (IOException e)
+            in.close();
+        } catch (IOException e)
 		{
 			LOGGER.log(Level.INFO, "Error closing input stream.", e);
 		}
