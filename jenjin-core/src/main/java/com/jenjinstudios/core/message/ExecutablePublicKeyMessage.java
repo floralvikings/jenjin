@@ -64,8 +64,8 @@ public class ExecutablePublicKeyMessage extends ExecutableMessage
 			if (address != null)
 			{
 				Key key = connection.getVerifiedKeys().get(address);
-				if (key == null || !key.equals(suppliedKey))
-				{
+                if ((key == null) || !key.equals(suppliedKey))
+                {
 					LOGGER.log(Level.SEVERE, "Unable to verify public key; supplied key does not match registry.");
 				} else
 				{
