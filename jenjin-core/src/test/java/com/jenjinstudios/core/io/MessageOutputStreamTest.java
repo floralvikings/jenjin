@@ -88,7 +88,7 @@ public class MessageOutputStreamTest
         String encStr = dis.readUTF();
 
         Assert.assertEquals(id, msg.getID(), "Message IDs not equal");
-        Assert.assertTrue(encrypted);
+        Assert.assertTrue(encrypted, "Message not encrypted.");
         Assert.assertNotEquals(encStr, msg.getArgument("encryptedString"));
 
     }
