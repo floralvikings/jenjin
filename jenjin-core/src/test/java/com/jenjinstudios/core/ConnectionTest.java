@@ -16,6 +16,7 @@ import static org.mockito.Mockito.*;
  *
  * @author Caleb Brinkman
  */
+@SuppressWarnings("OverlyCoupledClass")
 public class ConnectionTest
 {
     private static final MessageRegistry mr = MessageRegistry.getInstance();
