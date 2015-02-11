@@ -154,10 +154,9 @@ public class MessageInputStreamTest
 		KeyPair keyPair = null;
 		try
 		{
-			KeyPairGenerator keyPairGenerator;
-			keyPairGenerator = KeyPairGenerator.getInstance("RSA");
-			keyPairGenerator.initialize(512);
-			keyPair = keyPairGenerator.generateKeyPair();
+            KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
+            keyPairGenerator.initialize(512);
+            keyPair = keyPairGenerator.generateKeyPair();
 		} catch (NoSuchAlgorithmException e)
 		{
 			LOGGER.log(Level.SEVERE, "Unable to create RSA key pair!", e);
