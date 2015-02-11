@@ -14,7 +14,7 @@ import java.util.logging.Logger;
 public class SecurityUtil
 {
     private static final Logger LOGGER = Logger.getLogger(SecurityUtil.class.getName());
-    public static final int KEYSIZE = 512;
+    private static final int KEYSIZE = 512;
 
     /**
      * Generate an RSA-512 Public-Private Key Pair.
