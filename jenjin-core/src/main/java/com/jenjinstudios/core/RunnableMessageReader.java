@@ -1,10 +1,10 @@
 package com.jenjinstudios.core;
 
 import com.jenjinstudios.core.io.Message;
+import com.jenjinstudios.core.io.MessageRegistry;
 import com.jenjinstudios.core.io.MessageTypeException;
 import com.jenjinstudios.core.message.ExecutableMessage;
 import com.jenjinstudios.core.message.ExecutableMessageFactory;
-import com.jenjinstudios.core.message.MessageFactory;
 
 import java.io.EOFException;
 import java.io.IOException;
@@ -33,6 +33,21 @@ public class RunnableMessageReader implements Runnable
      */
     public RunnableMessageReader(Connection connection) {
         this.connection = connection;
+    }
+
+    /**
+     * Generate an InvalidMessage message for the given invalid ID and message name.
+     *
+     * @param id The ID of the invalid message.
+     * @param name The Name of the invalid message.
+     *
+     * @return The generated InvalidMessage object.
+     */
+    public static Message generateInvalidMessage(short id, String name) {
+        Message invalid = MessageRegistry.getInstance().createMessage("InvalidMessage");
+        invalid.setArgument("messageName", name);
+        invalid.setArgument("messageID", id);
+        return invalid;
     }
 
     @Override
@@ -79,7 +94,7 @@ public class RunnableMessageReader implements Runnable
     }
 
     private void processInvalidMessage(Message message) {
-        Message invalid = MessageFactory.generateInvalidMessage(message.getID(), message.name);
+        Message invalid = generateInvalidMessage(message.getID(), message.name);
         connection.getMessageIO().queueOutgoingMessage(invalid);
     }
 
@@ -90,7 +105,7 @@ public class RunnableMessageReader implements Runnable
 
     void reportInvalidMessage(MessageTypeException e) {
         LOGGER.log(Level.WARNING, "Input stream reported invalid message receipt.");
-        Message unknown = MessageFactory.generateInvalidMessage(e.getId(), "Unknown");
+        Message unknown = generateInvalidMessage(e.getId(), "Unknown");
         connection.getMessageIO().queueOutgoingMessage(unknown);
         invalidMsgCount++;
     }

@@ -24,21 +24,6 @@ public class MessageFactory
     }
 
     /**
-     * Generate an InvalidMessage message for the given invalid ID and message name.
-     *
-     * @param id The ID of the invalid message.
-     * @param name The Name of the invalid message.
-     *
-     * @return The generated InvalidMessage object.
-     */
-    public static Message generateInvalidMessage(short id, String name) {
-        Message invalid = MessageRegistry.getInstance().createMessage("InvalidMessage");
-        invalid.setArgument("messageName", name);
-        invalid.setArgument("messageID", id);
-        return invalid;
-    }
-
-    /**
      * Generate a PingResponse with the given time of request.
      *
      * @param requestTimeMillis The time at which the request for this response was made.
