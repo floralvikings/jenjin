@@ -43,11 +43,11 @@ public class DataInputStreamMock
     /**
      * Mock reading a boolean from the stream.
      *
-     * @param b The boolean to mock.
+     * @param value The boolean to mock.
      */
     @SuppressWarnings("BooleanParameter")
-    public void mockReadBoolean(boolean b) {
-        when = when.thenReturn(b ? 1 : 0);
+    public void mockReadBoolean(boolean value) {
+        when = when.thenReturn(value ? 1 : 0);
     }
 
     /**
