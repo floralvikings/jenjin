@@ -19,6 +19,7 @@ public class ConnectionTest
 {
     private static final MessageRegistry mr = MessageRegistry.getInstance();
     public static final int INVALID_MESSAGE_ID = -255;
+    public static final long REQUEST_TIME_SPOOF = 123456789l;
 
     /**
      * Test the {@code processMessage} method.
@@ -69,8 +70,8 @@ public class ConnectionTest
 	public void testShutDown() throws Exception {
 		DataInputStreamMock dataInputStreamMock = new DataInputStreamMock();
 		InputStream in = dataInputStreamMock.getIn();
-		dataInputStreamMock.mockReadShort((short) -255);
-		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        dataInputStreamMock.mockReadShort((short) INVALID_MESSAGE_ID);
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
 
 		MessageInputStream messageInputStream = new MessageInputStream(in);
 		MessageOutputStream messageOutputStream = new MessageOutputStream(bos);
@@ -80,8 +81,8 @@ public class ConnectionTest
 
 		Message msg = mr.createMessage("InvalidMessage");
 		msg.setArgument("messageName", "FooBar");
-		msg.setArgument("messageID", (short) -255);
-		connection.getMessageIO().queueOutgoingMessage(msg);
+        msg.setArgument("messageID", (short) INVALID_MESSAGE_ID);
+        connection.getMessageIO().queueOutgoingMessage(msg);
 		try
 		{
 			connection.getMessageIO().writeAllMessages();
@@ -104,7 +105,7 @@ public class ConnectionTest
 		MessageOutputStream messageOutputStream = new MessageOutputStream(bos);
 
 		Message pingRequest = mr.createMessage("PingRequest");
-		pingRequest.setArgument("requestTimeMillis", 123456789l);
+        pingRequest.setArgument("requestTimeMillis", REQUEST_TIME_SPOOF);
 
 		Mockito.when(messageInputStream.readMessage()).thenReturn(pingRequest).thenReturn(mr.createMessage
 			  ("BlankMessage"));
