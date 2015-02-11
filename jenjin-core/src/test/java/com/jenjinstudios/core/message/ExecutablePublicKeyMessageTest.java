@@ -3,6 +3,7 @@ package com.jenjinstudios.core.message;
 import com.jenjinstudios.core.Connection;
 import com.jenjinstudios.core.MessageIO;
 import com.jenjinstudios.core.io.Message;
+import com.jenjinstudios.core.io.MessageInputStream;
 import com.jenjinstudios.core.io.MessageOutputStream;
 import org.testng.annotations.Test;
 
@@ -33,11 +34,11 @@ public class ExecutablePublicKeyMessageTest
         keys.put(address, rsaKeyPair.getPublic());
 
         Connection connection = mock(Connection.class);
-        MessageIO messageIO = mock(MessageIO.class);
+        MessageInputStream in = mock(MessageInputStream.class);
         MessageOutputStream out = mock(MessageOutputStream.class);
 
-        when(messageIO.getOut()).thenReturn(out);
-        when(messageIO.getAddress()).thenReturn(address);
+        MessageIO messageIO = new MessageIO(in, out, address);
+
         when(connection.getMessageIO()).thenReturn(messageIO);
         when(connection.getVerifiedKeys()).thenReturn(keys);
 
