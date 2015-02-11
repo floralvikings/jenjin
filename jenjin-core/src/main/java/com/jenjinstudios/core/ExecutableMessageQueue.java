@@ -2,8 +2,8 @@ package com.jenjinstudios.core;
 
 import com.jenjinstudios.core.message.ExecutableMessage;
 
+import java.util.Collection;
 import java.util.LinkedList;
-import java.util.List;
 
 /**
  * This class is used to store and execute ExecutableMessages.
@@ -12,7 +12,7 @@ import java.util.List;
  */
 public class ExecutableMessageQueue
 {
-	private final List<ExecutableMessage> queuedExecutableMessages = new LinkedList<>();
+    private final Collection<ExecutableMessage> queuedExecutableMessages = new LinkedList<>();
 
 	/**
 	 * Add an {@code ExecutableMessage} to the end of the queue.
