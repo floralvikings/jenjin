@@ -6,8 +6,12 @@ import com.jenjinstudios.core.io.MessageRegistry;
 import java.net.InetAddress;
 import java.security.Key;
 import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * The {@code Connection} class is a subclass of the {@code Thread} class; it will loop indefinitely until the {@code
@@ -18,6 +22,8 @@ import java.util.Map;
  */
 public class Connection
 {
+    private static final Logger LOGGER = Logger.getLogger(Connection.class.getName());
+    private static final int KEYSIZE = 512;
     private final PingTracker pingTracker;
     private final ExecutableMessageQueue executableMessageQueue;
     private final MessageIO messageIO;
@@ -48,6 +54,25 @@ public class Connection
         Message publicKeyMessage = MessageRegistry.getInstance().createMessage("PublicKeyMessage");
         publicKeyMessage.setArgument("publicKey", publicKey.getEncoded());
         return publicKeyMessage;
+    }
+
+    /**
+     * Generate an RSA-512 Public-Private Key Pair.
+     *
+     * @return The generated {@code KeyPair}, or null if the KeyPair could not be created.
+     */
+    public static KeyPair generateRSAKeyPair() {
+        KeyPair keyPair = null;
+        try
+        {
+            KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
+            keyPairGenerator.initialize(KEYSIZE);
+            keyPair = keyPairGenerator.generateKeyPair();
+        } catch (NoSuchAlgorithmException e)
+        {
+            LOGGER.log(Level.SEVERE, "Unable to create RSA key pair!", e);
+        }
+        return keyPair;
     }
 
     /**

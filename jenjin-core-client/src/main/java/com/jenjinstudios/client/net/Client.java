@@ -4,7 +4,6 @@ import com.jenjinstudios.core.Connection;
 import com.jenjinstudios.core.MessageIO;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageRegistry;
-import com.jenjinstudios.core.util.SecurityUtil;
 
 import java.security.KeyPair;
 import java.util.LinkedList;
@@ -69,7 +68,7 @@ public class Client extends Connection
 
     @Override
     public void start() {
-        KeyPair rsaKeyPair = SecurityUtil.generateRSAKeyPair();
+        KeyPair rsaKeyPair = generateRSAKeyPair();
         setRSAKeyPair(rsaKeyPair);
 
         int period = 1000 / 60;

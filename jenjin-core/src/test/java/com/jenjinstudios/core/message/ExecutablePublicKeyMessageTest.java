@@ -3,7 +3,6 @@ package com.jenjinstudios.core.message;
 import com.jenjinstudios.core.Connection;
 import com.jenjinstudios.core.MessageIO;
 import com.jenjinstudios.core.io.Message;
-import com.jenjinstudios.core.util.SecurityUtil;
 import org.testng.annotations.Test;
 
 import java.net.InetAddress;
@@ -26,7 +25,7 @@ public class ExecutablePublicKeyMessageTest
      */
     @Test
     public void testVerification() {
-        KeyPair rsaKeyPair = SecurityUtil.generateRSAKeyPair();
+        KeyPair rsaKeyPair = Connection.generateRSAKeyPair();
         Message message = Connection.generatePublicKeyMessage(rsaKeyPair.getPublic());
         InetAddress address = InetAddress.getLoopbackAddress();
         Map<InetAddress, Key> keys = new HashMap<>();
@@ -50,7 +49,7 @@ public class ExecutablePublicKeyMessageTest
      */
     @Test
     public void testVerificationNoKeys() {
-        KeyPair rsaKeyPair = SecurityUtil.generateRSAKeyPair();
+        KeyPair rsaKeyPair = Connection.generateRSAKeyPair();
         Message message = Connection.generatePublicKeyMessage(rsaKeyPair.getPublic());
         InetAddress address = InetAddress.getLoopbackAddress();
         Map<InetAddress, Key> keys = new HashMap<>();
@@ -73,8 +72,8 @@ public class ExecutablePublicKeyMessageTest
      */
     @Test
     public void testVerificationInvalidKey() {
-        KeyPair rsaKeyPair = SecurityUtil.generateRSAKeyPair();
-        KeyPair invalidKeyPair = SecurityUtil.generateRSAKeyPair();
+        KeyPair rsaKeyPair = Connection.generateRSAKeyPair();
+        KeyPair invalidKeyPair = Connection.generateRSAKeyPair();
         Message message = Connection.generatePublicKeyMessage(invalidKeyPair.getPublic());
         InetAddress address = InetAddress.getLoopbackAddress();
         Map<InetAddress, Key> keys = new HashMap<>();
@@ -98,8 +97,8 @@ public class ExecutablePublicKeyMessageTest
      */
     @Test
     public void testVerificationNoAddress() {
-        KeyPair rsaKeyPair = SecurityUtil.generateRSAKeyPair();
-        KeyPair invalidKeyPair = SecurityUtil.generateRSAKeyPair();
+        KeyPair rsaKeyPair = Connection.generateRSAKeyPair();
+        KeyPair invalidKeyPair = Connection.generateRSAKeyPair();
         Message message = Connection.generatePublicKeyMessage(invalidKeyPair.getPublic());
         InetAddress address = InetAddress.getLoopbackAddress();
         Map<InetAddress, Key> keys = new HashMap<>();
