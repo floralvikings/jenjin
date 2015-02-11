@@ -24,7 +24,7 @@ public class DisabledExecutableMessageTest
     public void testMessageIsDisabled() {
         Message disabledMessage = MessageRegistry.getInstance().createMessage("DisabledMessage");
         Connection connection = mock(Connection.class);
-        ExecutableMessageFactory messageFactory = new ExecutableMessageFactory(connection);
+        Connection.ExecutableMessageFactory messageFactory = new Connection.ExecutableMessageFactory(connection);
         List<ExecutableMessage> message = messageFactory.getExecutableMessagesFor(disabledMessage);
         Assert.assertTrue(message.isEmpty(), "Mesage list not empty.");
     }
