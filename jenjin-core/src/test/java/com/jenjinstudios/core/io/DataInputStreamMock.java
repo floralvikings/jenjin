@@ -16,8 +16,8 @@ import static org.mockito.Mockito.*;
  */
 public class DataInputStreamMock
 {
-	private final InputStream in = Mockito.mock(InputStream.class);
-	private OngoingStubbing<Integer> when;
+    private final InputStream in = mock(InputStream.class);
+    private OngoingStubbing<Integer> when;
 
 	/**
 	 * Construct a new {@code DataInputStreamMock}.
