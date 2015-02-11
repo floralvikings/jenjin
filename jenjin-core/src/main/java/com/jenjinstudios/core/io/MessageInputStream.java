@@ -99,7 +99,7 @@ public class MessageInputStream extends DataInputStream
     }
 
     private static String simplifyClassName(String complexName) {
-        String simple = complexName;
+        String simple;
         switch (complexName)
         {
             case "java.lang.Integer":
@@ -127,7 +127,8 @@ public class MessageInputStream extends DataInputStream
                 simple = "[B";
                 break;
             default:
-                LOGGER.log(Level.WARNING, "Illegal argument type: " + complexName);
+                simple = complexName;
+                break;
         }
         return simple;
     }
