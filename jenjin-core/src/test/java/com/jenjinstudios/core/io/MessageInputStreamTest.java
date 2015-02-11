@@ -150,8 +150,8 @@ public class MessageInputStreamTest
 		Assert.assertEquals(((String[]) msg.getArgument("testStringArray"))[1], "A");
 	}
 
-	private KeyPair generateRSAKeyPair() {
-		KeyPair keyPair = null;
+    private static KeyPair generateRSAKeyPair() {
+        KeyPair keyPair = null;
 		try
 		{
             KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
