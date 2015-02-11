@@ -37,8 +37,8 @@ public class DisabledExecutableMessageTest
         Connection connection = mock(Connection.class);
         Message message = mock(Message.class);
 
-        DisabledExecutableMessage disabledExecutableMessage = new DisabledExecutableMessage(connection, message);
-        disabledExecutableMessage.runImmediate();
+        DisabledExecutableMessage executableMessage = new DisabledExecutableMessage(connection, message);
+        executableMessage.runImmediate();
     }
 
     /**
@@ -49,8 +49,8 @@ public class DisabledExecutableMessageTest
         Connection connection = mock(Connection.class);
         Message message = mock(Message.class);
 
-        DisabledExecutableMessage disabledExecutableMessage = new DisabledExecutableMessage(connection, message);
-        disabledExecutableMessage.runDelayed();
+        DisabledExecutableMessage executableMessage = new DisabledExecutableMessage(connection, message);
+        executableMessage.runDelayed();
 
     }
 }
