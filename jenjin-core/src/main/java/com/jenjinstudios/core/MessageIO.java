@@ -6,7 +6,6 @@ import com.jenjinstudios.core.io.MessageOutputStream;
 
 import java.io.IOException;
 import java.net.InetAddress;
-import java.security.Key;
 import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -30,9 +29,7 @@ public class MessageIO
      * @param in The input stream.
      * @param out The output stream.
      */
-    public MessageIO(MessageInputStream in, MessageOutputStream out) {
-        this(in, out, null);
-    }
+    public MessageIO(MessageInputStream in, MessageOutputStream out) { this(in, out, null); }
 
     /**
      * Construct a new {@code MessageIO} from the given message input and output streams.
