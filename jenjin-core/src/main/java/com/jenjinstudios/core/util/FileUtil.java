@@ -23,7 +23,7 @@ public class FileUtil
 	 * @return A list of all discovered files that match {@code fileName}.
 	 */
     public static Collection<File> search(File dir, String fileName) {
-        AbstractList<File> files = new ArrayList<>();
+        AbstractList<File> files = new ArrayList<>(10);
         File[] contents = dir.listFiles();
 		if (contents != null)
 			for (File f : contents)
