@@ -12,6 +12,7 @@ import javax.xml.bind.annotation.XmlType;
  *
  * @author Caleb Brinkman
  */
+@SuppressWarnings("ALL")
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "argument", namespace = "https://www.jenjinstudios.com")
 public class ArgumentType
