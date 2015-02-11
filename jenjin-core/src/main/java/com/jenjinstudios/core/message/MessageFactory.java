@@ -12,15 +12,5 @@ import java.security.Key;
  */
 public class MessageFactory
 {
-    /**
-     * Generate a PingRequest message.
-     *
-     * @return The generated message.
-     */
-    public static Message generatePingRequest() {
-        Message pingRequest = MessageRegistry.getInstance().createMessage("PingRequest");
-        pingRequest.setArgument("requestTimeMillis", System.currentTimeMillis());
-        return pingRequest;
-    }
 
 }

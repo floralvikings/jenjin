@@ -2,7 +2,8 @@ package com.jenjinstudios.client.net;
 
 import com.jenjinstudios.core.Connection;
 import com.jenjinstudios.core.MessageIO;
-import com.jenjinstudios.core.message.MessageFactory;
+import com.jenjinstudios.core.io.Message;
+import com.jenjinstudios.core.io.MessageRegistry;
 import com.jenjinstudios.core.util.SecurityUtil;
 
 import java.security.KeyPair;
@@ -34,6 +35,17 @@ public class Client extends Connection
     }
 
     /**
+     * Generate a PingRequest message.
+     *
+     * @return The generated message.
+     */
+    public static Message generatePingRequest() {
+        Message pingRequest = MessageRegistry.getInstance().createMessage("PingRequest");
+        pingRequest.setArgument("requestTimeMillis", System.currentTimeMillis());
+        return pingRequest;
+    }
+
+    /**
      * Add a task to the repeated queue of this client.  Should be called to extend client functionality.
      *
      * @param r The task to be performed.
@@ -62,7 +74,7 @@ public class Client extends Connection
 
         int period = 1000 / 60;
         // Finally, send a ping request to establish latency.
-        getMessageIO().queueOutgoingMessage(MessageFactory.generatePingRequest());
+        getMessageIO().queueOutgoingMessage(generatePingRequest());
 
         sendMessagesTimer = new Timer("Client Update Loop", false);
         sendMessagesTimer.scheduleAtFixedRate(clientLoop, 0, period);
