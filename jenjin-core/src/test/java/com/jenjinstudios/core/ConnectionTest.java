@@ -21,7 +21,7 @@ public class ConnectionTest
 {
     private static final MessageRegistry MESSAGE_REGISTRY = MessageRegistry.getInstance();
     private static final int INVALID_MESSAGE_ID = -255;
-    private static final long REQUEST_TIME_SPOOF = 123456789l;
+    private static final long REQUEST_TIME_SPOOF = 123456789L;
 
     /**
      * Test the {@code processMessage} method.
