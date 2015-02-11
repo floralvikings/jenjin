@@ -11,14 +11,14 @@ import org.testng.annotations.Test;
 @SuppressWarnings("MagicNumber")
 public class MessageTest
 {
-    private static final MessageRegistry mr = MessageRegistry.getInstance();
+    private static final MessageRegistry MESSAGE_REGISTRY = MessageRegistry.getInstance();
 
     /**
      * Test creating a message with an invalid name.
      */
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void testInvalidName() {
-        Message msg = mr.createMessage("InvalidMessage");
+        Message msg = MESSAGE_REGISTRY.createMessage("InvalidMessage");
         msg.setArgument("FooBar", 1337); // Expect exception
     }
 
@@ -27,7 +27,7 @@ public class MessageTest
      */
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void testInvalidArgumentType() {
-        Message msg = mr.createMessage("InvalidMessage");
+        Message msg = MESSAGE_REGISTRY.createMessage("InvalidMessage");
         msg.setArgument("messageName", "FooBar");
         msg.setArgument("messageID", "I'm totally a short, you guys."); // Expect exception
     }
@@ -37,7 +37,7 @@ public class MessageTest
      */
     @Test(expectedExceptions = IllegalStateException.class)
     public void testUnsetArgs() {
-        Message msg = mr.createMessage("InvalidMessage");
+        Message msg = MESSAGE_REGISTRY.createMessage("InvalidMessage");
         msg.setArgument("messageName", "FooBar");
         msg.getArgs(); // Expect exception
     }
@@ -47,7 +47,7 @@ public class MessageTest
      */
     @Test
     public void testToString() {
-        Message msg = mr.createMessage("InvalidMessage");
+        Message msg = MESSAGE_REGISTRY.createMessage("InvalidMessage");
         msg.setArgument("messageName", "FooBar");
         msg.setArgument("messageID", (short) -255);
 
