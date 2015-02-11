@@ -64,6 +64,6 @@ public class MessageTest
      */
     @Test(expectedExceptions = IllegalArgumentException.class)
     public Object testStreamConstructor() {
-        return new Message((short) 0, "Bob"); // Expect Exception
+        return new Message(MESSAGE_REGISTRY.getMessageType((short) 0), "Bob"); // Expect Exception
     }
 }

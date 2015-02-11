@@ -25,9 +25,9 @@ public class Message
     private final Map<String, Object> argumentsByName;
     private final short id;
 
-    Message(short id, Object... args) {
-        this.id = id;
-        messageType = MessageRegistry.getInstance().getMessageType(id);
+    Message(MessageType type, Object... args) {
+        this.id = type.getId();
+        messageType = type;
         name = messageType.getName();
         argumentsByName = new TreeMap<>();
         if (args.length != messageType.getArguments().size())
