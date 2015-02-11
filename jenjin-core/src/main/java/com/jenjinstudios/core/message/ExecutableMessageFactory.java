@@ -21,24 +21,31 @@ import java.util.logging.Logger;
 public class ExecutableMessageFactory
 {
     private static final Logger LOGGER = Logger.getLogger(ExecutableMessageFactory.class.getName());
+    private final Connection connection;
+
+    /**
+     * Construct an ExecutableMessageFactory for the specified connection.
+     *
+     * @param connection The connection for which this factory will produce ExecutableMessages.
+     */
+    public ExecutableMessageFactory(Connection connection) { this.connection = connection; }
 
     /**
      * Given a {@code Connection} and a {@code Message}, create and return an appropriate {@code ExecutableMessage}.
      *
-     * @param connection The {@code Connection} creating this {@code ExecutableMessage}.
      * @param message The {@code Message} for which the {@code ExecutableMessage} is being created.
      *
      * @return The {@code ExecutableMessage} created for {@code connection} and {@code message}.
      */
-    public static List<ExecutableMessage> getExecutableMessagesFor(Connection connection, Message message) {
+    public List<ExecutableMessage> getExecutableMessagesFor(Message message) {
         List<ExecutableMessage> executableMessages = new LinkedList<>();
-        Collection<Constructor> execConstructors = getExecConstructors(connection, message);
+        Collection<Constructor> execConstructors = getExecConstructors(message);
 
         for (Constructor c : execConstructors)
         {
             if (c != null)
             {
-                executableMessages.add(createExec(connection, message, c));
+                executableMessages.add(createExec(message, c));
             } else
             {
                 Object[] args = {connection.getClass().getName(), message.name};
@@ -49,7 +56,7 @@ public class ExecutableMessageFactory
         return executableMessages;
     }
 
-    private static Collection<Constructor> getExecConstructors(Connection connection, Message message) {
+    private Collection<Constructor> getExecConstructors(Message message) {
         Collection<Constructor> constructors = new LinkedList<>();
         MessageType messageType = MessageRegistry.getInstance().getMessageType(message.getID());
         for (String className : messageType.getExecutables())
@@ -63,16 +70,16 @@ public class ExecutableMessageFactory
             {
                 LOGGER.log(Level.WARNING, "Could not find class: {0}", className);
             }
-            constructors.add(getAppropriateConstructor(connection, execConstructors));
+            constructors.add(getAppropriateConstructor(execConstructors));
         }
         return constructors;
     }
 
-    private static ExecutableMessage createExec(Connection conn, Message msg, Constructor constructor) {
+    private ExecutableMessage createExec(Message msg, Constructor constructor) {
         ExecutableMessage executableMessage = null;
         try
         {
-            executableMessage = (ExecutableMessage) constructor.newInstance(conn, msg);
+            executableMessage = (ExecutableMessage) constructor.newInstance(connection, msg);
         } catch (InvocationTargetException | InstantiationException | IllegalAccessException e)
         {
             LOGGER.log(Level.SEVERE, "Constructor not correct", e);
@@ -80,7 +87,7 @@ public class ExecutableMessageFactory
         return executableMessage;
     }
 
-    private static Constructor getAppropriateConstructor(Connection connection, Constructor[] execConstructors) {
+    private Constructor getAppropriateConstructor(Constructor[] execConstructors) {
         Constructor correctConstructor = null;
         for (Constructor constructor : execConstructors)
         {

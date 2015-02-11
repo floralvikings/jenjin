@@ -75,7 +75,8 @@ public class RunnableMessageReader implements Runnable
     }
 
     void executeMessage(Message message) {
-        Collection<ExecutableMessage> execs = ExecutableMessageFactory.getExecutableMessagesFor(connection, message);
+        ExecutableMessageFactory messageFactory = new ExecutableMessageFactory(connection);
+        Collection<ExecutableMessage> execs = messageFactory.getExecutableMessagesFor(message);
         for (ExecutableMessage exec : execs)
         {
             if (exec != null)
