@@ -21,6 +21,7 @@ import java.util.logging.Logger;
 public class ExecutableMessageFactory
 {
     private static final Logger LOGGER = Logger.getLogger(ExecutableMessageFactory.class.getName());
+    public static final Constructor[] EMPTY_CONSTRUCTOR_ARRAY = new Constructor[0];
     private final Connection connection;
 
     /**
@@ -61,7 +62,7 @@ public class ExecutableMessageFactory
         MessageType messageType = MessageRegistry.getInstance().getMessageType(message.getID());
         for (String className : messageType.getExecutables())
         {
-            Constructor[] execConstructors = new Constructor[0];
+            Constructor[] execConstructors = EMPTY_CONSTRUCTOR_ARRAY;
             try
             {
                 Class execClass = Class.forName(className);
