@@ -1,7 +1,6 @@
 package com.jenjinstudios.core;
 
 import com.jenjinstudios.core.io.*;
-import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -9,6 +8,8 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+
+import static org.mockito.Mockito.*;
 
 /**
  * Test the {@code Connection} class.
@@ -101,14 +102,14 @@ public class ConnectionTest
 	public void testPingRequest() throws Exception {
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 
-		MessageInputStream messageInputStream = Mockito.mock(MessageInputStream.class);
-		MessageOutputStream messageOutputStream = new MessageOutputStream(bos);
+        MessageInputStream messageInputStream = mock(MessageInputStream.class);
+        MessageOutputStream messageOutputStream = new MessageOutputStream(bos);
 
 		Message pingRequest = mr.createMessage("PingRequest");
         pingRequest.setArgument("requestTimeMillis", REQUEST_TIME_SPOOF);
 
-		Mockito.when(messageInputStream.readMessage()).thenReturn(pingRequest).thenReturn(mr.createMessage
-			  ("BlankMessage"));
+        when(messageInputStream.readMessage()).thenReturn(pingRequest).thenReturn(mr.createMessage
+              ("BlankMessage"));
 		MessageIO messageIO = new MessageIO(messageInputStream, messageOutputStream);
 		Connection connection = new Connection(messageIO);
 		connection.start();
