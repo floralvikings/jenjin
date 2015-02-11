@@ -21,8 +21,8 @@ public class ArgumentTypeTest
 		ArgumentType argumentType = null;
 		for (ArgumentType a : mt.getArguments())
 		{
-			if (a.getName().equals("messageName"))
-			{
+            if ("messageName".equals(a.getName()))
+            {
 				argumentType = a;
 			}
 		}
