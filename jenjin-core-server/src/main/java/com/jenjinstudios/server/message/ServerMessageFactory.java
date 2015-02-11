@@ -2,14 +2,13 @@ package com.jenjinstudios.server.message;
 
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageRegistry;
-import com.jenjinstudios.core.message.MessageFactory;
 
 /**
  * Used to generate messages for the Jenjin core server.
  *
  * @author Caleb Brinkman
  */
-public class ServerMessageFactory extends MessageFactory
+public class ServerMessageFactory
 {
     /**
      * Generate a LogoutResponse.
