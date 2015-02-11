@@ -3,6 +3,7 @@ package com.jenjinstudios.core.util;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageRegistry;
 
+import java.security.Key;
 import java.security.PublicKey;
 
 /**
@@ -58,8 +59,8 @@ public class MessageFactory
 	 *
 	 * @return The generated message.
 	 */
-	public static Message generatePublicKeyMessage(PublicKey publicKey) {
-		Message publicKeyMessage = MessageRegistry.getInstance().createMessage("PublicKeyMessage");
+    public static Message generatePublicKeyMessage(Key publicKey) {
+        Message publicKeyMessage = MessageRegistry.getInstance().createMessage("PublicKeyMessage");
 		publicKeyMessage.setArgument("publicKey", publicKey.getEncoded());
 		return publicKeyMessage;
 	}
