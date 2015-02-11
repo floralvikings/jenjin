@@ -145,7 +145,6 @@ public class Connection
      *
      * @return The map of domains and verified keys for this client.
      */
-    public Map<InetAddress, Key> getVerifiedKeys() {
-        return verifiedKeys;
-    }
+    @SuppressWarnings("ReturnOfCollectionOrArrayField")
+    public Map<InetAddress, Key> getVerifiedKeys() { return verifiedKeys; }
 }
