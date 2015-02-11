@@ -54,7 +54,7 @@ public class MessageTest
         String expected = "Message 0 InvalidMessage";
         String actual = msg.toString();
 
-        Assert.assertEquals(actual, expected);
+        Assert.assertEquals(actual, expected, "Invalid message expected, not received.");
     }
 
     /**
