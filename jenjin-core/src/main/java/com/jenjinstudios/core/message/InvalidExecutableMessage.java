@@ -35,8 +35,7 @@ public class InvalidExecutableMessage extends ExecutableMessage
 	public void runImmediate() {
 		String messageName = (String) getMessage().getArgument("messageName");
 		short messageID = (short) getMessage().getArgument("messageID");
-		String reportMessage = "Connection reported invalid sent message: " + messageName + " (ID:  " + messageID +
-			  ")";
-		LOGGER.log(Level.SEVERE, reportMessage);
+        String reportMessage = "Connection reported invalid sent message: " + messageName + " (ID:  " + messageID + ')';
+        LOGGER.log(Level.SEVERE, reportMessage);
 	}
 }
