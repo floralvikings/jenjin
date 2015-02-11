@@ -1,6 +1,5 @@
 package com.jenjinstudios.core.io;
 
-import com.jenjinstudios.core.util.TypeMapper;
 import com.jenjinstudios.core.xml.ArgumentType;
 import com.jenjinstudios.core.xml.MessageType;
 
@@ -59,7 +58,7 @@ public class MessageInputStream extends DataInputStream
         LinkedList<Class> classes = new LinkedList<>();
         for (ArgumentType argumentType : messageType.getArguments())
         {
-            Class typeForName = TypeMapper.getTypeForName(argumentType.getType());
+            Class typeForName = Message.getTypeForName(argumentType.getType());
             classes.add(typeForName);
         }
         Class<?>[] classArray = new Class[classes.size()];
