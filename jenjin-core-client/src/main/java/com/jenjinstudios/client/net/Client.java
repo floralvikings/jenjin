@@ -39,7 +39,7 @@ public class Client extends Connection
      *
      * @return The generated message.
      */
-    public static Message generatePingRequest() {
+    private static Message generatePingRequest() {
         Message pingRequest = MessageRegistry.getInstance().createMessage("PingRequest");
         pingRequest.setArgument("requestTimeMillis", System.currentTimeMillis());
         return pingRequest;
