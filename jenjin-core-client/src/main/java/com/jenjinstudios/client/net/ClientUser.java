@@ -10,7 +10,13 @@ public class ClientUser
 	private final String username;
 	private final String password;
 
-	public ClientUser(String username, String password) {
+    /**
+     * Construct a new ClientUser with the given username and password.
+     *
+     * @param username The client's username.
+     * @param password The client's password.
+     */
+    public ClientUser(String username, String password) {
 		this.username = username;
 		this.password = password;
 	}
