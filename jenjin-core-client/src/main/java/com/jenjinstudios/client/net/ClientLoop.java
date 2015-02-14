@@ -57,7 +57,7 @@ class ClientLoop extends TimerTask
         {
             total += updateTimesNanos[i];
         }
-        return (total / maxIndex) / NANOS_TO_SECOND;
+        return total / maxIndex / NANOS_TO_SECOND;
     }
 
 }
