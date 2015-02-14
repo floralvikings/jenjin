@@ -29,15 +29,15 @@ public class ExecutableLoginResponseTest
 		AuthClient authClient = mock(AuthClient.class);
 		LoginTracker loginTracker = mock(LoginTracker.class);
 		when(loginTracker.isLoggedIn()).thenReturn(true);
-		when(loginTracker.getLoggedInTime()).thenReturn(12345l);
-		when(authClient.getLoginTracker()).thenReturn(loginTracker);
+        when(loginTracker.getLoggedInTime()).thenReturn(12345L);
+        when(authClient.getLoginTracker()).thenReturn(loginTracker);
 		when(authClient.getUser()).thenReturn(user);
 
         ExecutableLoginResponse response = new ExecutableLoginResponse(authClient, loginResponse);
         response.runImmediate();
         response.runDelayed();
 
-		verify(loginTracker).setLoggedInTime(12345l);
-        Assert.assertEquals(loginTracker.getLoggedInTime(), 12345l, "Login time was not as expected.");
+        verify(loginTracker).setLoggedInTime(12345L);
+        Assert.assertEquals(loginTracker.getLoggedInTime(), 12345L, "Login time was not as expected.");
     }
 }
