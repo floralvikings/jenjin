@@ -13,14 +13,12 @@ public class ClientMessageFactoryTest
 {
     @Test
     public void testGenerateLogoutRequest() {
-        ClientMessageFactory messageFactory = new ClientMessageFactory();
         Message message = AuthClient.generateLogoutRequest();
         Assert.assertEquals(message.name, "LogoutRequest");
     }
 
     @Test
     public void testGenerateLoginRequest() {
-        ClientMessageFactory messageFactory = new ClientMessageFactory();
         Message message = AuthClient.generateLoginRequest(new ClientUser("Foo", "Bar"));
         Assert.assertEquals(message.name, "LoginRequest");
         Assert.assertEquals(message.getArgument("username"), "Foo");
