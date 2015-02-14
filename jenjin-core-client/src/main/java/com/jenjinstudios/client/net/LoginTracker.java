@@ -71,6 +71,7 @@ public class LoginTracker
      *
      * @return Whether the login was successful.
      */
+    @SuppressWarnings("BooleanMethodNameMustStartWithQuestion")
     public boolean sendLoginRequestAndWaitForResponse() {
         sendLoginRequest();
         long startTime = System.currentTimeMillis();
