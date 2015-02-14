@@ -66,6 +66,11 @@ public class LoginTracker
         client.getMessageIO().queueOutgoingMessage(message);
     }
 
+    /**
+     * Send a login request and await the response.
+     *
+     * @return Whether the login was successful.
+     */
     public boolean sendLoginRequestAndWaitForResponse() {
         sendLoginRequest();
         long startTime = System.currentTimeMillis();
