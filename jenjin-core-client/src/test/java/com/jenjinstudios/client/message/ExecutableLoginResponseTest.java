@@ -16,7 +16,10 @@ import static org.mockito.Mockito.*;
  */
 public class ExecutableLoginResponseTest
 {
-	@Test
+    /**
+     * Test execution of the message.
+     */
+    @Test
 	public void testMessageExecution() {
 		Message loginResponse = MessageRegistry.getInstance().createMessage("LoginResponse");
 		loginResponse.setArgument("success", true);
