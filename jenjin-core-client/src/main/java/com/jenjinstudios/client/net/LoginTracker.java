@@ -6,6 +6,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
+ * Used to track the status of login requests and responses.
+ *
  * @author Caleb Brinkman
  */
 public class LoginTracker
