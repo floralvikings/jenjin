@@ -11,7 +11,7 @@ import java.util.logging.Logger;
 public class LoginTracker
 {
     private static final Logger LOGGER = Logger.getLogger(LoginTracker.class.getName());
-    public static final int MILLIS_IN_30_SECONDS = 30000;
+    private static final int MILLIS_IN_30_SECONDS = 30000;
     private volatile boolean loggedIn;
     private volatile boolean waitingForResponse;
     private long loggedInTime;
