@@ -19,8 +19,8 @@ public class AuthClientTest
 		MessageOutputStream mos = mock(MessageOutputStream.class);
 		MessageIO messageIO = new MessageIO(mis, mos);
 		ClientUser clientUser = mock(ClientUser.class);
-		boolean random = Math.random() * 10 % 2 == 0;
-		AuthClient authClient = new AuthClient(messageIO, clientUser);
+        boolean random = ((Math.random() * 10) % 2) == 0;
+        AuthClient authClient = new AuthClient(messageIO, clientUser);
 		authClient.getLoginTracker().setLoggedIn(random);
 
 		Assert.assertEquals(authClient.getLoginTracker().isLoggedIn(), random);
