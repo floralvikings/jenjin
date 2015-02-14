@@ -1,6 +1,7 @@
 package com.jenjinstudios.world.client.message;
 
-import com.jenjinstudios.client.message.AuthClientExecutableMessage;
+import com.jenjinstudios.client.net.AuthClient;
+import com.jenjinstudios.core.ExecutableMessage;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.world.client.WorldClient;
 
@@ -9,7 +10,7 @@ import com.jenjinstudios.world.client.WorldClient;
  *
  * @author Caleb Brinkman
  */
-public abstract class WorldClientExecutableMessage extends AuthClientExecutableMessage
+public abstract class WorldClientExecutableMessage extends ExecutableMessage
 {
     /**
      * Construct an ExecutableMessage with the given Message.
@@ -23,6 +24,6 @@ public abstract class WorldClientExecutableMessage extends AuthClientExecutableM
 
     @Override
     public WorldClient getConnection() {
-        return (WorldClient) super.getConnection();
+        return (WorldClient) (AuthClient) super.getConnection();
     }
 }

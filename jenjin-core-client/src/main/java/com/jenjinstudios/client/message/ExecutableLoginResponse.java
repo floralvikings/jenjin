@@ -1,6 +1,7 @@
 package com.jenjinstudios.client.message;
 
 import com.jenjinstudios.client.net.AuthClient;
+import com.jenjinstudios.core.ExecutableMessage;
 import com.jenjinstudios.core.io.Message;
 
 /**
@@ -9,7 +10,7 @@ import com.jenjinstudios.core.io.Message;
  * @author Caleb Brinkman
  */
 @SuppressWarnings("unused")
-public class ExecutableLoginResponse extends AuthClientExecutableMessage
+public class ExecutableLoginResponse extends ExecutableMessage
 {
     /**
      * Construct an ExecutableMessage with the given Message.
@@ -23,7 +24,7 @@ public class ExecutableLoginResponse extends AuthClientExecutableMessage
 
     @Override
     public void runDelayed() {
-        AuthClient client = getConnection();
+        AuthClient client = (AuthClient) super.getConnection();
         client.getLoginTracker().setLoggedIn((boolean) getMessage().getArgument("success"));
         if (client.getLoginTracker().isLoggedIn())
         {
