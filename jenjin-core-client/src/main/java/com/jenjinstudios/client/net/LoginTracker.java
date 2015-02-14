@@ -33,6 +33,11 @@ public class LoginTracker
      */
     public boolean isLoggedIn() { return loggedIn; }
 
+    /**
+     * Set when a successful login response has been received.
+     *
+     * @param loggedIn Whether the login was successful.
+     */
     public void setLoggedIn(boolean loggedIn) {
         waitingForResponse = false;
         this.loggedIn = loggedIn;
