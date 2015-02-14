@@ -22,7 +22,7 @@ public class Client extends Connection
     private final List<Runnable> repeatedTasks;
     /** The timer that manages the update loop. */
     private Timer sendMessagesTimer;
-    private ClientLoop clientLoop = new ClientLoop(this);
+    private final ClientLoop clientLoop = new ClientLoop(this);
 
     /**
      * Construct a new client and attempt to connect to the server over the specified port.
