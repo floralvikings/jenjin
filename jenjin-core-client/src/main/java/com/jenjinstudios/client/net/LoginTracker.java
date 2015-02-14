@@ -11,6 +11,7 @@ import java.util.logging.Logger;
 public class LoginTracker
 {
     private static final Logger LOGGER = Logger.getLogger(LoginTracker.class.getName());
+    public static final int MILLIS_IN_30_SECONDS = 30000;
     private volatile boolean loggedIn;
     private volatile boolean waitingForResponse;
     private long loggedInTime;
@@ -39,7 +40,7 @@ public class LoginTracker
     public boolean sendLoginRequestAndWaitForResponse() {
         sendLoginRequest();
         long startTime = System.currentTimeMillis();
-        while (waitingForResponse && System.currentTimeMillis() - startTime < (long) 30000)
+        while (waitingForResponse && System.currentTimeMillis() - startTime < (long) MILLIS_IN_30_SECONDS)
         {
             waitTenMillis();
         }
@@ -49,7 +50,7 @@ public class LoginTracker
     public void sendLogoutRequestAndWaitForResponse() {
         sendLogoutRequest();
         long startTime = System.currentTimeMillis();
-        while (waitingForResponse && System.currentTimeMillis() - startTime < (long) 30000)
+        while (waitingForResponse && System.currentTimeMillis() - startTime < (long) MILLIS_IN_30_SECONDS)
         {
             waitTenMillis();
         }
