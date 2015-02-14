@@ -26,6 +26,11 @@ public class LoginTracker
      */
     public LoginTracker(AuthClient client) { this.client = client; }
 
+    /**
+     * Returns whether this login tracker has received a successful login response.
+     *
+     * @return Whether this login tracker has received a successful login response.
+     */
     public boolean isLoggedIn() { return loggedIn; }
 
     public void setLoggedIn(boolean loggedIn) {
