@@ -1,8 +1,10 @@
 package com.jenjinstudios.client.net;
 
 import com.jenjinstudios.core.MessageIO;
+import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageInputStream;
 import com.jenjinstudios.core.io.MessageOutputStream;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.mock;
@@ -24,5 +26,19 @@ public class ClientTest
 		client.runRepeatedTasks();
 		verify(r).run();
 	}
+
+    @Test
+    public void testGenerateLogoutRequest() {
+        Message message = AuthClient.generateLogoutRequest();
+        Assert.assertEquals(message.name, "LogoutRequest");
+    }
+
+    @Test
+    public void testGenerateLoginRequest() {
+        Message message = AuthClient.generateLoginRequest(new ClientUser("Foo", "Bar"));
+        Assert.assertEquals(message.name, "LoginRequest");
+        Assert.assertEquals(message.getArgument("username"), "Foo");
+        Assert.assertEquals(message.getArgument("password"), "Bar");
+    }
 
 }
