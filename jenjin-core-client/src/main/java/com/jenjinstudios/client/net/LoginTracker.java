@@ -81,6 +81,9 @@ public class LoginTracker
         return loggedIn;
     }
 
+    /**
+     * Send a logout request and block execution until the response is received.
+     */
     public void sendLogoutRequestAndWaitForResponse() {
         sendLogoutRequest();
         long startTime = System.currentTimeMillis();
