@@ -50,6 +50,11 @@ public class AuthClient extends Client
         return loginRequest;
     }
 
+    /**
+     * Get the LoginTracker managed by this client.
+     *
+     * @return The login tracker managed by this client.
+     */
     public LoginTracker getLoginTracker() { return loginTracker; }
 
     /**
