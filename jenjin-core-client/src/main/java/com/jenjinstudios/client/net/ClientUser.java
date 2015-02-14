@@ -28,5 +28,10 @@ public class ClientUser
      */
     public String getUsername() { return username; }
 
-	public String getPassword() { return password; }
+    /**
+     * Get the password of this user.
+     *
+     * @return The password of this user.
+     */
+    public String getPassword() { return password; }
 }
