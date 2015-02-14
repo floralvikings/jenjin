@@ -15,6 +15,12 @@ public class AuthClient extends Client
     private final ClientUser user;
     private final LoginTracker loginTracker;
 
+    /**
+     * Construct a new client with authentication abilities.
+     *
+     * @param messageIO The MessageIO used by this client to communicate with a server.
+     * @param user The user which this client will attempt to authenticate.
+     */
     public AuthClient(MessageIO messageIO, ClientUser user) {
         super(messageIO);
         this.loginTracker = new LoginTracker(this);
