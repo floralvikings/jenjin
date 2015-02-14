@@ -11,11 +11,13 @@ import java.util.TimerTask;
 
 class ClientLoop extends TimerTask
 {
+    public static final int MAX_STORED_UPDATE_TIMES = 50;
+    public static final int NANOS_TO_SECOND = 1000000000;
     /** The Client for this loop. */
     private final Client client;
     private int updateCount;
     private long lastStart = System.nanoTime();
-    private final long[] updateTimesNanos = new long[50];
+    private final long[] updateTimesNanos = new long[MAX_STORED_UPDATE_TIMES];
 
     /**
      * Construct a ClientLoop for the given client.
@@ -55,7 +57,7 @@ class ClientLoop extends TimerTask
         {
             total += updateTimesNanos[i];
         }
-        return (total / maxIndex) / 1000000000;
+        return (total / maxIndex) / NANOS_TO_SECOND;
     }
 
 }
