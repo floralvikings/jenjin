@@ -19,7 +19,11 @@ public class LoginTracker
     private long loggedInTime;
     private final AuthClient client;
 
-
+    /**
+     * Construct a new LoginTracker working for the given client.
+     *
+     * @param client The client using this LoginTracker.
+     */
     public LoginTracker(AuthClient client) { this.client = client; }
 
     public boolean isLoggedIn() { return loggedIn; }
