@@ -24,7 +24,7 @@ public class ExecutableLogoutResponse extends ExecutableMessage
 
     @Override
     public void runDelayed() {
-        ((AuthClient) super.getConnection()).getLoginTracker().setLoggedIn(!((boolean) getMessage().getArgument
+        ((AuthClient) getConnection()).getLoginTracker().setLoggedIn(!((boolean) getMessage().getArgument
               ("success")));
     }
 
