@@ -34,6 +34,7 @@ public class AuthClient extends Client
     /**
      * Generate a LoginRequest message.  This message will be encrypted if possible.
      *
+     * @param user The User for which to generate the login request.
      * @return The LoginRequest message.
      */
     public static Message generateLoginRequest(ClientUser user) {// Create the login request.
