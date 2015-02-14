@@ -22,7 +22,7 @@ public abstract class ClientExecutableMessage extends ExecutableMessage
      * @param message The Message.
      */
     ClientExecutableMessage(Client client, Message message) {
-        super(message);
+        super(client, message);
         this.client = client;
     }
 

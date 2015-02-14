@@ -32,7 +32,7 @@ public class ExecutablePublicKeyMessage extends ExecutableMessage
      */
     @SuppressWarnings("WeakerAccess")
     public ExecutablePublicKeyMessage(Connection connection, Message message) {
-        super(message);
+        super(connection, message);
         this.connection = connection;
     }
 

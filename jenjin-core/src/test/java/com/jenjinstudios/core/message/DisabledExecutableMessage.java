@@ -23,7 +23,7 @@ public class DisabledExecutableMessage extends ExecutableMessage
      * @param message The message that caused this executable message to be invoked.
      */
     public DisabledExecutableMessage(Connection connection, Message message) {
-        super(message);
+        super(connection, message);
         LOGGER.log(Level.SEVERE, "DisabledExecutableMessage constructed in {0}", connection);
     }
 

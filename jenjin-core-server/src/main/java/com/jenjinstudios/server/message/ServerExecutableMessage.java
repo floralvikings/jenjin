@@ -21,7 +21,7 @@ public abstract class ServerExecutableMessage extends ExecutableMessage
      * @param message The message.
      */
     protected ServerExecutableMessage(ClientHandler handler, Message message) {
-        super(message);
+        super(handler, message);
         clientHandler = handler;
     }
 

@@ -25,7 +25,7 @@ public class ExecutableBlankMessage extends ExecutableMessage
      */
     @SuppressWarnings("WeakerAccess")
     public ExecutableBlankMessage(Connection connection, Message message) {
-        super(message);
+        super(connection, message);
         this.connection = connection;
     }
 
