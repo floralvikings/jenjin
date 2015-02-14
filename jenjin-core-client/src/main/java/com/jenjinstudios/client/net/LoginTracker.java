@@ -40,7 +40,7 @@ public class LoginTracker
     public boolean sendLoginRequestAndWaitForResponse() {
         sendLoginRequest();
         long startTime = System.currentTimeMillis();
-        while (waitingForResponse && System.currentTimeMillis() - startTime < (long) MILLIS_IN_30_SECONDS)
+        while (waitingForResponse && ((System.currentTimeMillis() - startTime) < (long) MILLIS_IN_30_SECONDS))
         {
             waitTenMillis();
         }
@@ -50,7 +50,7 @@ public class LoginTracker
     public void sendLogoutRequestAndWaitForResponse() {
         sendLogoutRequest();
         long startTime = System.currentTimeMillis();
-        while (waitingForResponse && System.currentTimeMillis() - startTime < (long) MILLIS_IN_30_SECONDS)
+        while (waitingForResponse && ((System.currentTimeMillis() - startTime) < (long) MILLIS_IN_30_SECONDS))
         {
             waitTenMillis();
         }
