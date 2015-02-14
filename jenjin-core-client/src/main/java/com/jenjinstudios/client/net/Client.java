@@ -96,5 +96,5 @@ public class Client extends Connection
      *
      * @return The average number of updates per second that this client is executing.
      */
-    public double getAverageUPS() { return 1d / clientLoop.getAverageRunTime(); }
+    public double getAverageUPS() { return 1.0d / clientLoop.getAverageRunTime(); }
 }
