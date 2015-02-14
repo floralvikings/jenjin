@@ -68,7 +68,7 @@ public class LoginTracker
             Thread.sleep(10);
         } catch (InterruptedException e)
         {
-            LOGGER.log(Level.WARNING, "Interrupted while waiting for login response.");
+            LOGGER.log(Level.WARNING, "Interrupted while waiting for login response.", e);
         }
     }
 
