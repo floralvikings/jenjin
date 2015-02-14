@@ -38,6 +38,6 @@ public class ExecutableLoginResponseTest
         response.runDelayed();
 
 		verify(loginTracker).setLoggedInTime(12345l);
-		Assert.assertEquals(loginTracker.getLoggedInTime(), 12345l);
-	}
+        Assert.assertEquals(loginTracker.getLoggedInTime(), 12345l, "Login time was not as expected.");
+    }
 }
