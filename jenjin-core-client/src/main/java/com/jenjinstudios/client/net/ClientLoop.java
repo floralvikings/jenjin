@@ -11,8 +11,8 @@ import java.util.TimerTask;
 
 class ClientLoop extends TimerTask
 {
-    public static final int MAX_STORED_UPDATE_TIMES = 50;
-    public static final int NANOS_TO_SECOND = 1000000000;
+    private static final int MAX_STORED_UPDATE_TIMES = 50;
+    private static final int NANOS_TO_SECOND = 1000000000;
     /** The Client for this loop. */
     private final Client client;
     private int updateCount;
