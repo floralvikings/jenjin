@@ -17,6 +17,7 @@ import java.util.Timer;
  */
 public class Client extends Connection
 {
+    private static final int UPDATES_PER_SECOND = 60;
     /** The list of tasks that this client will execute each update cycle. */
     private final List<Runnable> repeatedTasks;
     /** The timer that manages the update loop. */
@@ -71,11 +72,11 @@ public class Client extends Connection
         KeyPair rsaKeyPair = generateRSAKeyPair();
         setRSAKeyPair(rsaKeyPair);
 
-        int period = 1000 / 60;
         // Finally, send a ping request to establish latency.
         getMessageIO().queueOutgoingMessage(generatePingRequest());
 
         sendMessagesTimer = new Timer("Client Update Loop", false);
+        int period = 1000 / UPDATES_PER_SECOND;
         sendMessagesTimer.scheduleAtFixedRate(clientLoop, 0, period);
 
         super.start();
