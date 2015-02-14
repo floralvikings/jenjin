@@ -22,7 +22,7 @@ public abstract class WorldClientExecutableMessage extends AuthClientExecutableM
     }
 
     @Override
-    protected WorldClient getClient() {
+    public WorldClient getConnection() {
         return (WorldClient) super.getConnection();
     }
 }

@@ -1,6 +1,8 @@
 package com.jenjinstudios.client.message;
 
 import com.jenjinstudios.client.net.AuthClient;
+import com.jenjinstudios.client.net.Client;
+import com.jenjinstudios.core.ExecutableMessage;
 import com.jenjinstudios.core.io.Message;
 
 /**
@@ -8,7 +10,7 @@ import com.jenjinstudios.core.io.Message;
  *
  * @author Caleb Brinkman
  */
-public abstract class AuthClientExecutableMessage extends ClientExecutableMessage
+public abstract class AuthClientExecutableMessage extends ExecutableMessage
 {
     /**
      * Construct an ExecutableMessage with the given Message.
@@ -26,7 +28,7 @@ public abstract class AuthClientExecutableMessage extends ClientExecutableMessag
      * @return The client invoking this ExecutableMessage.
      */
     @Override
-    protected AuthClient getConnection() {
+    public AuthClient getConnection() {
         return (AuthClient) super.getConnection();
     }
 }
