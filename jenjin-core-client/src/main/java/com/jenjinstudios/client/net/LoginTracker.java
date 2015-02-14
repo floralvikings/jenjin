@@ -57,6 +57,9 @@ public class LoginTracker
      */
     public void setLoggedInTime(long loggedInTime) { this.loggedInTime = loggedInTime; }
 
+    /**
+     * Send a login request for this tracker's client.
+     */
     protected void sendLoginRequest() {
         waitingForResponse = true;
         Message message = AuthClient.generateLoginRequest(client.getUser());
