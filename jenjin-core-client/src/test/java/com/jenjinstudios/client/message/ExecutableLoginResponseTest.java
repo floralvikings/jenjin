@@ -11,6 +11,7 @@ import org.testng.annotations.Test;
 import static org.mockito.Mockito.*;
 
 /**
+ * Tests ExecutableLoginResponse.
  * @author Caleb Brinkman
  */
 public class ExecutableLoginResponseTest
@@ -19,7 +20,7 @@ public class ExecutableLoginResponseTest
 	public void testMessageExecution() {
 		Message loginResponse = MessageRegistry.getInstance().createMessage("LoginResponse");
 		loginResponse.setArgument("success", true);
-		loginResponse.setArgument("loginTime", 12345l);
+        loginResponse.setArgument("loginTime", 12345L);
 
 		ClientUser user = mock(ClientUser.class);
 		AuthClient authClient = mock(AuthClient.class);
@@ -29,9 +30,9 @@ public class ExecutableLoginResponseTest
 		when(authClient.getLoginTracker()).thenReturn(loginTracker);
 		when(authClient.getUser()).thenReturn(user);
 
-		ExecutableLoginResponse executableLoginResponse = new ExecutableLoginResponse(authClient, loginResponse);
-		executableLoginResponse.runImmediate();
-		executableLoginResponse.runDelayed();
+        ExecutableLoginResponse response = new ExecutableLoginResponse(authClient, loginResponse);
+        response.runImmediate();
+        response.runDelayed();
 
 		verify(loginTracker).setLoggedInTime(12345l);
 		Assert.assertEquals(loginTracker.getLoggedInTime(), 12345l);
