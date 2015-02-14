@@ -1,6 +1,8 @@
 package com.jenjinstudios.client.net;
 
 /**
+ * Used to represent a client-side user; contains fields for username and password.
+ *
  * @author Caleb Brinkman
  */
 public class ClientUser
