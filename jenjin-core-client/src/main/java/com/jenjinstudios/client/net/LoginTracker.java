@@ -43,6 +43,11 @@ public class LoginTracker
         this.loggedIn = loggedIn;
     }
 
+    /**
+     * Get the time at which the login was performed.
+     *
+     * @return The time at which the login was performed.
+     */
     public long getLoggedInTime() { return loggedInTime; }
 
     public void setLoggedInTime(long loggedInTime) { this.loggedInTime = loggedInTime; }
