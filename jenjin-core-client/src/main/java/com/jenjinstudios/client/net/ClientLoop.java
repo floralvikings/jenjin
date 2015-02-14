@@ -24,7 +24,7 @@ class ClientLoop extends TimerTask
      *
      * @param client The client for this ClientLoop
      */
-    public ClientLoop(Client client) {
+    ClientLoop(Client client) {
         this.client = client;
     }
 
