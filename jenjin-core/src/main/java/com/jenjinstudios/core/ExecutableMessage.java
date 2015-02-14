@@ -24,7 +24,7 @@ public abstract class ExecutableMessage
      * Construct a new ExecutableMessage; this should only ever be invoked reflectively, by a {@code Connection}'s
      * update cycle.
      *
-     * @param connection
+     * @param connection The connection for which this ExecutbleMessage will work.
      * @param message The message that caused this {@code ExecutableMessage} to be created.
      */
     protected ExecutableMessage(Connection connection, Message message) {
