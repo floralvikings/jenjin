@@ -31,6 +31,7 @@ public abstract class ClientExecutableMessage extends ExecutableMessage
      *
      * @return The client invoking this ExecutableMessage.
      */
+    @Override
     public Client getConnection() {
         return client;
     }
