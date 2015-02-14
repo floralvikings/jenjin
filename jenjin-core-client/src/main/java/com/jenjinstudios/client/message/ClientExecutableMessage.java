@@ -12,8 +12,6 @@ import com.jenjinstudios.core.ExecutableMessage;
 // TODO This class can probably be refactored away; should the subclasses just cast the constructor arguments?
 public abstract class ClientExecutableMessage extends ExecutableMessage
 {
-    /** The client invoking this ExecutableMessage. */
-    private final Client client;
 
     /**
      * Construct an ExecutableMessage with the given Message.
@@ -23,7 +21,6 @@ public abstract class ClientExecutableMessage extends ExecutableMessage
      */
     ClientExecutableMessage(Client client, Message message) {
         super(client, message);
-        this.client = client;
     }
 
     /**
@@ -33,6 +30,6 @@ public abstract class ClientExecutableMessage extends ExecutableMessage
      */
     @Override
     public Client getConnection() {
-        return client;
+        return (Client) super.getConnection();
     }
 }
