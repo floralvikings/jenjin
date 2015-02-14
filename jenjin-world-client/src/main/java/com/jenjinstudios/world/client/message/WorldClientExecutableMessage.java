@@ -6,21 +6,23 @@ import com.jenjinstudios.world.client.WorldClient;
 
 /**
  * This class is the superclass for all ExecutableMessages that are invoked by the WorldClient.
+ *
  * @author Caleb Brinkman
  */
 public abstract class WorldClientExecutableMessage extends AuthClientExecutableMessage
 {
-	/**
-	 * Construct an ExecutableMessage with the given Message.
-	 * @param client The client invoking this message.
-	 * @param message The Message.
-	 */
-	protected WorldClientExecutableMessage(WorldClient client, Message message) {
-		super(client, message);
-	}
+    /**
+     * Construct an ExecutableMessage with the given Message.
+     *
+     * @param client The client invoking this message.
+     * @param message The Message.
+     */
+    protected WorldClientExecutableMessage(WorldClient client, Message message) {
+        super(client, message);
+    }
 
-	@Override
-	protected WorldClient getClient() {
-		return (WorldClient) super.getClient();
-	}
+    @Override
+    protected WorldClient getClient() {
+        return (WorldClient) super.getConnection();
+    }
 }

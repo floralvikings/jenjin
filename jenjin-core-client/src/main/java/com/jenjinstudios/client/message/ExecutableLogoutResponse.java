@@ -5,27 +5,29 @@ import com.jenjinstudios.core.io.Message;
 
 /**
  * This class responds to a LogoutResponse message.
+ *
  * @author Caleb Brinkman
  */
 @SuppressWarnings("unused")
 public class ExecutableLogoutResponse extends AuthClientExecutableMessage
 {
-	/**
-	 * Construct an ExecutableMessage with the given Message.
-	 * @param client The client invoking this class.
-	 * @param message The Message.
-	 */
-	public ExecutableLogoutResponse(AuthClient client, Message message) {
-		super(client, message);
-	}
+    /**
+     * Construct an ExecutableMessage with the given Message.
+     *
+     * @param client The client invoking this class.
+     * @param message The Message.
+     */
+    public ExecutableLogoutResponse(AuthClient client, Message message) {
+        super(client, message);
+    }
 
-	@Override
-	public void runDelayed() {
-		getClient().getLoginTracker().setLoggedIn(!((boolean) getMessage().getArgument("success")));
-	}
+    @Override
+    public void runDelayed() {
+        getConnection().getLoginTracker().setLoggedIn(!((boolean) getMessage().getArgument("success")));
+    }
 
-	@Override
-	public void runImmediate() {
-	}
+    @Override
+    public void runImmediate() {
+    }
 
 }

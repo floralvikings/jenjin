@@ -9,35 +9,36 @@ import com.jenjinstudios.world.util.ActorUtils;
 
 /**
  * Process a ForceStateMessage.
+ *
  * @author Caleb Brinkman
  */
 public class ExecutableForceStateMessage extends WorldClientExecutableMessage
 {
-	private Vector2D vector2D;
-	private Angle angle;
-	private long timeOfForce;
+    private Vector2D vector2D;
+    private Angle angle;
+    private long timeOfForce;
 
-	public ExecutableForceStateMessage(WorldClient client, Message message) { super(client, message); }
+    public ExecutableForceStateMessage(WorldClient client, Message message) { super(client, message); }
 
-	@Override
-	public void runDelayed() {
-		Actor player = getClient().getPlayer();
-		double dist = ((player.getWorld().getLastUpdateCompleted() - timeOfForce) / 1000) * player.getMoveSpeed();
-		Vector2D corrected = vector2D.getVectorInDirection(dist, angle.getStepAngle());
-		player.setVector2D(corrected);
-		player.setAngle(angle);
+    @Override
+    public void runDelayed() {
+        Actor player = getConnection().getPlayer();
+        double dist = ((player.getWorld().getLastUpdateCompleted() - timeOfForce) / 1000) * player.getMoveSpeed();
+        Vector2D corrected = vector2D.getVectorInDirection(dist, angle.getStepAngle());
+        player.setVector2D(corrected);
+        player.setAngle(angle);
 
-		ActorUtils.forceIdle(player);
-	}
+        ActorUtils.forceIdle(player);
+    }
 
-	@Override
-	public void runImmediate() {
-		double x = (double) getMessage().getArgument("xCoordinate");
-		double y = (double) getMessage().getArgument("yCoordinate");
-		double relativeAngle = (double) getMessage().getArgument("relativeAngle");
-		double absoluteAngle = (double) getMessage().getArgument("absoluteAngle");
-		timeOfForce = (long) getMessage().getArgument("timeOfForce");
-		angle = new Angle(absoluteAngle, relativeAngle);
-		vector2D = new Vector2D(x, y);
-	}
+    @Override
+    public void runImmediate() {
+        double x = (double) getMessage().getArgument("xCoordinate");
+        double y = (double) getMessage().getArgument("yCoordinate");
+        double relativeAngle = (double) getMessage().getArgument("relativeAngle");
+        double absoluteAngle = (double) getMessage().getArgument("absoluteAngle");
+        timeOfForce = (long) getMessage().getArgument("timeOfForce");
+        angle = new Angle(absoluteAngle, relativeAngle);
+        vector2D = new Vector2D(x, y);
+    }
 }
