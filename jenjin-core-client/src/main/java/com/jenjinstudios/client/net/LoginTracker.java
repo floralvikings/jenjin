@@ -100,7 +100,7 @@ public class LoginTracker
         client.getMessageIO().queueOutgoingMessage(message);
     }
 
-    private void waitTenMillis() {
+    private static void waitTenMillis() {
         try
         {
             Thread.sleep(10);
