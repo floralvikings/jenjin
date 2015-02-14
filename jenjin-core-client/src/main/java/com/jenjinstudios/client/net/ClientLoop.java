@@ -2,6 +2,8 @@ package com.jenjinstudios.client.net;
 
 import java.io.IOException;
 import java.util.TimerTask;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * The ClientLoop class is essentially what amounts to the output thread.
@@ -13,6 +15,7 @@ class ClientLoop extends TimerTask
 {
     private static final int MAX_STORED_UPDATE_TIMES = 50;
     private static final int NANOS_TO_SECOND = 1000000000;
+    private static final Logger LOGGER = Logger.getLogger(ClientLoop.class.getName());
     /** The Client for this loop. */
     private final Client client;
     private int updateCount;
@@ -39,6 +42,7 @@ class ClientLoop extends TimerTask
             client.getMessageIO().writeAllMessages();
         } catch (IOException e)
         {
+            LOGGER.log(Level.INFO, "Shutting down because of IOException", e);
             client.shutdown();
         }
     }
