@@ -9,6 +9,7 @@ import org.testng.annotations.Test;
 import static org.mockito.Mockito.*;
 
 /**
+ * Test the ExecutableLogoutResponse class.
  * @author Caleb Brinkman
  */
 public class ExecutableLogoutResponseTest
