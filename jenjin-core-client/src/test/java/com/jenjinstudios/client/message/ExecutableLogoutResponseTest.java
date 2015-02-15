@@ -22,9 +22,9 @@ public class ExecutableLogoutResponseTest
 		LoginTracker loginTracker = mock(LoginTracker.class);
 		when(authClient.getLoginTracker()).thenReturn(loginTracker);
 
-		ExecutableLogoutResponse executableLogoutResponse = new ExecutableLogoutResponse(authClient, loginResponse);
-		executableLogoutResponse.runImmediate();
-		executableLogoutResponse.runDelayed();
+        ExecutableLogoutResponse response = new ExecutableLogoutResponse(authClient, loginResponse);
+        response.runImmediate();
+        response.runDelayed();
 
 		verify(loginTracker).setLoggedIn(false);
 	}
