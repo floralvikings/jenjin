@@ -31,6 +31,9 @@ public class ClientTest
 		verify(r).run();
 	}
 
+    /**
+     * Test the generateLogoutRequest method.
+     */
     @Test
     public void testGenerateLogoutRequest() {
         Message message = AuthClient.generateLogoutRequest();
