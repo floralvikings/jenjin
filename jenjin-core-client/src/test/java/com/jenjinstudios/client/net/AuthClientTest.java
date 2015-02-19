@@ -14,7 +14,10 @@ import static org.mockito.Mockito.mock;
  */
 public class AuthClientTest
 {
-	@Test
+    /**
+     * Test the isLoggedIn method.
+     */
+    @Test
 	public void testIsLoggedIn() {
 		MessageInputStream mis = mock(MessageInputStream.class);
 		MessageOutputStream mos = mock(MessageOutputStream.class);
