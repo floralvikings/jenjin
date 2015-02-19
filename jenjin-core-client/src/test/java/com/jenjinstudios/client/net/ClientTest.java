@@ -37,7 +37,7 @@ public class ClientTest
     @Test
     public void testGenerateLogoutRequest() {
         Message message = AuthClient.generateLogoutRequest();
-        Assert.assertEquals(message.name, "LogoutRequest");
+        Assert.assertEquals(message.name, "LogoutRequest", "Expectet LogoutRequest message");
     }
 
     /**
