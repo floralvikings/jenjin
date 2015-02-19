@@ -27,7 +27,7 @@ public class Client extends Connection
     /**
      * Construct a new client and attempt to connect to the server over the specified port.
      *
-     * @param messageIO The MessageIO used to send and recieve messages.
+     * @param messageIO The MessageIO used to send and receive messages.
      */
     protected Client(MessageIO messageIO) {
         super(messageIO);
