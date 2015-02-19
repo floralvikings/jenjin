@@ -58,6 +58,6 @@ public class AuthClientTest
         ClientUser clientUser = mock(ClientUser.class);
         AuthClient authClient = new AuthClient(messageIO, clientUser);
 
-        Assert.assertEquals(authClient.getUser(), clientUser);
+        Assert.assertEquals(authClient.getUser(), clientUser, "User was incorrect.");
     }
 }
