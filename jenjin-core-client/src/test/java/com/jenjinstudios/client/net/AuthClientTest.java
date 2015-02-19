@@ -44,7 +44,7 @@ public class AuthClientTest
         AuthClient authClient = new AuthClient(messageIO, clientUser);
         authClient.getLoginTracker().setLoggedInTime(random);
 
-        Assert.assertEquals(authClient.getLoginTracker().getLoggedInTime(), random);
+        Assert.assertEquals(authClient.getLoginTracker().getLoggedInTime(), random, "Login time was incorrect.");
     }
 
     @Test
