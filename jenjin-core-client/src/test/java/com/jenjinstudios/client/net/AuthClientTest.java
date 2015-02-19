@@ -31,6 +31,9 @@ public class AuthClientTest
         Assert.assertEquals(authClient.getLoginTracker().isLoggedIn(), random, "Login status was not expected.");
     }
 
+    /**
+     * Test the getLoggedInTime method.
+     */
     @Test
     public void testLoggedInTime() {
         MessageInputStream mis = mock(MessageInputStream.class);
