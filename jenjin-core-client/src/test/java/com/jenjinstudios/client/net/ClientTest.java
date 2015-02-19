@@ -16,7 +16,10 @@ import static org.mockito.Mockito.verify;
  */
 public class ClientTest
 {
-	@Test
+    /**
+     * Test the AddRepeatedTask method.
+     */
+    @Test
 	public void testAddRepeatedTask() {
 		MessageInputStream mis = mock(MessageInputStream.class);
 		MessageOutputStream mos = mock(MessageOutputStream.class);
