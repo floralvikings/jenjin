@@ -47,7 +47,7 @@ public class ClientTest
     public void testGenerateLoginRequest() {
         Message message = AuthClient.generateLoginRequest(new ClientUser("Foo", "Bar"));
         Assert.assertEquals(message.name, "LoginRequest");
-        Assert.assertEquals(message.getArgument("username"), "Foo");
+        Assert.assertEquals(message.getArgument("username"), "Foo", "Username was not expected.");
         Assert.assertEquals(message.getArgument("password"), "Bar");
     }
 
