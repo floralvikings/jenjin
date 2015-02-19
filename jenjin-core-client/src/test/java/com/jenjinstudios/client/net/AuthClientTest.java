@@ -28,7 +28,7 @@ public class AuthClientTest
         AuthClient authClient = new AuthClient(messageIO, clientUser);
         authClient.getLoginTracker().setLoggedIn(random);
 
-        Assert.assertEquals(authClient.getLoginTracker().isLoggedIn(), random);
+        Assert.assertEquals(authClient.getLoginTracker().isLoggedIn(), random, "Login status was not expected.");
     }
 
     @Test
