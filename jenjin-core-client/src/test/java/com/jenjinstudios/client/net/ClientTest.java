@@ -40,6 +40,9 @@ public class ClientTest
         Assert.assertEquals(message.name, "LogoutRequest");
     }
 
+    /**
+     * Test the generateLoginRequest method.
+     */
     @Test
     public void testGenerateLoginRequest() {
         Message message = AuthClient.generateLoginRequest(new ClientUser("Foo", "Bar"));
