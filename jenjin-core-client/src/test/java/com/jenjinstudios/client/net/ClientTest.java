@@ -11,6 +11,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 /**
+ * Used to test the Client class.
  * @author Caleb Brinkman
  */
 public class ClientTest
