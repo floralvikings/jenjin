@@ -47,6 +47,9 @@ public class AuthClientTest
         Assert.assertEquals(authClient.getLoginTracker().getLoggedInTime(), random, "Login time was incorrect.");
     }
 
+    /**
+     * Test the getUser method.
+     */
     @Test
     public void testGetUser() {
         MessageInputStream mis = mock(MessageInputStream.class);
