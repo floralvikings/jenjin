@@ -9,6 +9,7 @@ import org.testng.annotations.Test;
 import static org.mockito.Mockito.mock;
 
 /**
+ * Test the AuthClient class.
  * @author Caleb Brinkman
  */
 public class AuthClientTest
