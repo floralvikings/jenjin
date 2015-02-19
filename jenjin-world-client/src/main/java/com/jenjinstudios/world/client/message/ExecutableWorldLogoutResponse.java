@@ -5,25 +5,27 @@ import com.jenjinstudios.world.client.WorldClient;
 
 /**
  * Handles logout responses.
+ *
  * @author Caleb Brinkman
  */
 public class ExecutableWorldLogoutResponse extends WorldClientExecutableMessage
 {
-	/**
-	 * Construct an ExecutableMessage with the given Message.
-	 * @param client The client invoking this message.
-	 * @param message The Message.
-	 */
-	public ExecutableWorldLogoutResponse(WorldClient client, Message message) {
-		super(client, message);
-	}
+    /**
+     * Construct an ExecutableMessage with the given Message.
+     *
+     * @param client The client invoking this message.
+     * @param message The Message.
+     */
+    public ExecutableWorldLogoutResponse(WorldClient client, Message message) {
+        super(client, message);
+    }
 
-	@Override
-	public void runDelayed() {
-		getClient().getLoginTracker().setLoggedIn(!((boolean) getMessage().getArgument("success")));
-	}
+    @Override
+    public void runDelayed() {
+        getConnection().getLoginTracker().setLoggedIn(!((boolean) getMessage().getArgument("success")));
+    }
 
-	@Override
-	public void runImmediate() {
-	}
+    @Override
+    public void runImmediate() {
+    }
 }

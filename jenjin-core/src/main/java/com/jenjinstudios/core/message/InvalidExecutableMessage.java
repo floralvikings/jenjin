@@ -24,7 +24,7 @@ public class InvalidExecutableMessage extends ExecutableMessage
      */
     @SuppressWarnings("WeakerAccess")
     public InvalidExecutableMessage(Connection connection, Message message) {
-        super(message);
+        super(connection, message);
         LOGGER.log(Level.INFO, "InvalidExecutableMessage created for connection {0}", connection);
     }
 

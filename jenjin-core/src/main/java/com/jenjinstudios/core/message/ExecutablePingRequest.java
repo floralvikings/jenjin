@@ -21,7 +21,7 @@ public class ExecutablePingRequest extends ExecutableMessage
      * @param message The message which caused this executable message to be invoked.
      */
     public ExecutablePingRequest(Connection connection, Message message) {
-        super(message);
+        super(connection, message);
         this.connection = connection;
     }
 

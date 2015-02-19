@@ -1,6 +1,6 @@
 package com.jenjinstudios.world.client.message;
 
-import com.jenjinstudios.client.net.LoginTracker;
+import com.jenjinstudios.client.net.AuthClient;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageRegistry;
 import com.jenjinstudios.world.client.WorldClient;
@@ -13,20 +13,20 @@ import static org.mockito.Mockito.*;
  */
 public class ExecutableWorldLogoutResponseTest
 {
-	@Test
-	public void testMessageExecution() throws Exception {
-		MessageRegistry messageRegistry = MessageRegistry.getInstance();
-		Message worldLogoutResponse = messageRegistry.createMessage("LogoutResponse");
-		worldLogoutResponse.setArgument("success", true);
+    @Test
+    public void testMessageExecution() throws Exception {
+        MessageRegistry messageRegistry = MessageRegistry.getInstance();
+        Message worldLogoutResponse = messageRegistry.createMessage("LogoutResponse");
+        worldLogoutResponse.setArgument("success", true);
 
-		WorldClient worldClient = mock(WorldClient.class);
-		LoginTracker loginTracker = mock(LoginTracker.class);
-		when(worldClient.getLoginTracker()).thenReturn(loginTracker);
+        WorldClient worldClient = mock(WorldClient.class);
+        AuthClient.LoginTracker loginTracker = mock(AuthClient.LoginTracker.class);
+        when(worldClient.getLoginTracker()).thenReturn(loginTracker);
 
-		ExecutableWorldLogoutResponse message = new ExecutableWorldLogoutResponse(worldClient, worldLogoutResponse);
-		message.runImmediate();
-		message.runDelayed();
+        ExecutableWorldLogoutResponse message = new ExecutableWorldLogoutResponse(worldClient, worldLogoutResponse);
+        message.runImmediate();
+        message.runDelayed();
 
-		verify(loginTracker).setLoggedIn(false);
-	}
+        verify(loginTracker).setLoggedIn(false);
+    }
 }

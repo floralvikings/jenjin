@@ -17,46 +17,46 @@ import java.util.logging.Logger;
  */
 public class ExecutableWorldLoginResponse extends WorldClientExecutableMessage
 {
-	private static final Logger LOGGER = Logger.getLogger(ExecutableWorldLoginResponse.class.getName());
-	/** The player created as indicated by the world login response. */
-	private Actor player;
+    private static final Logger LOGGER = Logger.getLogger(ExecutableWorldLoginResponse.class.getName());
+    /** The player created as indicated by the world login response. */
+    private Actor player;
 
-	/**
-	 * Construct an ExecutableMessage with the given Message.
-	 *
-	 * @param client The client invoking this message.
-	 * @param message The Message.
-	 */
-	public ExecutableWorldLoginResponse(WorldClient client, Message message) {
-		super(client, message);
-	}
+    /**
+     * Construct an ExecutableMessage with the given Message.
+     *
+     * @param client The client invoking this message.
+     * @param message The Message.
+     */
+    public ExecutableWorldLoginResponse(WorldClient client, Message message) {
+        super(client, message);
+    }
 
-	@Override
-	public void runDelayed() {
-		WorldClient client = getClient();
-		boolean success = (boolean) getMessage().getArgument("success");
-		client.getLoginTracker().setLoggedIn(success);
-		if (success)
-		{
-			LOGGER.log(Level.INFO, "Logged in successfully; Player ID: " + player.getId());
-			client.getLoginTracker().setLoggedInTime((long) getMessage().getArgument("loginTime"));
-			client.setName(client.getUser().getUsername());
-			client.setPlayer(player);
-			client.getWorld().getWorldObjects().set(player.getId(), player);
+    @Override
+    public void runDelayed() {
+        WorldClient client = getConnection();
+        boolean success = (boolean) getMessage().getArgument("success");
+        client.getLoginTracker().setLoggedIn(success);
+        if (success)
+        {
+            LOGGER.log(Level.INFO, "Logged in successfully; Player ID: " + player.getId());
+            client.getLoginTracker().setLoggedInTime((long) getMessage().getArgument("loginTime"));
+            client.setName(client.getUser().getUsername());
+            client.setPlayer(player);
+            client.getWorld().getWorldObjects().set(player.getId(), player);
 
-			client.addRepeatedTask(new WorldClientUpdater(client));
-		}
-	}
+            client.addRepeatedTask(new WorldClientUpdater(client));
+        }
+    }
 
-	@Override
-	public void runImmediate() {
-		int id = (int) getMessage().getArgument("id");
-		double xCoordinate = (double) getMessage().getArgument("xCoordinate");
-		double yCoordinate = (double) getMessage().getArgument("yCoordinate");
-		player = new Actor(getClient().getUser().getUsername());
-		player.addPreUpdateEvent(Vision.EVENT_NAME, new Vision(player));
-		player.setId(id);
-		Vector2D vector2D = new Vector2D(xCoordinate, yCoordinate);
-		player.setVector2D(vector2D);
-	}
+    @Override
+    public void runImmediate() {
+        int id = (int) getMessage().getArgument("id");
+        double xCoordinate = (double) getMessage().getArgument("xCoordinate");
+        double yCoordinate = (double) getMessage().getArgument("yCoordinate");
+        player = new Actor(getConnection().getUser().getUsername());
+        player.addPreUpdateEvent(Vision.EVENT_NAME, new Vision(player));
+        player.setId(id);
+        Vector2D vector2D = new Vector2D(xCoordinate, yCoordinate);
+        player.setVector2D(vector2D);
+    }
 }

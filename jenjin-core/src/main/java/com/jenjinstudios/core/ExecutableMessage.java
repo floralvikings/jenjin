@@ -19,15 +19,18 @@ public abstract class ExecutableMessage
 {
     private static final Logger LOGGER = Logger.getLogger(ExecutableMessage.class.getName());
     private final Message message;
+    private final Connection connection;
 
     /**
      * Construct a new ExecutableMessage; this should only ever be invoked reflectively, by a {@code Connection}'s
      * update cycle.
      *
+     * @param connection The connection for which this ExecutbleMessage will work.
      * @param message The message that caused this {@code ExecutableMessage} to be created.
      */
-    protected ExecutableMessage(Message message) {
+    protected ExecutableMessage(Connection connection, Message message) {
         this.message = message;
+        this.connection = connection;
     }
 
     /**
@@ -49,4 +52,11 @@ public abstract class ExecutableMessage
     public Message getMessage() {
         return message;
     }
+
+    /**
+     * Get the connection associated with this ExecutableMessage.
+     *
+     * @return The connection associated with this ExecutableMessage.
+     */
+    public Connection getConnection() { return connection; }
 }
