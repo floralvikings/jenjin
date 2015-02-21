@@ -51,29 +51,34 @@ public class ExecutableStateChangeRequestTest
 	}
 
 	@Test
-	public void testInvalidRequestCoordinates() {
+	public void testInvalidRequestCoordinates() throws Exception {
 		World world = WorldUtils.createDefaultWorld();
 		Actor player = new Actor("FooBar");
+
+		// Add player and update world
 		world.getWorldObjects().add(player);
 		world.update();
+
 		WorldClientHandler mock = mock(WorldClientHandler.class);
-		when(mock.getPlayer()).thenReturn(player);
 		WorldServer worldServer = mock(WorldServer.class);
-		when(mock.getServer()).thenReturn(worldServer);
 		when(worldServer.getUps()).thenReturn(50);
+		when(mock.getPlayer()).thenReturn(player);
+		when(mock.getServer()).thenReturn(worldServer);
+
+		// Create a state change request, with coordinates set further than the allowed error
 		Message request = messageRegistry.createMessage("StateChangeRequest");
 		request.setArgument("relativeAngle", Angle.FRONT);
 		request.setArgument("absoluteAngle", 0.0);
 		request.setArgument("xCoordinate", 15.0);
 		request.setArgument("yCoordinate", 15.0);
 		request.setArgument("timeOfChange", System.currentTimeMillis());
+
+		// Create the executable state change request
 		ExecutableStateChangeRequest executableStateChangeRequest = new ExecutableStateChangeRequest(mock, request);
 		executableStateChangeRequest.runImmediate();
 		executableStateChangeRequest.runDelayed();
 
-		player.preUpdate();
-		player.update();
-		player.postUpdate();
+		world.update();
 
 		Assert.assertEquals(player.getAngle(), new Angle(0.0, Angle.IDLE));
 	}
