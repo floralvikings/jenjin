@@ -67,7 +67,7 @@ class ClientListener implements Runnable
 	 * Get the new clients accrued since the last check.
 	 * @return A {@code LinkedList} containing the new clients.
 	 */
-	public LinkedList<ClientHandler> getNewClients() {
+	public Iterable<ClientHandler> getNewClients() {
 		LinkedList<ClientHandler> temp = new LinkedList<>();
 		synchronized (newClientHandlers)
 		{
