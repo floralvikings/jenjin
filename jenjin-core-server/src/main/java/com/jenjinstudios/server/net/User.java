@@ -1,6 +1,7 @@
 package com.jenjinstudios.server.net;
 
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Caleb Brinkman
@@ -39,5 +40,5 @@ public class User
 
 	public void setLoggedIn(boolean loggedIn) { this.loggedIn = loggedIn; }
 
-	public HashMap<String, Object> getProperties() { return properties; }
+	public Map<String, Object> getProperties() { return properties; }
 }
