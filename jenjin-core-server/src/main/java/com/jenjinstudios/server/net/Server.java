@@ -53,8 +53,8 @@ public class Server extends Thread
      * Add new clients that have connected to the client listeners.
      */
     public void checkListenerForClients() {
-        LinkedList<ClientHandler> nc = clientListener.getNewClients();
-        for (ClientHandler h : nc)
+		Iterable<ClientHandler> nc = clientListener.getNewClients();
+		for (ClientHandler h : nc)
         {
             addClientHandler(h);
             h.start();
