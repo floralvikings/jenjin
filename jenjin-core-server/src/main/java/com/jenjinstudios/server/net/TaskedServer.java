@@ -17,7 +17,7 @@ public class TaskedServer extends Server
 	/** Tasks to be repeated in the main loop. */
 	private final List<Runnable> repeatedTasks;
 	/** Synced tasks scheduled by client handlers. */
-	private final LinkedList<Runnable> syncedTasks;
+	private final Deque<Runnable> syncedTasks;
 	/** The timer that controls the server loop. */
 	private ScheduledExecutorService loopTimer;
 	/** The server loop. */
