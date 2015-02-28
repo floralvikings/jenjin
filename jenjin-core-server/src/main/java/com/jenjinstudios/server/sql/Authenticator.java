@@ -256,8 +256,8 @@ public class Authenticator
     }
 
     protected void updateUserProperties(User user) throws SQLException {
-        HashMap<String, Object> properties = user.getProperties();
-        for (String name : properties.keySet())
+		Map<String, Object> properties = user.getProperties();
+		for (String name : properties.keySet())
         {
             Object value = properties.get(name);
             if (value != null && !isWrapperType(value.getClass())) { continue; }
