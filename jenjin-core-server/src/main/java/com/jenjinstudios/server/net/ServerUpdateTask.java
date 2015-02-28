@@ -11,6 +11,7 @@ class ServerUpdateTask implements Runnable
 {
 	/** The logger for this class. */
 	private static final Logger LOGGER = Logger.getLogger(ServerUpdateTask.class.getName());
+	public static final double MILLIS_IN_SECOND = 1000d;
 	/** The time in nanoseconds of the last 50 update cycles. */
 	private final double[] lastCycles;
 	/** The server for which this loop runs. */
@@ -110,7 +111,7 @@ class ServerUpdateTask implements Runnable
 	private void startNewCycle() {
 		long oldCycleStart = cycleStart == 0 ? System.currentTimeMillis() - 1000 / server.getUps() : cycleStart;
 		cycleStart = System.currentTimeMillis();
-		double cycleLength = (cycleStart - oldCycleStart) / 1000d;
+		double cycleLength = (cycleStart - oldCycleStart) / MILLIS_IN_SECOND;
 		lastCycles[getCycleArrayIndex()] = cycleLength;
 		cycleNum++;
 		double total = 0;
