@@ -260,8 +260,8 @@ public class Authenticator
 		for (String name : properties.keySet())
         {
             Object value = properties.get(name);
-            if (value != null && !isWrapperType(value.getClass())) { continue; }
-            Object existing = lookUpUserProperty(user.getUsername(), name);
+			if ((value != null) && !isWrapperType(value.getClass())) { continue; }
+			Object existing = lookUpUserProperty(user.getUsername(), name);
             if (existing == null)
             {
                 insertUserProperty(user.getUsername(), name, value);
