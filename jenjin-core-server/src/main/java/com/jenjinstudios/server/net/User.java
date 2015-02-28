@@ -9,7 +9,7 @@ import java.util.Map;
 public class User
 {
 	/** The Hash table of custom properties of this user. */
-	private final HashMap<String, Object> properties = new HashMap<>();
+	private final Map<String, Object> properties = new HashMap<>();
 	private String salt;
 	private boolean loggedIn;
 	private String username;

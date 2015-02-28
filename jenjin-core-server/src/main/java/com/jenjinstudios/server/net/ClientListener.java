@@ -10,6 +10,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -68,7 +69,7 @@ class ClientListener implements Runnable
 	 * @return A {@code LinkedList} containing the new clients.
 	 */
 	public Iterable<ClientHandler> getNewClients() {
-		LinkedList<ClientHandler> temp = new LinkedList<>();
+		Collection<ClientHandler> temp = new LinkedList<>();
 		synchronized (newClientHandlers)
 		{
 			if (!newClientHandlers.isEmpty())
