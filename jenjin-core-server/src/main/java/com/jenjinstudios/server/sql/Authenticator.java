@@ -57,8 +57,8 @@ public class Authenticator
             return getFullHexString(getSHA256Hash(input));
         } catch (NoSuchAlgorithmException | UnsupportedEncodingException ex)
         {
-            throw new RuntimeException("Unable to find SHA-256 Algorithm");
-        }
+			throw new RuntimeException("Unable to find SHA-256 Algorithm", ex);
+		}
     }
 
     private static byte[] getSHA256Hash(String input) throws UnsupportedEncodingException, NoSuchAlgorithmException {
