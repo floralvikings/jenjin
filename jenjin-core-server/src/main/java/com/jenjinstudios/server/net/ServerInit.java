@@ -7,7 +7,7 @@ import java.security.KeyPair;
  *
  * @author Caleb Brinkman
  */
-public class ServerInit implements Cloneable
+public class ServerInit
 {
 	/** The default number of updates per second. */
 	public static final int DEFAULT_UPS = 50;
