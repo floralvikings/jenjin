@@ -32,8 +32,6 @@ public class Authenticator
 	private static final Set<Class<?>> WRAPPER_TYPES = getWrapperTypes();
 	private static final String USER_TABLE = "jenjin_users";
 	private static final String PROPERTIES_TABLE = "jenjin_user_properties";
-	private static final String SALT_COLUMN = "salt";
-	private static final String PASSWORD_COLUMN = "password";
 	private static final String USER_COLUMN = "username";
 	private static final String PROPERTY_NAME_COLUMN = "propertyName";
 	private static final String PROPERTY_VALUE_COLUMN = "propertyValue";
@@ -43,15 +41,12 @@ public class Authenticator
 	private static final Logger LOGGER = Logger.getLogger(Authenticator.class.getName());
 	/** The connection used to communicate with the SQL database. */
 	private final Connection dbConnection;
-	/** The string used to get all information about the user. */
-	private final String userQuery;
 	private final String propertiesQuery;
 
 	/**
 	 * Create a new SQLHandler with the given database information, and connect to the database.
 	 */
 	public Authenticator(Connection dbConnection) {
-		userQuery = "SELECT * FROM " + USER_TABLE + " WHERE username = ?";
 		propertiesQuery = "SELECT * FROM " + PROPERTIES_TABLE + " WHERE username = ?";
 		this.dbConnection = dbConnection;
 	}
