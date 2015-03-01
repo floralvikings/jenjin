@@ -30,8 +30,8 @@ public class Authenticator
     private static final String PROPERTIES_TABLE = "jenjin_user_properties";
 	private static final String SALT_COLUMN = "salt";
 	private static final String PASSWORD_COLUMN = "password";
-	private static final String USER = "username";
-    private static final String PROPERTY_NAME = "propertyName";
+	private static final String USER_COLUMN = "username";
+	private static final String PROPERTY_NAME = "propertyName";
     private static final String PROPERTY_VALUE = "propertyValue";
     /** The name of the column in the user table specifying whether the user is currently logged in. */
     private static final String LOGGED_IN = "loggedin";
@@ -221,8 +221,8 @@ public class Authenticator
      */
     protected void updateLoggedinColumn(String username, boolean status) throws LoginException {
         String s = status ? "1" : "0";
-        String updateQuery = "UPDATE " + USER_TABLE + " SET " + LOGGED_IN + "=" + s + " WHERE " + USER + " = ?";
-        synchronized (dbConnection)
+		String updateQuery = "UPDATE " + USER_TABLE + " SET " + LOGGED_IN + "=" + s + " WHERE " + USER_COLUMN + " = ?";
+		synchronized (dbConnection)
         {
             try (PreparedStatement updateLoggedIn = dbConnection.prepareStatement(updateQuery))
             {
@@ -239,8 +239,8 @@ public class Authenticator
 
     public Object lookUpUserProperty(String username, String propertyName) throws SQLException {
         String propertyQuery = "SELECT * FROM " + PROPERTIES_TABLE + " " +
-              "WHERE " + USER + " = ? AND " + PROPERTY_NAME + " = ?";
-        Object r = null;
+			  "WHERE " + USER_COLUMN + " = ? AND " + PROPERTY_NAME + " = ?";
+		Object r = null;
         synchronized (dbConnection)
         {
             PreparedStatement statement = dbConnection.prepareStatement(propertyQuery);
@@ -293,8 +293,8 @@ public class Authenticator
 
     private void insertUserProperty(String username, String propertyName, Object propertyValue) throws SQLException {
         String insertPropertyQuery = "INSERT INTO " + PROPERTIES_TABLE + " " +
-              "(`" + USER + "`, `" + PROPERTY_NAME + "`, `" + PROPERTY_VALUE + "`) VALUES " +
-              "(?, ?, ?)";
+			  "(`" + USER_COLUMN + "`, `" + PROPERTY_NAME + "`, `" + PROPERTY_VALUE + "`) VALUES " +
+			  "(?, ?, ?)";
         synchronized (dbConnection)
         {
             PreparedStatement statement = dbConnection.prepareStatement(insertPropertyQuery);
@@ -308,8 +308,8 @@ public class Authenticator
 
     private void updateUserProperty(String username, String propertyName, Object propertyValue) throws SQLException {
         String updatePropertyQuery = "UPDATE " + PROPERTIES_TABLE + " SET " + PROPERTY_VALUE + " = ? WHERE " +
-              USER + " = ? AND " + PROPERTY_NAME + " = ?";
-        synchronized (dbConnection)
+			  USER_COLUMN + " = ? AND " + PROPERTY_NAME + " = ?";
+		synchronized (dbConnection)
         {
             PreparedStatement statement = dbConnection.prepareStatement(updatePropertyQuery);
             statement.setObject(1, propertyValue);
