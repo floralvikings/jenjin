@@ -31,7 +31,7 @@ public final class TestConnectionFactory
 			  "  `salt` CHAR(48) NOT NULL," +
 			  "  `loggedin` TINYINT NOT NULL DEFAULT '0'," +
 			  "  PRIMARY KEY (username)" +
-			  ")");
+			  ')');
 		statement.executeUpdate("CREATE TABLE jenjin_user_properties (" +
 			  " `username` VARCHAR(64) NOT NULL," +
 			  " `propertyName` VARCHAR(64) NOT NULL," +
