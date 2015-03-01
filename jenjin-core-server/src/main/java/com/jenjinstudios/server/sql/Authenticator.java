@@ -38,15 +38,15 @@ public class Authenticator
     /** The connection used to communicate with the SQL database. */
     private final Connection dbConnection;
     /** The string used to get all information about the user. */
-    private final String USER_QUERY;
-    private final String PROPERTIES_QUERY;
+	private final String userQuery;
+	private final String PROPERTIES_QUERY;
 
     /**
      * Create a new SQLHandler with the given database information, and connect to the database.
      */
     public Authenticator(Connection dbConnection) {
-        USER_QUERY = "SELECT * FROM " + USER_TABLE + " WHERE username = ?";
-        PROPERTIES_QUERY = "SELECT * FROM " + PROPERTIES_TABLE + " WHERE username = ?";
+		userQuery = "SELECT * FROM " + USER_TABLE + " WHERE username = ?";
+		PROPERTIES_QUERY = "SELECT * FROM " + PROPERTIES_TABLE + " WHERE username = ?";
         this.dbConnection = dbConnection;
     }
 
@@ -193,8 +193,8 @@ public class Authenticator
         PreparedStatement statement;
         synchronized (dbConnection)
         {
-            statement = dbConnection.prepareStatement(USER_QUERY,
-                  TYPE_SCROLL_SENSITIVE, CONCUR_UPDATABLE);
+			statement = dbConnection.prepareStatement(userQuery,
+				  TYPE_SCROLL_SENSITIVE, CONCUR_UPDATABLE);
             statement.setString(1, username);
 
         }
