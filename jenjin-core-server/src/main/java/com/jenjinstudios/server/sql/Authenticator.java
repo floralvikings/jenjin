@@ -2,7 +2,6 @@ package com.jenjinstudios.server.sql;
 
 import com.jenjinstudios.server.net.User;
 
-import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
@@ -14,6 +13,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static java.sql.ResultSet.*;
 
@@ -37,6 +38,7 @@ public class Authenticator
 	/** The name of the column in the user table specifying whether the user is currently logged in. */
     private static final String LOGGED_IN = "loggedin";
 	private static final int SHA256_STRING_LENGTH = 64;
+	private static final Logger LOGGER = Logger.getLogger(Authenticator.class.getName());
 	/** The connection used to communicate with the SQL database. */
 	private final Connection dbConnection;
     /** The string used to get all information about the user. */
@@ -53,21 +55,23 @@ public class Authenticator
     }
 
     private static String getSHA256String(String input) {
-        try
-        {
-            //Convert the pass to an md5 hash string
             return getFullHexString(getSHA256Hash(input));
-        } catch (NoSuchAlgorithmException | UnsupportedEncodingException ex)
-        {
-			throw new RuntimeException("Unable to find SHA-256 Algorithm", ex);
-		}
     }
 
-    private static byte[] getSHA256Hash(String input) throws UnsupportedEncodingException, NoSuchAlgorithmException {
-        byte[] passBytes = input.getBytes("UTF-8");
-        MessageDigest md = MessageDigest.getInstance("SHA-256");
-        return md.digest(passBytes);
-    }
+	private static byte[] getSHA256Hash(String input) {
+		byte[] passBytes = input.getBytes();
+		try
+		{
+			MessageDigest md = MessageDigest.getInstance("SHA-256");
+			passBytes = md.digest(passBytes);
+		} catch (NoSuchAlgorithmException e)
+		{
+			LOGGER.log(Level.SEVERE, "No SHA-256 algorithm found; are you using a valid Java implementation?");
+			// FIXME This could be a pretty big security issue for non-compliant JVMs
+			// maybe fall back to a custom SHA-256 implementation?
+		}
+		return passBytes;
+	}
 
 	private static String getFullHexString(byte... bytes) {
 		String hashedString;
