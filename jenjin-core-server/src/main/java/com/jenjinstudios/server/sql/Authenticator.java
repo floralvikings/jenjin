@@ -222,7 +222,7 @@ public class Authenticator
      */
     protected void updateLoggedinColumn(String username, boolean status) throws LoginException {
         String s = status ? "1" : "0";
-		String updateQuery = "UPDATE " + USER_TABLE + " SET " + LOGGED_IN + "=" + s + " WHERE " + USER_COLUMN + " = ?";
+		String updateQuery = "UPDATE " + USER_TABLE + " SET " + LOGGED_IN + '=' + s + " WHERE " + USER_COLUMN + " = ?";
 		synchronized (dbConnection)
         {
             try (PreparedStatement updateLoggedIn = dbConnection.prepareStatement(updateQuery))
