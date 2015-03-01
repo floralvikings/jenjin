@@ -315,7 +315,7 @@ public class Authenticator
         {
 			String updatePropertyQuery = "UPDATE " + PROPERTIES_TABLE + " SET " + PROPERTY_VALUE_COLUMN + " = ? " +
 				  "WHERE" +
-				  " " +
+				  ' ' +
 				  USER_COLUMN + " = ? AND " + PROPERTY_NAME_COLUMN + " = ?";
 			PreparedStatement statement = dbConnection.prepareStatement(updatePropertyQuery);
 			statement.setObject(1, propertyValue);
