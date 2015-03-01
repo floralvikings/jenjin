@@ -21,6 +21,8 @@ public interface DbTable<T>
 	 *
 	 * @param key The key of the object to update.
 	 * @param data The data with which to update the object.
+	 *
+	 * @return Whether the update was successful.
 	 */
-	void update(String key, T data);
+	boolean update(String key, T data);
 }
