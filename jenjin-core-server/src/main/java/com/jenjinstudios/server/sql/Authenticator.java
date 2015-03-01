@@ -70,8 +70,8 @@ public class Authenticator
 
 	private static String getFullHexString(byte... bytes) {
 		String hashedString;
-        StringBuilder hexString = new StringBuilder();
-        for (byte anEncryption : bytes)
+		StringBuilder hexString = new StringBuilder(64);
+		for (byte anEncryption : bytes)
         { // Convert back to a string, making sure to include leading zeros.
             String hex = Integer.toHexString(HEX_CONVERSION_CONSTANT & anEncryption);
             if (hex.length() == 1)
