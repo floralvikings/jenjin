@@ -91,7 +91,7 @@ public class Authenticator
      *
      * @return The hashed, salted string.
      */
-    public static String getSaltedSHA256String(String input, String salt) { return getSHA256String(salt + input); }
+	private static String getSaltedSHA256String(String input, String salt) { return getSHA256String(salt + input); }
 
     /**
      * Attempt to log the given user with the given password into the database.  This method does not perform any sort
