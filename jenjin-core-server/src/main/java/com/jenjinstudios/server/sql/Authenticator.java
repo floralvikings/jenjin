@@ -28,8 +28,8 @@ public class Authenticator
 	private static final Set<Class<?>> WRAPPER_TYPES = getWrapperTypes();
     private static final String USER_TABLE = "jenjin_users";
     private static final String PROPERTIES_TABLE = "jenjin_user_properties";
-    private static final String SALT = "salt";
-    private static final String PASSWORD = "password";
+	private static final String SALT_COLUMN = "salt";
+	private static final String PASSWORD = "password";
     private static final String USER = "username";
     private static final String PROPERTY_NAME = "propertyName";
     private static final String PROPERTY_VALUE = "propertyValue";
@@ -129,8 +129,8 @@ public class Authenticator
                 throw new LoginException("User " + username + " does not exist.");
             }
             boolean loggedIn = results.getBoolean(LOGGED_IN);
-            String salt = results.getString(SALT);
-            String dbPass = results.getString(PASSWORD);
+			String salt = results.getString(SALT_COLUMN);
+			String dbPass = results.getString(PASSWORD);
             User user = new User();
             user.setUsername(username);
             user.setPassword(dbPass);
