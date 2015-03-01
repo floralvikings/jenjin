@@ -39,15 +39,15 @@ public class Authenticator
     private final Connection dbConnection;
     /** The string used to get all information about the user. */
 	private final String userQuery;
-	private final String PROPERTIES_QUERY;
+	private final String propertiesQuery;
 
     /**
      * Create a new SQLHandler with the given database information, and connect to the database.
      */
     public Authenticator(Connection dbConnection) {
 		userQuery = "SELECT * FROM " + USER_TABLE + " WHERE username = ?";
-		PROPERTIES_QUERY = "SELECT * FROM " + PROPERTIES_TABLE + " WHERE username = ?";
-        this.dbConnection = dbConnection;
+		propertiesQuery = "SELECT * FROM " + PROPERTIES_TABLE + " WHERE username = ?";
+		this.dbConnection = dbConnection;
     }
 
     private static String getSHA256String(String input) {
@@ -205,8 +205,8 @@ public class Authenticator
         PreparedStatement statement;
         synchronized (dbConnection)
         {
-            statement = dbConnection.prepareStatement(PROPERTIES_QUERY, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
-            statement.setString(1, username);
+			statement = dbConnection.prepareStatement(propertiesQuery, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
+			statement.setString(1, username);
         }
         return statement.executeQuery();
     }
