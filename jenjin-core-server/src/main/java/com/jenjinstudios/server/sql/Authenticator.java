@@ -243,14 +243,14 @@ public class Authenticator
     }
 
     public Object lookUpUserProperty(String username, String propertyName) throws SQLException {
-		String propertyQuery = "SELECT * FROM " + PROPERTIES_TABLE + ' ' +
-			  "WHERE " + USER_COLUMN + " = ? AND " + PROPERTY_NAME_COLUMN + " = ?";
 		Object r = null;
         synchronized (dbConnection)
         {
-            PreparedStatement statement = dbConnection.prepareStatement(propertyQuery);
-            statement.setString(1, username);
-            statement.setString(2, propertyName);
+			String propertyQuery = "SELECT * FROM " + PROPERTIES_TABLE + ' ' +
+				  "WHERE " + USER_COLUMN + " = ? AND " + PROPERTY_NAME_COLUMN + " = ?";
+			PreparedStatement statement = dbConnection.prepareStatement(propertyQuery);
+			statement.setString(1, username);
+			statement.setString(2, propertyName);
             ResultSet results = statement.executeQuery();
             if (results.next())
             {
