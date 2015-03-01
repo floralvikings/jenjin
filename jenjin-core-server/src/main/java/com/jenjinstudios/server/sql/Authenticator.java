@@ -144,7 +144,7 @@ public class Authenticator
     }
 
     public Map<String, Object> lookUpUserProperties(String username) throws LoginException {
-        Map<String, Object> properties = new HashMap<>();
+		Map<String, Object> properties = new HashMap<>(10);
 
         try (ResultSet results = makePropertiesQuery(username))
         {
