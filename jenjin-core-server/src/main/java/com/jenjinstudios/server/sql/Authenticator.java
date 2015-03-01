@@ -36,8 +36,9 @@ public class Authenticator
 	private static final String PROPERTY_VALUE_COLUMN = "propertyValue";
 	/** The name of the column in the user table specifying whether the user is currently logged in. */
     private static final String LOGGED_IN = "loggedin";
-    /** The connection used to communicate with the SQL database. */
-    private final Connection dbConnection;
+	private static final int SHA256_STRING_LENGTH = 64;
+	/** The connection used to communicate with the SQL database. */
+	private final Connection dbConnection;
     /** The string used to get all information about the user. */
 	private final String userQuery;
 	private final String propertiesQuery;
@@ -70,7 +71,7 @@ public class Authenticator
 
 	private static String getFullHexString(byte... bytes) {
 		String hashedString;
-		StringBuilder hexString = new StringBuilder(64);
+		StringBuilder hexString = new StringBuilder(SHA256_STRING_LENGTH);
 		for (byte anEncryption : bytes)
         { // Convert back to a string, making sure to include leading zeros.
             String hex = Integer.toHexString(HEX_CONVERSION_CONSTANT & anEncryption);
