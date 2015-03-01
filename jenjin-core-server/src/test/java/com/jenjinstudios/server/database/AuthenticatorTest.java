@@ -70,21 +70,6 @@ public class AuthenticatorTest
 	}
 
 	@Test
-	public void testLookUpUser() throws Exception {
-		Authenticator connector = new Authenticator(connection);
-		User testAccount1 = connector.lookUpUser("TestAccount1");
-		Assert.assertEquals(testAccount1.getUsername(), "TestAccount1");
-
-	}
-
-	@Test
-	public void testLookUpFakeUser() throws Exception {
-		Authenticator connector = new Authenticator(connection);
-		User user = connector.lookUpUser("This User Doesn't Exist.");
-		Assert.assertNull(user);
-	}
-
-	@Test
 	public void testLogInUser() throws Exception {
 		Authenticator connector = new Authenticator(connection);
 		String username = "TestAccount2";
