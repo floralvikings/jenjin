@@ -74,7 +74,6 @@ public class Authenticator
 	}
 
 	private static String getFullHexString(byte... bytes) {
-		String hashedString;
 		StringBuilder hexString = new StringBuilder(SHA256_STRING_LENGTH);
 		for (byte anEncryption : bytes)
         { // Convert back to a string, making sure to include leading zeros.
@@ -85,9 +84,9 @@ public class Authenticator
             }
             hexString.append(hex);
         }
-        hashedString = hexString.toString();
-        return hashedString;
-    }
+		String hashedString = hexString.toString();
+		return hashedString;
+	}
 
     /**
      * Get a SHA-256 hash of the {@code String} created by combining {@code salt} and {@code hash}.
