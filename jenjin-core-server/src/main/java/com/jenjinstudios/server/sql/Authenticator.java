@@ -314,9 +314,7 @@ public class Authenticator
 		synchronized (dbConnection)
         {
 			String updatePropertyQuery = "UPDATE " + PROPERTIES_TABLE + " SET " + PROPERTY_VALUE_COLUMN + " = ? " +
-				  "WHERE" +
-				  ' ' +
-				  USER_COLUMN + " = ? AND " + PROPERTY_NAME_COLUMN + " = ?";
+				  "WHERE" + ' ' + USER_COLUMN + " = ? AND " + PROPERTY_NAME_COLUMN + " = ?";
 			PreparedStatement statement = dbConnection.prepareStatement(updatePropertyQuery);
 			statement.setObject(1, propertyValue);
             statement.setString(2, username);
