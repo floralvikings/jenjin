@@ -17,7 +17,8 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static java.sql.ResultSet.*;
+import static java.sql.ResultSet.CONCUR_UPDATABLE;
+import static java.sql.ResultSet.TYPE_SCROLL_INSENSITIVE;
 
 /**
  * The SQLHandler class is responsible for connecting to and querying the SQL database associated with a given Server.
@@ -167,27 +168,6 @@ public class Authenticator
 			updateLoggedinColumn(username, false);
 		}
 		return user;
-	}
-
-	/**
-	 * Query the database for user info.
-	 *
-	 * @param username The username of the user we're looking for.
-	 *
-	 * @return The ResultSet returned by the query.
-	 *
-	 * @throws SQLException If there is a SQL error.
-	 */
-	protected ResultSet makeUserQuery(String username) throws SQLException {
-		PreparedStatement statement;
-		synchronized (dbConnection)
-		{
-			statement = dbConnection.prepareStatement(userQuery,
-				  TYPE_SCROLL_SENSITIVE, CONCUR_UPDATABLE);
-			statement.setString(1, username);
-
-		}
-		return statement.executeQuery();
 	}
 
 	protected ResultSet makePropertiesQuery(String username) throws SQLException {
