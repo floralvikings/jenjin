@@ -24,8 +24,8 @@ import static java.sql.ResultSet.*;
 @SuppressWarnings("SameParameterValue")
 public class Authenticator
 {
-    public static final int HEX_CONVERSION_CONSTANT = 0xff;
-    private static final Set<Class<?>> WRAPPER_TYPES = getWrapperTypes();
+	private static final int HEX_CONVERSION_CONSTANT = 0xff;
+	private static final Set<Class<?>> WRAPPER_TYPES = getWrapperTypes();
     private static final String USER_TABLE = "jenjin_users";
     private static final String PROPERTIES_TABLE = "jenjin_user_properties";
     private static final String SALT = "salt";
