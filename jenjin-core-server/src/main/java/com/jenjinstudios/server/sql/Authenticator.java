@@ -32,8 +32,8 @@ public class Authenticator
 	private static final String PASSWORD_COLUMN = "password";
 	private static final String USER_COLUMN = "username";
 	private static final String PROPERTY_NAME_COLUMN = "propertyName";
-	private static final String PROPERTY_VALUE = "propertyValue";
-    /** The name of the column in the user table specifying whether the user is currently logged in. */
+	private static final String PROPERTY_VALUE_COLUMN = "propertyValue";
+	/** The name of the column in the user table specifying whether the user is currently logged in. */
     private static final String LOGGED_IN = "loggedin";
     /** The connection used to communicate with the SQL database. */
     private final Connection dbConnection;
@@ -151,8 +151,8 @@ public class Authenticator
             while (results.next())
             {
 				String propertyName = results.getString(PROPERTY_NAME_COLUMN);
-				Object propertyValue = results.getObject(PROPERTY_VALUE);
-                properties.put(propertyName, propertyValue);
+				Object propertyValue = results.getObject(PROPERTY_VALUE_COLUMN);
+				properties.put(propertyName, propertyValue);
             }
         } catch (SQLException e)
         {
@@ -249,8 +249,8 @@ public class Authenticator
             ResultSet results = statement.executeQuery();
             if (results.next())
             {
-                r = results.getObject(PROPERTY_VALUE);
-            }
+				r = results.getObject(PROPERTY_VALUE_COLUMN);
+			}
         }
         return r;
     }
@@ -293,7 +293,7 @@ public class Authenticator
 
     private void insertUserProperty(String username, String propertyName, Object propertyValue) throws SQLException {
         String insertPropertyQuery = "INSERT INTO " + PROPERTIES_TABLE + " " +
-			  "(`" + USER_COLUMN + "`, `" + PROPERTY_NAME_COLUMN + "`, `" + PROPERTY_VALUE + "`) VALUES " +
+			  "(`" + USER_COLUMN + "`, `" + PROPERTY_NAME_COLUMN + "`, `" + PROPERTY_VALUE_COLUMN + "`) VALUES " +
 			  "(?, ?, ?)";
         synchronized (dbConnection)
         {
@@ -307,7 +307,7 @@ public class Authenticator
     }
 
     private void updateUserProperty(String username, String propertyName, Object propertyValue) throws SQLException {
-        String updatePropertyQuery = "UPDATE " + PROPERTIES_TABLE + " SET " + PROPERTY_VALUE + " = ? WHERE " +
+		String updatePropertyQuery = "UPDATE " + PROPERTIES_TABLE + " SET " + PROPERTY_VALUE_COLUMN + " = ? WHERE " +
 			  USER_COLUMN + " = ? AND " + PROPERTY_NAME_COLUMN + " = ?";
 		synchronized (dbConnection)
         {
