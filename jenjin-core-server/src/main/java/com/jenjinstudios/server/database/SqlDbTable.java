@@ -47,8 +47,10 @@ public abstract class SqlDbTable<T> implements DbTable<T>
 	 * @param resultSet The results from the backing database.
 	 *
 	 * @return A {@code T} built from the result set.
+	 *
+	 * @throws java.sql.SQLException If there is an exception when querying the result set.
 	 */
-	protected abstract T buildLookupValue(ResultSet resultSet);
+	protected abstract T buildLookupValue(ResultSet resultSet) throws SQLException;
 
 	@Override
 	public T lookup(String key) {
