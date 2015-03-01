@@ -311,12 +311,14 @@ public class Authenticator
     }
 
     private void updateUserProperty(String username, String propertyName, Object propertyValue) throws SQLException {
-		String updatePropertyQuery = "UPDATE " + PROPERTIES_TABLE + " SET " + PROPERTY_VALUE_COLUMN + " = ? WHERE " +
-			  USER_COLUMN + " = ? AND " + PROPERTY_NAME_COLUMN + " = ?";
 		synchronized (dbConnection)
         {
-            PreparedStatement statement = dbConnection.prepareStatement(updatePropertyQuery);
-            statement.setObject(1, propertyValue);
+			String updatePropertyQuery = "UPDATE " + PROPERTIES_TABLE + " SET " + PROPERTY_VALUE_COLUMN + " = ? " +
+				  "WHERE" +
+				  " " +
+				  USER_COLUMN + " = ? AND " + PROPERTY_NAME_COLUMN + " = ?";
+			PreparedStatement statement = dbConnection.prepareStatement(updatePropertyQuery);
+			statement.setObject(1, propertyValue);
             statement.setString(2, username);
             statement.setObject(3, propertyName);
             statement.executeUpdate();
