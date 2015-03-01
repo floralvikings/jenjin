@@ -277,8 +277,8 @@ public class Authenticator
     public static boolean isWrapperType(Class<?> clazz) { return WRAPPER_TYPES.contains(clazz); }
 
     private static Set<Class<?>> getWrapperTypes() {
-        Set<Class<?>> ret = new HashSet<>();
-        ret.add(String.class);
+		Set<Class<?>> ret = new HashSet<>(10);
+		ret.add(String.class);
         ret.add(Boolean.class);
         ret.add(Character.class);
         ret.add(Byte.class);
