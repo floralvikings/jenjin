@@ -77,11 +77,11 @@ public class AuthenticatorTest
 
 	}
 
-	@Test(expectedExceptions = LoginException.class)
+	@Test
 	public void testLookUpFakeUser() throws Exception {
 		Authenticator connector = new Authenticator(connection);
-		connector.lookUpUser("This User Doesn't Exist.");
-
+		User user = connector.lookUpUser("This User Doesn't Exist.");
+		Assert.assertNull(user);
 	}
 
 	@Test

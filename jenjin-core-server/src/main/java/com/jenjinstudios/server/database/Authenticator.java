@@ -1,5 +1,6 @@
 package com.jenjinstudios.server.database;
 
+import com.jenjinstudios.server.database.sql.UserTable;
 import com.jenjinstudios.server.net.User;
 
 import java.security.MessageDigest;
@@ -126,26 +127,8 @@ public class Authenticator
 		return user;
 	}
 
-	public User lookUpUser(String username) throws LoginException {
-		try (ResultSet results = makeUserQuery(username))
-		{
-			if (!results.next())
-			{
-				throw new LoginException("User " + username + " does not exist.");
-			}
-			boolean loggedIn = results.getBoolean(LOGGED_IN);
-			String salt = results.getString(SALT_COLUMN);
-			String dbPass = results.getString(PASSWORD_COLUMN);
-			User user = new User();
-			user.setUsername(username);
-			user.setPassword(dbPass);
-			user.setSalt(salt);
-			user.setLoggedIn(loggedIn);
-			return user;
-		} catch (SQLException e)
-		{
-			throw new LoginException("Unable to retrieve user " + username + " because of SQL Exception.", e);
-		}
+	public User lookUpUser(String username) {
+		return new UserTable(dbConnection, USER_TABLE).lookup(username);
 	}
 
 	public Map<String, Object> lookUpUserProperties(String username) throws LoginException {
