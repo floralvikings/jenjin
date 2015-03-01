@@ -121,9 +121,9 @@ public class Authenticator
         if (user.isLoggedIn())
             throw new LoginException("User " + username + " is already logged in.");
         String hashedPassword = getSaltedSHA256String(password, user.getSalt());
-		boolean passwordCorrect = (hashedPassword != null) && hashedPassword.equalsIgnoreCase(user.getPassword());
-		if (!passwordCorrect)
-            throw new LoginException("User " + username + " provided incorrect password.");
+		boolean passwordIncorrect = (hashedPassword == null) || !hashedPassword.equalsIgnoreCase(user.getPassword());
+		if (passwordIncorrect)
+			throw new LoginException("User " + username + " provided incorrect password.");
         return user;
     }
 
