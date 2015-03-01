@@ -296,13 +296,13 @@ public class Authenticator
     }
 
     private void insertUserProperty(String username, String propertyName, Object propertyValue) throws SQLException {
-		String insertPropertyQuery = "INSERT INTO " + PROPERTIES_TABLE + ' ' +
-			  "(`" + USER_COLUMN + "`, `" + PROPERTY_NAME_COLUMN + "`, `" + PROPERTY_VALUE_COLUMN + "`) VALUES " +
-			  "(?, ?, ?)";
-        synchronized (dbConnection)
-        {
-            PreparedStatement statement = dbConnection.prepareStatement(insertPropertyQuery);
-            statement.setString(1, username);
+		synchronized (dbConnection)
+		{
+			String insertPropertyQuery = "INSERT INTO " + PROPERTIES_TABLE + ' ' +
+				  "(`" + USER_COLUMN + "`, `" + PROPERTY_NAME_COLUMN + "`, `" + PROPERTY_VALUE_COLUMN + "`) VALUES " +
+				  "(?, ?, ?)";
+			PreparedStatement statement = dbConnection.prepareStatement(insertPropertyQuery);
+			statement.setString(1, username);
             statement.setString(2, propertyName);
             statement.setObject(3, propertyValue);
             statement.executeUpdate();
