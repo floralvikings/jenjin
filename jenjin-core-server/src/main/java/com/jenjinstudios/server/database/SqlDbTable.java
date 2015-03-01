@@ -62,6 +62,7 @@ public abstract class SqlDbTable<T> implements DbTable<T>
 				statement.setString(1, key);
 				ResultSet resultSet = statement.executeQuery();
 				lookupValue = buildLookupValue(resultSet);
+				resultSet.close();
 			}
 		} catch (SQLException e)
 		{
