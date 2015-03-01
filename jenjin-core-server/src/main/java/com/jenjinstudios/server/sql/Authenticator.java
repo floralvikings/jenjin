@@ -239,7 +239,7 @@ public class Authenticator
     }
 
     public Object lookUpUserProperty(String username, String propertyName) throws SQLException {
-        String propertyQuery = "SELECT * FROM " + PROPERTIES_TABLE + " " +
+		String propertyQuery = "SELECT * FROM " + PROPERTIES_TABLE + ' ' +
 			  "WHERE " + USER_COLUMN + " = ? AND " + PROPERTY_NAME_COLUMN + " = ?";
 		Object r = null;
         synchronized (dbConnection)
