@@ -1,7 +1,7 @@
 package com.jenjinstudios.world.server.sql;
 
+import com.jenjinstudios.server.database.Authenticator;
 import com.jenjinstudios.server.net.User;
-import com.jenjinstudios.server.sql.Authenticator;
 import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.server.WorldClientHandler;
 

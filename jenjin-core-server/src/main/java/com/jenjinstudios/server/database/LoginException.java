@@ -1,4 +1,4 @@
-package com.jenjinstudios.server.sql;
+package com.jenjinstudios.server.database;
 
 import java.sql.SQLException;
 

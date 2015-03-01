@@ -1,8 +1,8 @@
 package com.jenjinstudios.world.server.message;
 
 import com.jenjinstudios.core.io.Message;
+import com.jenjinstudios.server.database.LoginException;
 import com.jenjinstudios.server.net.User;
-import com.jenjinstudios.server.sql.LoginException;
 import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.math.Vector2D;
 import com.jenjinstudios.world.server.WorldClientHandler;

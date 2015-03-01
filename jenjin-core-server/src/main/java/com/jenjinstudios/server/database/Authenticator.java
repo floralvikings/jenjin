@@ -1,4 +1,4 @@
-package com.jenjinstudios.server.sql;
+package com.jenjinstudios.server.database;
 
 import com.jenjinstudios.server.net.User;
 
@@ -223,7 +223,7 @@ public class Authenticator
 	 * @param username The user being queried.
 	 * @param status The new status of the loggedin column.
 	 *
-	 * @throws com.jenjinstudios.server.sql.LoginException If there is a SQL error.
+	 * @throws LoginException If there is a SQL error.
 	 */
 	protected void updateLoggedinColumn(String username, boolean status) throws LoginException {
 		String s = status ? "1" : "0";

@@ -1,10 +1,10 @@
 package com.jenjinstudios.server.message;
 
 import com.jenjinstudios.core.io.Message;
+import com.jenjinstudios.server.database.Authenticator;
+import com.jenjinstudios.server.database.LoginException;
 import com.jenjinstudios.server.net.ClientHandler;
 import com.jenjinstudios.server.net.User;
-import com.jenjinstudios.server.sql.Authenticator;
-import com.jenjinstudios.server.sql.LoginException;
 
 /**
  * Executable message to handle client logging out.

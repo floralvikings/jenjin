@@ -3,8 +3,8 @@ package com.jenjinstudios.server.net;
 import com.jenjinstudios.core.Connection;
 import com.jenjinstudios.core.MessageIO;
 import com.jenjinstudios.core.io.Message;
+import com.jenjinstudios.server.database.LoginException;
 import com.jenjinstudios.server.message.ServerMessageFactory;
-import com.jenjinstudios.server.sql.LoginException;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;

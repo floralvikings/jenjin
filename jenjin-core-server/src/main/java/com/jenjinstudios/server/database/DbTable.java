@@ -1,4 +1,4 @@
-package com.jenjinstudios.server.sql;
+package com.jenjinstudios.server.database;
 
 /**
  * Interface to be implemented by classes that will make database lookups.
