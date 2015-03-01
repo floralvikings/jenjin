@@ -238,8 +238,8 @@ public class Authenticator
             } catch (SQLException e)
             {
                 throw new LoginException("Unable to update " + username + "; SQLException when updating loggedin " +
-                      "column.");
-            }
+					  "column.", e);
+			}
         }
     }
 
