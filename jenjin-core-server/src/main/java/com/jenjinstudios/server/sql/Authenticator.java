@@ -84,8 +84,7 @@ public class Authenticator
             }
             hexString.append(hex);
         }
-		String hashedString = hexString.toString();
-		return hashedString;
+		return hexString.toString();
 	}
 
     /**
