@@ -67,8 +67,8 @@ public class Authenticator
         return md.digest(passBytes);
     }
 
-    private static String getFullHexString(byte[] bytes) {
-        String hashedString;
+	private static String getFullHexString(byte... bytes) {
+		String hashedString;
         StringBuilder hexString = new StringBuilder();
         for (byte anEncryption : bytes)
         { // Convert back to a string, making sure to include leading zeros.
