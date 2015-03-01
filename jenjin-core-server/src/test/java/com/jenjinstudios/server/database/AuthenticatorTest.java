@@ -1,7 +1,5 @@
-package com.jenjinstudios.server.sql;
+package com.jenjinstudios.server.database;
 
-import com.jenjinstudios.server.database.Authenticator;
-import com.jenjinstudios.server.database.LoginException;
 import com.jenjinstudios.server.net.User;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
