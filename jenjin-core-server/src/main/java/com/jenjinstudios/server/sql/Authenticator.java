@@ -12,6 +12,7 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import static java.sql.ResultSet.*;
@@ -257,18 +258,18 @@ public class Authenticator
 
     protected void updateUserProperties(User user) throws SQLException {
 		Map<String, Object> properties = user.getProperties();
-		for (String name : properties.keySet())
-        {
-            Object value = properties.get(name);
+		for (Entry<String, Object> stringObjectEntry : properties.entrySet())
+		{
+			Object value = stringObjectEntry.getValue();
 			if ((value == null) || isWrapperType(value.getClass()))
 			{
-				Object existing = lookUpUserProperty(user.getUsername(), name);
+				Object existing = lookUpUserProperty(user.getUsername(), stringObjectEntry.getKey());
 				if (existing == null)
 				{
-					insertUserProperty(user.getUsername(), name, value);
+					insertUserProperty(user.getUsername(), stringObjectEntry.getKey(), value);
 				} else if (!existing.equals(value))
 				{
-					updateUserProperty(user.getUsername(), name, value);
+					updateUserProperty(user.getUsername(), stringObjectEntry.getKey(), value);
 				}
 			}
 		}
