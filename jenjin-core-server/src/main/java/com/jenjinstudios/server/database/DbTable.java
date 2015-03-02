@@ -15,14 +15,4 @@ public interface DbTable<T>
 	 * @return The object stored in the database with the given primary key.
 	 */
 	T lookup(String key);
-
-	/**
-	 * Update the object in the database with the given primary key and data.
-	 *
-	 * @param key The key of the object to update.
-	 * @param data The data with which to update the object.
-	 *
-	 * @return Whether the update was successful.
-	 */
-	boolean update(String key, T data);
 }
