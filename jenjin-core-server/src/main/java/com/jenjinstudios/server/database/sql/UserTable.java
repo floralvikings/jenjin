@@ -6,6 +6,8 @@ import com.jenjinstudios.server.net.User;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Collection;
+import java.util.Map;
 
 /**
  * Used for looking up {@code User} objects from a backing SQL database.
@@ -31,6 +33,11 @@ public class UserTable extends SqlDbTable<User>
 
 	@Override
 	public String getPrimaryKeyColumn() { return USERNAME_COLUMN; }
+
+	@Override
+	public Collection<User> lookup(Map<String, Object> where) {
+		return null;
+	}
 
 	@Override
 	protected User buildLookupValue(ResultSet resultSet) throws SQLException {
