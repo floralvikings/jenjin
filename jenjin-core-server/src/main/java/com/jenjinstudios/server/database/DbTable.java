@@ -10,14 +10,6 @@ import java.util.Map;
  */
 public interface DbTable<T>
 {
-	/**
-	 * Look up the object in the database with the given primary key.
-	 *
-	 * @param key The primary key used to make the lookup query.
-	 *
-	 * @return The object stored in the database with the given primary key.
-	 */
-	T lookup(String key);
 
 	/**
 	 * Return the rows from the database with column names matching the keys, and records of those columns matching the

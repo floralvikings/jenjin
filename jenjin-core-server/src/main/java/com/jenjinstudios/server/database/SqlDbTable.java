@@ -57,27 +57,6 @@ public abstract class SqlDbTable<T> implements DbTable<T>
 	protected abstract T buildFromRow(ResultSet resultSet) throws SQLException;
 
 	@Override
-	public T lookup(String key) {
-		T lookupValue = null;
-		try
-		{
-			synchronized (connection)
-			{
-				PreparedStatement statement =
-					  connection.prepareStatement(getQuery(), TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
-				statement.setString(1, key);
-				ResultSet resultSet = statement.executeQuery();
-				lookupValue = buildFromRow(resultSet);
-				resultSet.close();
-			}
-		} catch (SQLException e)
-		{
-			LOGGER.log(Level.SEVERE, "SQL Exception when querying database: ", e);
-		}
-		return lookupValue;
-	}
-
-	@Override
 	public List<T> lookup(Map<String, Object> where) {
 		List<T> lookup = new LinkedList<>();
 		try
