@@ -34,13 +34,12 @@ public class UserTable extends SqlDbTable<User>
 
 	@Override
 	protected User buildFromRow(ResultSet resultSet) throws SQLException {
-		User user;
 		boolean loggedIn = resultSet.getBoolean(LOGGED_IN_COLUMN);
 		String salt = resultSet.getString(SALT_COLUMN);
 		String password = resultSet.getString(PASSWORD_COLUMN);
 		String username = resultSet.getString(USERNAME_COLUMN);
 
-		user = new User();
+		User user = new User();
 		user.setUsername(username);
 		user.setPassword(password);
 		user.setLoggedIn(loggedIn);
