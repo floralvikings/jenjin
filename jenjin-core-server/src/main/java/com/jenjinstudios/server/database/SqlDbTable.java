@@ -98,5 +98,4 @@ public abstract class SqlDbTable<T> implements DbTable<T>
 		return statement;
 	}
 
-	private String getQuery() { return "SELECT * FROM " + tableName + " WHERE " + getPrimaryKeyColumn() + " = ?"; }
 }
