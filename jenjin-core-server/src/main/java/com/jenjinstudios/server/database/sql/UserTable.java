@@ -34,20 +34,17 @@ public class UserTable extends SqlDbTable<User>
 
 	@Override
 	protected User buildLookupValue(ResultSet resultSet) throws SQLException {
-		User user = null;
-		if (resultSet.next())
-		{
-			boolean loggedIn = resultSet.getBoolean(LOGGED_IN_COLUMN);
-			String salt = resultSet.getString(SALT_COLUMN);
-			String password = resultSet.getString(PASSWORD_COLUMN);
-			String username = resultSet.getString(USERNAME_COLUMN);
+		User user;
+		boolean loggedIn = resultSet.getBoolean(LOGGED_IN_COLUMN);
+		String salt = resultSet.getString(SALT_COLUMN);
+		String password = resultSet.getString(PASSWORD_COLUMN);
+		String username = resultSet.getString(USERNAME_COLUMN);
 
-			user = new User();
-			user.setUsername(username);
-			user.setPassword(password);
-			user.setLoggedIn(loggedIn);
-			user.setSalt(salt);
-		}
+		user = new User();
+		user.setUsername(username);
+		user.setPassword(password);
+		user.setLoggedIn(loggedIn);
+		user.setSalt(salt);
 		return user;
 	}
 }
