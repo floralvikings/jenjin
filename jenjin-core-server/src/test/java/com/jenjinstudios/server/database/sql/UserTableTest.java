@@ -1,6 +1,7 @@
 package com.jenjinstudios.server.database.sql;
 
 import com.jenjinstudios.server.database.Authenticator;
+import com.jenjinstudios.server.database.DbTable;
 import com.jenjinstudios.server.net.User;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -8,6 +9,8 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import java.sql.Connection;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Test the UserTable class.
@@ -45,10 +48,11 @@ public class UserTableTest
 	 */
 	@Test
 	public void testLookUpUser() throws Exception {
-		Authenticator connector = new Authenticator(connection);
-		User testAccount1 = connector.lookUpUser("TestAccount1");
+		DbTable<User> table = new UserTable(connection, "jenjin_users");
+		List<User> users = table.lookup(Collections.singletonMap("username", "TestAccount1"));
+		User testAccount1 = users.isEmpty() ? null : users.get(0);
+		Assert.assertNotNull(testAccount1, "Test account was null");
 		Assert.assertEquals(testAccount1.getUsername(), "TestAccount1", "Incorrect user returned.");
-
 	}
 
 	/**
