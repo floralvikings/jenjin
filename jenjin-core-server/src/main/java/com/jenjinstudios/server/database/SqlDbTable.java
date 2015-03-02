@@ -4,6 +4,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -71,6 +75,48 @@ public abstract class SqlDbTable<T> implements DbTable<T>
 			LOGGER.log(Level.SEVERE, "SQL Exception when querying database: ", e);
 		}
 		return lookupValue;
+	}
+
+	@Override
+	public List<T> lookup(Map<String, Object> where) {
+		List<T> lookup = new LinkedList<>();
+		try
+		{
+			PreparedStatement statement = getLookupStatement(where);
+			ResultSet resultSet = statement.executeQuery();
+			while (resultSet.next())
+			{
+				lookup.add(buildLookupValue(resultSet));
+			}
+			resultSet.close();
+		} catch (SQLException e)
+		{
+			LOGGER.log(Level.SEVERE, "SQL Exception when querying database: ", e);
+		}
+		return lookup;
+	}
+
+	private PreparedStatement getLookupStatement(Map<String, Object> where) throws SQLException {
+		StringBuilder queryBuilder = new StringBuilder("SELECT * FROM " + tableName + " WHERE ");
+		for (Entry<String, Object> entry : where.entrySet())
+		{
+			queryBuilder.append(entry.getKey()).append(" = ? AND ");
+		}
+		int lastAnd = queryBuilder.lastIndexOf("AND");
+		queryBuilder.delete(lastAnd, lastAnd + 3);
+		String query = queryBuilder.toString();
+		PreparedStatement statement;
+		synchronized (connection)
+		{
+			statement = connection.prepareStatement(query, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
+			int parameterCount = 1;
+			for (Entry<String, Object> entry : where.entrySet())
+			{
+				statement.setObject(parameterCount, entry.getValue());
+				parameterCount++;
+			}
+		}
+		return statement;
 	}
 
 	private String getQuery() { return "SELECT * FROM " + tableName + " WHERE " + getPrimaryKeyColumn() + " = ?"; }
