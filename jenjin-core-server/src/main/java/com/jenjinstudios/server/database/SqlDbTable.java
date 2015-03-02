@@ -54,7 +54,7 @@ public abstract class SqlDbTable<T> implements DbTable<T>
 	 *
 	 * @throws java.sql.SQLException If there is an exception when querying the result set.
 	 */
-	protected abstract T buildLookupValue(ResultSet resultSet) throws SQLException;
+	protected abstract T buildFromRow(ResultSet resultSet) throws SQLException;
 
 	@Override
 	public T lookup(String key) {
@@ -67,7 +67,7 @@ public abstract class SqlDbTable<T> implements DbTable<T>
 					  connection.prepareStatement(getQuery(), TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
 				statement.setString(1, key);
 				ResultSet resultSet = statement.executeQuery();
-				lookupValue = buildLookupValue(resultSet);
+				lookupValue = buildFromRow(resultSet);
 				resultSet.close();
 			}
 		} catch (SQLException e)
@@ -86,7 +86,7 @@ public abstract class SqlDbTable<T> implements DbTable<T>
 			ResultSet resultSet = statement.executeQuery();
 			while (resultSet.next())
 			{
-				lookup.add(buildLookupValue(resultSet));
+				lookup.add(buildFromRow(resultSet));
 			}
 			resultSet.close();
 		} catch (SQLException e)

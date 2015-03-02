@@ -33,7 +33,7 @@ public class UserTable extends SqlDbTable<User>
 	public String getPrimaryKeyColumn() { return USERNAME_COLUMN; }
 
 	@Override
-	protected User buildLookupValue(ResultSet resultSet) throws SQLException {
+	protected User buildFromRow(ResultSet resultSet) throws SQLException {
 		User user;
 		boolean loggedIn = resultSet.getBoolean(LOGGED_IN_COLUMN);
 		String salt = resultSet.getString(SALT_COLUMN);
