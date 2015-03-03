@@ -62,10 +62,12 @@ public abstract class SqlDbTable<T> implements DbTable<T>
 	@Override
 	public List<T> lookup(Map<String, Object> where) {
 		List<T> lookup = new LinkedList<>();
+		PreparedStatement statement = null;
+		ResultSet resultSet = null;
 		try
 		{
-			PreparedStatement statement = getLookupStatement(where);
-			ResultSet resultSet = statement.executeQuery();
+			statement = getLookupStatement(where);
+			resultSet = statement.executeQuery();
 			while (resultSet.next())
 			{
 				lookup.add(buildFromRow(resultSet));
@@ -74,6 +76,28 @@ public abstract class SqlDbTable<T> implements DbTable<T>
 		} catch (SQLException e)
 		{
 			LOGGER.log(Level.SEVERE, "SQL Exception when querying database: ", e);
+		} finally
+		{
+			if (statement != null)
+			{
+				try
+				{
+					statement.close();
+				} catch (SQLException ex)
+				{
+					LOGGER.log(Level.WARNING, "SQL Exception when closing statement: ", ex);
+				}
+			}
+			if (resultSet != null)
+			{
+				try
+				{
+					resultSet.close();
+				} catch (SQLException ex)
+				{
+					LOGGER.log(Level.WARNING, "SQL Exception when closing ResultSet: ", ex);
+				}
+			}
 		}
 		return lookup;
 	}
