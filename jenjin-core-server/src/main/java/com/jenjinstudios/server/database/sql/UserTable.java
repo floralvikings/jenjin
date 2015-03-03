@@ -6,6 +6,9 @@ import com.jenjinstudios.server.net.User;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Used for looking up {@code User} objects from a backing SQL database.
@@ -14,6 +17,7 @@ import java.sql.SQLException;
  */
 public class UserTable extends SqlDbTable<User>
 {
+	private static final String USER_COLUMN = "username";
 	private static final String USERNAME_COLUMN = "username";
 	private static final String LOGGED_IN_COLUMN = "loggedin";
 	private static final String PASSWORD_COLUMN = "password";
@@ -42,5 +46,18 @@ public class UserTable extends SqlDbTable<User>
 		user.setLoggedIn(loggedIn);
 		user.setSalt(salt);
 		return user;
+	}
+
+	/**
+	 * Find the user with the given username, if it exists.
+	 *
+	 * @param username The username of the user to look for.
+	 *
+	 * @return The found User, or null if the user doesn't exist.
+	 */
+	public User findUser(String username) {
+		Map<String, Object> where = Collections.singletonMap(USER_COLUMN, username);
+		List<User> users = lookup(where);
+		return !users.isEmpty() ? users.get(0) : null;
 	}
 }
