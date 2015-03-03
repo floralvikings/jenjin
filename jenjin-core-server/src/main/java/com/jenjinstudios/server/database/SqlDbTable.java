@@ -80,7 +80,32 @@ public abstract class SqlDbTable<T> implements DbTable<T>
 
 	@Override
 	public boolean update(Map<String, Object> where, T row) {
-		return false;
+		Map<String, Object> data = buildFromObject(row);
+		PreparedStatement statement = null;
+		boolean success = false;
+		try
+		{
+			statement = getUpdateStatement(where, data);
+			statement.executeUpdate();
+			success = true;
+		} catch (SQLException e)
+		{
+			LOGGER.log(Level.SEVERE, "SQL Exception when querying database: ", e);
+		} finally
+		{
+			if (statement != null)
+			{
+				try
+				{
+					statement.close();
+				} catch (SQLException ex)
+				{
+					LOGGER.log(Level.WARNING, "SQL Exception when closing statement: ", ex);
+				}
+			}
+		}
+
+		return success;
 	}
 
 	private PreparedStatement getLookupStatement(Map<String, Object> where) throws SQLException {
@@ -101,8 +126,44 @@ public abstract class SqlDbTable<T> implements DbTable<T>
 		return statement;
 	}
 
-	private PreparedStatement getUpdateStatement(Map<String, Object> keys, Map<String, Object> data) {
-		return null;
+	private PreparedStatement getUpdateStatement(Map<String, Object> where, Map<String, Object> data)
+		  throws SQLException
+	{
+		StringBuilder queryBuilder = new StringBuilder("UPDATE " + tableName);
+		String setClause = buildSetClause(data);
+		String whereClause = buildWhereClause(where);
+		queryBuilder.append(setClause);
+		queryBuilder.append(whereClause);
+		String query = queryBuilder.toString();
+
+		PreparedStatement statement;
+		synchronized (connection)
+		{
+			statement = connection.prepareStatement(query, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
+			int parameterCount = 1;
+			for (Entry<String, Object> entry : data.entrySet())
+			{
+				statement.setObject(parameterCount, entry.getValue());
+				parameterCount++;
+			}
+			for (Entry<String, Object> entry : where.entrySet())
+			{
+				statement.setObject(parameterCount, entry.getValue());
+				parameterCount++;
+			}
+		}
+		return statement;
+	}
+
+	protected String buildSetClause(Map<String, Object> data) {
+		StringBuilder setClauseBuilder = new StringBuilder(" SET ");
+		for (Entry<String, Object> entry : data.entrySet())
+		{
+			setClauseBuilder.append(entry.getKey()).append(" = ?,");
+		}
+		int lastComma = setClauseBuilder.lastIndexOf(",");
+		setClauseBuilder.delete(lastComma, lastComma + 1);
+		return setClauseBuilder.toString();
 	}
 
 	private String buildWhereClause(Map<String, Object> where) {
