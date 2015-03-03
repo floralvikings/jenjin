@@ -74,14 +74,9 @@ public abstract class SqlDbTable<T> implements DbTable<T>
 	}
 
 	private PreparedStatement getLookupStatement(Map<String, Object> where) throws SQLException {
-		StringBuilder queryBuilder = new StringBuilder("SELECT * FROM " + tableName + " WHERE ");
-		for (Entry<String, Object> entry : where.entrySet())
-		{
-			queryBuilder.append(entry.getKey()).append(" = ? AND ");
-		}
-		int lastAnd = queryBuilder.lastIndexOf("AND");
-		queryBuilder.delete(lastAnd, lastAnd + 3);
-		String query = queryBuilder.toString();
+		StringBuilder queryBuilder = new StringBuilder("SELECT * FROM " + tableName);
+		String whereClause = buildWhereClause(where);
+		String query = queryBuilder.append(whereClause).toString();
 		PreparedStatement statement;
 		synchronized (connection)
 		{
@@ -94,6 +89,17 @@ public abstract class SqlDbTable<T> implements DbTable<T>
 			}
 		}
 		return statement;
+	}
+
+	private String buildWhereClause(Map<String, Object> where) {
+		StringBuilder whereClauseBuilder = new StringBuilder(" WHERE ");
+		for (Entry<String, Object> entry : where.entrySet())
+		{
+			whereClauseBuilder.append(entry.getKey()).append(" = ? AND ");
+		}
+		int lastAnd = whereClauseBuilder.lastIndexOf("AND");
+		whereClauseBuilder.delete(lastAnd, lastAnd + 3);
+		return whereClauseBuilder.toString();
 	}
 
 }
