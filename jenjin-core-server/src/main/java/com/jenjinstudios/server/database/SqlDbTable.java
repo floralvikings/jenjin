@@ -49,6 +49,16 @@ public abstract class SqlDbTable<T> implements DbTable<T>
 	 */
 	protected abstract T buildFromRow(ResultSet resultSet) throws SQLException;
 
+	/**
+	 * Given an object, build a Map using the names of the columns to be updated as the keys, and the records as the
+	 * values.
+	 *
+	 * @param data The object for which to build to map.
+	 *
+	 * @return The map.
+	 */
+	protected abstract Map<String, Object> buildFromObject(T data);
+
 	@Override
 	public List<T> lookup(Map<String, Object> where) {
 		List<T> lookup = new LinkedList<>();
