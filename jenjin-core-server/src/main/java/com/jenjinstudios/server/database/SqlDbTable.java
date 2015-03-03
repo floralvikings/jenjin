@@ -38,13 +38,6 @@ public abstract class SqlDbTable<T> implements DbTable<T>
 	}
 
 	/**
-	 * Get the name of the column to be used as the primary key.  Currently, compound keys are not supported.
-	 *
-	 * @return The name of the column to be used as the primary key.
-	 */
-	public abstract String getPrimaryKeyColumn();
-
-	/**
 	 * Given a result set from the backing database, build out the type-correct return value from that result.  This
 	 * method is used by the {@code lookup} method, and must be implemented.
 	 *
