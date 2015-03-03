@@ -155,7 +155,7 @@ public abstract class SqlDbTable<T> implements DbTable<T>
 		return statement;
 	}
 
-	protected String buildSetClause(Map<String, Object> data) {
+	private static String buildSetClause(Map<String, Object> data) {
 		StringBuilder setClauseBuilder = new StringBuilder(" SET ");
 		for (Entry<String, Object> entry : data.entrySet())
 		{
@@ -166,7 +166,7 @@ public abstract class SqlDbTable<T> implements DbTable<T>
 		return setClauseBuilder.toString();
 	}
 
-	private String buildWhereClause(Map<String, Object> where) {
+	private static String buildWhereClause(Map<String, Object> where) {
 		StringBuilder whereClauseBuilder = new StringBuilder(" WHERE ");
 		for (Entry<String, Object> entry : where.entrySet())
 		{
