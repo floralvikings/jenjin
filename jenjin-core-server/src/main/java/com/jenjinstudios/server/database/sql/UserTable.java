@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -46,6 +47,16 @@ public class UserTable extends SqlDbTable<User>
 		user.setLoggedIn(loggedIn);
 		user.setSalt(salt);
 		return user;
+	}
+
+	@Override
+	protected Map<String, Object> buildFromObject(User data) {
+		Map<String, Object> map = new HashMap<>(10);
+		map.put(LOGGED_IN_COLUMN, data.isLoggedIn());
+		map.put(SALT_COLUMN, data.getSalt());
+		map.put(PASSWORD_COLUMN, data.getPassword());
+		map.put(USERNAME_COLUMN, data.getUsername());
+		return map;
 	}
 
 	/**
