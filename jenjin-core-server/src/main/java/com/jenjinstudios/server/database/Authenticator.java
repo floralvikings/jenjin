@@ -9,8 +9,11 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -110,7 +113,9 @@ public class Authenticator
 	}
 
 	private User getUserWithValidPassword(String username, String password) throws LoginException {
-		User user = lookUpUser(username);
+		User user = new UserTable(dbConnection, USER_TABLE).findUser(username);
+		if (user == null)
+			throw new LoginException("User " + username + " does not exist.");
 		if (user.isLoggedIn())
 			throw new LoginException("User " + username + " is already logged in.");
 		String hashedPassword = getSaltedSHA256String(password, user.getSalt());
@@ -121,10 +126,7 @@ public class Authenticator
 	}
 
 	public User lookUpUser(String username) throws LoginException {
-		Map<String, Object> where = Collections.singletonMap(USER_COLUMN, username);
-		DbTable<User> userTable = new UserTable(dbConnection, USER_TABLE);
-		List<User> users = userTable.lookup(where);
-		return !users.isEmpty() ? users.get(0) : null;
+		return new UserTable(dbConnection, USER_TABLE).findUser(username);
 	}
 
 	public Map<String, Object> lookUpUserProperties(String username) throws LoginException {
@@ -156,8 +158,8 @@ public class Authenticator
 	 * @return The user that was logged out.
 	 */
 	public User logOutUser(String username) throws LoginException {
-		User user = lookUpUser(username);
-		if (user.isLoggedIn())
+		User user = new UserTable(dbConnection, USER_TABLE).findUser(username);
+		if ((user != null) && user.isLoggedIn())
 		{
 			user.setLoggedIn(false);
 			updateLoggedinColumn(username, false);
