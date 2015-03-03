@@ -101,6 +101,10 @@ public abstract class SqlDbTable<T> implements DbTable<T>
 		return statement;
 	}
 
+	private PreparedStatement getUpdateStatement(Map<String, Object> keys, Map<String, Object> data) {
+		return null;
+	}
+
 	private String buildWhereClause(Map<String, Object> where) {
 		StringBuilder whereClauseBuilder = new StringBuilder(" WHERE ");
 		for (Entry<String, Object> entry : where.entrySet())
