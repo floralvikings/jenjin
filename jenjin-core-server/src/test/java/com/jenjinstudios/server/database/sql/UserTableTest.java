@@ -11,6 +11,7 @@ import org.testng.annotations.Test;
 import java.sql.Connection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Test the UserTable class.
@@ -65,5 +66,25 @@ public class UserTableTest
 		Authenticator connector = new Authenticator(connection);
 		User user = connector.lookUpUser("This User Doesn't Exist.");
 		Assert.assertNull(user, "User should not have existed.");
+	}
+
+	/**
+	 * Test the update functionality.
+	 *
+	 * @throws Exception If there's an exception.
+	 */
+	@Test
+	public void testUpdate() throws Exception {
+		DbTable<User> table = new UserTable(connection, "jenjin_users");
+		Map<String, Object> where = Collections.singletonMap("username", "TestAccount1");
+		List<User> users = table.lookup(where);
+		User testAccount1 = users.isEmpty() ? null : users.get(0);
+		Assert.assertNotNull(testAccount1, "Test account was null");
+		testAccount1.setLoggedIn(true);
+		table.update(where, testAccount1);
+		List<User> lookup = table.lookup(where);
+		User user = lookup.isEmpty() ? null : lookup.get(0);
+		Assert.assertNotNull(user, "Test account was null");
+		Assert.assertTrue(user.isLoggedIn(), "User not updated");
 	}
 }
