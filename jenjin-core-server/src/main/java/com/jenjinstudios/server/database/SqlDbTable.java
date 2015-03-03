@@ -68,6 +68,11 @@ public abstract class SqlDbTable<T> implements DbTable<T>
 		return lookup;
 	}
 
+	@Override
+	public boolean update(Map<String, Object> where, T row) {
+		return false;
+	}
+
 	private PreparedStatement getLookupStatement(Map<String, Object> where) throws SQLException {
 		StringBuilder queryBuilder = new StringBuilder("SELECT * FROM " + tableName + " WHERE ");
 		for (Entry<String, Object> entry : where.entrySet())
