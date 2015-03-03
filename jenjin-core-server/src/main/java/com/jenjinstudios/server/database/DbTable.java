@@ -22,4 +22,14 @@ public interface DbTable<T>
 	 */
 	List<T> lookup(Map<String, Object> where);
 
+	/**
+	 * Update the row matching the given conditions with the given data.
+	 *
+	 * @param where A key-value collection wherein the keys are the names of the columns, and the values are the values
+	 * for which to update that row.
+	 * @param row The new data to place in the row.
+	 *
+	 * @return Whether the update was successful.
+	 */
+	boolean update(Map<String, Object> where, T row);
 }
