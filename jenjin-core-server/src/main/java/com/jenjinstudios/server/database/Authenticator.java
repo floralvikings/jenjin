@@ -1,6 +1,5 @@
 package com.jenjinstudios.server.database;
 
-import com.jenjinstudios.server.database.sql.UserTable;
 import com.jenjinstudios.server.net.User;
 import com.jenjinstudios.server.security.SHA256Hasher;
 
@@ -41,7 +40,7 @@ public class Authenticator
 	public Authenticator(Connection dbConnection, UserLookup userLookup) {
 		propertiesQuery = "SELECT * FROM " + PROPERTIES_TABLE + " WHERE username = ?";
 		this.dbConnection = dbConnection;
-		this.userLookup = new UserTable(this.dbConnection);
+		this.userLookup = userLookup;
 	}
 
 	/**
