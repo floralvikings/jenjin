@@ -1,6 +1,7 @@
 package com.jenjinstudios.server.database.sql;
 
 import com.jenjinstudios.server.database.DbException;
+import com.jenjinstudios.server.database.UserLookup;
 import com.jenjinstudios.server.net.User;
 
 import java.sql.Connection;
@@ -16,7 +17,7 @@ import java.util.Map;
  *
  * @author Caleb Brinkman
  */
-public class UserTable extends SqlDbTable<User>
+public class UserTable extends SqlDbTable<User> implements UserLookup
 {
 	private static final String USER_COLUMN = "username";
 	private static final String USERNAME_COLUMN = "username";
@@ -59,29 +60,15 @@ public class UserTable extends SqlDbTable<User>
 		return map;
 	}
 
-	/**
-	 * Find the user with the given username, if it exists.
-	 *
-	 * @param username The username of the user to look for.
-	 *
-	 * @return The found User, or null if the user doesn't exist.
-	 * @throws com.jenjinstudios.server.database.DbException If there is an error accessing the database.
-	 */
+
+	@Override
 	public User findUser(String username) throws DbException {
 		Map<String, Object> where = Collections.singletonMap(USER_COLUMN, username);
 		List<User> users = lookup(where);
 		return !users.isEmpty() ? users.get(0) : null;
 	}
 
-	/**
-	 * Update the given user in the databse.
-	 *
-	 * @param user The user to update.
-	 *
-	 * @return Whether an update was made.
-	 *
-	 * @throws DbException If there is an exception during the database update.
-	 */
+	@Override
 	public boolean updateUser(User user) throws DbException {
 		Map<String, Object> where = Collections.singletonMap(USER_COLUMN, user.getUsername());
 		return update(where, user);
