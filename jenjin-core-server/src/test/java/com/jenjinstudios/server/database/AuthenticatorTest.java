@@ -1,5 +1,6 @@
 package com.jenjinstudios.server.database;
 
+import com.jenjinstudios.server.database.sql.UserTable;
 import com.jenjinstudios.server.net.User;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -71,7 +72,7 @@ public class AuthenticatorTest
 
 	@Test
 	public void testLogInUser() throws Exception {
-		Authenticator connector = new Authenticator(connection);
+		Authenticator connector = new Authenticator(connection, new UserTable(connection));
 		String username = "TestAccount2";
 		String password = "testPassword";
 		connector.logInUser(username, password);
@@ -82,7 +83,7 @@ public class AuthenticatorTest
 
 	@Test(expectedExceptions = LoginException.class)
 	public void testConcurrentLogins() throws Exception {
-		Authenticator connector = new Authenticator(connection);
+		Authenticator connector = new Authenticator(connection, new UserTable(connection));
 		String username = "TestAccount3";
 		String password = "testPassword";
 		connector.logInUser(username, password);
@@ -93,7 +94,7 @@ public class AuthenticatorTest
 
 	@Test
 	public void testLogOutUser() throws Exception {
-		Authenticator connector = new Authenticator(connection);
+		Authenticator connector = new Authenticator(connection, new UserTable(connection));
 		String username = "TestAccount4";
 		String password = "testPassword";
 		connector.logInUser(username, password);
@@ -105,7 +106,7 @@ public class AuthenticatorTest
 
 	@Test
 	public void testInvalidPassword() throws Exception {
-		Authenticator connector = new Authenticator(connection);
+		Authenticator connector = new Authenticator(connection, new UserTable(connection));
 		String username = "TestAccount5";
 		String password = "incorrectPassword";
 		User user = connector.logInUser(username, password);
@@ -114,7 +115,7 @@ public class AuthenticatorTest
 
 	@Test
 	public void testLookUpUserProperties() throws Exception {
-		Authenticator authenticator = new Authenticator(connection);
+		Authenticator authenticator = new Authenticator(connection, new UserTable(connection));
 		String username = "TestAccount1";
 		Map<String, Object> properties = authenticator.lookUpUserProperties(username);
 		Assert.assertEquals(properties.get("Foo"), "Bar");
@@ -122,7 +123,7 @@ public class AuthenticatorTest
 
 	@Test
 	public void testLookUpUserProperty() throws Exception {
-		Authenticator authenticator = new Authenticator(connection);
+		Authenticator authenticator = new Authenticator(connection, new UserTable(connection));
 		String username = "TestAccount1";
 		Object foo = authenticator.lookUpUserProperty(username, "Foo");
 		Assert.assertEquals(foo, "Bar");
@@ -130,7 +131,7 @@ public class AuthenticatorTest
 
 	@Test
 	public void testInsertNewProperty() throws Exception {
-		Authenticator authenticator = new Authenticator(connection);
+		Authenticator authenticator = new Authenticator(connection, new UserTable(connection));
 		User user = authenticator.getUserLookup().findUser("TestAccount1");
 		user.getProperties().put("Donkey", "Hotey");
 		authenticator.updateUserProperties(user);
@@ -141,7 +142,7 @@ public class AuthenticatorTest
 
 	@Test
 	public void testUpdateProperty() throws Exception {
-		Authenticator authenticator = new Authenticator(connection);
+		Authenticator authenticator = new Authenticator(connection, new UserTable(connection));
 		User user = authenticator.getUserLookup().findUser("TestAccount1");
 		user.getProperties().put("Foo", "Hotey");
 		authenticator.updateUserProperties(user);

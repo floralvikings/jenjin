@@ -1,6 +1,7 @@
 package com.jenjinstudios.world.server.sql;
 
 import com.jenjinstudios.server.database.Authenticator;
+import com.jenjinstudios.server.database.sql.UserTable;
 import com.jenjinstudios.server.net.User;
 import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.server.WorldClientHandler;
@@ -29,7 +30,7 @@ public class WorldAuthenticator extends Authenticator
 	/**
 	 * Create a new SQLHandler with the given database information, and connect to the database.
 	 */
-	public WorldAuthenticator(Connection connection) { super(connection); }
+	public WorldAuthenticator(Connection connection) { super(connection, new UserTable(connection)); }
 
 	public void updatePlayer(WorldClientHandler worldClientHandler) {
 		Actor player = worldClientHandler.getPlayer();
