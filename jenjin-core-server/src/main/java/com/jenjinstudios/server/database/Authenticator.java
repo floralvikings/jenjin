@@ -132,6 +132,7 @@ public class Authenticator
 	/**
 	 * Update the loggedin column to reflect the supplied boolean.
 	 *
+	 * @param user The user for which to update the login column.
 	 * @throws LoginException If there is a SQL error.
 	 */
 	protected void updateLoggedinColumn(User user) throws LoginException {
