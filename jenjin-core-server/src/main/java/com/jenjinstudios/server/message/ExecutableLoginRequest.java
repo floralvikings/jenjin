@@ -2,7 +2,7 @@ package com.jenjinstudios.server.message;
 
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.server.database.Authenticator;
-import com.jenjinstudios.server.database.LoginException;
+import com.jenjinstudios.server.database.DbException;
 import com.jenjinstudios.server.net.ClientHandler;
 import com.jenjinstudios.server.net.User;
 
@@ -44,11 +44,17 @@ public class ExecutableLoginRequest extends ServerExecutableMessage
 		try
 		{
 			User user = authenticator.logInUser(username, password);
-			long loggedInTime = handler.getServer().getCycleStartTime();
-			handler.setLoggedInTime(loggedInTime);
-			queueLoginSuccessResponse(loggedInTime);
-			handler.setUser(user);
-		} catch (LoginException | NullPointerException e)
+			if (user != null)
+			{
+				long loggedInTime = handler.getServer().getCycleStartTime();
+				handler.setLoggedInTime(loggedInTime);
+				queueLoginSuccessResponse(loggedInTime);
+				handler.setUser(user);
+			} else
+			{
+				queueLoginFailureResponse();
+			}
+		} catch (DbException e)
 		{
 			LOGGER.log(Level.FINEST, "User login failure: ", e);
 			queueLoginFailureResponse();
