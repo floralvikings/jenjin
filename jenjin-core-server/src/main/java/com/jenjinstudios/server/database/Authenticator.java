@@ -14,6 +14,10 @@ import java.util.Map.Entry;
 import static java.sql.ResultSet.CONCUR_UPDATABLE;
 import static java.sql.ResultSet.TYPE_SCROLL_INSENSITIVE;
 
+/**
+ * The {@code Authenticator} class is responsible for retrieving and updating users in the database specified by a
+ * supplied JDBC {@code Connection}.
+ */
 public class Authenticator
 {
 	private static final Set<Class<?>> WRAPPER_TYPES = getWrapperTypes();
