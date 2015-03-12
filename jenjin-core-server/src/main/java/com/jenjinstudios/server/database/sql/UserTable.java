@@ -1,7 +1,6 @@
 package com.jenjinstudios.server.database.sql;
 
 import com.jenjinstudios.server.database.DbException;
-import com.jenjinstudios.server.database.SqlDbTable;
 import com.jenjinstudios.server.net.User;
 
 import java.sql.Connection;

@@ -1,4 +1,7 @@
-package com.jenjinstudios.server.database;
+package com.jenjinstudios.server.database.sql;
+
+import com.jenjinstudios.server.database.DbException;
+import com.jenjinstudios.server.database.DbTable;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
