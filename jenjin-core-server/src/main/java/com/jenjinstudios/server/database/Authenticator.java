@@ -22,14 +22,10 @@ public class Authenticator
 	private static final String USER_COLUMN = "username";
 	private static final String PROPERTY_NAME_COLUMN = "propertyName";
 	private static final String PROPERTY_VALUE_COLUMN = "propertyValue";
-	/** The connection used to communicate with the SQL database. */
 	private final Connection dbConnection;
 	private final String propertiesQuery;
 	private final UserTable userTable;
 
-	/**
-	 * Create a new SQLHandler with the given database information, and connect to the database.
-	 */
 	public Authenticator(Connection dbConnection) {
 		propertiesQuery = "SELECT * FROM " + PROPERTIES_TABLE + " WHERE username = ?";
 		this.dbConnection = dbConnection;
