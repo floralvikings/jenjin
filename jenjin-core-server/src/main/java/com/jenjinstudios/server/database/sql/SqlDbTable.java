@@ -78,7 +78,7 @@ public abstract class SqlDbTable<T> implements DbTable<T>
 			resultSet.close();
 		} catch (SQLException e)
 		{
-			LOGGER.log(Level.SEVERE, "SQL Exception when querying database: ", e);
+			throw new DbException("SQL Exception when querying database: ", e);
 		} finally
 		{
 			if (statement != null)
