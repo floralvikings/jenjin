@@ -81,10 +81,6 @@ public class Authenticator
 		return user;
 	}
 
-	public User lookUpUser(String username) {
-		return userTable.findUser(username);
-	}
-
 	public Map<String, Object> lookUpUserProperties(String username) throws LoginException {
 		Map<String, Object> properties = new HashMap<>(10);
 

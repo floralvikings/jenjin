@@ -75,7 +75,7 @@ public class AuthenticatorTest
 		String username = "TestAccount2";
 		String password = "testPassword";
 		connector.logInUser(username, password);
-		User user = connector.lookUpUser(username);
+		User user = connector.userTable.findUser(username);
 		Assert.assertTrue(user.isLoggedIn());
 
 	}
@@ -98,7 +98,7 @@ public class AuthenticatorTest
 		String password = "testPassword";
 		connector.logInUser(username, password);
 		connector.logOutUser(username);
-		User user = connector.lookUpUser(username);
+		User user = connector.userTable.findUser(username);
 		Assert.assertFalse(user.isLoggedIn());
 
 	}
@@ -131,7 +131,7 @@ public class AuthenticatorTest
 	@Test
 	public void testInsertNewProperty() throws Exception {
 		Authenticator authenticator = new Authenticator(connection);
-		User user = authenticator.lookUpUser("TestAccount1");
+		User user = authenticator.userTable.findUser("TestAccount1");
 		user.getProperties().put("Donkey", "Hotey");
 		authenticator.updateUserProperties(user);
 
@@ -142,7 +142,7 @@ public class AuthenticatorTest
 	@Test
 	public void testUpdateProperty() throws Exception {
 		Authenticator authenticator = new Authenticator(connection);
-		User user = authenticator.lookUpUser("TestAccount1");
+		User user = authenticator.userTable.findUser("TestAccount1");
 		user.getProperties().put("Foo", "Hotey");
 		authenticator.updateUserProperties(user);
 

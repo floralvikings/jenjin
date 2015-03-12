@@ -64,7 +64,7 @@ public class UserTableTest
 	@Test
 	public void testLookUpFakeUser() throws Exception {
 		Authenticator connector = new Authenticator(connection);
-		User user = connector.lookUpUser("This User Doesn't Exist.");
+		User user = connector.userTable.findUser("This User Doesn't Exist.");
 		Assert.assertNull(user, "User should not have existed.");
 	}
 
