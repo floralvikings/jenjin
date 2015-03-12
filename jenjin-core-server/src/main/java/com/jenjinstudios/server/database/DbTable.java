@@ -19,8 +19,10 @@ public interface DbTable<T>
 	 * for which to return that row.
 	 *
 	 * @return A collection of retrieved objects. This collection will be empty if no results were found.
+	 *
+	 * @throws DbException If there is an exception during the database transaction.
 	 */
-	List<T> lookup(Map<String, Object> where);
+	List<T> lookup(Map<String, Object> where) throws DbException;
 
 	/**
 	 * Update the row matching the given conditions with the given data.
@@ -30,6 +32,8 @@ public interface DbTable<T>
 	 * @param row The new data to place in the row.
 	 *
 	 * @return Whether the table was updated.
+	 *
+	 * @throws DbException If there is an exception during the database transaction.
 	 */
-	boolean update(Map<String, Object> where, T row);
+	boolean update(Map<String, Object> where, T row) throws DbException;
 }
