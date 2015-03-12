@@ -1,5 +1,6 @@
 package com.jenjinstudios.server.database.sql;
 
+import com.jenjinstudios.server.database.DbException;
 import com.jenjinstudios.server.database.SqlDbTable;
 import com.jenjinstudios.server.net.User;
 
@@ -65,8 +66,9 @@ public class UserTable extends SqlDbTable<User>
 	 * @param username The username of the user to look for.
 	 *
 	 * @return The found User, or null if the user doesn't exist.
+	 * @throws com.jenjinstudios.server.database.DbException If there is an error accessing the database.
 	 */
-	public User findUser(String username) {
+	public User findUser(String username) throws DbException {
 		Map<String, Object> where = Collections.singletonMap(USER_COLUMN, username);
 		List<User> users = lookup(where);
 		return !users.isEmpty() ? users.get(0) : null;
