@@ -50,9 +50,10 @@ public class Authenticator
 	 * @return The User represented by the backing database with the given username and password.  Returns null if the
 	 * user does not exist or the password is invalid.
 	 *
-	 * @throws LoginException If there is an error communicating with the database, or the user is already logged in.
+	 * @throws LoginException If the user is already logged in.
+	 * @throws DbException If there is an error during the database transaction.
 	 */
-	public User logInUser(String username, String password) throws LoginException {
+	public User logInUser(String username, String password) throws DbException {
 		User user = getUserWithValidPassword(username, password);
 		if (user != null)
 		{
