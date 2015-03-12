@@ -31,7 +31,7 @@ public class Authenticator
 	private static final String PROPERTY_VALUE_COLUMN = "propertyValue";
 	private final Connection dbConnection;
 	private final String propertiesQuery;
-	private final UserTable userTable;
+	private final UserLookup userTable;
 
 	/**
 	 * Construct a new Authenticator with the given database Connection.
@@ -75,7 +75,7 @@ public class Authenticator
 	 *
 	 * @return The UserTable.
 	 */
-	public UserTable getUserTable() { return userTable; }
+	public UserLookup getUserTable() { return userTable; }
 
 	private User getUserWithValidPassword(String username, String password) throws DbException {
 		User user = userTable.findUser(username);
