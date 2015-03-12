@@ -72,4 +72,18 @@ public class UserTable extends SqlDbTable<User>
 		List<User> users = lookup(where);
 		return !users.isEmpty() ? users.get(0) : null;
 	}
+
+	/**
+	 * Update the given user in the databse.
+	 *
+	 * @param user The user to update.
+	 *
+	 * @return Whether an update was made.
+	 *
+	 * @throws DbException If there is an exception during the database update.
+	 */
+	public boolean updateUser(User user) throws DbException {
+		Map<String, Object> where = Collections.singletonMap(USER_COLUMN, user.getUsername());
+		return update(where, user);
+	}
 }
