@@ -65,7 +65,7 @@ public class Authenticator
 				throw new LoginException("User already logged in.");
 			}
 			user.setLoggedIn(true);
-			updateLoggedinColumn(user);
+			userTable.updateUser(user);
 		}
 		return user;
 	}
@@ -125,7 +125,7 @@ public class Authenticator
 		if ((user != null) && user.isLoggedIn())
 		{
 			user.setLoggedIn(false);
-			updateLoggedinColumn(user);
+			userTable.updateUser(user);
 		}
 		return user;
 	}
@@ -138,16 +138,6 @@ public class Authenticator
 			statement.setString(1, username);
 		}
 		return statement.executeQuery();
-	}
-
-	/**
-	 * Update the loggedin column to reflect the supplied boolean.
-	 *
-	 * @param user The user for which to update the login column.
-	 * @throws DbException If there is an exception while updating the user.
-	 */
-	protected void updateLoggedinColumn(User user) throws DbException {
-		userTable.updateUser(user);
 	}
 
 	public Object lookUpUserProperty(String username, String propertyName) throws SQLException {
