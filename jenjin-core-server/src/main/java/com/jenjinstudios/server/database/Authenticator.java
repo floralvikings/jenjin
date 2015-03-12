@@ -67,7 +67,7 @@ public class Authenticator
 		return user;
 	}
 
-	private User getUserWithValidPassword(String username, String password) throws LoginException {
+	private User getUserWithValidPassword(String username, String password) throws DbException {
 		User user = userTable.findUser(username);
 		if (user != null)
 		{
