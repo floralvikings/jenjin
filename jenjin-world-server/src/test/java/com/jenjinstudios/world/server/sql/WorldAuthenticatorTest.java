@@ -5,11 +5,13 @@ import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.math.Vector2D;
 import com.jenjinstudios.world.server.WorldClientHandler;
 import org.mockito.Mockito;
+import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import java.sql.*;
+import java.util.Map;
 
 import static java.sql.ResultSet.CONCUR_UPDATABLE;
 import static java.sql.ResultSet.TYPE_SCROLL_SENSITIVE;
@@ -58,7 +60,8 @@ public class WorldAuthenticatorTest
 				  "VALUES " +
 				  "('TestAccount" + i + "', 'xCoord', '0'), " +
 				  "('TestAccount" + i + "', 'yCoord', '0'), " +
-				  "('TestAccount" + i + "', 'zoneID', '0') ");
+				  "('TestAccount" + i + "', 'zoneID', '0')," +
+				  "('TestAccount" + i + "', 'Foo', 'Bar') ");
 		}
 		connectionNumber++;
 		return testConnection;
@@ -92,5 +95,43 @@ public class WorldAuthenticatorTest
 		ResultSet results = statement.executeQuery();
 		results.next();
 		assertEquals(results.getDouble("propertyValue"), 10d);
+	}
+
+	@Test
+	public void testLookUpUserProperties() throws Exception {
+		WorldAuthenticator authenticator = new WorldAuthenticator(connection);
+		String username = "TestAccount1";
+		Map<String, Object> properties = authenticator.lookUpUserProperties(username);
+		Assert.assertEquals(properties.get("Foo"), "Bar");
+	}
+
+	@Test
+	public void testLookUpUserProperty() throws Exception {
+		WorldAuthenticator authenticator = new WorldAuthenticator(connection);
+		String username = "TestAccount1";
+		Object foo = authenticator.lookUpUserProperty(username, "Foo");
+		Assert.assertEquals(foo, "Bar");
+	}
+
+	@Test
+	public void testInsertNewProperty() throws Exception {
+		WorldAuthenticator authenticator = new WorldAuthenticator(connection);
+		User user = authenticator.getUserLookup().findUser("TestAccount1");
+		user.getProperties().put("Donkey", "Hotey");
+		authenticator.updateUserProperties(user);
+
+		Object o = authenticator.lookUpUserProperty("TestAccount1", "Donkey");
+		Assert.assertEquals(o, "Hotey");
+	}
+
+	@Test
+	public void testUpdateProperty() throws Exception {
+		WorldAuthenticator authenticator = new WorldAuthenticator(connection);
+		User user = authenticator.getUserLookup().findUser("TestAccount1");
+		user.getProperties().put("Foo", "Hotey");
+		authenticator.updateUserProperties(user);
+
+		Object o = authenticator.lookUpUserProperty("TestAccount1", "Foo");
+		Assert.assertEquals(o, "Hotey");
 	}
 }

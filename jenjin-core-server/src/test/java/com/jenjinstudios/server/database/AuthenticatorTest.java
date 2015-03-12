@@ -10,7 +10,6 @@ import org.testng.annotations.Test;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Statement;
-import java.util.Map;
 
 /**
  * @author Caleb Brinkman
@@ -37,11 +36,6 @@ public class AuthenticatorTest
 			  "  `loggedin` TINYINT NOT NULL DEFAULT '0'," +
 			  "  PRIMARY KEY (username)" +
 			  ")");
-		statement.executeUpdate("CREATE TABLE jenjin_user_properties (" +
-			  " `username` VARCHAR(64) NOT NULL," +
-			  " `propertyName` VARCHAR(64) NOT NULL," +
-			  " `propertyValue` VARCHAR(64)," +
-			  " PRIMARY KEY (`username`, `propertyName`))");
 		for (int i = 1; i < 10; i++)
 		{
 			statement.executeUpdate(
@@ -52,9 +46,6 @@ public class AuthenticatorTest
 						"'650f00f552d4df0147d236e240ccfc490444f4b358c4ff1d79f5fd90f57243bd', " +
 						"'e3c42b85a183d3f654a3d2bb3bc5ea607d0fb529d9b890d3', " +
 						"'0')");
-			statement.executeUpdate("INSERT INTO jenjin_user_properties (`username`, `propertyName`, " +
-				  "`propertyValue`) " +
-				  "VALUES ('TestAccount" + i + "', 'Foo', 'Bar')");
 		}
 		connectionNumber++;
 		return testConnection;
@@ -72,7 +63,7 @@ public class AuthenticatorTest
 
 	@Test
 	public void testLogInUser() throws Exception {
-		Authenticator connector = new Authenticator(connection, new UserTable(connection));
+		Authenticator connector = new Authenticator(new UserTable(connection));
 		String username = "TestAccount2";
 		String password = "testPassword";
 		connector.logInUser(username, password);
@@ -83,7 +74,7 @@ public class AuthenticatorTest
 
 	@Test(expectedExceptions = LoginException.class)
 	public void testConcurrentLogins() throws Exception {
-		Authenticator connector = new Authenticator(connection, new UserTable(connection));
+		Authenticator connector = new Authenticator(new UserTable(connection));
 		String username = "TestAccount3";
 		String password = "testPassword";
 		connector.logInUser(username, password);
@@ -94,7 +85,7 @@ public class AuthenticatorTest
 
 	@Test
 	public void testLogOutUser() throws Exception {
-		Authenticator connector = new Authenticator(connection, new UserTable(connection));
+		Authenticator connector = new Authenticator(new UserTable(connection));
 		String username = "TestAccount4";
 		String password = "testPassword";
 		connector.logInUser(username, password);
@@ -106,48 +97,10 @@ public class AuthenticatorTest
 
 	@Test
 	public void testInvalidPassword() throws Exception {
-		Authenticator connector = new Authenticator(connection, new UserTable(connection));
+		Authenticator connector = new Authenticator(new UserTable(connection));
 		String username = "TestAccount5";
 		String password = "incorrectPassword";
 		User user = connector.logInUser(username, password);
 		Assert.assertNull(user, "Invalid password should result in null user.");
-	}
-
-	@Test
-	public void testLookUpUserProperties() throws Exception {
-		Authenticator authenticator = new Authenticator(connection, new UserTable(connection));
-		String username = "TestAccount1";
-		Map<String, Object> properties = authenticator.lookUpUserProperties(username);
-		Assert.assertEquals(properties.get("Foo"), "Bar");
-	}
-
-	@Test
-	public void testLookUpUserProperty() throws Exception {
-		Authenticator authenticator = new Authenticator(connection, new UserTable(connection));
-		String username = "TestAccount1";
-		Object foo = authenticator.lookUpUserProperty(username, "Foo");
-		Assert.assertEquals(foo, "Bar");
-	}
-
-	@Test
-	public void testInsertNewProperty() throws Exception {
-		Authenticator authenticator = new Authenticator(connection, new UserTable(connection));
-		User user = authenticator.getUserLookup().findUser("TestAccount1");
-		user.getProperties().put("Donkey", "Hotey");
-		authenticator.updateUserProperties(user);
-
-		Object o = authenticator.lookUpUserProperty("TestAccount1", "Donkey");
-		Assert.assertEquals(o, "Hotey");
-	}
-
-	@Test
-	public void testUpdateProperty() throws Exception {
-		Authenticator authenticator = new Authenticator(connection, new UserTable(connection));
-		User user = authenticator.getUserLookup().findUser("TestAccount1");
-		user.getProperties().put("Foo", "Hotey");
-		authenticator.updateUserProperties(user);
-
-		Object o = authenticator.lookUpUserProperty("TestAccount1", "Foo");
-		Assert.assertEquals(o, "Hotey");
 	}
 }
