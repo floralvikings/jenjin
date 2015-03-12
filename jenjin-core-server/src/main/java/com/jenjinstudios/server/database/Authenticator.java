@@ -33,11 +33,12 @@ public class Authenticator
 	private final UserLookup userTable;
 
 	/**
-	 * Construct a new Authenticator with the given database Connection.
+	 * Construct a new Authenticator with the given database Connection and UserLookup.
 	 *
 	 * @param dbConnection The database connection.
+	 * @param userLookup The UserLookup used to find and update users.
 	 */
-	public Authenticator(Connection dbConnection) {
+	public Authenticator(Connection dbConnection, UserLookup userLookup) {
 		propertiesQuery = "SELECT * FROM " + PROPERTIES_TABLE + " WHERE username = ?";
 		this.dbConnection = dbConnection;
 		userTable = new UserTable(this.dbConnection);
