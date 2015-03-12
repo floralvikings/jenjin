@@ -14,12 +14,6 @@ import java.util.Map.Entry;
 import static java.sql.ResultSet.CONCUR_UPDATABLE;
 import static java.sql.ResultSet.TYPE_SCROLL_INSENSITIVE;
 
-/**
- * The SQLHandler class is responsible for connecting to and querying the SQL database associated with a given Server.
- *
- * @author Caleb Brinkman
- */
-@SuppressWarnings("SameParameterValue")
 public class Authenticator
 {
 	private static final Set<Class<?>> WRAPPER_TYPES = getWrapperTypes();
