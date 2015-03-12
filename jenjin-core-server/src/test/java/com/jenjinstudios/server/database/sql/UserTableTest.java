@@ -1,6 +1,5 @@
 package com.jenjinstudios.server.database.sql;
 
-import com.jenjinstudios.server.database.Authenticator;
 import com.jenjinstudios.server.database.DbTable;
 import com.jenjinstudios.server.net.User;
 import org.testng.Assert;
@@ -63,8 +62,8 @@ public class UserTableTest
 	 */
 	@Test
 	public void testLookUpFakeUser() throws Exception {
-		Authenticator connector = new Authenticator(connection);
-		User user = connector.userTable.findUser("This User Doesn't Exist.");
+		UserTable table = new UserTable(connection, "jenjin_users");
+		User user = table.findUser("This User Doesn't Exist.");
 		Assert.assertNull(user, "User should not have existed.");
 	}
 
