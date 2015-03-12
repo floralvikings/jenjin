@@ -77,7 +77,7 @@ public class Authenticator
 		return user;
 	}
 
-	public User lookUpUser(String username) throws LoginException {
+	public User lookUpUser(String username) {
 		return userTable.findUser(username);
 	}
 
@@ -109,7 +109,7 @@ public class Authenticator
 	 *
 	 * @return The user that was logged out.
 	 */
-	public User logOutUser(String username) throws LoginException {
+	public User logOutUser(String username) {
 		User user = userTable.findUser(username);
 		if ((user != null) && user.isLoggedIn())
 		{
@@ -133,9 +133,8 @@ public class Authenticator
 	 * Update the loggedin column to reflect the supplied boolean.
 	 *
 	 * @param user The user for which to update the login column.
-	 * @throws LoginException If there is a SQL error.
 	 */
-	protected void updateLoggedinColumn(User user) throws LoginException {
+	protected void updateLoggedinColumn(User user) {
 		Map<String, Object> where = Collections.singletonMap("username", user.getUsername());
 		userTable.update(where, user);
 	}
