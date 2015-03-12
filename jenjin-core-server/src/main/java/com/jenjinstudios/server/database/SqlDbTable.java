@@ -60,7 +60,7 @@ public abstract class SqlDbTable<T> implements DbTable<T>
 	protected abstract Map<String, Object> buildFromObject(T data);
 
 	@Override
-	public List<T> lookup(Map<String, Object> where) {
+	public List<T> lookup(Map<String, Object> where) throws DbException {
 		List<T> lookup = new LinkedList<>();
 		PreparedStatement statement = null;
 		ResultSet resultSet = null;
@@ -103,7 +103,7 @@ public abstract class SqlDbTable<T> implements DbTable<T>
 	}
 
 	@Override
-	public boolean update(Map<String, Object> where, T row) {
+	public boolean update(Map<String, Object> where, T row) throws DbException {
 		Map<String, Object> data = buildFromObject(row);
 		PreparedStatement statement = null;
 		boolean success = false;
