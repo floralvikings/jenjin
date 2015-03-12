@@ -1,6 +1,7 @@
 package com.jenjinstudios.world.server.message;
 
 import com.jenjinstudios.core.io.Message;
+import com.jenjinstudios.server.database.DbException;
 import com.jenjinstudios.server.database.LoginException;
 import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.server.WorldClientHandler;
@@ -43,14 +44,14 @@ public class ExecutableWorldLogoutRequest extends WorldExecutableMessage
 		{
 			tryLogOutUser();
 			getClientHandler().sendLogoutStatus(true);
-		} catch (LoginException e)
+		} catch (DbException e)
 		{
 			getClientHandler().sendLogoutStatus(false);
 		}
 
 	}
 
-	private void tryLogOutUser() throws LoginException {
+	private void tryLogOutUser() throws DbException {
 		WorldClientHandler handler = getClientHandler();
 		if (authenticator != null && handler.getUser() != null)
 		{
