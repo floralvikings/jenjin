@@ -113,11 +113,10 @@ public abstract class SqlDbTable<T> implements DbTable<T>
 		try
 		{
 			statement = getUpdateStatement(where, data);
-			statement.executeUpdate();
-			success = true;
+			success = statement.executeUpdate() > 0;
 		} catch (SQLException e)
 		{
-			LOGGER.log(Level.SEVERE, "SQL Exception when querying database: ", e);
+			throw new DbException("SQL Exception when querying database", e);
 		} finally
 		{
 			if (statement != null)
