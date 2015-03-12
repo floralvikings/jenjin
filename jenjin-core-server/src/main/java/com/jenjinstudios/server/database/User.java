@@ -6,7 +6,7 @@ import java.util.Map;
 /**
  * @author Caleb Brinkman
  */
-public class User
+public class User implements IUser
 {
 	/** The Hash table of custom properties of this user. */
 	private final Map<String, Object> properties = new HashMap<>();
@@ -16,28 +16,28 @@ public class User
 	/** The hashed, salted password of this user. */
 	private String password;
 
+	@Override
 	public String getUsername() { return username; }
 
+	@Override
 	public void setUsername(String username) { this.username = username; }
 
-	/**
-	 * Get the hashed, salted password of this user.
-	 * @return The hashed, salted password of this user.
-	 */
+	@Override
 	public String getPassword() { return password; }
 
-	/**
-	 * Set the hashed, salted password of this user.
-	 * @param password The hashed, salted password of this user.
-	 */
+	@Override
 	public void setPassword(String password) { this.password = password; }
 
+	@Override
 	public String getSalt() { return salt; }
 
+	@Override
 	public void setSalt(String salt) { this.salt = salt; }
 
+	@Override
 	public boolean isLoggedIn() { return loggedIn; }
 
+	@Override
 	public void setLoggedIn(boolean loggedIn) { this.loggedIn = loggedIn; }
 
 	public Map<String, Object> getProperties() { return properties; }

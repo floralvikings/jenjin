@@ -1,6 +1,7 @@
 package com.jenjinstudios.server.database.sql;
 
 import com.jenjinstudios.server.database.DbException;
+import com.jenjinstudios.server.database.IUser;
 import com.jenjinstudios.server.database.User;
 import com.jenjinstudios.server.database.UserLookup;
 
@@ -17,7 +18,7 @@ import java.util.Map;
  *
  * @author Caleb Brinkman
  */
-public class UserTable extends SqlDbTable<User> implements UserLookup
+public class UserTable extends SqlDbTable<IUser> implements UserLookup
 {
 	private static final String USER_COLUMN = "username";
 	private static final String USERNAME_COLUMN = "username";
@@ -36,13 +37,13 @@ public class UserTable extends SqlDbTable<User> implements UserLookup
 	}
 
 	@Override
-	protected User buildFromRow(ResultSet resultSet) throws SQLException {
+	protected IUser buildFromRow(ResultSet resultSet) throws SQLException {
 		boolean loggedIn = resultSet.getBoolean(LOGGED_IN_COLUMN);
 		String salt = resultSet.getString(SALT_COLUMN);
 		String password = resultSet.getString(PASSWORD_COLUMN);
 		String username = resultSet.getString(USERNAME_COLUMN);
 
-		User user = new User();
+		IUser user = new User();
 		user.setUsername(username);
 		user.setPassword(password);
 		user.setLoggedIn(loggedIn);
@@ -51,7 +52,7 @@ public class UserTable extends SqlDbTable<User> implements UserLookup
 	}
 
 	@Override
-	protected Map<String, Object> buildFromObject(User data) {
+	protected Map<String, Object> buildFromObject(IUser data) {
 		Map<String, Object> map = new HashMap<>(10);
 		map.put(LOGGED_IN_COLUMN, data.isLoggedIn());
 		map.put(SALT_COLUMN, data.getSalt());
@@ -64,12 +65,12 @@ public class UserTable extends SqlDbTable<User> implements UserLookup
 	@Override
 	public User findUser(String username) throws DbException {
 		Map<String, Object> where = Collections.singletonMap(USER_COLUMN, username);
-		List<User> users = lookup(where);
+		List<IUser> users = lookup(where);
 		return !users.isEmpty() ? users.get(0) : null;
 	}
 
 	@Override
-	public boolean updateUser(User user) throws DbException {
+	public boolean updateUser(IUser user) throws DbException {
 		Map<String, Object> where = Collections.singletonMap(USER_COLUMN, user.getUsername());
 		return update(where, user);
 	}

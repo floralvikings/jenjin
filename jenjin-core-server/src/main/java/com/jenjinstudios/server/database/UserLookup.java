@@ -27,5 +27,5 @@ public interface UserLookup
 	 *
 	 * @throws DbException If there is an exception during the database update.
 	 */
-	boolean updateUser(User user) throws DbException;
+	boolean updateUser(IUser user) throws DbException;
 }

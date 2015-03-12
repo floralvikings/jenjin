@@ -3,6 +3,7 @@ package com.jenjinstudios.server.message;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageRegistry;
 import com.jenjinstudios.server.database.Authenticator;
+import com.jenjinstudios.server.database.IUser;
 import com.jenjinstudios.server.database.User;
 import com.jenjinstudios.server.net.AuthServer;
 import com.jenjinstudios.server.net.ClientHandler;
@@ -22,7 +23,7 @@ public class ExecutableLogoutRequestTest
 		MessageRegistry messageRegistry = MessageRegistry.getInstance();
 		Message logoutRequest = messageRegistry.createMessage("LogoutRequest");
 
-		User user = new User();
+		IUser user = new User();
 		user.setUsername("foo");
 		user.setUsername("bar");
 		ClientHandler clientHandler = mock(ClientHandler.class);

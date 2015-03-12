@@ -1,5 +1,6 @@
 package com.jenjinstudios.world.server.sql;
 
+import com.jenjinstudios.server.database.IUser;
 import com.jenjinstudios.server.database.User;
 import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.math.Vector2D;
@@ -82,7 +83,7 @@ public class WorldAuthenticatorTest
 		WorldClientHandler worldClientHandler = Mockito.mock(WorldClientHandler.class);
 		WorldAuthenticator worldAuthenticator = new WorldAuthenticator(connection);
 		Actor actor = mock(Actor.class);
-		User user = new User();
+		IUser user = new User();
 		user.setUsername("TestAccount1");
 		when(actor.getVector2D()).thenReturn(new Vector2D(10, 10));
 		when(worldClientHandler.getPlayer()).thenReturn(actor);

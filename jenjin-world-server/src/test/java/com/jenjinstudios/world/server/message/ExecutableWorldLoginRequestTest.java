@@ -2,6 +2,7 @@ package com.jenjinstudios.world.server.message;
 
 import com.jenjinstudios.core.MessageIO;
 import com.jenjinstudios.core.io.Message;
+import com.jenjinstudios.server.database.IUser;
 import com.jenjinstudios.server.database.User;
 import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.World;
@@ -35,7 +36,7 @@ public class ExecutableWorldLoginRequestTest
 		Message message = Mockito.mock(Message.class);
 		WorldServerMessageFactory messageFactory = Mockito.mock(WorldServerMessageFactory.class);
 		World world = Mockito.mock(World.class);
-		User user = Mockito.mock(User.class);
+		IUser user = Mockito.mock(User.class);
 		Actor player = Mockito.mock(Actor.class);
 		WorldAuthenticator authenticator = Mockito.mock(WorldAuthenticator.class);
 		WorldServer server = Mockito.mock(WorldServer.class);
