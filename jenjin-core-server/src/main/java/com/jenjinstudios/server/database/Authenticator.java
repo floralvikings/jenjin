@@ -136,8 +136,9 @@ public class Authenticator
 	 * Update the loggedin column to reflect the supplied boolean.
 	 *
 	 * @param user The user for which to update the login column.
+	 * @throws DbException If there is an exception while updating the user.
 	 */
-	protected void updateLoggedinColumn(User user) {
+	protected void updateLoggedinColumn(User user) throws DbException {
 		Map<String, Object> where = Collections.singletonMap("username", user.getUsername());
 		userTable.update(where, user);
 	}
