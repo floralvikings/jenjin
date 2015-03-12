@@ -41,6 +41,17 @@ public class Authenticator
 		userTable = new UserTable(this.dbConnection, USER_TABLE);
 	}
 
+	/**
+	 * Attempt to retrieve the User from the database with the given Username and valid password.
+	 *
+	 * @param username The username of the user to retrieve.
+	 * @param password The cleartext password of the user to retrieve.
+	 *
+	 * @return The User represented by the backing database with the given username and password.  Returns null if the
+	 * user does not exist or the password is invalid.
+	 *
+	 * @throws LoginException If there is an error communicating with the database, or the user is already logged in.
+	 */
 	public User logInUser(String username, String password) throws LoginException {
 		User user = getUserWithValidPassword(username, password);
 		if (user.isLoggedIn())
