@@ -48,7 +48,7 @@ public class UserTableTest
 	 */
 	@Test
 	public void testLookUpUser() throws Exception {
-		DbTable<User> table = new UserTable(connection, "jenjin_users");
+		DbTable<User> table = new UserTable(connection);
 		List<User> users = table.lookup(Collections.singletonMap("username", "TestAccount1"));
 		User testAccount1 = users.isEmpty() ? null : users.get(0);
 		Assert.assertNotNull(testAccount1, "Test account was null");
@@ -62,7 +62,7 @@ public class UserTableTest
 	 */
 	@Test
 	public void testLookUpFakeUser() throws Exception {
-		UserTable table = new UserTable(connection, "jenjin_users");
+		UserTable table = new UserTable(connection);
 		User user = table.findUser("This User Doesn't Exist.");
 		Assert.assertNull(user, "User should not have existed.");
 	}
@@ -74,7 +74,7 @@ public class UserTableTest
 	 */
 	@Test
 	public void testUpdate() throws Exception {
-		DbTable<User> table = new UserTable(connection, "jenjin_users");
+		DbTable<User> table = new UserTable(connection);
 		Map<String, Object> where = Collections.singletonMap("username", "TestAccount1");
 		List<User> users = table.lookup(where);
 		User testAccount1 = users.isEmpty() ? null : users.get(0);

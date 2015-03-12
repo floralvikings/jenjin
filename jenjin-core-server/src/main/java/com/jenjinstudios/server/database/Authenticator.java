@@ -24,7 +24,6 @@ import static java.sql.ResultSet.TYPE_SCROLL_INSENSITIVE;
 public class Authenticator
 {
 	private static final Set<Class<?>> WRAPPER_TYPES = getWrapperTypes();
-	private static final String USER_TABLE = "jenjin_users";
 	private static final String PROPERTIES_TABLE = "jenjin_user_properties";
 	private static final String USER_COLUMN = "username";
 	private static final String PROPERTY_NAME_COLUMN = "propertyName";
@@ -41,7 +40,7 @@ public class Authenticator
 	public Authenticator(Connection dbConnection) {
 		propertiesQuery = "SELECT * FROM " + PROPERTIES_TABLE + " WHERE username = ?";
 		this.dbConnection = dbConnection;
-		userTable = new UserTable(this.dbConnection, USER_TABLE);
+		userTable = new UserTable(this.dbConnection);
 	}
 
 	/**

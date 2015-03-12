@@ -24,15 +24,15 @@ public class UserTable extends SqlDbTable<User> implements UserLookup
 	private static final String LOGGED_IN_COLUMN = "loggedin";
 	private static final String PASSWORD_COLUMN = "password";
 	private static final String SALT_COLUMN = "salt";
+	public static final String USER_TABLE = "jenjin_users";
 
 	/**
 	 * Construct a new SqlDbTable with the given SQL {@code Connection} and table name.
+	 *  @param connection The {@code Connection} used to communicate with the SQL database.
 	 *
-	 * @param connection The {@code Connection} used to communicate with the SQL database.
-	 * @param tableName The name of the table to query.
 	 */
-	public UserTable(Connection connection, String tableName) {
-		super(connection, tableName);
+	public UserTable(Connection connection) {
+		super(connection, USER_TABLE);
 	}
 
 	@Override
