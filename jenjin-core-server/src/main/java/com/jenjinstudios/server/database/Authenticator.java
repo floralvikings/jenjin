@@ -8,8 +8,11 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import static java.sql.ResultSet.CONCUR_UPDATABLE;
 import static java.sql.ResultSet.TYPE_SCROLL_INSENSITIVE;
@@ -144,8 +147,7 @@ public class Authenticator
 	 * @throws DbException If there is an exception while updating the user.
 	 */
 	protected void updateLoggedinColumn(User user) throws DbException {
-		Map<String, Object> where = Collections.singletonMap("username", user.getUsername());
-		userTable.update(where, user);
+		userTable.updateUser(user);
 	}
 
 	public Object lookUpUserProperty(String username, String propertyName) throws SQLException {
