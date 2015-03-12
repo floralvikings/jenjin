@@ -67,6 +67,13 @@ public class Authenticator
 		return user;
 	}
 
+	/**
+	 * Get the UserTable used by this Authenticator to make queries.
+	 *
+	 * @return The UserTable.
+	 */
+	public UserTable getUserTable() { return userTable; }
+
 	private User getUserWithValidPassword(String username, String password) throws DbException {
 		User user = userTable.findUser(username);
 		if (user != null)
