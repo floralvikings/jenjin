@@ -30,7 +30,7 @@ public class Authenticator
 	private static final String PROPERTY_VALUE_COLUMN = "propertyValue";
 	private final Connection dbConnection;
 	private final String propertiesQuery;
-	private final UserLookup userTable;
+	private final UserLookup userLookup;
 
 	/**
 	 * Construct a new Authenticator with the given database Connection and UserLookup.
@@ -41,7 +41,7 @@ public class Authenticator
 	public Authenticator(Connection dbConnection, UserLookup userLookup) {
 		propertiesQuery = "SELECT * FROM " + PROPERTIES_TABLE + " WHERE username = ?";
 		this.dbConnection = dbConnection;
-		userTable = new UserTable(this.dbConnection);
+		this.userLookup = new UserTable(this.dbConnection);
 	}
 
 	/**
@@ -65,7 +65,7 @@ public class Authenticator
 				throw new LoginException("User already logged in.");
 			}
 			user.setLoggedIn(true);
-			userTable.updateUser(user);
+			userLookup.updateUser(user);
 		}
 		return user;
 	}
@@ -75,10 +75,10 @@ public class Authenticator
 	 *
 	 * @return The UserTable.
 	 */
-	public UserLookup getUserTable() { return userTable; }
+	public UserLookup getUserLookup() { return userLookup; }
 
 	private User getUserWithValidPassword(String username, String password) throws DbException {
-		User user = userTable.findUser(username);
+		User user = userLookup.findUser(username);
 		if (user != null)
 		{
 			String hashedPassword = SHA256Hasher.getSaltedSHA256String(password, user.getSalt());
@@ -121,11 +121,11 @@ public class Authenticator
 	 * @throws DbException If there is an exception when updating the database.
 	 */
 	public User logOutUser(String username) throws DbException {
-		User user = userTable.findUser(username);
+		User user = userLookup.findUser(username);
 		if ((user != null) && user.isLoggedIn())
 		{
 			user.setLoggedIn(false);
-			userTable.updateUser(user);
+			userLookup.updateUser(user);
 		}
 		return user;
 	}
