@@ -60,7 +60,7 @@ public class Authenticator
 	 */
 	public User logInUser(String username, String password) throws LoginException {
 		User user = getUserWithValidPassword(username, password);
-		updateLoggedinColumn(username, true);
+		updateLoggedinColumn(username, true, user);
 		user.setLoggedIn(true);
 		return user;
 	}
@@ -115,7 +115,7 @@ public class Authenticator
 		if ((user != null) && user.isLoggedIn())
 		{
 			user.setLoggedIn(false);
-			updateLoggedinColumn(username, false);
+			updateLoggedinColumn(username, false, user);
 		}
 		return user;
 	}
@@ -138,7 +138,7 @@ public class Authenticator
 	 *
 	 * @throws LoginException If there is a SQL error.
 	 */
-	protected void updateLoggedinColumn(String username, boolean status) throws LoginException {
+	protected void updateLoggedinColumn(String username, boolean status, User user) throws LoginException {
 		String s = status ? "1" : "0";
 		String updateQuery = "UPDATE " + USER_TABLE + " SET " + LOGGED_IN + '=' + s + " WHERE " + USER_COLUMN + " = ?";
 		synchronized (dbConnection)
