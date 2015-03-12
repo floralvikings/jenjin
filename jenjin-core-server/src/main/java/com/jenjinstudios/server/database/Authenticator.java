@@ -2,9 +2,8 @@ package com.jenjinstudios.server.database;
 
 import com.jenjinstudios.server.database.sql.UserTable;
 import com.jenjinstudios.server.net.User;
+import com.jenjinstudios.server.security.SHA256Hasher;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -14,8 +13,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import static java.sql.ResultSet.CONCUR_UPDATABLE;
 import static java.sql.ResultSet.TYPE_SCROLL_INSENSITIVE;
@@ -28,7 +25,6 @@ import static java.sql.ResultSet.TYPE_SCROLL_INSENSITIVE;
 @SuppressWarnings("SameParameterValue")
 public class Authenticator
 {
-	private static final int HEX_CONVERSION_CONSTANT = 0xff;
 	private static final Set<Class<?>> WRAPPER_TYPES = getWrapperTypes();
 	private static final String USER_TABLE = "jenjin_users";
 	private static final String PROPERTIES_TABLE = "jenjin_user_properties";
@@ -37,8 +33,6 @@ public class Authenticator
 	private static final String PROPERTY_VALUE_COLUMN = "propertyValue";
 	/** The name of the column in the user table specifying whether the user is currently logged in. */
 	private static final String LOGGED_IN = "loggedin";
-	private static final int SHA256_STRING_LENGTH = 64;
-	private static final Logger LOGGER = Logger.getLogger(Authenticator.class.getName());
 	/** The connection used to communicate with the SQL database. */
 	private final Connection dbConnection;
 	private final String propertiesQuery;
@@ -50,49 +44,6 @@ public class Authenticator
 		propertiesQuery = "SELECT * FROM " + PROPERTIES_TABLE + " WHERE username = ?";
 		this.dbConnection = dbConnection;
 	}
-
-	private static String getSHA256String(String input) {
-		return getFullHexString(getSHA256Hash(input));
-	}
-
-	private static byte[] getSHA256Hash(String input) {
-		byte[] passBytes = input.getBytes();
-		try
-		{
-			MessageDigest md = MessageDigest.getInstance("SHA-256");
-			passBytes = md.digest(passBytes);
-		} catch (NoSuchAlgorithmException e)
-		{
-			LOGGER.log(Level.SEVERE, "No SHA-256 algorithm found; are you using a valid Java implementation?");
-			// FIXME This could be a pretty big security issue for non-compliant JVMs
-			// maybe fall back to a custom SHA-256 implementation?
-		}
-		return passBytes;
-	}
-
-	private static String getFullHexString(byte... bytes) {
-		StringBuilder hexString = new StringBuilder(SHA256_STRING_LENGTH);
-		for (byte anEncryption : bytes)
-		{ // Convert back to a string, making sure to include leading zeros.
-			String hex = Integer.toHexString(HEX_CONVERSION_CONSTANT & anEncryption);
-			if (hex.length() == 1)
-			{
-				hexString.append('0');
-			}
-			hexString.append(hex);
-		}
-		return hexString.toString();
-	}
-
-	/**
-	 * Get a SHA-256 hash of the {@code String} created by combining {@code salt} and {@code hash}.
-	 *
-	 * @param input The string to be salted and hashed.
-	 * @param salt The salt to prepend to the string before hashing.
-	 *
-	 * @return The hashed, salted string.
-	 */
-	private static String getSaltedSHA256String(String input, String salt) { return getSHA256String(salt + input); }
 
 	/**
 	 * Attempt to log the given user with the given password into the database.  This method does not perform any sort
@@ -118,7 +69,7 @@ public class Authenticator
 			throw new LoginException("User " + username + " does not exist.");
 		if (user.isLoggedIn())
 			throw new LoginException("User " + username + " is already logged in.");
-		String hashedPassword = getSaltedSHA256String(password, user.getSalt());
+		String hashedPassword = SHA256Hasher.getSaltedSHA256String(password, user.getSalt());
 		boolean passwordIncorrect = (hashedPassword == null) || !hashedPassword.equalsIgnoreCase(user.getPassword());
 		if (passwordIncorrect)
 			throw new LoginException("User " + username + " provided incorrect password.");
