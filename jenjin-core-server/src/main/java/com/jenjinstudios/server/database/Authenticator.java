@@ -28,8 +28,6 @@ public class Authenticator
 	private static final String USER_COLUMN = "username";
 	private static final String PROPERTY_NAME_COLUMN = "propertyName";
 	private static final String PROPERTY_VALUE_COLUMN = "propertyValue";
-	/** The name of the column in the user table specifying whether the user is currently logged in. */
-	private static final String LOGGED_IN = "loggedin";
 	/** The connection used to communicate with the SQL database. */
 	private final Connection dbConnection;
 	private final String propertiesQuery;
