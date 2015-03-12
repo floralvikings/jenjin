@@ -41,17 +41,6 @@ public class Authenticator
 		userTable = new UserTable(this.dbConnection, USER_TABLE);
 	}
 
-	/**
-	 * Attempt to log the given user with the given password into the database.  This method does not perform any sort
-	 * of hashing or encryption on the password.  If the user is already logged in this method will return false.
-	 * <p>
-	 * This method should be overwritten by implementations, or called from super if they still wish to use the
-	 * "loggedIn" column.
-	 *
-	 * @return true if the user was logged in successfully, false if the user was already logged in or the update to
-	 * the
-	 * database failed.
-	 */
 	public User logInUser(String username, String password) throws LoginException {
 		User user = getUserWithValidPassword(username, password);
 		if (user.isLoggedIn())
