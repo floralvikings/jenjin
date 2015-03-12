@@ -60,7 +60,7 @@ public class Authenticator
 			throw new LoginException("User already logged in.");
 		}
 		user.setLoggedIn(true);
-		updateLoggedinColumn(username, user);
+		updateLoggedinColumn(user);
 		return user;
 	}
 
@@ -114,7 +114,7 @@ public class Authenticator
 		if ((user != null) && user.isLoggedIn())
 		{
 			user.setLoggedIn(false);
-			updateLoggedinColumn(username, user);
+			updateLoggedinColumn(user);
 		}
 		return user;
 	}
@@ -132,11 +132,10 @@ public class Authenticator
 	/**
 	 * Update the loggedin column to reflect the supplied boolean.
 	 *
-	 * @param username The user being queried.
 	 * @throws LoginException If there is a SQL error.
 	 */
-	protected void updateLoggedinColumn(String username, User user) throws LoginException {
-		Map<String, Object> where = Collections.singletonMap("username", username);
+	protected void updateLoggedinColumn(User user) throws LoginException {
+		Map<String, Object> where = Collections.singletonMap("username", user.getUsername());
 		userTable.update(where, user);
 	}
 
