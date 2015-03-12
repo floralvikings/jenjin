@@ -54,25 +54,29 @@ public class Authenticator
 	 */
 	public User logInUser(String username, String password) throws LoginException {
 		User user = getUserWithValidPassword(username, password);
-		if (user.isLoggedIn())
+		if (user != null)
 		{
-			throw new LoginException("User already logged in.");
+			if (user.isLoggedIn())
+			{
+				throw new LoginException("User already logged in.");
+			}
+			user.setLoggedIn(true);
+			updateLoggedinColumn(user);
 		}
-		user.setLoggedIn(true);
-		updateLoggedinColumn(user);
 		return user;
 	}
 
 	private User getUserWithValidPassword(String username, String password) throws LoginException {
 		User user = userTable.findUser(username);
-		if (user == null)
-			throw new LoginException("User " + username + " does not exist.");
-		if (user.isLoggedIn())
-			throw new LoginException("User " + username + " is already logged in.");
-		String hashedPassword = SHA256Hasher.getSaltedSHA256String(password, user.getSalt());
-		boolean passwordIncorrect = (hashedPassword == null) || !hashedPassword.equalsIgnoreCase(user.getPassword());
-		if (passwordIncorrect)
-			throw new LoginException("User " + username + " provided incorrect password.");
+		if (user != null)
+		{
+			String hashedPassword = SHA256Hasher.getSaltedSHA256String(password, user.getSalt());
+			boolean passwordIncorrect = (hashedPassword == null) || !hashedPassword.equalsIgnoreCase(user.getPassword
+				  ());
+
+			if (passwordIncorrect)
+				user = null;
+		}
 		return user;
 	}
 
