@@ -6,7 +6,7 @@ import com.jenjinstudios.server.database.LoginException;
 import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.server.WorldClientHandler;
 import com.jenjinstudios.world.server.WorldServer;
-import com.jenjinstudios.world.server.sql.WorldAuthenticator;
+import com.jenjinstudios.world.server.database.WorldAuthenticator;
 
 /**
  * Handles requests to log out of the world.

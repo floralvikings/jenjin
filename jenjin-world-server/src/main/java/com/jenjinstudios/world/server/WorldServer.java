@@ -6,7 +6,7 @@ import com.jenjinstudios.server.net.ServerInit;
 import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.io.WorldDocumentReader;
 import com.jenjinstudios.world.io.WorldDocumentWriter;
-import com.jenjinstudios.world.server.sql.WorldAuthenticator;
+import com.jenjinstudios.world.server.database.WorldAuthenticator;
 import com.jenjinstudios.world.util.WorldUtils;
 
 import java.io.ByteArrayInputStream;

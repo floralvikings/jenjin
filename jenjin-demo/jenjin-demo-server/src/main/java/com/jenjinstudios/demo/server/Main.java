@@ -3,7 +3,7 @@ package com.jenjinstudios.demo.server;
 import com.jenjinstudios.server.net.ServerInit;
 import com.jenjinstudios.world.server.WorldClientHandler;
 import com.jenjinstudios.world.server.WorldServer;
-import com.jenjinstudios.world.server.sql.WorldAuthenticator;
+import com.jenjinstudios.world.server.database.WorldAuthenticator;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

@@ -7,7 +7,7 @@ import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.math.Vector2D;
 import com.jenjinstudios.world.server.WorldClientHandler;
 import com.jenjinstudios.world.server.WorldServer;
-import com.jenjinstudios.world.server.sql.WorldAuthenticator;
+import com.jenjinstudios.world.server.database.WorldAuthenticator;
 
 import java.util.Map;
 

@@ -1,4 +1,4 @@
-package com.jenjinstudios.world.server.sql;
+package com.jenjinstudios.world.server.database;
 
 import com.jenjinstudios.server.database.IUser;
 import com.jenjinstudios.server.database.User;
