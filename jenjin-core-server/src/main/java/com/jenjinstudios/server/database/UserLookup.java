@@ -16,7 +16,7 @@ public interface UserLookup
 	 *
 	 * @throws com.jenjinstudios.server.database.DbException If there is an error accessing the database.
 	 */
-	User findUser(String username) throws DbException;
+	IUser findUser(String username) throws DbException;
 
 	/**
 	 * Update the given user in the databse.

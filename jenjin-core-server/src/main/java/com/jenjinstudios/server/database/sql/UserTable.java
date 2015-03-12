@@ -63,7 +63,7 @@ public class UserTable extends SqlDbTable<IUser> implements UserLookup
 
 
 	@Override
-	public User findUser(String username) throws DbException {
+	public IUser findUser(String username) throws DbException {
 		Map<String, Object> where = Collections.singletonMap(USER_COLUMN, username);
 		List<IUser> users = lookup(where);
 		return !users.isEmpty() ? users.get(0) : null;

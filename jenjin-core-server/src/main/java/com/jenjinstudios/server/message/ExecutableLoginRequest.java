@@ -3,7 +3,7 @@ package com.jenjinstudios.server.message;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.server.database.Authenticator;
 import com.jenjinstudios.server.database.DbException;
-import com.jenjinstudios.server.database.User;
+import com.jenjinstudios.server.database.IUser;
 import com.jenjinstudios.server.net.ClientHandler;
 
 import java.util.logging.Level;
@@ -43,7 +43,7 @@ public class ExecutableLoginRequest extends ServerExecutableMessage
 		String password = (String) getMessage().getArgument("password");
 		try
 		{
-			User user = authenticator.logInUser(username, password);
+			IUser user = authenticator.logInUser(username, password);
 			if (user != null)
 			{
 				long loggedInTime = handler.getServer().getCycleStartTime();
