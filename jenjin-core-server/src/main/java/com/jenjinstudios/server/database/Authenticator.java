@@ -68,13 +68,13 @@ public class Authenticator
 	}
 
 	/**
-	 * Attempt to log out the user with the given username.  Note that if a user is already logged out, this method
-	 * will
-	 * have no affect.
+	 * Attempt to log out the user with the given username.  Note that if a user is already logged out, this method has
+	 * no affect.
 	 *
 	 * @param username The username of the user to be logged out.
 	 *
 	 * @return The user that was logged out.
+	 *
 	 * @throws DbException If there is an exception when updating the database.
 	 */
 	public User logOutUser(String username) throws DbException {
