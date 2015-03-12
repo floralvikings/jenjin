@@ -30,6 +30,11 @@ public class Authenticator
 	private final String propertiesQuery;
 	private final UserTable userTable;
 
+	/**
+	 * Construct a new Authenticator with the given database Connection.
+	 *
+	 * @param dbConnection The database connection.
+	 */
 	public Authenticator(Connection dbConnection) {
 		propertiesQuery = "SELECT * FROM " + PROPERTIES_TABLE + " WHERE username = ?";
 		this.dbConnection = dbConnection;
