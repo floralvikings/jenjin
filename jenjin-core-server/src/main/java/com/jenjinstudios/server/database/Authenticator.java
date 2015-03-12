@@ -36,6 +36,7 @@ public class Authenticator
 	/** The connection used to communicate with the SQL database. */
 	private final Connection dbConnection;
 	private final String propertiesQuery;
+	private final UserTable userTable;
 
 	/**
 	 * Create a new SQLHandler with the given database information, and connect to the database.
@@ -43,6 +44,7 @@ public class Authenticator
 	public Authenticator(Connection dbConnection) {
 		propertiesQuery = "SELECT * FROM " + PROPERTIES_TABLE + " WHERE username = ?";
 		this.dbConnection = dbConnection;
+		userTable = new UserTable(this.dbConnection, USER_TABLE);
 	}
 
 	/**
@@ -64,7 +66,7 @@ public class Authenticator
 	}
 
 	private User getUserWithValidPassword(String username, String password) throws LoginException {
-		User user = new UserTable(dbConnection, USER_TABLE).findUser(username);
+		User user = userTable.findUser(username);
 		if (user == null)
 			throw new LoginException("User " + username + " does not exist.");
 		if (user.isLoggedIn())
@@ -77,7 +79,7 @@ public class Authenticator
 	}
 
 	public User lookUpUser(String username) throws LoginException {
-		return new UserTable(dbConnection, USER_TABLE).findUser(username);
+		return userTable.findUser(username);
 	}
 
 	public Map<String, Object> lookUpUserProperties(String username) throws LoginException {
@@ -109,7 +111,7 @@ public class Authenticator
 	 * @return The user that was logged out.
 	 */
 	public User logOutUser(String username) throws LoginException {
-		User user = new UserTable(dbConnection, USER_TABLE).findUser(username);
+		User user = userTable.findUser(username);
 		if ((user != null) && user.isLoggedIn())
 		{
 			user.setLoggedIn(false);
