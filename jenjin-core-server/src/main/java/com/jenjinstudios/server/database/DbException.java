@@ -14,4 +14,11 @@ public class DbException extends Exception
 	 * @param cause The cause.
 	 */
 	public DbException(String message, Throwable cause) { super(message, cause); }
+
+	/**
+	 * Construct a DbException with the given message.
+	 *
+	 * @param message The message.
+	 */
+	public DbException(String message) { super(message); }
 }
