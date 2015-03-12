@@ -3,9 +3,9 @@ package com.jenjinstudios.server.message;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageRegistry;
 import com.jenjinstudios.server.database.Authenticator;
+import com.jenjinstudios.server.database.User;
 import com.jenjinstudios.server.net.AuthServer;
 import com.jenjinstudios.server.net.ClientHandler;
-import com.jenjinstudios.server.net.User;
 import org.mockito.Mockito;
 import org.testng.annotations.Test;
 

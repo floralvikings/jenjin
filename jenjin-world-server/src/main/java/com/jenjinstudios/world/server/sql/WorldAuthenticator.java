@@ -2,8 +2,8 @@ package com.jenjinstudios.world.server.sql;
 
 import com.jenjinstudios.server.database.Authenticator;
 import com.jenjinstudios.server.database.LoginException;
+import com.jenjinstudios.server.database.User;
 import com.jenjinstudios.server.database.sql.UserTable;
-import com.jenjinstudios.server.net.User;
 import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.server.WorldClientHandler;
 

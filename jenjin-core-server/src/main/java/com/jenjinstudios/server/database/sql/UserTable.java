@@ -1,8 +1,8 @@
 package com.jenjinstudios.server.database.sql;
 
 import com.jenjinstudios.server.database.DbException;
+import com.jenjinstudios.server.database.User;
 import com.jenjinstudios.server.database.UserLookup;
-import com.jenjinstudios.server.net.User;
 
 import java.sql.Connection;
 import java.sql.ResultSet;

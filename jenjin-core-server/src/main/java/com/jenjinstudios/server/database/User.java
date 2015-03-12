@@ -1,4 +1,4 @@
-package com.jenjinstudios.server.net;
+package com.jenjinstudios.server.database;
 
 import java.util.HashMap;
 import java.util.Map;

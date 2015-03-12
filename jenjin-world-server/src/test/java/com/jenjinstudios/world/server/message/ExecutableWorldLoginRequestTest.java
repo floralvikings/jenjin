@@ -2,7 +2,7 @@ package com.jenjinstudios.world.server.message;
 
 import com.jenjinstudios.core.MessageIO;
 import com.jenjinstudios.core.io.Message;
-import com.jenjinstudios.server.net.User;
+import com.jenjinstudios.server.database.User;
 import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.collections.WorldObjectList;

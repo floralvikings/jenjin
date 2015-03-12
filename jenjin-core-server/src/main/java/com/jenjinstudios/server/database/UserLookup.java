@@ -1,7 +1,5 @@
 package com.jenjinstudios.server.database;
 
-import com.jenjinstudios.server.net.User;
-
 /**
  * Interface for all database calsses used to lookup users.
  *

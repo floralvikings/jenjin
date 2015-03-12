@@ -1,7 +1,6 @@
 package com.jenjinstudios.server.database;
 
 import com.jenjinstudios.server.database.sql.UserTable;
-import com.jenjinstudios.server.net.User;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;

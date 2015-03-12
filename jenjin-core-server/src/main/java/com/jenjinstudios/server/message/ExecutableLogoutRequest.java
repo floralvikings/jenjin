@@ -3,8 +3,8 @@ package com.jenjinstudios.server.message;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.server.database.Authenticator;
 import com.jenjinstudios.server.database.DbException;
+import com.jenjinstudios.server.database.User;
 import com.jenjinstudios.server.net.ClientHandler;
-import com.jenjinstudios.server.net.User;
 
 /**
  * Executable message to handle client logging out.

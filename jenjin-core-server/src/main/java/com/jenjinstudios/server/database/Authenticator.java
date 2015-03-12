@@ -1,6 +1,5 @@
 package com.jenjinstudios.server.database;
 
-import com.jenjinstudios.server.net.User;
 import com.jenjinstudios.server.security.SHA256Hasher;
 
 /**

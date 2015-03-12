@@ -1,6 +1,6 @@
 package com.jenjinstudios.world.server.sql;
 
-import com.jenjinstudios.server.net.User;
+import com.jenjinstudios.server.database.User;
 import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.math.Vector2D;
 import com.jenjinstudios.world.server.WorldClientHandler;

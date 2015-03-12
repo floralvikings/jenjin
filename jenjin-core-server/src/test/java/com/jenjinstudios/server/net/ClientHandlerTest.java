@@ -4,6 +4,7 @@ import com.jenjinstudios.core.MessageIO;
 import com.jenjinstudios.core.io.MessageInputStream;
 import com.jenjinstudios.core.io.MessageOutputStream;
 import com.jenjinstudios.server.database.Authenticator;
+import com.jenjinstudios.server.database.User;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
