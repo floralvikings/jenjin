@@ -2,7 +2,7 @@ package com.jenjinstudios.server.message;
 
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.server.database.Authenticator;
-import com.jenjinstudios.server.database.LoginException;
+import com.jenjinstudios.server.database.DbException;
 import com.jenjinstudios.server.net.ClientHandler;
 import com.jenjinstudios.server.net.User;
 
@@ -42,7 +42,7 @@ public class ExecutableLogoutRequest extends ServerExecutableMessage
 				user = authenticator.logOutUser(username);
 				handler.sendLogoutStatus(!user.isLoggedIn());
 				handler.setUser(null);
-			} catch (LoginException e)
+			} catch (DbException e)
 			{
 				handler.sendLogoutStatus(false);
 			}
