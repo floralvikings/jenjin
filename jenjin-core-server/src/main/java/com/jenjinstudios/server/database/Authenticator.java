@@ -111,8 +111,9 @@ public class Authenticator
 	 * @param username The username of the user to be logged out.
 	 *
 	 * @return The user that was logged out.
+	 * @throws DbException If there is an exception when updating the database.
 	 */
-	public User logOutUser(String username) {
+	public User logOutUser(String username) throws DbException {
 		User user = userTable.findUser(username);
 		if ((user != null) && user.isLoggedIn())
 		{
