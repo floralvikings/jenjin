@@ -1,15 +1,10 @@
 package com.jenjinstudios.server.database;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * @author Caleb Brinkman
  */
 public class User implements IUser
 {
-	/** The Hash table of custom properties of this user. */
-	private final Map<String, Object> properties = new HashMap<>();
 	private String salt;
 	private boolean loggedIn;
 	private String username;
@@ -39,6 +34,4 @@ public class User implements IUser
 
 	@Override
 	public void setLoggedIn(boolean loggedIn) { this.loggedIn = loggedIn; }
-
-	public Map<String, Object> getProperties() { return properties; }
 }
