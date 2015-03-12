@@ -8,11 +8,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import static java.sql.ResultSet.CONCUR_UPDATABLE;
 import static java.sql.ResultSet.TYPE_SCROLL_INSENSITIVE;
@@ -60,8 +57,12 @@ public class Authenticator
 	 */
 	public User logInUser(String username, String password) throws LoginException {
 		User user = getUserWithValidPassword(username, password);
-		updateLoggedinColumn(username, true, user);
+		if (user.isLoggedIn())
+		{
+			throw new LoginException("User already logged in.");
+		}
 		user.setLoggedIn(true);
+		updateLoggedinColumn(username, true, user);
 		return user;
 	}
 
@@ -139,21 +140,8 @@ public class Authenticator
 	 * @throws LoginException If there is a SQL error.
 	 */
 	protected void updateLoggedinColumn(String username, boolean status, User user) throws LoginException {
-		String s = status ? "1" : "0";
-		String updateQuery = "UPDATE " + USER_TABLE + " SET " + LOGGED_IN + '=' + s + " WHERE " + USER_COLUMN + " = ?";
-		synchronized (dbConnection)
-		{
-			try (PreparedStatement updateLoggedIn = dbConnection.prepareStatement(updateQuery))
-			{
-				updateLoggedIn.setString(1, username);
-				updateLoggedIn.executeUpdate();
-				updateLoggedIn.close();
-			} catch (SQLException e)
-			{
-				throw new LoginException("Unable to update " + username + "; SQLException when updating loggedin " +
-					  "column.", e);
-			}
-		}
+		Map<String, Object> where = Collections.singletonMap("username", username);
+		userTable.update(where, user);
 	}
 
 	public Object lookUpUserProperty(String username, String propertyName) throws SQLException {
