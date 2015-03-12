@@ -103,13 +103,13 @@ public class AuthenticatorTest
 
 	}
 
-	@Test(expectedExceptions = LoginException.class)
+	@Test
 	public void testInvalidPassword() throws Exception {
 		Authenticator connector = new Authenticator(connection);
 		String username = "TestAccount5";
 		String password = "incorrectPassword";
-		connector.logInUser(username, password);
-
+		User user = connector.logInUser(username, password);
+		Assert.assertNull(user, "Invalid password should result in null user.");
 	}
 
 	@Test
