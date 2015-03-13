@@ -1,5 +1,6 @@
 package com.jenjinstudios.world.server;
 
+import com.jenjinstudios.server.authentication.Authenticator;
 import com.jenjinstudios.server.net.AuthServer;
 import com.jenjinstudios.server.net.ClientHandler;
 import com.jenjinstudios.server.net.ServerInit;
@@ -31,7 +32,7 @@ public class WorldServer extends AuthServer
 	 * @throws NoSuchMethodException If there is no appropriate constructor for the specified ClientHandler
 	 * constructor.
 	 */
-	public WorldServer(ServerInit init, WorldAuthenticator authenticator, WorldDocumentReader reader)
+	public WorldServer(ServerInit init, Authenticator<Player> authenticator, WorldDocumentReader reader)
 	throws IOException, NoSuchMethodException
 	{
 		super(init, authenticator);
