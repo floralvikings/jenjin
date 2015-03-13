@@ -1,6 +1,8 @@
 package com.jenjinstudios.server.authentication;
 
 /**
+ * Represents the most basic fields needed to fully implement the User interface.
+ *
  * @author Caleb Brinkman
  */
 public class BasicUser implements User
