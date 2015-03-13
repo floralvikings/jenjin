@@ -1,6 +1,6 @@
 package com.jenjinstudios.server.database;
 
-import com.jenjinstudios.server.authentication.Authenticator;
+import com.jenjinstudios.server.authentication.BasicAuthenticator;
 import com.jenjinstudios.server.authentication.LoginException;
 import com.jenjinstudios.server.authentication.User;
 import com.jenjinstudios.server.database.sql.UserTable;
@@ -16,7 +16,7 @@ import java.sql.Statement;
 /**
  * @author Caleb Brinkman
  */
-public class AuthenticatorTest
+public class BasicAuthenticatorTest
 {
 	private static int connectionNumber = 0;
 	private static Connection connection;
@@ -65,7 +65,7 @@ public class AuthenticatorTest
 
 	@Test
 	public void testLogInUser() throws Exception {
-		Authenticator connector = new Authenticator(new UserTable(connection));
+		BasicAuthenticator connector = new BasicAuthenticator(new UserTable(connection));
 		String username = "TestAccount2";
 		String password = "testPassword";
 		connector.logInUser(username, password);
@@ -76,7 +76,7 @@ public class AuthenticatorTest
 
 	@Test(expectedExceptions = LoginException.class)
 	public void testConcurrentLogins() throws Exception {
-		Authenticator connector = new Authenticator(new UserTable(connection));
+		BasicAuthenticator connector = new BasicAuthenticator(new UserTable(connection));
 		String username = "TestAccount3";
 		String password = "testPassword";
 		connector.logInUser(username, password);
@@ -87,7 +87,7 @@ public class AuthenticatorTest
 
 	@Test
 	public void testLogOutUser() throws Exception {
-		Authenticator connector = new Authenticator(new UserTable(connection));
+		BasicAuthenticator connector = new BasicAuthenticator(new UserTable(connection));
 		String username = "TestAccount4";
 		String password = "testPassword";
 		connector.logInUser(username, password);
@@ -99,7 +99,7 @@ public class AuthenticatorTest
 
 	@Test
 	public void testInvalidPassword() throws Exception {
-		Authenticator connector = new Authenticator(new UserTable(connection));
+		BasicAuthenticator connector = new BasicAuthenticator(new UserTable(connection));
 		String username = "TestAccount5";
 		String password = "incorrectPassword";
 		User user = connector.logInUser(username, password);

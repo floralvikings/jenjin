@@ -3,7 +3,7 @@ package com.jenjinstudios.server.message;
 import com.jenjinstudios.core.MessageIO;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageRegistry;
-import com.jenjinstudios.server.authentication.Authenticator;
+import com.jenjinstudios.server.authentication.BasicAuthenticator;
 import com.jenjinstudios.server.authentication.BasicUser;
 import com.jenjinstudios.server.authentication.LoginException;
 import com.jenjinstudios.server.net.AuthServer;
@@ -34,7 +34,7 @@ public class ExecutableLoginRequestTest
 		ClientHandler clientHandler = mock(ClientHandler.class);
 		AuthServer server = mock(AuthServer.class);
 		ServerMessageFactory serverMessageFactory = new ServerMessageFactory();
-		Authenticator authenticator = mock(Authenticator.class);
+		BasicAuthenticator authenticator = mock(BasicAuthenticator.class);
 		MessageIO messageIO = mock(MessageIO.class);
 		when(server.getAuthenticator()).thenReturn(authenticator);
 		when(server.getCycleStartTime()).thenReturn(12345l);
@@ -64,7 +64,7 @@ public class ExecutableLoginRequestTest
 		ClientHandler clientHandler = mock(ClientHandler.class);
 		AuthServer server = mock(AuthServer.class);
 		ServerMessageFactory serverMessageFactory = new ServerMessageFactory();
-		Authenticator authenticator = mock(Authenticator.class);
+		BasicAuthenticator authenticator = mock(BasicAuthenticator.class);
 		MessageIO messageIO = mock(MessageIO.class);
 		when(server.getAuthenticator()).thenReturn(authenticator);
 		when(server.getCycleStartTime()).thenReturn(12345l);

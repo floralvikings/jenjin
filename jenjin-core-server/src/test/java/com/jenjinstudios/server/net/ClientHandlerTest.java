@@ -3,7 +3,7 @@ package com.jenjinstudios.server.net;
 import com.jenjinstudios.core.MessageIO;
 import com.jenjinstudios.core.io.MessageInputStream;
 import com.jenjinstudios.core.io.MessageOutputStream;
-import com.jenjinstudios.server.authentication.Authenticator;
+import com.jenjinstudios.server.authentication.BasicAuthenticator;
 import com.jenjinstudios.server.authentication.BasicUser;
 import org.testng.annotations.Test;
 
@@ -55,7 +55,7 @@ public class ClientHandlerTest
 
 	@Test
 	public void testShutDown() throws Exception {
-		Authenticator authenticator = mock(Authenticator.class);
+		BasicAuthenticator authenticator = mock(BasicAuthenticator.class);
 		BasicUser user = mock(BasicUser.class);
 		AuthServer server = mock(AuthServer.class);
 		MessageInputStream mis = mock(MessageInputStream.class);
