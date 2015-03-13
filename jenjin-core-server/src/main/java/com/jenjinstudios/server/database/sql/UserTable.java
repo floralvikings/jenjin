@@ -18,7 +18,7 @@ import java.util.Map;
  *
  * @author Caleb Brinkman
  */
-public class UserTable extends SqlDbTable<IUser> implements UserLookup
+public class UserTable extends SqlDbTable<IUser> implements UserLookup<IUser>
 {
 	private static final String USER_COLUMN = "username";
 	private static final String USERNAME_COLUMN = "username";
