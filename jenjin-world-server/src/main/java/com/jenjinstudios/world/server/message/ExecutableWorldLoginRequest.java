@@ -2,14 +2,12 @@ package com.jenjinstudios.world.server.message;
 
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.server.database.DbException;
-import com.jenjinstudios.server.database.User;
 import com.jenjinstudios.world.Actor;
-import com.jenjinstudios.world.math.Vector2D;
+import com.jenjinstudios.world.actor.Vision;
+import com.jenjinstudios.world.server.Player;
 import com.jenjinstudios.world.server.WorldClientHandler;
 import com.jenjinstudios.world.server.WorldServer;
 import com.jenjinstudios.world.server.database.WorldAuthenticator;
-
-import java.util.Map;
 
 /**
  * Handles requests to login to the world.
@@ -18,13 +16,8 @@ import java.util.Map;
  */
 public class ExecutableWorldLoginRequest extends WorldExecutableMessage
 {
-	private static final String X_COORD = "xCoord";
-	private static final String Y_COORD = "yCoord";
-	private static final String ZONE_ID = "zoneID";
 	private final WorldAuthenticator authenticator;
 	private Message loginResponse;
-	private Map<String, Object> playerData;
-	private User user;
 
 	/**
 	 * Construct a new ExecutableMessage.  Must be implemented by subclasses.
@@ -39,12 +32,13 @@ public class ExecutableWorldLoginRequest extends WorldExecutableMessage
 
 	@Override
 	public void runDelayed() {
-		if (user != null)
+		if (getClientHandler().getUser() != null)
 		{
 			handleLoginSuccess();
+			getClientHandler().getUser().addPreUpdateEvent(Vision.EVENT_NAME, new Vision(getClientHandler().getUser()));
 			((WorldServer) getClientHandler().getServer()).getWorld().getWorldObjects().add(
-				  getClientHandler().getPlayer());
-			loginResponse.setArgument("id", getClientHandler().getPlayer().getId());
+				  getClientHandler().getUser());
+			loginResponse.setArgument("id", getClientHandler().getUser().getId());
 		}
 		getClientHandler().getMessageIO().queueOutgoingMessage(loginResponse);
 	}
@@ -63,12 +57,12 @@ public class ExecutableWorldLoginRequest extends WorldExecutableMessage
 
 	private void tryLogInUser() throws DbException {
 		WorldClientHandler handler = getClientHandler();
-		if (authenticator != null && handler.getUser() == null)
+		if ((authenticator != null) && (handler.getUser() == null))
 		{
 			String username = (String) getMessage().getArgument("username");
 			String password = (String) getMessage().getArgument("password");
-			user = authenticator.logInUser(username, password);
-			playerData = authenticator.lookUpUserProperties(username);
+			Player player = (Player) authenticator.logInUser(username, password);
+			handler.setUser(player);
 		}
 	}
 
@@ -89,27 +83,7 @@ public class ExecutableWorldLoginRequest extends WorldExecutableMessage
 	}
 
 	private void handleLoginSuccess() {
-		Actor player = setHandlerPlayerInfo();
-		loginResponse = createSuccessResponse(player);
-	}
-
-	private Actor setHandlerPlayerInfo() {
-		WorldClientHandler handler = getClientHandler();
-		Actor player = handler.getPlayer();
-		double x = Double.parseDouble((String) playerData.remove(X_COORD));
-		double y = Double.parseDouble((String) playerData.remove(Y_COORD));
-		int zoneId = Integer.parseInt((String) playerData.remove(ZONE_ID));
-		String username = user.getUsername();
-		Vector2D coordinates = new Vector2D(x, y);
-		player.setName(username);
-		player.setVector2D(coordinates);
-		player.setZoneID(zoneId);
-		for (String s : playerData.keySet())
-		{
-			player.getProperties().put(s, playerData.get(s));
-		}
-		handler.setUser(user);
-		return player;
+		loginResponse = createSuccessResponse(getClientHandler().getUser());
 	}
 
 	private Message createSuccessResponse(Actor player) {

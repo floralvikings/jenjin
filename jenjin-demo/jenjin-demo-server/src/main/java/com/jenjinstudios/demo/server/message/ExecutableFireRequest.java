@@ -26,7 +26,7 @@ public class ExecutableFireRequest extends WorldExecutableMessage
 	@Override
 	public void runDelayed() {
 		World world = ((WorldServer) getClientHandler().getServer()).getWorld();
-		Actor player = getClientHandler().getPlayer();
+		Actor player = getClientHandler().getUser();
 		Bullet bullet = new Bullet(player);
 		world.getWorldObjects().add(bullet);
 	}

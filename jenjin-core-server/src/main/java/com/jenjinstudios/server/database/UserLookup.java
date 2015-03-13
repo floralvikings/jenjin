@@ -5,7 +5,7 @@ package com.jenjinstudios.server.database;
  *
  * @author Caleb Brinkman
  */
-public interface UserLookup<T extends IUser>
+public interface UserLookup
 {
 	/**
 	 * Find the user with the given username, if it exists.
@@ -16,7 +16,7 @@ public interface UserLookup<T extends IUser>
 	 *
 	 * @throws com.jenjinstudios.server.database.DbException If there is an error accessing the database.
 	 */
-	T findUser(String username) throws DbException;
+	IUser findUser(String username) throws DbException;
 
 	/**
 	 * Update the given user in the databse.
@@ -27,5 +27,5 @@ public interface UserLookup<T extends IUser>
 	 *
 	 * @throws DbException If there is an exception during the database update.
 	 */
-	boolean updateUser(T user) throws DbException;
+	boolean updateUser(IUser user) throws DbException;
 }

@@ -1,6 +1,7 @@
 package com.jenjinstudios.world.server.database.sql;
 
 import com.jenjinstudios.server.database.DbException;
+import com.jenjinstudios.server.database.IUser;
 import com.jenjinstudios.server.database.UserLookup;
 import com.jenjinstudios.server.database.sql.SqlDbTable;
 import com.jenjinstudios.world.math.Vector2D;
@@ -19,7 +20,7 @@ import java.util.Map;
  *
  * @author Caleb Brinkman
  */
-public class PlayerTable extends SqlDbTable<Player> implements UserLookup<Player>
+public class PlayerTable extends SqlDbTable<Player> implements UserLookup
 {
 	private static final String USER_COLUMN = "username";
 	private static final String USERNAME_COLUMN = "username";
@@ -82,8 +83,8 @@ public class PlayerTable extends SqlDbTable<Player> implements UserLookup<Player
 	}
 
 	@Override
-	public boolean updateUser(Player user) throws DbException {
+	public boolean updateUser(IUser user) throws DbException {
 		Map<String, Object> where = Collections.singletonMap(USER_COLUMN, user.getUsername());
-		return update(where, user);
+		return update(where, (Player) user);
 	}
 }

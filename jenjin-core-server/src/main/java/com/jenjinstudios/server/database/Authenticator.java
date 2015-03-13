@@ -81,7 +81,14 @@ public class Authenticator
 		if ((user != null) && user.isLoggedIn())
 		{
 			user.setLoggedIn(false);
-			userLookup.updateUser(user);
+			try
+			{
+				userLookup.updateUser(user);
+			} catch (DbException e)
+			{
+				user.setLoggedIn(true);
+				throw e;
+			}
 		}
 		return user;
 	}

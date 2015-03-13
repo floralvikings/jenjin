@@ -64,7 +64,7 @@ public class WorldServer extends AuthServer
 	@Override
 	public void removeClient(ClientHandler handler) {
 		super.removeClient(handler);
-		if (((WorldClientHandler) handler).getPlayer() != null)
-			world.getWorldObjects().remove(((WorldClientHandler) handler).getPlayer().getId());
+		if (((WorldClientHandler) handler).getUser() != null)
+			world.getWorldObjects().remove(((WorldClientHandler) handler).getUser().getId());
 	}
 }

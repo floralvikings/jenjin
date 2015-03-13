@@ -3,7 +3,7 @@ package com.jenjinstudios.world.server.message;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.server.database.DbException;
 import com.jenjinstudios.server.database.LoginException;
-import com.jenjinstudios.world.Actor;
+import com.jenjinstudios.world.server.Player;
 import com.jenjinstudios.world.server.WorldClientHandler;
 import com.jenjinstudios.world.server.WorldServer;
 import com.jenjinstudios.world.server.database.WorldAuthenticator;
@@ -30,9 +30,9 @@ public class ExecutableWorldLogoutRequest extends WorldExecutableMessage
 
 	@Override
 	public void runDelayed() {
-		Actor clientActor = getClientHandler().getPlayer();
+		Player clientActor = getClientHandler().getUser();
 		// Multiple logout requests can cause Player to be null; have to check first.
-		if (clientActor != null)
+		if ((clientActor != null) && !clientActor.isLoggedIn())
 		{
 			clientActor.getWorld().getWorldObjects().remove(clientActor.getId());
 		}
@@ -55,7 +55,6 @@ public class ExecutableWorldLogoutRequest extends WorldExecutableMessage
 		WorldClientHandler handler = getClientHandler();
 		if (authenticator != null && handler.getUser() != null)
 		{
-			authenticator.updatePlayer(handler);
 			authenticator.logOutUser(handler.getUser().getUsername());
 		} else throw new LoginException("Missing ClientHandler username or Authenticator.");
 	}

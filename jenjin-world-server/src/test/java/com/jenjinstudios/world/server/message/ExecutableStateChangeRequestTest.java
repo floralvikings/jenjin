@@ -2,9 +2,9 @@ package com.jenjinstudios.world.server.message;
 
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageRegistry;
-import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.math.Angle;
+import com.jenjinstudios.world.server.Player;
 import com.jenjinstudios.world.server.WorldClientHandler;
 import com.jenjinstudios.world.server.WorldServer;
 import com.jenjinstudios.world.util.WorldUtils;
@@ -25,11 +25,11 @@ public class ExecutableStateChangeRequestTest
 	@Test
 	public void testValidRequest() throws InterruptedException {
 		World world = WorldUtils.createDefaultWorld();
-		Actor player = new Actor("FooBar");
+		Player player = new Player("FooBar");
 		world.getWorldObjects().add(player);
 		world.update();
 		WorldClientHandler mock = mock(WorldClientHandler.class);
-		when(mock.getPlayer()).thenReturn(player);
+		when(mock.getUser()).thenReturn(player);
 		WorldServer worldServer = mock(WorldServer.class);
 		when(mock.getServer()).thenReturn(worldServer);
 		when(worldServer.getUps()).thenReturn(50);
@@ -53,7 +53,7 @@ public class ExecutableStateChangeRequestTest
 	@Test
 	public void testInvalidRequestCoordinates() throws Exception {
 		World world = WorldUtils.createDefaultWorld();
-		Actor player = new Actor("FooBar");
+		Player player = new Player("FooBar");
 
 		// Add player and update world
 		world.getWorldObjects().add(player);
@@ -62,7 +62,7 @@ public class ExecutableStateChangeRequestTest
 		WorldClientHandler mock = mock(WorldClientHandler.class);
 		WorldServer worldServer = mock(WorldServer.class);
 		when(worldServer.getUps()).thenReturn(50);
-		when(mock.getPlayer()).thenReturn(player);
+		when(mock.getUser()).thenReturn(player);
 		when(mock.getServer()).thenReturn(worldServer);
 
 		// Create a state change request, with coordinates set further than the allowed error
@@ -87,11 +87,11 @@ public class ExecutableStateChangeRequestTest
 	public void testInvalidRequestTime() {
 		// Functionally the same as testing excessive delay.
 		World world = WorldUtils.createDefaultWorld();
-		Actor player = new Actor("FooBar");
+		Player player = new Player("FooBar");
 		world.getWorldObjects().add(player);
 		world.update();
 		WorldClientHandler mock = mock(WorldClientHandler.class);
-		when(mock.getPlayer()).thenReturn(player);
+		when(mock.getUser()).thenReturn(player);
 		WorldServer worldServer = mock(WorldServer.class);
 		when(mock.getServer()).thenReturn(worldServer);
 		when(worldServer.getUps()).thenReturn(50);
@@ -115,14 +115,14 @@ public class ExecutableStateChangeRequestTest
 	@Test
 	public void testExcessiveDelay() throws InterruptedException {
 		World world = WorldUtils.createDefaultWorld();
-		Actor player = new Actor("FooBar");
+		Player player = new Player("FooBar");
 		world.getWorldObjects().add(player);
 		world.update();
 		WorldClientHandler mock = mock(WorldClientHandler.class);
 		WorldServer worldServer = mock(WorldServer.class);
 		when(mock.getServer()).thenReturn(worldServer);
 		when(worldServer.getUps()).thenReturn(50);
-		when(mock.getPlayer()).thenReturn(player);
+		when(mock.getUser()).thenReturn(player);
 		Message request = messageRegistry.createMessage("StateChangeRequest");
 		request.setArgument("relativeAngle", Angle.FRONT);
 		request.setArgument("absoluteAngle", 0.0);
