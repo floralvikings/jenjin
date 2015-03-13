@@ -4,7 +4,7 @@ import com.jenjinstudios.core.MessageIO;
 import com.jenjinstudios.core.io.MessageInputStream;
 import com.jenjinstudios.core.io.MessageOutputStream;
 import com.jenjinstudios.server.authentication.Authenticator;
-import com.jenjinstudios.server.authentication.User;
+import com.jenjinstudios.server.authentication.BasicUser;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
@@ -56,7 +56,7 @@ public class ClientHandlerTest
 	@Test
 	public void testShutDown() throws Exception {
 		Authenticator authenticator = mock(Authenticator.class);
-		User user = mock(User.class);
+		BasicUser user = mock(BasicUser.class);
 		AuthServer server = mock(AuthServer.class);
 		MessageInputStream mis = mock(MessageInputStream.class);
 		MessageOutputStream mos = mock(MessageOutputStream.class);

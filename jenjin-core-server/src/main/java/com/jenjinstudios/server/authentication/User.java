@@ -1,37 +1,66 @@
 package com.jenjinstudios.server.authentication;
 
 /**
+ * Interface for all objects representing a user in the database.
+ *
  * @author Caleb Brinkman
  */
-public class User implements IUser
+public interface User
 {
-	private String salt;
-	private boolean loggedIn;
-	private String username;
-	/** The hashed, salted password of this user. */
-	private String password;
+	/**
+	 * Get the <b>unique</b> username associated with this User.
+	 *
+	 * @return The <b>unique</b> username associated with this User.
+	 */
+	String getUsername();
 
-	@Override
-	public String getUsername() { return username; }
+	/**
+	 * Set the username associated with this user.  This username must be unique; duplicate usernames can restult in
+	 * user data being overwritten in the database.
+	 *
+	 * @param username The uesrname associated with this user.  <b>Must be unique</b>.
+	 */
+	void setUsername(String username);
 
-	@Override
-	public void setUsername(String username) { this.username = username; }
+	/**
+	 * Get the hashed, salted password of this user.
+	 *
+	 * @return The hashed, salted password of this user.
+	 */
+	String getPassword();
 
-	@Override
-	public String getPassword() { return password; }
+	/**
+	 * Set the hashed, salted password of this user.
+	 *
+	 * @param password The hashed, salted password of this user.
+	 */
+	void setPassword(String password);
 
-	@Override
-	public void setPassword(String password) { this.password = password; }
+	/**
+	 * Get the salt used in securing this user's password in the database.
+	 *
+	 * @return The salt used in securing this user's password in the database.
+	 */
+	String getSalt();
 
-	@Override
-	public String getSalt() { return salt; }
+	/**
+	 * Set the salt used in securing this user's password in the database.
+	 *
+	 * @param salt The salt.
+	 */
+	void setSalt(String salt);
 
-	@Override
-	public void setSalt(String salt) { this.salt = salt; }
+	/**
+	 * Get whether this user is currently logged in.
+	 *
+	 * @return Whether this user is currently logged in.
+	 */
+	boolean isLoggedIn();
 
-	@Override
-	public boolean isLoggedIn() { return loggedIn; }
-
-	@Override
-	public void setLoggedIn(boolean loggedIn) { this.loggedIn = loggedIn; }
+	/**
+	 * Set whether this user is currently logged in.
+	 *
+	 * @param loggedIn Whether this user is currently logged in.
+	 */
+	void setLoggedIn(boolean loggedIn);
 }

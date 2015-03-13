@@ -1,6 +1,6 @@
 package com.jenjinstudios.server.database.sql;
 
-import com.jenjinstudios.server.authentication.IUser;
+import com.jenjinstudios.server.authentication.User;
 import com.jenjinstudios.server.database.DbTable;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -48,9 +48,9 @@ public class UserTableTest
 	 */
 	@Test
 	public void testLookUpUser() throws Exception {
-		DbTable<IUser> table = new UserTable(connection);
-		List<IUser> users = table.lookup(Collections.singletonMap("username", "TestAccount1"));
-		IUser testAccount1 = users.isEmpty() ? null : users.get(0);
+		DbTable<User> table = new UserTable(connection);
+		List<User> users = table.lookup(Collections.singletonMap("username", "TestAccount1"));
+		User testAccount1 = users.isEmpty() ? null : users.get(0);
 		Assert.assertNotNull(testAccount1, "Test account was null");
 		Assert.assertEquals(testAccount1.getUsername(), "TestAccount1", "Incorrect user returned.");
 	}
@@ -63,7 +63,7 @@ public class UserTableTest
 	@Test
 	public void testLookUpFakeUser() throws Exception {
 		UserTable table = new UserTable(connection);
-		IUser user = table.findUser("This User Doesn't Exist.");
+		User user = table.findUser("This User Doesn't Exist.");
 		Assert.assertNull(user, "User should not have existed.");
 	}
 
@@ -74,15 +74,15 @@ public class UserTableTest
 	 */
 	@Test
 	public void testUpdate() throws Exception {
-		DbTable<IUser> table = new UserTable(connection);
+		DbTable<User> table = new UserTable(connection);
 		Map<String, Object> where = Collections.singletonMap("username", "TestAccount1");
-		List<IUser> users = table.lookup(where);
-		IUser testAccount1 = users.isEmpty() ? null : users.get(0);
+		List<User> users = table.lookup(where);
+		User testAccount1 = users.isEmpty() ? null : users.get(0);
 		Assert.assertNotNull(testAccount1, "Test account was null");
 		testAccount1.setLoggedIn(true);
 		table.update(where, testAccount1);
-		List<IUser> lookup = table.lookup(where);
-		IUser user = lookup.isEmpty() ? null : lookup.get(0);
+		List<User> lookup = table.lookup(where);
+		User user = lookup.isEmpty() ? null : lookup.get(0);
 		Assert.assertNotNull(user, "Test account was null");
 		Assert.assertTrue(user.isLoggedIn(), "User not updated");
 	}

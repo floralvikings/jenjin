@@ -1,8 +1,8 @@
 package com.jenjinstudios.server.database;
 
 import com.jenjinstudios.server.authentication.Authenticator;
-import com.jenjinstudios.server.authentication.IUser;
 import com.jenjinstudios.server.authentication.LoginException;
+import com.jenjinstudios.server.authentication.User;
 import com.jenjinstudios.server.database.sql.UserTable;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -69,7 +69,7 @@ public class AuthenticatorTest
 		String username = "TestAccount2";
 		String password = "testPassword";
 		connector.logInUser(username, password);
-		IUser user = connector.getUserLookup().findUser(username);
+		User user = connector.getUserLookup().findUser(username);
 		Assert.assertTrue(user.isLoggedIn());
 
 	}
@@ -92,7 +92,7 @@ public class AuthenticatorTest
 		String password = "testPassword";
 		connector.logInUser(username, password);
 		connector.logOutUser(username);
-		IUser user = connector.getUserLookup().findUser(username);
+		User user = connector.getUserLookup().findUser(username);
 		Assert.assertFalse(user.isLoggedIn());
 
 	}
@@ -102,7 +102,7 @@ public class AuthenticatorTest
 		Authenticator connector = new Authenticator(new UserTable(connection));
 		String username = "TestAccount5";
 		String password = "incorrectPassword";
-		IUser user = connector.logInUser(username, password);
+		User user = connector.logInUser(username, password);
 		Assert.assertNull(user, "Invalid password should result in null user.");
 	}
 }

@@ -3,7 +3,7 @@ package com.jenjinstudios.server.net;
 import com.jenjinstudios.core.Connection;
 import com.jenjinstudios.core.MessageIO;
 import com.jenjinstudios.core.io.Message;
-import com.jenjinstudios.server.authentication.IUser;
+import com.jenjinstudios.server.authentication.User;
 import com.jenjinstudios.server.database.DbException;
 import com.jenjinstudios.server.message.ServerMessageFactory;
 
@@ -26,7 +26,7 @@ public class ClientHandler extends Connection
     private int handlerId = -1;
     /** The time at which this client was successfully logged in. */
     private long loggedInTime;
-	private IUser user;
+	private User user;
 
     /**
      * Construct a new Client Handler using the given socket.  When constructing a new ClientHandler, it is necessary to
@@ -117,12 +117,12 @@ public class ClientHandler extends Connection
      *
      * @return The User associated with this ClientHandler.
      */
-	public IUser getUser() { return user; }
+	public User getUser() { return user; }
 
     /**
      * Set the User associated with this ClientHandler.
      *
 	 * @param user The User associated with this ClientHandler.
 	 */
-	public void setUser(IUser user) { this.user = user; }
+	public void setUser(User user) { this.user = user; }
 }

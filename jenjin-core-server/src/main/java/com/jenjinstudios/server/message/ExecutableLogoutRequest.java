@@ -2,7 +2,7 @@ package com.jenjinstudios.server.message;
 
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.server.authentication.Authenticator;
-import com.jenjinstudios.server.authentication.IUser;
+import com.jenjinstudios.server.authentication.User;
 import com.jenjinstudios.server.database.DbException;
 import com.jenjinstudios.server.net.ClientHandler;
 
@@ -33,7 +33,7 @@ public class ExecutableLogoutRequest extends ServerExecutableMessage
 	@Override
 	public void runImmediate() {
 		ClientHandler handler = getClientHandler();
-		IUser user = handler.getUser();
+		User user = handler.getUser();
 		if (authenticator != null && user != null)
 		{
 			String username = user.getUsername();

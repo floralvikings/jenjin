@@ -32,8 +32,8 @@ public class Authenticator
 	 * @throws LoginException If the user is already logged in.
 	 * @throws com.jenjinstudios.server.database.DbException If there is an error during the database transaction.
 	 */
-	public IUser logInUser(String username, String password) throws DbException {
-		IUser user = getUserWithValidPassword(username, password);
+	public User logInUser(String username, String password) throws DbException {
+		User user = getUserWithValidPassword(username, password);
 		if (user != null)
 		{
 			if (user.isLoggedIn())
@@ -53,8 +53,8 @@ public class Authenticator
 	 */
 	public UserLookup getUserLookup() { return userLookup; }
 
-	private IUser getUserWithValidPassword(String username, String password) throws DbException {
-		IUser user = userLookup.findUser(username);
+	private User getUserWithValidPassword(String username, String password) throws DbException {
+		User user = userLookup.findUser(username);
 		if (user != null)
 		{
 			String hashedPassword = SHA256Hasher.getSaltedSHA256String(password, user.getSalt());
@@ -77,8 +77,8 @@ public class Authenticator
 	 *
 	 * @throws DbException If there is an exception when updating the database.
 	 */
-	public IUser logOutUser(String username) throws DbException {
-		IUser user = userLookup.findUser(username);
+	public User logOutUser(String username) throws DbException {
+		User user = userLookup.findUser(username);
 		if ((user != null) && user.isLoggedIn())
 		{
 			user.setLoggedIn(false);

@@ -7,7 +7,7 @@ import com.jenjinstudios.server.database.DbException;
  *
  * @author Caleb Brinkman
  */
-public interface UserLookup<T extends IUser>
+public interface UserLookup<T extends User>
 {
 	/**
 	 * Find the user with the given username, if it exists.

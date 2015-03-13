@@ -1,28 +1,21 @@
-package com.jenjinstudios.world.server;
-
-import com.jenjinstudios.server.authentication.User;
-import com.jenjinstudios.world.Actor;
+package com.jenjinstudios.server.authentication;
 
 /**
- * Represents a Player in the game world.
- *
  * @author Caleb Brinkman
  */
-public class Player extends Actor implements User
+public class BasicUser implements User
 {
-	private String password;
 	private String salt;
 	private boolean loggedIn;
-
-	public Player(String name) {
-		super(name);
-	}
-
-	@Override
-	public String getUsername() { return getName(); }
+	private String username;
+	/** The hashed, salted password of this user. */
+	private String password;
 
 	@Override
-	public void setUsername(String username) { setName(username); }
+	public String getUsername() { return username; }
+
+	@Override
+	public void setUsername(String username) { this.username = username; }
 
 	@Override
 	public String getPassword() { return password; }

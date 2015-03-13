@@ -4,7 +4,7 @@ import com.jenjinstudios.core.MessageIO;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageRegistry;
 import com.jenjinstudios.server.authentication.Authenticator;
-import com.jenjinstudios.server.authentication.IUser;
+import com.jenjinstudios.server.authentication.BasicUser;
 import com.jenjinstudios.server.authentication.LoginException;
 import com.jenjinstudios.server.authentication.User;
 import com.jenjinstudios.server.net.AuthServer;
@@ -28,7 +28,7 @@ public class ExecutableLoginRequestTest
 		message.setArgument("username", "foo");
 		message.setArgument("password", "bar");
 
-		IUser user = new User();
+		User user = new BasicUser();
 		user.setUsername("foo");
 		user.setUsername("bar");
 		user.setLoggedIn(true);
@@ -58,7 +58,7 @@ public class ExecutableLoginRequestTest
 		message.setArgument("username", "foo-dapoo");
 		message.setArgument("password", "bar");
 
-		IUser user = new User();
+		User user = new BasicUser();
 		user.setUsername("foo");
 		user.setUsername("bar");
 		user.setLoggedIn(true);
