@@ -90,20 +90,22 @@ public class Server extends Thread
     public void broadcast() {
         synchronized (clientHandlers)
         {
-            clientHandlers.values().stream().forEach(c -> {
-                if (c != null)
+			Collection<ClientHandler> toShutdown = new LinkedList<>();
+			clientHandlers.values().stream().forEach(c -> {
+				if (c != null)
                 {
                     try
                     {
                         c.getMessageIO().writeAllMessages();
-                    } catch (IOException e)
-                    {
-                        c.shutdown();
-                    }
+					} catch (IOException ignored)
+					{
+						toShutdown.add(c);
+					}
                 }
             });
-        }
-    }
+			toShutdown.forEach(ClientHandler::shutdown);
+		}
+	}
 
     /** Update all clients before they sendAllMessages. */
     public void update() {

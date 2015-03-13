@@ -7,7 +7,6 @@ import com.jenjinstudios.server.net.ServerInit;
 import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.io.WorldDocumentReader;
 import com.jenjinstudios.world.io.WorldDocumentWriter;
-import com.jenjinstudios.world.server.database.WorldAuthenticator;
 import com.jenjinstudios.world.util.WorldUtils;
 
 import java.io.ByteArrayInputStream;
@@ -55,8 +54,9 @@ public class WorldServer extends AuthServer
 
 	public World getWorld() { return world; }
 
+	@SuppressWarnings("unchecked")
 	@Override
-	public WorldAuthenticator getAuthenticator() { return (WorldAuthenticator) super.getAuthenticator(); }
+	public Authenticator<Player> getAuthenticator() { return (Authenticator<Player>) super.getAuthenticator(); }
 
 	public byte[] getWorldFileChecksum() { return worldFileChecksum; }
 

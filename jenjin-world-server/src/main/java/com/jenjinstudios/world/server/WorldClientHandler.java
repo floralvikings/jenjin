@@ -30,16 +30,19 @@ public class WorldClientHandler extends ClientHandler
 	@Override
 	public void update() {
 		super.update();
-		if (!hasSentActorStepMessage)
+		if (getUser() != null)
 		{
-			getMessageIO().queueOutgoingMessage(getMessageFactory().generateActorMoveSpeedMessage(getUser()
-				  .getMoveSpeed()));
-			hasSentActorStepMessage = true;
+			if (!hasSentActorStepMessage)
+			{
+				getMessageIO().queueOutgoingMessage(getMessageFactory().generateActorMoveSpeedMessage(getUser()
+					  .getMoveSpeed()));
+				hasSentActorStepMessage = true;
+			}
+			queueForcesStateMessage();
+			queueNewlyVisibleMessages();
+			queueNewlyInvisibleMessages();
+			queueStateChangeMessages();
 		}
-		queueForcesStateMessage();
-		queueNewlyVisibleMessages();
-		queueNewlyInvisibleMessages();
-		queueStateChangeMessages();
 	}
 
 	public WorldServerMessageFactory getMessageFactory() { return messageFactory; }

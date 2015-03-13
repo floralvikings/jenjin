@@ -1,13 +1,13 @@
 package com.jenjinstudios.world.server.message;
 
 import com.jenjinstudios.core.io.Message;
+import com.jenjinstudios.server.authentication.Authenticator;
 import com.jenjinstudios.server.database.DbException;
 import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.actor.Vision;
 import com.jenjinstudios.world.server.Player;
 import com.jenjinstudios.world.server.WorldClientHandler;
 import com.jenjinstudios.world.server.WorldServer;
-import com.jenjinstudios.world.server.database.WorldAuthenticator;
 
 /**
  * Handles requests to login to the world.
@@ -16,7 +16,7 @@ import com.jenjinstudios.world.server.database.WorldAuthenticator;
  */
 public class ExecutableWorldLoginRequest extends WorldExecutableMessage
 {
-	private final WorldAuthenticator authenticator;
+	private final Authenticator<Player> authenticator;
 	private Message loginResponse;
 
 	/**
