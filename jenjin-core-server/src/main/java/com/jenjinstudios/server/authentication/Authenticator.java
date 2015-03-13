@@ -8,7 +8,7 @@ import com.jenjinstudios.server.security.SHA256Hasher;
  *
  * @author Caleb Brinkman
  */
-public class AbstractAuthenticator<T extends User>
+public class Authenticator<T extends User>
 {
 	private final UserLookup<T> userLookup;
 
@@ -17,7 +17,7 @@ public class AbstractAuthenticator<T extends User>
 	 *
 	 * @param userLookup The UserLookup used to find and update users.
 	 */
-	public AbstractAuthenticator(UserLookup<T> userLookup) { this.userLookup = userLookup; }
+	public Authenticator(UserLookup<T> userLookup) { this.userLookup = userLookup; }
 
 	/**
 	 * Get the UserLookup used to find and update users.

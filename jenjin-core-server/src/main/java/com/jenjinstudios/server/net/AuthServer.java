@@ -1,6 +1,6 @@
 package com.jenjinstudios.server.net;
 
-import com.jenjinstudios.server.authentication.AbstractAuthenticator;
+import com.jenjinstudios.server.authentication.Authenticator;
 
 import java.io.IOException;
 
@@ -11,7 +11,7 @@ import java.io.IOException;
 public class AuthServer extends TaskedServer
 {
 	/** The SQLHandler used by this Server. */
-	private AbstractAuthenticator authenticator;
+	private Authenticator authenticator;
 
 	/**
 	 * Construct a new Server without a SQLHandler.
@@ -20,7 +20,7 @@ public class AuthServer extends TaskedServer
 	 * @throws NoSuchMethodException If there is no appropriate constructor for the specified ClientHandler
 	 * constructor.
 	 */
-	public AuthServer(ServerInit initInfo, AbstractAuthenticator authenticator) throws IOException,
+	public AuthServer(ServerInit initInfo, Authenticator authenticator) throws IOException,
 		  NoSuchMethodException {
 		super(initInfo);
 		this.authenticator = authenticator;
@@ -30,5 +30,5 @@ public class AuthServer extends TaskedServer
 	 * The SQLHandler used by this Server.
 	 * @return The SQLHandler used by this Server.
 	 */
-	public AbstractAuthenticator getAuthenticator() { return authenticator; }
+	public Authenticator getAuthenticator() { return authenticator; }
 }

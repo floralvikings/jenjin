@@ -1,7 +1,7 @@
 package com.jenjinstudios.server.message;
 
 import com.jenjinstudios.core.io.Message;
-import com.jenjinstudios.server.authentication.AbstractAuthenticator;
+import com.jenjinstudios.server.authentication.Authenticator;
 import com.jenjinstudios.server.authentication.User;
 import com.jenjinstudios.server.database.DbException;
 import com.jenjinstudios.server.net.ClientHandler;
@@ -14,7 +14,7 @@ import com.jenjinstudios.server.net.ClientHandler;
 public class ExecutableLogoutRequest extends ServerExecutableMessage
 {
 	/** The SQLHandler used to log out the client. */
-	private final AbstractAuthenticator authenticator;
+	private final Authenticator authenticator;
 
 	/**
 	 * Construct a new ExecutableLogoutRequest.

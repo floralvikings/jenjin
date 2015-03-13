@@ -1,6 +1,6 @@
 package com.jenjinstudios.world.server.database;
 
-import com.jenjinstudios.server.authentication.AbstractAuthenticator;
+import com.jenjinstudios.server.authentication.Authenticator;
 import com.jenjinstudios.world.server.Player;
 import com.jenjinstudios.world.server.database.sql.PlayerTable;
 
@@ -11,7 +11,7 @@ import java.sql.Connection;
  * @author Caleb Brinkman
  */
 @SuppressWarnings("SpellCheckingInspection")
-public class WorldAuthenticator extends AbstractAuthenticator<Player>
+public class WorldAuthenticator extends Authenticator<Player>
 {
 
 	/**
