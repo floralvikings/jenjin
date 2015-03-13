@@ -1,9 +1,12 @@
 package com.jenjinstudios.demo.server;
 
+import com.jenjinstudios.server.authentication.Authenticator;
+import com.jenjinstudios.server.authentication.UserLookup;
 import com.jenjinstudios.server.net.ServerInit;
+import com.jenjinstudios.world.server.Player;
 import com.jenjinstudios.world.server.WorldClientHandler;
 import com.jenjinstudios.world.server.WorldServer;
-import com.jenjinstudios.world.server.database.WorldAuthenticator;
+import com.jenjinstudios.world.server.database.sql.PlayerTable;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -36,7 +39,8 @@ public class Main
 		ServerInit serverInit = new ServerInit();
 		serverInit.setHandlerClass(WorldClientHandler.class);
 		Connection sqlConnection = createDemoConnection();
-		WorldAuthenticator worldAuthenticator = new WorldAuthenticator(sqlConnection);
+		UserLookup<Player> userLookup = new PlayerTable(sqlConnection);
+		Authenticator<Player> worldAuthenticator = new Authenticator<>(userLookup);
 		return new WorldServer(serverInit, worldAuthenticator, null);
 	}
 
