@@ -1,7 +1,7 @@
 package com.jenjinstudios.server.message;
 
 import com.jenjinstudios.core.io.Message;
-import com.jenjinstudios.server.authentication.Authenticator;
+import com.jenjinstudios.server.authentication.AbstractAuthenticator;
 import com.jenjinstudios.server.authentication.User;
 import com.jenjinstudios.server.database.DbException;
 import com.jenjinstudios.server.net.ClientHandler;
@@ -19,7 +19,7 @@ public class ExecutableLoginRequest extends ServerExecutableMessage
 {
 	private static final Logger LOGGER = Logger.getLogger(ExecutableLoginRequest.class.getName());
 	/** The SQL handler used by this executable message. */
-	private final Authenticator authenticator;
+	private final AbstractAuthenticator authenticator;
 
 	/**
 	 * Construct a new ExecutableLoginRequest.

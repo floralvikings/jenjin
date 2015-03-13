@@ -6,7 +6,6 @@ import com.jenjinstudios.core.io.MessageRegistry;
 import com.jenjinstudios.server.authentication.Authenticator;
 import com.jenjinstudios.server.authentication.BasicUser;
 import com.jenjinstudios.server.authentication.LoginException;
-import com.jenjinstudios.server.authentication.User;
 import com.jenjinstudios.server.net.AuthServer;
 import com.jenjinstudios.server.net.ClientHandler;
 import org.mockito.Mockito;
@@ -28,7 +27,7 @@ public class ExecutableLoginRequestTest
 		message.setArgument("username", "foo");
 		message.setArgument("password", "bar");
 
-		User user = new BasicUser();
+		BasicUser user = new BasicUser();
 		user.setUsername("foo");
 		user.setUsername("bar");
 		user.setLoggedIn(true);
@@ -58,7 +57,7 @@ public class ExecutableLoginRequestTest
 		message.setArgument("username", "foo-dapoo");
 		message.setArgument("password", "bar");
 
-		User user = new BasicUser();
+		BasicUser user = new BasicUser();
 		user.setUsername("foo");
 		user.setUsername("bar");
 		user.setLoggedIn(true);
