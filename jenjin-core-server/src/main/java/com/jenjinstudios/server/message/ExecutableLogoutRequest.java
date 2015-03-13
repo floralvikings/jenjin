@@ -1,9 +1,9 @@
 package com.jenjinstudios.server.message;
 
 import com.jenjinstudios.core.io.Message;
-import com.jenjinstudios.server.database.Authenticator;
+import com.jenjinstudios.server.authentication.Authenticator;
+import com.jenjinstudios.server.authentication.IUser;
 import com.jenjinstudios.server.database.DbException;
-import com.jenjinstudios.server.database.IUser;
 import com.jenjinstudios.server.net.ClientHandler;
 
 /**

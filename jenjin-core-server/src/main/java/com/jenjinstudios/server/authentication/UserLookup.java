@@ -1,4 +1,6 @@
-package com.jenjinstudios.server.database;
+package com.jenjinstudios.server.authentication;
+
+import com.jenjinstudios.server.database.DbException;
 
 /**
  * Interface for all database calsses used to lookup users.

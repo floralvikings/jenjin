@@ -1,4 +1,6 @@
-package com.jenjinstudios.server.database;
+package com.jenjinstudios.server.authentication;
+
+import com.jenjinstudios.server.database.DbException;
 
 import java.sql.SQLException;
 

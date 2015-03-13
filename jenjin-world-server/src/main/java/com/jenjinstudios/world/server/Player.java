@@ -1,6 +1,6 @@
 package com.jenjinstudios.world.server;
 
-import com.jenjinstudios.server.database.IUser;
+import com.jenjinstudios.server.authentication.IUser;
 import com.jenjinstudios.world.Actor;
 
 /**

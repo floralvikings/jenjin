@@ -1,7 +1,7 @@
 package com.jenjinstudios.world.server.database.sql;
 
+import com.jenjinstudios.server.authentication.UserLookup;
 import com.jenjinstudios.server.database.DbException;
-import com.jenjinstudios.server.database.UserLookup;
 import com.jenjinstudios.server.database.sql.SqlDbTable;
 import com.jenjinstudios.world.math.Vector2D;
 import com.jenjinstudios.world.server.Player;

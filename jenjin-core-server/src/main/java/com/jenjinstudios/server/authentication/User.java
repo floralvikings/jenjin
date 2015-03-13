@@ -1,4 +1,4 @@
-package com.jenjinstudios.server.database;
+package com.jenjinstudios.server.authentication;
 
 /**
  * @author Caleb Brinkman

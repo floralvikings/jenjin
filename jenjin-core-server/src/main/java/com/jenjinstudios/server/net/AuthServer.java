@@ -1,6 +1,6 @@
 package com.jenjinstudios.server.net;
 
-import com.jenjinstudios.server.database.Authenticator;
+import com.jenjinstudios.server.authentication.Authenticator;
 
 import java.io.IOException;
 

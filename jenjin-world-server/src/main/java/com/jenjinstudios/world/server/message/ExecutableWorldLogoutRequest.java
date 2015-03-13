@@ -1,8 +1,8 @@
 package com.jenjinstudios.world.server.message;
 
 import com.jenjinstudios.core.io.Message;
+import com.jenjinstudios.server.authentication.LoginException;
 import com.jenjinstudios.server.database.DbException;
-import com.jenjinstudios.server.database.LoginException;
 import com.jenjinstudios.world.server.Player;
 import com.jenjinstudios.world.server.WorldClientHandler;
 import com.jenjinstudios.world.server.WorldServer;

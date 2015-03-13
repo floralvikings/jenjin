@@ -1,5 +1,6 @@
-package com.jenjinstudios.server.database;
+package com.jenjinstudios.server.authentication;
 
+import com.jenjinstudios.server.database.DbException;
 import com.jenjinstudios.server.security.SHA256Hasher;
 
 /**
@@ -29,7 +30,7 @@ public class Authenticator
 	 * user does not exist or the password is invalid.
 	 *
 	 * @throws LoginException If the user is already logged in.
-	 * @throws DbException If there is an error during the database transaction.
+	 * @throws com.jenjinstudios.server.database.DbException If there is an error during the database transaction.
 	 */
 	public IUser logInUser(String username, String password) throws DbException {
 		IUser user = getUserWithValidPassword(username, password);

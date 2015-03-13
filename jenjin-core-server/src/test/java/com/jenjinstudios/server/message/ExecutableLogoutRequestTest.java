@@ -2,9 +2,9 @@ package com.jenjinstudios.server.message;
 
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageRegistry;
-import com.jenjinstudios.server.database.Authenticator;
-import com.jenjinstudios.server.database.IUser;
-import com.jenjinstudios.server.database.User;
+import com.jenjinstudios.server.authentication.Authenticator;
+import com.jenjinstudios.server.authentication.IUser;
+import com.jenjinstudios.server.authentication.User;
 import com.jenjinstudios.server.net.AuthServer;
 import com.jenjinstudios.server.net.ClientHandler;
 import org.mockito.Mockito;

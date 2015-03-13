@@ -1,7 +1,7 @@
 package com.jenjinstudios.server.database.sql;
 
+import com.jenjinstudios.server.authentication.IUser;
 import com.jenjinstudios.server.database.DbTable;
-import com.jenjinstudios.server.database.IUser;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;

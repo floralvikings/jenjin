@@ -3,8 +3,8 @@ package com.jenjinstudios.server.net;
 import com.jenjinstudios.core.MessageIO;
 import com.jenjinstudios.core.io.MessageInputStream;
 import com.jenjinstudios.core.io.MessageOutputStream;
-import com.jenjinstudios.server.database.Authenticator;
-import com.jenjinstudios.server.database.User;
+import com.jenjinstudios.server.authentication.Authenticator;
+import com.jenjinstudios.server.authentication.User;
 import org.testng.annotations.Test;
 
 import java.io.IOException;

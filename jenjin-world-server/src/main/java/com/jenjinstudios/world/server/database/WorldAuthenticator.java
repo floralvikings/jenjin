@@ -1,6 +1,6 @@
 package com.jenjinstudios.world.server.database;
 
-import com.jenjinstudios.server.database.Authenticator;
+import com.jenjinstudios.server.authentication.Authenticator;
 import com.jenjinstudios.world.server.database.sql.PlayerTable;
 
 import java.sql.Connection;

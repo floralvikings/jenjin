@@ -1,4 +1,4 @@
-package com.jenjinstudios.server.database;
+package com.jenjinstudios.server.authentication;
 
 /**
  * Interface for all objects representing a user in the database.
