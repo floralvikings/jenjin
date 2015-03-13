@@ -54,8 +54,8 @@ public class Main
 			  "  `password` CHAR(64) NOT NULL," +
 			  "  `salt` CHAR(48) NOT NULL," +
 			  "  `loggedin` TINYINT NOT NULL DEFAULT '0'," +
-			  "  `xCoord` INT NOT NULL DEFAULT '0'," +
-			  "  `yCoord` INT NOT NULL DEFAULT '0'," +
+			  "  `xCoord` DOUBLE NOT NULL DEFAULT '0'," +
+			  "  `yCoord` DOUBLE NOT NULL DEFAULT '0'," +
 			  "  `zoneId` INT NOT NULL DEFAULT '0'," +
 			  "  PRIMARY KEY (username)" +
 			  ')');
@@ -68,7 +68,7 @@ public class Main
 						"('TestAccount" + i + "', " +
 						"'650f00f552d4df0147d236e240ccfc490444f4b358c4ff1d79f5fd90f57243bd', " +
 						"'e3c42b85a183d3f654a3d2bb3bc5ea607d0fb529d9b890d3', " +
-						"'0', '0', '0')");
+						"'0', '0', '0', '0')");
 		}
 		return testConnection;
 	}
