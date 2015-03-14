@@ -100,9 +100,8 @@ public class Authenticator<T extends User>
 		T user = userLookup.findUser(username);
 		if (user != null)
 		{
-			String hashedPassword = SHA256Hasher.getSaltedSHA256String(password, user.getSalt());
-			boolean passwordIncorrect = (hashedPassword == null) || !hashedPassword.equalsIgnoreCase(user.getPassword
-				  ());
+			String hashedPass = SHA256Hasher.getSaltedSHA256String(password, user.getSalt());
+			boolean passwordIncorrect = (hashedPass == null) || !hashedPass.equalsIgnoreCase(user.getPassword());
 
 			if (passwordIncorrect)
 				user = null;
