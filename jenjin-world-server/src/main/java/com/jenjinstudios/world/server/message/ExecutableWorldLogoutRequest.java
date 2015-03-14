@@ -1,8 +1,8 @@
 package com.jenjinstudios.world.server.message;
 
 import com.jenjinstudios.core.io.Message;
+import com.jenjinstudios.server.authentication.AuthenticationException;
 import com.jenjinstudios.server.authentication.Authenticator;
-import com.jenjinstudios.server.authentication.LoginException;
 import com.jenjinstudios.server.database.DbException;
 import com.jenjinstudios.world.server.Player;
 import com.jenjinstudios.world.server.WorldClientHandler;
@@ -56,6 +56,6 @@ public class ExecutableWorldLogoutRequest extends WorldExecutableMessage
 		if (authenticator != null && handler.getUser() != null)
 		{
 			authenticator.logOutUser(handler.getUser().getUsername());
-		} else throw new LoginException("Missing ClientHandler username or Authenticator.");
+		} else throw new AuthenticationException("Missing ClientHandler username or Authenticator.");
 	}
 }

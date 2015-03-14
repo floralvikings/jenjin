@@ -7,14 +7,14 @@ import com.jenjinstudios.server.database.DbException;
  *
  * @author Caleb Brinkman
  */
-public class LoginException extends DbException
+public class AuthenticationException extends DbException
 {
 	/**
 	 * Construct a LoginException with the given message.
 	 *
 	 * @param message The message.
 	 */
-	public LoginException(String message) { super(message); }
+	public AuthenticationException(String message) { super(message); }
 
 	/**
 	 * Construct a LoginException with the given message and cause.
@@ -22,5 +22,5 @@ public class LoginException extends DbException
 	 * @param s The mesasge.
 	 * @param e The cause.
 	 */
-	public LoginException(String s, Throwable e) { super(s, e); }
+	public AuthenticationException(String s, Throwable e) { super(s, e); }
 }

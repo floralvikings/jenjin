@@ -1,7 +1,7 @@
 package com.jenjinstudios.server.database;
 
+import com.jenjinstudios.server.authentication.AuthenticationException;
 import com.jenjinstudios.server.authentication.BasicAuthenticator;
-import com.jenjinstudios.server.authentication.LoginException;
 import com.jenjinstudios.server.authentication.User;
 import com.jenjinstudios.server.database.sql.UserTable;
 import org.testng.Assert;
@@ -74,7 +74,7 @@ public class BasicAuthenticatorTest
 
 	}
 
-	@Test(expectedExceptions = LoginException.class)
+	@Test(expectedExceptions = AuthenticationException.class)
 	public void testConcurrentLogins() throws Exception {
 		BasicAuthenticator connector = new BasicAuthenticator(new UserTable(connection));
 		String username = "TestAccount3";

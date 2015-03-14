@@ -2,7 +2,7 @@ package com.jenjinstudios.world.server.message;
 
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageRegistry;
-import com.jenjinstudios.server.authentication.LoginException;
+import com.jenjinstudios.server.authentication.AuthenticationException;
 import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.collections.WorldObjectList;
@@ -85,7 +85,7 @@ public class ExecutableWorldLogoutRequestTest
 		WorldAuthenticator authenticator = mock(WorldAuthenticator.class);
 		when(worldServer.getAuthenticator()).thenReturn(authenticator);
 		when(worldServer.getWorld()).thenReturn(world);
-		when(authenticator.logOutUser(any())).thenThrow(new LoginException("Foo"));
+		when(authenticator.logOutUser(any())).thenThrow(new AuthenticationException("Foo"));
 		when(handler.getServer()).thenReturn(worldServer);
 		when(handler.getUser()).thenReturn(player);
 
