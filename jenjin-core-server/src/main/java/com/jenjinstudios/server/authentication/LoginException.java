@@ -2,8 +2,6 @@ package com.jenjinstudios.server.authentication;
 
 import com.jenjinstudios.server.database.DbException;
 
-import java.sql.SQLException;
-
 /**
  * Thrown when an exception occurs during a login process.
  *
@@ -24,5 +22,5 @@ public class LoginException extends DbException
 	 * @param s The mesasge.
 	 * @param e The cause.
 	 */
-	public LoginException(String s, SQLException e) { super(s, e); }
+	public LoginException(String s, Throwable e) { super(s, e); }
 }
