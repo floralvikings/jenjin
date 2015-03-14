@@ -79,7 +79,7 @@ public class Authenticator<T extends User>
 			} catch (DbException e)
 			{
 				user.setLoggedIn(true);
-				throw e;
+				throw new LoginException("Unable to log out user", e);
 			}
 			if (user.isLoggedIn())
 			{
