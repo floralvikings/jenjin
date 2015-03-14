@@ -47,7 +47,10 @@ public class Authenticator<T extends User>
 				throw new LoginException("User already logged in.");
 			}
 			user.setLoggedIn(true);
-			userLookup.updateUser(user);
+			if (!userLookup.updateUser(user))
+			{
+				throw new LoginException("Update was not made to database");
+			}
 		}
 		return user;
 	}
@@ -69,11 +72,18 @@ public class Authenticator<T extends User>
 			user.setLoggedIn(false);
 			try
 			{
-				userLookup.updateUser(user);
+				if (!userLookup.updateUser(user))
+				{
+					user.setLoggedIn(true);
+				}
 			} catch (DbException e)
 			{
 				user.setLoggedIn(true);
 				throw e;
+			}
+			if (user.isLoggedIn())
+			{
+				throw new LoginException("Database was not updated.");
 			}
 		}
 		return user;
