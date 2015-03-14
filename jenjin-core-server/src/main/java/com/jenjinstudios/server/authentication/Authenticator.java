@@ -63,9 +63,9 @@ public class Authenticator<T extends User>
 	 *
 	 * @return The user that was logged out.
 	 *
-	 * @throws DbException If there is an exception when updating the database.
+	 * @throws AuthenticationException If there is an exception when updating the database.
 	 */
-	public T logOutUser(String username) throws DbException {
+	public T logOutUser(String username) throws AuthenticationException {
 		T user;
 		try
 		{
