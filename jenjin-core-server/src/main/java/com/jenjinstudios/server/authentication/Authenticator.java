@@ -66,7 +66,14 @@ public class Authenticator<T extends User>
 	 * @throws DbException If there is an exception when updating the database.
 	 */
 	public T logOutUser(String username) throws DbException {
-		T user = userLookup.findUser(username);
+		T user;
+		try
+		{
+			user = userLookup.findUser(username);
+		} catch (DbException ex)
+		{
+			throw new AuthenticationException("Exception when accessing authentication database", ex);
+		}
 		if ((user != null) && user.isLoggedIn())
 		{
 			user.setLoggedIn(false);
