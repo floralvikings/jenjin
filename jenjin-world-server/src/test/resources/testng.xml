@@ -1,0 +1,27 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+
+<suite name="jenjin-world-server" verbose="1">
+    <test name="server">
+        <packages>
+            <package name="com.jenjinstudios.world.server" />
+        </packages>
+    </test>
+
+    <test name="ai">
+        <packages>
+            <package name="com.jenjinstudios.world.server.ai" />
+        </packages>
+    </test>
+
+    <test name="sql">
+        <packages>
+            <package name="com.jenjinstudios.world.server.sql" />
+        </packages>
+    </test>
+
+    <test name="message">
+        <packages>
+            <package name="com.jenjinstudios.world.server.message" />
+        </packages>
+    </test>
+</suite>
