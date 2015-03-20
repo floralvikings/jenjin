@@ -6,6 +6,9 @@ import com.jenjinstudios.server.authentication.User;
 import com.jenjinstudios.server.database.DbException;
 import com.jenjinstudios.server.net.ClientHandler;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  * Executable message to handle client logging out.
  * @author Caleb Brinkman
@@ -13,6 +16,7 @@ import com.jenjinstudios.server.net.ClientHandler;
 @SuppressWarnings("unused")
 public class ExecutableLogoutRequest extends ServerExecutableMessage
 {
+	private static final Logger LOGGER = Logger.getLogger(ExecutableLogoutRequest.class.getName());
 	/** The SQLHandler used to log out the client. */
 	private final Authenticator authenticator;
 
@@ -44,6 +48,7 @@ public class ExecutableLogoutRequest extends ServerExecutableMessage
 				handler.setUser(null);
 			} catch (DbException e)
 			{
+				LOGGER.log(Level.INFO, "Exception when logging out user " + user.getUsername(), e);
 				handler.sendLogoutStatus(false);
 			}
 		}
