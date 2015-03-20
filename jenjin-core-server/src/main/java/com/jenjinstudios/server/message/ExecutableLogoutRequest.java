@@ -34,7 +34,7 @@ public class ExecutableLogoutRequest extends ServerExecutableMessage
 	public void runImmediate() {
 		ClientHandler handler = getClientHandler();
 		User user = handler.getUser();
-		if (authenticator != null && user != null)
+		if ((authenticator != null) && (user != null))
 		{
 			String username = user.getUsername();
 			try
