@@ -112,7 +112,7 @@ public class WorldServerMessageFactoryTest
 	@Test
 	public void testGenerateWorldFileResponse() {
 		byte[] fileBytes = {2, 4, 6, 8, 10};
-		Message message = worldServerMessageFactory.generateWorldFileResponse(fileBytes);
+		Message message = WorldServerMessageFactory.generateWorldFileResponse(fileBytes);
 		assertEquals(message.name, "WorldFileResponse");
 		assertEquals(message.getArgument("fileBytes"), fileBytes);
 	}

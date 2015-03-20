@@ -26,7 +26,7 @@ public class ExecutableWorldFileRequestTest
 		WorldServer server = mock(WorldServer.class);
 		WorldServerMessageFactory messageFactory = mock(WorldServerMessageFactory.class);
 		MessageIO messageIO = Mockito.mock(MessageIO.class);
-		when(messageFactory.generateWorldFileResponse(any())).thenReturn(response);
+		when(WorldServerMessageFactory.generateWorldFileResponse(any())).thenReturn(response);
 		when(server.getWorldFileChecksum()).thenReturn(fileBytes);
 		when(clientHandler.getMessageFactory()).thenReturn(messageFactory);
 		when(clientHandler.getServer()).thenReturn(server);

@@ -77,7 +77,7 @@ public class WorldServerMessageFactory
 		return MessageRegistry.getInstance().createMessage("WorldLoginResponse");
 	}
 
-	public Message generateWorldFileResponse(byte[] worldFileBytes) {
+	public static Message generateWorldFileResponse(byte[] worldFileBytes) {
 		Message response = MessageRegistry.getInstance().createMessage("WorldFileResponse");
 		response.setArgument("fileBytes", worldFileBytes);
 		return response;
