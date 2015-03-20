@@ -63,7 +63,6 @@ public class ExecutableLoginRequestTest
 		user.setLoggedIn(true);
 		ClientHandler clientHandler = mock(ClientHandler.class);
 		AuthServer server = mock(AuthServer.class);
-		ServerMessageFactory serverMessageFactory = new ServerMessageFactory();
 		Authenticator<BasicUser> authenticator = mock(Authenticator.class);
 		MessageIO messageIO = mock(MessageIO.class);
 		when(server.getAuthenticator()).thenReturn(authenticator);
@@ -71,7 +70,6 @@ public class ExecutableLoginRequestTest
 		when(authenticator.logInUser("foo", "bar")).thenReturn(user);
 		when(authenticator.logInUser("foo-dapoo", "bar")).thenThrow(new AuthenticationException("Nope"));
 		when(clientHandler.getServer()).thenReturn(server);
-		when(clientHandler.getMessageFactory()).thenReturn(serverMessageFactory);
 		when(clientHandler.getMessageIO()).thenReturn(messageIO);
 
 		ExecutableLoginRequest executableLoginRequest = new ExecutableLoginRequest(clientHandler, message);
