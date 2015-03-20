@@ -57,7 +57,7 @@ public class WorldClientHandler extends ClientHandler
 			for (WorldObject object : vision.getNewlyVisibleObjects())
 			{
 				Message newlyVisibleMessage;
-				newlyVisibleMessage = getMessageFactory().generateNewlyVisibleMessage(object);
+				newlyVisibleMessage = WorldServerMessageFactory.generateNewlyVisibleMessage(object);
 				getMessageIO().queueOutgoingMessage(newlyVisibleMessage);
 			}
 		}

@@ -44,7 +44,7 @@ public class WorldServerMessageFactoryTest
 		when(object.getName()).thenReturn("Foo");
 		when(object.getVector2D()).thenReturn(Vector2D.ORIGIN);
 
-		Message message = worldServerMessageFactory.generateNewlyVisibleMessage(object);
+		Message message = WorldServerMessageFactory.generateNewlyVisibleMessage(object);
 		assertEquals(message.name, "ObjectVisibleMessage");
 		assertEquals(message.getArgument("name"), "Foo");
 	}
@@ -57,7 +57,7 @@ public class WorldServerMessageFactoryTest
 		when(actor.getAngle()).thenReturn(new Angle());
 		when(actor.getWorld()).thenReturn(WorldUtils.createDefaultWorld());
 
-		Message message = worldServerMessageFactory.generateNewlyVisibleMessage(actor);
+		Message message = WorldServerMessageFactory.generateNewlyVisibleMessage(actor);
 		assertEquals(message.name, "ActorVisibleMessage");
 		assertEquals(message.getArgument("name"), "Foo");
 		assertEquals(message.getArgument("relativeAngle"), Angle.IDLE);

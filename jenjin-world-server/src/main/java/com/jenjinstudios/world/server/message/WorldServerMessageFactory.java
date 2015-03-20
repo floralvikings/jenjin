@@ -18,7 +18,7 @@ import java.util.List;
  */
 public class WorldServerMessageFactory
 {
-	public Message generateNewlyVisibleMessage(WorldObject object) {
+	public static Message generateNewlyVisibleMessage(WorldObject object) {
 		Message newlyVisibleMessage;
 		if (object instanceof Actor)
 		{
