@@ -3,7 +3,7 @@ package com.jenjinstudios.world.server.database;
 import com.jenjinstudios.server.authentication.Authenticator;
 import com.jenjinstudios.server.authentication.UserLookup;
 import com.jenjinstudios.world.server.Player;
-import com.jenjinstudios.world.server.database.sql.PlayerTable;
+import com.jenjinstudios.world.server.sql.PlayerTable;
 
 import java.sql.Connection;
 

@@ -1,4 +1,4 @@
-package com.jenjinstudios.world.server.database.sql;
+package com.jenjinstudios.world.server.sql;
 
 import com.jenjinstudios.server.authentication.UserLookup;
 import com.jenjinstudios.server.database.DbException;
