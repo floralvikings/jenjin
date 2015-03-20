@@ -72,10 +72,8 @@ public class ClientHandler extends Connection
         getServer().removeClient(this);
     }
 
-    public ServerMessageFactory getMessageFactory() { return messageFactory; }
-
-    /**
-     * The server.
+	/**
+	 * The server.
      *
      * @return The server for which this client handler works.
      */
