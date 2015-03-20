@@ -89,7 +89,7 @@ public class WorldServerMessageFactory
 		return response;
 	}
 
-	private Message generateActorVisibleMessage(Actor newlyVisible) {
+	private static Message generateActorVisibleMessage(Actor newlyVisible) {
 		Message newlyVisibleMessage;
 		newlyVisibleMessage = MessageRegistry.getInstance().createMessage("ActorVisibleMessage");
 		newlyVisibleMessage.setArgument("name", newlyVisible.getName());
