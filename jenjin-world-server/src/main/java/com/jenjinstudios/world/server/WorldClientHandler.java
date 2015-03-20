@@ -19,12 +19,10 @@ import java.util.Set;
  */
 public class WorldClientHandler extends ClientHandler
 {
-	private final WorldServerMessageFactory messageFactory;
 	private boolean hasSentActorStepMessage;
 
 	public WorldClientHandler(WorldServer s, MessageIO messageIO) {
 		super(s, messageIO);
-		this.messageFactory = new WorldServerMessageFactory();
 	}
 
 	@Override
