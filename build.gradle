@@ -20,7 +20,13 @@ subprojects {
     }
 
     test {
-        useTestNG()
+
+        useTestNG({
+            suiteXmlFiles ->
+                [
+                        './testng/xml'
+                ]
+        })
 
         testLogging {
             events "passed", "skipped", "failed", "standardOut", "standardError"
