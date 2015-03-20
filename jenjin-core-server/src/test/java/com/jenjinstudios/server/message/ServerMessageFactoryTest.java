@@ -13,8 +13,6 @@ public class ServerMessageFactoryTest
 
 	@Test
 	public void testGenerateLogoutResponse() {
-		ServerMessageFactory serverMessageFactory =
-			  new ServerMessageFactory();
 		Message message = ServerMessageFactory.generateLogoutResponse(true);
 
 		assertEquals(message.name, "LogoutResponse");
