@@ -5,7 +5,8 @@ import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageRegistry;
 import com.jenjinstudios.world.server.WorldClientHandler;
 import com.jenjinstudios.world.server.WorldServer;
-import org.mockito.Mockito;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.*;
@@ -15,16 +16,19 @@ import static org.mockito.Mockito.*;
  */
 public class ExecutableWorldFileRequestTest
 {
-	@SuppressWarnings("unchecked")
 	@Test
+	@PrepareForTest(WorldServerMessageFactory.class)
 	public void testExecuteMessage() {
 		Message message = mock(Message.class);
 		Message response = MessageRegistry.getInstance().createMessage("WorldFileResponse");
 		byte[] fileBytes = {1, 2, 3, 4, 5};
 		response.setArgument("fileBytes", fileBytes);
+
+		PowerMockito.mockStatic(WorldServerMessageFactory.class);
 		WorldClientHandler clientHandler = mock(WorldClientHandler.class);
 		WorldServer server = mock(WorldServer.class);
-		MessageIO messageIO = Mockito.mock(MessageIO.class);
+		MessageIO messageIO = mock(MessageIO.class);
+
 		when(WorldServerMessageFactory.generateWorldFileResponse(any())).thenReturn(response);
 		when(server.getWorldFileChecksum()).thenReturn(fileBytes);
 		when(clientHandler.getServer()).thenReturn(server);
