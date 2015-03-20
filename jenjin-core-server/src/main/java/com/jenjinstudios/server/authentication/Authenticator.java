@@ -36,10 +36,16 @@ public class Authenticator<T extends User>
 	 * user does not exist or the password is invalid.
 	 *
 	 * @throws AuthenticationException If the user is already logged in.
-	 * @throws com.jenjinstudios.server.database.DbException If there is an error during the database transaction.
 	 */
-	public T logInUser(String username, String clearTextPassword) throws DbException {
-		T user = getUserWithValidPassword(username, clearTextPassword);
+	public T logInUser(String username, String clearTextPassword) throws AuthenticationException {
+		T user;
+		try
+		{
+			user = getUserWithValidPassword(username, clearTextPassword);
+		} catch (DbException e)
+		{
+			throw new AuthenticationException("Database Exception when looking up user.", e);
+		}
 		if (user != null)
 		{
 			if (user.isLoggedIn())
@@ -47,9 +53,19 @@ public class Authenticator<T extends User>
 				throw new AuthenticationException("User already logged in.");
 			}
 			user.setLoggedIn(true);
-			if (!userLookup.updateUser(user))
+			try
 			{
-				throw new AuthenticationException("Update was not made to database");
+				if (!userLookup.updateUser(user))
+				{
+					user.setLoggedIn(false);
+				}
+			} catch (DbException e)
+			{
+				throw new AuthenticationException("Database Exception when updating user.", e);
+			}
+			if (user.isLoggedIn())
+			{
+				throw new AuthenticationException("Database was not updated.");
 			}
 		}
 		return user;
