@@ -25,7 +25,7 @@ public class ExecutableWorldChecksumRequestTest
 		WorldServer server = mock(WorldServer.class);
 		WorldServerMessageFactory messageFactory = mock(WorldServerMessageFactory.class);
 		MessageIO messageIO = mock(MessageIO.class);
-		when(messageFactory.generateWorldChecksumResponse(any())).thenReturn(response);
+		when(WorldServerMessageFactory.generateWorldChecksumResponse(any())).thenReturn(response);
 		when(server.getWorldFileChecksum()).thenReturn(checksum);
 		when(clientHandler.getMessageFactory()).thenReturn(messageFactory);
 		when(clientHandler.getServer()).thenReturn(server);

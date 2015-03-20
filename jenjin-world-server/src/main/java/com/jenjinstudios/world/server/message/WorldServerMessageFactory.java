@@ -83,7 +83,7 @@ public class WorldServerMessageFactory
 		return response;
 	}
 
-	public Message generateWorldChecksumResponse(byte[] checkSum) {
+	public static Message generateWorldChecksumResponse(byte[] checkSum) {
 		Message response = MessageRegistry.getInstance().createMessage("WorldChecksumResponse");
 		response.setArgument("checksum", checkSum);
 		return response;

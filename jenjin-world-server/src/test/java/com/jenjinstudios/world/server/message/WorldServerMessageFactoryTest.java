@@ -120,7 +120,7 @@ public class WorldServerMessageFactoryTest
 	@Test
 	public void testGenerateWorldChecksumResponse() {
 		byte[] checksum = {2, 4, 6, 8, 10};
-		Message message = worldServerMessageFactory.generateWorldChecksumResponse(checksum);
+		Message message = WorldServerMessageFactory.generateWorldChecksumResponse(checksum);
 		assertEquals(message.name, "WorldChecksumResponse");
 		assertEquals(message.getArgument("checksum"), checksum);
 	}
