@@ -20,10 +20,8 @@ public class ClientHandler extends Connection
     private static final Logger LOGGER = Logger.getLogger(ClientHandler.class.getName());
     /** The server. */
     private final AuthServer server;
-    /** The message factory used by this ClientHandler. */
-    private final ServerMessageFactory messageFactory;
-    /** The id of the client handler. */
-    private int handlerId = -1;
+	/** The id of the client handler. */
+	private int handlerId = -1;
     /** The time at which this client was successfully logged in. */
     private long loggedInTime;
 	private User user;
@@ -39,8 +37,6 @@ public class ClientHandler extends Connection
         super(messageIO);
         setName("ClientHandler with unset ID");
         server = s;
-
-        this.messageFactory = new ServerMessageFactory();
     }
 
     /**
