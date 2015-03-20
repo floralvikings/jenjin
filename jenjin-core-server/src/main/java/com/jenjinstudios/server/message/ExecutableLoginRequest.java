@@ -1,9 +1,9 @@
 package com.jenjinstudios.server.message;
 
 import com.jenjinstudios.core.io.Message;
+import com.jenjinstudios.server.authentication.AuthenticationException;
 import com.jenjinstudios.server.authentication.Authenticator;
 import com.jenjinstudios.server.authentication.User;
-import com.jenjinstudios.server.database.DbException;
 import com.jenjinstudios.server.net.ClientHandler;
 
 import java.util.logging.Level;
@@ -54,7 +54,7 @@ public class ExecutableLoginRequest extends ServerExecutableMessage
 			{
 				queueLoginFailureResponse();
 			}
-		} catch (DbException e)
+		} catch (AuthenticationException e)
 		{
 			LOGGER.log(Level.FINEST, "User login failure: ", e);
 			queueLoginFailureResponse();
