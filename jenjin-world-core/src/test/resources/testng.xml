@@ -7,6 +7,30 @@
         </packages>
     </test>
 
+    <test name="actor">
+        <packages>
+            <package name="com.jenjinstudios.world.actor" />
+        </packages>
+    </test>
+
+    <test name="collections">
+        <packages>
+            <package name="com.jenjinstudios.world.collections" />
+        </packages>
+    </test>
+
+    <test name="event">
+        <packages>
+            <package name="com.jenjinstudios.world.event" />
+        </packages>
+    </test>
+
+    <test name="io">
+        <packages>
+            <package name="com.jenjinstudios.world.io" />
+        </packages>
+    </test>
+
     <test name="json">
         <packages>
             <package name="com.jenjinstudios.world.json" />
@@ -16,6 +40,18 @@
     <test name="math">
         <packages>
             <package name="com.jenjinstudios.world.math" />
+        </packages>
+    </test>
+
+    <test name="state">
+        <packages>
+            <package name="com.jenjinstudios.world.state" />
+        </packages>
+    </test>
+
+    <test name="util">
+        <packages>
+            <package name="com.jenjinstudios.world.util" />
         </packages>
     </test>
 </suite>
