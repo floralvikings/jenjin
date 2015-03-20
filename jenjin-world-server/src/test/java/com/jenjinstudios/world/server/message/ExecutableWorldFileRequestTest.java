@@ -7,6 +7,7 @@ import com.jenjinstudios.world.server.WorldClientHandler;
 import com.jenjinstudios.world.server.WorldServer;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.testng.PowerMockTestCase;
 import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.*;
@@ -14,7 +15,8 @@ import static org.mockito.Mockito.*;
 /**
  * @author Caleb Brinkman
  */
-public class ExecutableWorldFileRequestTest
+@PrepareForTest(WorldServerMessageFactory.class)
+public class ExecutableWorldFileRequestTest extends PowerMockTestCase
 {
 	@Test
 	@PrepareForTest(WorldServerMessageFactory.class)
