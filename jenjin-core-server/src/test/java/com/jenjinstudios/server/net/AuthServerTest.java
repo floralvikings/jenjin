@@ -1,6 +1,7 @@
 package com.jenjinstudios.server.net;
 
-import com.jenjinstudios.server.authentication.BasicAuthenticator;
+import com.jenjinstudios.server.authentication.Authenticator;
+import com.jenjinstudios.server.authentication.BasicUser;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -15,7 +16,7 @@ public class AuthServerTest
 	@Test
 	public void testConstructor() throws Exception {
 		ServerInit serverInit = new ServerInit();
-		BasicAuthenticator authenticator = mock(BasicAuthenticator.class);
+		Authenticator<BasicUser> authenticator = mock(Authenticator.class);
 
 		AuthServer authServer = new AuthServer(serverInit, authenticator);
 		authServer.shutdown();
