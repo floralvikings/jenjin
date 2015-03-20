@@ -62,14 +62,14 @@ public class ExecutableLoginRequest extends ServerExecutableMessage
 	}
 
 	private void queueLoginSuccessResponse(long loggedInTime) {
-		Message loginResponse = getClientHandler().getMessageFactory().generateLoginResponse(true, loggedInTime);
+		Message loginResponse = ServerMessageFactory.generateLoginResponse(true, loggedInTime);
 		getClientHandler().getMessageIO().queueOutgoingMessage(loginResponse);
 	}
 
 	private void queueLoginFailureResponse() {
 		ClientHandler clientHandler = getClientHandler();
 		ServerMessageFactory messageFactory = clientHandler.getMessageFactory();
-		Message loginResponse = messageFactory.generateLoginResponse(false, 0);
+		Message loginResponse = ServerMessageFactory.generateLoginResponse(false, 0);
 		clientHandler.getMessageIO().queueOutgoingMessage(loginResponse);
 	}
 

@@ -31,8 +31,8 @@ public class ServerMessageFactory
      *
      * @return The LoginResponse message.
      */
-    public Message generateLoginResponse(boolean success, long loggedInTime) {
-        Message loginResponse = MessageRegistry.getInstance().createMessage("LoginResponse");
+	public static Message generateLoginResponse(boolean success, long loggedInTime) {
+		Message loginResponse = MessageRegistry.getInstance().createMessage("LoginResponse");
         loginResponse.setArgument("success", success);
         loginResponse.setArgument("loginTime", loggedInTime);
         return loginResponse;
