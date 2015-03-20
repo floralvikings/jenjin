@@ -34,7 +34,7 @@ public class WorldClientHandler extends ClientHandler
 		{
 			if (!hasSentActorStepMessage)
 			{
-				getMessageIO().queueOutgoingMessage(getMessageFactory().generateActorMoveSpeedMessage(getUser()
+				getMessageIO().queueOutgoingMessage(WorldServerMessageFactory.generateActorMoveSpeedMessage(getUser()
 					  .getMoveSpeed()));
 				hasSentActorStepMessage = true;
 			}

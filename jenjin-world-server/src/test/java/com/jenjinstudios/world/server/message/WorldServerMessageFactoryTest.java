@@ -95,7 +95,7 @@ public class WorldServerMessageFactoryTest
 
 	@Test
 	public void testGenerateActorMoveSpeedMessage() {
-		Message message = worldServerMessageFactory.generateActorMoveSpeedMessage(Actor.DEFAULT_MOVE_SPEED);
+		Message message = WorldServerMessageFactory.generateActorMoveSpeedMessage(Actor.DEFAULT_MOVE_SPEED);
 		assertEquals(message.name, "ActorMoveSpeed");
 		assertEquals(message.getArgument("moveSpeed"), Actor.DEFAULT_MOVE_SPEED);
 	}

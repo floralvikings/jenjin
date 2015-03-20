@@ -61,7 +61,7 @@ public class WorldServerMessageFactory
 		return forcedStateMessage;
 	}
 
-	public Message generateActorMoveSpeedMessage(double moveSpeed) {
+	public static Message generateActorMoveSpeedMessage(double moveSpeed) {
 		Message stepLengthMessage = MessageRegistry.getInstance().createMessage("ActorMoveSpeed");
 		stepLengthMessage.setArgument("moveSpeed", moveSpeed);
 		return stepLengthMessage;
