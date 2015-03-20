@@ -2,6 +2,7 @@ package com.jenjinstudios.world.server.message;
 
 import com.jenjinstudios.core.MessageIO;
 import com.jenjinstudios.core.io.Message;
+import com.jenjinstudios.server.authentication.Authenticator;
 import com.jenjinstudios.server.authentication.BasicUser;
 import com.jenjinstudios.server.authentication.User;
 import com.jenjinstudios.world.World;
@@ -10,7 +11,6 @@ import com.jenjinstudios.world.math.Vector2D;
 import com.jenjinstudios.world.server.Player;
 import com.jenjinstudios.world.server.WorldClientHandler;
 import com.jenjinstudios.world.server.WorldServer;
-import com.jenjinstudios.world.server.database.WorldAuthenticator;
 import org.mockito.Mockito;
 import org.testng.annotations.Test;
 
@@ -38,7 +38,7 @@ public class ExecutableWorldLoginRequestTest
 		World world = mock(World.class);
 		User user = Mockito.mock(BasicUser.class);
 		Player player = Mockito.mock(Player.class);
-		WorldAuthenticator authenticator = Mockito.mock(WorldAuthenticator.class);
+		Authenticator<Player> authenticator = Mockito.mock(Authenticator.class);
 		WorldServer server = Mockito.mock(WorldServer.class);
 		WorldObjectList worldObjectMap = mock(WorldObjectList.class);
 		MessageIO messageIO = Mockito.mock(MessageIO.class);

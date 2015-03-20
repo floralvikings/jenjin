@@ -3,6 +3,7 @@ package com.jenjinstudios.world.server.message;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageRegistry;
 import com.jenjinstudios.server.authentication.AuthenticationException;
+import com.jenjinstudios.server.authentication.Authenticator;
 import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.collections.WorldObjectList;
@@ -10,7 +11,6 @@ import com.jenjinstudios.world.math.Vector2D;
 import com.jenjinstudios.world.server.Player;
 import com.jenjinstudios.world.server.WorldClientHandler;
 import com.jenjinstudios.world.server.WorldServer;
-import com.jenjinstudios.world.server.database.WorldAuthenticator;
 import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.*;
@@ -31,7 +31,7 @@ public class ExecutableWorldLogoutRequestTest
 		Player player = mock(Player.class);
 		WorldClientHandler handler = mock(WorldClientHandler.class);
 		WorldServer worldServer = mock(WorldServer.class);
-		WorldAuthenticator authenticator = mock(WorldAuthenticator.class);
+		Authenticator<Player> authenticator = mock(Authenticator.class);
 		WorldObjectList worldObjectMap = mock(WorldObjectList.class);
 		when(world.getWorldObjects()).thenReturn(worldObjectMap);
 		when(worldServer.getAuthenticator()).thenReturn(authenticator);
@@ -58,7 +58,7 @@ public class ExecutableWorldLogoutRequestTest
 		Actor player = mock(Actor.class);
 		WorldClientHandler handler = mock(WorldClientHandler.class);
 		WorldServer worldServer = mock(WorldServer.class);
-		WorldAuthenticator authenticator = mock(WorldAuthenticator.class);
+		Authenticator<Player> authenticator = mock(Authenticator.class);
 		when(worldServer.getAuthenticator()).thenReturn(authenticator);
 		when(worldServer.getWorld()).thenReturn(world);
 		when(handler.getServer()).thenReturn(worldServer);
@@ -82,7 +82,7 @@ public class ExecutableWorldLogoutRequestTest
 		player.setLoggedIn(true);
 		WorldServer worldServer = mock(WorldServer.class);
 		WorldClientHandler handler = mock(WorldClientHandler.class);
-		WorldAuthenticator authenticator = mock(WorldAuthenticator.class);
+		Authenticator<Player> authenticator = mock(Authenticator.class);
 		when(worldServer.getAuthenticator()).thenReturn(authenticator);
 		when(worldServer.getWorld()).thenReturn(world);
 		when(authenticator.logOutUser(any())).thenThrow(new AuthenticationException("Foo"));
