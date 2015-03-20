@@ -127,7 +127,7 @@ public class WorldServerMessageFactoryTest
 
 	@Test
 	public void testGenerateWorldLoginResponse() {
-		Message message = worldServerMessageFactory.generateWorldLoginResponse();
+		Message message = WorldServerMessageFactory.generateWorldLoginResponse();
 		Assert.assertEquals(message.name, "WorldLoginResponse");
 	}
 }

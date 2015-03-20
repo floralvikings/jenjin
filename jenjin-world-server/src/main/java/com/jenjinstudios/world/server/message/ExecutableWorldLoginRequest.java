@@ -72,7 +72,7 @@ public class ExecutableWorldLoginRequest extends WorldExecutableMessage
 
 	private Message createFailureResponse() {
 		WorldClientHandler handler = getClientHandler();
-		Message loginResponse = handler.getMessageFactory().generateWorldLoginResponse();
+		Message loginResponse = WorldServerMessageFactory.generateWorldLoginResponse();
 		loginResponse.setArgument("success", false);
 		loginResponse.setArgument("id", -1);
 		loginResponse.setArgument("loginTime", handler.getLoggedInTime());
@@ -87,7 +87,7 @@ public class ExecutableWorldLoginRequest extends WorldExecutableMessage
 	}
 
 	private Message createSuccessResponse(Actor player) {
-		Message loginResponse = getClientHandler().getMessageFactory().generateWorldLoginResponse();
+		Message loginResponse = WorldServerMessageFactory.generateWorldLoginResponse();
 		loginResponse.setArgument("success", true);
 		loginResponse.setArgument("loginTime", getClientHandler().getLoggedInTime());
 		loginResponse.setArgument("xCoordinate", player.getVector2D().getXCoordinate());

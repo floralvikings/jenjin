@@ -73,7 +73,7 @@ public class WorldServerMessageFactory
 		return newlyInvisibleMessage;
 	}
 
-	public Message generateWorldLoginResponse() {
+	public static Message generateWorldLoginResponse() {
 		return MessageRegistry.getInstance().createMessage("WorldLoginResponse");
 	}
 

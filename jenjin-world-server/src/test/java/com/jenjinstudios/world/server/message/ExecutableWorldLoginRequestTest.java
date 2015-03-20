@@ -48,7 +48,7 @@ public class ExecutableWorldLoginRequestTest
 		Mockito.when(authenticator.logInUser(Mockito.anyString(), Mockito.anyString())).thenReturn(player);
 		Mockito.when(server.getAuthenticator()).thenReturn(authenticator);
 		Mockito.when(server.getWorld()).thenReturn(world);
-		Mockito.when(messageFactory.generateWorldLoginResponse()).thenReturn(message);
+		Mockito.when(WorldServerMessageFactory.generateWorldLoginResponse()).thenReturn(message);
 		Mockito.when(player.getVector2D()).thenReturn(Vector2D.ORIGIN);
 		ExecutableWorldLoginRequest exec = new ExecutableWorldLoginRequest(wch, message);
 		exec.runImmediate();
