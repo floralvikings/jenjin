@@ -1,8 +1,8 @@
 package com.jenjinstudios.world.server.message;
 
 import com.jenjinstudios.core.io.Message;
+import com.jenjinstudios.server.authentication.AuthenticationException;
 import com.jenjinstudios.server.authentication.Authenticator;
-import com.jenjinstudios.server.database.DbException;
 import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.actor.Vision;
 import com.jenjinstudios.world.server.Player;
@@ -48,14 +48,14 @@ public class ExecutableWorldLoginRequest extends WorldExecutableMessage
 		try
 		{
 			tryLogInUser();
-		} catch (DbException e)
+		} catch (AuthenticationException e)
 		{
 			handleLoginFailure();
 		}
 		getClientHandler().setLoggedInTime(getClientHandler().getServer().getCycleStartTime());
 	}
 
-	private void tryLogInUser() throws DbException {
+	private void tryLogInUser() throws AuthenticationException {
 		WorldClientHandler handler = getClientHandler();
 		if ((authenticator != null) && (handler.getUser() == null))
 		{
