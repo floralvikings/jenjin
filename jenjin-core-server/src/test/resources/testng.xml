@@ -1,0 +1,33 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+
+<suite name="jenjin-core-server" verbose="1">
+    <test name="authentication">
+        <packages>
+            <package name="com.jenjinstudios.server.authentication" />
+        </packages>
+    </test>
+
+    <test name="database">
+        <packages>
+            <package name="com.jenjinstudios.server.database" />
+        </packages>
+    </test>
+
+    <test name="message">
+        <packages>
+            <package name="com.jenjinstudios.server.message" />
+        </packages>
+    </test>
+
+    <test name="net">
+        <packages>
+            <package name="com.jenjinstudios.server.net" />
+        </packages>
+    </test>
+
+    <test name="security">
+        <packages>
+            <package name="com.jenjinstudios.server.security" />
+        </packages>
+    </test>
+</suite>
