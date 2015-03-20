@@ -7,10 +7,8 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import java.io.*;
 import java.nio.file.Paths;
-import java.util.AbstractList;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedList;
+import java.util.*;
+import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
@@ -83,11 +81,12 @@ public final class MessageFileFinder
         }
     }
 
-    private static Collection<MessageGroup> readXmlStreams(Iterable<InputStream> streamsToRead) {
-        Collection<MessageGroup> foundMessages = new LinkedList<>();
-        for (InputStream inputStream : streamsToRead)
-        {
-            try
+	private static Collection<MessageGroup> readXmlStreams(Map<String, InputStream> streamsToRead) {
+		Collection<MessageGroup> foundMessages = new LinkedList<>();
+		for (Entry<String, InputStream> entry : streamsToRead.entrySet())
+		{
+			InputStream inputStream = entry.getValue();
+			try
             {
                 JAXBContext jaxbContext = JAXBContext.newInstance(MessageGroup.class);
                 Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
@@ -101,8 +100,8 @@ public final class MessageFileFinder
                 }
             } catch (JAXBException | RuntimeException ex)
             {
-                LOGGER.log(Level.INFO, "Unable to parse XML file", ex);
-            } finally
+				LOGGER.log(Level.INFO, "Unable to parse XML entry: " + entry.getKey(), ex);
+			} finally
             {
                 try
                 {
@@ -144,17 +143,17 @@ public final class MessageFileFinder
         return search(rootFile, MESSAGE_FILE_NAME);
     }
 
-    private Collection<InputStream> findMessageFileStreams() {
-        Collection<InputStream> inputStreams = new LinkedList<>();
-        Iterable<File> messageFiles = findMessageFiles();
+	private Map<String, InputStream> findMessageFileStreams() {
+		Map<String, InputStream> inputStreams = new HashMap<>(10);
+		Iterable<File> messageFiles = findMessageFiles();
         for (File file : messageFiles)
         {
             LOGGER.log(Level.INFO, "Registering XML file {0}", file);
             try
             {
                 //noinspection ObjectAllocationInLoop
-                inputStreams.add(new FileInputStream(file));
-            } catch (FileNotFoundException ex)
+				inputStreams.put(file.getAbsolutePath(), new FileInputStream(file));
+			} catch (FileNotFoundException ex)
             {
                 LOGGER.log(Level.WARNING, "Unable to create input stream for " + file, ex);
             }
@@ -162,21 +161,21 @@ public final class MessageFileFinder
         return inputStreams;
     }
 
-    private static Collection<InputStream> findMessageJarStreams() {
-        Collection<InputStream> inputStreams = new LinkedList<>();
-        Iterable<String> jarMessageEntries = findJarMessageEntries();
+	private static Map<String, InputStream> findMessageJarStreams() {
+		Map<String, InputStream> inputStreams = new HashMap<>(10);
+		Iterable<String> jarMessageEntries = findJarMessageEntries();
         for (String entry : jarMessageEntries)
         {
             LOGGER.log(Level.INFO, "Registering XML entry {0}", entry);
-            inputStreams.add(MessageFileFinder.class.getClassLoader().getResourceAsStream(entry));
-        }
+			inputStreams.put(entry, MessageFileFinder.class.getClassLoader().getResourceAsStream(entry));
+		}
         return inputStreams;
     }
 
     Collection<MessageGroup> findXmlRegistries() {
-        Collection<InputStream> streamsToRead = new LinkedList<>();
-        streamsToRead.addAll(findMessageJarStreams());
-        streamsToRead.addAll(findMessageFileStreams());
-        return readXmlStreams(streamsToRead);
+		Map<String, InputStream> streamsToRead = new HashMap<>(10);
+		streamsToRead.putAll(findMessageJarStreams());
+		streamsToRead.putAll(findMessageFileStreams());
+		return readXmlStreams(streamsToRead);
     }
 }
