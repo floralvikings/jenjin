@@ -8,7 +8,7 @@ import com.jenjinstudios.core.io.MessageRegistry;
  *
  * @author Caleb Brinkman
  */
-public class ServerMessageFactory
+public final class ServerMessageFactory
 {
     /**
      * Generate a LogoutResponse.
