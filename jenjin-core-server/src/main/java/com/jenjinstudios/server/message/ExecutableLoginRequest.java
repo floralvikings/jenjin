@@ -68,7 +68,6 @@ public class ExecutableLoginRequest extends ServerExecutableMessage
 
 	private void queueLoginFailureResponse() {
 		ClientHandler clientHandler = getClientHandler();
-		ServerMessageFactory messageFactory = clientHandler.getMessageFactory();
 		Message loginResponse = ServerMessageFactory.generateLoginResponse(false, 0);
 		clientHandler.getMessageIO().queueOutgoingMessage(loginResponse);
 	}
