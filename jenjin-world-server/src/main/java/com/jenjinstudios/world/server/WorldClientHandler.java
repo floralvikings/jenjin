@@ -45,8 +45,6 @@ public class WorldClientHandler extends ClientHandler
 		}
 	}
 
-	public WorldServerMessageFactory getMessageFactory() { return messageFactory; }
-
 	public Player getUser() { return (Player) super.getUser(); }
 
 	private void queueNewlyVisibleMessages() {
