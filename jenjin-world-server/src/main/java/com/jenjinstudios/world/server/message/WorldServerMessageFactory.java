@@ -2,7 +2,6 @@ package com.jenjinstudios.world.server.message;
 
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageRegistry;
-import com.jenjinstudios.server.message.ServerMessageFactory;
 import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.WorldObject;
 import com.jenjinstudios.world.actor.StateChangeStack;
@@ -17,7 +16,7 @@ import java.util.List;
  *
  * @author Caleb Brinkman
  */
-public class WorldServerMessageFactory extends ServerMessageFactory
+public class WorldServerMessageFactory
 {
 	public Message generateNewlyVisibleMessage(WorldObject object) {
 		Message newlyVisibleMessage;
