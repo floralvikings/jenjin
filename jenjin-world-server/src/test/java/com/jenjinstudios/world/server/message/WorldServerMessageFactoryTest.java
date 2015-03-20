@@ -104,7 +104,7 @@ public class WorldServerMessageFactoryTest
 	public void testGenerateNewlyInvisibleMessage() {
 		WorldObject o = mock(WorldObject.class);
 		when(o.getId()).thenReturn(2468);
-		Message message = worldServerMessageFactory.generateNewlyInvisibleMessage(o);
+		Message message = WorldServerMessageFactory.generateNewlyInvisibleMessage(o);
 		assertEquals(message.name, "ObjectInvisibleMessage");
 		assertEquals(message.getArgument("id"), 2468);
 	}

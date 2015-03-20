@@ -67,7 +67,7 @@ public class WorldServerMessageFactory
 		return stepLengthMessage;
 	}
 
-	public Message generateNewlyInvisibleMessage(WorldObject object) {
+	public static Message generateNewlyInvisibleMessage(WorldObject object) {
 		Message newlyInvisibleMessage = MessageRegistry.getInstance().createMessage("ObjectInvisibleMessage");
 		newlyInvisibleMessage.setArgument("id", object.getId());
 		return newlyInvisibleMessage;

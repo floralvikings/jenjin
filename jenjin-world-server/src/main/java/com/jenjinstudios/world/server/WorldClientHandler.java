@@ -70,7 +70,7 @@ public class WorldClientHandler extends ClientHandler
 			Vision vision = (Vision) o;
 			for (WorldObject object : vision.getNewlyInvisibleObjects())
 			{
-				Message newlyInvisibleMessage = getMessageFactory().generateNewlyInvisibleMessage(object);
+				Message newlyInvisibleMessage = WorldServerMessageFactory.generateNewlyInvisibleMessage(object);
 				getMessageIO().queueOutgoingMessage(newlyInvisibleMessage);
 			}
 		}
