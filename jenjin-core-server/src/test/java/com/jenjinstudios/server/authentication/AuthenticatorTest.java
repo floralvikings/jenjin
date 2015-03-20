@@ -1,9 +1,5 @@
-package com.jenjinstudios.server.database;
+package com.jenjinstudios.server.authentication;
 
-import com.jenjinstudios.server.authentication.AuthenticationException;
-import com.jenjinstudios.server.authentication.Authenticator;
-import com.jenjinstudios.server.authentication.BasicUser;
-import com.jenjinstudios.server.authentication.User;
 import com.jenjinstudios.server.database.sql.UserTable;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -17,14 +13,16 @@ import java.sql.Statement;
 /**
  * @author Caleb Brinkman
  */
-public class BasicAuthenticatorTest
+public class AuthenticatorTest
 {
 	private static int connectionNumber = 0;
 	private static Connection connection;
 
 	/**
 	 * Create a unique connection with some dummy data that we can test on.
+	 *
 	 * @return The dummy connection.
+	 *
 	 * @throws Exception If something goes wrong creating the connection.
 	 */
 	private static Connection createTestConnection() throws Exception {
