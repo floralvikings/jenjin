@@ -104,7 +104,7 @@ public class WorldServerMessageFactory
 		return newlyVisibleMessage;
 	}
 
-	private Message generateObjectVisibleMessage(WorldObject object) {
+	private static Message generateObjectVisibleMessage(WorldObject object) {
 		Message newlyVisibleMessage;
 		newlyVisibleMessage = MessageRegistry.getInstance().createMessage("ObjectVisibleMessage");
 		newlyVisibleMessage.setArgument("name", object.getName());
