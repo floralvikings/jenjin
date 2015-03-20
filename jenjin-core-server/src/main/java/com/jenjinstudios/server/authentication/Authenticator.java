@@ -63,7 +63,7 @@ public class Authenticator<T extends User>
 			{
 				throw new AuthenticationException("Database Exception when updating user.", e);
 			}
-			if (user.isLoggedIn())
+			if (!user.isLoggedIn())
 			{
 				throw new AuthenticationException("Database was not updated.");
 			}
