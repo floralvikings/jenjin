@@ -10,8 +10,10 @@ import com.jenjinstudios.core.io.MessageRegistry;
  */
 public final class ServerMessageFactory
 {
-    /**
-     * Generate a LogoutResponse.
+	private ServerMessageFactory() {}
+
+	/**
+	 * Generate a LogoutResponse.
      *
      * @param success Whether the logout attempt was successful.
      *
