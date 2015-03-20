@@ -11,7 +11,11 @@ import com.jenjinstudios.world.math.Vector2D;
 import com.jenjinstudios.world.server.Player;
 import com.jenjinstudios.world.server.WorldClientHandler;
 import com.jenjinstudios.world.server.WorldServer;
+import org.mockito.Matchers;
 import org.mockito.Mockito;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.testng.PowerMockTestCase;
 import org.testng.annotations.Test;
 
 import java.util.HashMap;
@@ -23,7 +27,8 @@ import static org.mockito.Mockito.when;
 /**
  * @author Caleb Brinkman
  */
-public class ExecutableWorldLoginRequestTest
+@PrepareForTest(WorldServerMessageFactory.class)
+public class ExecutableWorldLoginRequestTest extends PowerMockTestCase
 {
 	@Test
 	@SuppressWarnings("unchecked")
@@ -33,27 +38,29 @@ public class ExecutableWorldLoginRequestTest
 		playerData.put("yCoord", "0.0");
 		playerData.put("zoneID", "0");
 		playerData.put("username", "Foo");
+
+		PowerMockito.mockStatic(WorldServerMessageFactory.class);
 		Message message = mock(Message.class);
-		WorldServerMessageFactory messageFactory = mock(WorldServerMessageFactory.class);
 		World world = mock(World.class);
-		User user = Mockito.mock(BasicUser.class);
-		Player player = Mockito.mock(Player.class);
-		Authenticator<Player> authenticator = Mockito.mock(Authenticator.class);
-		WorldServer server = Mockito.mock(WorldServer.class);
+		User user = mock(BasicUser.class);
+		Player player = mock(Player.class);
+		Authenticator<Player> authenticator = mock(Authenticator.class);
+		WorldServer server = mock(WorldServer.class);
 		WorldObjectList worldObjectMap = mock(WorldObjectList.class);
-		MessageIO messageIO = Mockito.mock(MessageIO.class);
+		MessageIO messageIO = mock(MessageIO.class);
 		WorldClientHandler wch = new WorldClientHandler(server, messageIO);
+
 		when(world.getWorldObjects()).thenReturn(worldObjectMap);
-		Mockito.when(user.isLoggedIn()).thenReturn(true);
-		Mockito.when(authenticator.logInUser(Mockito.anyString(), Mockito.anyString())).thenReturn(player);
-		Mockito.when(server.getAuthenticator()).thenReturn(authenticator);
-		Mockito.when(server.getWorld()).thenReturn(world);
-		Mockito.when(WorldServerMessageFactory.generateWorldLoginResponse()).thenReturn(message);
-		Mockito.when(player.getVector2D()).thenReturn(Vector2D.ORIGIN);
+		when(user.isLoggedIn()).thenReturn(true);
+		when(authenticator.logInUser(Matchers.anyString(), Matchers.anyString())).thenReturn(player);
+		when(server.getAuthenticator()).thenReturn(authenticator);
+		when(server.getWorld()).thenReturn(world);
+		when(WorldServerMessageFactory.generateWorldLoginResponse()).thenReturn(message);
+		when(player.getVector2D()).thenReturn(Vector2D.ORIGIN);
 		ExecutableWorldLoginRequest exec = new ExecutableWorldLoginRequest(wch, message);
 		exec.runImmediate();
 		exec.runDelayed();
 
-		Mockito.verify(worldObjectMap).add(Mockito.anyObject());
+		Mockito.verify(worldObjectMap).add(Matchers.anyObject());
 	}
 }
