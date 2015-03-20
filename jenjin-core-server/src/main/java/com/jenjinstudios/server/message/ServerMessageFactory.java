@@ -17,8 +17,8 @@ public class ServerMessageFactory
      *
      * @return The LogoutResponse.
      */
-    public Message generateLogoutResponse(boolean success) {
-        Message logoutResponse = MessageRegistry.getInstance().createMessage("LogoutResponse");
+	public static Message generateLogoutResponse(boolean success) {
+		Message logoutResponse = MessageRegistry.getInstance().createMessage("LogoutResponse");
         logoutResponse.setArgument("success", success);
         return logoutResponse;
     }

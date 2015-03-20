@@ -87,8 +87,8 @@ public class ClientHandler extends Connection
      * @param success Whether the attempt was successful.
      */
     public void sendLogoutStatus(boolean success) {
-        Message logoutResponse = getMessageFactory().generateLogoutResponse(success);
-        getMessageIO().queueOutgoingMessage(logoutResponse);
+		Message logoutResponse = ServerMessageFactory.generateLogoutResponse(success);
+		getMessageIO().queueOutgoingMessage(logoutResponse);
     }
 
     /**
