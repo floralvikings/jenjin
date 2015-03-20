@@ -1,0 +1,15 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+
+<suite name="jenjin-core-client" verbose="1">
+    <test name="message">
+        <packages>
+            <package name="com.jenjinstudios.client.message" />
+        </packages>
+    </test>
+
+    <test name="net">
+        <packages>
+            <package name="com.jenjinstudios.client.net" />
+        </packages>
+    </test>
+</suite>
