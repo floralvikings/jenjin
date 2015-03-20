@@ -1,0 +1,21 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+
+<suite name="jenjin-core" verbose="1">
+    <test name="core">
+        <packages>
+            <package name="com.jenjinstudios.core" />
+        </packages>
+    </test>
+
+    <test name="io">
+        <packages>
+            <package name="com.jenjinstudios.core.io" />
+        </packages>
+    </test>
+
+    <test name="message">
+        <packages>
+            <package name="com.jenjinstudios.core.message" />
+        </packages>
+    </test>
+</suite>
