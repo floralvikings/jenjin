@@ -1,13 +1,11 @@
 package com.jenjinstudios.server.authentication;
 
-import com.jenjinstudios.server.database.DbException;
-
 /**
  * Thrown when an exception occurs during a login process.
  *
  * @author Caleb Brinkman
  */
-public class AuthenticationException extends DbException
+public class AuthenticationException extends Exception
 {
 	/**
 	 * Construct a LoginException with the given message.
