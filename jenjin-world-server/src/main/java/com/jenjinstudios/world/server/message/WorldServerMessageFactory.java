@@ -51,7 +51,7 @@ public class WorldServerMessageFactory
 		return messages;
 	}
 
-	public Message generateForcedStateMessage(MoveState forcedState) {
+	public static Message generateForcedStateMessage(MoveState forcedState) {
 		Message forcedStateMessage = MessageRegistry.getInstance().createMessage("ForceStateMessage");
 		forcedStateMessage.setArgument("relativeAngle", forcedState.angle.getRelativeAngle());
 		forcedStateMessage.setArgument("absoluteAngle", forcedState.angle.getAbsoluteAngle());

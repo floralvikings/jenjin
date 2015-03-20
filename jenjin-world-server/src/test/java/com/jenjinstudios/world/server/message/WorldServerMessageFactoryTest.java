@@ -84,7 +84,7 @@ public class WorldServerMessageFactoryTest
 	@Test
 	public void testGenerateForcedStateMessage() {
 		MoveState forcedState = new MoveState(new Angle(), Vector2D.ORIGIN, 0);
-		Message message = worldServerMessageFactory.generateForcedStateMessage(forcedState);
+		Message message = WorldServerMessageFactory.generateForcedStateMessage(forcedState);
 		assertEquals(message.name, "ForceStateMessage");
 		assertEquals(message.getArgument("relativeAngle"), forcedState.angle.getRelativeAngle());
 		assertEquals(message.getArgument("absoluteAngle"), forcedState.angle.getAbsoluteAngle());

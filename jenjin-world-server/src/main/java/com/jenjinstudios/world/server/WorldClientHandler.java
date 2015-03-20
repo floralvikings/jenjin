@@ -95,6 +95,6 @@ public class WorldClientHandler extends ClientHandler
 	private void queueForcesStateMessage() {
 		MoveState forcedState = getUser().getForcedState();
 		if (forcedState != null)
-			getMessageIO().queueOutgoingMessage(getMessageFactory().generateForcedStateMessage(forcedState));
+			getMessageIO().queueOutgoingMessage(WorldServerMessageFactory.generateForcedStateMessage(forcedState));
 	}
 }
