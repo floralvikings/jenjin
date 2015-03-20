@@ -3,8 +3,8 @@ package com.jenjinstudios.server.net;
 import com.jenjinstudios.core.Connection;
 import com.jenjinstudios.core.MessageIO;
 import com.jenjinstudios.core.io.Message;
+import com.jenjinstudios.server.authentication.AuthenticationException;
 import com.jenjinstudios.server.authentication.User;
-import com.jenjinstudios.server.database.DbException;
 import com.jenjinstudios.server.message.ServerMessageFactory;
 
 import java.util.logging.Level;
@@ -64,7 +64,7 @@ public class ClientHandler extends Connection
             try
             {
                 server.getAuthenticator().logOutUser(user.getUsername());
-			} catch (DbException e)
+			} catch (AuthenticationException e)
 			{
                 LOGGER.log(Level.WARNING, "Unable to perform emergency logout.", e);
             }
