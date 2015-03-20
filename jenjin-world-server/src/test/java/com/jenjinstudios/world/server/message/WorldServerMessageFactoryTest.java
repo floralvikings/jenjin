@@ -70,7 +70,7 @@ public class WorldServerMessageFactoryTest
 		MoveState m = new MoveState(new Angle(), Vector2D.ORIGIN, 0);
 		when(stack.getStateChanges()).thenReturn(Arrays.asList(m));
 		when(actor.getEventStack(StateChangeStack.STACK_NAME)).thenReturn(stack);
-		List<Message> messages = worldServerMessageFactory.generateChangeStateMessages(actor);
+		List<Message> messages = WorldServerMessageFactory.generateChangeStateMessages(actor);
 
 		Message newState = messages.get(0);
 		assertEquals(newState.getArgument("id"), actor.getId());

@@ -30,7 +30,7 @@ public class WorldServerMessageFactory
 		return newlyVisibleMessage;
 	}
 
-	public List<Message> generateChangeStateMessages(Actor changedActor) {
+	public static List<Message> generateChangeStateMessages(Actor changedActor) {
 		List<Message> messages = new LinkedList<>();
 		EventStack eventStack = changedActor.getEventStack(StateChangeStack.STACK_NAME);
 		if (eventStack != null && eventStack instanceof StateChangeStack)

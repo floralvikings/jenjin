@@ -88,7 +88,7 @@ public class WorldClientHandler extends ClientHandler
 	}
 
 	private void queueActorStateChangeMessages(Actor object) {
-		List<Message> newState = getMessageFactory().generateChangeStateMessages(object);
+		List<Message> newState = WorldServerMessageFactory.generateChangeStateMessages(object);
 		newState.forEach(getMessageIO()::queueOutgoingMessage);
 	}
 
