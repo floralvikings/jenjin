@@ -2,8 +2,8 @@ package com.jenjinstudios.world.server;
 
 import com.jenjinstudios.server.authentication.Authenticator;
 import com.jenjinstudios.server.net.ClientHandler;
+import com.jenjinstudios.server.net.Server;
 import com.jenjinstudios.server.net.ServerInit;
-import com.jenjinstudios.server.net.TaskedServer;
 import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.io.WorldDocumentReader;
 import com.jenjinstudios.world.io.WorldDocumentWriter;
@@ -17,7 +17,7 @@ import java.io.IOException;
  * The WorldServer class is responsible for updating a game world.
  * @author Caleb Brinkman
  */
-public class WorldServer extends TaskedServer
+public class WorldServer extends Server
 {
 	private final World world;
 	private final byte[] worldFileChecksum;
