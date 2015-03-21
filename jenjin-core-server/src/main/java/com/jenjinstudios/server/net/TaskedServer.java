@@ -10,10 +10,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-/**
- * A server which executes runnable tasks.
- * @author Caleb Brinkman
- */
 public class TaskedServer extends Server
 {
 	private final Authenticator authenticator;
@@ -22,12 +18,6 @@ public class TaskedServer extends Server
 	private ScheduledExecutorService loopTimer;
 	private ServerUpdateTask serverUpdateTask;
 
-	/**
-	 * Construct a new Server without a SQLHandler.
-	 * @throws java.io.IOException If there is an IO Error initializing the server.
-	 * @throws NoSuchMethodException If there is no appropriate constructor for the specified ClientHandler
-	 * constructor.
-	 */
 	public TaskedServer(ServerInit initInfo, Authenticator authenticator) throws IOException,
 		  NoSuchMethodException {
 		super(initInfo);
@@ -36,25 +26,12 @@ public class TaskedServer extends Server
 		this.authenticator = authenticator;
 	}
 
-	/**
-	 * Get the start time, in nanoseconds, of the current update cycle.
-	 * @return The cycle start time.
-	 */
 	public long getCycleStartTime() {
 		return (serverUpdateTask != null) ? serverUpdateTask.getCycleStartTime() : -1;
 	}
 
-	/**
-	 * The SQLHandler used by this Server.
-	 *
-	 * @return The SQLHandler used by this Server.
-	 */
 	public Authenticator getAuthenticator() { return authenticator; }
 
-	/**
-	 * Add a task to be repeated every update.
-	 * @param r The {@code Runnable} containing the task to be repeated.
-	 */
 	protected void addRepeatedTask(Runnable r) {
 		synchronized (repeatedTasks)
 		{
