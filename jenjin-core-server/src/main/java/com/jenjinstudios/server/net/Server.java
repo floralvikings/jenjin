@@ -12,41 +12,20 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- * The base Server class for implementation of the JGSA.  It contains extensible execution functionality designed to be
- * used by Executable Messages from ClientHandlers.
- *
- * @author Caleb Brinkman
- */
 public class Server extends Thread
 {
-    /** The logger used by this class. */
     public static final Logger LOGGER = Logger.getLogger(Server.class.getName());
-    /** The updates per second. */
     protected final int UPS;
-    /** The period of the update in milliseconds. */
     protected final int PERIOD;
 	protected final Authenticator authenticator;
 	protected final List<Runnable> repeatedTasks;
 	protected final Deque<Runnable> syncedTasks;
-	/** The list of {@code ClientListener}s working for this server. */
 	private final ClientListener clientListener;
-    /** The list of {@code ClientHandler}s working for this server. */
     private final Map<Integer, ClientHandler> clientHandlers;
     private final KeyPair rsaKeyPair;
 	private ScheduledExecutorService loopTimer;
 	private ServerUpdateTask serverUpdateTask;
 
-	/**
-	 * Construct a new Server without a SQLHandler.
-     *
-     * @param initInfo The initialization object to use when constructing the server.
-     *
-     * @throws java.io.IOException If there is an IO Error initializing the server.
-     * @throws NoSuchMethodException If there is no appropriate constructor for the specified ClientHandler
-     * constructor.
-     */
-    @SuppressWarnings("unchecked")
 	protected Server(ServerInit initInfo, Authenticator authenticator) throws IOException, NoSuchMethodException {
 		super("Server");
         LOGGER.log(Level.FINE, "Initializing Server.");
@@ -60,9 +39,6 @@ public class Server extends Thread
 		syncedTasks = new LinkedList<>();
 	}
 
-    /**
-     * Add new clients that have connected to the client listeners.
-     */
     public void checkListenerForClients() {
 		Iterable<ClientHandler> nc = clientListener.getNewClients();
 		for (ClientHandler h : nc)
@@ -111,9 +87,6 @@ public class Server extends Thread
         h.setRSAKeyPair(rsaKeyPair);
     }
 
-    /**
-     * Run all messages currently waiting in ClientHandler queues.
-     */
     public void runClientHandlerQueuedMessages() {
         synchronized (clientHandlers)
         {
@@ -124,7 +97,6 @@ public class Server extends Thread
         }
     }
 
-    /** Broadcast all outgoing messages to clients. */
     public void broadcast() {
         synchronized (clientHandlers)
         {
@@ -145,7 +117,6 @@ public class Server extends Thread
 		}
 	}
 
-    /** Update all clients before they sendAllMessages. */
     public void update() {
         synchronized (clientHandlers)
         {
@@ -163,7 +134,6 @@ public class Server extends Thread
 
 	public Authenticator getAuthenticator() { return authenticator; }
 
-	/** Run the server. */
 	@Override
     public void run() {
         clientListener.startListening(this);
@@ -174,11 +144,6 @@ public class Server extends Thread
 		loopTimer.scheduleAtFixedRate(serverUpdateTask, 0, PERIOD, TimeUnit.MILLISECONDS);
 	}
 
-    /**
-     * Shutdown the server, forcing all client links to close.
-     *
-     * @throws IOException if there is an error shutting down a client.
-     */
 	public void shutdown() throws IOException {
 		synchronized (clientHandlers)
         {
@@ -198,11 +163,6 @@ public class Server extends Thread
 			loopTimer.shutdown();
 	}
 
-    /**
-     * Schedule a client to be removed during the next update.
-     *
-     * @param handler The client handler to be removed.
-     */
     protected void removeClient(ClientHandler handler) {
         synchronized (clientHandlers)
         {
