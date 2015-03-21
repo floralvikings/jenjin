@@ -85,8 +85,6 @@ public class TaskedServer extends Server
 			loopTimer.shutdown();
 	}
 
-	public double getAverageUPS() { return serverUpdateTask.getAverageUPS(); }
-
 	public int getUps() { return UPS; }
 
 	public void runRepeatedTasks() {
