@@ -21,7 +21,7 @@ public class ClientHandlerTest
 
 	@Test
 	public void testSendLogoutStatus() throws Exception {
-		AuthServer server = mock(AuthServer.class);
+		TaskedServer server = mock(TaskedServer.class);
 		MessageInputStream mis = mock(MessageInputStream.class);
 		MessageOutputStream mos = mock(MessageOutputStream.class);
 		MessageIO messageIO = new MessageIO(mis, mos);
@@ -41,7 +41,7 @@ public class ClientHandlerTest
 
 	@Test
 	public void testSetID() throws Exception {
-		AuthServer server = mock(AuthServer.class);
+		TaskedServer server = mock(TaskedServer.class);
 		MessageInputStream mis = mock(MessageInputStream.class);
 		MessageOutputStream mos = mock(MessageOutputStream.class);
 		MessageIO messageIO = new MessageIO(mis, mos);
@@ -57,7 +57,7 @@ public class ClientHandlerTest
 	public void testShutDown() throws Exception {
 		Authenticator<BasicUser> authenticator = mock(Authenticator.class);
 		BasicUser user = mock(BasicUser.class);
-		AuthServer server = mock(AuthServer.class);
+		TaskedServer server = mock(TaskedServer.class);
 		MessageInputStream mis = mock(MessageInputStream.class);
 		MessageOutputStream mos = mock(MessageOutputStream.class);
 		MessageIO messageIO = new MessageIO(mis, mos);
@@ -73,7 +73,7 @@ public class ClientHandlerTest
 
 	@Test
 	public void testLoggedInTime() {
-		AuthServer server = mock(AuthServer.class);
+		TaskedServer server = mock(TaskedServer.class);
 		MessageInputStream mis = mock(MessageInputStream.class);
 		MessageOutputStream mos = mock(MessageOutputStream.class);
 		MessageIO messageIO = new MessageIO(mis, mos);
