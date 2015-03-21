@@ -6,8 +6,8 @@ import com.jenjinstudios.core.io.MessageRegistry;
 import com.jenjinstudios.server.authentication.AuthenticationException;
 import com.jenjinstudios.server.authentication.Authenticator;
 import com.jenjinstudios.server.authentication.BasicUser;
-import com.jenjinstudios.server.net.AuthServer;
 import com.jenjinstudios.server.net.ClientHandler;
+import com.jenjinstudios.server.net.TaskedServer;
 import org.mockito.Mockito;
 import org.testng.annotations.Test;
 
@@ -32,7 +32,7 @@ public class ExecutableLoginRequestTest
 		user.setUsername("bar");
 		user.setLoggedIn(true);
 		ClientHandler clientHandler = mock(ClientHandler.class);
-		AuthServer server = mock(AuthServer.class);
+		TaskedServer server = mock(TaskedServer.class);
 		Authenticator<BasicUser> authenticator = mock(Authenticator.class);
 		MessageIO messageIO = mock(MessageIO.class);
 		when(server.getAuthenticator()).thenReturn(authenticator);
@@ -60,7 +60,7 @@ public class ExecutableLoginRequestTest
 		user.setUsername("bar");
 		user.setLoggedIn(true);
 		ClientHandler clientHandler = mock(ClientHandler.class);
-		AuthServer server = mock(AuthServer.class);
+		TaskedServer server = mock(TaskedServer.class);
 		Authenticator<BasicUser> authenticator = mock(Authenticator.class);
 		MessageIO messageIO = mock(MessageIO.class);
 		when(server.getAuthenticator()).thenReturn(authenticator);
