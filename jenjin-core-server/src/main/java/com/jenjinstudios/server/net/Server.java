@@ -26,6 +26,7 @@ public class Server extends Thread
     protected final int PERIOD;
 	protected final Authenticator authenticator;
 	protected final List<Runnable> repeatedTasks;
+	protected final Deque<Runnable> syncedTasks;
 	/** The list of {@code ClientListener}s working for this server. */
 	private final ClientListener clientListener;
     /** The list of {@code ClientHandler}s working for this server. */
@@ -52,6 +53,7 @@ public class Server extends Thread
         rsaKeyPair = initInfo.getKeyPair() == null ? Connection.generateRSAKeyPair() : initInfo.getKeyPair();
 		this.authenticator = authenticator;
 		repeatedTasks = new LinkedList<>();
+		syncedTasks = new LinkedList<>();
 	}
 
     /**
@@ -71,6 +73,13 @@ public class Server extends Thread
 		synchronized (repeatedTasks)
 		{
 			repeatedTasks.forEach(Runnable::run);
+		}
+	}
+
+	public void runSyncedTasks() {
+		synchronized (syncedTasks)
+		{
+			while (!syncedTasks.isEmpty()) { syncedTasks.remove().run(); }
 		}
 	}
 
