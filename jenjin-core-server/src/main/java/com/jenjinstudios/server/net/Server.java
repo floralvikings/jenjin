@@ -15,11 +15,11 @@ import java.util.logging.Logger;
 public class Server extends Thread
 {
     public static final Logger LOGGER = Logger.getLogger(Server.class.getName());
-    protected final int UPS;
-    protected final int PERIOD;
-	protected final Authenticator authenticator;
-	protected final List<Runnable> repeatedTasks;
-	protected final Deque<Runnable> syncedTasks;
+	private final int UPS;
+	private final int PERIOD;
+	private final Authenticator authenticator;
+	private final List<Runnable> repeatedTasks;
+	private final Deque<Runnable> syncedTasks;
 	private final ClientListener clientListener;
     private final Map<Integer, ClientHandler> clientHandlers;
     private final KeyPair rsaKeyPair;
