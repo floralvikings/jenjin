@@ -52,7 +52,9 @@ public class ExecutableWorldLoginRequest extends WorldExecutableMessage
 		{
 			handleLoginFailure();
 		}
-		getClientHandler().setLoggedInTime(getClientHandler().getServer().getCycleStartTime());
+		long result;
+		getClientHandler().getServer().serverUpdateTask.getCycleStartTime();
+		getClientHandler().setLoggedInTime(result);
 	}
 
 	private void tryLogInUser() throws AuthenticationException {

@@ -151,5 +151,5 @@ public class ServerUpdateTask implements Runnable
 
 	double getAverageUPS() { return averageUPS; }
 
-	long getCycleStartTime() { return cycleStart; }
+	public long getCycleStartTime() { return cycleStart; }
 }

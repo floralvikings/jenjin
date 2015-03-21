@@ -90,7 +90,9 @@ public class WorldServerMessageFactoryTest
 		assertEquals(message.getArgument("absoluteAngle"), forcedState.angle.getAbsoluteAngle());
 		assertEquals(message.getArgument("xCoordinate"), forcedState.position.getXCoordinate());
 		assertEquals(message.getArgument("yCoordinate"), forcedState.position.getYCoordinate());
-		assertEquals(message.getArgument("timeOfForce"), clientHandler.getServer().getCycleStartTime());
+		long result;
+		clientHandler.getServer().serverUpdateTask.getCycleStartTime();
+		assertEquals(message.getArgument("timeOfForce"), result);
 	}
 
 	@Test
