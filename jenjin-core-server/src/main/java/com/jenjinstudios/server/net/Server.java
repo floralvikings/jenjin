@@ -18,7 +18,6 @@ import java.util.logging.Logger;
  *
  * @author Caleb Brinkman
  */
-@SuppressWarnings("SameParameterValue")
 public class Server extends Thread
 {
     /** The logger used by this class. */
