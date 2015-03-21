@@ -31,7 +31,7 @@ public class Server extends Thread
         PERIOD = 1000 / UPS;
         clientListener = new ClientListener(getClass(), initInfo.getHandlerClass(), initInfo.getPort());
         clientHandlers = new TreeMap<>();
-        rsaKeyPair = initInfo.getKeyPair() == null ? Connection.generateRSAKeyPair() : initInfo.getKeyPair();
+		rsaKeyPair = (initInfo.getKeyPair() == null) ? Connection.generateRSAKeyPair() : initInfo.getKeyPair();
 		this.authenticator = authenticator;
 	}
 
