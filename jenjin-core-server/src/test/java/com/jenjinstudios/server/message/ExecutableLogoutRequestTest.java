@@ -5,8 +5,8 @@ import com.jenjinstudios.core.io.MessageRegistry;
 import com.jenjinstudios.server.authentication.Authenticator;
 import com.jenjinstudios.server.authentication.BasicUser;
 import com.jenjinstudios.server.authentication.User;
-import com.jenjinstudios.server.net.AuthServer;
 import com.jenjinstudios.server.net.ClientHandler;
+import com.jenjinstudios.server.net.TaskedServer;
 import org.mockito.Mockito;
 import org.testng.annotations.Test;
 
@@ -27,7 +27,7 @@ public class ExecutableLogoutRequestTest
 		user.setUsername("foo");
 		user.setUsername("bar");
 		ClientHandler clientHandler = mock(ClientHandler.class);
-		AuthServer server = mock(AuthServer.class);
+		TaskedServer server = mock(TaskedServer.class);
 		Authenticator<BasicUser> authenticator = mock(Authenticator.class);
 		when(server.getAuthenticator()).thenReturn(authenticator);
 		when(server.getCycleStartTime()).thenReturn(12345l);
