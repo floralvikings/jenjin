@@ -83,6 +83,8 @@ public class Server extends Thread
 		}
 	}
 
+	public int getUps() { return UPS; }
+
 	private void addClientHandler(ClientHandler h) {
 		int nullIndex = 0;
         synchronized (clientHandlers)

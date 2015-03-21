@@ -46,6 +46,4 @@ public class TaskedServer extends Server
 			loopTimer.shutdown();
 	}
 
-	public int getUps() { return UPS; }
-
 }
