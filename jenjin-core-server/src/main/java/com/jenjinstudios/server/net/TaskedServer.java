@@ -16,15 +16,10 @@ import java.util.concurrent.TimeUnit;
  */
 public class TaskedServer extends Server
 {
-	/** The SQLHandler used by this Server. */
 	protected final Authenticator authenticator;
-	/** Tasks to be repeated in the main loop. */
 	private final List<Runnable> repeatedTasks;
-	/** Synced tasks scheduled by client handlers. */
 	private final Deque<Runnable> syncedTasks;
-	/** The timer that controls the server loop. */
 	private ScheduledExecutorService loopTimer;
-	/** The server loop. */
 	private ServerUpdateTask serverUpdateTask;
 
 	/**
