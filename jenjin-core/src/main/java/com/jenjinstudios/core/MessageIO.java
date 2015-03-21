@@ -1,12 +1,10 @@
 package com.jenjinstudios.core;
 
-import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageInputStream;
 import com.jenjinstudios.core.io.MessageOutputStream;
 
 import java.io.IOException;
 import java.net.InetAddress;
-import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -21,10 +19,9 @@ public class MessageIO
     private final MessageInputStream in;
     private final MessageOutputStream out;
     private final InetAddress address;
-    private final LinkedList<Message> outgoingMessages;
 
-    /**
-     * Construct a new {@code MessageIO} from the given message input and output streams.
+	/**
+	 * Construct a new {@code MessageIO} from the given message input and output streams.
      *
      * @param in The input stream.
      * @param out The output stream.
@@ -42,7 +39,6 @@ public class MessageIO
         this.in = in;
         this.out = out;
         this.address = address;
-        outgoingMessages = new LinkedList<>();
     }
 
     /**
