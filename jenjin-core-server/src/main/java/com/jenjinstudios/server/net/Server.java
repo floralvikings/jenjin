@@ -1,6 +1,7 @@
 package com.jenjinstudios.server.net;
 
 import com.jenjinstudios.core.Connection;
+import com.jenjinstudios.server.authentication.Authenticator;
 
 import java.io.IOException;
 import java.security.KeyPair;
@@ -23,8 +24,9 @@ public class Server extends Thread
     protected final int UPS;
     /** The period of the update in milliseconds. */
     protected final int PERIOD;
-    /** The list of {@code ClientListener}s working for this server. */
-    private final ClientListener clientListener;
+	protected final Authenticator authenticator;
+	/** The list of {@code ClientListener}s working for this server. */
+	private final ClientListener clientListener;
     /** The list of {@code ClientHandler}s working for this server. */
     private final Map<Integer, ClientHandler> clientHandlers;
     private final KeyPair rsaKeyPair;
@@ -39,15 +41,16 @@ public class Server extends Thread
      * constructor.
      */
     @SuppressWarnings("unchecked")
-    protected Server(ServerInit initInfo) throws IOException, NoSuchMethodException {
-        super("Server");
+	protected Server(ServerInit initInfo, Authenticator authenticator) throws IOException, NoSuchMethodException {
+		super("Server");
         LOGGER.log(Level.FINE, "Initializing Server.");
         UPS = initInfo.getUps();
         PERIOD = 1000 / UPS;
         clientListener = new ClientListener(getClass(), initInfo.getHandlerClass(), initInfo.getPort());
         clientHandlers = new TreeMap<>();
         rsaKeyPair = initInfo.getKeyPair() == null ? Connection.generateRSAKeyPair() : initInfo.getKeyPair();
-    }
+		this.authenticator = authenticator;
+	}
 
     /**
      * Add new clients that have connected to the client listeners.
@@ -93,16 +96,16 @@ public class Server extends Thread
 			Collection<ClientHandler> toShutdown = new LinkedList<>();
 			clientHandlers.values().stream().forEach(c -> {
 				if (c != null)
-                {
-                    try
-                    {
-                        c.getMessageIO().writeAllMessages();
+				{
+					try
+					{
+						c.getMessageIO().writeAllMessages();
 					} catch (IOException ignored)
 					{
 						toShutdown.add(c);
 					}
-                }
-            });
+				}
+			});
 			toShutdown.forEach(ClientHandler::shutdown);
 		}
 	}
@@ -123,8 +126,10 @@ public class Server extends Thread
         }
     }
 
-    /** Run the server. */
-    @Override
+	public Authenticator getAuthenticator() { return authenticator; }
+
+	/** Run the server. */
+	@Override
     public void run() {
         clientListener.startListening(this);
     }

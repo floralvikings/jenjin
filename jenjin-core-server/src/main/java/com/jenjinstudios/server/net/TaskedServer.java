@@ -12,7 +12,6 @@ import java.util.concurrent.TimeUnit;
 
 public class TaskedServer extends Server
 {
-	private final Authenticator authenticator;
 	private final List<Runnable> repeatedTasks;
 	private final Deque<Runnable> syncedTasks;
 	private ScheduledExecutorService loopTimer;
@@ -20,17 +19,14 @@ public class TaskedServer extends Server
 
 	public TaskedServer(ServerInit initInfo, Authenticator authenticator) throws IOException,
 		  NoSuchMethodException {
-		super(initInfo);
+		super(initInfo, authenticator);
 		repeatedTasks = new LinkedList<>();
 		syncedTasks = new LinkedList<>();
-		this.authenticator = authenticator;
 	}
 
 	public long getCycleStartTime() {
 		return (serverUpdateTask != null) ? serverUpdateTask.getCycleStartTime() : -1;
 	}
-
-	public Authenticator getAuthenticator() { return authenticator; }
 
 	protected void addRepeatedTask(Runnable r) {
 		synchronized (repeatedTasks)
