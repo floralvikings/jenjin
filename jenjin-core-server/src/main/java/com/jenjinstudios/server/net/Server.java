@@ -18,8 +18,6 @@ public class Server extends Thread
 	private final int UPS;
 	private final int PERIOD;
 	private final Authenticator authenticator;
-	private final List<Runnable> repeatedTasks;
-	private final Deque<Runnable> syncedTasks;
 	private final ClientListener clientListener;
     private final Map<Integer, ClientHandler> clientHandlers;
     private final KeyPair rsaKeyPair;
@@ -35,9 +33,9 @@ public class Server extends Thread
         clientHandlers = new TreeMap<>();
         rsaKeyPair = initInfo.getKeyPair() == null ? Connection.generateRSAKeyPair() : initInfo.getKeyPair();
 		this.authenticator = authenticator;
-		repeatedTasks = new LinkedList<>();
-		syncedTasks = new LinkedList<>();
 	}
+
+	public ServerUpdateTask getServerUpdateTask() { return serverUpdateTask; }
 
     public void checkListenerForClients() {
 		Iterable<ClientHandler> nc = clientListener.getNewClients();
@@ -49,31 +47,10 @@ public class Server extends Thread
 
     }
 
-	public void runRepeatedTasks() {
-		synchronized (repeatedTasks)
-		{
-			repeatedTasks.forEach(Runnable::run);
-		}
-	}
-
-	public void runSyncedTasks() {
-		synchronized (syncedTasks)
-		{
-			while (!syncedTasks.isEmpty()) { syncedTasks.remove().run(); }
-		}
-	}
-
 	public int getUps() { return UPS; }
 
 	public long getCycleStartTime() {
 		return (serverUpdateTask != null) ? serverUpdateTask.getCycleStartTime() : -1;
-	}
-
-	protected void addRepeatedTask(Runnable r) {
-		synchronized (repeatedTasks)
-		{
-			repeatedTasks.add(r);
-		}
 	}
 
 	private void addClientHandler(ClientHandler h) {

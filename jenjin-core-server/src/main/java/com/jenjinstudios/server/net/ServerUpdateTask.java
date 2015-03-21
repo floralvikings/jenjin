@@ -1,5 +1,8 @@
 package com.jenjinstudios.server.net;
 
+import java.util.Deque;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -7,10 +10,12 @@ import java.util.logging.Logger;
  * Implements the update loop in the form of a TimerTask.
  * @author Caleb Brinkman
  */
-class ServerUpdateTask implements Runnable
+public class ServerUpdateTask implements Runnable
 {
 	/** The logger for this class. */
 	private static final Logger LOGGER = Logger.getLogger(ServerUpdateTask.class.getName());
+	private final List<Runnable> repeatedTasks;
+	private final Deque<Runnable> syncedTasks;
 	public static final double MILLIS_IN_SECOND = 1000d;
 	/** The time in nanoseconds of the last 50 update cycles. */
 	private final double[] lastCycles;
@@ -32,6 +37,8 @@ class ServerUpdateTask implements Runnable
 		this.server = server;
 		lastCycles = new double[server.getUps() * 10];
 		cycleNum = 0;
+		repeatedTasks = new LinkedList<>();
+		syncedTasks = new LinkedList<>();
 	}
 
 	@Override
@@ -89,7 +96,10 @@ class ServerUpdateTask implements Runnable
 	private void runRepeatedTasks() {
 		try
 		{
-			server.runRepeatedTasks();
+			synchronized (repeatedTasks)
+			{
+				repeatedTasks.forEach(Runnable::run);
+			}
 		} catch (Exception ex)
 		{
 			LOGGER.log(Level.WARNING, "Exception when running repeated tasks.", ex);
@@ -100,7 +110,10 @@ class ServerUpdateTask implements Runnable
 	private void runSynchronizedTasks() {
 		try
 		{
-			server.runSyncedTasks();
+			synchronized (syncedTasks)
+			{
+				while (!syncedTasks.isEmpty()) { syncedTasks.remove().run(); }
+			}
 		} catch (Exception ex)
 		{
 			LOGGER.log(Level.WARNING, "Exception when running repeated tasks.", ex);
@@ -125,6 +138,13 @@ class ServerUpdateTask implements Runnable
 	private double ceilNumCycles() {
 		return cycleNum < 1 || cycleNum > lastCycles.length ?
 			  lastCycles.length : cycleNum;
+	}
+
+	public void addRepeatedTask(Runnable r) {
+		synchronized (repeatedTasks)
+		{
+			repeatedTasks.add(r);
+		}
 	}
 
 	private int getCycleArrayIndex() { return Math.abs(cycleNum) % lastCycles.length; }

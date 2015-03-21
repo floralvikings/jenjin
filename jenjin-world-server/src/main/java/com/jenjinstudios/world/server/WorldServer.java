@@ -49,7 +49,7 @@ public class WorldServer extends Server
 		}
 		worldFileBytes = reader.getWorldFileBytes();
 		worldFileChecksum = reader.getWorldFileChecksum();
-		addRepeatedTask(world::update);
+		getServerUpdateTask().addRepeatedTask(world::update);
 	}
 
 	public World getWorld() { return world; }
