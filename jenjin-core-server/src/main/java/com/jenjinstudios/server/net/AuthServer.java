@@ -10,8 +10,6 @@ import java.io.IOException;
  */
 public class AuthServer extends TaskedServer
 {
-	/** The SQLHandler used by this Server. */
-	private final Authenticator authenticator;
 
 	/**
 	 * Construct a new Server without a SQLHandler.
@@ -22,13 +20,7 @@ public class AuthServer extends TaskedServer
 	 */
 	public AuthServer(ServerInit initInfo, Authenticator authenticator) throws IOException,
 		  NoSuchMethodException {
-		super(initInfo);
-		this.authenticator = authenticator;
+		super(initInfo, authenticator);
 	}
 
-	/**
-	 * The SQLHandler used by this Server.
-	 * @return The SQLHandler used by this Server.
-	 */
-	public Authenticator getAuthenticator() { return authenticator; }
 }

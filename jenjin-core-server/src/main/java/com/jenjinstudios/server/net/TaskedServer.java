@@ -1,5 +1,7 @@
 package com.jenjinstudios.server.net;
 
+import com.jenjinstudios.server.authentication.Authenticator;
+
 import java.io.IOException;
 import java.util.Deque;
 import java.util.LinkedList;
@@ -14,6 +16,8 @@ import java.util.concurrent.TimeUnit;
  */
 public class TaskedServer extends Server
 {
+	/** The SQLHandler used by this Server. */
+	protected final Authenticator authenticator;
 	/** Tasks to be repeated in the main loop. */
 	private final List<Runnable> repeatedTasks;
 	/** Synced tasks scheduled by client handlers. */
@@ -29,10 +33,12 @@ public class TaskedServer extends Server
 	 * @throws NoSuchMethodException If there is no appropriate constructor for the specified ClientHandler
 	 * constructor.
 	 */
-	protected TaskedServer(ServerInit initInfo) throws IOException, NoSuchMethodException {
+	protected TaskedServer(ServerInit initInfo, Authenticator authenticator) throws IOException,
+		  NoSuchMethodException {
 		super(initInfo);
 		repeatedTasks = new LinkedList<>();
 		syncedTasks = new LinkedList<>();
+		this.authenticator = authenticator;
 	}
 
 	/**
@@ -42,6 +48,13 @@ public class TaskedServer extends Server
 	public long getCycleStartTime() {
 		return serverUpdateTask != null ? serverUpdateTask.getCycleStartTime() : -1;
 	}
+
+	/**
+	 * The SQLHandler used by this Server.
+	 *
+	 * @return The SQLHandler used by this Server.
+	 */
+	public Authenticator getAuthenticator() { return authenticator; }
 
 	/**
 	 * Add a task to be repeated every update.
