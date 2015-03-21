@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class TaskedServer extends Server
 {
-	protected final Authenticator authenticator;
+	private final Authenticator authenticator;
 	private final List<Runnable> repeatedTasks;
 	private final Deque<Runnable> syncedTasks;
 	private ScheduledExecutorService loopTimer;
