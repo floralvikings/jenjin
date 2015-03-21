@@ -25,6 +25,7 @@ public class Server extends Thread
     /** The period of the update in milliseconds. */
     protected final int PERIOD;
 	protected final Authenticator authenticator;
+	protected final List<Runnable> repeatedTasks;
 	/** The list of {@code ClientListener}s working for this server. */
 	private final ClientListener clientListener;
     /** The list of {@code ClientHandler}s working for this server. */
@@ -50,6 +51,7 @@ public class Server extends Thread
         clientHandlers = new TreeMap<>();
         rsaKeyPair = initInfo.getKeyPair() == null ? Connection.generateRSAKeyPair() : initInfo.getKeyPair();
 		this.authenticator = authenticator;
+		repeatedTasks = new LinkedList<>();
 	}
 
     /**
@@ -65,8 +67,15 @@ public class Server extends Thread
 
     }
 
-    private void addClientHandler(ClientHandler h) {
-        int nullIndex = 0;
+	public void runRepeatedTasks() {
+		synchronized (repeatedTasks)
+		{
+			repeatedTasks.forEach(Runnable::run);
+		}
+	}
+
+	private void addClientHandler(ClientHandler h) {
+		int nullIndex = 0;
         synchronized (clientHandlers)
         {
             while (clientHandlers.containsKey(nullIndex)) nullIndex++;

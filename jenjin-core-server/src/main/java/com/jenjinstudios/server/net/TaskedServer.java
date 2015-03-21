@@ -5,14 +5,12 @@ import com.jenjinstudios.server.authentication.Authenticator;
 import java.io.IOException;
 import java.util.Deque;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class TaskedServer extends Server
 {
-	private final List<Runnable> repeatedTasks;
 	private final Deque<Runnable> syncedTasks;
 	private ScheduledExecutorService loopTimer;
 	private ServerUpdateTask serverUpdateTask;
@@ -20,7 +18,6 @@ public class TaskedServer extends Server
 	public TaskedServer(ServerInit initInfo, Authenticator authenticator) throws IOException,
 		  NoSuchMethodException {
 		super(initInfo, authenticator);
-		repeatedTasks = new LinkedList<>();
 		syncedTasks = new LinkedList<>();
 	}
 
@@ -54,13 +51,6 @@ public class TaskedServer extends Server
 	}
 
 	public int getUps() { return UPS; }
-
-	public void runRepeatedTasks() {
-		synchronized (repeatedTasks)
-		{
-			repeatedTasks.forEach(Runnable::run);
-		}
-	}
 
 	public void runSyncedTasks() {
 		synchronized (syncedTasks)
