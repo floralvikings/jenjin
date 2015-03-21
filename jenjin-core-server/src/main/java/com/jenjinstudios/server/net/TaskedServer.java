@@ -90,7 +90,7 @@ public class TaskedServer extends Server
 	public void runRepeatedTasks() {
 		synchronized (repeatedTasks)
 		{
-			for (Runnable r : repeatedTasks) r.run();
+			repeatedTasks.forEach(Runnable::run);
 		}
 	}
 
