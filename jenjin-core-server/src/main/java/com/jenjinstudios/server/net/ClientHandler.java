@@ -19,7 +19,7 @@ public class ClientHandler extends Connection
 {
     private static final Logger LOGGER = Logger.getLogger(ClientHandler.class.getName());
     /** The server. */
-    private final AuthServer server;
+	private final TaskedServer server;
 	/** The id of the client handler. */
 	private int handlerId = -1;
     /** The time at which this client was successfully logged in. */
@@ -33,8 +33,8 @@ public class ClientHandler extends Connection
      * @param s The server for which this handler works.
      * @param messageIO The MessageIO used to send and receive messages.
      */
-    public ClientHandler(AuthServer s, MessageIO messageIO) {
-        super(messageIO);
+	public ClientHandler(TaskedServer s, MessageIO messageIO) {
+		super(messageIO);
         setName("ClientHandler with unset ID");
         server = s;
     }
@@ -73,7 +73,7 @@ public class ClientHandler extends Connection
      *
      * @return The server for which this client handler works.
      */
-    public AuthServer getServer() { return server; }
+	public TaskedServer getServer() { return server; }
 
     /**
      * Queue a message indicating the success or failure of a logout attempt.
