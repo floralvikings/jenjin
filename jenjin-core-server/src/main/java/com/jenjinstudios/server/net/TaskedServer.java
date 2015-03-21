@@ -33,7 +33,7 @@ public class TaskedServer extends Server
 	 * @throws NoSuchMethodException If there is no appropriate constructor for the specified ClientHandler
 	 * constructor.
 	 */
-	protected TaskedServer(ServerInit initInfo, Authenticator authenticator) throws IOException,
+	public TaskedServer(ServerInit initInfo, Authenticator authenticator) throws IOException,
 		  NoSuchMethodException {
 		super(initInfo);
 		repeatedTasks = new LinkedList<>();
