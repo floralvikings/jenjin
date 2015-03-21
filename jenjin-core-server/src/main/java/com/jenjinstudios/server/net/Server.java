@@ -14,7 +14,7 @@ import java.util.logging.Logger;
 
 public class Server extends Thread
 {
-    public static final Logger LOGGER = Logger.getLogger(Server.class.getName());
+	private static final Logger LOGGER = Logger.getLogger(Server.class.getName());
 	private final int UPS;
 	private final int PERIOD;
 	private final Authenticator authenticator;
