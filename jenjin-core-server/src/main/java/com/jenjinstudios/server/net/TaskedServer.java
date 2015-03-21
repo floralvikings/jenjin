@@ -46,7 +46,7 @@ public class TaskedServer extends Server
 	 * @return The cycle start time.
 	 */
 	public long getCycleStartTime() {
-		return serverUpdateTask != null ? serverUpdateTask.getCycleStartTime() : -1;
+		return (serverUpdateTask != null) ? serverUpdateTask.getCycleStartTime() : -1;
 	}
 
 	/**
