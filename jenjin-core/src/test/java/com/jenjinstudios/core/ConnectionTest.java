@@ -9,7 +9,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * Test the {@code Connection} class.
@@ -68,7 +69,7 @@ public class ConnectionTest
 	 *
 	 * @throws Exception If there's an exception.
 	 */
-	@Test(expectedExceptions = MessageQueueException.class)
+	@Test
 	public void testShutDown() throws Exception {
 		DataInputStreamMock dataInputStreamMock = new DataInputStreamMock();
 		InputStream in = dataInputStreamMock.getIn();
@@ -81,17 +82,7 @@ public class ConnectionTest
 		Connection connection = new Connection(messageIO);
 		connection.shutdown();
 
-        Message msg = MESSAGE_REGISTRY.createMessage("InvalidMessage");
-        msg.setArgument("messageName", "FooBar");
-        msg.setArgument("messageID", (short) INVALID_MESSAGE_ID);
-        connection.getMessageIO().queueOutgoingMessage(msg);
-		try
-		{
-			connection.getMessageIO().writeAllMessages();
-		} catch (IOException e)
-		{
-			connection.shutdown();
-		}
+		Assert.assertTrue(connection.getMessageIO().getOut().isClosed(), "MessageOutputStream should be closed");
 	}
 
 	/**
