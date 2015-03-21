@@ -11,7 +11,7 @@ import java.io.IOException;
 public class AuthServer extends TaskedServer
 {
 	/** The SQLHandler used by this Server. */
-	private Authenticator authenticator;
+	private final Authenticator authenticator;
 
 	/**
 	 * Construct a new Server without a SQLHandler.
