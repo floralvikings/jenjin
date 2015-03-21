@@ -73,10 +73,6 @@ public class MessageIO
      * @param message The {@code Message} to write.
      */
     public void queueOutgoingMessage(Message message) {
-        if (out.isClosed())
-        {
-            throw new MessageQueueException(message);
-        }
         synchronized (outgoingMessages)
         {
             outgoingMessages.add(message);
