@@ -1,6 +1,7 @@
 package com.jenjinstudios.world.server.message;
 
 import com.jenjinstudios.core.io.Message;
+import com.jenjinstudios.server.net.ServerUpdateTask;
 import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.WorldObject;
 import com.jenjinstudios.world.actor.StateChangeStack;
@@ -33,6 +34,9 @@ public class WorldServerMessageFactoryTest
 	@BeforeMethod
 	public void setUp() {
 		WorldServer worldServer = mock(WorldServer.class);
+		ServerUpdateTask serverUpdateTask = mock(ServerUpdateTask.class);
+		when(worldServer.getServerUpdateTask()).thenReturn(serverUpdateTask);
+		when(serverUpdateTask.getCycleStartTime()).thenReturn(0L);
 		clientHandler = mock(WorldClientHandler.class);
 		when(clientHandler.getServer()).thenReturn(worldServer);
 		worldServerMessageFactory = new WorldServerMessageFactory();
@@ -90,8 +94,7 @@ public class WorldServerMessageFactoryTest
 		assertEquals(message.getArgument("absoluteAngle"), forcedState.angle.getAbsoluteAngle());
 		assertEquals(message.getArgument("xCoordinate"), forcedState.position.getXCoordinate());
 		assertEquals(message.getArgument("yCoordinate"), forcedState.position.getYCoordinate());
-		long result;
-		clientHandler.getServer().serverUpdateTask.getCycleStartTime();
+		long result = clientHandler.getServer().getServerUpdateTask().getCycleStartTime();
 		assertEquals(message.getArgument("timeOfForce"), result);
 	}
 

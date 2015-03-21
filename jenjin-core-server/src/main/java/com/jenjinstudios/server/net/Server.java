@@ -22,7 +22,7 @@ public class Server extends Thread
     private final Map<Integer, ClientHandler> clientHandlers;
     private final KeyPair rsaKeyPair;
 	private ScheduledExecutorService loopTimer;
-	private ServerUpdateTask serverUpdateTask;
+	private ServerUpdateTask serverUpdateTask = new ServerUpdateTask(this);
 
 	protected Server(ServerInit initInfo, Authenticator authenticator) throws IOException, NoSuchMethodException {
 		super("Server");
@@ -48,10 +48,6 @@ public class Server extends Thread
     }
 
 	public int getUps() { return UPS; }
-
-	public long getCycleStartTime() {
-		return (serverUpdateTask != null) ? serverUpdateTask.getCycleStartTime() : -1;
-	}
 
 	private void addClientHandler(ClientHandler h) {
 		int nullIndex = 0;

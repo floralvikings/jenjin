@@ -46,7 +46,8 @@ public class ExecutableLoginRequest extends ServerExecutableMessage
 			User user = authenticator.logInUser(username, password);
 			if (user != null)
 			{
-				long loggedInTime = handler.getServer().getCycleStartTime();
+				long loggedInTime = handler.getServer().getServerUpdateTask().getCycleStartTime();
+				;
 				handler.setLoggedInTime(loggedInTime);
 				queueLoginSuccessResponse(loggedInTime);
 				handler.setUser(user);

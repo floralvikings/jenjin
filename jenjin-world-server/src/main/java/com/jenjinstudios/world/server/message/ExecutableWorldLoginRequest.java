@@ -52,8 +52,7 @@ public class ExecutableWorldLoginRequest extends WorldExecutableMessage
 		{
 			handleLoginFailure();
 		}
-		long result;
-		getClientHandler().getServer().serverUpdateTask.getCycleStartTime();
+		long result = getClientHandler().getServer().getServerUpdateTask().getCycleStartTime();
 		getClientHandler().setLoggedInTime(result);
 	}
 

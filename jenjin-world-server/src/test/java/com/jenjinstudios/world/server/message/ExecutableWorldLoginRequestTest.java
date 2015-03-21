@@ -5,6 +5,7 @@ import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.server.authentication.Authenticator;
 import com.jenjinstudios.server.authentication.BasicUser;
 import com.jenjinstudios.server.authentication.User;
+import com.jenjinstudios.server.net.ServerUpdateTask;
 import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.collections.WorldObjectList;
 import com.jenjinstudios.world.math.Vector2D;
@@ -50,6 +51,9 @@ public class ExecutableWorldLoginRequestTest extends PowerMockTestCase
 		MessageIO messageIO = mock(MessageIO.class);
 		WorldClientHandler wch = new WorldClientHandler(server, messageIO);
 
+		ServerUpdateTask serverUpdateTask = mock(ServerUpdateTask.class);
+		when(server.getServerUpdateTask()).thenReturn(serverUpdateTask);
+		when(serverUpdateTask.getCycleStartTime()).thenReturn(0L);
 		when(world.getWorldObjects()).thenReturn(worldObjectMap);
 		when(user.isLoggedIn()).thenReturn(true);
 		when(authenticator.logInUser(Matchers.anyString(), Matchers.anyString())).thenReturn(player);

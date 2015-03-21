@@ -7,6 +7,7 @@ import com.jenjinstudios.server.authentication.BasicUser;
 import com.jenjinstudios.server.authentication.User;
 import com.jenjinstudios.server.net.ClientHandler;
 import com.jenjinstudios.server.net.Server;
+import com.jenjinstudios.server.net.ServerUpdateTask;
 import org.mockito.Mockito;
 import org.testng.annotations.Test;
 
@@ -30,7 +31,9 @@ public class ExecutableLogoutRequestTest
 		Server server = mock(Server.class);
 		Authenticator<BasicUser> authenticator = mock(Authenticator.class);
 		when(server.getAuthenticator()).thenReturn(authenticator);
-		when(server.getCycleStartTime()).thenReturn(12345l);
+		ServerUpdateTask serverUpdateTask = mock(ServerUpdateTask.class);
+		when(server.getServerUpdateTask()).thenReturn(serverUpdateTask);
+		when(serverUpdateTask.getCycleStartTime()).thenReturn(12345L);
 		when(authenticator.logOutUser(Mockito.<String>any())).thenReturn(new BasicUser());
 		when(clientHandler.getServer()).thenReturn(server);
 		when(clientHandler.getUser()).thenReturn(user);
