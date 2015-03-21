@@ -103,9 +103,4 @@ public class TaskedServer extends Server
 		}
 	}
 
-	/**
-	 * Synced tasks scheduled by client handlers.
-	 * @return The list of synchronized tasks scheduled by ClientHandlers.
-	 */
-	Deque<Runnable> getSyncedTasks() { return syncedTasks; }
 }
