@@ -8,7 +8,6 @@ import com.jenjinstudios.server.authentication.Authenticator;
 import com.jenjinstudios.server.authentication.BasicUser;
 import com.jenjinstudios.server.net.ClientHandler;
 import com.jenjinstudios.server.net.Server;
-import com.jenjinstudios.server.net.TaskedServer;
 import org.mockito.Mockito;
 import org.testng.annotations.Test;
 
@@ -33,7 +32,7 @@ public class ExecutableLoginRequestTest
 		user.setUsername("bar");
 		user.setLoggedIn(true);
 		ClientHandler clientHandler = mock(ClientHandler.class);
-		TaskedServer server = mock(TaskedServer.class);
+		Server server = mock(Server.class);
 		Authenticator<BasicUser> authenticator = mock(Authenticator.class);
 		MessageIO messageIO = mock(MessageIO.class);
 		when(server.getAuthenticator()).thenReturn(authenticator);
