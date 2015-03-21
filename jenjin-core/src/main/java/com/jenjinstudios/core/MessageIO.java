@@ -66,23 +66,8 @@ public class MessageIO
      */
     public MessageOutputStream getOut() { return out; }
 
-	/**
-	 * Write all the messages in the outgoing messages queue to the output stream.
-     *
-     * @throws java.io.IOException If there is an exception writing a message to the output stream.
-     */
-    public void writeAllMessages() throws IOException {
-        synchronized (outgoingMessages)
-        {
-            while (!outgoingMessages.isEmpty())
-            {
-                out.writeMessage(outgoingMessages.remove());
-            }
-        }
-    }
-
-    void closeOutputStream() {
-        try
+	void closeOutputStream() {
+		try
         {
             out.close();
         } catch (IOException e)
