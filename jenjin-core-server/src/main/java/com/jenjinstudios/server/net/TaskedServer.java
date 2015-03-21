@@ -104,12 +104,6 @@ public class TaskedServer extends Server
 	}
 
 	/**
-	 * Tasks to be repeated in the main loop.
-	 * @return The list of repeated tasks to be executed by this server.
-	 */
-	Iterable<Runnable> getRepeatedTasks() { return repeatedTasks; }
-
-	/**
 	 * Synced tasks scheduled by client handlers.
 	 * @return The list of synchronized tasks scheduled by ClientHandlers.
 	 */
