@@ -74,7 +74,7 @@ class ClientListener implements Runnable
 		{
 			if (!newClientHandlers.isEmpty())
 			{
-				Server.LOGGER.log(Level.FINE, newClientHandlers.peek().toString());
+				LOGGER.log(Level.FINE, newClientHandlers.peek().toString());
 				temp = new LinkedList<>(newClientHandlers);
 				newClientHandlers.removeAll(temp);
 			}
@@ -147,7 +147,7 @@ class ClientListener implements Runnable
 			{
 			} catch (IOException e)
 			{
-				Server.LOGGER.log(Level.WARNING, "Error connecting to client: ", e);
+				LOGGER.log(Level.WARNING, "Error connecting to client: ", e);
 			}
 		}
 	}
