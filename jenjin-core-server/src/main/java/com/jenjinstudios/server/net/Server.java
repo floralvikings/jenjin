@@ -6,6 +6,9 @@ import com.jenjinstudios.server.authentication.Authenticator;
 import java.io.IOException;
 import java.security.KeyPair;
 import java.util.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -32,9 +35,11 @@ public class Server extends Thread
     /** The list of {@code ClientHandler}s working for this server. */
     private final Map<Integer, ClientHandler> clientHandlers;
     private final KeyPair rsaKeyPair;
+	private ScheduledExecutorService loopTimer;
+	private ServerUpdateTask serverUpdateTask;
 
-    /**
-     * Construct a new Server without a SQLHandler.
+	/**
+	 * Construct a new Server without a SQLHandler.
      *
      * @param initInfo The initialization object to use when constructing the server.
      *
@@ -84,6 +89,17 @@ public class Server extends Thread
 	}
 
 	public int getUps() { return UPS; }
+
+	public long getCycleStartTime() {
+		return (serverUpdateTask != null) ? serverUpdateTask.getCycleStartTime() : -1;
+	}
+
+	protected void addRepeatedTask(Runnable r) {
+		synchronized (repeatedTasks)
+		{
+			repeatedTasks.add(r);
+		}
+	}
 
 	private void addClientHandler(ClientHandler h) {
 		int nullIndex = 0;
@@ -152,15 +168,20 @@ public class Server extends Thread
 	@Override
     public void run() {
         clientListener.startListening(this);
-    }
+
+		serverUpdateTask = new ServerUpdateTask(this);
+
+		loopTimer = Executors.newSingleThreadScheduledExecutor(new ServerUpdateThreadFactory());
+		loopTimer.scheduleAtFixedRate(serverUpdateTask, 0, PERIOD, TimeUnit.MILLISECONDS);
+	}
 
     /**
      * Shutdown the server, forcing all client links to close.
      *
      * @throws IOException if there is an error shutting down a client.
      */
-    protected void shutdown() throws IOException {
-        synchronized (clientHandlers)
+	public void shutdown() throws IOException {
+		synchronized (clientHandlers)
         {
             Set<Integer> integers = clientHandlers.keySet();
             for (int i : integers)
@@ -173,7 +194,10 @@ public class Server extends Thread
             }
         }
         clientListener.stopListening();
-    }
+
+		if (loopTimer != null)
+			loopTimer.shutdown();
+	}
 
     /**
      * Schedule a client to be removed during the next update.

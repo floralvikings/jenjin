@@ -15,7 +15,7 @@ class ServerUpdateTask implements Runnable
 	/** The time in nanoseconds of the last 50 update cycles. */
 	private final double[] lastCycles;
 	/** The server for which this loop runs. */
-	private final TaskedServer server;
+	private final Server server;
 	/** The start time, in nanoseconds, of the current cycle. */
 	private volatile long cycleStart = 0;
 	/** The current cycle number. */
@@ -28,7 +28,7 @@ class ServerUpdateTask implements Runnable
 	 * @param server The server for which this server loop works.
 	 */
 	@SuppressWarnings("unchecked")
-	public ServerUpdateTask(TaskedServer server) {
+	public ServerUpdateTask(Server server) {
 		this.server = server;
 		lastCycles = new double[server.getUps() * 10];
 		cycleNum = 0;
