@@ -32,13 +32,13 @@ public class ServerWorldFileTracker
 
 	public void requestServerWorldFileChecksum() {
 		Message worldFileChecksumRequest = this.worldClient.getMessageFactory().generateWorldChecksumRequest();
-		this.worldClient.getMessageIO().queueOutgoingMessage(worldFileChecksumRequest);
+		worldClient.enqueueMessage(worldFileChecksumRequest);
 	}
 
 	public void requestServerWorldFile() {
 		if (needsWorldFile())
 		{
-			this.worldClient.getMessageIO().queueOutgoingMessage(this.worldClient.getMessageFactory()
+			worldClient.enqueueMessage(this.worldClient.getMessageFactory()
 				  .generateWorldFileRequest());
 		} else
 		{

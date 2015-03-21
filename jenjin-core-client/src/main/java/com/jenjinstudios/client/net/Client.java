@@ -5,13 +5,11 @@ import com.jenjinstudios.core.MessageIO;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageRegistry;
 
-import java.io.IOException;
 import java.security.KeyPair;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -77,7 +75,7 @@ public class Client extends Connection
         setRSAKeyPair(rsaKeyPair);
 
         // Finally, send a ping request to establish latency.
-        getMessageIO().queueOutgoingMessage(generatePingRequest());
+		enqueueMessage(generatePingRequest());
 
         sendMessagesTimer = new Timer("Client Update Loop", false);
         int period = 1000 / UPDATES_PER_SECOND;
@@ -134,14 +132,6 @@ public class Client extends Connection
             saveUpdateTime();
             client.runRepeatedTasks();
             client.getExecutableMessageQueue().runQueuedExecutableMessages();
-            try
-            {
-                client.getMessageIO().writeAllMessages();
-            } catch (IOException e)
-            {
-                LOGGER.log(Level.INFO, "Shutting down because of IOException", e);
-                client.shutdown();
-            }
         }
 
         private void saveUpdateTime() {

@@ -66,21 +66,8 @@ public class MessageIO
      */
     public MessageOutputStream getOut() { return out; }
 
-    /**
-     * Add the specified {@code Message} to the queue of outgoing messages.  This queue is written when {@code
-     * writeAllMessages} is called.
-     *
-     * @param message The {@code Message} to write.
-     */
-    public void queueOutgoingMessage(Message message) {
-        synchronized (outgoingMessages)
-        {
-            outgoingMessages.add(message);
-        }
-    }
-
-    /**
-     * Write all the messages in the outgoing messages queue to the output stream.
+	/**
+	 * Write all the messages in the outgoing messages queue to the output stream.
      *
      * @throws java.io.IOException If there is an exception writing a message to the output stream.
      */

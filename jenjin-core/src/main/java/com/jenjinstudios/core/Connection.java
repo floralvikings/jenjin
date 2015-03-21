@@ -1,5 +1,6 @@
 package com.jenjinstudios.core;
 
+import com.jenjinstudios.core.concurrency.MessageWriter;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageRegistry;
 import com.jenjinstudios.core.io.MessageTypeException;
@@ -34,7 +35,8 @@ public class Connection
     private final ExecutableMessageQueue executableMessageQueue;
     private final MessageIO messageIO;
     private final Thread messageReaderThread;
-    private String name = "Connection";
+	private final MessageWriter messageWriter;
+	private String name = "Connection";
     private final Map<InetAddress, Key> verifiedKeys = new HashMap<>(10);
 
     /**
@@ -47,7 +49,15 @@ public class Connection
         pingTracker = new PingTracker();
         executableMessageQueue = new ExecutableMessageQueue();
         messageReaderThread = new Thread(new RunnableMessageReader(this));
-    }
+		messageWriter = new MessageWriter(messageIO.getOut());
+	}
+
+	/**
+	 * Queue up the supplied message to be written.
+	 *
+	 * @param message The message to be sent.
+	 */
+	public void enqueueMessage(Message message) { messageWriter.enqueue(message); }
 
     /**
      * Generate a PublicKeyMessage for the given {@code PublicKey}.
@@ -86,7 +96,8 @@ public class Connection
      */
     public void start() {
         messageReaderThread.start();
-    }
+		messageWriter.start();
+	}
 
     /**
      * Set the RSA public/private key pair used to encrypt outgoing and decrypt incoming messages, and queue a message
@@ -99,8 +110,8 @@ public class Connection
         {
             messageIO.getIn().setPrivateKey(rsaKeyPair.getPrivate());
             Message message = generatePublicKeyMessage(rsaKeyPair.getPublic());
-            messageIO.queueOutgoingMessage(message);
-        }
+			enqueueMessage(message);
+		}
     }
 
     /**
@@ -128,7 +139,8 @@ public class Connection
      * End this connection's execution loop and close any streams.
      */
     public void shutdown() {
-        messageIO.closeInputStream();
+		messageWriter.stop();
+		messageIO.closeInputStream();
         messageIO.closeOutputStream();
     }
 
@@ -232,8 +244,8 @@ public class Connection
 
         private void processInvalidMessage(Message message) {
             Message invalid = generateInvalidMessage(message.getID(), message.name);
-            connection.getMessageIO().queueOutgoingMessage(invalid);
-        }
+			connection.enqueueMessage(invalid);
+		}
 
         private void processExecutableMessage(ExecutableMessage exec) {
             exec.runImmediate();
@@ -243,8 +255,8 @@ public class Connection
         void reportInvalidMessage(MessageTypeException e) {
             INNER_LOGGER.log(Level.WARNING, "Input stream reported invalid message receipt.");
             Message unknown = generateInvalidMessage(e.getId(), "Unknown");
-            connection.getMessageIO().queueOutgoingMessage(unknown);
-            invalidMsgCount++;
+			connection.enqueueMessage(unknown);
+			invalidMsgCount++;
         }
     }
 

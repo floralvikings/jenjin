@@ -82,8 +82,8 @@ public class ClientHandler extends Connection
      */
     public void sendLogoutStatus(boolean success) {
 		Message logoutResponse = ServerMessageFactory.generateLogoutResponse(success);
-		getMessageIO().queueOutgoingMessage(logoutResponse);
-    }
+		enqueueMessage(logoutResponse);
+	}
 
     /**
      * Get the time at which this client was successfully logged in.

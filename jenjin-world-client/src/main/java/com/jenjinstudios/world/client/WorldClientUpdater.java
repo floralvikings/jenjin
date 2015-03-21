@@ -46,7 +46,7 @@ public class WorldClientUpdater implements Runnable
 					MoveState moveState = newStates.remove(0);
 					WorldClientMessageFactory messageFactory = worldClient.getMessageFactory();
 					Message stateChangeRequest = messageFactory.generateStateChangeRequest(moveState);
-					worldClient.getMessageIO().queueOutgoingMessage(stateChangeRequest);
+					worldClient.enqueueMessage(stateChangeRequest);
 				}
 			}
 		}

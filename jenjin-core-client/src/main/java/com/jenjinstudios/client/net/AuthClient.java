@@ -125,8 +125,8 @@ public class AuthClient extends Client
         protected void sendLoginRequest() {
             waitingForResponse = true;
             Message message = generateLoginRequest(client.getUser());
-            client.getMessageIO().queueOutgoingMessage(message);
-        }
+			client.enqueueMessage(message);
+		}
 
         /**
          * Send a login request and await the response.
@@ -159,8 +159,8 @@ public class AuthClient extends Client
         private void sendLogoutRequest() {
             waitingForResponse = true;
             Message message = generateLogoutRequest();
-            client.getMessageIO().queueOutgoingMessage(message);
-        }
+			client.enqueueMessage(message);
+		}
 
         private static void waitTenMillis() {
             try

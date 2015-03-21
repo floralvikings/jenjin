@@ -32,8 +32,7 @@ public class WorldClientHandler extends ClientHandler
 		{
 			if (!hasSentActorStepMessage)
 			{
-				getMessageIO().queueOutgoingMessage(WorldServerMessageFactory.generateActorMoveSpeedMessage(getUser()
-					  .getMoveSpeed()));
+				enqueueMessage(WorldServerMessageFactory.generateActorMoveSpeedMessage(getUser().getMoveSpeed()));
 				hasSentActorStepMessage = true;
 			}
 			queueForcesStateMessage();
@@ -54,7 +53,7 @@ public class WorldClientHandler extends ClientHandler
 			{
 				Message newlyVisibleMessage;
 				newlyVisibleMessage = WorldServerMessageFactory.generateNewlyVisibleMessage(object);
-				getMessageIO().queueOutgoingMessage(newlyVisibleMessage);
+				enqueueMessage(newlyVisibleMessage);
 			}
 		}
 	}
@@ -67,7 +66,7 @@ public class WorldClientHandler extends ClientHandler
 			for (WorldObject object : vision.getNewlyInvisibleObjects())
 			{
 				Message newlyInvisibleMessage = WorldServerMessageFactory.generateNewlyInvisibleMessage(object);
-				getMessageIO().queueOutgoingMessage(newlyInvisibleMessage);
+				enqueueMessage(newlyInvisibleMessage);
 			}
 		}
 	}
@@ -85,12 +84,12 @@ public class WorldClientHandler extends ClientHandler
 
 	private void queueActorStateChangeMessages(Actor object) {
 		List<Message> newState = WorldServerMessageFactory.generateChangeStateMessages(object);
-		newState.forEach(getMessageIO()::queueOutgoingMessage);
+		newState.forEach(this::enqueueMessage);
 	}
 
 	private void queueForcesStateMessage() {
 		MoveState forcedState = getUser().getForcedState();
 		if (forcedState != null)
-			getMessageIO().queueOutgoingMessage(WorldServerMessageFactory.generateForcedStateMessage(forcedState));
+			enqueueMessage(WorldServerMessageFactory.generateForcedStateMessage(forcedState));
 	}
 }

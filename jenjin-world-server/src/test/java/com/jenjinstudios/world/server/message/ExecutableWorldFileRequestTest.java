@@ -40,6 +40,6 @@ public class ExecutableWorldFileRequestTest extends PowerMockTestCase
 		exec.runImmediate();
 		exec.runDelayed();
 
-		verify(messageIO).queueOutgoingMessage(response);
+		verify(clientHandler).enqueueMessage(response);
 	}
 }

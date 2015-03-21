@@ -49,7 +49,6 @@ public class ServerUpdateTask implements Runnable
 		runRepeatedTasks();
 		runQueuedMessages();
 		update();
-		broadcast();
 	}
 
 	private void checkForNewClients() {
@@ -59,16 +58,6 @@ public class ServerUpdateTask implements Runnable
 		} catch (Exception ex)
 		{
 			LOGGER.log(Level.WARNING, "Exception when checking for new clients", ex);
-		}
-	}
-
-	private void broadcast() {
-		try
-		{
-			server.broadcast();
-		} catch (Exception ex)
-		{
-			LOGGER.log(Level.WARNING, "Exception when broadcasting", ex);
 		}
 	}
 

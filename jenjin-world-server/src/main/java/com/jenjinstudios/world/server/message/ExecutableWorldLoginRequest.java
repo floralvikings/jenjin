@@ -40,7 +40,7 @@ public class ExecutableWorldLoginRequest extends WorldExecutableMessage
 				  getClientHandler().getUser());
 			loginResponse.setArgument("id", getClientHandler().getUser().getId());
 		}
-		getClientHandler().getMessageIO().queueOutgoingMessage(loginResponse);
+		getClientHandler().enqueueMessage(loginResponse);
 	}
 
 	@Override

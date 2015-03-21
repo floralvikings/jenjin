@@ -5,7 +5,10 @@ import com.jenjinstudios.server.authentication.Authenticator;
 
 import java.io.IOException;
 import java.security.KeyPair;
-import java.util.*;
+import java.util.Collection;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -70,28 +73,8 @@ public class Server extends Thread
         }
     }
 
-    public void broadcast() {
-        synchronized (clientHandlers)
-        {
-			Collection<ClientHandler> toShutdown = new LinkedList<>();
-			clientHandlers.values().stream().forEach(c -> {
-				if (c != null)
-				{
-					try
-					{
-						c.getMessageIO().writeAllMessages();
-					} catch (IOException ignored)
-					{
-						toShutdown.add(c);
-					}
-				}
-			});
-			toShutdown.forEach(ClientHandler::shutdown);
-		}
-	}
-
-    public void update() {
-        synchronized (clientHandlers)
+	public void update() {
+		synchronized (clientHandlers)
         {
             Set<Integer> integers = clientHandlers.keySet();
             for (int i : integers)

@@ -7,8 +7,6 @@ import com.jenjinstudios.server.authentication.Authenticator;
 import com.jenjinstudios.server.authentication.BasicUser;
 import org.testng.annotations.Test;
 
-import java.io.IOException;
-
 import static org.mockito.Mockito.*;
 import static org.testng.Assert.assertEquals;
 
@@ -28,15 +26,10 @@ public class ClientHandlerTest
 
 		ClientHandler clientHandler = new ClientHandler(server, messageIO);
 		clientHandler.sendLogoutStatus(true);
-		try
-		{
-			clientHandler.getMessageIO().writeAllMessages();
-		} catch (IOException e)
-		{
-			clientHandler.shutdown();
-		}
-
+		clientHandler.start();
+		Thread.sleep(20);
 		verify(mos, times(1)).writeMessage(any());
+		clientHandler.shutdown();
 	}
 
 	@Test

@@ -64,13 +64,13 @@ public class ExecutableLoginRequest extends ServerExecutableMessage
 
 	private void queueLoginSuccessResponse(long loggedInTime) {
 		Message loginResponse = ServerMessageFactory.generateLoginResponse(true, loggedInTime);
-		getClientHandler().getMessageIO().queueOutgoingMessage(loginResponse);
+		getClientHandler().enqueueMessage(loginResponse);
 	}
 
 	private void queueLoginFailureResponse() {
 		ClientHandler clientHandler = getClientHandler();
 		Message loginResponse = ServerMessageFactory.generateLoginResponse(false, 0);
-		clientHandler.getMessageIO().queueOutgoingMessage(loginResponse);
+		clientHandler.enqueueMessage(loginResponse);
 	}
 
 }

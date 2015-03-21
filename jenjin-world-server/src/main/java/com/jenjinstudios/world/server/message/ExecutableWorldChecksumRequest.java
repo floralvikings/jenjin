@@ -29,7 +29,7 @@ public class ExecutableWorldChecksumRequest extends WorldExecutableMessage
 	public void runImmediate() {
 		byte[] checkSum = ((WorldServer) getClientHandler().getServer()).getWorldFileChecksum();
 		Message response = WorldServerMessageFactory.generateWorldChecksumResponse(checkSum);
-		getClientHandler().getMessageIO().queueOutgoingMessage(response);
+		getClientHandler().enqueueMessage(response);
 	}
 
 }
