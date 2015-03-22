@@ -23,39 +23,6 @@ public class ConnectionTest
     private static final int INVALID_MESSAGE_ID = -255;
     private static final long REQUEST_TIME_SPOOF = 123456789L;
 
-    /**
-     * Test the {@code processMessage} method.
-	 *
-	 * @throws Exception If there's an exception.
-	 */
-	@Test
-	public void testProcessMessage() throws Exception {
-		// Spoof an invalid message
-		DataInputStreamMock dataInputStreamMock = new DataInputStreamMock();
-        dataInputStreamMock.mockReadShort((short) INVALID_MESSAGE_ID);
-        dataInputStreamMock.mockReadShort((short) -1);
-		dataInputStreamMock.mockReadBoolean(false);
-		dataInputStreamMock.mockReadUtf("FooBar");
-		dataInputStreamMock.mockReadShort((short) -1);
-		InputStream in = dataInputStreamMock.getIn();
-		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-
-		MessageInputStream messageInputStream = new MessageInputStream(in);
-		MessageOutputStream messageOutputStream = new MessageOutputStream(bos);
-		MessageIO messageIO = new MessageIO(messageInputStream, messageOutputStream);
-		Connection connection = new Connection(messageIO);
-		connection.start();
-		Thread.sleep(100);
-		connection.getExecutableMessageQueue().runQueuedExecutableMessages();
-		connection.shutdown();
-
-		// The connection should execute the InvalidExecutableMessage,
-		byte[] bytes = bos.toByteArray();
-		MessageInputStream mis = new MessageInputStream(new ByteArrayInputStream(bytes));
-		Message msg = mis.readMessage();
-        Assert.assertEquals(msg.getArgument("messageName"), "Unknown", "Argument does not match");
-    }
-
 	/**
 	 * Test the {@code shutdown} method.
 	 *
