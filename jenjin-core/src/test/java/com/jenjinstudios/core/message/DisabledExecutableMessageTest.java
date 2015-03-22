@@ -1,13 +1,8 @@
 package com.jenjinstudios.core.message;
 
 import com.jenjinstudios.core.Connection;
-import com.jenjinstudios.core.ExecutableMessage;
 import com.jenjinstudios.core.io.Message;
-import com.jenjinstudios.core.io.MessageRegistry;
-import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import java.util.List;
 
 import static org.mockito.Mockito.mock;
 
@@ -18,17 +13,6 @@ import static org.mockito.Mockito.mock;
  */
 public class DisabledExecutableMessageTest
 {
-    /**
-     * Ensure that a message can be properly disabled.
-     */
-    @Test
-    public void testMessageIsDisabled() {
-        Message disabledMessage = MessageRegistry.getInstance().createMessage("DisabledMessage");
-        Connection connection = mock(Connection.class);
-        Connection.ExecutableMessageFactory messageFactory = new Connection.ExecutableMessageFactory(connection);
-        List<ExecutableMessage> message = messageFactory.getExecutableMessagesFor(disabledMessage);
-        Assert.assertTrue(message.isEmpty(), "Mesage list not empty.");
-    }
 
     /**
      * Ensure that the DisabledMessage cannot be invoked.
