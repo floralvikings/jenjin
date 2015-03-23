@@ -1,6 +1,7 @@
 package com.jenjinstudios.core.io;
 
 import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import javax.crypto.Cipher;
@@ -22,6 +23,14 @@ public class MessageInputStreamTest
 {
 
 	private static final Logger LOGGER = Logger.getLogger(MessageInputStreamTest.class.getName());
+
+	@BeforeClass
+	public void setUp() {
+		MessageRegistry.getInstance().register("Test Message Registry",
+			  getClass().getClassLoader().getResourceAsStream("test/jenjinstudios/core/Messages.xml"));
+		MessageRegistry.getInstance().register("Core Message Registry",
+			  getClass().getClassLoader().getResourceAsStream("com/jenjinstudios/core/io/Messages.xml"));
+	}
 
 	/**
 	 * Test the ability to read a valid message.
