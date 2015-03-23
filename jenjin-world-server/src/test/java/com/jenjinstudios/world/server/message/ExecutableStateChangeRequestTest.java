@@ -33,12 +33,12 @@ public class ExecutableStateChangeRequestTest
 		WorldServer worldServer = mock(WorldServer.class);
 		when(mock.getServer()).thenReturn(worldServer);
 		when(worldServer.getUps()).thenReturn(50);
-		Message request = messageRegistry.createMessage("StateChangeRequest");
-		request.setArgument("relativeAngle", Angle.FRONT);
-		request.setArgument("absoluteAngle", 0.0);
-		request.setArgument("xCoordinate", 0.0);
-		request.setArgument("yCoordinate", 0.0);
-		request.setArgument("timeOfChange", System.currentTimeMillis());
+		Message request = mock(Message.class);
+		when(request.getArgument("relativeAngle")).thenReturn(Angle.FRONT);
+		when(request.getArgument("absoluteAngle")).thenReturn(0.0);
+		when(request.getArgument("xCoordinate")).thenReturn(0.0);
+		when(request.getArgument("yCoordinate")).thenReturn(0.0);
+		when(request.getArgument("timeOfChange")).thenReturn(System.currentTimeMillis());
 		ExecutableStateChangeRequest executableStateChangeRequest = new ExecutableStateChangeRequest(mock, request);
 		executableStateChangeRequest.runImmediate();
 		executableStateChangeRequest.runDelayed();
@@ -66,12 +66,12 @@ public class ExecutableStateChangeRequestTest
 		when(mock.getServer()).thenReturn(worldServer);
 
 		// Create a state change request, with coordinates set further than the allowed error
-		Message request = messageRegistry.createMessage("StateChangeRequest");
-		request.setArgument("relativeAngle", Angle.FRONT);
-		request.setArgument("absoluteAngle", 0.0);
-		request.setArgument("xCoordinate", 15.0);
-		request.setArgument("yCoordinate", 15.0);
-		request.setArgument("timeOfChange", System.currentTimeMillis());
+		Message request = mock(Message.class);
+		when(request.getArgument("relativeAngle")).thenReturn(Angle.FRONT);
+		when(request.getArgument("absoluteAngle")).thenReturn(0.0);
+		when(request.getArgument("xCoordinate")).thenReturn(15.0);
+		when(request.getArgument("yCoordinate")).thenReturn(15.0);
+		when(request.getArgument("timeOfChange")).thenReturn(System.currentTimeMillis());
 
 		// Create the executable state change request
 		ExecutableStateChangeRequest executableStateChangeRequest = new ExecutableStateChangeRequest(mock, request);
@@ -95,12 +95,12 @@ public class ExecutableStateChangeRequestTest
 		WorldServer worldServer = mock(WorldServer.class);
 		when(mock.getServer()).thenReturn(worldServer);
 		when(worldServer.getUps()).thenReturn(50);
-		Message request = messageRegistry.createMessage("StateChangeRequest");
-		request.setArgument("relativeAngle", Angle.FRONT);
-		request.setArgument("absoluteAngle", 0.0);
-		request.setArgument("xCoordinate", 0.0);
-		request.setArgument("yCoordinate", 0.0);
-		request.setArgument("timeOfChange", System.currentTimeMillis() - 2000);
+		Message request = mock(Message.class);
+		when(request.getArgument("relativeAngle")).thenReturn(Angle.FRONT);
+		when(request.getArgument("absoluteAngle")).thenReturn(0.0);
+		when(request.getArgument("xCoordinate")).thenReturn(0.0);
+		when(request.getArgument("yCoordinate")).thenReturn(0.0);
+		when(request.getArgument("timeOfChange")).thenReturn(System.currentTimeMillis() - 2000);
 		ExecutableStateChangeRequest executableStateChangeRequest = new ExecutableStateChangeRequest(mock, request);
 		executableStateChangeRequest.runImmediate();
 		executableStateChangeRequest.runDelayed();
@@ -123,12 +123,12 @@ public class ExecutableStateChangeRequestTest
 		when(mock.getServer()).thenReturn(worldServer);
 		when(worldServer.getUps()).thenReturn(50);
 		when(mock.getUser()).thenReturn(player);
-		Message request = messageRegistry.createMessage("StateChangeRequest");
-		request.setArgument("relativeAngle", Angle.FRONT);
-		request.setArgument("absoluteAngle", 0.0);
-		request.setArgument("xCoordinate", 0.0);
-		request.setArgument("yCoordinate", 0.0);
-		request.setArgument("timeOfChange", System.currentTimeMillis());
+		Message request = mock(Message.class);
+		when(request.getArgument("relativeAngle")).thenReturn(Angle.FRONT);
+		when(request.getArgument("absoluteAngle")).thenReturn(0.0);
+		when(request.getArgument("xCoordinate")).thenReturn(0.0);
+		when(request.getArgument("yCoordinate")).thenReturn(0.0);
+		when(request.getArgument("timeOfChange")).thenReturn(System.currentTimeMillis());
 		Thread.sleep(1200);
 		ExecutableStateChangeRequest executableStateChangeRequest = new ExecutableStateChangeRequest(mock, request);
 		executableStateChangeRequest.runImmediate();
