@@ -1,9 +1,11 @@
 package com.jenjinstudios.server.net;
 
 import com.jenjinstudios.core.Connection;
+import com.jenjinstudios.core.io.MessageRegistry;
 import com.jenjinstudios.server.authentication.Authenticator;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.security.KeyPair;
 import java.util.Collection;
 import java.util.Map;
@@ -36,6 +38,8 @@ public class Server extends Thread
         clientHandlers = new TreeMap<>();
 		rsaKeyPair = (initInfo.getKeyPair() == null) ? Connection.generateRSAKeyPair() : initInfo.getKeyPair();
 		this.authenticator = authenticator;
+		InputStream stream = getClass().getClassLoader().getResourceAsStream("com/jenjinstudios/server/Messages.xml");
+		MessageRegistry.getInstance().register("Core Client/Server Messages", stream);
 	}
 
 	public ServerUpdateTask getServerUpdateTask() { return serverUpdateTask; }
