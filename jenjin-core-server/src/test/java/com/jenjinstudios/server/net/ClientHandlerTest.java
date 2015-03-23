@@ -1,10 +1,15 @@
 package com.jenjinstudios.server.net;
 
 import com.jenjinstudios.core.MessageIO;
+import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageInputStream;
 import com.jenjinstudios.core.io.MessageOutputStream;
 import com.jenjinstudios.server.authentication.Authenticator;
 import com.jenjinstudios.server.authentication.BasicUser;
+import com.jenjinstudios.server.message.ServerMessageFactory;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.testng.PowerMockTestCase;
 import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.*;
@@ -14,11 +19,15 @@ import static org.testng.Assert.assertEquals;
  * @author Caleb Brinkman
  */
 @SuppressWarnings("unchecked")
-public class ClientHandlerTest
+@PrepareForTest(ServerMessageFactory.class)
+public class ClientHandlerTest extends PowerMockTestCase
 {
 
 	@Test
 	public void testSendLogoutStatus() throws Exception {
+		PowerMockito.mockStatic(ServerMessageFactory.class);
+		Message message = mock(Message.class);
+		when(ServerMessageFactory.generateLogoutResponse(true)).thenReturn(message);
 		Server server = mock(Server.class);
 		MessageInputStream mis = mock(MessageInputStream.class);
 		MessageOutputStream mos = mock(MessageOutputStream.class);
