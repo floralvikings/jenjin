@@ -1,8 +1,8 @@
 package com.jenjinstudios.client.message;
 
 import com.jenjinstudios.client.net.AuthClient;
+import com.jenjinstudios.client.net.AuthClient.LoginTracker;
 import com.jenjinstudios.core.io.Message;
-import com.jenjinstudios.core.io.MessageRegistry;
 import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.*;
@@ -19,12 +19,12 @@ public class ExecutableLogoutResponseTest
      */
     @Test
     public void testMessageExecution() {
-        Message loginResponse = MessageRegistry.getInstance().createMessage("LogoutResponse");
-        loginResponse.setArgument("success", true);
+		Message loginResponse = mock(Message.class);
+		when(loginResponse.getArgument("success")).thenReturn(true);
 
         AuthClient authClient = mock(AuthClient.class);
-        AuthClient.LoginTracker loginTracker = mock(AuthClient.LoginTracker.class);
-        when(authClient.getLoginTracker()).thenReturn(loginTracker);
+		LoginTracker loginTracker = mock(LoginTracker.class);
+		when(authClient.getLoginTracker()).thenReturn(loginTracker);
 
         ExecutableLogoutResponse response = new ExecutableLogoutResponse(authClient, loginResponse);
         response.runImmediate();
