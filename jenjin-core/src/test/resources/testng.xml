@@ -18,4 +18,10 @@
             <package name="com.jenjinstudios.core.message" />
         </packages>
     </test>
+
+    <test name="concurrency">
+        <packages>
+            <package name="com.jenjinstudios.core.concurrency" />
+        </packages>
+    </test>
 </suite>
