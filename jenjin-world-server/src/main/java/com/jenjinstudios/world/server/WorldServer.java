@@ -1,5 +1,6 @@
 package com.jenjinstudios.world.server;
 
+import com.jenjinstudios.core.io.MessageRegistry;
 import com.jenjinstudios.server.authentication.Authenticator;
 import com.jenjinstudios.server.net.ClientHandler;
 import com.jenjinstudios.server.net.Server;
@@ -12,6 +13,7 @@ import com.jenjinstudios.world.util.WorldUtils;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * The WorldServer class is responsible for updating a game world.
@@ -50,6 +52,9 @@ public class WorldServer extends Server
 		worldFileBytes = reader.getWorldFileBytes();
 		worldFileChecksum = reader.getWorldFileChecksum();
 		getServerUpdateTask().addRepeatedTask(world::update);
+		InputStream stream = getClass().getClassLoader().
+			  getResourceAsStream("com/jenjinstudios/world/server/Messages.xml");
+		MessageRegistry.getInstance().register("World Client/Server Messages", stream);
 	}
 
 	public World getWorld() { return world; }
