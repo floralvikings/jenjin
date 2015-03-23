@@ -1,6 +1,7 @@
 package com.jenjinstudios.world.server.message;
 
 import com.jenjinstudios.core.io.Message;
+import com.jenjinstudios.core.io.MessageRegistry;
 import com.jenjinstudios.server.net.ServerUpdateTask;
 import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.WorldObject;
@@ -12,6 +13,7 @@ import com.jenjinstudios.world.server.WorldServer;
 import com.jenjinstudios.world.state.MoveState;
 import com.jenjinstudios.world.util.WorldUtils;
 import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -28,7 +30,12 @@ import static org.testng.Assert.assertEquals;
 public class WorldServerMessageFactoryTest
 {
 	private WorldClientHandler clientHandler;
-	private WorldServerMessageFactory worldServerMessageFactory;
+
+	@BeforeClass
+	public void registerMessages() {
+		MessageRegistry.getInstance().register("Core Message Registry",
+			  getClass().getClassLoader().getResourceAsStream("com/jenjinstudios/world/server/Messages.xml"));
+	}
 
 	@SuppressWarnings("unchecked")
 	@BeforeMethod
@@ -39,7 +46,6 @@ public class WorldServerMessageFactoryTest
 		when(serverUpdateTask.getCycleStartTime()).thenReturn(0L);
 		clientHandler = mock(WorldClientHandler.class);
 		when(clientHandler.getServer()).thenReturn(worldServer);
-		worldServerMessageFactory = new WorldServerMessageFactory();
 	}
 
 	@Test
