@@ -79,7 +79,8 @@ public class MessageRegistry
 	 *
 	 * @param name The name of the {@code MessageType} of which the return {@code Message} will be.
 	 *
-	 * @return A new "empty" {@code Message} of the type specified by {@code name}.
+	 * @return A new "empty" {@code Message} of the type specified by {@code name}.  Returns null if no message type
+	 * matching {@code name} is found.
 	 */
 	public Message createMessage(String name) {
         MessageType messageType = getMessageType(name);
@@ -89,7 +90,7 @@ public class MessageRegistry
 			message = new Message(messageType);
 		} else
 		{
-			LOGGER.log(Level.WARNING, "Couldn't find {0} even after refreshing XML registry.", name);
+			LOGGER.log(Level.WARNING, "Couldn't find message type: " + name);
 		}
 		return message;
 	}
