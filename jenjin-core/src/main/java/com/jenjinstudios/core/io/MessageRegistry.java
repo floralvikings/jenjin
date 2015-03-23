@@ -4,7 +4,13 @@ import com.jenjinstudios.core.xml.ExecutableOverride;
 import com.jenjinstudios.core.xml.MessageGroup;
 import com.jenjinstudios.core.xml.MessageType;
 
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.*;
+import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -101,13 +107,34 @@ public class MessageRegistry
 
 	private void registerXmlMessages() {
         MessageFileFinder fileFinder = new MessageFileFinder();
-        Collection<MessageGroup> foundMessages = fileFinder.findXmlRegistries();
+		Map<String, InputStream> foundMessages = fileFinder.findXmlRegistries();
+		for (Entry<String, InputStream> entry : foundMessages.entrySet())
+		{
+			registerXmlMessages(entry.getKey(), entry.getValue());
+		}
+	}
 
-        for (MessageGroup messageGroup : foundMessages)
-        {
-            messageGroup.getMessages().forEach(this::registerMessageType);
-            messageGroup.getOverrides().forEach(this::registerOverride);
-        }
+	private void registerXmlMessages(String streamName, InputStream inputStream) {
+		try
+		{
+			JAXBContext jaxbContext = JAXBContext.newInstance(MessageGroup.class);
+			Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+			MessageGroup group = (MessageGroup) jaxbUnmarshaller.unmarshal(inputStream);
+			group.getMessages().forEach(this::registerMessageType);
+			group.getOverrides().forEach(this::registerOverride);
+		} catch (JAXBException e)
+		{
+			LOGGER.log(Level.WARNING, "Unable to parse XML stream into MessageGroup " + streamName, e);
+		} finally
+		{
+			try
+			{
+				inputStream.close();
+			} catch (IOException ex)
+			{
+				LOGGER.log(Level.INFO, "Unable to close stream", ex);
+			}
+		}
 	}
 
 	private void registerOverride(ExecutableOverride override) {
