@@ -5,6 +5,9 @@ import com.jenjinstudios.core.MessageIO;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageInputStream;
 import com.jenjinstudios.core.io.MessageOutputStream;
+import com.jenjinstudios.core.io.MessageRegistry;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import java.net.InetAddress;
@@ -22,6 +25,25 @@ import static org.mockito.Mockito.*;
  */
 public class ExecutablePublicKeyMessageTest
 {
+	/**
+	 * Set up the message registry.
+	 */
+	@BeforeClass
+	public void setUp() {
+		MessageRegistry.getInstance().register("Test Message Registry",
+			  getClass().getClassLoader().getResourceAsStream("test/jenjinstudios/core/Messages.xml"));
+		MessageRegistry.getInstance().register("Core Message Registry",
+			  getClass().getClassLoader().getResourceAsStream("com/jenjinstudios/core/io/Messages.xml"));
+	}
+
+	/**
+	 * Clear the message registry.
+	 */
+	@AfterClass
+	public void clearMessageRegistry() {
+		MessageRegistry.getInstance().clear();
+	}
+
     /**
      * Test key verification.
      */
