@@ -1,6 +1,7 @@
 package com.jenjinstudios.core.io;
 
 import org.testng.Assert;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -28,6 +29,14 @@ public class MessageOutputStreamTest
 			  getClass().getClassLoader().getResourceAsStream("test/jenjinstudios/core/Messages.xml"));
 		MESSAGE_REGISTRY.register("Core Message Registry",
 			  getClass().getClassLoader().getResourceAsStream("com/jenjinstudios/core/io/Messages.xml"));
+	}
+
+	/**
+	 * Clear the message registry.
+	 */
+	@AfterClass
+	public void clearMessageRegistry() {
+		MessageRegistry.getInstance().clear();
 	}
 
     /**
