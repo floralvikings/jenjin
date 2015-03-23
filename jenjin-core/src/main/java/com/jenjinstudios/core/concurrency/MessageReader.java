@@ -49,7 +49,7 @@ public class MessageReader
 	/**
 	 * Begin reading messages from the output stream.
 	 */
-	public void start() { runTimer.scheduleAtFixedRate(readTask, 0, 10); }
+	public void start() { runTimer.schedule(readTask, 0, 10); }
 
 	/**
 	 * Stop reading messages from the output stream.  Once this has been called, the timer may not be restarted.
