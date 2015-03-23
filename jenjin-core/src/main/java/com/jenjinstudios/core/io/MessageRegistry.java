@@ -123,6 +123,9 @@ public class MessageRegistry
 		}
 	}
 
+	/**
+	 * Clear the message registry of all entries.
+	 */
 	public void clear() {
 		synchronized (messageTypesByID)
 		{
