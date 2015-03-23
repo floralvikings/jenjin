@@ -1,7 +1,6 @@
 package com.jenjinstudios.world.client.message;
 
 import com.jenjinstudios.core.io.Message;
-import com.jenjinstudios.core.io.MessageRegistry;
 import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.client.WorldClient;
@@ -20,14 +19,13 @@ public class ExecutableStateChangeMessageTest
 {
 	@Test
 	public void testMessageExecution() throws Exception {
-		MessageRegistry messageRegistry = MessageRegistry.getInstance();
-		Message stateChangeMessage = messageRegistry.createMessage("StateChangeMessage");
-		stateChangeMessage.setArgument("id", 100);
-		stateChangeMessage.setArgument("relativeAngle", IDLE);
-		stateChangeMessage.setArgument("absoluteAngle", PI);
-		stateChangeMessage.setArgument("timeOfChange", System.currentTimeMillis());
-		stateChangeMessage.setArgument("xCoordinate", PI);
-		stateChangeMessage.setArgument("yCoordinate", PI);
+		Message stateChangeMessage = mock(Message.class);
+		when(stateChangeMessage.getArgument("id")).thenReturn(100);
+		when(stateChangeMessage.getArgument("relativeAngle")).thenReturn(IDLE);
+		when(stateChangeMessage.getArgument("absoluteAngle")).thenReturn(PI);
+		when(stateChangeMessage.getArgument("timeOfChange")).thenReturn(System.currentTimeMillis());
+		when(stateChangeMessage.getArgument("xCoordinate")).thenReturn(PI);
+		when(stateChangeMessage.getArgument("yCoordinate")).thenReturn(PI);
 
 		WorldClient worldClient = mock(WorldClient.class);
 		World world = mock(World.class);
