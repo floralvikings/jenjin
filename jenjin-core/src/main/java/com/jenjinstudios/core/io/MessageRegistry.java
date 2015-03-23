@@ -10,7 +10,6 @@ import javax.xml.bind.Unmarshaller;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
-import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -93,15 +92,6 @@ public class MessageRegistry
 			LOGGER.log(Level.WARNING, "Couldn't find message type: " + name);
 		}
 		return message;
-	}
-
-	private void registerXmlMessages() {
-        MessageFileFinder fileFinder = new MessageFileFinder();
-		Map<String, InputStream> foundMessages = fileFinder.findXmlRegistries();
-		for (Entry<String, InputStream> entry : foundMessages.entrySet())
-		{
-			register(entry.getKey(), entry.getValue());
-		}
 	}
 
 	/**
