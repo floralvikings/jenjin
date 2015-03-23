@@ -3,7 +3,6 @@ package com.jenjinstudios.client.message;
 import com.jenjinstudios.client.net.AuthClient;
 import com.jenjinstudios.client.net.ClientUser;
 import com.jenjinstudios.core.io.Message;
-import com.jenjinstudios.core.io.MessageRegistry;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -21,9 +20,9 @@ public class ExecutableLoginResponseTest
      */
     @Test
     public void testMessageExecution() {
-        Message loginResponse = MessageRegistry.getInstance().createMessage("LoginResponse");
-        loginResponse.setArgument("success", true);
-        loginResponse.setArgument("loginTime", 12345L);
+		Message loginResponse = mock(Message.class);
+		when(loginResponse.getArgument("success")).thenReturn(true);
+		when(loginResponse.getArgument("loginTime")).thenReturn(12345L);
 
         ClientUser user = mock(ClientUser.class);
         AuthClient authClient = mock(AuthClient.class);
