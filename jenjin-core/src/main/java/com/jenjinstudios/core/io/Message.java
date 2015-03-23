@@ -5,8 +5,6 @@ import com.jenjinstudios.core.xml.MessageType;
 
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * The {@code Message} class is used in sending data to and receiving data from {@code Connection} objects.  Each
@@ -19,20 +17,16 @@ import java.util.logging.Logger;
 @SuppressWarnings("ClassWithTooManyDependents")
 public class Message
 {
-    private static final Logger LOGGER = Logger.getLogger(Message.class.getName());
-    /** The unique name of this type of Message. */
-    public final String name;
-    private final MessageType messageType;
+	/** The unique name of this type of Message. */
+	public final String name;
+	private final MessageType messageType;
     private final Map<String, Object> argumentsByName;
     private final short id;
 
     Message(MessageType type, Object... args) {
-        this.id = type.getId();
-        messageType = type;
-        name = messageType.getName();
-        argumentsByName = new TreeMap<>();
-        if (args.length != messageType.getArguments().size())
-        {
+		this(type);
+		if (args.length != messageType.getArguments().size())
+		{
             throw new IllegalArgumentException("Incorrect number of arguments provided for Message");
         }
         for (int i = 0; i < messageType.getArguments().size(); i++)
@@ -42,91 +36,15 @@ public class Message
     }
 
     Message(MessageType messageType) {
-        this.messageType = messageType;
-        this.name = messageType.getName();
-        id = messageType.getId();
-        argumentsByName = new TreeMap<>();
-    }
+		this.id = messageType.getId();
+		this.messageType = messageType;
+		this.name = messageType.getName();
+		argumentsByName = new TreeMap<>();
+	}
 
-    /**
-     * Get the Class that represents the primitive type of the given name.
-     *
-     * @param name The name of the type.  One of: <ul> <li>byte</li> <li>short</li> <li>char</li> <li>int</li>
-     * <li>float</li> <li>long</li> <li>double</li> <li>String</li> <li>String[]</li> <li>byte[]</li> </ul>
-     *
-     * @return The Class represented by {@code name}.
-     */
-    public static Class getTypeForName(String name) {
-        Class type = getPrimitiveClass(name);
-        if (type == null)
-        {
-            try
-            {
-                type = Class.forName(name);
-            } catch (ClassNotFoundException ex)
-            {
-                LOGGER.log(Level.WARNING, "Unknown Primitive Type", ex);
-                type = Object.class;
-            }
-        }
-        return type;
-    }
-
-    private static Class getPrimitiveClass(String name) {
-        Class type;
-        switch (name)
-        {
-            case "boolean":
-                type = Boolean.class;
-                break;
-            case "byte":
-                type = Byte.class;
-                break;
-            case "short":
-                type = Short.class;
-                break;
-            case "int":
-                type = Integer.class;
-                break;
-            case "long":
-                type = Long.class;
-                break;
-            case "float":
-                type = Float.class;
-                break;
-            case "double":
-                type = Double.class;
-                break;
-            case "String":
-                type = String.class;
-                break;
-            default:
-                type = getArrayType(name);
-                break;
-        }
-        return type;
-    }
-
-    private static Class getArrayType(String name) {
-        Class type;
-        switch (name)
-        {
-            case "byte[]":
-                type = byte[].class;
-                break;
-            case "String[]":
-                type = String[].class;
-                break;
-            default:
-                type = null;
-                break;
-        }
-        return type;
-    }
-
-    /**
-     * Set the argument with the given name to the argument of the given value.
-     *
+	/**
+	 * Set the argument with the given name to the argument of the given value.
+	 *
      * @param argumentName The name of the argument.
      * @param argument The value to be stored in the argument.
      *
@@ -147,9 +65,9 @@ public class Message
                   " (Message type: " + messageType.getName() + ')');
         }
         @SuppressWarnings("rawtypes")
-        Class argumentClass = getTypeForName(argType.getType());
-        if (!argumentClass.isInstance(argument))
-        {
+		Class argumentClass = TypeUtil.getTypeForName(argType.getType());
+		if (!argumentClass.isInstance(argument))
+		{
             throw new IllegalArgumentException("Invalid argument type for Message: " + argument +
                   " (Expected " + argType.getType() + ", got " + argument.getClass() + ')');
         }

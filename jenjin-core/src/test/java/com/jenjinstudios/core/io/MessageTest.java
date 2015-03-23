@@ -1,7 +1,15 @@
 package com.jenjinstudios.core.io;
 
+import com.jenjinstudios.core.xml.ArgumentType;
+import com.jenjinstudios.core.xml.MessageType;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+
+import java.util.LinkedList;
+import java.util.List;
+
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * Tests the {@code Message class}.
@@ -11,59 +19,108 @@ import org.testng.annotations.Test;
 @SuppressWarnings("MagicNumber")
 public class MessageTest
 {
-    private static final MessageRegistry MESSAGE_REGISTRY = MessageRegistry.getInstance();
+	/**
+	 * Test a successful invocation of the Message varargs constructor.
+	 */
+	@Test
+	public void testVarargsConstructor() {
+		MessageType messageType = createMessageTypeMock();
+		Message message = new Message(messageType, "123", 456, 789L);
+		Assert.assertEquals(message.getArgs()[0], "123", "Arguments should be equal.");
+	}
 
-    /**
-     * Test creating a message with an invalid name.
-     */
-    @Test(expectedExceptions = IllegalArgumentException.class)
-    public void testInvalidName() {
-        Message msg = MESSAGE_REGISTRY.createMessage("InvalidMessage");
-        msg.setArgument("FooBar", 1337); // Expect exception
-    }
+	/**
+	 * Test the varargs constructor with an invalid number of arguments.
+	 */
+	@Test(expectedExceptions = IllegalArgumentException.class)
+	public void testVaragsConstructorInvalidCount() {
+		MessageType messageType = createMessageTypeMock();
+		//noinspection ResultOfObjectAllocationIgnored
+		new Message(messageType, "123", 456);
+	}
 
-    /**
-     * Test creating a message with an invalid argument.
-     */
-    @Test(expectedExceptions = IllegalArgumentException.class)
-    public void testInvalidArgumentType() {
-        Message msg = MESSAGE_REGISTRY.createMessage("InvalidMessage");
-        msg.setArgument("messageName", "FooBar");
-        msg.setArgument("messageID", "I'm totally a short, you guys."); // Expect exception
-    }
+	/**
+	 * Test the varargs constructor with an invalid argument type.
+	 */
+	@Test(expectedExceptions = IllegalArgumentException.class)
+	public void testVarargsConstructorInvalidType() {
+		MessageType messageType = createMessageTypeMock();
+		//noinspection ResultOfObjectAllocationIgnored
+		new Message(messageType, "123", 456, "Should be a long");
+	}
 
-    /**
-     * Test retrieving message arguments with arguments unset.
-     */
-    @Test(expectedExceptions = IllegalStateException.class)
-    public void testUnsetArgs() {
-        Message msg = MESSAGE_REGISTRY.createMessage("InvalidMessage");
-        msg.setArgument("messageName", "FooBar");
-        msg.getArgs(); // Expect exception
-    }
+	/**
+	 * Test setting an argument with an invalid name.
+	 */
+	@Test(expectedExceptions = IllegalArgumentException.class)
+	public void testSetInvalidArgument() {
+		MessageType messageType = createMessageTypeMock();
+		Message message = new Message(messageType);
+		message.setArgument("NonExistent Argument Name", "foobar");
+	}
 
-    /**
-     * Test message toString method.
-     */
-    @Test
-    public void testToString() {
-        Message msg = MESSAGE_REGISTRY.createMessage("InvalidMessage");
-        msg.setArgument("messageName", "FooBar");
-        msg.setArgument("messageID", (short) -255);
+	/**
+	 * Test the getArgument method.
+	 */
+	@Test
+	public void testGetArgument() {
+		MessageType messageType = createMessageTypeMock();
+		Message message = new Message(messageType, "123", 456, 789L);
+		Assert.assertEquals(message.getArgument("First"), "123", "Arguments should be equal.");
+	}
 
-        String expected = "Message 0 InvalidMessage";
-        String actual = msg.toString();
+	/**
+	 * Test the getID method.
+	 */
+	@Test
+	public void testGetId() {
+		MessageType messageType = createMessageTypeMock();
+		Message message = new Message(messageType);
+		Assert.assertEquals(message.getID(), 1234, "Message ID should be equal to mocked id.");
+	}
 
-        Assert.assertEquals(actual, expected, "Invalid message expected, not received.");
-    }
+	/**
+	 * Test the getArgs method while arguments are not all assigned.
+	 */
+	@Test(expectedExceptions = IllegalStateException.class)
+	public void testGetArgsWhileInvalid() {
+		MessageType messageType = createMessageTypeMock();
+		Message message = new Message(messageType);
+		message.getArgs();
+	}
 
-    /**
-     * Test constructor used in streams.
-     *
-     * @return Nothing.
-     */
-    @Test(expectedExceptions = IllegalArgumentException.class)
-    public Object testStreamConstructor() {
-        return new Message(MESSAGE_REGISTRY.getMessageType((short) 0), "Bob"); // Expect Exception
-    }
+	/**
+	 * Test the toString method.
+	 */
+	@Test
+	public void testToString() {
+		MessageType messageType = createMessageTypeMock();
+		Message message = new Message(messageType);
+		Assert.assertEquals(message.toString(), "Message 1234 MockType", "toString incorrect");
+	}
+
+	private static MessageType createMessageTypeMock() {
+		ArgumentType firstArgType = mock(ArgumentType.class);
+		when(firstArgType.getName()).thenReturn("First");
+		when(firstArgType.getType()).thenReturn("String");
+
+		ArgumentType secondArgType = mock(ArgumentType.class);
+		when(secondArgType.getName()).thenReturn("Second");
+		when(secondArgType.getType()).thenReturn("int");
+
+		ArgumentType thirdArgType = mock(ArgumentType.class);
+		when(thirdArgType.getName()).thenReturn("Third");
+		when(thirdArgType.getType()).thenReturn("long");
+
+		List<ArgumentType> args = new LinkedList<>();
+		args.add(firstArgType);
+		args.add(secondArgType);
+		args.add(thirdArgType);
+
+		MessageType messageType = mock(MessageType.class);
+		when(messageType.getArguments()).thenReturn(args);
+		when(messageType.getId()).thenReturn((short) 1234);
+		when(messageType.getName()).thenReturn("MockType");
+		return messageType;
+	}
 }
