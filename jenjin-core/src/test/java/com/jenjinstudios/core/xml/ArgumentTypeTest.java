@@ -1,7 +1,6 @@
-package com.jenjinstudios.core.io;
+package com.jenjinstudios.core.xml;
 
-import com.jenjinstudios.core.xml.ArgumentType;
-import com.jenjinstudios.core.xml.MessageType;
+import com.jenjinstudios.core.io.MessageRegistry;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
