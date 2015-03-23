@@ -24,4 +24,10 @@
             <package name="com.jenjinstudios.core.concurrency" />
         </packages>
     </test>
+
+    <test name="xml">
+        <packages>
+            <package name="com.jenjinstudios.core.xml" />
+        </packages>
+    </test>
 </suite>
