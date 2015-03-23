@@ -123,6 +123,21 @@ public class MessageRegistry
 		}
 	}
 
+	public void clear() {
+		synchronized (messageTypesByID)
+		{
+			messageTypesByID.clear();
+		}
+		synchronized (messageTypesByName)
+		{
+			messageTypesByName.clear();
+		}
+		synchronized (finalOverrides)
+		{
+			finalOverrides.clear();
+		}
+	}
+
 	private void registerOverride(ExecutableOverride override) {
         short overrideId = override.getId();
         List<String> overrides = override.getExecutables();
