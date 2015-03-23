@@ -13,6 +13,7 @@ import com.jenjinstudios.world.server.WorldServer;
 import com.jenjinstudios.world.state.MoveState;
 import com.jenjinstudios.world.util.WorldUtils;
 import org.testng.Assert;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -35,6 +36,14 @@ public class WorldServerMessageFactoryTest
 	public void registerMessages() {
 		MessageRegistry.getInstance().register("Core Message Registry",
 			  getClass().getClassLoader().getResourceAsStream("com/jenjinstudios/world/server/Messages.xml"));
+	}
+
+	/**
+	 * Clear the message registry.
+	 */
+	@AfterClass
+	public void clearMessageRegistry() {
+		MessageRegistry.getInstance().clear();
 	}
 
 	@SuppressWarnings("unchecked")
