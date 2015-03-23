@@ -1,7 +1,6 @@
 package com.jenjinstudios.world.client.message;
 
 import com.jenjinstudios.core.io.Message;
-import com.jenjinstudios.core.io.MessageRegistry;
 import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.client.WorldClient;
@@ -20,13 +19,12 @@ public class ExecutableForceStateMessageTest
 {
 	@Test(timeOut = 5000)
 	public void testMessageExecution() throws Exception {
-		MessageRegistry messageRegistry = MessageRegistry.getInstance();
-		Message forceStateMessage = messageRegistry.createMessage("ForceStateMessage");
-		forceStateMessage.setArgument("relativeAngle", IDLE);
-		forceStateMessage.setArgument("absoluteAngle", PI);
-		forceStateMessage.setArgument("xCoordinate", PI);
-		forceStateMessage.setArgument("yCoordinate", PI);
-		forceStateMessage.setArgument("timeOfForce", 12345l);
+		Message forceStateMessage = mock(Message.class);
+		when(forceStateMessage.getArgument("relativeAngle")).thenReturn(IDLE);
+		when(forceStateMessage.getArgument("absoluteAngle")).thenReturn(PI);
+		when(forceStateMessage.getArgument("xCoordinate")).thenReturn(PI);
+		when(forceStateMessage.getArgument("yCoordinate")).thenReturn(PI);
+		when(forceStateMessage.getArgument("timeOfForce")).thenReturn(12345L);
 
 		WorldClient worldClient = mock(WorldClient.class);
 		Actor clientPlayer = mock(Actor.class);
