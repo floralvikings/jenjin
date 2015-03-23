@@ -114,7 +114,13 @@ public class MessageRegistry
 		}
 	}
 
-	private void registerXmlMessages(String streamName, InputStream inputStream) {
+	/**
+	 * Attempt to parse the given InputStream for an XML serialized message group.
+	 *
+	 * @param streamName The name of the stream; typically a filename.
+	 * @param inputStream The stream from which to read the XML serialized message group.
+	 */
+	public void registerXmlMessages(String streamName, InputStream inputStream) {
 		try
 		{
 			JAXBContext jaxbContext = JAXBContext.newInstance(MessageGroup.class);
