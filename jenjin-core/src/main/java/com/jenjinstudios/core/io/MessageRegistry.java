@@ -36,10 +36,6 @@ public class MessageRegistry
 	private final Map<String, MessageType> messageTypesByName = new TreeMap<>();
     private final Collection<Short> finalOverrides = new LinkedList<>();
 
-	private MessageRegistry() {
-		registerXmlMessages();
-	}
-
 	/**
 	 * Get an immutable instance of this class.  This method only creates a new instance once; each time it is called
 	 * thereafter returns the same instance that has already been created.
