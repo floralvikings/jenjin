@@ -6,6 +6,7 @@ import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageRegistry;
 import com.jenjinstudios.core.xml.MessageType;
 
+import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.net.InetAddress;
@@ -51,6 +52,8 @@ public class Connection
 		messageReader = new MessageReader(messageIO.getIn());
 		messageExecutionTask = new MessageExecutor();
 		messageExecutionTimer = new Timer();
+		InputStream stream = getClass().getClassLoader().getResourceAsStream("com/jenjinstudios/core/io/Messages.xml");
+		MessageRegistry.getInstance().register("Core XML Registry", stream);
 	}
 
 	/**
