@@ -10,6 +10,7 @@ import com.jenjinstudios.server.net.ClientHandler;
 import com.jenjinstudios.server.net.Server;
 import com.jenjinstudios.server.net.ServerUpdateTask;
 import org.mockito.Mockito;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import static org.mockito.Matchers.anyLong;
@@ -21,6 +22,12 @@ import static org.mockito.Mockito.when;
  */
 public class ExecutableLoginRequestTest
 {
+	@BeforeClass
+	public void registerMessages() {
+		MessageRegistry.getInstance().register("Core Message Registry",
+			  getClass().getClassLoader().getResourceAsStream("com/jenjinstudios/server/Messages.xml"));
+	}
+
 	@Test
 	@SuppressWarnings("unchecked")
 	public void testMessageExecution() throws Exception {
