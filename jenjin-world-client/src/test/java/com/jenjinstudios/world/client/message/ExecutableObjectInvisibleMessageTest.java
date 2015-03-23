@@ -1,7 +1,6 @@
 package com.jenjinstudios.world.client.message;
 
 import com.jenjinstudios.core.io.Message;
-import com.jenjinstudios.core.io.MessageRegistry;
 import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.client.WorldClient;
 import com.jenjinstudios.world.collections.WorldObjectList;
@@ -16,9 +15,8 @@ public class ExecutableObjectInvisibleMessageTest
 {
 	@Test
 	public void testMessageExecution() throws Exception {
-		MessageRegistry messageRegistry = MessageRegistry.getInstance();
-		Message objectInvisibleMessage = messageRegistry.createMessage("ObjectInvisibleMessage");
-		objectInvisibleMessage.setArgument("id", 100);
+		Message msg = mock(Message.class);
+		when(msg.getArgument("id")).thenReturn(100);
 
 		WorldClient worldClient = mock(WorldClient.class);
 		World world = mock(World.class);
@@ -27,7 +25,7 @@ public class ExecutableObjectInvisibleMessageTest
 		when(worldClient.getWorld()).thenReturn(world);
 
 		ExecutableObjectInvisibleMessage message =
-			  new ExecutableObjectInvisibleMessage(worldClient, objectInvisibleMessage);
+			  new ExecutableObjectInvisibleMessage(worldClient, msg);
 		message.runImmediate();
 		message.runDelayed();
 
