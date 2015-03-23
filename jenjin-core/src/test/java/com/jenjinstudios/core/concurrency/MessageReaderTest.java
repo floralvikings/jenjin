@@ -2,7 +2,6 @@ package com.jenjinstudios.core.concurrency;
 
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageInputStream;
-import com.jenjinstudios.core.io.MessageRegistry;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -26,8 +25,8 @@ public class MessageReaderTest
 	 */
 	@Test
 	public void testAsynchronousReading() throws Exception {
-		Message message = MessageRegistry.getInstance().createMessage("PingRequest");
-		message.setArgument("requestTimeMillis", 12345L);
+		Message message = mock(Message.class);
+		when(message.getArgument("requestTimeMillis")).thenReturn(12345L);
 		MessageInputStream inputStream = mock(MessageInputStream.class);
 		// Mock a blocking read.
 		when(inputStream.readMessage()).thenReturn(message).then(invocationOnMock -> {
