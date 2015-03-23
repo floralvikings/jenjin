@@ -122,8 +122,8 @@ public class MessageRegistry
         synchronized (messageTypesByID)
         {
             MessageType messageType = messageTypesByID.get(overrideId);
-            executables = messageType != null ? messageType.getExecutables() : new LinkedList<>();
-        }
+			executables = (messageType != null) ? messageType.getExecutables() : new LinkedList<>();
+		}
         switch (overrideMode)
         {
 			case "Override":
