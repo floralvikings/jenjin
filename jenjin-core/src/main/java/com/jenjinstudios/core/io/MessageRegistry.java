@@ -110,7 +110,7 @@ public class MessageRegistry
 		Map<String, InputStream> foundMessages = fileFinder.findXmlRegistries();
 		for (Entry<String, InputStream> entry : foundMessages.entrySet())
 		{
-			registerXmlMessages(entry.getKey(), entry.getValue());
+			register(entry.getKey(), entry.getValue());
 		}
 	}
 
@@ -120,7 +120,7 @@ public class MessageRegistry
 	 * @param streamName The name of the stream; typically a filename.
 	 * @param inputStream The stream from which to read the XML serialized message group.
 	 */
-	public void registerXmlMessages(String streamName, InputStream inputStream) {
+	public void register(String streamName, InputStream inputStream) {
 		try
 		{
 			JAXBContext jaxbContext = JAXBContext.newInstance(MessageGroup.class);
