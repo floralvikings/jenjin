@@ -15,6 +15,7 @@ import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
+import java.util.Deque;
 import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -84,8 +85,8 @@ public class MessageInputStream extends DataInputStream
         }
     }
 
-    private Object[] readMessageArgs(LinkedList<Class> classes) throws IOException {
-        Object[] args = new Object[classes.size()];
+	private Object[] readMessageArgs(Deque<Class> classes) throws IOException {
+		Object[] args = new Object[classes.size()];
 
         for (int i = 0; i < args.length; i++)
         {
