@@ -3,12 +3,14 @@ package com.jenjinstudios.world.client;
 import com.jenjinstudios.client.net.AuthClient;
 import com.jenjinstudios.client.net.ClientUser;
 import com.jenjinstudios.core.MessageIO;
+import com.jenjinstudios.core.io.MessageRegistry;
 import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.client.message.WorldClientMessageFactory;
 import com.jenjinstudios.world.io.WorldDocumentException;
 
 import java.io.File;
+import java.io.InputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -31,7 +33,10 @@ public class WorldClient extends AuthClient
         this.messageFactory = new WorldClientMessageFactory();
         serverWorldFileTracker = new ServerWorldFileTracker(this, worldFile);
         world = serverWorldFileTracker.readWorldFromFile();
-    }
+		InputStream stream = getClass().getClassLoader().
+			  getResourceAsStream("com/jenjinstudios/world/client/Messages.xml");
+		MessageRegistry.getInstance().register("World Client/Server Messages", stream);
+	}
 
     public WorldClientMessageFactory getMessageFactory() {return messageFactory; }
 
