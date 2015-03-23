@@ -91,14 +91,8 @@ public final class MessageFileFinder
                 JAXBContext jaxbContext = JAXBContext.newInstance(MessageGroup.class);
                 Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
                 MessageGroup collection = (MessageGroup) jaxbUnmarshaller.unmarshal(inputStream);
-                if (foundMessages.contains(collection))
-                {
-                    LOGGER.log(Level.FINE, "Found duplicate message file; ignoring.");
-                } else
-                {
-                    foundMessages.add(collection);
-                }
-            } catch (JAXBException | RuntimeException ex)
+				foundMessages.add(collection);
+			} catch (JAXBException | RuntimeException ex)
             {
 				LOGGER.log(Level.INFO, "Unable to parse XML entry: " + entry.getKey(), ex);
 			} finally
