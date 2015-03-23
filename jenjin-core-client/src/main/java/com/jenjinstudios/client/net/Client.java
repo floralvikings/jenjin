@@ -5,6 +5,7 @@ import com.jenjinstudios.core.MessageIO;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageRegistry;
 
+import java.io.InputStream;
 import java.security.KeyPair;
 import java.util.LinkedList;
 import java.util.List;
@@ -34,7 +35,9 @@ public class Client extends Connection
     protected Client(MessageIO messageIO) {
         super(messageIO);
         repeatedTasks = new LinkedList<>();
-    }
+		InputStream stream = getClass().getClassLoader().getResourceAsStream("com/jenjinstudios/client/Messages.xml");
+		MessageRegistry.getInstance().register("Core Client/Server Messages", stream);
+	}
 
     /**
      * Generate a PingRequest message.
