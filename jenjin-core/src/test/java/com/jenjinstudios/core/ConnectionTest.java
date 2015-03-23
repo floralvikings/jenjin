@@ -2,6 +2,7 @@ package com.jenjinstudios.core;
 
 import com.jenjinstudios.core.io.*;
 import org.testng.Assert;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -24,12 +25,23 @@ public class ConnectionTest
     private static final int INVALID_MESSAGE_ID = -255;
     private static final long REQUEST_TIME_SPOOF = 123456789L;
 
+	/**
+	 * Set up the message registry.
+	 */
 	@BeforeClass
 	public void setUp() {
 		MESSAGE_REGISTRY.register("Test Message Registry",
 			  getClass().getClassLoader().getResourceAsStream("test/jenjinstudios/core/Messages.xml"));
 		MESSAGE_REGISTRY.register("Core Message Registry",
 			  getClass().getClassLoader().getResourceAsStream("com/jenjinstudios/core/io/Messages.xml"));
+	}
+
+	/**
+	 * Clear the message registry.
+	 */
+	@AfterClass
+	public void clearMessageRegistry() {
+		MESSAGE_REGISTRY.clear();
 	}
 
 	/**
