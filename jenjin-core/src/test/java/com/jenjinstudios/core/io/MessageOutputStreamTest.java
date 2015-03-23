@@ -1,6 +1,7 @@
 package com.jenjinstudios.core.io;
 
 import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import java.io.*;
@@ -20,6 +21,14 @@ public class MessageOutputStreamTest
 {
     private static final MessageRegistry MESSAGE_REGISTRY = MessageRegistry.getInstance();
     private static final Logger LOGGER = Logger.getLogger(MessageOutputStreamTest.class.getName());
+
+	@BeforeClass
+	public void setUp() {
+		MESSAGE_REGISTRY.register("Test Message Registry",
+			  getClass().getClassLoader().getResourceAsStream("test/jenjinstudios/core/Messages.xml"));
+		MESSAGE_REGISTRY.register("Core Message Registry",
+			  getClass().getClassLoader().getResourceAsStream("com/jenjinstudios/core/io/Messages.xml"));
+	}
 
     /**
      * Test writing a message to the stream.
