@@ -10,6 +10,7 @@ import com.jenjinstudios.server.net.ClientHandler;
 import com.jenjinstudios.server.net.Server;
 import com.jenjinstudios.server.net.ServerUpdateTask;
 import org.mockito.Mockito;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -26,6 +27,14 @@ public class ExecutableLoginRequestTest
 	public void registerMessages() {
 		MessageRegistry.getInstance().register("Core Message Registry",
 			  getClass().getClassLoader().getResourceAsStream("com/jenjinstudios/server/Messages.xml"));
+	}
+
+	/**
+	 * Clear the message registry.
+	 */
+	@AfterClass
+	public void clearMessageRegistry() {
+		MessageRegistry.getInstance().clear();
 	}
 
 	@Test
