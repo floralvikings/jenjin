@@ -21,7 +21,7 @@ import static org.mockito.Mockito.*;
 @SuppressWarnings("unchecked")
 public class ExecutableWorldLogoutRequestTest
 {
-	private static final MessageRegistry messageRegistry = MessageRegistry.getInstance();
+	private static final MessageRegistry messageRegistry = MessageRegistry.getGlobalRegistry();
 
 	@Test
 	public void testSuccessfulLogout() {

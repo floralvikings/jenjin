@@ -36,8 +36,8 @@ public class AuthClient extends Client
      * @return The LogoutRequestMessage.
      */
     public static Message generateLogoutRequest() {
-        return MessageRegistry.getInstance().createMessage
-              ("LogoutRequest");
+		return MessageRegistry.getGlobalRegistry().createMessage
+			  ("LogoutRequest");
     }
 
     /**
@@ -47,8 +47,8 @@ public class AuthClient extends Client
      * @return The LoginRequest message.
      */
     public static Message generateLoginRequest(ClientUser user) {// Create the login request.
-        Message loginRequest = MessageRegistry.getInstance().createMessage("LoginRequest");
-        loginRequest.setArgument("username", user.getUsername());
+		Message loginRequest = MessageRegistry.getGlobalRegistry().createMessage("LoginRequest");
+		loginRequest.setArgument("username", user.getUsername());
         loginRequest.setArgument("password", user.getPassword());
         return loginRequest;
     }

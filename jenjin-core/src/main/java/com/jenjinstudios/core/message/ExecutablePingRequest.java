@@ -33,8 +33,8 @@ public class ExecutablePingRequest extends ExecutableMessage
      * @return The generated PingResponse.
      */
     private static Message generatePingResponse(long requestTimeMillis) {
-        Message pingResponse = MessageRegistry.getInstance().createMessage("PingResponse");
-        pingResponse.setArgument("requestTimeMillis", requestTimeMillis);
+		Message pingResponse = MessageRegistry.getGlobalRegistry().createMessage("PingResponse");
+		pingResponse.setArgument("requestTimeMillis", requestTimeMillis);
         return pingResponse;
     }
 

@@ -20,8 +20,8 @@ public class WorldClientMessageFactory
      * @return The generated message.
      */
     public Message generateStateChangeRequest(MoveState moveState) {
-        Message stateChangeRequest = MessageRegistry.getInstance().createMessage("StateChangeRequest");
-        stateChangeRequest.setArgument("relativeAngle", moveState.angle.getRelativeAngle());
+		Message stateChangeRequest = MessageRegistry.getGlobalRegistry().createMessage("StateChangeRequest");
+		stateChangeRequest.setArgument("relativeAngle", moveState.angle.getRelativeAngle());
         stateChangeRequest.setArgument("absoluteAngle", moveState.angle.getAbsoluteAngle());
         stateChangeRequest.setArgument("timeOfChange", moveState.timeOfChange);
         stateChangeRequest.setArgument("xCoordinate", moveState.position.getXCoordinate());
@@ -35,8 +35,8 @@ public class WorldClientMessageFactory
      * @return The file request.
      */
     public Message generateWorldFileRequest() {
-        return MessageRegistry.getInstance().createMessage
-              ("WorldFileRequest");
+		return MessageRegistry.getGlobalRegistry().createMessage
+			  ("WorldFileRequest");
     }
 
     /**
@@ -45,7 +45,7 @@ public class WorldClientMessageFactory
      * @return The request for the checksum.
      */
     public Message generateWorldChecksumRequest() {
-        return MessageRegistry.getInstance().createMessage
-              ("WorldChecksumRequest");
+		return MessageRegistry.getGlobalRegistry().createMessage
+			  ("WorldChecksumRequest");
     }
 }

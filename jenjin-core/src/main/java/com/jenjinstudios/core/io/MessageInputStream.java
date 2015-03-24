@@ -39,8 +39,8 @@ public class MessageInputStream extends DataInputStream
      */
     public MessageInputStream(InputStream inputStream) {
         super(inputStream);
-        this.messageRegistry = MessageRegistry.getInstance();
-    }
+		this.messageRegistry = MessageRegistry.getGlobalRegistry();
+	}
 
     /**
      * Read a {@code Message} object from the stream.

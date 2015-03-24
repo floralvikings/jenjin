@@ -41,8 +41,8 @@ public class MessageRegistry
 	 *
 	 * @return An immutable, static {@code MessageRegistry}.
 	 */
-	public static MessageRegistry getInstance() {
-        return MESSAGE_REGISTRY;
+	public static MessageRegistry getGlobalRegistry() {
+		return MESSAGE_REGISTRY;
     }
 
 	/**

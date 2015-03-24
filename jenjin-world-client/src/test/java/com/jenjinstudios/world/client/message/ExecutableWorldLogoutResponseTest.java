@@ -15,7 +15,7 @@ public class ExecutableWorldLogoutResponseTest
 {
     @Test
     public void testMessageExecution() throws Exception {
-        MessageRegistry messageRegistry = MessageRegistry.getInstance();
+		MessageRegistry messageRegistry = MessageRegistry.getGlobalRegistry();
 		Message worldLogoutResponse = mock(Message.class);
 		when(worldLogoutResponse.getArgument("success")).thenReturn(true);
 

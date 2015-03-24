@@ -21,7 +21,7 @@ public class ExecutableLogoutRequestTest
 	@SuppressWarnings("unchecked")
 	@Test
 	public void testMessageExecution() throws Exception {
-		MessageRegistry messageRegistry = MessageRegistry.getInstance();
+		MessageRegistry messageRegistry = MessageRegistry.getGlobalRegistry();
 		Message logoutRequest = messageRegistry.createMessage("LogoutRequest");
 
 		User user = new BasicUser();

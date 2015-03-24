@@ -36,7 +36,7 @@ public class Client extends Connection
         super(messageIO);
         repeatedTasks = new LinkedList<>();
 		InputStream stream = getClass().getClassLoader().getResourceAsStream("com/jenjinstudios/client/Messages.xml");
-		MessageRegistry.getInstance().register("Core Client/Server Messages", stream);
+		MessageRegistry.getGlobalRegistry().register("Core Client/Server Messages", stream);
 	}
 
     /**
@@ -45,8 +45,8 @@ public class Client extends Connection
      * @return The generated message.
      */
     private static Message generatePingRequest() {
-        Message pingRequest = MessageRegistry.getInstance().createMessage("PingRequest");
-        pingRequest.setArgument("requestTimeMillis", System.currentTimeMillis());
+		Message pingRequest = MessageRegistry.getGlobalRegistry().createMessage("PingRequest");
+		pingRequest.setArgument("requestTimeMillis", System.currentTimeMillis());
         return pingRequest;
     }
 

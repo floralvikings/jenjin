@@ -30,9 +30,9 @@ public class ExecutablePublicKeyMessageTest
 	 */
 	@BeforeClass
 	public void setUp() {
-		MessageRegistry.getInstance().register("Test Message Registry",
+		MessageRegistry.getGlobalRegistry().register("Test Message Registry",
 			  getClass().getClassLoader().getResourceAsStream("test/jenjinstudios/core/Messages.xml"));
-		MessageRegistry.getInstance().register("Core Message Registry",
+		MessageRegistry.getGlobalRegistry().register("Core Message Registry",
 			  getClass().getClassLoader().getResourceAsStream("com/jenjinstudios/core/io/Messages.xml"));
 	}
 
@@ -41,7 +41,7 @@ public class ExecutablePublicKeyMessageTest
 	 */
 	@AfterClass
 	public void clearMessageRegistry() {
-		MessageRegistry.getInstance().clear();
+		MessageRegistry.getGlobalRegistry().clear();
 	}
 
     /**

@@ -35,7 +35,7 @@ public class WorldClient extends AuthClient
         world = serverWorldFileTracker.readWorldFromFile();
 		InputStream stream = getClass().getClassLoader().
 			  getResourceAsStream("com/jenjinstudios/world/client/Messages.xml");
-		MessageRegistry.getInstance().register("World Client/Server Messages", stream);
+		MessageRegistry.getGlobalRegistry().register("World Client/Server Messages", stream);
 	}
 
     public WorldClientMessageFactory getMessageFactory() {return messageFactory; }

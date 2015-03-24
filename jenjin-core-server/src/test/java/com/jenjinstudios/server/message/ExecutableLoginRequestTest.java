@@ -25,7 +25,7 @@ public class ExecutableLoginRequestTest
 {
 	@BeforeClass
 	public void registerMessages() {
-		MessageRegistry.getInstance().register("Core Message Registry",
+		MessageRegistry.getGlobalRegistry().register("Core Message Registry",
 			  getClass().getClassLoader().getResourceAsStream("com/jenjinstudios/server/Messages.xml"));
 	}
 
@@ -34,13 +34,13 @@ public class ExecutableLoginRequestTest
 	 */
 	@AfterClass
 	public void clearMessageRegistry() {
-		MessageRegistry.getInstance().clear();
+		MessageRegistry.getGlobalRegistry().clear();
 	}
 
 	@Test
 	@SuppressWarnings("unchecked")
 	public void testMessageExecution() throws Exception {
-		Message message = MessageRegistry.getInstance().createMessage("LoginRequest");
+		Message message = MessageRegistry.getGlobalRegistry().createMessage("LoginRequest");
 		message.setArgument("username", "foo");
 		message.setArgument("password", "bar");
 
@@ -70,7 +70,7 @@ public class ExecutableLoginRequestTest
 	@Test
 	@SuppressWarnings("unchecked")
 	public void testFailedLogin() throws Exception {
-		Message message = MessageRegistry.getInstance().createMessage("LoginRequest");
+		Message message = MessageRegistry.getGlobalRegistry().createMessage("LoginRequest");
 		message.setArgument("username", "foo-dapoo");
 		message.setArgument("password", "bar");
 

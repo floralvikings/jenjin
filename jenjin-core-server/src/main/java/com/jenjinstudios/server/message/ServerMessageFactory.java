@@ -20,8 +20,8 @@ public final class ServerMessageFactory
      * @return The LogoutResponse.
      */
 	public static Message generateLogoutResponse(boolean success) {
-		Message logoutResponse = MessageRegistry.getInstance().createMessage("LogoutResponse");
-        logoutResponse.setArgument("success", success);
+		Message logoutResponse = MessageRegistry.getGlobalRegistry().createMessage("LogoutResponse");
+		logoutResponse.setArgument("success", success);
         return logoutResponse;
     }
 
@@ -34,8 +34,8 @@ public final class ServerMessageFactory
      * @return The LoginResponse message.
      */
 	public static Message generateLoginResponse(boolean success, long loggedInTime) {
-		Message loginResponse = MessageRegistry.getInstance().createMessage("LoginResponse");
-        loginResponse.setArgument("success", success);
+		Message loginResponse = MessageRegistry.getGlobalRegistry().createMessage("LoginResponse");
+		loginResponse.setArgument("success", success);
         loginResponse.setArgument("loginTime", loggedInTime);
         return loginResponse;
     }

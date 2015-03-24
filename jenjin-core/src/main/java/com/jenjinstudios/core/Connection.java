@@ -53,7 +53,7 @@ public class Connection
 		messageExecutionTask = new MessageExecutor();
 		messageExecutionTimer = new Timer();
 		InputStream stream = getClass().getClassLoader().getResourceAsStream("com/jenjinstudios/core/io/Messages.xml");
-		MessageRegistry.getInstance().register("Core XML Registry", stream);
+		MessageRegistry.getGlobalRegistry().register("Core XML Registry", stream);
 	}
 
 	/**
@@ -71,8 +71,8 @@ public class Connection
      * @return The generated message.
      */
     public static Message generatePublicKeyMessage(Key publicKey) {
-        Message publicKeyMessage = MessageRegistry.getInstance().createMessage("PublicKeyMessage");
-        publicKeyMessage.setArgument("publicKey", publicKey.getEncoded());
+		Message publicKeyMessage = MessageRegistry.getGlobalRegistry().createMessage("PublicKeyMessage");
+		publicKeyMessage.setArgument("publicKey", publicKey.getEncoded());
         return publicKeyMessage;
     }
 
@@ -203,7 +203,7 @@ public class Connection
 		}
 
 		private Message generateInvalidMessage(short id, String messageName) {
-			Message invalid = MessageRegistry.getInstance().createMessage("InvalidMessage");
+			Message invalid = MessageRegistry.getGlobalRegistry().createMessage("InvalidMessage");
 			invalid.setArgument("messageName", messageName);
 			invalid.setArgument("messageID", id);
 			return invalid;
@@ -251,7 +251,7 @@ public class Connection
 
 		private Collection<Constructor> getExecConstructors(Message message) {
 			Collection<Constructor> constructors = new LinkedList<>();
-			MessageType messageType = MessageRegistry.getInstance().getMessageType(message.getID());
+			MessageType messageType = MessageRegistry.getGlobalRegistry().getMessageType(message.getID());
 			for (String className : messageType.getExecutables())
 			{
 				Constructor[] execConstructors = EMPTY_CONSTRUCTOR_ARRAY;

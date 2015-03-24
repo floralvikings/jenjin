@@ -34,7 +34,7 @@ public class WorldServerMessageFactoryTest
 
 	@BeforeClass
 	public void registerMessages() {
-		MessageRegistry.getInstance().register("Core Message Registry",
+		MessageRegistry.getGlobalRegistry().register("Core Message Registry",
 			  getClass().getClassLoader().getResourceAsStream("com/jenjinstudios/world/server/Messages.xml"));
 	}
 
@@ -43,7 +43,7 @@ public class WorldServerMessageFactoryTest
 	 */
 	@AfterClass
 	public void clearMessageRegistry() {
-		MessageRegistry.getInstance().clear();
+		MessageRegistry.getGlobalRegistry().clear();
 	}
 
 	@SuppressWarnings("unchecked")

@@ -38,7 +38,7 @@ public class WorldServerMessageFactory
 			StateChangeStack stateChangeStack = (StateChangeStack) eventStack;
 			for (MoveState m : stateChangeStack.getStateChanges())
 			{
-				Message newState = MessageRegistry.getInstance().createMessage("StateChangeMessage");
+				Message newState = MessageRegistry.getGlobalRegistry().createMessage("StateChangeMessage");
 				newState.setArgument("id", changedActor.getId());
 				newState.setArgument("relativeAngle", m.angle.getRelativeAngle());
 				newState.setArgument("absoluteAngle", m.angle.getAbsoluteAngle());
@@ -52,7 +52,7 @@ public class WorldServerMessageFactory
 	}
 
 	public static Message generateForcedStateMessage(MoveState forcedState) {
-		Message forcedStateMessage = MessageRegistry.getInstance().createMessage("ForceStateMessage");
+		Message forcedStateMessage = MessageRegistry.getGlobalRegistry().createMessage("ForceStateMessage");
 		forcedStateMessage.setArgument("relativeAngle", forcedState.angle.getRelativeAngle());
 		forcedStateMessage.setArgument("absoluteAngle", forcedState.angle.getAbsoluteAngle());
 		forcedStateMessage.setArgument("xCoordinate", forcedState.position.getXCoordinate());
@@ -62,36 +62,36 @@ public class WorldServerMessageFactory
 	}
 
 	public static Message generateActorMoveSpeedMessage(double moveSpeed) {
-		Message stepLengthMessage = MessageRegistry.getInstance().createMessage("ActorMoveSpeed");
+		Message stepLengthMessage = MessageRegistry.getGlobalRegistry().createMessage("ActorMoveSpeed");
 		stepLengthMessage.setArgument("moveSpeed", moveSpeed);
 		return stepLengthMessage;
 	}
 
 	public static Message generateNewlyInvisibleMessage(WorldObject object) {
-		Message newlyInvisibleMessage = MessageRegistry.getInstance().createMessage("ObjectInvisibleMessage");
+		Message newlyInvisibleMessage = MessageRegistry.getGlobalRegistry().createMessage("ObjectInvisibleMessage");
 		newlyInvisibleMessage.setArgument("id", object.getId());
 		return newlyInvisibleMessage;
 	}
 
 	public static Message generateWorldLoginResponse() {
-		return MessageRegistry.getInstance().createMessage("WorldLoginResponse");
+		return MessageRegistry.getGlobalRegistry().createMessage("WorldLoginResponse");
 	}
 
 	public static Message generateWorldFileResponse(byte[] worldFileBytes) {
-		Message response = MessageRegistry.getInstance().createMessage("WorldFileResponse");
+		Message response = MessageRegistry.getGlobalRegistry().createMessage("WorldFileResponse");
 		response.setArgument("fileBytes", worldFileBytes);
 		return response;
 	}
 
 	public static Message generateWorldChecksumResponse(byte[] checkSum) {
-		Message response = MessageRegistry.getInstance().createMessage("WorldChecksumResponse");
+		Message response = MessageRegistry.getGlobalRegistry().createMessage("WorldChecksumResponse");
 		response.setArgument("checksum", checkSum);
 		return response;
 	}
 
 	private static Message generateActorVisibleMessage(Actor newlyVisible) {
 		Message newlyVisibleMessage;
-		newlyVisibleMessage = MessageRegistry.getInstance().createMessage("ActorVisibleMessage");
+		newlyVisibleMessage = MessageRegistry.getGlobalRegistry().createMessage("ActorVisibleMessage");
 		newlyVisibleMessage.setArgument("name", newlyVisible.getName());
 		newlyVisibleMessage.setArgument("id", newlyVisible.getId());
 		newlyVisibleMessage.setArgument("resourceID", newlyVisible.getResourceID());
@@ -106,7 +106,7 @@ public class WorldServerMessageFactory
 
 	private static Message generateObjectVisibleMessage(WorldObject object) {
 		Message newlyVisibleMessage;
-		newlyVisibleMessage = MessageRegistry.getInstance().createMessage("ObjectVisibleMessage");
+		newlyVisibleMessage = MessageRegistry.getGlobalRegistry().createMessage("ObjectVisibleMessage");
 		newlyVisibleMessage.setArgument("name", object.getName());
 		newlyVisibleMessage.setArgument("id", object.getId());
 		newlyVisibleMessage.setArgument("resourceID", object.getResourceID());

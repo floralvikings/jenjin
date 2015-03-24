@@ -37,8 +37,8 @@ public class MessageOutputStream extends DataOutputStream
      */
     public MessageOutputStream(OutputStream out) {
         super(out);
-        this.messageRegistry = MessageRegistry.getInstance();
-    }
+		this.messageRegistry = MessageRegistry.getGlobalRegistry();
+	}
 
     /**
      * Write the given {@code Message} to the output stream.

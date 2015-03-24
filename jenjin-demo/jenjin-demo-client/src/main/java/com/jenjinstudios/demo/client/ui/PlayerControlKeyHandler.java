@@ -74,7 +74,7 @@ public class PlayerControlKeyHandler implements EventHandler<KeyEvent>
 	}
 
 	private void sendFireRequest() {
-		Message message = MessageRegistry.getInstance().createMessage("FireRequest");
+		Message message = MessageRegistry.getGlobalRegistry().createMessage("FireRequest");
 		worldClient.enqueueMessage(message);
 	}
 

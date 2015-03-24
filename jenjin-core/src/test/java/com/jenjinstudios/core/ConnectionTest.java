@@ -21,8 +21,8 @@ import static org.mockito.Mockito.when;
 @SuppressWarnings("OverlyCoupledClass")
 public class ConnectionTest
 {
-    private static final MessageRegistry MESSAGE_REGISTRY = MessageRegistry.getInstance();
-    private static final int INVALID_MESSAGE_ID = -255;
+	private static final MessageRegistry MESSAGE_REGISTRY = MessageRegistry.getGlobalRegistry();
+	private static final int INVALID_MESSAGE_ID = -255;
     private static final long REQUEST_TIME_SPOOF = 123456789L;
 
 	/**

@@ -54,7 +54,7 @@ public class WorldServer extends Server
 		getServerUpdateTask().addRepeatedTask(world::update);
 		InputStream stream = getClass().getClassLoader().
 			  getResourceAsStream("com/jenjinstudios/world/server/Messages.xml");
-		MessageRegistry.getInstance().register("World Client/Server Messages", stream);
+		MessageRegistry.getGlobalRegistry().register("World Client/Server Messages", stream);
 	}
 
 	public World getWorld() { return world; }

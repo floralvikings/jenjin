@@ -20,8 +20,8 @@ import java.util.logging.Logger;
 @SuppressWarnings("MagicNumber")
 public class MessageOutputStreamTest
 {
-    private static final MessageRegistry MESSAGE_REGISTRY = MessageRegistry.getInstance();
-    private static final Logger LOGGER = Logger.getLogger(MessageOutputStreamTest.class.getName());
+	private static final MessageRegistry MESSAGE_REGISTRY = MessageRegistry.getGlobalRegistry();
+	private static final Logger LOGGER = Logger.getLogger(MessageOutputStreamTest.class.getName());
 
 	@BeforeClass
 	public void setUp() {
@@ -36,7 +36,7 @@ public class MessageOutputStreamTest
 	 */
 	@AfterClass
 	public void clearMessageRegistry() {
-		MessageRegistry.getInstance().clear();
+		MessageRegistry.getGlobalRegistry().clear();
 	}
 
     /**

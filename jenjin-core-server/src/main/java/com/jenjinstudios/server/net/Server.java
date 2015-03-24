@@ -39,7 +39,7 @@ public class Server extends Thread
 		rsaKeyPair = (initInfo.getKeyPair() == null) ? Connection.generateRSAKeyPair() : initInfo.getKeyPair();
 		this.authenticator = authenticator;
 		InputStream stream = getClass().getClassLoader().getResourceAsStream("com/jenjinstudios/server/Messages.xml");
-		MessageRegistry.getInstance().register("Core Client/Server Messages", stream);
+		MessageRegistry.getGlobalRegistry().register("Core Client/Server Messages", stream);
 	}
 
 	public ServerUpdateTask getServerUpdateTask() { return serverUpdateTask; }
