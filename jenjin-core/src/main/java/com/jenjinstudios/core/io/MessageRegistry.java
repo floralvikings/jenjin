@@ -184,12 +184,12 @@ public class MessageRegistry
             String name = messageType.getName();
             if (messageTypesByID.containsKey(id))
             {
-                LOGGER.log(Level.WARNING, "Unable to register message type: " + name + ". ID already " +
-                      "registered.");
+				LOGGER.log(Level.INFO, "Unable to register message type: " + name + ". ID already " +
+					  "registered.");
             } else if (messageTypesByName.containsKey(name))
             {
-                LOGGER.log(Level.WARNING, "Unable to register message type: " + id + ". Name already " +
-                      "registered.");
+				LOGGER.log(Level.INFO, "Unable to register message type: " + id + ". Name already " +
+					  "registered.");
             } else
             {
                 messageTypesByID.put(id, messageType);
