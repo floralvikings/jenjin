@@ -44,8 +44,8 @@ public class Connection
      *
      * @param streams The {@code MessageIO} containing streams used to read and write messages.
      */
-    protected Connection(MessageIO streams) {
-        this.messageIO = streams;
+	public Connection(MessageIO streams) {
+		this.messageIO = streams;
         pingTracker = new PingTracker();
         executableMessageQueue = new ExecutableMessageQueue();
 		messageWriter = new MessageWriter(messageIO.getOut());
