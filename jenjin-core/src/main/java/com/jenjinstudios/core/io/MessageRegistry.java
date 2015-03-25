@@ -192,7 +192,8 @@ public class MessageRegistry
 					  "registered.");
             } else
             {
-                messageTypesByID.put(id, messageType);
+				LOGGER.log(Level.INFO, "Registering message type: " + messageType.getName());
+				messageTypesByID.put(id, messageType);
                 messageTypesByName.put(name, messageType);
             }
         }
