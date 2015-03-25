@@ -17,7 +17,7 @@ public class ExecutableTest extends ExecutableMessage
 	 * @param message The message that caused this {@code ExecutableMessage} to be created.
 	 */
 	@SuppressWarnings("UnusedDeclaration")
-	protected ExecutableTest(Connection connection, Message message) {
+	public ExecutableTest(Connection connection, Message message) {
 		super(connection, message);
 	}
 
