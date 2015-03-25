@@ -65,5 +65,7 @@ public class ConnectionTest
 		// Give the second connection time to read the message
 		Thread.sleep(100);
 		Assert.assertEquals(connectionTwo.getName(), "FooBar", "Connection name should be set by executable message.");
+
+		MessageRegistry.getGlobalRegistry().clear();
 	}
 }
