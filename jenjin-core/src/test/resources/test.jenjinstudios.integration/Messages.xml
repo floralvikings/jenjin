@@ -1,0 +1,10 @@
+<?xml version="1.0" ?>
+
+<messages xmlns="https://www.jenjinstudios.com">
+
+    <message name="Test" id="-5">
+        <executable>test.jenjinstudios.integration.message.ExecutableTest</executable>
+        <argument type="String" encrypt="true" name="encryptedString" />
+    </message>
+
+</messages>
