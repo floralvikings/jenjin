@@ -30,7 +30,7 @@ public class ConnectionTest
 	public void integrationTest() throws Exception {
 		InputStream stream = getClass().
 			  getClassLoader().
-			  getResourceAsStream("test/jenjinstudios/core/Messages.xml");
+			  getResourceAsStream("test/jenjinstudios/integration/Messages.xml");
 		MessageRegistry.getGlobalRegistry().register("Integration test messages", stream);
 
 		ServerSocket serverSocket = new ServerSocket(51015);
