@@ -79,6 +79,18 @@ public class ConnectionTest
 		// Give the second connection time to read the message
 		Thread.sleep(100);
 		Assert.assertEquals(connectionTwo.getName(), "FooBar", "Connection name should be set by executable message.");
+
+		// Sleep for a while, then send another message to mimic real communication.
+		Thread.sleep(100);
+		connectionTwo.enqueueMessage(message);
+
+		// Sleep to give the connection time to retrieve the message.
+		Thread.sleep(100);
+		Assert.assertEquals(connectionOne.getName(), "FooBar", "Connection name should be set by executable message.");
+
+		// Make sure they can shut down w/o exceptions
+		connectionOne.shutdown();
+		connectionTwo.shutdown();
 	}
 
 	private static class SocketPair
