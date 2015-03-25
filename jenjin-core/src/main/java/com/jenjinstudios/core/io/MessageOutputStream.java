@@ -108,8 +108,8 @@ public class MessageOutputStream extends DataOutputStream
         {
             if (encryptCipher == null)
             {
-                LOGGER.log(Level.SEVERE, "AES key not set, message will not be encrypted: " + s);
-                throw new IOException("Unable to encrypt sensitive data.");
+				LOGGER.log(Level.SEVERE, "AES key not set, message will not be encrypted");
+				throw new IOException("Unable to encrypt sensitive data.");
             } else
             {
                 try
