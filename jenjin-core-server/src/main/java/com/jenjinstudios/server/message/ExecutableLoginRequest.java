@@ -33,10 +33,6 @@ public class ExecutableLoginRequest extends ServerExecutableMessage
 	}
 
 	@Override
-	public void runDelayed() {
-	}
-
-	@Override
 	public void runImmediate() {
 		ClientHandler handler = getClientHandler();
 		String username = (String) getMessage().getArgument("username");
