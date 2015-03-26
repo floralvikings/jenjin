@@ -44,7 +44,7 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage
 	@Override
 	public void runDelayed() {
 		Actor player = getClientHandler().getUser();
-		if (player != null)
+		if ((player != null) && (player.getWorld() != null))
 		{
 			double distance = MathUtil.round(player.getMoveSpeed() * ((double) timePast / 1000d), 2);
 			position = uncorrectedPosition.getVectorInDirection(distance, angle.getStepAngle());
