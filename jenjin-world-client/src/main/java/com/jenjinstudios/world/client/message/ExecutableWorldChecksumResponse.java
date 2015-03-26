@@ -21,10 +21,6 @@ public class ExecutableWorldChecksumResponse extends WorldClientExecutableMessag
     }
 
     @Override
-    public void runDelayed() {
-    }
-
-    @Override
     public void runImmediate() {
         byte[] bytes = (byte[]) getMessage().getArgument("checksum");
         getConnection().getServerWorldFileTracker().setChecksum(bytes);
