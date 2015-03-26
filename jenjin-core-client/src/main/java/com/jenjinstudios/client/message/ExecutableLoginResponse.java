@@ -24,17 +24,18 @@ public class ExecutableLoginResponse extends ExecutableMessage
 
     @Override
     public void runDelayed() {
-        AuthClient client = (AuthClient) getConnection();
-        client.getLoginTracker().setLoggedIn((boolean) getMessage().getArgument("success"));
-        if (client.getLoginTracker().isLoggedIn())
-        {
-            client.getLoginTracker().setLoggedInTime((long) getMessage().getArgument("loginTime"));
-            client.setName("Client: " + client.getUser().getUsername());
-        }
+
     }
 
     @Override
     public void runImmediate() {
-    }
+		AuthClient client = (AuthClient) getConnection();
+		client.getLoginTracker().setLoggedIn((boolean) getMessage().getArgument("success"));
+		if (client.getLoginTracker().isLoggedIn())
+		{
+			client.getLoginTracker().setLoggedInTime((long) getMessage().getArgument("loginTime"));
+			client.setName("Client: " + client.getUser().getUsername());
+		}
+	}
 
 }
