@@ -1,5 +1,6 @@
 package com.jenjinstudios.demo.client;
 
+import com.jenjinstudios.core.io.MessageRegistry;
 import com.jenjinstudios.demo.client.ui.ClientPane;
 import com.jenjinstudios.demo.client.ui.LoginPane;
 import com.jenjinstudios.world.client.WorldClient;
@@ -13,6 +14,8 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+
+import java.io.InputStream;
 
 /**
  * @author Caleb Brinkman
@@ -28,6 +31,8 @@ public class Main extends Application implements EventHandler<WindowEvent>
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
+		InputStream stream = getClass().getResourceAsStream("/com/jenjinstudios/demo/client/Messages.xml");
+		MessageRegistry.getGlobalRegistry().register("Demo Client Messages", stream);
 		LoginPane loginPane = new LoginPane(this);
 		stage = primaryStage;
 		stage.setOnCloseRequest(this);
