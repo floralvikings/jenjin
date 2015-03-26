@@ -5,6 +5,7 @@ import com.jenjinstudios.core.ExecutableMessage;
 import com.jenjinstudios.core.io.Message;
 
 /**
+ * Used to test message execution.
  * @author Caleb Brinkman
  */
 public class ExecutableTest extends ExecutableMessage
@@ -19,11 +20,6 @@ public class ExecutableTest extends ExecutableMessage
 	@SuppressWarnings("UnusedDeclaration")
 	public ExecutableTest(Connection connection, Message message) {
 		super(connection, message);
-	}
-
-	@Override
-	public void runDelayed() {
-
 	}
 
 	@Override
