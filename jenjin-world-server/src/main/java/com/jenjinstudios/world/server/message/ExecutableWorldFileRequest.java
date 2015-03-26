@@ -22,10 +22,6 @@ public class ExecutableWorldFileRequest extends WorldExecutableMessage
 	}
 
 	@Override
-	public void runDelayed() {
-	}
-
-	@Override
 	public void runImmediate() {
 		byte[] worldFileBytes = ((WorldServer) getClientHandler().getServer()).getWorldFileBytes();
 		Message response = WorldServerMessageFactory.generateWorldFileResponse(worldFileBytes);
