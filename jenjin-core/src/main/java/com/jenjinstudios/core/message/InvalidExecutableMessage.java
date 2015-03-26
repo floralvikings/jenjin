@@ -29,10 +29,6 @@ public class InvalidExecutableMessage extends ExecutableMessage
     }
 
     @Override
-    public void runDelayed() {
-    }
-
-    @Override
     public void runImmediate() {
         String messageName = (String) getMessage().getArgument("messageName");
         short messageID = (short) getMessage().getArgument("messageID");
