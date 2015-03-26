@@ -1,4 +1,4 @@
-package test.jenjinstudios.integration;
+package test.jenjinstudios.integration.integration;
 
 import com.jenjinstudios.core.Connection;
 import com.jenjinstudios.core.MessageIO;
@@ -36,7 +36,7 @@ public class ConnectionTest
 	public void registerTestMessages() {
 		InputStream stream = getClass().
 			  getClassLoader().
-			  getResourceAsStream("test/jenjinstudios/integration/Messages.xml");
+			  getResourceAsStream("test/jenjinstudios/integration/connection/Messages.xml");
 		MessageRegistry.getGlobalRegistry().register("Integration test messages", stream);
 	}
 

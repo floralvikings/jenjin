@@ -1,4 +1,4 @@
-package test.jenjinstudios.integration.message;
+package test.jenjinstudios.integration.integration.message;
 
 import com.jenjinstudios.core.Connection;
 import com.jenjinstudios.core.ExecutableMessage;
