@@ -18,7 +18,12 @@ public class PingTracker
 	 *
 	 * @param pingTime The time taken for a ping to travel from one connection to another and back.
 	 */
-	public void addPingTime(long pingTime) { pingTimes.add(pingTime); }
+	public void addPingTime(long pingTime) {
+		synchronized (pingTimes)
+		{
+			pingTimes.add(pingTime);
+		}
+	}
 
 	/**
 	 * Get the average of all ping times added to this tracker.
