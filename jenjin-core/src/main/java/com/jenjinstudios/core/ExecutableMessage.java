@@ -36,13 +36,13 @@ public abstract class ExecutableMessage
     /**
      * This method is invoked by the {@code Connection} execution timer, and should not be called directly.
      */
-    public abstract void runDelayed();
+	public void runDelayed() { }
 
     /**
      * This method is invoked by a {@code Connection} when a message is received and the {@code ExecutableMessage} is
      * created, and should not be called directly.
      */
-    public abstract void runImmediate();
+	public abstract void runImmediate();
 
     /**
      * Get the message for which this {@code ExecutableMessage} was created.
