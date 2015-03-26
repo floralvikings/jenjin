@@ -39,10 +39,6 @@ public class ExecutablePingRequest extends ExecutableMessage
     }
 
     @Override
-    public void runDelayed() {
-    }
-
-    @Override
     public void runImmediate() {
         long requestTimeNanos = (long) getMessage().getArgument("requestTimeMillis");
 
