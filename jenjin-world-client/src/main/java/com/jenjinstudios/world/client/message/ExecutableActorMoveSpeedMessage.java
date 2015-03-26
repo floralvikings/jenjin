@@ -19,11 +19,6 @@ public class ExecutableActorMoveSpeedMessage extends WorldClientExecutableMessag
 		super(client, message);
 	}
 
-	/** Run the synced portion of this message. */
-	@Override
-	public void runDelayed() {
-	}
-
 	/** Run asynchronous portion of this message. */
 	@Override
 	public void runImmediate() {
