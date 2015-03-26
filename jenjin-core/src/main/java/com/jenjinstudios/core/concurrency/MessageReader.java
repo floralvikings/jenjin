@@ -87,7 +87,10 @@ public class MessageReader
 				errored = false;
 			} catch (IOException e)
 			{
-				LOGGER.log(Level.WARNING, "MessageReader encountered an error while reading message", e);
+				if (!errored)
+				{    // Only log the error once.
+					LOGGER.log(Level.WARNING, "MessageReader encountered an error while reading message", e);
+				}
 				errored = true;
 			}
 		}
