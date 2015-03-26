@@ -33,7 +33,9 @@ public class Connection
     private final ExecutableMessageQueue executableMessageQueue;
     private final MessageIO messageIO;
 	private final Timer messageExecutionTimer;
+	private final Timer checkErrorTimer;
 	private final TimerTask messageExecutionTask;
+	private final TimerTask checkErrorTask;
 	private final MessageWriter messageWriter;
 	private final MessageReader messageReader;
 	private String name = "Connection";
@@ -51,7 +53,9 @@ public class Connection
 		messageWriter = new MessageWriter(messageIO.getOut());
 		messageReader = new MessageReader(messageIO.getIn());
 		messageExecutionTask = new MessageExecutor();
+		checkErrorTask = new CheckErrorsTask();
 		messageExecutionTimer = new Timer();
+		checkErrorTimer = new Timer();
 		InputStream stream = getClass().getClassLoader().getResourceAsStream("com/jenjinstudios/core/io/Messages.xml");
 		MessageRegistry.getGlobalRegistry().register("Core XML Registry", stream);
 	}
@@ -100,6 +104,7 @@ public class Connection
      */
     public void start() {
 		messageExecutionTimer.scheduleAtFixedRate(messageExecutionTask, 0, 10);
+		checkErrorTimer.scheduleAtFixedRate(checkErrorTask, 0, 10);
 		messageReader.start();
 		messageWriter.start();
 	}
@@ -145,6 +150,9 @@ public class Connection
      */
     public void shutdown() {
 		messageWriter.stop();
+		messageReader.stop();
+		checkErrorTimer.cancel();
+		messageExecutionTimer.cancel();
 		messageIO.closeInputStream();
         messageIO.closeOutputStream();
     }
@@ -170,6 +178,18 @@ public class Connection
      */
     @SuppressWarnings("ReturnOfCollectionOrArrayField")
     public Map<InetAddress, Key> getVerifiedKeys() { return verifiedKeys; }
+
+	private class CheckErrorsTask extends TimerTask
+	{
+		@Override
+		public void run() {
+			if (messageReader.isErrored() || messageWriter.isErrored())
+			{
+				LOGGER.log(Level.SEVERE, "Message reader or writer in error state; shutting down.");
+				shutdown();
+			}
+		}
+	}
 
 	private class MessageExecutor extends TimerTask
 	{
