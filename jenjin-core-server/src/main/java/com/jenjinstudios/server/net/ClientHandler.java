@@ -66,7 +66,8 @@ public class ClientHandler extends Connection
             }
         }
         getServer().removeClient(this);
-    }
+		super.shutdown();
+	}
 
 	/**
 	 * The server.
