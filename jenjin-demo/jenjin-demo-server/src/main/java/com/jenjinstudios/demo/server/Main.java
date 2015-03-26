@@ -1,5 +1,6 @@
 package com.jenjinstudios.demo.server;
 
+import com.jenjinstudios.core.io.MessageRegistry;
 import com.jenjinstudios.server.authentication.Authenticator;
 import com.jenjinstudios.server.authentication.UserLookup;
 import com.jenjinstudios.server.net.ServerInit;
@@ -8,6 +9,7 @@ import com.jenjinstudios.world.server.WorldClientHandler;
 import com.jenjinstudios.world.server.WorldServer;
 import com.jenjinstudios.world.server.sql.PlayerTable;
 
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Statement;
@@ -19,6 +21,8 @@ import java.util.Scanner;
 public class Main
 {
 	public static void main(String[] args) throws Exception {
+		InputStream stream = Main.class.getResourceAsStream("/com/jenjinstudios/demo/server/Messages.xml");
+		MessageRegistry.getGlobalRegistry().register("Demo Client Messages", stream);
 		Scanner input = new Scanner(System.in);
 		WorldServer demoServer;
 
