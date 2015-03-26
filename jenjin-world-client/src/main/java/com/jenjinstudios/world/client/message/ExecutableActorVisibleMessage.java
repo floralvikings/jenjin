@@ -24,12 +24,6 @@ public class ExecutableActorVisibleMessage extends WorldClientExecutableMessage
     public ExecutableActorVisibleMessage(WorldClient client, Message message) { super(client, message); }
 
     @Override
-    public void runDelayed() {
-
-
-	}
-
-    @Override
     public void runImmediate() {
         Message message = getMessage();
         String name = (String) message.getArgument("name");
