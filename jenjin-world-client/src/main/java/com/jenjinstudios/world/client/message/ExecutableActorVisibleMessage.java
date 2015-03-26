@@ -25,21 +25,9 @@ public class ExecutableActorVisibleMessage extends WorldClientExecutableMessage
 
     @Override
     public void runDelayed() {
-        int id = newlyVisible.getId();
-        World world = getConnection().getWorld();
-        try
-        {
-            world.getWorldObjects().set(id, newlyVisible);
-        } catch (Exception ex)
-        {
-            WorldObject existing = world.getWorldObjects().get(id);
-            LOGGER.log(Level.WARNING, "Received message for already extant object ID:  {0}, {1}; Current: {2}",
-                  new Object[]{id, newlyVisible, existing});
 
-            world.getWorldObjects().set(id, newlyVisible);
-        }
 
-    }
+	}
 
     @Override
     public void runImmediate() {
@@ -64,5 +52,20 @@ public class ExecutableActorVisibleMessage extends WorldClientExecutableMessage
         newlyVisible.setVector2D(newVector);
         newlyVisible.setAngle(new Angle(absoluteAngle, relativeAngle));
         newlyVisible.setMoveSpeed(moveSpeed);
-    }
+
+		World world = getConnection().getWorld();
+		world.scheduleUpdateTask(() -> {
+			try
+			{
+				world.getWorldObjects().set(id, newlyVisible);
+			} catch (RuntimeException ex)
+			{
+				WorldObject existing = world.getWorldObjects().get(id);
+				LOGGER.log(Level.WARNING, "Received message for already extant object ID: " +
+					  id + ", " + newlyVisible + "; Current: " + existing, ex);
+
+				world.getWorldObjects().set(id, newlyVisible);
+			}
+		});
+	}
 }

@@ -35,8 +35,7 @@ public class ExecutableActorVisibleMessageTest
 
 		ExecutableActorVisibleMessage message = new ExecutableActorVisibleMessage(worldClient, actorVisibleMessage);
 		message.runImmediate();
-		message.runDelayed();
 
-		verify(worldObjectMap).set(eq(100), any());
+		verify(world).scheduleUpdateTask(any());
 	}
 }
