@@ -37,11 +37,6 @@ public class ExecutablePublicKeyMessage extends ExecutableMessage
     }
 
     @Override
-    public void runDelayed() {
-
-    }
-
-    @Override
     public void runImmediate() {
         byte[] keyBytes = (byte[]) getMessage().getArgument("publicKey");
         try
