@@ -25,17 +25,4 @@ public class DisabledExecutableMessageTest
         DisabledExecutableMessage executableMessage = new DisabledExecutableMessage(connection, message);
         executableMessage.runImmediate();
     }
-
-    /**
-     * Ensure that the DisabledMessage cannot be invoked.
-     */
-    @Test(expectedExceptions = IllegalStateException.class)
-    public void testMessageExecutionDelayed() {
-        Connection connection = mock(Connection.class);
-        Message message = mock(Message.class);
-
-        DisabledExecutableMessage executableMessage = new DisabledExecutableMessage(connection, message);
-        executableMessage.runDelayed();
-
-    }
 }
