@@ -31,10 +31,6 @@ public class ExecutableLogoutRequest extends ServerExecutableMessage
 	}
 
 	@Override
-	public void runDelayed() {
-	}
-
-	@Override
 	public void runImmediate() {
 		ClientHandler handler = getClientHandler();
 		User user = handler.getUser();
