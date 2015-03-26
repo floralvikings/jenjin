@@ -149,6 +149,7 @@ public class Connection
      * End this connection's execution loop and close any streams.
      */
     public void shutdown() {
+		LOGGER.log(Level.INFO, "Shutting down connection: " + name);
 		messageWriter.stop();
 		messageReader.stop();
 		checkErrorTimer.cancel();
