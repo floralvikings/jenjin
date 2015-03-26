@@ -44,21 +44,24 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage
 	@Override
 	public void runDelayed() {
 		Actor player = getClientHandler().getUser();
-		double distance = MathUtil.round(player.getMoveSpeed() * ((double) timePast / 1000d), 2);
-		position = uncorrectedPosition.getVectorInDirection(distance, angle.getStepAngle());
-		if (!locationWalkable(player))
+		if (player != null)
 		{
-			LOGGER.log(Level.INFO, "Attempted move to unwalkable location: {0}", position);
-			Angle pAngle = player.getAngle().asIdle();
-			forcePlayerToAngle(player, pAngle);
-		} else if (!isCorrectionSafe(player))
-		{
-			Angle pAngle = player.getAngle();
-			forcePlayerToAngle(player, pAngle);
-		} else
-		{
-			player.setAngle(angle);
-			player.setVector2D(position);
+			double distance = MathUtil.round(player.getMoveSpeed() * ((double) timePast / 1000d), 2);
+			position = uncorrectedPosition.getVectorInDirection(distance, angle.getStepAngle());
+			if (!locationWalkable(player))
+			{
+				LOGGER.log(Level.INFO, "Attempted move to unwalkable location: {0}", position);
+				Angle pAngle = player.getAngle().asIdle();
+				forcePlayerToAngle(player, pAngle);
+			} else if (!isCorrectionSafe(player))
+			{
+				Angle pAngle = player.getAngle();
+				forcePlayerToAngle(player, pAngle);
+			} else
+			{
+				player.setAngle(angle);
+				player.setVector2D(position);
+			}
 		}
 	}
 
