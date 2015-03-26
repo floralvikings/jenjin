@@ -28,8 +28,5 @@ public class DisabledExecutableMessage extends ExecutableMessage
     }
 
     @Override
-    public void runDelayed() { throw new IllegalStateException("This message should be disabled."); }
-
-    @Override
     public void runImmediate() { throw new IllegalStateException("This message should be disabled."); }
 }
