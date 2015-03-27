@@ -3,6 +3,7 @@ package com.jenjinstudios.world.server.message;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.server.authentication.AuthenticationException;
 import com.jenjinstudios.server.authentication.Authenticator;
+import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.server.Player;
 import com.jenjinstudios.world.server.WorldClientHandler;
 import com.jenjinstudios.world.server.WorldServer;
@@ -29,12 +30,6 @@ public class ExecutableWorldLogoutRequest extends WorldExecutableMessage
 
 	@Override
 	public void runDelayed() {
-		Player clientActor = getClientHandler().getUser();
-		// Multiple logout requests can cause Player to be null; have to check first.
-		if ((clientActor != null) && !clientActor.isLoggedIn())
-		{
-			clientActor.getWorld().getWorldObjects().remove(clientActor.getId());
-		}
 	}
 
 	@Override
@@ -48,6 +43,14 @@ public class ExecutableWorldLogoutRequest extends WorldExecutableMessage
 			getClientHandler().sendLogoutStatus(false);
 		}
 
+		Player clientActor = getClientHandler().getUser();
+		World world = ((WorldServer) getClientHandler().getServer()).getWorld();
+		world.scheduleUpdateTask(() -> {
+			if ((clientActor != null) && !clientActor.isLoggedIn())
+			{
+				clientActor.getWorld().getWorldObjects().remove(clientActor.getId());
+			}
+		});
 	}
 
 	private void tryLogOutUser() throws AuthenticationException {
