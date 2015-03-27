@@ -218,7 +218,6 @@ public class Connection
 				} else
 				{
 					executable.runImmediate();
-					executableMessageQueue.queueExecutableMessage(executable);
 				}
 			}
 		}
