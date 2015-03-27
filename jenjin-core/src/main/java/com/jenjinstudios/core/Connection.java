@@ -30,8 +30,7 @@ public class Connection
     private static final Logger LOGGER = Logger.getLogger(Connection.class.getName());
     private static final int KEYSIZE = 512;
     private final PingTracker pingTracker;
-    private final ExecutableMessageQueue executableMessageQueue;
-    private final MessageIO messageIO;
+	private final MessageIO messageIO;
 	private final Timer messageExecutionTimer;
 	private final Timer checkErrorTimer;
 	private final TimerTask messageExecutionTask;
@@ -49,7 +48,6 @@ public class Connection
 	public Connection(MessageIO streams) {
 		this.messageIO = streams;
         pingTracker = new PingTracker();
-        executableMessageQueue = new ExecutableMessageQueue();
 		messageWriter = new MessageWriter(messageIO.getOut());
 		messageReader = new MessageReader(messageIO.getIn());
 		messageExecutionTask = new MessageExecutor();
