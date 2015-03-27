@@ -27,7 +27,7 @@ public class ExecutableWorldLogoutRequestTest
 	public void testSuccessfulLogout() {
 		Message logOutRequest = messageRegistry.createMessage("WorldLogoutRequest");
 
-		World world = mock(World.class);
+		World world = spy(new World());
 		Player player = mock(Player.class);
 		WorldClientHandler handler = mock(WorldClientHandler.class);
 		WorldServer worldServer = mock(WorldServer.class);
@@ -44,7 +44,7 @@ public class ExecutableWorldLogoutRequestTest
 
 		ExecutableWorldLogoutRequest exec = new ExecutableWorldLogoutRequest(handler, logOutRequest);
 		exec.runImmediate();
-		exec.runDelayed();
+		world.update();
 
 		verify(handler).sendLogoutStatus(true);
 		verify(worldObjectMap).remove(player.getId());
