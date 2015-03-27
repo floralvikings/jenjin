@@ -25,7 +25,6 @@ public class ExecutableWorldLogoutResponseTest
 
         ExecutableWorldLogoutResponse message = new ExecutableWorldLogoutResponse(worldClient, worldLogoutResponse);
         message.runImmediate();
-        message.runDelayed();
 
         verify(loginTracker).setLoggedIn(false);
     }
