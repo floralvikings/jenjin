@@ -25,14 +25,16 @@ public class ExecutableFireRequest extends WorldExecutableMessage
 	/** Run the synced portion of this message. */
 	@Override
 	public void runDelayed() {
-		World world = ((WorldServer) getClientHandler().getServer()).getWorld();
-		Actor player = getClientHandler().getUser();
-		Bullet bullet = new Bullet(player);
-		world.getWorldObjects().add(bullet);
 	}
 
 	/** Run asynchronous portion of this message. */
 	@Override
 	public void runImmediate() {
+		World world = ((WorldServer) getClientHandler().getServer()).getWorld();
+		world.scheduleUpdateTask(() -> {
+			Actor player = getClientHandler().getUser();
+			Bullet bullet = new Bullet(player);
+			world.getWorldObjects().add(bullet);
+		});
 	}
 }
