@@ -23,7 +23,6 @@ public class ExecutableActorMoveSpeedMessageTest
 		ExecutableActorMoveSpeedMessage message =
 			  new ExecutableActorMoveSpeedMessage(worldClient, msg);
 		message.runImmediate();
-		message.runDelayed();
 
 		Assert.assertEquals(Actor.DEFAULT_MOVE_SPEED, 123.45);
 	}
