@@ -7,7 +7,6 @@ import com.jenjinstudios.server.authentication.Authenticator;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.KeyPair;
-import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
@@ -65,16 +64,6 @@ public class Server extends Thread
         }
         h.setHandlerId(nullIndex);
         h.setRSAKeyPair(rsaKeyPair);
-    }
-
-    public void runClientHandlerQueuedMessages() {
-        synchronized (clientHandlers)
-        {
-            Collection<ClientHandler> handlers = clientHandlers.values();
-            handlers.stream().
-                  filter(current -> current != null).
-                  forEach(c -> c.getExecutableMessageQueue().runQueuedExecutableMessages());
-        }
     }
 
 	public void update() {
