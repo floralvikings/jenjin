@@ -1,6 +1,7 @@
 package com.jenjinstudios.world.client.message;
 
 import com.jenjinstudios.core.io.Message;
+import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.WorldObject;
 import com.jenjinstudios.world.client.WorldClient;
 import com.jenjinstudios.world.math.Vector2D;
@@ -13,11 +14,8 @@ import com.jenjinstudios.world.math.Vector2D;
 @SuppressWarnings("WeakerAccess")
 public class ExecutableObjectVisibleMessage extends WorldClientExecutableMessage
 {
-    /** The newly visible actor. */
-    WorldObject newlyVisible;
-
-    /**
-     * Construct an ExecutableMessage with the given Message.
+	/**
+	 * Construct an ExecutableMessage with the given Message.
      *
      * @param client The client invoking this message.
      * @param message The Message.
@@ -27,7 +25,7 @@ public class ExecutableObjectVisibleMessage extends WorldClientExecutableMessage
     }
 
     @Override
-    public void runDelayed() { getConnection().getWorld().getWorldObjects().set(newlyVisible.getId(), newlyVisible); }
+	public void runDelayed() { }
 
     @Override
     public void runImmediate() {
@@ -39,9 +37,14 @@ public class ExecutableObjectVisibleMessage extends WorldClientExecutableMessage
         double yCoordinate = (double) message.getArgument("yCoordinate");
         Vector2D vector2D = new Vector2D(xCoordinate, yCoordinate);
 
-        newlyVisible = new WorldObject(name);
-        newlyVisible.setId(id);
+		WorldObject newlyVisible = new WorldObject(name);
+		newlyVisible.setId(id);
         newlyVisible.setResourceID(resourceID);
         newlyVisible.setVector2D(vector2D);
-    }
+
+		World world = getConnection().getWorld();
+		world.scheduleUpdateTask(() -> {
+			world.getWorldObjects().set(newlyVisible.getId(), newlyVisible);
+		});
+	}
 }
