@@ -27,7 +27,6 @@ public class ExecutableWorldChecksumResponseTest
 
 		ExecutableWorldChecksumResponse response = new ExecutableWorldChecksumResponse(worldClient, message);
 		response.runImmediate();
-		response.runDelayed();
 
 		assertEquals(serverWorldFileTracker.getChecksum(), checksum);
 		assertFalse(serverWorldFileTracker.isWaitingForChecksum());
