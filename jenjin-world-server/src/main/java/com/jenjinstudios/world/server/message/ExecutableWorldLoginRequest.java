@@ -4,6 +4,7 @@ import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.server.authentication.AuthenticationException;
 import com.jenjinstudios.server.authentication.Authenticator;
 import com.jenjinstudios.world.Actor;
+import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.actor.Vision;
 import com.jenjinstudios.world.server.Player;
 import com.jenjinstudios.world.server.WorldClientHandler;
@@ -32,15 +33,7 @@ public class ExecutableWorldLoginRequest extends WorldExecutableMessage
 
 	@Override
 	public void runDelayed() {
-		if (getClientHandler().getUser() != null)
-		{
-			handleLoginSuccess();
-			getClientHandler().getUser().addPreUpdateEvent(Vision.EVENT_NAME, new Vision(getClientHandler().getUser()));
-			((WorldServer) getClientHandler().getServer()).getWorld().getWorldObjects().add(
-				  getClientHandler().getUser());
-			loginResponse.setArgument("id", getClientHandler().getUser().getId());
-		}
-		getClientHandler().enqueueMessage(loginResponse);
+
 	}
 
 	@Override
@@ -54,6 +47,19 @@ public class ExecutableWorldLoginRequest extends WorldExecutableMessage
 		}
 		long result = getClientHandler().getServer().getServerUpdateTask().getCycleStartTime();
 		getClientHandler().setLoggedInTime(result);
+		World world = ((WorldServer) getClientHandler().getServer()).getWorld();
+		world.scheduleUpdateTask(() -> {
+			if (getClientHandler().getUser() != null)
+			{
+				handleLoginSuccess();
+				getClientHandler().getUser().addPreUpdateEvent(Vision.EVENT_NAME, new Vision(getClientHandler()
+					  .getUser()));
+				world.getWorldObjects().add(
+					  getClientHandler().getUser());
+				loginResponse.setArgument("id", getClientHandler().getUser().getId());
+			}
+			getClientHandler().enqueueMessage(loginResponse);
+		});
 	}
 
 	private void tryLogInUser() throws AuthenticationException {
