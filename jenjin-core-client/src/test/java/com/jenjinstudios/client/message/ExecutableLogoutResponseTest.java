@@ -28,7 +28,6 @@ public class ExecutableLogoutResponseTest
 
         ExecutableLogoutResponse response = new ExecutableLogoutResponse(authClient, loginResponse);
         response.runImmediate();
-        response.runDelayed();
 
         verify(loginTracker).setLoggedIn(false);
     }
