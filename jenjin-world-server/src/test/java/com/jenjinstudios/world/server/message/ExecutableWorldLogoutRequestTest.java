@@ -68,7 +68,6 @@ public class ExecutableWorldLogoutRequestTest
 
 		ExecutableWorldLogoutRequest exec = new ExecutableWorldLogoutRequest(handler, logOutRequest);
 		exec.runImmediate();
-		exec.runDelayed();
 
 		verify(handler).sendLogoutStatus(false);
 	}
