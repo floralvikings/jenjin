@@ -138,15 +138,8 @@ public class Connection
      */
     public PingTracker getPingTracker() { return pingTracker; }
 
-    /**
-     * Get the {@code ExecutableMessageQueue} maintained by this connection.
-     *
-     * @return The {@code ExecutableMessageQueue} maintained by this connection.
-     */
-    public ExecutableMessageQueue getExecutableMessageQueue() { return executableMessageQueue; }
-
-    /**
-     * End this connection's execution loop and close any streams.
+	/**
+	 * End this connection's execution loop and close any streams.
      */
     public void shutdown() {
 		LOGGER.log(Level.INFO, "Shutting down connection: " + name);
