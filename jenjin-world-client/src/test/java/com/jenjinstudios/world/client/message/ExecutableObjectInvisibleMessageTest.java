@@ -19,7 +19,7 @@ public class ExecutableObjectInvisibleMessageTest
 		when(msg.getArgument("id")).thenReturn(100);
 
 		WorldClient worldClient = mock(WorldClient.class);
-		World world = mock(World.class);
+		World world = spy(new World());
 		WorldObjectList worldObjectMap = mock(WorldObjectList.class);
 		when(world.getWorldObjects()).thenReturn(worldObjectMap);
 		when(worldClient.getWorld()).thenReturn(world);
@@ -27,7 +27,7 @@ public class ExecutableObjectInvisibleMessageTest
 		ExecutableObjectInvisibleMessage message =
 			  new ExecutableObjectInvisibleMessage(worldClient, msg);
 		message.runImmediate();
-		message.runDelayed();
+		world.update();
 
 		verify(worldObjectMap).remove(100);
 	}
