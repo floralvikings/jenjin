@@ -117,8 +117,6 @@ public class ConnectionTest
 		MessageIO messageIO = new MessageIO(messageInputStream, messageOutputStream);
 		Connection connection = new Connection(messageIO);
 
-		// Create and run the connection.  Normally, we would use connection.start() to spawn a new thread
-		// but for testing purposes we want the connection to run in the current thread.
 		connection.start();
 		Thread.sleep(100);
 		connection.shutdown();
