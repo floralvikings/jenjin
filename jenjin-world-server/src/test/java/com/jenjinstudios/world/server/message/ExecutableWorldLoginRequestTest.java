@@ -22,8 +22,7 @@ import org.testng.annotations.Test;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * @author Caleb Brinkman
@@ -42,7 +41,7 @@ public class ExecutableWorldLoginRequestTest extends PowerMockTestCase
 
 		PowerMockito.mockStatic(WorldServerMessageFactory.class);
 		Message message = mock(Message.class);
-		World world = mock(World.class);
+		World world = spy(new World());
 		User user = mock(BasicUser.class);
 		Player player = mock(Player.class);
 		Authenticator<Player> authenticator = mock(Authenticator.class);
@@ -63,7 +62,7 @@ public class ExecutableWorldLoginRequestTest extends PowerMockTestCase
 		when(player.getVector2D()).thenReturn(Vector2D.ORIGIN);
 		ExecutableWorldLoginRequest exec = new ExecutableWorldLoginRequest(wch, message);
 		exec.runImmediate();
-		exec.runDelayed();
+		world.update();
 
 		Mockito.verify(worldObjectMap).add(Matchers.anyObject());
 	}
