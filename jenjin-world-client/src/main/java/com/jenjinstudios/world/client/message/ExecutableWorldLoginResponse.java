@@ -30,10 +30,6 @@ public class ExecutableWorldLoginResponse extends WorldClientExecutableMessage
     }
 
     @Override
-    public void runDelayed() {
-	}
-
-    @Override
     public void runImmediate() {
         int id = (int) getMessage().getArgument("id");
         double xCoordinate = (double) getMessage().getArgument("xCoordinate");
