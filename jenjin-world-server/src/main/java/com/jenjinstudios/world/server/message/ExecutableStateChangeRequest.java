@@ -43,10 +43,6 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage
 		super(handler, message);
 	}
 
-	@Override
-	public void runDelayed() {
-	}
-
 	private void forcePlayerToAngle(Actor player, Angle pAngle) {
 		Vector2D vector2D = player.getVector2D();
 		MoveState forcedState = new MoveState(pAngle, vector2D, player.getWorld().getLastUpdateCompleted());
