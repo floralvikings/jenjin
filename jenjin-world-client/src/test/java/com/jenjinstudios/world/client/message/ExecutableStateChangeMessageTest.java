@@ -28,7 +28,7 @@ public class ExecutableStateChangeMessageTest
 		when(stateChangeMessage.getArgument("yCoordinate")).thenReturn(PI);
 
 		WorldClient worldClient = mock(WorldClient.class);
-		World world = mock(World.class);
+		World world = spy(new World());
 		WorldObjectList worldObjectMap = mock(WorldObjectList.class);
 		when(world.getWorldObjects()).thenReturn(worldObjectMap);
 		Actor clientActor = mock(Actor.class);
@@ -37,7 +37,7 @@ public class ExecutableStateChangeMessageTest
 
 		ExecutableStateChangeMessage message = new ExecutableStateChangeMessage(worldClient, stateChangeMessage);
 		message.runImmediate();
-		message.runDelayed();
+		world.update();
 
 		verify(worldObjectMap).get(100);
 		verify(clientActor).setAngle(eq(new Angle(PI)));
