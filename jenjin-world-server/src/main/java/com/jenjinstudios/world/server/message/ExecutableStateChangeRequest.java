@@ -8,7 +8,6 @@ import com.jenjinstudios.world.math.Angle;
 import com.jenjinstudios.world.math.MathUtil;
 import com.jenjinstudios.world.math.Vector2D;
 import com.jenjinstudios.world.server.WorldClientHandler;
-import com.jenjinstudios.world.server.WorldServer;
 import com.jenjinstudios.world.state.MoveState;
 import com.jenjinstudios.world.util.ZoneUtils;
 
@@ -60,7 +59,7 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage
 		angle = new Angle(absoluteAngle, relativeAngle);
 		timePast = (System.currentTimeMillis() - timeOfChange);
 
-		((WorldServer) getClientHandler().getServer()).getWorld().scheduleUpdateTask(() -> {
+		getClientHandler().getUser().getWorld().scheduleUpdateTask(() -> {
 			Actor player = getClientHandler().getUser();
 			if ((player != null) && (player.getWorld() != null))
 			{
