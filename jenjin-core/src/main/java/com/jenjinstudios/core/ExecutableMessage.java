@@ -33,13 +33,8 @@ public abstract class ExecutableMessage
         this.connection = connection;
     }
 
-    /**
-     * This method is invoked by the {@code Connection} execution timer, and should not be called directly.
-     */
-	public void runDelayed() { }
-
-    /**
-     * This method is invoked by a {@code Connection} when a message is received and the {@code ExecutableMessage} is
+	/**
+	 * This method is invoked by a {@code Connection} when a message is received and the {@code ExecutableMessage} is
      * created, and should not be called directly.
      */
 	public abstract void runImmediate();
