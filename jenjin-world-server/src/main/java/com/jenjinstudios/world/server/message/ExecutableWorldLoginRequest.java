@@ -32,11 +32,6 @@ public class ExecutableWorldLoginRequest extends WorldExecutableMessage
 	}
 
 	@Override
-	public void runDelayed() {
-
-	}
-
-	@Override
 	public void runImmediate() {
 		try
 		{
