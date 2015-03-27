@@ -23,11 +23,6 @@ public class ExecutableForceStateMessage extends WorldClientExecutableMessage
     public ExecutableForceStateMessage(WorldClient client, Message message) { super(client, message); }
 
     @Override
-    public void runDelayed() {
-
-    }
-
-    @Override
     public void runImmediate() {
         double x = (double) getMessage().getArgument("xCoordinate");
         double y = (double) getMessage().getArgument("yCoordinate");
