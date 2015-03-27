@@ -41,11 +41,7 @@ public class ExecutableStateChangeRequestTest
 		when(request.getArgument("timeOfChange")).thenReturn(System.currentTimeMillis());
 		ExecutableStateChangeRequest executableStateChangeRequest = new ExecutableStateChangeRequest(mock, request);
 		executableStateChangeRequest.runImmediate();
-		executableStateChangeRequest.runDelayed();
-
-		player.preUpdate();
-		player.update();
-		player.postUpdate();
+		world.update();
 
 		Assert.assertEquals(player.getAngle(), new Angle(0.0, Angle.FRONT));
 	}
