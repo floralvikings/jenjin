@@ -134,7 +134,6 @@ public class Client extends Connection
             updateCount++;
             saveUpdateTime();
             client.runRepeatedTasks();
-            client.getExecutableMessageQueue().runQueuedExecutableMessages();
         }
 
         private void saveUpdateTime() {
