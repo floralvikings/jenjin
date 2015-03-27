@@ -61,7 +61,7 @@ public class MessageReader
 	 *
 	 * @return A list of all messages received since the last time this method was called.
 	 */
-	public LinkedList<Message> getReceivedMessages() {
+	public Deque<Message> getReceivedMessages() {
 		LinkedList<Message> messages = new LinkedList<>();
 		synchronized (incoming)
 		{
