@@ -31,7 +31,7 @@ public class ExecutableLogoutRequest extends ServerExecutableMessage
 	}
 
 	@Override
-	public void runImmediate() {
+	public void execute() {
 		ClientHandler handler = getClientHandler();
 		User user = handler.getUser();
 		if ((authenticator != null) && (user != null))

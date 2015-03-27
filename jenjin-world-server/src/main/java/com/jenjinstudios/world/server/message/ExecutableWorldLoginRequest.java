@@ -32,7 +32,7 @@ public class ExecutableWorldLoginRequest extends WorldExecutableMessage
 	}
 
 	@Override
-	public void runImmediate() {
+	public void execute() {
 		try
 		{
 			tryLogInUser();

@@ -49,7 +49,7 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage
 	}
 
 	@Override
-	public void runImmediate() {
+	public void execute() {
 		double relativeAngle = (double) getMessage().getArgument("relativeAngle");
 		double absoluteAngle = (double) getMessage().getArgument("absoluteAngle");
 		double x = (double) getMessage().getArgument("xCoordinate");

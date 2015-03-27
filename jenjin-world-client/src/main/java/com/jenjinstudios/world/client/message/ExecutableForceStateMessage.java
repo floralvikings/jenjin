@@ -23,8 +23,8 @@ public class ExecutableForceStateMessage extends WorldClientExecutableMessage
     public ExecutableForceStateMessage(WorldClient client, Message message) { super(client, message); }
 
     @Override
-    public void runImmediate() {
-        double x = (double) getMessage().getArgument("xCoordinate");
+	public void execute() {
+		double x = (double) getMessage().getArgument("xCoordinate");
         double y = (double) getMessage().getArgument("yCoordinate");
         double relativeAngle = (double) getMessage().getArgument("relativeAngle");
         double absoluteAngle = (double) getMessage().getArgument("absoluteAngle");

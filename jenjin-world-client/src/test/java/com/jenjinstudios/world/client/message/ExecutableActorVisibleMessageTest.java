@@ -34,7 +34,7 @@ public class ExecutableActorVisibleMessageTest
 		when(worldClient.getWorld()).thenReturn(world);
 
 		ExecutableActorVisibleMessage message = new ExecutableActorVisibleMessage(worldClient, actorVisibleMessage);
-		message.runImmediate();
+		message.execute();
 
 		verify(world).scheduleUpdateTask(any());
 	}

@@ -23,6 +23,6 @@ public class DisabledExecutableMessageTest
         Message message = mock(Message.class);
 
         DisabledExecutableMessage executableMessage = new DisabledExecutableMessage(connection, message);
-        executableMessage.runImmediate();
-    }
+		executableMessage.execute();
+	}
 }

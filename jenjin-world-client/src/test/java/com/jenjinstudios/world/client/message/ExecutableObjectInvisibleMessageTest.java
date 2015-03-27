@@ -26,7 +26,7 @@ public class ExecutableObjectInvisibleMessageTest
 
 		ExecutableObjectInvisibleMessage message =
 			  new ExecutableObjectInvisibleMessage(worldClient, msg);
-		message.runImmediate();
+		message.execute();
 		world.update();
 
 		verify(worldObjectMap).remove(100);

@@ -29,7 +29,7 @@ public class ExecutableObjectVisibleMessageTest
 		when(worldClient.getWorld()).thenReturn(world);
 
 		ExecutableObjectVisibleMessage message = new ExecutableObjectVisibleMessage(worldClient, actorVisibleMessage);
-		message.runImmediate();
+		message.execute();
 		world.update();
 
 		verify(worldObjectMap).set(eq(100), any());

@@ -39,7 +39,7 @@ public class ExecutableLogoutRequestTest
 		when(clientHandler.getUser()).thenReturn(user);
 
 		ExecutableLogoutRequest executableLogoutRequest = new ExecutableLogoutRequest(clientHandler, logoutRequest);
-		executableLogoutRequest.runImmediate();
+		executableLogoutRequest.execute();
 
 		verify(clientHandler).setUser(null);
 	}

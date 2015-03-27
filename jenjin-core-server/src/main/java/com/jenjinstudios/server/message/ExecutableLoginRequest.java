@@ -33,7 +33,7 @@ public class ExecutableLoginRequest extends ServerExecutableMessage
 	}
 
 	@Override
-	public void runImmediate() {
+	public void execute() {
 		ClientHandler handler = getClientHandler();
 		String username = (String) getMessage().getArgument("username");
 		String password = (String) getMessage().getArgument("password");

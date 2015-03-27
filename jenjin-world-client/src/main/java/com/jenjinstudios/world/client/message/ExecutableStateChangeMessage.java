@@ -28,7 +28,7 @@ public class ExecutableStateChangeMessage extends WorldClientExecutableMessage
     }
 
     @Override
-    public void runImmediate() {
+	public void execute() {
 		int actorID = (int) getMessage().getArgument("id");
 		double relativeAngle = (double) getMessage().getArgument("relativeAngle");
         double absoluteAngle = (double) getMessage().getArgument("absoluteAngle");

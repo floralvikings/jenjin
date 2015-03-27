@@ -61,7 +61,7 @@ public class ExecutableLoginRequestTest
 		when(clientHandler.getMessageIO()).thenReturn(messageIO);
 
 		ExecutableLoginRequest executableLoginRequest = new ExecutableLoginRequest(clientHandler, message);
-		executableLoginRequest.runImmediate();
+		executableLoginRequest.execute();
 
 		Mockito.verify(clientHandler).setLoggedInTime(anyLong());
 	}
@@ -91,7 +91,7 @@ public class ExecutableLoginRequestTest
 		when(clientHandler.getMessageIO()).thenReturn(messageIO);
 
 		ExecutableLoginRequest executableLoginRequest = new ExecutableLoginRequest(clientHandler, message);
-		executableLoginRequest.runImmediate();
+		executableLoginRequest.execute();
 
 		Mockito.verify(clientHandler, Mockito.never()).setLoggedInTime(anyLong());
 	}

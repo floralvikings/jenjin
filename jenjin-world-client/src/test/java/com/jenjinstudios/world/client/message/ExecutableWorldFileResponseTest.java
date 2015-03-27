@@ -26,7 +26,7 @@ public class ExecutableWorldFileResponseTest
 		when(worldClient.getServerWorldFileTracker()).thenReturn(serverWorldFileTracker);
 
 		ExecutableWorldFileResponse response = new ExecutableWorldFileResponse(worldClient, message);
-		response.runImmediate();
+		response.execute();
 
 		assertEquals(serverWorldFileTracker.getBytes(), fileBytes);
 		assertFalse(serverWorldFileTracker.isWaitingForFile());

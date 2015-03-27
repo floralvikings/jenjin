@@ -29,7 +29,7 @@ public class ExecutableWorldLogoutRequest extends WorldExecutableMessage
 	}
 
 	@Override
-	public void runImmediate() {
+	public void execute() {
 		try
 		{
 			tryLogOutUser();

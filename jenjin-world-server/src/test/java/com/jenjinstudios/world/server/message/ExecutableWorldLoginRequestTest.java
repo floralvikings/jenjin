@@ -61,7 +61,7 @@ public class ExecutableWorldLoginRequestTest extends PowerMockTestCase
 		when(WorldServerMessageFactory.generateWorldLoginResponse()).thenReturn(message);
 		when(player.getVector2D()).thenReturn(Vector2D.ORIGIN);
 		ExecutableWorldLoginRequest exec = new ExecutableWorldLoginRequest(wch, message);
-		exec.runImmediate();
+		exec.execute();
 		world.update();
 
 		Mockito.verify(worldObjectMap).add(Matchers.anyObject());

@@ -37,7 +37,7 @@ public class ExecutableWorldChecksumRequestTest extends PowerMockTestCase
 		when(clientHandler.getMessageIO()).thenReturn(messageIO);
 
 		ExecutableWorldChecksumRequest exec = new ExecutableWorldChecksumRequest(clientHandler, message);
-		exec.runImmediate();
+		exec.execute();
 
 		verify(clientHandler).enqueueMessage(response);
 	}

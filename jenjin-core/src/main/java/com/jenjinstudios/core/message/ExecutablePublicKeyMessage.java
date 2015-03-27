@@ -37,8 +37,8 @@ public class ExecutablePublicKeyMessage extends ExecutableMessage
     }
 
     @Override
-    public void runImmediate() {
-        byte[] keyBytes = (byte[]) getMessage().getArgument("publicKey");
+	public void execute() {
+		byte[] keyBytes = (byte[]) getMessage().getArgument("publicKey");
         try
         {
             PublicKey suppliedKey = KeyFactory.getInstance("RSA").generatePublic(new X509EncodedKeySpec(keyBytes));

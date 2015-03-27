@@ -24,7 +24,7 @@ public class ExecutableFireRequest extends WorldExecutableMessage
 
 	/** Run asynchronous portion of this message. */
 	@Override
-	public void runImmediate() {
+	public void execute() {
 		World world = ((WorldServer) getClientHandler().getServer()).getWorld();
 		world.scheduleUpdateTask(() -> {
 			Actor player = getClientHandler().getUser();

@@ -23,7 +23,7 @@ public class ExecutableTest extends ExecutableMessage
 	}
 
 	@Override
-	public void runImmediate() {
+	public void execute() {
 		getConnection().setName((String) getMessage().getArgument("encryptedString"));
 	}
 }

@@ -208,7 +208,7 @@ public class Connection
 					enqueueMessage(invalid);
 				} else
 				{
-					executable.runImmediate();
+					executable.execute();
 				}
 			}
 		}

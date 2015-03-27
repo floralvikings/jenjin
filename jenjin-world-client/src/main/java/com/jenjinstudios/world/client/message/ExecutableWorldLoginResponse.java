@@ -30,8 +30,8 @@ public class ExecutableWorldLoginResponse extends WorldClientExecutableMessage
     }
 
     @Override
-    public void runImmediate() {
-        int id = (int) getMessage().getArgument("id");
+	public void execute() {
+		int id = (int) getMessage().getArgument("id");
         double xCoordinate = (double) getMessage().getArgument("xCoordinate");
         double yCoordinate = (double) getMessage().getArgument("yCoordinate");
 		Actor player = new Actor(getConnection().getUser().getUsername());

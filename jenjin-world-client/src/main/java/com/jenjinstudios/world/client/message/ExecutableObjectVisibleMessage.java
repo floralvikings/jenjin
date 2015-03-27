@@ -25,8 +25,8 @@ public class ExecutableObjectVisibleMessage extends WorldClientExecutableMessage
     }
 
     @Override
-    public void runImmediate() {
-        Message message = getMessage();
+	public void execute() {
+		Message message = getMessage();
         String name = (String) message.getArgument("name");
         int id = (int) message.getArgument("id");
         int resourceID = (int) message.getArgument("resourceID");

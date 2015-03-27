@@ -34,7 +34,7 @@ public class ExecutableLoginResponseTest
         when(authClient.getUser()).thenReturn(user);
 
         ExecutableLoginResponse response = new ExecutableLoginResponse(authClient, loginResponse);
-        response.runImmediate();
+		response.execute();
 
         verify(loginTracker).setLoggedInTime(12345L);
         Assert.assertEquals(loginTracker.getLoggedInTime(), 12345L, "Login time was not as expected.");

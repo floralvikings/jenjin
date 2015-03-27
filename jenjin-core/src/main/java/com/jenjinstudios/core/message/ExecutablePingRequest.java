@@ -39,8 +39,8 @@ public class ExecutablePingRequest extends ExecutableMessage
     }
 
     @Override
-    public void runImmediate() {
-        long requestTimeNanos = (long) getMessage().getArgument("requestTimeMillis");
+	public void execute() {
+		long requestTimeNanos = (long) getMessage().getArgument("requestTimeMillis");
 
         Message pingResponse =
               generatePingResponse(requestTimeNanos);

@@ -43,7 +43,7 @@ public class ExecutableWorldLogoutRequestTest
 		when(player.getVector2D()).thenReturn(Vector2D.ORIGIN);
 
 		ExecutableWorldLogoutRequest exec = new ExecutableWorldLogoutRequest(handler, logOutRequest);
-		exec.runImmediate();
+		exec.execute();
 		world.update();
 
 		verify(handler).sendLogoutStatus(true);
@@ -67,7 +67,7 @@ public class ExecutableWorldLogoutRequestTest
 		when(player.getVector2D()).thenReturn(Vector2D.ORIGIN);
 
 		ExecutableWorldLogoutRequest exec = new ExecutableWorldLogoutRequest(handler, logOutRequest);
-		exec.runImmediate();
+		exec.execute();
 
 		verify(handler).sendLogoutStatus(false);
 	}
@@ -89,7 +89,7 @@ public class ExecutableWorldLogoutRequestTest
 		when(handler.getUser()).thenReturn(player);
 
 		ExecutableWorldLogoutRequest exec = new ExecutableWorldLogoutRequest(handler, logOutRequest);
-		exec.runImmediate();
+		exec.execute();
 
 		verify(handler).sendLogoutStatus(false);
 	}
