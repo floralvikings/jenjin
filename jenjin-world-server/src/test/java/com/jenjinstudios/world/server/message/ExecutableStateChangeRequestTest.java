@@ -72,7 +72,6 @@ public class ExecutableStateChangeRequestTest
 		// Create the executable state change request
 		ExecutableStateChangeRequest executableStateChangeRequest = new ExecutableStateChangeRequest(mock, request);
 		executableStateChangeRequest.runImmediate();
-		executableStateChangeRequest.runDelayed();
 
 		world.update();
 
@@ -99,11 +98,7 @@ public class ExecutableStateChangeRequestTest
 		when(request.getArgument("timeOfChange")).thenReturn(System.currentTimeMillis() - 2000);
 		ExecutableStateChangeRequest executableStateChangeRequest = new ExecutableStateChangeRequest(mock, request);
 		executableStateChangeRequest.runImmediate();
-		executableStateChangeRequest.runDelayed();
-
-		player.preUpdate();
-		player.update();
-		player.postUpdate();
+		world.update();
 
 		Assert.assertEquals(player.getAngle(), new Angle(0.0, Angle.IDLE));
 	}
@@ -128,10 +123,7 @@ public class ExecutableStateChangeRequestTest
 		Thread.sleep(1200);
 		ExecutableStateChangeRequest executableStateChangeRequest = new ExecutableStateChangeRequest(mock, request);
 		executableStateChangeRequest.runImmediate();
-		executableStateChangeRequest.runDelayed();
-		player.preUpdate();
-		player.update();
-		player.postUpdate();
+		world.update();
 
 		Assert.assertEquals(player.getAngle(), new Angle(0.0, Angle.IDLE));
 	}
