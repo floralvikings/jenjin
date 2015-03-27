@@ -37,7 +37,6 @@ public class ExecutableWorldFileRequestTest extends PowerMockTestCase
 
 		ExecutableWorldFileRequest exec = new ExecutableWorldFileRequest(clientHandler, message);
 		exec.runImmediate();
-		exec.runDelayed();
 
 		verify(clientHandler).enqueueMessage(response);
 	}
