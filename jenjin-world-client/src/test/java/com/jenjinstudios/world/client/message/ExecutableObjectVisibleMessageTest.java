@@ -23,14 +23,14 @@ public class ExecutableObjectVisibleMessageTest
 		when(actorVisibleMessage.getArgument("yCoordinate")).thenReturn(1.0);
 
 		WorldClient worldClient = mock(WorldClient.class);
-		World world = mock(World.class);
+		World world = spy(new World());
 		WorldObjectList worldObjectMap = mock(WorldObjectList.class);
 		when(world.getWorldObjects()).thenReturn(worldObjectMap);
 		when(worldClient.getWorld()).thenReturn(world);
 
 		ExecutableObjectVisibleMessage message = new ExecutableObjectVisibleMessage(worldClient, actorVisibleMessage);
 		message.runImmediate();
-		message.runDelayed();
+		world.update();
 
 		verify(worldObjectMap).set(eq(100), any());
 	}
