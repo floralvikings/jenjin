@@ -86,7 +86,6 @@ public class ConnectionTest
 		Connection connection = new Connection(messageIO);
 		connection.start();
 		Thread.sleep(100);
-		connection.getExecutableMessageQueue().runQueuedExecutableMessages();
 		connection.shutdown();
 
 		// The connection should execute the InvalidExecutableMessage,
