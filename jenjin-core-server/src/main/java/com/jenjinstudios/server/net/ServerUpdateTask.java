@@ -70,16 +70,6 @@ public class ServerUpdateTask implements Runnable
 		}
 	}
 
-	private void runQueuedMessages() {
-		try
-		{
-			server.runClientHandlerQueuedMessages();
-		} catch (Exception ex)
-		{
-			LOGGER.log(Level.WARNING, "Exception when executing client messages", ex);
-		}
-	}
-
 	/** Run the repeated tasks in the server queue. */
 	private void runRepeatedTasks() {
 		try
