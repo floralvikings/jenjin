@@ -26,7 +26,7 @@ public class ExecutableWorldLoginResponseTest
 		when(message.getArgument("zoneNumber")).thenReturn(0);
 
 		WorldClient worldClient = mock(WorldClient.class);
-		World world = mock(World.class);
+		World world = spy(new World());
 		WorldObjectList worldObjectMap = mock(WorldObjectList.class);
 		when(world.getWorldObjects()).thenReturn(worldObjectMap);
 		LoginTracker loginTracker = mock(LoginTracker.class);
@@ -37,7 +37,7 @@ public class ExecutableWorldLoginResponseTest
 
 		ExecutableWorldLoginResponse response = new ExecutableWorldLoginResponse(worldClient, message);
 		response.runImmediate();
-		response.runDelayed();
+		world.update();
 
 		verify(loginTracker).setLoggedIn(true);
 		verify(loginTracker).setLoggedInTime(0l);
