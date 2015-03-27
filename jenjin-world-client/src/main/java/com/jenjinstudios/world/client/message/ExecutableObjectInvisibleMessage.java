@@ -1,6 +1,7 @@
 package com.jenjinstudios.world.client.message;
 
 import com.jenjinstudios.core.io.Message;
+import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.client.WorldClient;
 
 /**
@@ -17,9 +18,12 @@ public class ExecutableObjectInvisibleMessage extends WorldClientExecutableMessa
 
     @Override
     public void runDelayed() {
-        getConnection().getWorld().getWorldObjects().remove(id);
     }
 
     @Override
-    public void runImmediate() { id = (int) getMessage().getArgument("id"); }
+	public void runImmediate() {
+		id = (int) getMessage().getArgument("id");
+		World world = getConnection().getWorld();
+		world.scheduleUpdateTask(() -> world.getWorldObjects().remove(id));
+	}
 }
