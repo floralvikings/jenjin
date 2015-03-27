@@ -121,8 +121,6 @@ public class ConnectionTest
 		// but for testing purposes we want the connection to run in the current thread.
 		connection.start();
 		Thread.sleep(100);
-		// Again, normally an implementation would schedule this, but that's excessive for testing purposes
-		connection.getExecutableMessageQueue().runQueuedExecutableMessages();
 		connection.shutdown();
 
 		// Ping time should be extremely close to 0, but taking into account wonkiness with tests, I'll allow
