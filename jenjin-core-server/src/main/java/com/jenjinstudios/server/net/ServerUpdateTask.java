@@ -47,7 +47,6 @@ public class ServerUpdateTask implements Runnable
 		checkForNewClients();
 		runSynchronizedTasks();
 		runRepeatedTasks();
-		runQueuedMessages();
 		update();
 	}
 
