@@ -27,7 +27,7 @@ public class ExecutableLoginResponseTest
 
         ClientUser user = mock(ClientUser.class);
         AuthClient authClient = mock(AuthClient.class);
-		LoginTracker loginTracker = mock(AuthClient.LoginTracker.class);
+		LoginTracker loginTracker = mock(LoginTracker.class);
 		when(loginTracker.isLoggedIn()).thenReturn(true);
         when(loginTracker.getLoggedInTime()).thenReturn(12345L);
         when(authClient.getLoginTracker()).thenReturn(loginTracker);
