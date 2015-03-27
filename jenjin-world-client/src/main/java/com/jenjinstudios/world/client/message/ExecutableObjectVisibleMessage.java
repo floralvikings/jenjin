@@ -25,9 +25,6 @@ public class ExecutableObjectVisibleMessage extends WorldClientExecutableMessage
     }
 
     @Override
-	public void runDelayed() { }
-
-    @Override
     public void runImmediate() {
         Message message = getMessage();
         String name = (String) message.getArgument("name");
