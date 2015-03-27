@@ -28,14 +28,15 @@ public class ExecutableForceStateMessageTest
 
 		WorldClient worldClient = mock(WorldClient.class);
 		Actor clientPlayer = mock(Actor.class);
-		World world = mock(World.class);
+		World world = new World();
+		when(worldClient.getWorld()).thenReturn(world);
 		when(clientPlayer.getWorld()).thenReturn(world);
 		when(worldClient.getPlayer()).thenReturn(clientPlayer);
 		when(clientPlayer.getAngle()).thenReturn(new Angle());
 
 		ExecutableForceStateMessage message = new ExecutableForceStateMessage(worldClient, forceStateMessage);
 		message.runImmediate();
-		message.runDelayed();
+		world.update();
 
 		verify(clientPlayer).setAngle(eq(new Angle(PI, IDLE)));
 		verify(clientPlayer).setVector2D(eq(new Vector2D(PI, PI)));
