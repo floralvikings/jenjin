@@ -8,6 +8,7 @@ import com.jenjinstudios.world.math.Angle;
 import com.jenjinstudios.world.math.MathUtil;
 import com.jenjinstudios.world.math.Vector2D;
 import com.jenjinstudios.world.server.WorldClientHandler;
+import com.jenjinstudios.world.server.WorldServer;
 import com.jenjinstudios.world.state.MoveState;
 import com.jenjinstudios.world.util.ZoneUtils;
 
@@ -23,6 +24,7 @@ import java.util.logging.Logger;
 public class ExecutableStateChangeRequest extends WorldExecutableMessage
 {
 	private static final Logger LOGGER = Logger.getLogger(ExecutableStateChangeRequest.class.getName());
+	private static final double MS_TO_S = 1000.0d;
 	private Angle angle;
 	/** The new position, corrected for lag. */
 	private Vector2D position;
@@ -43,26 +45,6 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage
 
 	@Override
 	public void runDelayed() {
-		Actor player = getClientHandler().getUser();
-		if ((player != null) && (player.getWorld() != null))
-		{
-			double distance = MathUtil.round(player.getMoveSpeed() * ((double) timePast / 1000d), 2);
-			position = uncorrectedPosition.getVectorInDirection(distance, angle.getStepAngle());
-			if (!locationWalkable(player))
-			{
-				LOGGER.log(Level.INFO, "Attempted move to unwalkable location: {0}", position);
-				Angle pAngle = player.getAngle().asIdle();
-				forcePlayerToAngle(player, pAngle);
-			} else if (!isCorrectionSafe(player))
-			{
-				Angle pAngle = player.getAngle();
-				forcePlayerToAngle(player, pAngle);
-			} else
-			{
-				player.setAngle(angle);
-				player.setVector2D(position);
-			}
-		}
 	}
 
 	private void forcePlayerToAngle(Actor player, Angle pAngle) {
@@ -81,6 +63,29 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage
 		uncorrectedPosition = new Vector2D(x, y);
 		angle = new Angle(absoluteAngle, relativeAngle);
 		timePast = (System.currentTimeMillis() - timeOfChange);
+
+		((WorldServer) getClientHandler().getServer()).getWorld().scheduleUpdateTask(() -> {
+			Actor player = getClientHandler().getUser();
+			if ((player != null) && (player.getWorld() != null))
+			{
+				double distance = MathUtil.round(player.getMoveSpeed() * (timePast / MS_TO_S), 2);
+				position = uncorrectedPosition.getVectorInDirection(distance, angle.getStepAngle());
+				if (!locationWalkable(player))
+				{
+					LOGGER.log(Level.INFO, "Attempted move to unwalkable location: {0}", position);
+					Angle pAngle = player.getAngle().asIdle();
+					forcePlayerToAngle(player, pAngle);
+				} else if (!isCorrectionSafe(player))
+				{
+					Angle pAngle = player.getAngle();
+					forcePlayerToAngle(player, pAngle);
+				} else
+				{
+					player.setAngle(angle);
+					player.setVector2D(position);
+				}
+			}
+		});
 
 	}
 
