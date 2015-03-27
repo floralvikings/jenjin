@@ -12,9 +12,7 @@ import com.jenjinstudios.world.client.WorldClient;
 @SuppressWarnings("WeakerAccess")
 public class ExecutableObjectInvisibleMessage extends WorldClientExecutableMessage
 {
-    private int id;
-
-    public ExecutableObjectInvisibleMessage(WorldClient client, Message message) { super(client, message); }
+	public ExecutableObjectInvisibleMessage(WorldClient client, Message message) { super(client, message); }
 
     @Override
     public void runDelayed() {
@@ -22,7 +20,7 @@ public class ExecutableObjectInvisibleMessage extends WorldClientExecutableMessa
 
     @Override
 	public void runImmediate() {
-		id = (int) getMessage().getArgument("id");
+		int id = (int) getMessage().getArgument("id");
 		World world = getConnection().getWorld();
 		world.scheduleUpdateTask(() -> world.getWorldObjects().remove(id));
 	}
