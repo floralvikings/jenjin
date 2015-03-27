@@ -28,10 +28,6 @@ public class ExecutableStateChangeMessage extends WorldClientExecutableMessage
     }
 
     @Override
-    public void runDelayed() {
-    }
-
-    @Override
     public void runImmediate() {
 		int actorID = (int) getMessage().getArgument("id");
 		double relativeAngle = (double) getMessage().getArgument("relativeAngle");
