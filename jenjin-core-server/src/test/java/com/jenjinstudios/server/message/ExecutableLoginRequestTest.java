@@ -93,7 +93,6 @@ public class ExecutableLoginRequestTest
 
 		ExecutableLoginRequest executableLoginRequest = new ExecutableLoginRequest(clientHandler, message);
 		executableLoginRequest.runImmediate();
-		executableLoginRequest.runDelayed();
 
 		Mockito.verify(clientHandler, Mockito.never()).setLoggedInTime(anyLong());
 	}
