@@ -22,10 +22,11 @@ public class ExecutableWorldLogoutResponse extends WorldClientExecutableMessage
 
     @Override
     public void runDelayed() {
-        getConnection().getLoginTracker().setLoggedIn(!((boolean) getMessage().getArgument("success")));
+
     }
 
     @Override
     public void runImmediate() {
-    }
+		getConnection().getLoginTracker().setLoggedIn(!((boolean) getMessage().getArgument("success")));
+	}
 }
