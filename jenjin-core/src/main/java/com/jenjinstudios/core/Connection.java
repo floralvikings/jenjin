@@ -18,13 +18,6 @@ import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- * The {@code Connection} class is a subclass of the {@code Thread} class; it will loop indefinitely until the {@code
- * shutdown} method is called, reading {@code Message} objects from a stream, and invoking the correct implementation of
- * {@code ExecutableMessage} each time a new message is received.
- *
- * @author Caleb Brinkman
- */
 public class Connection
 {
     private static final Logger LOGGER = Logger.getLogger(Connection.class.getName());
