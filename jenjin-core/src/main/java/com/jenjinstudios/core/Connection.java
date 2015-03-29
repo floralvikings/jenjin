@@ -204,7 +204,7 @@ public class Connection
 		}
 	}
 
-	protected class MessageExecutor extends TimerTask
+	private class MessageExecutor extends TimerTask
 	{
 		private final ExecutableMessageFactory exMessageFactory;
 
