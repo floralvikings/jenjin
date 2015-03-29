@@ -192,7 +192,7 @@ public class Connection
 		}
 	}
 
-	protected class CheckErrorsTask extends TimerTask
+	private class CheckErrorsTask extends TimerTask
 	{
 		@Override
 		public void run() {
