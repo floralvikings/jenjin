@@ -45,7 +45,7 @@ public class Connection
 		MessageRegistry.getGlobalRegistry().register("Core XML Registry", stream);
 		messageWriter = new MessageWriter(messageIO.getOut());
 		messageExecutionTimer = new Timer();
-		messageExecutionTask = new MessageExecutor();
+		messageExecutionTask = new MessageExecutorTask();
 		pingTracker = new PingTracker();
 		checkErrorTimer = new Timer();
 		checkErrorTask = new CheckErrorsTask();
@@ -204,11 +204,11 @@ public class Connection
 		}
 	}
 
-	private class MessageExecutor extends TimerTask
+	private class MessageExecutorTask extends TimerTask
 	{
 		private final ExecutableMessageFactory exMessageFactory;
 
-		protected MessageExecutor() {
+		protected MessageExecutorTask() {
 			exMessageFactory = new ExecutableMessageFactory(Connection.this);
 		}
 
