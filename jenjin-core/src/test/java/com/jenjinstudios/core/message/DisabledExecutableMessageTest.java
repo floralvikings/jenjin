@@ -1,6 +1,7 @@
 package com.jenjinstudios.core.message;
 
 import com.jenjinstudios.core.Connection;
+import com.jenjinstudios.core.EncryptedConnection;
 import com.jenjinstudios.core.io.Message;
 import org.testng.annotations.Test;
 
@@ -19,8 +20,8 @@ public class DisabledExecutableMessageTest
      */
     @Test(expectedExceptions = IllegalStateException.class)
     public void testMessageExecution() {
-        Connection connection = mock(Connection.class);
-        Message message = mock(Message.class);
+		Connection connection = mock(EncryptedConnection.class);
+		Message message = mock(Message.class);
 
         DisabledExecutableMessage executableMessage = new DisabledExecutableMessage(connection, message);
 		executableMessage.execute();

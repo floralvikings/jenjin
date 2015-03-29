@@ -59,7 +59,7 @@ public class ConnectionTest
 		MessageInputStream messageInputStream = new MessageInputStream(in);
 		MessageOutputStream messageOutputStream = new MessageOutputStream(bos);
 		MessageIO messageIO = new MessageIO(messageInputStream, messageOutputStream);
-		Connection connection = new Connection(messageIO);
+		Connection connection = new EncryptedConnection(messageIO);
 		connection.shutdown();
 
 		Assert.assertTrue(connection.getMessageIO().getOut().isClosed(), "MessageOutputStream should be closed");
@@ -83,7 +83,7 @@ public class ConnectionTest
         when(messageInputStream.readMessage()).thenReturn(pingRequest).thenReturn(MESSAGE_REGISTRY.createMessage
               ("BlankMessage"));
 		MessageIO messageIO = new MessageIO(messageInputStream, messageOutputStream);
-		Connection connection = new Connection(messageIO);
+		Connection connection = new EncryptedConnection(messageIO);
 		connection.start();
 		Thread.sleep(100);
 		connection.shutdown();
@@ -115,7 +115,7 @@ public class ConnectionTest
 		MessageInputStream messageInputStream = new MessageInputStream(in);
 		MessageOutputStream messageOutputStream = new MessageOutputStream(bos);
 		MessageIO messageIO = new MessageIO(messageInputStream, messageOutputStream);
-		Connection connection = new Connection(messageIO);
+		Connection connection = new EncryptedConnection(messageIO);
 
 		connection.start();
 		Thread.sleep(100);

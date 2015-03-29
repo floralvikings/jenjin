@@ -1,6 +1,6 @@
 package com.jenjinstudios.core.message;
 
-import com.jenjinstudios.core.Connection;
+import com.jenjinstudios.core.EncryptedConnection;
 import com.jenjinstudios.core.ExecutableMessage;
 import com.jenjinstudios.core.io.Message;
 
@@ -22,7 +22,7 @@ import java.util.logging.Logger;
 public class ExecutablePublicKeyMessage extends ExecutableMessage
 {
     private static final Logger LOGGER = Logger.getLogger(ExecutablePublicKeyMessage.class.getName());
-    private final Connection connection;
+	private final EncryptedConnection connection;
 
     /**
      * Construct a new {@code ExecutablePublicKeyMessage}.
@@ -31,8 +31,8 @@ public class ExecutablePublicKeyMessage extends ExecutableMessage
      * @param message The message which caused this executable message to be invoked.
      */
     @SuppressWarnings("WeakerAccess")
-    public ExecutablePublicKeyMessage(Connection connection, Message message) {
-        super(connection, message);
+	public ExecutablePublicKeyMessage(EncryptedConnection connection, Message message) {
+		super(connection, message);
         this.connection = connection;
     }
 

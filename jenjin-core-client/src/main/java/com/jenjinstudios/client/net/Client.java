@@ -1,6 +1,6 @@
 package com.jenjinstudios.client.net;
 
-import com.jenjinstudios.core.Connection;
+import com.jenjinstudios.core.EncryptedConnection;
 import com.jenjinstudios.core.MessageIO;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageRegistry;
@@ -18,7 +18,7 @@ import java.util.logging.Logger;
  *
  * @author Caleb Brinkman
  */
-public class Client extends Connection
+public class Client extends EncryptedConnection
 {
     private static final int UPDATES_PER_SECOND = 60;
     /** The list of tasks that this client will execute each update cycle. */

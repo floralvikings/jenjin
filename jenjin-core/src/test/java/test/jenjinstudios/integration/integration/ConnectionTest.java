@@ -1,6 +1,6 @@
 package test.jenjinstudios.integration.integration;
 
-import com.jenjinstudios.core.Connection;
+import com.jenjinstudios.core.EncryptedConnection;
 import com.jenjinstudios.core.MessageIO;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageInputStream;
@@ -56,14 +56,14 @@ public class ConnectionTest
 	@Test
 	public void integrationTest() throws Exception {
 		ConnectionPair connectionPair = new ConnectionPair();
-		Connection connectionOne = connectionPair.getConnectionOne();
-		Connection connectionTwo = connectionPair.getConnectionTwo();
+		EncryptedConnection connectionOne = connectionPair.getConnectionOne();
+		EncryptedConnection connectionTwo = connectionPair.getConnectionTwo();
 
 		connectionOne.start();
 		connectionTwo.start();
 
-		KeyPair keyPairOne = Connection.generateRSAKeyPair();
-		KeyPair keyPairTwo = Connection.generateRSAKeyPair();
+		KeyPair keyPairOne = EncryptedConnection.generateRSAKeyPair();
+		KeyPair keyPairTwo = EncryptedConnection.generateRSAKeyPair();
 
 		connectionOne.setRSAKeyPair(keyPairOne);
 		connectionTwo.setRSAKeyPair(keyPairTwo);
@@ -136,14 +136,14 @@ public class ConnectionTest
 
 	private static class ConnectionPair
 	{
-		private final Connection connectionOne;
-		private final Connection connectionTwo;
+		private final EncryptedConnection connectionOne;
+		private final EncryptedConnection connectionTwo;
 
-		public Connection getConnectionOne() {
+		public EncryptedConnection getConnectionOne() {
 			return connectionOne;
 		}
 
-		public Connection getConnectionTwo() {
+		public EncryptedConnection getConnectionTwo() {
 			return connectionTwo;
 		}
 
@@ -160,8 +160,8 @@ public class ConnectionTest
 			MessageOutputStream outputStreamTwo = new MessageOutputStream(socketTwo.getOutputStream());
 			MessageIO messageIOTwo = new MessageIO(inputStreamTwo, outputStreamTwo);
 
-			connectionOne = new Connection(messageIOOne);
-			connectionTwo = new Connection(messageIOTwo);
+			connectionOne = new EncryptedConnection(messageIOOne);
+			connectionTwo = new EncryptedConnection(messageIOTwo);
 		}
 	}
 }

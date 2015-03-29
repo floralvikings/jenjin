@@ -1,6 +1,6 @@
 package com.jenjinstudios.core.message;
 
-import com.jenjinstudios.core.Connection;
+import com.jenjinstudios.core.EncryptedConnection;
 import com.jenjinstudios.core.MessageIO;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageInputStream;
@@ -49,14 +49,14 @@ public class ExecutablePublicKeyMessageTest
      */
     @Test
     public void testVerification() {
-        KeyPair rsaKeyPair = Connection.generateRSAKeyPair();
-        Message message = Connection.generatePublicKeyMessage(rsaKeyPair.getPublic());
-        InetAddress address = InetAddress.getLoopbackAddress();
+		KeyPair rsaKeyPair = EncryptedConnection.generateRSAKeyPair();
+		Message message = EncryptedConnection.generatePublicKeyMessage(rsaKeyPair.getPublic());
+		InetAddress address = InetAddress.getLoopbackAddress();
         Map<InetAddress, Key> keys = new HashMap<>(10);
         keys.put(address, rsaKeyPair.getPublic());
 
-        Connection connection = mock(Connection.class);
-        MessageInputStream in = mock(MessageInputStream.class);
+		EncryptedConnection connection = mock(EncryptedConnection.class);
+		MessageInputStream in = mock(MessageInputStream.class);
         MessageOutputStream out = mock(MessageOutputStream.class);
 
         MessageIO messageIO = new MessageIO(in, out, address);
@@ -75,13 +75,13 @@ public class ExecutablePublicKeyMessageTest
      */
     @Test
     public void testVerificationNoKeys() {
-        KeyPair rsaKeyPair = Connection.generateRSAKeyPair();
-        Message message = Connection.generatePublicKeyMessage(rsaKeyPair.getPublic());
-        InetAddress address = InetAddress.getLoopbackAddress();
+		KeyPair rsaKeyPair = EncryptedConnection.generateRSAKeyPair();
+		Message message = EncryptedConnection.generatePublicKeyMessage(rsaKeyPair.getPublic());
+		InetAddress address = InetAddress.getLoopbackAddress();
         Map<InetAddress, Key> keys = new HashMap<>(10);
 
-        Connection connection = mock(Connection.class);
-        MessageIO messageIO = mock(MessageIO.class);
+		EncryptedConnection connection = mock(EncryptedConnection.class);
+		MessageIO messageIO = mock(MessageIO.class);
         MessageOutputStream out = mock(MessageOutputStream.class);
 
         when(messageIO.getOut()).thenReturn(out);
@@ -100,15 +100,15 @@ public class ExecutablePublicKeyMessageTest
      */
     @Test
     public void testVerificationInvalidKey() {
-        KeyPair rsaKeyPair = Connection.generateRSAKeyPair();
-        KeyPair invalidKeyPair = Connection.generateRSAKeyPair();
-        Message message = Connection.generatePublicKeyMessage(invalidKeyPair.getPublic());
-        InetAddress address = InetAddress.getLoopbackAddress();
+		KeyPair rsaKeyPair = EncryptedConnection.generateRSAKeyPair();
+		KeyPair invalidKeyPair = EncryptedConnection.generateRSAKeyPair();
+		Message message = EncryptedConnection.generatePublicKeyMessage(invalidKeyPair.getPublic());
+		InetAddress address = InetAddress.getLoopbackAddress();
         Map<InetAddress, Key> keys = new HashMap<>(10);
         keys.put(address, rsaKeyPair.getPublic());
 
-        Connection connection = mock(Connection.class);
-        MessageIO messageIO = mock(MessageIO.class);
+		EncryptedConnection connection = mock(EncryptedConnection.class);
+		MessageIO messageIO = mock(MessageIO.class);
         MessageOutputStream out = mock(MessageOutputStream.class);
 
         when(messageIO.getOut()).thenReturn(out);
@@ -127,15 +127,15 @@ public class ExecutablePublicKeyMessageTest
      */
     @Test
     public void testVerificationNoAddress() {
-        KeyPair rsaKeyPair = Connection.generateRSAKeyPair();
-        KeyPair invalidKeyPair = Connection.generateRSAKeyPair();
-        Message message = Connection.generatePublicKeyMessage(invalidKeyPair.getPublic());
-        InetAddress address = InetAddress.getLoopbackAddress();
+		KeyPair rsaKeyPair = EncryptedConnection.generateRSAKeyPair();
+		KeyPair invalidKeyPair = EncryptedConnection.generateRSAKeyPair();
+		Message message = EncryptedConnection.generatePublicKeyMessage(invalidKeyPair.getPublic());
+		InetAddress address = InetAddress.getLoopbackAddress();
         Map<InetAddress, Key> keys = new HashMap<>(10);
         keys.put(address, rsaKeyPair.getPublic());
 
-        Connection connection = mock(Connection.class);
-        MessageIO messageIO = mock(MessageIO.class);
+		EncryptedConnection connection = mock(EncryptedConnection.class);
+		MessageIO messageIO = mock(MessageIO.class);
         MessageOutputStream out = mock(MessageOutputStream.class);
 
         when(messageIO.getOut()).thenReturn(out);

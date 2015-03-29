@@ -9,20 +9,22 @@ import com.jenjinstudios.core.xml.MessageType;
 import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.net.InetAddress;
-import java.security.Key;
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
-import java.security.NoSuchAlgorithmException;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * The Connection class utilizes a MessageInputStream and MessageOutputStream to read and write messages to another
+ * connection.  This is done with four seperate Threads, started using the start() method; one for reading messages, one
+ * for executing the retrieved messages' ExecutableMessage equivalent, one for writing messages, and one for monitoring
+ * the others for errors.
+ *
+ * @author Caleb Brinkman
+ */
 public class Connection
 {
-    private static final Logger LOGGER = Logger.getLogger(Connection.class.getName());
-    private static final int KEYSIZE = 512;
-    private final PingTracker pingTracker;
+	private static final Logger LOGGER = Logger.getLogger(Connection.class.getName());
+	private final PingTracker pingTracker;
 	private final MessageIO messageIO;
 	private final Timer messageExecutionTimer;
 	private final Timer checkErrorTimer;
@@ -31,24 +33,23 @@ public class Connection
 	private final MessageWriter messageWriter;
 	private final MessageReader messageReader;
 	private String name = "Connection";
-    private final Map<InetAddress, Key> verifiedKeys = new HashMap<>(10);
 
-    /**
-     * Construct a new {@code Connection} that utilizes the specified {@code MessageIO} to read and write messages.
-     *
-     * @param streams The {@code MessageIO} containing streams used to read and write messages.
-     */
+	/**
+	 * Construct a new connection using the given MessageIO for reading and writing messages.
+	 *
+	 * @param streams The MessageIO containing the input and output streams
+	 */
 	public Connection(MessageIO streams) {
 		this.messageIO = streams;
-        pingTracker = new PingTracker();
-		messageWriter = new MessageWriter(messageIO.getOut());
-		messageReader = new MessageReader(messageIO.getIn());
-		messageExecutionTask = new MessageExecutor();
-		checkErrorTask = new CheckErrorsTask();
-		messageExecutionTimer = new Timer();
-		checkErrorTimer = new Timer();
 		InputStream stream = getClass().getClassLoader().getResourceAsStream("com/jenjinstudios/core/io/Messages.xml");
 		MessageRegistry.getGlobalRegistry().register("Core XML Registry", stream);
+		messageWriter = new MessageWriter(messageIO.getOut());
+		messageExecutionTimer = new Timer();
+		messageExecutionTask = new MessageExecutor();
+		pingTracker = new PingTracker();
+		checkErrorTimer = new Timer();
+		checkErrorTask = new CheckErrorsTask();
+		messageReader = new MessageReader(messageIO.getIn());
 	}
 
 	/**
@@ -58,161 +59,56 @@ public class Connection
 	 */
 	public void enqueueMessage(Message message) { messageWriter.enqueue(message); }
 
-    /**
-     * Generate a PublicKeyMessage for the given {@code PublicKey}.
-     *
-     * @param publicKey The {@code PublicKey} for which to generate a {@code Message}.
-     *
-     * @return The generated message.
-     */
-    public static Message generatePublicKeyMessage(Key publicKey) {
-		Message publicKeyMessage = MessageRegistry.getGlobalRegistry().createMessage("PublicKeyMessage");
-		publicKeyMessage.setArgument("publicKey", publicKey.getEncoded());
-        return publicKeyMessage;
-    }
-
-    /**
-     * Generate an RSA-512 Public-Private Key Pair.
-     *
-     * @return The generated {@code KeyPair}, or null if the KeyPair could not be created.
-     */
-    public static KeyPair generateRSAKeyPair() {
-        KeyPair keyPair = null;
-        try
-        {
-            KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
-            keyPairGenerator.initialize(KEYSIZE);
-            keyPair = keyPairGenerator.generateKeyPair();
-        } catch (NoSuchAlgorithmException e)
-        {
-            LOGGER.log(Level.SEVERE, "Unable to create RSA key pair!", e);
-        }
-        return keyPair;
-    }
-
-    /**
-     * Start the message reader thread managed by this connection.
-     */
-    public void start() {
+	/**
+	 * Start the message reader thread managed by this connection.
+	 */
+	public void start() {
 		messageExecutionTimer.scheduleAtFixedRate(messageExecutionTask, 0, 10);
 		checkErrorTimer.scheduleAtFixedRate(checkErrorTask, 0, 10);
 		messageReader.start();
 		messageWriter.start();
 	}
 
-    /**
-     * Set the RSA public/private key pair used to encrypt outgoing and decrypt incoming messages, and queue a message
-     * containing the public key.
-     *
-     * @param rsaKeyPair The keypair to use for encryption/decrytion.
-     */
-    public void setRSAKeyPair(KeyPair rsaKeyPair) {
-        if (rsaKeyPair != null)
-        {
-            messageIO.getIn().setPrivateKey(rsaKeyPair.getPrivate());
-            Message message = generatePublicKeyMessage(rsaKeyPair.getPublic());
-			enqueueMessage(message);
-		}
-    }
+	/**
+	 * Get the MessageIO containing the keys and streams used by this connection.
+	 *
+	 * @return The MessageIO containing the keys and streams used by this connection.
+	 */
+	public MessageIO getMessageIO() { return messageIO; }
 
-    /**
-     * Get the MessageIO containing the keys and streams used by this connection.
-     *
-     * @return The MessageIO containing the keys and streams used by this connection.
-     */
-    public MessageIO getMessageIO() { return messageIO; }
-
-    /**
-     * Get the PingTracker used by this connection to track latency.
-     *
-     * @return The PingTracker used by this connection to track latency.
-     */
-    public PingTracker getPingTracker() { return pingTracker; }
+	/**
+	 * Get the PingTracker used by this connection to track latency.
+	 *
+	 * @return The PingTracker used by this connection to track latency.
+	 */
+	public PingTracker getPingTracker() { return pingTracker; }
 
 	/**
 	 * End this connection's execution loop and close any streams.
-     */
-    public void shutdown() {
+	 */
+	public void shutdown() {
 		LOGGER.log(Level.INFO, "Shutting down connection: " + name);
 		messageWriter.stop();
 		messageReader.stop();
 		checkErrorTimer.cancel();
 		messageExecutionTimer.cancel();
 		messageIO.closeInputStream();
-        messageIO.closeOutputStream();
-    }
-
-    /**
-     * Get the name of this {@code Connection}.
-     *
-     * @return The name of this {@code Connection}.
-     */
-    public String getName() { return name; }
-
-    /**
-     * Set the name of this {@code Connection}.
-     *
-     * @param name The name of this {@code Connection}.
-     */
-    public void setName(String name) { this.name = name; }
-
-    /**
-     * Get the map of domains and verified keys for this client.
-     *
-     * @return The map of domains and verified keys for this client.
-     */
-    @SuppressWarnings("ReturnOfCollectionOrArrayField")
-    public Map<InetAddress, Key> getVerifiedKeys() { return verifiedKeys; }
-
-	private class CheckErrorsTask extends TimerTask
-	{
-		@Override
-		public void run() {
-			if (messageReader.isErrored() || messageWriter.isErrored())
-			{
-				LOGGER.log(Level.SEVERE, "Message reader or writer in error state; shutting down.");
-				shutdown();
-			}
-		}
+		messageIO.closeOutputStream();
 	}
 
-	private class MessageExecutor extends TimerTask
-	{
-		private final ExecutableMessageFactory exMessageFactory;
+	/**
+	 * Get the name of this {@code Connection}.
+	 *
+	 * @return The name of this {@code Connection}.
+	 */
+	public String getName() { return name; }
 
-		private MessageExecutor() {
-			exMessageFactory = new ExecutableMessageFactory(Connection.this);
-		}
-
-		@Override
-		public void run() {
-			Iterable<Message> messages = messageReader.getReceivedMessages();
-			messages.forEach(this::executeMessage);
-		}
-
-		private void executeMessage(Message message) {
-			List<ExecutableMessage> executables = exMessageFactory.getExecutableMessagesFor(message);
-			for (ExecutableMessage executable : executables)
-			{
-				if (executable == null)
-				{
-					LOGGER.log(Level.WARNING, "Invalid message received from MessageReader");
-					Message invalid = generateInvalidMessage(message.getID(), message.name);
-					enqueueMessage(invalid);
-				} else
-				{
-					executable.execute();
-				}
-			}
-		}
-
-		private Message generateInvalidMessage(short id, String messageName) {
-			Message invalid = MessageRegistry.getGlobalRegistry().createMessage("InvalidMessage");
-			invalid.setArgument("messageName", messageName);
-			invalid.setArgument("messageID", id);
-			return invalid;
-		}
-	}
+	/**
+	 * Set the name of this {@code Connection}.
+	 *
+	 * @param name The name of this {@code Connection}.
+	 */
+	public void setName(String name) { this.name = name; }
 
 	private static class ExecutableMessageFactory
 	{
@@ -293,6 +189,56 @@ public class Connection
 					correctConstructor = constructor;
 			}
 			return correctConstructor;
+		}
+	}
+
+	protected class CheckErrorsTask extends TimerTask
+	{
+		@Override
+		public void run() {
+			if (messageReader.isErrored() || messageWriter.isErrored())
+			{
+				LOGGER.log(Level.SEVERE, "Message reader or writer in error state; shutting down.");
+				shutdown();
+			}
+		}
+	}
+
+	protected class MessageExecutor extends TimerTask
+	{
+		private final ExecutableMessageFactory exMessageFactory;
+
+		protected MessageExecutor() {
+			exMessageFactory = new ExecutableMessageFactory(Connection.this);
+		}
+
+		@Override
+		public void run() {
+			Iterable<Message> messages = messageReader.getReceivedMessages();
+			messages.forEach(this::executeMessage);
+		}
+
+		private void executeMessage(Message message) {
+			List<ExecutableMessage> executables = exMessageFactory.getExecutableMessagesFor(message);
+			for (ExecutableMessage executable : executables)
+			{
+				if (executable == null)
+				{
+					LOGGER.log(Level.WARNING, "Invalid message received from MessageReader");
+					Message invalid = generateInvalidMessage(message.getID(), message.name);
+					enqueueMessage(invalid);
+				} else
+				{
+					executable.execute();
+				}
+			}
+		}
+
+		private Message generateInvalidMessage(short id, String messageName) {
+			Message invalid = MessageRegistry.getGlobalRegistry().createMessage("InvalidMessage");
+			invalid.setArgument("messageName", messageName);
+			invalid.setArgument("messageID", id);
+			return invalid;
 		}
 	}
 }
