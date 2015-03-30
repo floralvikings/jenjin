@@ -54,7 +54,16 @@ public class MessageReader
 	/**
 	 * Stop reading messages from the output stream.  Once this has been called, the timer may not be restarted.
 	 */
-	public void stop() { runTimer.cancel(); }
+	public void stop() {
+		runTimer.cancel();
+		try
+		{
+			inputStream.close();
+		} catch (IOException e)
+		{
+			LOGGER.log(Level.FINE, "Exception when closing input stream", e);
+		}
+	}
 
 	/**
 	 * Returns a list of all messages received since the last time this method was called.
