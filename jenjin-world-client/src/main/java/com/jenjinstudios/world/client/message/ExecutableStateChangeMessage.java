@@ -38,7 +38,7 @@ public class ExecutableStateChangeMessage extends WorldClientExecutableMessage
 		Vector2D oldVector = new Vector2D(x, y);
 		Angle angle = new Angle(absoluteAngle, relativeAngle);
 
-		World world = getConnection().getWorld();
+		World world = getThreadPool().getWorld();
 		world.scheduleUpdateTask(() -> {
 			WorldObject obj = world.getWorldObjects().get(actorID);
 			if (obj instanceof Actor)

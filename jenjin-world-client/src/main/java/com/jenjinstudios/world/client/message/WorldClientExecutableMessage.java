@@ -1,6 +1,5 @@
 package com.jenjinstudios.world.client.message;
 
-import com.jenjinstudios.client.net.AuthClient;
 import com.jenjinstudios.core.concurrency.ExecutableMessage;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.world.client.WorldClient;
@@ -23,7 +22,7 @@ public abstract class WorldClientExecutableMessage extends ExecutableMessage
     }
 
     @Override
-    public WorldClient getConnection() {
-        return (WorldClient) (AuthClient) super.getConnection();
-    }
+	public WorldClient getThreadPool() {
+		return (WorldClient) super.getThreadPool();
+	}
 }

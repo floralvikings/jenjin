@@ -32,9 +32,9 @@ public class ExecutableForceStateMessage extends WorldClientExecutableMessage
         angle = new Angle(absoluteAngle, relativeAngle);
         vector2D = new Vector2D(x, y);
 
-		World world = getConnection().getWorld();
+		World world = getThreadPool().getWorld();
 		world.scheduleUpdateTask(() -> {
-			Actor player = getConnection().getPlayer();
+			Actor player = getThreadPool().getPlayer();
 			double dist = ((world.getLastUpdateCompleted() - timeOfForce) / MS_TO_S) * player.getMoveSpeed();
 			Vector2D corrected = vector2D.getVectorInDirection(dist, angle.getStepAngle());
 			player.setVector2D(corrected);

@@ -24,6 +24,6 @@ public class ExecutableTest extends ExecutableMessage
 
 	@Override
 	public void execute() {
-		getConnection().setName((String) getMessage().getArgument("encryptedString"));
+		((Connection) getThreadPool()).setName((String) getMessage().getArgument("encryptedString"));
 	}
 }

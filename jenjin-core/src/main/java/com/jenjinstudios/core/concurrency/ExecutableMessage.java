@@ -1,6 +1,5 @@
 package com.jenjinstudios.core.concurrency;
 
-import com.jenjinstudios.core.Connection;
 import com.jenjinstudios.core.io.Message;
 
 import java.util.logging.Logger;
@@ -15,19 +14,19 @@ public abstract class ExecutableMessage
 {
     private static final Logger LOGGER = Logger.getLogger(ExecutableMessage.class.getName());
     private final Message message;
-    private final Connection connection;
+	private final MessageThreadPool threadPool;
 
     /**
      * Construct a new ExecutableMessage; this should only ever be invoked reflectively, by a {@code Connection}'s
      * update cycle.
      *
-     * @param connection The connection for which this ExecutbleMessage will work.
-     * @param message The message that caused this {@code ExecutableMessage} to be created.
+	 * @param threadPool The threadPool for which this ExecutbleMessage will work.
+	 * @param message The message that caused this {@code ExecutableMessage} to be created.
      */
-    protected ExecutableMessage(Connection connection, Message message) {
-        this.message = message;
-        this.connection = connection;
-    }
+	protected ExecutableMessage(MessageThreadPool threadPool, Message message) {
+		this.message = message;
+		this.threadPool = threadPool;
+	}
 
 	/**
 	 * This method is invoked by a {@code Connection} when a message is received and the {@code ExecutableMessage} is
@@ -45,9 +44,9 @@ public abstract class ExecutableMessage
     }
 
     /**
-     * Get the connection associated with this ExecutableMessage.
-     *
-     * @return The connection associated with this ExecutableMessage.
-     */
-    public Connection getConnection() { return connection; }
+	 * Get the threadPool associated with this ExecutableMessage.
+	 *
+	 * @return The threadPool associated with this ExecutableMessage.
+	 */
+	public MessageThreadPool getThreadPool() { return threadPool; }
 }

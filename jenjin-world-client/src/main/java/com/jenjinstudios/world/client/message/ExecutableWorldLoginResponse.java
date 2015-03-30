@@ -34,13 +34,13 @@ public class ExecutableWorldLoginResponse extends WorldClientExecutableMessage
 		int id = (int) getMessage().getArgument("id");
         double xCoordinate = (double) getMessage().getArgument("xCoordinate");
         double yCoordinate = (double) getMessage().getArgument("yCoordinate");
-		Actor player = new Actor(getConnection().getUser().getUsername());
+		Actor player = new Actor(getThreadPool().getUser().getUsername());
 		player.addPreUpdateEvent(Vision.EVENT_NAME, new Vision(player));
         player.setId(id);
         Vector2D vector2D = new Vector2D(xCoordinate, yCoordinate);
         player.setVector2D(vector2D);
 
-		WorldClient client = getConnection();
+		WorldClient client = getThreadPool();
 		client.getWorld().scheduleUpdateTask(() -> {
 			boolean success = (boolean) getMessage().getArgument("success");
 			client.getLoginTracker().setLoggedIn(success);

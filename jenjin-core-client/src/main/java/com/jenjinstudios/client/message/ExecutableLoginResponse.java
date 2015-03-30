@@ -24,7 +24,7 @@ public class ExecutableLoginResponse extends ExecutableMessage
 
     @Override
 	public void execute() {
-		AuthClient client = (AuthClient) getConnection();
+		AuthClient client = (AuthClient) getThreadPool();
 		client.getLoginTracker().setLoggedIn((boolean) getMessage().getArgument("success"));
 		if (client.getLoginTracker().isLoggedIn())
 		{
