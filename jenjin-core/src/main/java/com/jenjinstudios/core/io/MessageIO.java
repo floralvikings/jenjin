@@ -59,18 +59,8 @@ public class MessageIO
      */
     public MessageOutputStream getOut() { return out; }
 
-	void closeOutputStream() {
+	void closeInputStream() {
 		try
-        {
-            out.close();
-        } catch (IOException e)
-        {
-            LOGGER.log(Level.INFO, "Error closing output stream.", e);
-        }
-    }
-
-    void closeInputStream() {
-        try
         {
             in.close();
         } catch (IOException e)
