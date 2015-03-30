@@ -11,8 +11,6 @@ import com.jenjinstudios.core.io.Message;
  */
 public class ExecutablePingResponse extends ExecutableMessage
 {
-    private final Connection connection;
-
     /**
      * Construct a new {@code PingResponse}.
      *
@@ -21,14 +19,12 @@ public class ExecutablePingResponse extends ExecutableMessage
      */
     public ExecutablePingResponse(Connection connection, Message message) {
         super(connection, message);
-
-        this.connection = connection;
     }
 
     @Override
 	public Message execute() {
 		long requestTime = (long) getMessage().getArgument("requestTimeMillis");
-		connection.getPingTracker().addPingTime(System.currentTimeMillis() - requestTime);
+		((Connection) getThreadPool()).getPingTracker().addPingTime(System.currentTimeMillis() - requestTime);
 		return null;
 	}
 }
