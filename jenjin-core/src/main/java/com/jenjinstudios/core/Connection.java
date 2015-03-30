@@ -89,7 +89,6 @@ public class Connection
 		messageReader.stop();
 		checkErrorTimer.cancel();
 		messageExecutor.stop();
-		messageIO.closeInputStream();
 		messageIO.closeOutputStream();
 	}
 
