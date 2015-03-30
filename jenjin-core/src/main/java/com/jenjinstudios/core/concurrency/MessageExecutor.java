@@ -19,6 +19,7 @@ public class MessageExecutor
 {
 	private static final Logger LOGGER = Logger.getLogger(MessageExecutor.class.getName());
 	private final MessageExecutorTask messageExecutorTask;
+	private final MessageContext messageContext;
 	private final Timer runTimer;
 
 	/**
@@ -26,9 +27,11 @@ public class MessageExecutor
 	 * appropriate ExecutableMessages under the given Connection.
 	 *
 	 * @param threadPool The threadPool under which to execute messages.
+	 * @param messageContext The data that should be passed into each message.
 	 */
-	public MessageExecutor(MessageThreadPool threadPool) {
+	public MessageExecutor(MessageThreadPool threadPool, MessageContext messageContext) {
 		this.messageExecutorTask = new MessageExecutorTask(threadPool);
+		this.messageContext = messageContext;
 		runTimer = new Timer("MessageExecutor");
 	}
 
