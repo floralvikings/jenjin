@@ -4,7 +4,7 @@
 
     <message name="Test" id="-5">
         <executable>test.jenjinstudios.integration.integration.message.ExecutableTest</executable>
-        <argument type="String" encrypt="true" name="encryptedString" />
+        <argument type="String" name="encryptedString" />
     </message>
 
 </messages>

@@ -1,6 +1,6 @@
 package test.jenjinstudios.integration.integration;
 
-import com.jenjinstudios.core.EncryptedConnection;
+import com.jenjinstudios.core.Connection;
 import com.jenjinstudios.core.MessageIO;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageInputStream;
@@ -16,7 +16,6 @@ import java.io.InputStream;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.security.KeyPair;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -56,17 +55,11 @@ public class ConnectionTest
 	@Test
 	public void integrationTest() throws Exception {
 		ConnectionPair connectionPair = new ConnectionPair();
-		EncryptedConnection connectionOne = connectionPair.getConnectionOne();
-		EncryptedConnection connectionTwo = connectionPair.getConnectionTwo();
+		Connection connectionOne = connectionPair.getConnectionOne();
+		Connection connectionTwo = connectionPair.getConnectionTwo();
 
 		connectionOne.start();
 		connectionTwo.start();
-
-		KeyPair keyPairOne = EncryptedConnection.generateRSAKeyPair();
-		KeyPair keyPairTwo = EncryptedConnection.generateRSAKeyPair();
-
-		connectionOne.setRSAKeyPair(keyPairOne);
-		connectionTwo.setRSAKeyPair(keyPairTwo);
 
 		// Give the connections time to set key pairs
 		Thread.sleep(100);
@@ -136,14 +129,14 @@ public class ConnectionTest
 
 	private static class ConnectionPair
 	{
-		private final EncryptedConnection connectionOne;
-		private final EncryptedConnection connectionTwo;
+		private final Connection connectionOne;
+		private final Connection connectionTwo;
 
-		public EncryptedConnection getConnectionOne() {
+		public Connection getConnectionOne() {
 			return connectionOne;
 		}
 
-		public EncryptedConnection getConnectionTwo() {
+		public Connection getConnectionTwo() {
 			return connectionTwo;
 		}
 
@@ -160,8 +153,8 @@ public class ConnectionTest
 			MessageOutputStream outputStreamTwo = new MessageOutputStream(socketTwo.getOutputStream());
 			MessageIO messageIOTwo = new MessageIO(inputStreamTwo, outputStreamTwo);
 
-			connectionOne = new EncryptedConnection(messageIOOne);
-			connectionTwo = new EncryptedConnection(messageIOTwo);
+			connectionOne = new Connection(messageIOOne);
+			connectionTwo = new Connection(messageIOTwo);
 		}
 	}
 }
