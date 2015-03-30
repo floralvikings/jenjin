@@ -4,6 +4,11 @@ import com.jenjinstudios.core.io.Message;
 
 import java.util.logging.Logger;
 
+/**
+ * The ExecutableMessage class is central to the Jenjin message-processing system; using data in the global message
+ * registry, a MessageExecutor thread constructs an Executable message based on each message received by a Connection.
+ * Once the message is created, the execute method is immediately called on it.
+ */
 @SuppressWarnings("unused")
 public abstract class ExecutableMessage
 {
