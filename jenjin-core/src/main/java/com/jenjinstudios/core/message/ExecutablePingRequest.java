@@ -12,18 +12,14 @@ import com.jenjinstudios.core.io.MessageRegistry;
  */
 public class ExecutablePingRequest extends ExecutableMessage
 {
-    private final Connection connection;
 
-    /**
-     * Construct a new PingRequest.
+	/**
+	 * Construct a new PingRequest.
      *
      * @param connection The connection invoking this executable message.
      * @param message The message which caused this executable message to be invoked.
      */
-    public ExecutablePingRequest(Connection connection, Message message) {
-        super(connection, message);
-        this.connection = connection;
-    }
+	public ExecutablePingRequest(Connection connection, Message message) { super(connection, message); }
 
     /**
      * Generate a PingResponse with the given time of request.
@@ -41,11 +37,7 @@ public class ExecutablePingRequest extends ExecutableMessage
     @Override
 	public Message execute() {
 		long requestTimeNanos = (long) getMessage().getArgument("requestTimeMillis");
-
-        Message pingResponse =
-              generatePingResponse(requestTimeNanos);
-		connection.enqueueMessage(pingResponse);
-		return null;
+		return generatePingResponse(requestTimeNanos);
 	}
 
 }
