@@ -54,7 +54,16 @@ public class MessageWriter
 	/**
 	 * Stop writing messages to the output stream.  Once this has been called, the timer may not be restarted.
 	 */
-	public void stop() { runTimer.cancel(); }
+	public void stop() {
+		runTimer.cancel();
+		try
+		{
+			outputStream.close();
+		} catch (IOException e)
+		{
+			LOGGER.log(Level.FINE, "Exception when closing output stream", e);
+		}
+	}
 
 	/**
 	 * Enqueue a message to be written to the output stream.
