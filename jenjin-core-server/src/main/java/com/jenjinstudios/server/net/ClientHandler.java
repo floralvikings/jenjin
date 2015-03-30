@@ -1,7 +1,7 @@
 package com.jenjinstudios.server.net;
 
 import com.jenjinstudios.core.EncryptedConnection;
-import com.jenjinstudios.core.io.MessageIO;
+import com.jenjinstudios.core.io.MessageStreamPair;
 import com.jenjinstudios.server.authentication.AuthenticationException;
 import com.jenjinstudios.server.authentication.User;
 
@@ -29,11 +29,11 @@ public class ClientHandler extends EncryptedConnection
      * send the client a FirstConnectResponse message with the server's UPS
      *
      * @param s The server for which this handler works.
-     * @param messageIO The MessageIO used to send and receive messages.
-     */
-	public ClientHandler(Server s, MessageIO messageIO) {
-		super(messageIO);
-        setName("ClientHandler with unset ID");
+	 * @param messageStreamPair The MessageIO used to send and receive messages.
+	 */
+	public ClientHandler(Server s, MessageStreamPair messageStreamPair) {
+		super(messageStreamPair);
+		setName("ClientHandler with unset ID");
         server = s;
     }
 

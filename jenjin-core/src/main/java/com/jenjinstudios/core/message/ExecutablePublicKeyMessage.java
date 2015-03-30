@@ -44,8 +44,8 @@ public class ExecutablePublicKeyMessage extends ExecutableMessage
             PublicKey suppliedKey = KeyFactory.getInstance("RSA").generatePublic(new X509EncodedKeySpec(keyBytes));
             if (isKeyValid(suppliedKey))
             {
-                connection.getMessageIO().getOut().setPublicKey(suppliedKey);
-            }
+				connection.getMessageStreamPair().getOut().setPublicKey(suppliedKey);
+			}
         } catch (InvalidKeySpecException | NoSuchAlgorithmException e)
         {
             LOGGER.log(Level.INFO, "Unable to instantiate public key; messages will not be encrypted!", e);
@@ -60,8 +60,8 @@ public class ExecutablePublicKeyMessage extends ExecutableMessage
             verified = true;
         } else
         {
-            InetAddress address = connection.getMessageIO().getAddress();
-            if (address != null)
+			InetAddress address = connection.getMessageStreamPair().getAddress();
+			if (address != null)
             {
                 Key key = connection.getVerifiedKeys().get(address);
                 if ((key == null) || !key.equals(suppliedKey))

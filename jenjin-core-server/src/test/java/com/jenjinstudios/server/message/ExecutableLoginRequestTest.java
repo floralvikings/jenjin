@@ -1,8 +1,8 @@
 package com.jenjinstudios.server.message;
 
 import com.jenjinstudios.core.io.Message;
-import com.jenjinstudios.core.io.MessageIO;
 import com.jenjinstudios.core.io.MessageRegistry;
+import com.jenjinstudios.core.io.MessageStreamPair;
 import com.jenjinstudios.server.authentication.AuthenticationException;
 import com.jenjinstudios.server.authentication.Authenticator;
 import com.jenjinstudios.server.authentication.BasicUser;
@@ -51,14 +51,14 @@ public class ExecutableLoginRequestTest
 		ClientHandler clientHandler = mock(ClientHandler.class);
 		Server server = mock(Server.class);
 		Authenticator<BasicUser> authenticator = mock(Authenticator.class);
-		MessageIO messageIO = mock(MessageIO.class);
+		MessageStreamPair messageStreamPair = mock(MessageStreamPair.class);
 		when(server.getAuthenticator()).thenReturn(authenticator);
 		ServerUpdateTask serverUpdateTask = mock(ServerUpdateTask.class);
 		when(server.getServerUpdateTask()).thenReturn(serverUpdateTask);
 		when(serverUpdateTask.getCycleStartTime()).thenReturn(12345L);
 		when(authenticator.logInUser("foo", "bar")).thenReturn(user);
 		when(clientHandler.getServer()).thenReturn(server);
-		when(clientHandler.getMessageIO()).thenReturn(messageIO);
+		when(clientHandler.getMessageStreamPair()).thenReturn(messageStreamPair);
 
 		ExecutableLoginRequest executableLoginRequest = new ExecutableLoginRequest(clientHandler, message);
 		executableLoginRequest.execute();
@@ -80,7 +80,7 @@ public class ExecutableLoginRequestTest
 		ClientHandler clientHandler = mock(ClientHandler.class);
 		Server server = mock(Server.class);
 		Authenticator<BasicUser> authenticator = mock(Authenticator.class);
-		MessageIO messageIO = mock(MessageIO.class);
+		MessageStreamPair messageStreamPair = mock(MessageStreamPair.class);
 		when(server.getAuthenticator()).thenReturn(authenticator);
 		ServerUpdateTask serverUpdateTask = mock(ServerUpdateTask.class);
 		when(server.getServerUpdateTask()).thenReturn(serverUpdateTask);
@@ -88,7 +88,7 @@ public class ExecutableLoginRequestTest
 		when(authenticator.logInUser("foo", "bar")).thenReturn(user);
 		when(authenticator.logInUser("foo-dapoo", "bar")).thenThrow(new AuthenticationException("Nope"));
 		when(clientHandler.getServer()).thenReturn(server);
-		when(clientHandler.getMessageIO()).thenReturn(messageIO);
+		when(clientHandler.getMessageStreamPair()).thenReturn(messageStreamPair);
 
 		ExecutableLoginRequest executableLoginRequest = new ExecutableLoginRequest(clientHandler, message);
 		executableLoginRequest.execute();

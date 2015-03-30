@@ -58,11 +58,12 @@ public class ConnectionTest
 
 		MessageInputStream messageInputStream = new MessageInputStream(in);
 		MessageOutputStream messageOutputStream = new MessageOutputStream(bos);
-		MessageIO messageIO = new MessageIO(messageInputStream, messageOutputStream);
-		Connection connection = new EncryptedConnection(messageIO);
+		MessageStreamPair messageStreamPair = new MessageStreamPair(messageInputStream, messageOutputStream);
+		Connection connection = new EncryptedConnection(messageStreamPair);
 		connection.shutdown();
 
-		Assert.assertTrue(connection.getMessageIO().getOut().isClosed(), "MessageOutputStream should be closed");
+		Assert.assertTrue(connection.getMessageStreamPair().getOut().isClosed(), "MessageOutputStream should be " +
+			  "closed");
 	}
 
 	/**
@@ -82,8 +83,8 @@ public class ConnectionTest
 
         when(messageInputStream.readMessage()).thenReturn(pingRequest).thenReturn(MESSAGE_REGISTRY.createMessage
               ("BlankMessage"));
-		MessageIO messageIO = new MessageIO(messageInputStream, messageOutputStream);
-		Connection connection = new EncryptedConnection(messageIO);
+		MessageStreamPair messageStreamPair = new MessageStreamPair(messageInputStream, messageOutputStream);
+		Connection connection = new EncryptedConnection(messageStreamPair);
 		connection.start();
 		Thread.sleep(100);
 		connection.shutdown();
@@ -114,8 +115,8 @@ public class ConnectionTest
 
 		MessageInputStream messageInputStream = new MessageInputStream(in);
 		MessageOutputStream messageOutputStream = new MessageOutputStream(bos);
-		MessageIO messageIO = new MessageIO(messageInputStream, messageOutputStream);
-		Connection connection = new EncryptedConnection(messageIO);
+		MessageStreamPair messageStreamPair = new MessageStreamPair(messageInputStream, messageOutputStream);
+		Connection connection = new EncryptedConnection(messageStreamPair);
 
 		connection.start();
 		Thread.sleep(100);

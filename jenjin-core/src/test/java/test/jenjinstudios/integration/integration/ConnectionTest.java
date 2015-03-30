@@ -143,14 +143,14 @@ public class ConnectionTest
 
 			MessageInputStream inputStreamOne = new MessageInputStream(socketOne.getInputStream());
 			MessageOutputStream outputStreamOne = new MessageOutputStream(socketOne.getOutputStream());
-			MessageIO messageIOOne = new MessageIO(inputStreamOne, outputStreamOne);
+			MessageStreamPair messageStreamPairOne = new MessageStreamPair(inputStreamOne, outputStreamOne);
 
 			MessageInputStream inputStreamTwo = new MessageInputStream(socketTwo.getInputStream());
 			MessageOutputStream outputStreamTwo = new MessageOutputStream(socketTwo.getOutputStream());
-			MessageIO messageIOTwo = new MessageIO(inputStreamTwo, outputStreamTwo);
+			MessageStreamPair messageStreamPairTwo = new MessageStreamPair(inputStreamTwo, outputStreamTwo);
 
-			connectionOne = new Connection(messageIOOne);
-			connectionTwo = new Connection(messageIOTwo);
+			connectionOne = new Connection(messageStreamPairOne);
+			connectionTwo = new Connection(messageStreamPairTwo);
 		}
 	}
 }

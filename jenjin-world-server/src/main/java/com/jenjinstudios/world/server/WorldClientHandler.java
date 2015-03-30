@@ -1,7 +1,7 @@
 package com.jenjinstudios.world.server;
 
 import com.jenjinstudios.core.io.Message;
-import com.jenjinstudios.core.io.MessageIO;
+import com.jenjinstudios.core.io.MessageStreamPair;
 import com.jenjinstudios.server.net.ClientHandler;
 import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.WorldObject;
@@ -21,8 +21,8 @@ public class WorldClientHandler extends ClientHandler
 {
 	private boolean hasSentActorStepMessage;
 
-	public WorldClientHandler(WorldServer s, MessageIO messageIO) {
-		super(s, messageIO);
+	public WorldClientHandler(WorldServer s, MessageStreamPair messageStreamPair) {
+		super(s, messageStreamPair);
 	}
 
 	@Override

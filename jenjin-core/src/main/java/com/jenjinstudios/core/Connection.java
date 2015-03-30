@@ -1,8 +1,8 @@
 package com.jenjinstudios.core;
 
 import com.jenjinstudios.core.concurrency.MessageThreadPool;
-import com.jenjinstudios.core.io.MessageIO;
 import com.jenjinstudios.core.io.MessageRegistry;
+import com.jenjinstudios.core.io.MessageStreamPair;
 
 import java.io.InputStream;
 
@@ -24,7 +24,7 @@ public class Connection extends MessageThreadPool
 	 *
 	 * @param streams The MessageIO containing the input and output streams
 	 */
-	public Connection(MessageIO streams) {
+	public Connection(MessageStreamPair streams) {
 		super(streams);
 		InputStream stream = getClass().getClassLoader().getResourceAsStream("com/jenjinstudios/core/io/Messages.xml");
 		MessageRegistry.getGlobalRegistry().register("Core XML Registry", stream);

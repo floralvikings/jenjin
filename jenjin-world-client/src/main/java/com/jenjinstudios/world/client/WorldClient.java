@@ -2,8 +2,8 @@ package com.jenjinstudios.world.client;
 
 import com.jenjinstudios.client.net.AuthClient;
 import com.jenjinstudios.client.net.ClientUser;
-import com.jenjinstudios.core.io.MessageIO;
 import com.jenjinstudios.core.io.MessageRegistry;
+import com.jenjinstudios.core.io.MessageStreamPair;
 import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.client.message.WorldClientMessageFactory;
@@ -28,8 +28,8 @@ public class WorldClient extends AuthClient
     private World world;
     private Actor player;
 
-    public WorldClient(MessageIO messageIO, ClientUser clientUser, File worldFile) throws WorldDocumentException {
-        super(messageIO, clientUser);
+    public WorldClient(MessageStreamPair messageStreamPair, ClientUser clientUser, File worldFile) throws WorldDocumentException {
+        super(messageStreamPair, clientUser);
         this.messageFactory = new WorldClientMessageFactory();
         serverWorldFileTracker = new ServerWorldFileTracker(this, worldFile);
         world = serverWorldFileTracker.readWorldFromFile();

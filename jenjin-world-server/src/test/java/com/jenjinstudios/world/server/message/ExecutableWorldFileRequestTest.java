@@ -1,7 +1,7 @@
 package com.jenjinstudios.world.server.message;
 
 import com.jenjinstudios.core.io.Message;
-import com.jenjinstudios.core.io.MessageIO;
+import com.jenjinstudios.core.io.MessageStreamPair;
 import com.jenjinstudios.world.server.WorldClientHandler;
 import com.jenjinstudios.world.server.WorldServer;
 import org.powermock.api.mockito.PowerMockito;
@@ -29,12 +29,12 @@ public class ExecutableWorldFileRequestTest extends PowerMockTestCase
 		PowerMockito.mockStatic(WorldServerMessageFactory.class);
 		WorldClientHandler clientHandler = mock(WorldClientHandler.class);
 		WorldServer server = mock(WorldServer.class);
-		MessageIO messageIO = mock(MessageIO.class);
+		MessageStreamPair messageStreamPair = mock(MessageStreamPair.class);
 
 		when(WorldServerMessageFactory.generateWorldFileResponse(any())).thenReturn(response);
 		when(server.getWorldFileChecksum()).thenReturn(fileBytes);
 		when(clientHandler.getServer()).thenReturn(server);
-		when(clientHandler.getMessageIO()).thenReturn(messageIO);
+		when(clientHandler.getMessageStreamPair()).thenReturn(messageStreamPair);
 
 		ExecutableWorldFileRequest exec = new ExecutableWorldFileRequest(clientHandler, message);
 		Message resp = exec.execute();

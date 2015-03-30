@@ -55,10 +55,10 @@ public class ExecutablePublicKeyMessageTest
 		MessageInputStream in = mock(MessageInputStream.class);
         MessageOutputStream out = mock(MessageOutputStream.class);
 
-        MessageIO messageIO = new MessageIO(in, out, address);
+		MessageStreamPair messageStreamPair = new MessageStreamPair(in, out, address);
 
-        when(connection.getMessageIO()).thenReturn(messageIO);
-        when(connection.getVerifiedKeys()).thenReturn(keys);
+		when(connection.getMessageStreamPair()).thenReturn(messageStreamPair);
+		when(connection.getVerifiedKeys()).thenReturn(keys);
 
         ExecutablePublicKeyMessage executable = new ExecutablePublicKeyMessage(connection, message);
 		executable.execute();
@@ -77,13 +77,13 @@ public class ExecutablePublicKeyMessageTest
         Map<InetAddress, Key> keys = new HashMap<>(10);
 
 		EncryptedConnection connection = mock(EncryptedConnection.class);
-		MessageIO messageIO = mock(MessageIO.class);
-        MessageOutputStream out = mock(MessageOutputStream.class);
+		MessageStreamPair messageStreamPair = mock(MessageStreamPair.class);
+		MessageOutputStream out = mock(MessageOutputStream.class);
 
-        when(messageIO.getOut()).thenReturn(out);
-        when(messageIO.getAddress()).thenReturn(address);
-        when(connection.getMessageIO()).thenReturn(messageIO);
-        when(connection.getVerifiedKeys()).thenReturn(keys);
+		when(messageStreamPair.getOut()).thenReturn(out);
+		when(messageStreamPair.getAddress()).thenReturn(address);
+		when(connection.getMessageStreamPair()).thenReturn(messageStreamPair);
+		when(connection.getVerifiedKeys()).thenReturn(keys);
 
         ExecutablePublicKeyMessage executable = new ExecutablePublicKeyMessage(connection, message);
 		executable.execute();
@@ -104,13 +104,13 @@ public class ExecutablePublicKeyMessageTest
         keys.put(address, rsaKeyPair.getPublic());
 
 		EncryptedConnection connection = mock(EncryptedConnection.class);
-		MessageIO messageIO = mock(MessageIO.class);
-        MessageOutputStream out = mock(MessageOutputStream.class);
+		MessageStreamPair messageStreamPair = mock(MessageStreamPair.class);
+		MessageOutputStream out = mock(MessageOutputStream.class);
 
-        when(messageIO.getOut()).thenReturn(out);
-        when(messageIO.getAddress()).thenReturn(address);
-        when(connection.getMessageIO()).thenReturn(messageIO);
-        when(connection.getVerifiedKeys()).thenReturn(keys);
+		when(messageStreamPair.getOut()).thenReturn(out);
+		when(messageStreamPair.getAddress()).thenReturn(address);
+		when(connection.getMessageStreamPair()).thenReturn(messageStreamPair);
+		when(connection.getVerifiedKeys()).thenReturn(keys);
 
         ExecutablePublicKeyMessage executable = new ExecutablePublicKeyMessage(connection, message);
 		executable.execute();
@@ -131,12 +131,12 @@ public class ExecutablePublicKeyMessageTest
         keys.put(address, rsaKeyPair.getPublic());
 
 		EncryptedConnection connection = mock(EncryptedConnection.class);
-		MessageIO messageIO = mock(MessageIO.class);
-        MessageOutputStream out = mock(MessageOutputStream.class);
+		MessageStreamPair messageStreamPair = mock(MessageStreamPair.class);
+		MessageOutputStream out = mock(MessageOutputStream.class);
 
-        when(messageIO.getOut()).thenReturn(out);
-        when(connection.getMessageIO()).thenReturn(messageIO);
-        when(connection.getVerifiedKeys()).thenReturn(keys);
+		when(messageStreamPair.getOut()).thenReturn(out);
+		when(connection.getMessageStreamPair()).thenReturn(messageStreamPair);
+		when(connection.getVerifiedKeys()).thenReturn(keys);
 
         ExecutablePublicKeyMessage executable = new ExecutablePublicKeyMessage(connection, message);
 		executable.execute();

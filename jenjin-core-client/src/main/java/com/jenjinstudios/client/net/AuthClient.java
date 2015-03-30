@@ -1,8 +1,8 @@
 package com.jenjinstudios.client.net;
 
 import com.jenjinstudios.core.io.Message;
-import com.jenjinstudios.core.io.MessageIO;
 import com.jenjinstudios.core.io.MessageRegistry;
+import com.jenjinstudios.core.io.MessageStreamPair;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -21,11 +21,11 @@ public class AuthClient extends Client
     /**
      * Construct a new client with authentication abilities.
      *
-     * @param messageIO The MessageIO used by this client to communicate with a server.
+     * @param messageStreamPair The MessageIO used by this client to communicate with a server.
      * @param user The user which this client will attempt to authenticate.
      */
-    public AuthClient(MessageIO messageIO, ClientUser user) {
-        super(messageIO);
+    public AuthClient(MessageStreamPair messageStreamPair, ClientUser user) {
+        super(messageStreamPair);
         this.loginTracker = new LoginTracker(this);
         this.user = user;
     }

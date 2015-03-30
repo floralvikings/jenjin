@@ -1,8 +1,8 @@
 package com.jenjinstudios.server.net;
 
-import com.jenjinstudios.core.io.MessageIO;
 import com.jenjinstudios.core.io.MessageInputStream;
 import com.jenjinstudios.core.io.MessageOutputStream;
+import com.jenjinstudios.core.io.MessageStreamPair;
 import com.jenjinstudios.server.authentication.Authenticator;
 import com.jenjinstudios.server.authentication.BasicUser;
 import com.jenjinstudios.server.message.ServerMessageFactory;
@@ -26,9 +26,9 @@ public class ClientHandlerTest extends PowerMockTestCase
 		Server server = mock(Server.class);
 		MessageInputStream mis = mock(MessageInputStream.class);
 		MessageOutputStream mos = mock(MessageOutputStream.class);
-		MessageIO messageIO = new MessageIO(mis, mos);
+		MessageStreamPair messageStreamPair = new MessageStreamPair(mis, mos);
 
-		ClientHandler clientHandler = new ClientHandler(server, messageIO);
+		ClientHandler clientHandler = new ClientHandler(server, messageStreamPair);
 		clientHandler.setHandlerId(123);
 
 		assertEquals(clientHandler.getHandlerId(), 123);
@@ -42,10 +42,10 @@ public class ClientHandlerTest extends PowerMockTestCase
 		Server server = mock(Server.class);
 		MessageInputStream mis = mock(MessageInputStream.class);
 		MessageOutputStream mos = mock(MessageOutputStream.class);
-		MessageIO messageIO = new MessageIO(mis, mos);
+		MessageStreamPair messageStreamPair = new MessageStreamPair(mis, mos);
 		when(server.getAuthenticator()).thenReturn(authenticator);
 
-		ClientHandler clientHandler = new ClientHandler(server, messageIO);
+		ClientHandler clientHandler = new ClientHandler(server, messageStreamPair);
 		clientHandler.setUser(user);
 		clientHandler.shutdown();
 
@@ -58,8 +58,8 @@ public class ClientHandlerTest extends PowerMockTestCase
 		Server server = mock(Server.class);
 		MessageInputStream mis = mock(MessageInputStream.class);
 		MessageOutputStream mos = mock(MessageOutputStream.class);
-		MessageIO messageIO = new MessageIO(mis, mos);
-		ClientHandler clientHandler = new ClientHandler(server, messageIO);
+		MessageStreamPair messageStreamPair = new MessageStreamPair(mis, mos);
+		ClientHandler clientHandler = new ClientHandler(server, messageStreamPair);
 		clientHandler.setLoggedInTime(12345l);
 		assertEquals(clientHandler.getLoggedInTime(), 12345l);
 	}

@@ -7,7 +7,7 @@ import java.net.InetAddress;
  *
  * @author Caleb Brinkman
  */
-public class MessageIO
+public class MessageStreamPair
 {
 	private final MessageInputStream in;
 	private final MessageOutputStream out;
@@ -19,7 +19,7 @@ public class MessageIO
      * @param in The input stream.
      * @param out The output stream.
      */
-    public MessageIO(MessageInputStream in, MessageOutputStream out) { this(in, out, null); }
+	public MessageStreamPair(MessageInputStream in, MessageOutputStream out) { this(in, out, null); }
 
     /**
      * Construct a new {@code MessageIO} from the given message input and output streams.
@@ -28,8 +28,8 @@ public class MessageIO
      * @param out The output stream.
      * @param address The Internet Address of the complementary connection.
      */
-    public MessageIO(MessageInputStream in, MessageOutputStream out, InetAddress address) {
-        this.in = in;
+	public MessageStreamPair(MessageInputStream in, MessageOutputStream out, InetAddress address) {
+		this.in = in;
         this.out = out;
         this.address = address;
     }

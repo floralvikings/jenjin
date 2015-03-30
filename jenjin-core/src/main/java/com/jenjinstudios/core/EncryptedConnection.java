@@ -1,8 +1,8 @@
 package com.jenjinstudios.core;
 
 import com.jenjinstudios.core.io.Message;
-import com.jenjinstudios.core.io.MessageIO;
 import com.jenjinstudios.core.io.MessageRegistry;
+import com.jenjinstudios.core.io.MessageStreamPair;
 
 import java.net.InetAddress;
 import java.security.Key;
@@ -28,7 +28,7 @@ public class EncryptedConnection extends Connection
 	 *
 	 * @param streams The {@code MessageIO} containing streams used to read and write messages.
 	 */
-	public EncryptedConnection(MessageIO streams) {
+	public EncryptedConnection(MessageStreamPair streams) {
 		super(streams);
 	}
 
@@ -73,7 +73,7 @@ public class EncryptedConnection extends Connection
 	public void setRSAKeyPair(KeyPair rsaKeyPair) {
 		if (rsaKeyPair != null)
 		{
-			getMessageIO().getIn().setPrivateKey(rsaKeyPair.getPrivate());
+			getMessageStreamPair().getIn().setPrivateKey(rsaKeyPair.getPrivate());
 			Message message = generatePublicKeyMessage(rsaKeyPair.getPublic());
 			enqueueMessage(message);
 		}

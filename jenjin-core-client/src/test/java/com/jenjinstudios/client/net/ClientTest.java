@@ -1,9 +1,9 @@
 package com.jenjinstudios.client.net;
 
 import com.jenjinstudios.core.io.Message;
-import com.jenjinstudios.core.io.MessageIO;
 import com.jenjinstudios.core.io.MessageInputStream;
 import com.jenjinstudios.core.io.MessageOutputStream;
+import com.jenjinstudios.core.io.MessageStreamPair;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -23,9 +23,9 @@ public class ClientTest
 	public void testAddRepeatedTask() {
 		MessageInputStream mis = mock(MessageInputStream.class);
 		MessageOutputStream mos = mock(MessageOutputStream.class);
-		MessageIO messageIO = new MessageIO(mis, mos);
+		MessageStreamPair messageStreamPair = new MessageStreamPair(mis, mos);
 		Runnable r = mock(Runnable.class);
-		Client client = new Client(messageIO);
+		Client client = new Client(messageStreamPair);
 		client.addRepeatedTask(r);
 		client.runRepeatedTasks();
 		verify(r).run();

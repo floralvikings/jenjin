@@ -1,8 +1,8 @@
 package com.jenjinstudios.client.net;
 
-import com.jenjinstudios.core.io.MessageIO;
 import com.jenjinstudios.core.io.MessageInputStream;
 import com.jenjinstudios.core.io.MessageOutputStream;
+import com.jenjinstudios.core.io.MessageStreamPair;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -22,10 +22,10 @@ public class AuthClientTest
     public void testIsLoggedIn() {
         MessageInputStream mis = mock(MessageInputStream.class);
         MessageOutputStream mos = mock(MessageOutputStream.class);
-        MessageIO messageIO = new MessageIO(mis, mos);
+        MessageStreamPair messageStreamPair = new MessageStreamPair(mis, mos);
         ClientUser clientUser = mock(ClientUser.class);
         boolean random = ((Math.random() * 10) % 2) == 0;
-        AuthClient authClient = new AuthClient(messageIO, clientUser);
+        AuthClient authClient = new AuthClient(messageStreamPair, clientUser);
         authClient.getLoginTracker().setLoggedIn(random);
 
         Assert.assertEquals(authClient.getLoginTracker().isLoggedIn(), random, "Login status was not expected.");
@@ -38,10 +38,10 @@ public class AuthClientTest
     public void testLoggedInTime() {
         MessageInputStream mis = mock(MessageInputStream.class);
         MessageOutputStream mos = mock(MessageOutputStream.class);
-        MessageIO messageIO = new MessageIO(mis, mos);
+        MessageStreamPair messageStreamPair = new MessageStreamPair(mis, mos);
         ClientUser clientUser = mock(ClientUser.class);
         long random = (long) (Math.random() * 1000);
-        AuthClient authClient = new AuthClient(messageIO, clientUser);
+        AuthClient authClient = new AuthClient(messageStreamPair, clientUser);
         authClient.getLoginTracker().setLoggedInTime(random);
 
         Assert.assertEquals(authClient.getLoginTracker().getLoggedInTime(), random, "Login time was incorrect.");
@@ -54,9 +54,9 @@ public class AuthClientTest
     public void testGetUser() {
         MessageInputStream mis = mock(MessageInputStream.class);
         MessageOutputStream mos = mock(MessageOutputStream.class);
-        MessageIO messageIO = new MessageIO(mis, mos);
+        MessageStreamPair messageStreamPair = new MessageStreamPair(mis, mos);
         ClientUser clientUser = mock(ClientUser.class);
-        AuthClient authClient = new AuthClient(messageIO, clientUser);
+        AuthClient authClient = new AuthClient(messageStreamPair, clientUser);
 
         Assert.assertEquals(authClient.getUser(), clientUser, "User was incorrect.");
     }

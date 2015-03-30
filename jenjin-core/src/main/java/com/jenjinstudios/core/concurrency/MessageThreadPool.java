@@ -1,7 +1,7 @@
 package com.jenjinstudios.core.concurrency;
 
 import com.jenjinstudios.core.io.Message;
-import com.jenjinstudios.core.io.MessageIO;
+import com.jenjinstudios.core.io.MessageStreamPair;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -16,7 +16,7 @@ import java.util.logging.Logger;
 public class MessageThreadPool
 {
 	private static final Logger LOGGER = Logger.getLogger(MessageThreadPool.class.getName());
-	private final MessageIO messageIO;
+	private final MessageStreamPair messageStreamPair;
 	private final MessageExecutor messageExecutor;
 	private final MessageReader messageReader;
 	private final MessageWriter messageWriter;
@@ -25,12 +25,12 @@ public class MessageThreadPool
 	/**
 	 * Construct a MessageThreadPool whose threads will read from and write to the given MessageIO streams.
 	 *
-	 * @param messageIO The MessageIO containing the streams to read/write.
+	 * @param messageStreamPair The MessageIO containing the streams to read/write.
 	 */
-	protected MessageThreadPool(MessageIO messageIO) {
-		this.messageIO = messageIO;
-		messageWriter = new MessageWriter(messageIO.getOut());
-		messageReader = new MessageReader(messageIO.getIn());
+	protected MessageThreadPool(MessageStreamPair messageStreamPair) {
+		this.messageStreamPair = messageStreamPair;
+		messageWriter = new MessageWriter(messageStreamPair.getOut());
+		messageReader = new MessageReader(messageStreamPair.getIn());
 		errorChecker = new ErrorChecker();
 		messageExecutor = new MessageExecutor(this);
 	}
@@ -61,7 +61,7 @@ public class MessageThreadPool
 	 *
 	 * @return The MessageIO containing the keys and streams used by this connection.
 	 */
-	public MessageIO getMessageIO() { return messageIO; }
+	public MessageStreamPair getMessageStreamPair() { return messageStreamPair; }
 
 	/**
 	 * Queue up the supplied message to be written.

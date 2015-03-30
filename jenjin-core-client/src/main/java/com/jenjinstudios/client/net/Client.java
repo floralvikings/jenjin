@@ -2,8 +2,8 @@ package com.jenjinstudios.client.net;
 
 import com.jenjinstudios.core.EncryptedConnection;
 import com.jenjinstudios.core.io.Message;
-import com.jenjinstudios.core.io.MessageIO;
 import com.jenjinstudios.core.io.MessageRegistry;
+import com.jenjinstudios.core.io.MessageStreamPair;
 
 import java.io.InputStream;
 import java.security.KeyPair;
@@ -30,10 +30,10 @@ public class Client extends EncryptedConnection
     /**
      * Construct a new client and attempt to connect to the server over the specified port.
      *
-     * @param messageIO The MessageIO used to send and receive messages.
+     * @param messageStreamPair The MessageIO used to send and receive messages.
      */
-    protected Client(MessageIO messageIO) {
-        super(messageIO);
+    protected Client(MessageStreamPair messageStreamPair) {
+        super(messageStreamPair);
         repeatedTasks = new LinkedList<>();
 		InputStream stream = getClass().getClassLoader().getResourceAsStream("com/jenjinstudios/client/Messages.xml");
 		MessageRegistry.getGlobalRegistry().register("Core Client/Server Messages", stream);
