@@ -4,16 +4,6 @@ import com.jenjinstudios.core.io.Message;
 
 import java.util.logging.Logger;
 
-/**
- * The {@code ExecutableMessage} class is one of the most important classes of the Jenjin dynamic messaging system.  A
- * subclass of the {@code ExecutableMessage} class is constructed reflectively by a {@code Connection} when it received
- * a message, based on information in the {@code MessageRegistry}.  After constructing the message, the {@code
- * runImmediate} method is (immediately) invoked.  After it finishes executing, the {@code ExecutableMessage} is added
- * to a queue in the {@code Connection}'s execution timer, and is later executed in a synchronous fashion with the other
- * events in the connection's execution timer.
- *
- * @author Caleb Brinkman
- */
 @SuppressWarnings("unused")
 public abstract class ExecutableMessage
 {
