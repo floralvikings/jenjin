@@ -1,6 +1,6 @@
 package com.jenjinstudios.server.message;
 
-import com.jenjinstudios.core.ExecutableMessage;
+import com.jenjinstudios.core.concurrency.ExecutableMessage;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.server.net.ClientHandler;
 

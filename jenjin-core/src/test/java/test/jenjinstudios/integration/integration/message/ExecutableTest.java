@@ -1,7 +1,7 @@
 package test.jenjinstudios.integration.integration.message;
 
 import com.jenjinstudios.core.Connection;
-import com.jenjinstudios.core.ExecutableMessage;
+import com.jenjinstudios.core.concurrency.ExecutableMessage;
 import com.jenjinstudios.core.io.Message;
 
 /**

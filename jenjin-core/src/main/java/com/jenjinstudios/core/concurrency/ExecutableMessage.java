@@ -1,5 +1,6 @@
-package com.jenjinstudios.core;
+package com.jenjinstudios.core.concurrency;
 
+import com.jenjinstudios.core.Connection;
 import com.jenjinstudios.core.io.Message;
 
 import java.util.logging.Logger;

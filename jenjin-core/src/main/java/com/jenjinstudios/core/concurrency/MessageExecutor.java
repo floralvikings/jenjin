@@ -1,6 +1,5 @@
 package com.jenjinstudios.core.concurrency;
 
-import com.jenjinstudios.core.ExecutableMessage;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageRegistry;
 import com.jenjinstudios.core.xml.MessageType;

@@ -1,7 +1,7 @@
 package com.jenjinstudios.core.message;
 
 import com.jenjinstudios.core.EncryptedConnection;
-import com.jenjinstudios.core.ExecutableMessage;
+import com.jenjinstudios.core.concurrency.ExecutableMessage;
 import com.jenjinstudios.core.io.Message;
 
 import java.net.InetAddress;

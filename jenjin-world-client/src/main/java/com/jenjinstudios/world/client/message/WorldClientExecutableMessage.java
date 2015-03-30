@@ -1,7 +1,7 @@
 package com.jenjinstudios.world.client.message;
 
 import com.jenjinstudios.client.net.AuthClient;
-import com.jenjinstudios.core.ExecutableMessage;
+import com.jenjinstudios.core.concurrency.ExecutableMessage;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.world.client.WorldClient;
 
