@@ -1,8 +1,6 @@
 package com.jenjinstudios.core.io;
 
-import java.io.IOException;
 import java.net.InetAddress;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -59,13 +57,4 @@ public class MessageIO
      */
     public MessageOutputStream getOut() { return out; }
 
-	void closeInputStream() {
-		try
-        {
-            in.close();
-        } catch (IOException e)
-        {
-            LOGGER.log(Level.INFO, "Error closing input stream.", e);
-        }
-    }
 }
