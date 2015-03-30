@@ -1,6 +1,5 @@
 package com.jenjinstudios.core.concurrency;
 
-import com.jenjinstudios.core.Connection;
 import com.jenjinstudios.core.ExecutableMessage;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageRegistry;
@@ -28,10 +27,9 @@ public class MessageExecutor
 	 * appropriate ExecutableMessages under the given Connection.
 	 *
 	 * @param connection The connection under which to execute messages.
-	 * @param messageReader The message reader from which to take messages.
 	 */
-	public MessageExecutor(Connection connection, MessageReader messageReader) {
-		this.messageExecutorTask = new MessageExecutorTask(connection, messageReader);
+	public MessageExecutor(MessageThreadPool connection) {
+		this.messageExecutorTask = new MessageExecutorTask(connection);
 		runTimer = new Timer("MessageExecutor");
 	}
 
@@ -52,18 +50,16 @@ public class MessageExecutor
 	private static class MessageExecutorTask extends TimerTask
 	{
 		private final ExecutableMessageFactory exMessageFactory;
-		private final Connection connection;
-		private final MessageReader messageReader;
+		private final MessageThreadPool connection;
 
-		protected MessageExecutorTask(Connection connection, MessageReader messageReader) {
+		protected MessageExecutorTask(MessageThreadPool connection) {
 			this.connection = connection;
 			exMessageFactory = new ExecutableMessageFactory(this.connection);
-			this.messageReader = messageReader;
 		}
 
 		@Override
 		public void run() {
-			Iterable<Message> messages = messageReader.getReceivedMessages();
+			Iterable<Message> messages = connection.getReceivedMessages();
 			messages.forEach(this::executeMessage);
 		}
 
@@ -94,14 +90,14 @@ public class MessageExecutor
 	private static class ExecutableMessageFactory
 	{
 		private static final Constructor[] EMPTY_CONSTRUCTOR_ARRAY = new Constructor[0];
-		private final Connection connection;
+		private final MessageThreadPool connection;
 
 		/**
 		 * Construct an ExecutableMessageFactory for the specified connection.
 		 *
 		 * @param connection The connection for which this factory will produce ExecutableMessages.
 		 */
-		private ExecutableMessageFactory(Connection connection) { this.connection = connection; }
+		private ExecutableMessageFactory(MessageThreadPool connection) { this.connection = connection; }
 
 		/**
 		 * Given a {@code Connection} and a {@code Message}, create and return an appropriate {@code
