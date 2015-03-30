@@ -9,6 +9,8 @@ import com.jenjinstudios.server.net.ClientHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static com.jenjinstudios.server.message.ServerMessageFactory.generateLoginResponse;
+
 /**
  * Executes the necessary actions to deal with a login response.
  *
@@ -37,37 +39,26 @@ public class ExecutableLoginRequest extends ServerExecutableMessage
 		ClientHandler handler = getClientHandler();
 		String username = (String) getMessage().getArgument("username");
 		String password = (String) getMessage().getArgument("password");
+		Message response;
 		try
 		{
 			User user = authenticator.logInUser(username, password);
 			if (user != null)
 			{
 				long loggedInTime = handler.getServer().getServerUpdateTask().getCycleStartTime();
-				;
 				handler.setLoggedInTime(loggedInTime);
-				queueLoginSuccessResponse(loggedInTime);
+				response = generateLoginResponse(true, loggedInTime);
 				handler.setUser(user);
 			} else
 			{
-				queueLoginFailureResponse();
+				response = generateLoginResponse(false, 0);
 			}
 		} catch (AuthenticationException e)
 		{
 			LOGGER.log(Level.FINEST, "User login failure: ", e);
-			queueLoginFailureResponse();
+			response = generateLoginResponse(false, 0);
 		}
-		return null;
-	}
-
-	private void queueLoginSuccessResponse(long loggedInTime) {
-		Message loginResponse = ServerMessageFactory.generateLoginResponse(true, loggedInTime);
-		getClientHandler().enqueueMessage(loginResponse);
-	}
-
-	private void queueLoginFailureResponse() {
-		ClientHandler clientHandler = getClientHandler();
-		Message loginResponse = ServerMessageFactory.generateLoginResponse(false, 0);
-		clientHandler.enqueueMessage(loginResponse);
+		return response;
 	}
 
 }
