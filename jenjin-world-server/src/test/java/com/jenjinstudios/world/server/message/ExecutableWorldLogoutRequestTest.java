@@ -4,6 +4,7 @@ import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageRegistry;
 import com.jenjinstudios.server.authentication.AuthenticationException;
 import com.jenjinstudios.server.authentication.Authenticator;
+import com.jenjinstudios.server.message.ServerMessageFactory;
 import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.collections.WorldObjectList;
@@ -11,6 +12,10 @@ import com.jenjinstudios.world.math.Vector2D;
 import com.jenjinstudios.world.server.Player;
 import com.jenjinstudios.world.server.WorldClientHandler;
 import com.jenjinstudios.world.server.WorldServer;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.testng.PowerMockTestCase;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.*;
@@ -19,12 +24,15 @@ import static org.mockito.Mockito.*;
  * @author Caleb Brinkman
  */
 @SuppressWarnings("unchecked")
-public class ExecutableWorldLogoutRequestTest
+@PrepareForTest(ServerMessageFactory.class)
+public class ExecutableWorldLogoutRequestTest extends PowerMockTestCase
 {
 	private static final MessageRegistry messageRegistry = MessageRegistry.getGlobalRegistry();
 
 	@Test
 	public void testSuccessfulLogout() {
+		PowerMockito.mockStatic(ServerMessageFactory.class);
+		when(ServerMessageFactory.generateLogoutResponse(anyBoolean())).thenReturn(mock(Message.class));
 		Message logOutRequest = messageRegistry.createMessage("WorldLogoutRequest");
 
 		World world = spy(new World());
@@ -46,12 +54,14 @@ public class ExecutableWorldLogoutRequestTest
 		exec.execute();
 		world.update();
 
-		verify(handler).sendLogoutStatus(true);
 		verify(worldObjectMap).remove(player.getId());
 	}
 
 	@Test
 	public void testNullUser() throws Exception {
+		PowerMockito.mockStatic(ServerMessageFactory.class);
+		Message response = mock(Message.class);
+		when(ServerMessageFactory.generateLogoutResponse(false)).thenReturn(response);
 		Message logOutRequest = messageRegistry.createMessage("WorldLogoutRequest");
 
 		World world = mock(World.class);
@@ -67,13 +77,16 @@ public class ExecutableWorldLogoutRequestTest
 		when(player.getVector2D()).thenReturn(Vector2D.ORIGIN);
 
 		ExecutableWorldLogoutRequest exec = new ExecutableWorldLogoutRequest(handler, logOutRequest);
-		exec.execute();
+		Message resp = exec.execute();
 
-		verify(handler).sendLogoutStatus(false);
+		Assert.assertEquals(resp, response, "Response mocks should be equal");
 	}
 
 	@Test
 	public void testFailedLogout() throws Exception {
+		PowerMockito.mockStatic(ServerMessageFactory.class);
+		Message response = mock(Message.class);
+		when(ServerMessageFactory.generateLogoutResponse(false)).thenReturn(response);
 		Message logOutRequest = messageRegistry.createMessage("WorldLogoutRequest");
 
 		World world = mock(World.class);
@@ -89,8 +102,8 @@ public class ExecutableWorldLogoutRequestTest
 		when(handler.getUser()).thenReturn(player);
 
 		ExecutableWorldLogoutRequest exec = new ExecutableWorldLogoutRequest(handler, logOutRequest);
-		exec.execute();
+		Message resp = exec.execute();
 
-		verify(handler).sendLogoutStatus(false);
+		Assert.assertEquals(resp, response, "Response mocks should be equal");
 	}
 }

@@ -3,6 +3,7 @@ package com.jenjinstudios.world.server.message;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.server.authentication.AuthenticationException;
 import com.jenjinstudios.server.authentication.Authenticator;
+import com.jenjinstudios.server.message.ServerMessageFactory;
 import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.server.Player;
 import com.jenjinstudios.world.server.WorldClientHandler;
@@ -30,13 +31,14 @@ public class ExecutableWorldLogoutRequest extends WorldExecutableMessage
 
 	@Override
 	public Message execute() {
+		Message response;
 		try
 		{
 			tryLogOutUser();
-			getClientHandler().sendLogoutStatus(true);
+			response = ServerMessageFactory.generateLogoutResponse(true);
 		} catch (AuthenticationException e)
 		{
-			getClientHandler().sendLogoutStatus(false);
+			response = ServerMessageFactory.generateLogoutResponse(false);
 		}
 
 		Player clientActor = getClientHandler().getUser();
@@ -47,7 +49,7 @@ public class ExecutableWorldLogoutRequest extends WorldExecutableMessage
 				clientActor.getWorld().getWorldObjects().remove(clientActor.getId());
 			}
 		});
-		return null;
+		return response;
 	}
 
 	private void tryLogOutUser() throws AuthenticationException {
