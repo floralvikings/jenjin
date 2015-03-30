@@ -1,7 +1,7 @@
 package com.jenjinstudios.world.client;
 
-import com.jenjinstudios.core.MessageIO;
 import com.jenjinstudios.core.io.Message;
+import com.jenjinstudios.core.io.MessageIO;
 import com.jenjinstudios.world.client.message.ExecutableWorldChecksumResponse;
 import com.jenjinstudios.world.client.message.ExecutableWorldFileResponse;
 import com.jenjinstudios.world.client.message.WorldClientMessageFactory;

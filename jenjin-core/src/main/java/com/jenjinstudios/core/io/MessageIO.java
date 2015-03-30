@@ -1,7 +1,4 @@
-package com.jenjinstudios.core;
-
-import com.jenjinstudios.core.io.MessageInputStream;
-import com.jenjinstudios.core.io.MessageOutputStream;
+package com.jenjinstudios.core.io;
 
 import java.io.IOException;
 import java.net.InetAddress;

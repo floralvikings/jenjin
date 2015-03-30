@@ -1,7 +1,7 @@
 package com.jenjinstudios.world.server;
 
-import com.jenjinstudios.core.MessageIO;
 import com.jenjinstudios.core.io.Message;
+import com.jenjinstudios.core.io.MessageIO;
 import com.jenjinstudios.server.net.ClientHandler;
 import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.WorldObject;

@@ -1,6 +1,7 @@
 package com.jenjinstudios.core;
 
 import com.jenjinstudios.core.io.Message;
+import com.jenjinstudios.core.io.MessageIO;
 import com.jenjinstudios.core.io.MessageRegistry;
 
 import java.net.InetAddress;

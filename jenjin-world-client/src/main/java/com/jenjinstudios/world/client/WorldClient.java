@@ -2,7 +2,7 @@ package com.jenjinstudios.world.client;
 
 import com.jenjinstudios.client.net.AuthClient;
 import com.jenjinstudios.client.net.ClientUser;
-import com.jenjinstudios.core.MessageIO;
+import com.jenjinstudios.core.io.MessageIO;
 import com.jenjinstudios.core.io.MessageRegistry;
 import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.World;

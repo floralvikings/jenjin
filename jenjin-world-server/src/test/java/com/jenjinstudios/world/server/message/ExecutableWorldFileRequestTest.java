@@ -1,7 +1,7 @@
 package com.jenjinstudios.world.server.message;
 
-import com.jenjinstudios.core.MessageIO;
 import com.jenjinstudios.core.io.Message;
+import com.jenjinstudios.core.io.MessageIO;
 import com.jenjinstudios.world.server.WorldClientHandler;
 import com.jenjinstudios.world.server.WorldServer;
 import org.powermock.api.mockito.PowerMockito;

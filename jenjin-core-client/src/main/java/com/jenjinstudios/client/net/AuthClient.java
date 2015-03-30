@@ -1,7 +1,7 @@
 package com.jenjinstudios.client.net;
 
-import com.jenjinstudios.core.MessageIO;
 import com.jenjinstudios.core.io.Message;
+import com.jenjinstudios.core.io.MessageIO;
 import com.jenjinstudios.core.io.MessageRegistry;
 
 import java.util.logging.Level;

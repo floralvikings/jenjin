@@ -1,7 +1,7 @@
 package com.jenjinstudios.demo.client.ui;
 
 import com.jenjinstudios.client.net.ClientUser;
-import com.jenjinstudios.core.MessageIO;
+import com.jenjinstudios.core.io.MessageIO;
 import com.jenjinstudios.core.io.MessageInputStream;
 import com.jenjinstudios.core.io.MessageOutputStream;
 import com.jenjinstudios.demo.client.Main;

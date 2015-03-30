@@ -1,6 +1,7 @@
 package com.jenjinstudios.core;
 
 import com.jenjinstudios.core.concurrency.MessageThreadPool;
+import com.jenjinstudios.core.io.MessageIO;
 import com.jenjinstudios.core.io.MessageRegistry;
 
 import java.io.InputStream;

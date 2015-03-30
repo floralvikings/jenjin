@@ -1,8 +1,8 @@
 package com.jenjinstudios.server.net;
 
 import com.jenjinstudios.core.EncryptedConnection;
-import com.jenjinstudios.core.MessageIO;
 import com.jenjinstudios.core.io.Message;
+import com.jenjinstudios.core.io.MessageIO;
 import com.jenjinstudios.server.authentication.AuthenticationException;
 import com.jenjinstudios.server.authentication.User;
 import com.jenjinstudios.server.message.ServerMessageFactory;

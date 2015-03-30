@@ -1,7 +1,7 @@
 package com.jenjinstudios.core.concurrency;
 
-import com.jenjinstudios.core.MessageIO;
 import com.jenjinstudios.core.io.Message;
+import com.jenjinstudios.core.io.MessageIO;
 
 import java.util.Timer;
 import java.util.TimerTask;
