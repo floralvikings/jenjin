@@ -17,7 +17,7 @@ public class ExecutableObjectInvisibleMessage extends WorldClientExecutableMessa
     @Override
 	public Message execute() {
 		int id = (int) getMessage().getArgument("id");
-		World world = getThreadPool().getWorld();
+		World world = getWorldClient().getWorld();
 		world.scheduleUpdateTask(() -> world.getWorldObjects().remove(id));
 		return null;
 	}

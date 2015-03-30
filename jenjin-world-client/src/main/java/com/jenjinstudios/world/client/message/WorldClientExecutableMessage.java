@@ -21,8 +21,12 @@ public abstract class WorldClientExecutableMessage extends ExecutableMessage
         super(client, message);
     }
 
-    @Override
-	public WorldClient getThreadPool() {
-		return (WorldClient) super.getThreadPool();
+	/**
+	 * Get the WorldClient associated with this message.
+	 *
+	 * @return The WorldClient associated with this message.
+	 */
+	public WorldClient getWorldClient() {
+		return (WorldClient) getThreadPool();
 	}
 }

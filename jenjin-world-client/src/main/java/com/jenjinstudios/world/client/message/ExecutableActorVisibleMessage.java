@@ -47,7 +47,7 @@ public class ExecutableActorVisibleMessage extends WorldClientExecutableMessage
         newlyVisible.setAngle(new Angle(absoluteAngle, relativeAngle));
         newlyVisible.setMoveSpeed(moveSpeed);
 
-		World world = getThreadPool().getWorld();
+		World world = getWorldClient().getWorld();
 		world.scheduleUpdateTask(() -> {
 			try
 			{

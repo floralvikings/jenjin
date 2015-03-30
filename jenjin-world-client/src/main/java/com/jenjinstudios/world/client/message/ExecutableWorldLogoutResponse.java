@@ -22,7 +22,7 @@ public class ExecutableWorldLogoutResponse extends WorldClientExecutableMessage
 
 	@Override
 	public Message execute() {
-		getThreadPool().getLoginTracker().setLoggedIn(!((boolean) getMessage().getArgument("success")));
+		getWorldClient().getLoginTracker().setLoggedIn(!((boolean) getMessage().getArgument("success")));
 		return null;
 	}
 }
