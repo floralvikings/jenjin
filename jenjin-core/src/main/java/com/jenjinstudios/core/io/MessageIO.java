@@ -1,7 +1,6 @@
 package com.jenjinstudios.core.io;
 
 import java.net.InetAddress;
-import java.util.logging.Logger;
 
 /**
  * Used to contain a {@code MessageInputStream} and {@code MessageOutputStream}.
@@ -10,9 +9,8 @@ import java.util.logging.Logger;
  */
 public class MessageIO
 {
-    private static final Logger LOGGER = Logger.getLogger(MessageIO.class.getName());
-    private final MessageInputStream in;
-    private final MessageOutputStream out;
+	private final MessageInputStream in;
+	private final MessageOutputStream out;
     private final InetAddress address;
 
 	/**
