@@ -49,16 +49,16 @@ public class MessageExecutor
 	private static class MessageExecutorTask extends TimerTask
 	{
 		private final ExecutableMessageFactory exMessageFactory;
-		private final MessageThreadPool connection;
+		private final MessageThreadPool threadPool;
 
-		protected MessageExecutorTask(MessageThreadPool connection) {
-			this.connection = connection;
-			exMessageFactory = new ExecutableMessageFactory(this.connection);
+		protected MessageExecutorTask(MessageThreadPool threadPool) {
+			this.threadPool = threadPool;
+			exMessageFactory = new ExecutableMessageFactory(this.threadPool);
 		}
 
 		@Override
 		public void run() {
-			Iterable<Message> messages = connection.getReceivedMessages();
+			Iterable<Message> messages = threadPool.getReceivedMessages();
 			messages.forEach(this::executeMessage);
 		}
 
@@ -70,10 +70,14 @@ public class MessageExecutor
 				{
 					LOGGER.log(Level.WARNING, "Invalid message received from MessageReader");
 					Message invalid = generateInvalidMessage(message.getID(), message.name);
-					connection.enqueueMessage(invalid);
+					threadPool.enqueueMessage(invalid);
 				} else
 				{
-					executable.execute();
+					Message response = executable.execute();
+					if (response != null)
+					{
+						threadPool.enqueueMessage(response);
+					}
 				}
 			}
 		}
