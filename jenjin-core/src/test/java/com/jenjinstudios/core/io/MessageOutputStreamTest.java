@@ -23,6 +23,9 @@ public class MessageOutputStreamTest
 	private static final MessageRegistry MESSAGE_REGISTRY = MessageRegistry.getGlobalRegistry();
 	private static final Logger LOGGER = Logger.getLogger(MessageOutputStreamTest.class.getName());
 
+	/**
+	 * Register messages for testing purposes.
+	 */
 	@BeforeClass
 	public void setUp() {
 		MESSAGE_REGISTRY.register("Test Message Registry",
