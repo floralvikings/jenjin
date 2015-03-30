@@ -89,14 +89,14 @@ public class MessageExecutor
 	private static class ExecutableMessageFactory
 	{
 		private static final Constructor[] EMPTY_CONSTRUCTOR_ARRAY = new Constructor[0];
-		private final MessageThreadPool connection;
+		private final MessageThreadPool threadPool;
 
 		/**
-		 * Construct an ExecutableMessageFactory for the specified connection.
+		 * Construct an ExecutableMessageFactory for the specified threadPool.
 		 *
-		 * @param connection The connection for which this factory will produce ExecutableMessages.
+		 * @param threadPool The threadPool for which this factory will produce ExecutableMessages.
 		 */
-		private ExecutableMessageFactory(MessageThreadPool connection) { this.connection = connection; }
+		private ExecutableMessageFactory(MessageThreadPool threadPool) { this.threadPool = threadPool; }
 
 		/**
 		 * Given a {@code Connection} and a {@code Message}, create and return an appropriate {@code
@@ -104,7 +104,7 @@ public class MessageExecutor
 		 *
 		 * @param message The {@code Message} for which the {@code ExecutableMessage} is being created.
 		 *
-		 * @return The {@code ExecutableMessage} created for {@code connection} and {@code message}.
+		 * @return The {@code ExecutableMessage} created for {@code threadPool} and {@code message}.
 		 */
 		public List<ExecutableMessage> getExecutableMessagesFor(Message message) {
 			List<ExecutableMessage> executableMessages = new LinkedList<>();
@@ -117,7 +117,7 @@ public class MessageExecutor
 					executableMessages.add(createExec(message, constructor));
 				} else
 				{
-					Object[] args = {connection.getClass().getName(), message.name};
+					Object[] args = {threadPool.getClass().getName(), message.name};
 					String report = "No constructor containing Connection or {0} as first argument type found for {1}";
 					LOGGER.log(Level.SEVERE, report, args);
 				}
@@ -148,7 +148,7 @@ public class MessageExecutor
 			ExecutableMessage executableMessage = null;
 			try
 			{
-				executableMessage = (ExecutableMessage) constructor.newInstance(connection, msg);
+				executableMessage = (ExecutableMessage) constructor.newInstance(threadPool, msg);
 			} catch (InvocationTargetException | InstantiationException | IllegalAccessException e)
 			{
 				LOGGER.log(Level.SEVERE, "Constructor not correct", e);
@@ -161,7 +161,7 @@ public class MessageExecutor
 			for (Constructor constructor : execConstructors)
 			{
 				Class<?> firstParam = constructor.getParameterTypes()[0];
-				if (firstParam.isAssignableFrom(connection.getClass()))
+				if (firstParam.isAssignableFrom(threadPool.getClass()))
 					correctConstructor = constructor;
 			}
 			return correctConstructor;
