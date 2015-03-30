@@ -7,6 +7,7 @@ import com.jenjinstudios.world.server.WorldServer;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.testng.PowerMockTestCase;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.*;
@@ -36,8 +37,8 @@ public class ExecutableWorldFileRequestTest extends PowerMockTestCase
 		when(clientHandler.getMessageIO()).thenReturn(messageIO);
 
 		ExecutableWorldFileRequest exec = new ExecutableWorldFileRequest(clientHandler, message);
-		exec.execute();
+		Message resp = exec.execute();
 
-		verify(clientHandler).enqueueMessage(response);
+		Assert.assertEquals(resp, response, "Response mocks should be equal");
 	}
 }
