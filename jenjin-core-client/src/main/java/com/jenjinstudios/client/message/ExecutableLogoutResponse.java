@@ -23,9 +23,10 @@ public class ExecutableLogoutResponse extends ExecutableMessage
     }
 
     @Override
-	public void execute() {
+	public Message execute() {
 		((AuthClient) getThreadPool()).getLoginTracker().setLoggedIn(!((boolean) getMessage().getArgument
 			  ("success")));
+		return null;
 	}
 
 }

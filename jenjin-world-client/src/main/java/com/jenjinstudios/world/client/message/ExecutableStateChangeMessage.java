@@ -28,7 +28,7 @@ public class ExecutableStateChangeMessage extends WorldClientExecutableMessage
     }
 
     @Override
-	public void execute() {
+	public Message execute() {
 		int actorID = (int) getMessage().getArgument("id");
 		double relativeAngle = (double) getMessage().getArgument("relativeAngle");
         double absoluteAngle = (double) getMessage().getArgument("absoluteAngle");
@@ -50,5 +50,6 @@ public class ExecutableStateChangeMessage extends WorldClientExecutableMessage
 				actor.setVector2D(position);
 			}
 		});
+		return null;
 	}
 }

@@ -24,7 +24,7 @@ public class ExecutableActorVisibleMessage extends WorldClientExecutableMessage
     public ExecutableActorVisibleMessage(WorldClient client, Message message) { super(client, message); }
 
     @Override
-	public void execute() {
+	public Message execute() {
 		Message message = getMessage();
         String name = (String) message.getArgument("name");
         int id = (int) message.getArgument("id");
@@ -61,5 +61,6 @@ public class ExecutableActorVisibleMessage extends WorldClientExecutableMessage
 				world.getWorldObjects().set(id, newlyVisible);
 			}
 		});
+		return null;
 	}
 }

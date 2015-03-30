@@ -49,7 +49,7 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage
 	}
 
 	@Override
-	public void execute() {
+	public Message execute() {
 		double relativeAngle = (double) getMessage().getArgument("relativeAngle");
 		double absoluteAngle = (double) getMessage().getArgument("absoluteAngle");
 		double x = (double) getMessage().getArgument("xCoordinate");
@@ -81,7 +81,7 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage
 				}
 			}
 		});
-
+		return null;
 	}
 
 	private boolean locationWalkable(Actor player) {

@@ -39,13 +39,13 @@ public class ExecutablePingRequest extends ExecutableMessage
     }
 
     @Override
-	public void execute() {
+	public Message execute() {
 		long requestTimeNanos = (long) getMessage().getArgument("requestTimeMillis");
 
         Message pingResponse =
               generatePingResponse(requestTimeNanos);
 		connection.enqueueMessage(pingResponse);
-
-    }
+		return null;
+	}
 
 }

@@ -21,7 +21,8 @@ public class ExecutableWorldLogoutResponse extends WorldClientExecutableMessage
     }
 
 	@Override
-	public void execute() {
+	public Message execute() {
 		getThreadPool().getLoginTracker().setLoggedIn(!((boolean) getMessage().getArgument("success")));
+		return null;
 	}
 }

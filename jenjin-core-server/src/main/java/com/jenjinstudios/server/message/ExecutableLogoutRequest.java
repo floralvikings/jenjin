@@ -31,7 +31,7 @@ public class ExecutableLogoutRequest extends ServerExecutableMessage
 	}
 
 	@Override
-	public void execute() {
+	public Message execute() {
 		ClientHandler handler = getClientHandler();
 		User user = handler.getUser();
 		if ((authenticator != null) && (user != null))
@@ -48,5 +48,6 @@ public class ExecutableLogoutRequest extends ServerExecutableMessage
 				handler.sendLogoutStatus(false);
 			}
 		}
+		return null;
 	}
 }

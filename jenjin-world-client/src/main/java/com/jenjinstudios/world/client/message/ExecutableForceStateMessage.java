@@ -23,7 +23,7 @@ public class ExecutableForceStateMessage extends WorldClientExecutableMessage
     public ExecutableForceStateMessage(WorldClient client, Message message) { super(client, message); }
 
     @Override
-	public void execute() {
+	public Message execute() {
 		double x = (double) getMessage().getArgument("xCoordinate");
         double y = (double) getMessage().getArgument("yCoordinate");
         double relativeAngle = (double) getMessage().getArgument("relativeAngle");
@@ -42,5 +42,6 @@ public class ExecutableForceStateMessage extends WorldClientExecutableMessage
 
 			ActorUtils.forceIdle(player);
 		});
+		return null;
 	}
 }

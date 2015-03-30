@@ -33,7 +33,7 @@ public class ExecutableLoginRequest extends ServerExecutableMessage
 	}
 
 	@Override
-	public void execute() {
+	public Message execute() {
 		ClientHandler handler = getClientHandler();
 		String username = (String) getMessage().getArgument("username");
 		String password = (String) getMessage().getArgument("password");
@@ -56,6 +56,7 @@ public class ExecutableLoginRequest extends ServerExecutableMessage
 			LOGGER.log(Level.FINEST, "User login failure: ", e);
 			queueLoginFailureResponse();
 		}
+		return null;
 	}
 
 	private void queueLoginSuccessResponse(long loggedInTime) {

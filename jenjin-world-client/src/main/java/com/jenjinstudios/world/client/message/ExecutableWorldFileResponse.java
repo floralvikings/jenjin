@@ -21,9 +21,10 @@ public class ExecutableWorldFileResponse extends WorldClientExecutableMessage
     }
 
     @Override
-	public void execute() {
+	public Message execute() {
 		byte[] bytes = (byte[]) getMessage().getArgument("fileBytes");
 		getThreadPool().getServerWorldFileTracker().setBytes(bytes);
 		getThreadPool().getServerWorldFileTracker().setWaitingForFile(false);
+		return null;
 	}
 }

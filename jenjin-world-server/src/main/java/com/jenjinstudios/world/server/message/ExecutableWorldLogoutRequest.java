@@ -29,7 +29,7 @@ public class ExecutableWorldLogoutRequest extends WorldExecutableMessage
 	}
 
 	@Override
-	public void execute() {
+	public Message execute() {
 		try
 		{
 			tryLogOutUser();
@@ -47,6 +47,7 @@ public class ExecutableWorldLogoutRequest extends WorldExecutableMessage
 				clientActor.getWorld().getWorldObjects().remove(clientActor.getId());
 			}
 		});
+		return null;
 	}
 
 	private void tryLogOutUser() throws AuthenticationException {

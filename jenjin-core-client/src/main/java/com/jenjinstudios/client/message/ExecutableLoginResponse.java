@@ -23,7 +23,7 @@ public class ExecutableLoginResponse extends ExecutableMessage
     }
 
     @Override
-	public void execute() {
+	public Message execute() {
 		AuthClient client = (AuthClient) getThreadPool();
 		client.getLoginTracker().setLoggedIn((boolean) getMessage().getArgument("success"));
 		if (client.getLoginTracker().isLoggedIn())
@@ -31,6 +31,7 @@ public class ExecutableLoginResponse extends ExecutableMessage
 			client.getLoginTracker().setLoggedInTime((long) getMessage().getArgument("loginTime"));
 			client.setName("Client: " + client.getUser().getUsername());
 		}
+		return null;
 	}
 
 }

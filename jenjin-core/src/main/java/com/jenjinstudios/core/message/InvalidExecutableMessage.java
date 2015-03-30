@@ -29,10 +29,11 @@ public class InvalidExecutableMessage extends ExecutableMessage
     }
 
     @Override
-	public void execute() {
+	public Message execute() {
 		String messageName = (String) getMessage().getArgument("messageName");
         short messageID = (short) getMessage().getArgument("messageID");
         String reportMessage = "Connection reported invalid sent message: " + messageName + " (ID:  " + messageID + ')';
         LOGGER.log(Level.SEVERE, reportMessage);
-    }
+		return null;
+	}
 }

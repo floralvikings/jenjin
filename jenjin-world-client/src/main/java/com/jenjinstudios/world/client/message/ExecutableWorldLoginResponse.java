@@ -30,7 +30,7 @@ public class ExecutableWorldLoginResponse extends WorldClientExecutableMessage
     }
 
     @Override
-	public void execute() {
+	public Message execute() {
 		int id = (int) getMessage().getArgument("id");
         double xCoordinate = (double) getMessage().getArgument("xCoordinate");
         double yCoordinate = (double) getMessage().getArgument("yCoordinate");
@@ -55,5 +55,6 @@ public class ExecutableWorldLoginResponse extends WorldClientExecutableMessage
 				client.addRepeatedTask(new WorldClientUpdater(client));
 			}
 		});
+		return null;
 	}
 }

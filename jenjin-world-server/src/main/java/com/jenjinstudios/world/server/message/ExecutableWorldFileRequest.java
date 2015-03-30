@@ -22,9 +22,10 @@ public class ExecutableWorldFileRequest extends WorldExecutableMessage
 	}
 
 	@Override
-	public void execute() {
+	public Message execute() {
 		byte[] worldFileBytes = ((WorldServer) getClientHandler().getServer()).getWorldFileBytes();
 		Message response = WorldServerMessageFactory.generateWorldFileResponse(worldFileBytes);
 		getClientHandler().enqueueMessage(response);
+		return null;
 	}
 }

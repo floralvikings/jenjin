@@ -23,7 +23,8 @@ public class ExecutableTest extends ExecutableMessage
 	}
 
 	@Override
-	public void execute() {
+	public Message execute() {
 		((Connection) getThreadPool()).setName((String) getMessage().getArgument("encryptedString"));
+		return null;
 	}
 }

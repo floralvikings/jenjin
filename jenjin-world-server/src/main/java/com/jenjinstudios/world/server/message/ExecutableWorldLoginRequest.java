@@ -32,7 +32,7 @@ public class ExecutableWorldLoginRequest extends WorldExecutableMessage
 	}
 
 	@Override
-	public void execute() {
+	public Message execute() {
 		try
 		{
 			tryLogInUser();
@@ -55,6 +55,7 @@ public class ExecutableWorldLoginRequest extends WorldExecutableMessage
 			}
 			getClientHandler().enqueueMessage(loginResponse);
 		});
+		return null;
 	}
 
 	private void tryLogInUser() throws AuthenticationException {

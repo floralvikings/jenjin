@@ -24,12 +24,13 @@ public class ExecutableFireRequest extends WorldExecutableMessage
 
 	/** Run asynchronous portion of this message. */
 	@Override
-	public void execute() {
+	public Message execute() {
 		World world = ((WorldServer) getClientHandler().getServer()).getWorld();
 		world.scheduleUpdateTask(() -> {
 			Actor player = getClientHandler().getUser();
 			Bullet bullet = new Bullet(player);
 			world.getWorldObjects().add(bullet);
 		});
+		return null;
 	}
 }

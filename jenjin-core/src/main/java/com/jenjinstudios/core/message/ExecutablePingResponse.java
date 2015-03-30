@@ -26,8 +26,9 @@ public class ExecutablePingResponse extends ExecutableMessage
     }
 
     @Override
-	public void execute() {
+	public Message execute() {
 		long requestTime = (long) getMessage().getArgument("requestTimeMillis");
 		connection.getPingTracker().addPingTime(System.currentTimeMillis() - requestTime);
+		return null;
 	}
 }

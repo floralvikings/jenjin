@@ -30,7 +30,8 @@ public class ExecutableBlankMessage extends ExecutableMessage
     }
 
     @Override
-	public void execute() {
+	public Message execute() {
 		LOGGER.log(Level.FINEST, "{0} received blank message.", connection.getName());
-    }
+		return null;
+	}
 }

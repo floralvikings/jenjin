@@ -37,7 +37,7 @@ public class ExecutablePublicKeyMessage extends ExecutableMessage
     }
 
     @Override
-	public void execute() {
+	public Message execute() {
 		byte[] keyBytes = (byte[]) getMessage().getArgument("publicKey");
         try
         {
@@ -50,7 +50,8 @@ public class ExecutablePublicKeyMessage extends ExecutableMessage
         {
             LOGGER.log(Level.INFO, "Unable to instantiate public key; messages will not be encrypted!", e);
         }
-    }
+		return null;
+	}
 
     private boolean isKeyValid(Key suppliedKey) {
         boolean verified = false;

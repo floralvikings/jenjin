@@ -21,7 +21,8 @@ public class ExecutableActorMoveSpeedMessage extends WorldClientExecutableMessag
 
 	/** Run asynchronous portion of this message. */
 	@Override
-	public void execute() {
+	public Message execute() {
 		Actor.DEFAULT_MOVE_SPEED = (double) getMessage().getArgument("moveSpeed");
+		return null;
 	}
 }

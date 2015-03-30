@@ -25,7 +25,7 @@ public class ExecutableObjectVisibleMessage extends WorldClientExecutableMessage
     }
 
     @Override
-	public void execute() {
+	public Message execute() {
 		Message message = getMessage();
         String name = (String) message.getArgument("name");
         int id = (int) message.getArgument("id");
@@ -43,5 +43,6 @@ public class ExecutableObjectVisibleMessage extends WorldClientExecutableMessage
 		world.scheduleUpdateTask(() -> {
 			world.getWorldObjects().set(newlyVisible.getId(), newlyVisible);
 		});
+		return null;
 	}
 }

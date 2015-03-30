@@ -29,10 +29,13 @@ public abstract class ExecutableMessage
 	}
 
 	/**
-	 * This method is invoked by a {@code Connection} when a message is received and the {@code ExecutableMessage} is
-     * created, and should not be called directly.
-     */
-	public abstract void execute();
+	 * This method is invoked by a {@code MessageThreadPool} when a message is received and the {@code
+	 * ExecutableMessage} is
+	 * created, and should not be called directly; the returned Message is sent by the MessageThreadPool.
+	 *
+	 * @return The response to the received message, if any; null if no response should be made.
+	 */
+	public abstract Message execute();
 
     /**
      * Get the message for which this {@code ExecutableMessage} was created.
