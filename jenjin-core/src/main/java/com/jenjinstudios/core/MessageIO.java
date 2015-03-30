@@ -53,7 +53,7 @@ public class MessageIO
      *
      * @return The {@code MessageInputStream} managed by this {@code MessageIO}.
      */
-    MessageInputStream getIn() { return in; }
+	public MessageInputStream getIn() { return in; }
 
     /**
      * Get the {@code MessageOutputStream} managed by this {@code MessageIO}.
