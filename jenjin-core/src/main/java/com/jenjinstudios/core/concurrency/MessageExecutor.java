@@ -25,10 +25,10 @@ public class MessageExecutor
 	 * Construct a new MessageExecutor which takes messages from the given MessageReader, and constructs and executes
 	 * appropriate ExecutableMessages under the given Connection.
 	 *
-	 * @param connection The connection under which to execute messages.
+	 * @param threadPool The threadPool under which to execute messages.
 	 */
-	public MessageExecutor(MessageThreadPool connection) {
-		this.messageExecutorTask = new MessageExecutorTask(connection);
+	public MessageExecutor(MessageThreadPool threadPool) {
+		this.messageExecutorTask = new MessageExecutorTask(threadPool);
 		runTimer = new Timer("MessageExecutor");
 	}
 
