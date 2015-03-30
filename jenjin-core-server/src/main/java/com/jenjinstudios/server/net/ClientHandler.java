@@ -1,11 +1,9 @@
 package com.jenjinstudios.server.net;
 
 import com.jenjinstudios.core.EncryptedConnection;
-import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageIO;
 import com.jenjinstudios.server.authentication.AuthenticationException;
 import com.jenjinstudios.server.authentication.User;
-import com.jenjinstudios.server.message.ServerMessageFactory;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -76,18 +74,8 @@ public class ClientHandler extends EncryptedConnection
      */
 	public Server getServer() { return server; }
 
-    /**
-     * Queue a message indicating the success or failure of a logout attempt.
-     *
-     * @param success Whether the attempt was successful.
-     */
-    public void sendLogoutStatus(boolean success) {
-		Message logoutResponse = ServerMessageFactory.generateLogoutResponse(success);
-		enqueueMessage(logoutResponse);
-	}
-
-    /**
-     * Get the time at which this client was successfully logged in.
+	/**
+	 * Get the time at which this client was successfully logged in.
      *
      * @return The time at which this client was successfully logged in.
      */
