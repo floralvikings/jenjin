@@ -53,9 +53,8 @@ public class ExecutableWorldLoginRequest extends WorldExecutableMessage
 					  getClientHandler().getUser());
 				loginResponse.setArgument("id", getClientHandler().getUser().getId());
 			}
-			getClientHandler().enqueueMessage(loginResponse);
 		});
-		return null;
+		return loginResponse;
 	}
 
 	private void tryLogInUser() throws AuthenticationException {
