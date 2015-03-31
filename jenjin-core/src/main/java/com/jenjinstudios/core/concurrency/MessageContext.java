@@ -7,4 +7,10 @@ package com.jenjinstudios.core.concurrency;
  */
 public interface MessageContext
 {
+	/**
+	 * Get the name of the context.
+	 *
+	 * @return The name of the context.
+	 */
+	String getName();
 }
