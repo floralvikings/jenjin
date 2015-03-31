@@ -42,9 +42,7 @@ public abstract class ExecutableMessage
      *
      * @return The message for which this {@code ExecutableMessage} was created.
      */
-    public Message getMessage() {
-        return message;
-    }
+	public Message getMessage() { return message; }
 
     /**
 	 * Get the threadPool associated with this ExecutableMessage.
