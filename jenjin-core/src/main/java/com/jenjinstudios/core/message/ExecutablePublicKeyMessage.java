@@ -22,7 +22,6 @@ import java.util.logging.Logger;
 public class ExecutablePublicKeyMessage extends ExecutableMessage
 {
     private static final Logger LOGGER = Logger.getLogger(ExecutablePublicKeyMessage.class.getName());
-	private final EncryptedConnection connection;
 
     /**
      * Construct a new {@code ExecutablePublicKeyMessage}.
@@ -33,7 +32,6 @@ public class ExecutablePublicKeyMessage extends ExecutableMessage
     @SuppressWarnings("WeakerAccess")
 	public ExecutablePublicKeyMessage(EncryptedConnection connection, Message message) {
 		super(connection, message);
-        this.connection = connection;
     }
 
     @Override
@@ -44,7 +42,7 @@ public class ExecutablePublicKeyMessage extends ExecutableMessage
             PublicKey suppliedKey = KeyFactory.getInstance("RSA").generatePublic(new X509EncodedKeySpec(keyBytes));
             if (isKeyValid(suppliedKey))
             {
-				connection.getMessageStreamPair().getOut().setPublicKey(suppliedKey);
+				getThreadPool().getMessageStreamPair().getOut().setPublicKey(suppliedKey);
 			}
         } catch (InvalidKeySpecException | NoSuchAlgorithmException e)
         {
@@ -55,16 +53,16 @@ public class ExecutablePublicKeyMessage extends ExecutableMessage
 
     private boolean isKeyValid(Key suppliedKey) {
         boolean verified = false;
-        if (connection.getVerifiedKeys().isEmpty())
-        {
+		if (((EncryptedConnection) getThreadPool()).getVerifiedKeys().isEmpty())
+		{
             verified = true;
         } else
         {
-			InetAddress address = connection.getMessageStreamPair().getAddress();
+			InetAddress address = getThreadPool().getMessageStreamPair().getAddress();
 			if (address != null)
             {
-                Key key = connection.getVerifiedKeys().get(address);
-                if ((key == null) || !key.equals(suppliedKey))
+				Key key = ((EncryptedConnection) getThreadPool()).getVerifiedKeys().get(address);
+				if ((key == null) || !key.equals(suppliedKey))
                 {
                     LOGGER.log(Level.SEVERE, "Unable to verify public key; supplied key does not match registry.");
                 } else
