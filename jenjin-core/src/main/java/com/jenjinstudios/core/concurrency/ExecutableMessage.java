@@ -10,22 +10,28 @@ import java.util.logging.Logger;
  * Once the message is created, the execute method is immediately called on it.
  */
 @SuppressWarnings("unused")
-public abstract class ExecutableMessage
+public abstract class ExecutableMessage<T extends MessageContext>
 {
     private static final Logger LOGGER = Logger.getLogger(ExecutableMessage.class.getName());
     private final Message message;
 	private final MessageThreadPool threadPool;
+	private final T context;
 
-    /**
-     * Construct a new ExecutableMessage; this should only ever be invoked reflectively, by a {@code Connection}'s
+	/**
+	 * Construct a new ExecutableMessage; this should only ever be invoked reflectively, by a {@code Connection}'s
      * update cycle.
      *
 	 * @param threadPool The threadPool for which this ExecutbleMessage will work.
 	 * @param message The message that caused this {@code ExecutableMessage} to be created.
      */
 	protected ExecutableMessage(MessageThreadPool threadPool, Message message) {
+		this(threadPool, message, null);
+	}
+
+	protected ExecutableMessage(MessageThreadPool threadPool, Message message, T context) {
 		this.message = message;
 		this.threadPool = threadPool;
+		this.context = context;
 	}
 
 	/**
@@ -50,4 +56,11 @@ public abstract class ExecutableMessage
 	 * @return The threadPool associated with this ExecutableMessage.
 	 */
 	public MessageThreadPool getThreadPool() { return threadPool; }
+
+	/**
+	 * Get the MessageContext for this executable.
+	 *
+	 * @return The MessageContext for this executable.
+	 */
+	public T getContext() { return context; }
 }
