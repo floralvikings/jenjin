@@ -15,7 +15,6 @@ import java.util.logging.Logger;
 public class ExecutableBlankMessage extends ExecutableMessage
 {
     private static final Logger LOGGER = Logger.getLogger(ExecutableBlankMessage.class.getName());
-    private final Connection connection;
 
     /**
      * Construct a new ExecutableBlankMessage; not meant to be used in production code.
@@ -26,12 +25,11 @@ public class ExecutableBlankMessage extends ExecutableMessage
     @SuppressWarnings("WeakerAccess")
     public ExecutableBlankMessage(Connection connection, Message message) {
         super(connection, message);
-        this.connection = connection;
     }
 
     @Override
 	public Message execute() {
-		LOGGER.log(Level.FINEST, "{0} received blank message.", connection.getName());
+		LOGGER.log(Level.FINEST, "{0} received blank message.", ((Connection) getThreadPool()).getName());
 		return null;
 	}
 }
