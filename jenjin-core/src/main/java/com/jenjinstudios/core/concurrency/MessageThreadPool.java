@@ -35,6 +35,11 @@ public class MessageThreadPool
 		messageExecutor = new MessageExecutor(this);
 	}
 
+	/**
+	 * Set the context in which this thread pool should execute messages.
+	 *
+	 * @param context The context in which messages should be executed.
+	 */
 	protected void setMessageContext(MessageContext context) {
 		messageExecutor.setMessageContext(context);
 	}
