@@ -2,6 +2,7 @@ package com.jenjinstudios.core.message;
 
 import com.jenjinstudios.core.EncryptedConnection;
 import com.jenjinstudios.core.concurrency.ExecutableMessage;
+import com.jenjinstudios.core.concurrency.MessageContext;
 import com.jenjinstudios.core.io.Message;
 
 import java.net.InetAddress;
@@ -19,7 +20,7 @@ import java.util.logging.Logger;
  *
  * @author Caleb Brinkman
  */
-public class ExecutablePublicKeyMessage extends ExecutableMessage
+public class ExecutablePublicKeyMessage extends ExecutableMessage<MessageContext>
 {
     private static final Logger LOGGER = Logger.getLogger(ExecutablePublicKeyMessage.class.getName());
 
@@ -28,11 +29,12 @@ public class ExecutablePublicKeyMessage extends ExecutableMessage
      *
      * @param connection The connection invoking this executable message.
      * @param message The message which caused this executable message to be invoked.
-     */
+	 * @param context The context in which to execute the message.
+	 */
     @SuppressWarnings("WeakerAccess")
-	public ExecutablePublicKeyMessage(EncryptedConnection connection, Message message) {
-		super(connection, message);
-    }
+	public ExecutablePublicKeyMessage(EncryptedConnection connection, Message message, MessageContext context) {
+		super(connection, message, context);
+	}
 
     @Override
 	public Message execute() {

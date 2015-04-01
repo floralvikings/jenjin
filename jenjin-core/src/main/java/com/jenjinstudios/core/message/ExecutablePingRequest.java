@@ -2,6 +2,7 @@ package com.jenjinstudios.core.message;
 
 import com.jenjinstudios.core.Connection;
 import com.jenjinstudios.core.concurrency.ExecutableMessage;
+import com.jenjinstudios.core.concurrency.MessageContext;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageRegistry;
 
@@ -10,7 +11,7 @@ import com.jenjinstudios.core.io.MessageRegistry;
  *
  * @author Caleb Brinkman
  */
-public class ExecutablePingRequest extends ExecutableMessage
+public class ExecutablePingRequest extends ExecutableMessage<MessageContext>
 {
 
 	/**
@@ -18,8 +19,10 @@ public class ExecutablePingRequest extends ExecutableMessage
      *
      * @param connection The connection invoking this executable message.
      * @param message The message which caused this executable message to be invoked.
-     */
-	public ExecutablePingRequest(Connection connection, Message message) { super(connection, message); }
+	 * @param context The context in which to execute the message.
+	 */
+	public ExecutablePingRequest(Connection connection, Message message, MessageContext context) { super(connection,
+		  message, context); }
 
     /**
      * Generate a PingResponse with the given time of request.

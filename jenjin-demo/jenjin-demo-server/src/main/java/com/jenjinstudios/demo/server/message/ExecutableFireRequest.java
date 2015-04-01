@@ -1,5 +1,6 @@
 package com.jenjinstudios.demo.server.message;
 
+import com.jenjinstudios.core.concurrency.MessageContext;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.demo.server.Bullet;
 import com.jenjinstudios.world.Actor;
@@ -11,15 +12,16 @@ import com.jenjinstudios.world.server.message.WorldExecutableMessage;
 /**
  * @author Caleb Brinkman
  */
-public class ExecutableFireRequest extends WorldExecutableMessage
+public class ExecutableFireRequest extends WorldExecutableMessage<MessageContext>
 {
 	/**
 	 * Construct a new ExecutableMessage.  Must be implemented by subclasses.
 	 * @param handler The handler using this ExecutableMessage.
 	 * @param message The message.
+	 * @param context The context in which to execute the message.
 	 */
-	public ExecutableFireRequest(WorldClientHandler handler, Message message) {
-		super(handler, message);
+	public ExecutableFireRequest(WorldClientHandler handler, Message message, MessageContext context) {
+		super(handler, message, context);
 	}
 
 	/** Run asynchronous portion of this message. */

@@ -35,7 +35,7 @@ public class ServerWorldFileTrackerTest
 
 		Assert.assertTrue(serverWorldFileTracker.isWaitingForChecksum());
 
-		ExecutableWorldChecksumResponse exec = new ExecutableWorldChecksumResponse(worldClient, message);
+		ExecutableWorldChecksumResponse exec = new ExecutableWorldChecksumResponse(worldClient, message, null);
 		exec.execute();
 
 		Assert.assertFalse(serverWorldFileTracker.isWaitingForChecksum());
@@ -62,7 +62,7 @@ public class ServerWorldFileTrackerTest
 
 		Assert.assertTrue(serverWorldFileTracker.isWaitingForFile());
 
-		ExecutableWorldFileResponse exec = new ExecutableWorldFileResponse(worldClient, message);
+		ExecutableWorldFileResponse exec = new ExecutableWorldFileResponse(worldClient, message, null);
 		exec.execute();
 
 		Assert.assertFalse(serverWorldFileTracker.isWaitingForFile());

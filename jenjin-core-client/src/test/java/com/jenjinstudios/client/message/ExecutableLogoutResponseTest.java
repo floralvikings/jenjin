@@ -26,7 +26,7 @@ public class ExecutableLogoutResponseTest
 		LoginTracker loginTracker = mock(LoginTracker.class);
 		when(authClient.getLoginTracker()).thenReturn(loginTracker);
 
-        ExecutableLogoutResponse response = new ExecutableLogoutResponse(authClient, loginResponse);
+		ExecutableLogoutResponse response = new ExecutableLogoutResponse(authClient, loginResponse, null);
 		response.execute();
 
         verify(loginTracker).setLoggedIn(false);

@@ -23,7 +23,8 @@ public class ExecutableWorldLogoutResponseTest
         AuthClient.LoginTracker loginTracker = mock(AuthClient.LoginTracker.class);
         when(worldClient.getLoginTracker()).thenReturn(loginTracker);
 
-        ExecutableWorldLogoutResponse message = new ExecutableWorldLogoutResponse(worldClient, worldLogoutResponse);
+		ExecutableWorldLogoutResponse message = new ExecutableWorldLogoutResponse(worldClient, worldLogoutResponse,
+			  null);
 		message.execute();
 
         verify(loginTracker).setLoggedIn(false);

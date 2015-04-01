@@ -1,6 +1,7 @@
 package com.jenjinstudios.server.message;
 
 import com.jenjinstudios.core.concurrency.ExecutableMessage;
+import com.jenjinstudios.core.concurrency.MessageContext;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.server.net.ClientHandler;
 
@@ -9,7 +10,7 @@ import com.jenjinstudios.server.net.ClientHandler;
  *
  * @author Caleb Brinkman
  */
-public abstract class ServerExecutableMessage extends ExecutableMessage
+public abstract class ServerExecutableMessage<T extends MessageContext> extends ExecutableMessage<T>
 {
     /** The ClientHandler for this object. */
     private final ClientHandler clientHandler;
@@ -19,10 +20,11 @@ public abstract class ServerExecutableMessage extends ExecutableMessage
      *
      * @param handler The handler using this ExecutableMessage.
      * @param message The message.
-     */
-    protected ServerExecutableMessage(ClientHandler handler, Message message) {
-        super(handler, message);
-        clientHandler = handler;
+	 * @param context The context in which to execute the message.
+	 */
+	protected ServerExecutableMessage(ClientHandler handler, Message message, T context) {
+		super(handler, message, context);
+		clientHandler = handler;
     }
 
     /**

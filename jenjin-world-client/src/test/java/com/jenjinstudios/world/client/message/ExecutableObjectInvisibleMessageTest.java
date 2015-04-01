@@ -25,7 +25,7 @@ public class ExecutableObjectInvisibleMessageTest
 		when(worldClient.getWorld()).thenReturn(world);
 
 		ExecutableObjectInvisibleMessage message =
-			  new ExecutableObjectInvisibleMessage(worldClient, msg);
+			  new ExecutableObjectInvisibleMessage(worldClient, msg, null);
 		message.execute();
 		world.update();
 

@@ -36,7 +36,7 @@ public class ExecutableWorldFileRequestTest extends PowerMockTestCase
 		when(clientHandler.getServer()).thenReturn(server);
 		when(clientHandler.getMessageStreamPair()).thenReturn(messageStreamPair);
 
-		ExecutableWorldFileRequest exec = new ExecutableWorldFileRequest(clientHandler, message);
+		ExecutableWorldFileRequest exec = new ExecutableWorldFileRequest(clientHandler, message, null);
 		Message resp = exec.execute();
 
 		Assert.assertEquals(resp, response, "Response mocks should be equal");

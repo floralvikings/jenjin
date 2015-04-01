@@ -23,7 +23,7 @@ public class DisabledExecutableMessageTest
 		Connection connection = mock(EncryptedConnection.class);
 		Message message = mock(Message.class);
 
-        DisabledExecutableMessage executableMessage = new DisabledExecutableMessage(connection, message);
+		DisabledExecutableMessage executableMessage = new DisabledExecutableMessage(connection, message, null);
 		executableMessage.execute();
 	}
 }

@@ -1,5 +1,6 @@
 package com.jenjinstudios.world.client.message;
 
+import com.jenjinstudios.core.concurrency.MessageContext;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.WorldObject;
@@ -12,17 +13,18 @@ import com.jenjinstudios.world.math.Vector2D;
  * @author Caleb Brinkman
  */
 @SuppressWarnings("WeakerAccess")
-public class ExecutableObjectVisibleMessage extends WorldClientExecutableMessage
+public class ExecutableObjectVisibleMessage extends WorldClientExecutableMessage<MessageContext>
 {
 	/**
 	 * Construct an ExecutableMessage with the given Message.
      *
      * @param client The client invoking this message.
      * @param message The Message.
-     */
-    public ExecutableObjectVisibleMessage(WorldClient client, Message message) {
-        super(client, message);
-    }
+	 * @param context The context in which to execute the message.
+	 */
+	public ExecutableObjectVisibleMessage(WorldClient client, Message message, MessageContext context) {
+		super(client, message, context);
+	}
 
     @Override
 	public Message execute() {

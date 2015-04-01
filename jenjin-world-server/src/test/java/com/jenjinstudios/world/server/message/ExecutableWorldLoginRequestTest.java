@@ -60,7 +60,7 @@ public class ExecutableWorldLoginRequestTest extends PowerMockTestCase
 		when(server.getWorld()).thenReturn(world);
 		when(WorldServerMessageFactory.generateWorldLoginResponse()).thenReturn(message);
 		when(player.getVector2D()).thenReturn(Vector2D.ORIGIN);
-		ExecutableWorldLoginRequest exec = new ExecutableWorldLoginRequest(wch, message);
+		ExecutableWorldLoginRequest exec = new ExecutableWorldLoginRequest(wch, message, null);
 		exec.execute();
 		world.update();
 

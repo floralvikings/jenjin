@@ -21,7 +21,7 @@ public class ExecutableActorMoveSpeedMessageTest
 		WorldClient worldClient = Mockito.mock(WorldClient.class);
 
 		ExecutableActorMoveSpeedMessage message =
-			  new ExecutableActorMoveSpeedMessage(worldClient, msg);
+			  new ExecutableActorMoveSpeedMessage(worldClient, msg, null);
 		message.execute();
 
 		Assert.assertEquals(Actor.DEFAULT_MOVE_SPEED, 123.45);

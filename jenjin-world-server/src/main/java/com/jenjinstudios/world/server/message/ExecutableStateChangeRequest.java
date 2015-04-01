@@ -1,5 +1,6 @@
 package com.jenjinstudios.world.server.message;
 
+import com.jenjinstudios.core.concurrency.MessageContext;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.Location;
@@ -20,7 +21,7 @@ import java.util.logging.Logger;
  * @author Caleb Brinkman
  */
 @SuppressWarnings("WeakerAccess")
-public class ExecutableStateChangeRequest extends WorldExecutableMessage
+public class ExecutableStateChangeRequest extends WorldExecutableMessage<MessageContext>
 {
 	private static final Logger LOGGER = Logger.getLogger(ExecutableStateChangeRequest.class.getName());
 	private static final double MS_TO_S = 1000.0d;
@@ -37,9 +38,10 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage
 	 *
 	 * @param handler The handler using this ExecutableMessage.
 	 * @param message The message.
+	 * @param context The context in which to execute the message.
 	 */
-	public ExecutableStateChangeRequest(WorldClientHandler handler, Message message) {
-		super(handler, message);
+	public ExecutableStateChangeRequest(WorldClientHandler handler, Message message, MessageContext context) {
+		super(handler, message, context);
 	}
 
 	private void forcePlayerToAngle(Actor player, Angle pAngle) {

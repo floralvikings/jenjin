@@ -35,7 +35,7 @@ public class ExecutableWorldLoginResponseTest
 		when(worldClient.getUser()).thenReturn(new ClientUser("Foo", "Bar"));
 		when(worldClient.getLoginTracker()).thenReturn(loginTracker);
 
-		ExecutableWorldLoginResponse response = new ExecutableWorldLoginResponse(worldClient, message);
+		ExecutableWorldLoginResponse response = new ExecutableWorldLoginResponse(worldClient, message, null);
 		response.execute();
 		world.update();
 

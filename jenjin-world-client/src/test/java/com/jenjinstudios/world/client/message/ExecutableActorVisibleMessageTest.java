@@ -33,7 +33,8 @@ public class ExecutableActorVisibleMessageTest
 		when(world.getWorldObjects()).thenReturn(worldObjectMap);
 		when(worldClient.getWorld()).thenReturn(world);
 
-		ExecutableActorVisibleMessage message = new ExecutableActorVisibleMessage(worldClient, actorVisibleMessage);
+		ExecutableActorVisibleMessage message = new ExecutableActorVisibleMessage(worldClient, actorVisibleMessage,
+			  null);
 		message.execute();
 
 		verify(world).scheduleUpdateTask(any());

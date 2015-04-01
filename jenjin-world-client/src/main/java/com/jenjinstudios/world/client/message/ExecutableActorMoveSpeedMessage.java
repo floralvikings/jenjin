@@ -1,5 +1,6 @@
 package com.jenjinstudios.world.client.message;
 
+import com.jenjinstudios.core.concurrency.MessageContext;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.client.WorldClient;
@@ -8,15 +9,16 @@ import com.jenjinstudios.world.client.WorldClient;
  * Sets the ClientActor step length.
  * @author Caleb Brinkman
  */
-public class ExecutableActorMoveSpeedMessage extends WorldClientExecutableMessage
+public class ExecutableActorMoveSpeedMessage extends WorldClientExecutableMessage<MessageContext>
 {
 	/**
 	 * Construct an ExecutableMessage with the given Message.
 	 * @param client The client invoking this message.
 	 * @param message The Message.
+	 * @param context The context in which to execute the message.
 	 */
-	public ExecutableActorMoveSpeedMessage(WorldClient client, Message message) {
-		super(client, message);
+	public ExecutableActorMoveSpeedMessage(WorldClient client, Message message, MessageContext context) {
+		super(client, message, context);
 	}
 
 	/** Run asynchronous portion of this message. */

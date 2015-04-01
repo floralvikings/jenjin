@@ -2,6 +2,7 @@ package com.jenjinstudios.client.message;
 
 import com.jenjinstudios.client.net.AuthClient;
 import com.jenjinstudios.core.concurrency.ExecutableMessage;
+import com.jenjinstudios.core.concurrency.MessageContext;
 import com.jenjinstudios.core.io.Message;
 
 /**
@@ -10,17 +11,18 @@ import com.jenjinstudios.core.io.Message;
  * @author Caleb Brinkman
  */
 @SuppressWarnings("unused")
-public class ExecutableLogoutResponse extends ExecutableMessage
+public class ExecutableLogoutResponse extends ExecutableMessage<MessageContext>
 {
     /**
      * Construct an ExecutableMessage with the given Message.
      *
      * @param client The client invoking this class.
      * @param message The Message.
-     */
-    public ExecutableLogoutResponse(AuthClient client, Message message) {
-        super(client, message);
-    }
+	 * @param context The context in which to execute the message.
+	 */
+	public ExecutableLogoutResponse(AuthClient client, Message message, MessageContext context) {
+		super(client, message, context);
+	}
 
     @Override
 	public Message execute() {

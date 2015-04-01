@@ -35,7 +35,7 @@ public class ExecutableStateChangeMessageTest
 		when(worldClient.getWorld()).thenReturn(world);
 		when(worldObjectMap.get(100)).thenReturn(clientActor);
 
-		ExecutableStateChangeMessage message = new ExecutableStateChangeMessage(worldClient, stateChangeMessage);
+		ExecutableStateChangeMessage message = new ExecutableStateChangeMessage(worldClient, stateChangeMessage, null);
 		message.execute();
 		world.update();
 

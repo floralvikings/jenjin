@@ -39,7 +39,8 @@ public class ExecutableStateChangeRequestTest
 		when(request.getArgument("xCoordinate")).thenReturn(0.0);
 		when(request.getArgument("yCoordinate")).thenReturn(0.0);
 		when(request.getArgument("timeOfChange")).thenReturn(System.currentTimeMillis());
-		ExecutableStateChangeRequest executableStateChangeRequest = new ExecutableStateChangeRequest(mock, request);
+		ExecutableStateChangeRequest executableStateChangeRequest = new ExecutableStateChangeRequest(mock, request,
+			  null);
 		executableStateChangeRequest.execute();
 		world.update();
 
@@ -70,7 +71,7 @@ public class ExecutableStateChangeRequestTest
 		when(request.getArgument("timeOfChange")).thenReturn(System.currentTimeMillis());
 
 		// Create the executable state change request
-		ExecutableStateChangeRequest executableStateChangeRequest = new ExecutableStateChangeRequest(mock, request);
+		ExecutableStateChangeRequest executableStateChangeRequest = new ExecutableStateChangeRequest(mock, request, null);
 		executableStateChangeRequest.execute();
 
 		world.update();
@@ -96,7 +97,7 @@ public class ExecutableStateChangeRequestTest
 		when(request.getArgument("xCoordinate")).thenReturn(0.0);
 		when(request.getArgument("yCoordinate")).thenReturn(0.0);
 		when(request.getArgument("timeOfChange")).thenReturn(System.currentTimeMillis() - 2000);
-		ExecutableStateChangeRequest executableStateChangeRequest = new ExecutableStateChangeRequest(mock, request);
+		ExecutableStateChangeRequest executableStateChangeRequest = new ExecutableStateChangeRequest(mock, request, null);
 		executableStateChangeRequest.execute();
 		world.update();
 
@@ -121,7 +122,7 @@ public class ExecutableStateChangeRequestTest
 		when(request.getArgument("yCoordinate")).thenReturn(0.0);
 		when(request.getArgument("timeOfChange")).thenReturn(System.currentTimeMillis());
 		Thread.sleep(1200);
-		ExecutableStateChangeRequest executableStateChangeRequest = new ExecutableStateChangeRequest(mock, request);
+		ExecutableStateChangeRequest executableStateChangeRequest = new ExecutableStateChangeRequest(mock, request, null);
 		executableStateChangeRequest.execute();
 		world.update();
 

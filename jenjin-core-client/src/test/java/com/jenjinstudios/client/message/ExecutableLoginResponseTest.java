@@ -33,7 +33,7 @@ public class ExecutableLoginResponseTest
         when(authClient.getLoginTracker()).thenReturn(loginTracker);
         when(authClient.getUser()).thenReturn(user);
 
-        ExecutableLoginResponse response = new ExecutableLoginResponse(authClient, loginResponse);
+		ExecutableLoginResponse response = new ExecutableLoginResponse(authClient, loginResponse, null);
 		response.execute();
 
         verify(loginTracker).setLoggedInTime(12345L);
