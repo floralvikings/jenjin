@@ -18,8 +18,10 @@ import java.util.logging.Logger;
 public class MessageExecutor
 {
 	private static final Logger LOGGER = Logger.getLogger(MessageExecutor.class.getName());
+	private static final Constructor[] EMPTY_CONSTRUCTOR_ARRAY = new Constructor[0];
 	private final MessageExecutorTask messageExecutorTask;
 	private final Timer runTimer;
+	private MessageContext messageContext;
 
 	/**
 	 * Construct a new MessageExecutor which takes messages from the given MessageReader, and constructs and executes
@@ -46,11 +48,14 @@ public class MessageExecutor
 		runTimer.cancel();
 	}
 
-	protected void setMessageContext(MessageContext messageContext) {
-		messageExecutorTask.setMessageContext(messageContext);
-	}
+	/**
+	 * Set the MessageContext to be passed into ExecutableMessages created by this executor.
+	 *
+	 * @param messageContext The context in which ExecutableMessages should be created.
+	 */
+	protected void setMessageContext(MessageContext messageContext) { this.messageContext = messageContext; }
 
-	private static class MessageExecutorTask extends TimerTask
+	private class MessageExecutorTask extends TimerTask
 	{
 		private final ExecutableMessageFactory exMessageFactory;
 		private final MessageThreadPool threadPool;
@@ -64,10 +69,6 @@ public class MessageExecutor
 		public void run() {
 			Iterable<Message> messages = threadPool.getReceivedMessages();
 			messages.forEach(this::executeMessage);
-		}
-
-		public void setMessageContext(MessageContext messageContext) {
-			exMessageFactory.setMessageContext(messageContext);
 		}
 
 		private void executeMessage(Message message) {
@@ -90,7 +91,7 @@ public class MessageExecutor
 			}
 		}
 
-		private static Message generateInvalidMessage(short id, String messageName) {
+		private Message generateInvalidMessage(short id, String messageName) {
 			Message invalid = MessageRegistry.getGlobalRegistry().createMessage("InvalidMessage");
 			invalid.setArgument("messageName", messageName);
 			invalid.setArgument("messageID", id);
@@ -98,11 +99,9 @@ public class MessageExecutor
 		}
 	}
 
-	private static class ExecutableMessageFactory
+	private class ExecutableMessageFactory
 	{
-		private static final Constructor[] EMPTY_CONSTRUCTOR_ARRAY = new Constructor[0];
 		private final MessageThreadPool threadPool;
-		private MessageContext context;
 
 		/**
 		 * Construct an ExecutableMessageFactory for the specified threadPool.
@@ -140,10 +139,6 @@ public class MessageExecutor
 			return executableMessages;
 		}
 
-		public void setMessageContext(MessageContext messageContext) {
-			this.context = messageContext;
-		}
-
 		private Collection<Constructor> getExecConstructors(Message message) {
 			Collection<Constructor> constructors = new LinkedList<>();
 			MessageType messageType = MessageRegistry.getGlobalRegistry().getMessageType(message.getID());
@@ -167,7 +162,7 @@ public class MessageExecutor
 			ExecutableMessage executableMessage = null;
 			try
 			{
-				executableMessage = (ExecutableMessage) constructor.newInstance(threadPool, msg, context);
+				executableMessage = (ExecutableMessage) constructor.newInstance(threadPool, msg, messageContext);
 			} catch (InvocationTargetException | InstantiationException | IllegalAccessException e)
 			{
 				LOGGER.log(Level.SEVERE, "Constructor not correct", e);
