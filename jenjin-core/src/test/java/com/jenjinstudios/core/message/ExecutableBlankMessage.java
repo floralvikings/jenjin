@@ -31,7 +31,7 @@ public class ExecutableBlankMessage extends ExecutableMessage<MessageContext>
 
     @Override
 	public Message execute() {
-		LOGGER.log(Level.FINEST, "{0} received blank message.", ((Connection) getThreadPool()).getName());
+		LOGGER.log(Level.FINEST, "{0} received blank message.", getContext().getName());
 		return null;
 	}
 }
