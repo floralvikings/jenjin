@@ -30,7 +30,7 @@ public class MessageExecutor
 	 * @param messageContext The data that should be passed into each message.
 	 */
 	public MessageExecutor(MessageThreadPool threadPool, MessageContext messageContext) {
-		this.messageExecutorTask = new MessageExecutorTask(threadPool);
+		this.messageExecutorTask = new MessageExecutorTask(threadPool, messageContext);
 		this.messageContext = messageContext;
 		runTimer = new Timer("MessageExecutor");
 	}
@@ -54,9 +54,9 @@ public class MessageExecutor
 		private final ExecutableMessageFactory exMessageFactory;
 		private final MessageThreadPool threadPool;
 
-		protected MessageExecutorTask(MessageThreadPool threadPool) {
+		protected MessageExecutorTask(MessageThreadPool threadPool, MessageContext context) {
 			this.threadPool = threadPool;
-			exMessageFactory = new ExecutableMessageFactory(this.threadPool);
+			exMessageFactory = new ExecutableMessageFactory(this.threadPool, context);
 		}
 
 		@Override
@@ -97,13 +97,17 @@ public class MessageExecutor
 	{
 		private static final Constructor[] EMPTY_CONSTRUCTOR_ARRAY = new Constructor[0];
 		private final MessageThreadPool threadPool;
+		private final MessageContext context;
 
 		/**
 		 * Construct an ExecutableMessageFactory for the specified threadPool.
 		 *
 		 * @param threadPool The threadPool for which this factory will produce ExecutableMessages.
 		 */
-		private ExecutableMessageFactory(MessageThreadPool threadPool) { this.threadPool = threadPool; }
+		private ExecutableMessageFactory(MessageThreadPool threadPool, MessageContext context) {
+			this.threadPool = threadPool;
+			this.context = context;
+		}
 
 		/**
 		 * Given a {@code Connection} and a {@code Message}, create and return an appropriate {@code
@@ -155,7 +159,7 @@ public class MessageExecutor
 			ExecutableMessage executableMessage = null;
 			try
 			{
-				executableMessage = (ExecutableMessage) constructor.newInstance(threadPool, msg);
+				executableMessage = (ExecutableMessage) constructor.newInstance(threadPool, msg, context);
 			} catch (InvocationTargetException | InstantiationException | IllegalAccessException e)
 			{
 				LOGGER.log(Level.SEVERE, "Constructor not correct", e);
