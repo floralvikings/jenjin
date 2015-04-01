@@ -23,11 +23,8 @@ public abstract class ExecutableMessage<T extends MessageContext>
      *
 	 * @param threadPool The threadPool for which this ExecutbleMessage will work.
 	 * @param message The message that caused this {@code ExecutableMessage} to be created.
+	 * @param context The MessageContext in which to execute this message.
      */
-	protected ExecutableMessage(MessageThreadPool threadPool, Message message) {
-		this(threadPool, message, null);
-	}
-
 	protected ExecutableMessage(MessageThreadPool threadPool, Message message, T context) {
 		this.message = message;
 		this.threadPool = threadPool;
