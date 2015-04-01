@@ -27,12 +27,16 @@ public class MessageThreadPool
 	 *
 	 * @param messageStreamPair The MessageIO containing the streams to read/write.
 	 */
-	protected MessageThreadPool(MessageStreamPair messageStreamPair, MessageContext messageContext) {
+	protected MessageThreadPool(MessageStreamPair messageStreamPair) {
 		this.messageStreamPair = messageStreamPair;
 		messageWriter = new MessageWriter(messageStreamPair.getOut());
 		messageReader = new MessageReader(messageStreamPair.getIn());
 		errorChecker = new ErrorChecker();
-		messageExecutor = new MessageExecutor(this, messageContext);
+		messageExecutor = new MessageExecutor(this);
+	}
+
+	protected void setMessageContext(MessageContext context) {
+		messageExecutor.setMessageContext(context);
 	}
 
 	/**

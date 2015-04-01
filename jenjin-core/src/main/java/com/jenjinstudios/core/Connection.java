@@ -25,10 +25,12 @@ public class Connection extends MessageThreadPool
 	 * @param streams The MessageIO containing the input and output streams
 	 */
 	public Connection(MessageStreamPair streams) {
-		super(streams, new SimpleMessageContext("Connection"));
+		super(streams);
+		SimpleMessageContext messageContext = new SimpleMessageContext("Connection");
+		setMessageContext(messageContext);
+		pingTracker = messageContext.getPingTracker();
 		InputStream stream = getClass().getClassLoader().getResourceAsStream("com/jenjinstudios/core/io/Messages.xml");
 		MessageRegistry.getGlobalRegistry().register("Core XML Registry", stream);
-		pingTracker = new PingTracker();
 	}
 
 	/**

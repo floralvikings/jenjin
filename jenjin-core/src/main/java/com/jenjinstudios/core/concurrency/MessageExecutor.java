@@ -19,7 +19,6 @@ public class MessageExecutor
 {
 	private static final Logger LOGGER = Logger.getLogger(MessageExecutor.class.getName());
 	private final MessageExecutorTask messageExecutorTask;
-	private final MessageContext messageContext;
 	private final Timer runTimer;
 
 	/**
@@ -27,11 +26,9 @@ public class MessageExecutor
 	 * appropriate ExecutableMessages under the given Connection.
 	 *
 	 * @param threadPool The threadPool under which to execute messages.
-	 * @param messageContext The data that should be passed into each message.
 	 */
-	public MessageExecutor(MessageThreadPool threadPool, MessageContext messageContext) {
-		this.messageExecutorTask = new MessageExecutorTask(threadPool, messageContext);
-		this.messageContext = messageContext;
+	public MessageExecutor(MessageThreadPool threadPool) {
+		this.messageExecutorTask = new MessageExecutorTask(threadPool);
 		runTimer = new Timer("MessageExecutor");
 	}
 
@@ -49,20 +46,28 @@ public class MessageExecutor
 		runTimer.cancel();
 	}
 
+	protected void setMessageContext(MessageContext messageContext) {
+		messageExecutorTask.setMessageContext(messageContext);
+	}
+
 	private static class MessageExecutorTask extends TimerTask
 	{
 		private final ExecutableMessageFactory exMessageFactory;
 		private final MessageThreadPool threadPool;
 
-		protected MessageExecutorTask(MessageThreadPool threadPool, MessageContext context) {
+		protected MessageExecutorTask(MessageThreadPool threadPool) {
 			this.threadPool = threadPool;
-			exMessageFactory = new ExecutableMessageFactory(this.threadPool, context);
+			exMessageFactory = new ExecutableMessageFactory(this.threadPool);
 		}
 
 		@Override
 		public void run() {
 			Iterable<Message> messages = threadPool.getReceivedMessages();
 			messages.forEach(this::executeMessage);
+		}
+
+		public void setMessageContext(MessageContext messageContext) {
+			exMessageFactory.setMessageContext(messageContext);
 		}
 
 		private void executeMessage(Message message) {
@@ -97,16 +102,15 @@ public class MessageExecutor
 	{
 		private static final Constructor[] EMPTY_CONSTRUCTOR_ARRAY = new Constructor[0];
 		private final MessageThreadPool threadPool;
-		private final MessageContext context;
+		private MessageContext context;
 
 		/**
 		 * Construct an ExecutableMessageFactory for the specified threadPool.
 		 *
 		 * @param threadPool The threadPool for which this factory will produce ExecutableMessages.
 		 */
-		private ExecutableMessageFactory(MessageThreadPool threadPool, MessageContext context) {
+		private ExecutableMessageFactory(MessageThreadPool threadPool) {
 			this.threadPool = threadPool;
-			this.context = context;
 		}
 
 		/**
@@ -134,6 +138,10 @@ public class MessageExecutor
 				}
 			}
 			return executableMessages;
+		}
+
+		public void setMessageContext(MessageContext messageContext) {
+			this.context = messageContext;
 		}
 
 		private Collection<Constructor> getExecConstructors(Message message) {
