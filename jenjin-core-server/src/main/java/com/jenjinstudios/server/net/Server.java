@@ -1,6 +1,6 @@
 package com.jenjinstudios.server.net;
 
-import com.jenjinstudios.core.EncryptedConnection;
+import com.jenjinstudios.core.Connection;
 import com.jenjinstudios.core.io.MessageRegistry;
 import com.jenjinstudios.server.authentication.Authenticator;
 
@@ -35,7 +35,7 @@ public class Server extends Thread
         PERIOD = 1000 / UPS;
         clientListener = new ClientListener(getClass(), initInfo.getHandlerClass(), initInfo.getPort());
         clientHandlers = new TreeMap<>();
-		rsaKeyPair = (initInfo.getKeyPair() == null) ? EncryptedConnection.generateRSAKeyPair() : initInfo
+		rsaKeyPair = (initInfo.getKeyPair() == null) ? Connection.generateRSAKeyPair() : initInfo
 			  .getKeyPair();
 		this.authenticator = authenticator;
 		InputStream stream = getClass().getClassLoader().getResourceAsStream("com/jenjinstudios/server/Messages.xml");

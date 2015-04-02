@@ -1,6 +1,6 @@
 package com.jenjinstudios.core.message;
 
-import com.jenjinstudios.core.EncryptedConnection;
+import com.jenjinstudios.core.Connection;
 import com.jenjinstudios.core.concurrency.MessageContext;
 import com.jenjinstudios.core.io.*;
 import org.testng.annotations.AfterClass;
@@ -46,13 +46,13 @@ public class ExecutablePublicKeyMessageTest
      */
     @Test
     public void testVerification() {
-		KeyPair rsaKeyPair = EncryptedConnection.generateRSAKeyPair();
-		Message message = EncryptedConnection.generatePublicKeyMessage(rsaKeyPair.getPublic());
+		KeyPair rsaKeyPair = Connection.generateRSAKeyPair();
+		Message message = Connection.generatePublicKeyMessage(rsaKeyPair.getPublic());
 		InetAddress address = InetAddress.getLoopbackAddress();
         Map<InetAddress, Key> keys = new HashMap<>(10);
         keys.put(address, rsaKeyPair.getPublic());
 
-		EncryptedConnection connection = mock(EncryptedConnection.class);
+		Connection connection = mock(Connection.class);
 		MessageInputStream in = mock(MessageInputStream.class);
         MessageOutputStream out = mock(MessageOutputStream.class);
 		MessageContext context = mock(MessageContext.class);
@@ -74,13 +74,13 @@ public class ExecutablePublicKeyMessageTest
      */
     @Test
     public void testVerificationNoKeys() {
-		KeyPair rsaKeyPair = EncryptedConnection.generateRSAKeyPair();
-		Message message = EncryptedConnection.generatePublicKeyMessage(rsaKeyPair.getPublic());
+		KeyPair rsaKeyPair = Connection.generateRSAKeyPair();
+		Message message = Connection.generatePublicKeyMessage(rsaKeyPair.getPublic());
 		InetAddress address = InetAddress.getLoopbackAddress();
         Map<InetAddress, Key> keys = new HashMap<>(10);
 
 		MessageContext context = mock(MessageContext.class);
-		EncryptedConnection connection = mock(EncryptedConnection.class);
+		Connection connection = mock(Connection.class);
 		MessageStreamPair messageStreamPair = mock(MessageStreamPair.class);
 		MessageOutputStream out = mock(MessageOutputStream.class);
 
@@ -100,15 +100,15 @@ public class ExecutablePublicKeyMessageTest
      */
     @Test
     public void testVerificationInvalidKey() {
-		KeyPair rsaKeyPair = EncryptedConnection.generateRSAKeyPair();
-		KeyPair invalidKeyPair = EncryptedConnection.generateRSAKeyPair();
-		Message message = EncryptedConnection.generatePublicKeyMessage(invalidKeyPair.getPublic());
+		KeyPair rsaKeyPair = Connection.generateRSAKeyPair();
+		KeyPair invalidKeyPair = Connection.generateRSAKeyPair();
+		Message message = Connection.generatePublicKeyMessage(invalidKeyPair.getPublic());
 		InetAddress address = InetAddress.getLoopbackAddress();
         Map<InetAddress, Key> keys = new HashMap<>(10);
         keys.put(address, rsaKeyPair.getPublic());
 
 		MessageContext context = mock(MessageContext.class);
-		EncryptedConnection connection = mock(EncryptedConnection.class);
+		Connection connection = mock(Connection.class);
 		MessageStreamPair messageStreamPair = mock(MessageStreamPair.class);
 		MessageOutputStream out = mock(MessageOutputStream.class);
 
@@ -128,15 +128,15 @@ public class ExecutablePublicKeyMessageTest
      */
     @Test
     public void testVerificationNoAddress() {
-		KeyPair rsaKeyPair = EncryptedConnection.generateRSAKeyPair();
-		KeyPair invalidKeyPair = EncryptedConnection.generateRSAKeyPair();
-		Message message = EncryptedConnection.generatePublicKeyMessage(invalidKeyPair.getPublic());
+		KeyPair rsaKeyPair = Connection.generateRSAKeyPair();
+		KeyPair invalidKeyPair = Connection.generateRSAKeyPair();
+		Message message = Connection.generatePublicKeyMessage(invalidKeyPair.getPublic());
 		InetAddress address = InetAddress.getLoopbackAddress();
         Map<InetAddress, Key> keys = new HashMap<>(10);
         keys.put(address, rsaKeyPair.getPublic());
 
 		MessageContext context = mock(MessageContext.class);
-		EncryptedConnection connection = mock(EncryptedConnection.class);
+		Connection connection = mock(Connection.class);
 		MessageStreamPair messageStreamPair = mock(MessageStreamPair.class);
 		MessageOutputStream out = mock(MessageOutputStream.class);
 

@@ -1,6 +1,6 @@
 package com.jenjinstudios.server.net;
 
-import com.jenjinstudios.core.EncryptedConnection;
+import com.jenjinstudios.core.Connection;
 import com.jenjinstudios.core.io.MessageStreamPair;
 import com.jenjinstudios.server.authentication.AuthenticationException;
 import com.jenjinstudios.server.authentication.User;
@@ -13,7 +13,7 @@ import java.util.logging.Logger;
  *
  * @author Caleb Brinkman
  */
-public class ClientHandler extends EncryptedConnection
+public class ClientHandler extends Connection
 {
     private static final Logger LOGGER = Logger.getLogger(ClientHandler.class.getName());
     /** The server. */
