@@ -61,6 +61,21 @@ public class MessageOutputStream extends DataOutputStream
             writeArgument(args[i], argumentTypes.get(i).isEncrypt());
     }
 
+	/**
+	 * Write a message using the supplied Key to encrypt the message.
+	 *
+	 * @param message The message to write.
+	 * @param encryptionKey The key used to encrypt any outgoing parameters.
+	 *
+	 * @throws IOException If there is an error writing to the output stream.
+	 */
+	public void writeMessage(Message message, Key encryptionKey) throws IOException {
+		Cipher oldCipher = encryptCipher;
+		setPublicKey(encryptionKey);
+		writeMessage(message);
+		encryptCipher = oldCipher;
+	}
+
     /**
      * Return whether this stream has been closed.
      *
