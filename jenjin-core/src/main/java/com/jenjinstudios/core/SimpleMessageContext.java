@@ -61,12 +61,12 @@ public class SimpleMessageContext implements MessageContext
 	public Map<InetAddress, Key> getVerifiedKeys() { return Collections.unmodifiableMap(verifiedKeys); }
 
 	@Override
-	public void addVerifiedKey(InetAddress address, Key key) {
-		if (verifiedKeys.containsKey(address))
+	public void addVerifiedKey(InetAddress newAddress, Key key) {
+		if (verifiedKeys.containsKey(newAddress))
 		{
 			throw new IllegalStateException("Internet address already has private key set.");
 		}
-		verifiedKeys.put(address, key);
+		verifiedKeys.put(newAddress, key);
 	}
 
 	@Override
