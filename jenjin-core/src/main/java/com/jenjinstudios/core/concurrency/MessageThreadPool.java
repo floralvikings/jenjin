@@ -42,6 +42,7 @@ public class MessageThreadPool
 	 */
 	protected void setMessageContext(MessageContext context) {
 		messageExecutor.setMessageContext(context);
+		messageWriter.setMessageContext(context);
 	}
 
 	/**
