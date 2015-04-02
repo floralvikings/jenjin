@@ -2,7 +2,11 @@ package com.jenjinstudios.core;
 
 import com.jenjinstudios.core.concurrency.MessageContext;
 
+import java.net.InetAddress;
 import java.security.Key;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Represents the most basic implemented MessageContext.
@@ -11,6 +15,7 @@ import java.security.Key;
  */
 public class SimpleMessageContext implements MessageContext
 {
+	private final Map<InetAddress, Key> verifiedKeys;
 	private final String name;
 	private final PingTracker pingTracker;
 	private Key encryptionKey;
@@ -23,6 +28,7 @@ public class SimpleMessageContext implements MessageContext
 	public SimpleMessageContext(String name) {
 		this.name = name;
 		this.pingTracker = new PingTracker();
+		this.verifiedKeys = new HashMap<>(10);
 	}
 
 	@Override
@@ -40,4 +46,7 @@ public class SimpleMessageContext implements MessageContext
 
 	@Override
 	public void setEncryptionKey(Key encryptionKey) { this.encryptionKey = encryptionKey; }
+
+	@Override
+	public Map<InetAddress, Key> getVerifiedKeys() { return Collections.unmodifiableMap(verifiedKeys); }
 }
