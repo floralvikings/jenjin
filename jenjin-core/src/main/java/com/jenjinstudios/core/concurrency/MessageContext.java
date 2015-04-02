@@ -33,7 +33,8 @@ public interface MessageContext
 	void setEncryptionKey(Key encryptionKey);
 
 	/**
-	 * Get the map of internet addresses and keys with which they are associated that are verified to be correlated.
+	 * Get the (unmodifiable) map of internet addresses and keys with which they are associated that are verified to
+	 * be correlated.
 	 *
 	 * @return The map of internet addresses and keys with which they are associated that are verified to be
 	 * correlated.
