@@ -2,6 +2,8 @@ package com.jenjinstudios.core;
 
 import com.jenjinstudios.core.concurrency.MessageContext;
 
+import java.security.Key;
+
 /**
  * Represents the most basic implemented MessageContext.
  *
@@ -11,6 +13,7 @@ public class SimpleMessageContext implements MessageContext
 {
 	private final String name;
 	private final PingTracker pingTracker;
+	private Key encryptionKey;
 
 	/**
 	 * Construct a new MessageContext with the given name.
@@ -31,4 +34,10 @@ public class SimpleMessageContext implements MessageContext
 	 * @return The PingTracker associated with this MessageContext.
 	 */
 	public PingTracker getPingTracker() { return pingTracker; }
+
+	@Override
+	public Key getEncryptionKey() { return encryptionKey; }
+
+	@Override
+	public void setEncryptionKey(Key encryptionKey) { this.encryptionKey = encryptionKey; }
 }
