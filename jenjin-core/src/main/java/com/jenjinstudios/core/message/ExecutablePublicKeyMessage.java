@@ -55,7 +55,7 @@ public class ExecutablePublicKeyMessage extends ExecutableMessage<MessageContext
 
     private boolean isKeyValid(Key suppliedKey) {
         boolean verified = false;
-		if (((EncryptedConnection) getThreadPool()).getVerifiedKeys().isEmpty())
+		if (getContext().getVerifiedKeys().isEmpty())
 		{
             verified = true;
         } else
@@ -63,7 +63,7 @@ public class ExecutablePublicKeyMessage extends ExecutableMessage<MessageContext
 			InetAddress address = getThreadPool().getMessageStreamPair().getAddress();
 			if (address != null)
             {
-				Key key = ((EncryptedConnection) getThreadPool()).getVerifiedKeys().get(address);
+				Key key = getContext().getVerifiedKeys().get(address);
 				if ((key == null) || !key.equals(suppliedKey))
                 {
                     LOGGER.log(Level.SEVERE, "Unable to verify public key; supplied key does not match registry.");
