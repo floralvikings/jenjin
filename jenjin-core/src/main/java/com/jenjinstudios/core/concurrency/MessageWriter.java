@@ -92,7 +92,13 @@ public class MessageWriter
 					Message message = outgoing.removeFirst();
 					try
 					{
-						outputStream.writeMessage(message);
+						if (context.getEncryptionKey() != null)
+						{
+							outputStream.writeMessage(message, context.getEncryptionKey());
+						} else
+						{
+							outputStream.writeMessage(message);
+						}
 						errored = false;
 					} catch (IOException e)
 					{
