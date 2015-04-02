@@ -4,13 +4,10 @@ import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageRegistry;
 import com.jenjinstudios.core.io.MessageStreamPair;
 
-import java.net.InetAddress;
 import java.security.Key;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -21,7 +18,6 @@ public class EncryptedConnection extends Connection
 {
 	private static final int KEYSIZE = 512;
 	private static final Logger LOGGER = Logger.getLogger(EncryptedConnection.class.getName());
-	private final Map<InetAddress, Key> verifiedKeys = new HashMap<>(10);
 
 	/**
 	 * Construct a new {@code Connection} that utilizes the specified {@code MessageIO} to read and write messages.
