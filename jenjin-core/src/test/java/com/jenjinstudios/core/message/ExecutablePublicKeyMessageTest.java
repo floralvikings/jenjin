@@ -60,7 +60,7 @@ public class ExecutablePublicKeyMessageTest
 		MessageStreamPair messageStreamPair = new MessageStreamPair(in, out, address);
 
 		when(connection.getMessageStreamPair()).thenReturn(messageStreamPair);
-		when(connection.getVerifiedKeys()).thenReturn(keys);
+		when(context.getVerifiedKeys()).thenReturn(keys);
 
 		ExecutablePublicKeyMessage executable = new ExecutablePublicKeyMessage(connection, message, context);
 		executable.execute();
@@ -86,7 +86,7 @@ public class ExecutablePublicKeyMessageTest
 		when(messageStreamPair.getOut()).thenReturn(out);
 		when(messageStreamPair.getAddress()).thenReturn(address);
 		when(connection.getMessageStreamPair()).thenReturn(messageStreamPair);
-		when(connection.getVerifiedKeys()).thenReturn(keys);
+		when(context.getVerifiedKeys()).thenReturn(keys);
 
 		ExecutablePublicKeyMessage executable = new ExecutablePublicKeyMessage(connection, message, context);
 		executable.execute();
@@ -106,6 +106,7 @@ public class ExecutablePublicKeyMessageTest
         Map<InetAddress, Key> keys = new HashMap<>(10);
         keys.put(address, rsaKeyPair.getPublic());
 
+		MessageContext context = mock(MessageContext.class);
 		EncryptedConnection connection = mock(EncryptedConnection.class);
 		MessageStreamPair messageStreamPair = mock(MessageStreamPair.class);
 		MessageOutputStream out = mock(MessageOutputStream.class);
@@ -113,13 +114,13 @@ public class ExecutablePublicKeyMessageTest
 		when(messageStreamPair.getOut()).thenReturn(out);
 		when(messageStreamPair.getAddress()).thenReturn(address);
 		when(connection.getMessageStreamPair()).thenReturn(messageStreamPair);
-		when(connection.getVerifiedKeys()).thenReturn(keys);
+		when(context.getVerifiedKeys()).thenReturn(keys);
 
-		ExecutablePublicKeyMessage executable = new ExecutablePublicKeyMessage(connection, message, null);
+		ExecutablePublicKeyMessage executable = new ExecutablePublicKeyMessage(connection, message, context);
 		executable.execute();
 
-        verify(out, times(0)).setPublicKey(any());
-    }
+		verify(context, times(0)).setEncryptionKey(any());
+	}
 
     /**
      * Test invalid key verification due to unknown host.
@@ -133,17 +134,18 @@ public class ExecutablePublicKeyMessageTest
         Map<InetAddress, Key> keys = new HashMap<>(10);
         keys.put(address, rsaKeyPair.getPublic());
 
+		MessageContext context = mock(MessageContext.class);
 		EncryptedConnection connection = mock(EncryptedConnection.class);
 		MessageStreamPair messageStreamPair = mock(MessageStreamPair.class);
 		MessageOutputStream out = mock(MessageOutputStream.class);
 
 		when(messageStreamPair.getOut()).thenReturn(out);
 		when(connection.getMessageStreamPair()).thenReturn(messageStreamPair);
-		when(connection.getVerifiedKeys()).thenReturn(keys);
+		when(context.getVerifiedKeys()).thenReturn(keys);
 
-		ExecutablePublicKeyMessage executable = new ExecutablePublicKeyMessage(connection, message, null);
+		ExecutablePublicKeyMessage executable = new ExecutablePublicKeyMessage(connection, message, context);
 		executable.execute();
 
-        verify(out, times(0)).setPublicKey(any());
-    }
+		verify(context, times(0)).setEncryptionKey(any());
+	}
 }
