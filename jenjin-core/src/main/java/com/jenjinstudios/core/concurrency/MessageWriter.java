@@ -25,15 +25,18 @@ public class MessageWriter
 	private final MessageOutputStream outputStream;
 	private final Timer runTimer;
 	private final WriteTask writeTask;
+	private final MessageContext context;
 	private volatile boolean errored;
 
 	/**
 	 * Construct a MessageWriter that will write messages to the given MessageOutputStream.
 	 *
 	 * @param outputStream The output stream to which this writer will write.
+	 * @param context The context in which messages should be sent.
 	 */
-	public MessageWriter(MessageOutputStream outputStream) {
+	public MessageWriter(MessageOutputStream outputStream, MessageContext context) {
 		this.outputStream = outputStream;
+		this.context = context;
 		outgoing = new LinkedList<>();
 		runTimer = new Timer("MessageWriter");
 		writeTask = new WriteTask();
