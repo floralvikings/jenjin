@@ -84,8 +84,8 @@ public class ExecutablePublicKeyMessageTest
 		MessageOutputStream out = mock(MessageOutputStream.class);
 
 		when(messageStreamPair.getOut()).thenReturn(out);
-		when(messageStreamPair.getAddress()).thenReturn(address);
 		when(connection.getMessageStreamPair()).thenReturn(messageStreamPair);
+		when(context.getAddress()).thenReturn(address);
 		when(context.getVerifiedKeys()).thenReturn(keys);
 
 		ExecutablePublicKeyMessage executable = new ExecutablePublicKeyMessage(connection, message, context);
@@ -112,8 +112,8 @@ public class ExecutablePublicKeyMessageTest
 		MessageOutputStream out = mock(MessageOutputStream.class);
 
 		when(messageStreamPair.getOut()).thenReturn(out);
-		when(messageStreamPair.getAddress()).thenReturn(address);
 		when(connection.getMessageStreamPair()).thenReturn(messageStreamPair);
+		when(context.getAddress()).thenReturn(address);
 		when(context.getVerifiedKeys()).thenReturn(keys);
 
 		ExecutablePublicKeyMessage executable = new ExecutablePublicKeyMessage(connection, message, context);
