@@ -1,6 +1,7 @@
 package com.jenjinstudios.core.message;
 
 import com.jenjinstudios.core.EncryptedConnection;
+import com.jenjinstudios.core.concurrency.MessageContext;
 import com.jenjinstudios.core.io.*;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -54,17 +55,18 @@ public class ExecutablePublicKeyMessageTest
 		EncryptedConnection connection = mock(EncryptedConnection.class);
 		MessageInputStream in = mock(MessageInputStream.class);
         MessageOutputStream out = mock(MessageOutputStream.class);
+		MessageContext context = mock(MessageContext.class);
 
 		MessageStreamPair messageStreamPair = new MessageStreamPair(in, out, address);
 
 		when(connection.getMessageStreamPair()).thenReturn(messageStreamPair);
 		when(connection.getVerifiedKeys()).thenReturn(keys);
 
-		ExecutablePublicKeyMessage executable = new ExecutablePublicKeyMessage(connection, message, null);
+		ExecutablePublicKeyMessage executable = new ExecutablePublicKeyMessage(connection, message, context);
 		executable.execute();
 
-        verify(out).setPublicKey(rsaKeyPair.getPublic());
-    }
+		verify(context).setEncryptionKey(rsaKeyPair.getPublic());
+	}
 
     /**
      * Test verification bypass when no verified keys are present.
@@ -76,6 +78,7 @@ public class ExecutablePublicKeyMessageTest
 		InetAddress address = InetAddress.getLoopbackAddress();
         Map<InetAddress, Key> keys = new HashMap<>(10);
 
+		MessageContext context = mock(MessageContext.class);
 		EncryptedConnection connection = mock(EncryptedConnection.class);
 		MessageStreamPair messageStreamPair = mock(MessageStreamPair.class);
 		MessageOutputStream out = mock(MessageOutputStream.class);
@@ -85,11 +88,11 @@ public class ExecutablePublicKeyMessageTest
 		when(connection.getMessageStreamPair()).thenReturn(messageStreamPair);
 		when(connection.getVerifiedKeys()).thenReturn(keys);
 
-		ExecutablePublicKeyMessage executable = new ExecutablePublicKeyMessage(connection, message, null);
+		ExecutablePublicKeyMessage executable = new ExecutablePublicKeyMessage(connection, message, context);
 		executable.execute();
 
-        verify(out).setPublicKey(rsaKeyPair.getPublic());
-    }
+		verify(context).setEncryptionKey(rsaKeyPair.getPublic());
+	}
 
     /**
      * Test failed key verification due to invalid key.
