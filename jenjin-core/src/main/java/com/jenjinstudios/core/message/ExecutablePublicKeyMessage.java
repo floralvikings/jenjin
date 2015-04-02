@@ -44,7 +44,7 @@ public class ExecutablePublicKeyMessage extends ExecutableMessage<MessageContext
             PublicKey suppliedKey = KeyFactory.getInstance("RSA").generatePublic(new X509EncodedKeySpec(keyBytes));
             if (isKeyValid(suppliedKey))
             {
-				getThreadPool().getMessageStreamPair().getOut().setPublicKey(suppliedKey);
+				getContext().setEncryptionKey(suppliedKey);
 			}
         } catch (InvalidKeySpecException | NoSuchAlgorithmException e)
         {
