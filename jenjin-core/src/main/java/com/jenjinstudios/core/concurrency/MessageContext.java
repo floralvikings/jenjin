@@ -44,10 +44,10 @@ public interface MessageContext
 	/**
 	 * Add a key to the map of verified keys, associated with the specified internet address.
 	 *
-	 * @param address The internet address that will be using the specified key.
+	 * @param newAddress The internet address that will be using the specified key.
 	 * @param key The key that will be used by the specified internet address.
 	 */
-	void addVerifiedKey(InetAddress address, Key key);
+	void addVerifiedKey(InetAddress newAddress, Key key);
 
 	/**
 	 * Get the internet address at the other end of this context.  May be null if no address is set.
