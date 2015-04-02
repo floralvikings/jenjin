@@ -1,5 +1,7 @@
 package com.jenjinstudios.core.concurrency;
 
+import java.security.Key;
+
 /**
  * Used to represent data that should be passed into an executable message on construction.
  *
@@ -13,4 +15,11 @@ public interface MessageContext
 	 * @return The name of the context.
 	 */
 	String getName();
+
+	/**
+	 * The key used to encrypt messages sent in this context.
+	 *
+	 * @return The key used to encrypt messages sent in this context.
+	 */
+	Key getEncryptionKey();
 }
