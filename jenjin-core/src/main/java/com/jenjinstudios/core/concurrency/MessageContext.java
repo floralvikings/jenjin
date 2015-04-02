@@ -22,4 +22,11 @@ public interface MessageContext
 	 * @return The key used to encrypt messages sent in this context.
 	 */
 	Key getEncryptionKey();
+
+	/**
+	 * Set the key used to encrypt messages sent in this context.
+	 *
+	 * @param encryptionKey The key used to encrypt messages sent in this context.
+	 */
+	void setEncryptionKey(Key encryptionKey);
 }
