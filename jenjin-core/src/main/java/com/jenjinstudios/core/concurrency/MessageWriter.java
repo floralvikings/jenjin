@@ -4,6 +4,7 @@ import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageOutputStream;
 
 import java.io.IOException;
+import java.security.Key;
 import java.util.LinkedList;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -25,18 +26,16 @@ public class MessageWriter
 	private final MessageOutputStream outputStream;
 	private final Timer runTimer;
 	private final WriteTask writeTask;
-	private final MessageContext context;
+	private MessageContext context;
 	private volatile boolean errored;
 
 	/**
 	 * Construct a MessageWriter that will write messages to the given MessageOutputStream.
 	 *
 	 * @param outputStream The output stream to which this writer will write.
-	 * @param context The context in which messages should be sent.
 	 */
-	public MessageWriter(MessageOutputStream outputStream, MessageContext context) {
+	public MessageWriter(MessageOutputStream outputStream) {
 		this.outputStream = outputStream;
-		this.context = context;
 		outgoing = new LinkedList<>();
 		runTimer = new Timer("MessageWriter");
 		writeTask = new WriteTask();
@@ -80,10 +79,18 @@ public class MessageWriter
 		}
 	}
 
+	/**
+	 * Set the message context in which messages should be written.
+	 *
+	 * @param messageContext The context in which messages should be written.
+	 */
+	public void setMessageContext(MessageContext messageContext) { this.context = messageContext; }
+
 	private class WriteTask extends TimerTask
 	{
 		@Override
 		public void run() {
+			Key encryptionKey = (context != null) ? context.getEncryptionKey() : null;
 			synchronized (outgoing)
 			{
 				boolean noErrorThisExecution = true;
@@ -92,9 +99,9 @@ public class MessageWriter
 					Message message = outgoing.removeFirst();
 					try
 					{
-						if (context.getEncryptionKey() != null)
+						if (encryptionKey != null)
 						{
-							outputStream.writeMessage(message, context.getEncryptionKey());
+							outputStream.writeMessage(message, encryptionKey);
 						} else
 						{
 							outputStream.writeMessage(message);
