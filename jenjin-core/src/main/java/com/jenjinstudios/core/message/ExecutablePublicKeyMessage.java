@@ -60,7 +60,7 @@ public class ExecutablePublicKeyMessage extends ExecutableMessage<MessageContext
             verified = true;
         } else
         {
-			InetAddress address = getThreadPool().getMessageStreamPair().getAddress();
+			InetAddress address = getContext().getAddress();
 			if (address != null)
             {
 				Key key = getContext().getVerifiedKeys().get(address);
