@@ -49,4 +49,13 @@ public class SimpleMessageContext implements MessageContext
 
 	@Override
 	public Map<InetAddress, Key> getVerifiedKeys() { return Collections.unmodifiableMap(verifiedKeys); }
+
+	@Override
+	public void addVerifiedKey(InetAddress address, Key key) {
+		if (verifiedKeys.containsKey(address))
+		{
+			throw new IllegalStateException("Internet address already has private key set.");
+		}
+		verifiedKeys.put(address, key);
+	}
 }
