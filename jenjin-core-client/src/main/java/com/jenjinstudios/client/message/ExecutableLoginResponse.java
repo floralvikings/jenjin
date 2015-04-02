@@ -1,6 +1,7 @@
 package com.jenjinstudios.client.message;
 
 import com.jenjinstudios.client.net.AuthClient;
+import com.jenjinstudios.client.net.ClientMessageContext;
 import com.jenjinstudios.core.concurrency.ExecutableMessage;
 import com.jenjinstudios.core.concurrency.MessageContext;
 import com.jenjinstudios.core.io.Message;
@@ -11,7 +12,7 @@ import com.jenjinstudios.core.io.Message;
  * @author Caleb Brinkman
  */
 @SuppressWarnings("unused")
-public class ExecutableLoginResponse extends ExecutableMessage<MessageContext>
+public class ExecutableLoginResponse extends ExecutableMessage<ClientMessageContext>
 {
     /**
      * Construct an ExecutableMessage with the given Message.
@@ -20,7 +21,7 @@ public class ExecutableLoginResponse extends ExecutableMessage<MessageContext>
      * @param message The Message.
 	 * @param context The context in which to execute the message.
 	 */
-	public ExecutableLoginResponse(AuthClient client, Message message, MessageContext context) {
+	public ExecutableLoginResponse(AuthClient client, Message message, ClientMessageContext context) {
 		super(client, message, context);
 	}
 
