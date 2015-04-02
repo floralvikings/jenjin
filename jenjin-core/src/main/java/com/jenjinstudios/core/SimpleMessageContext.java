@@ -18,6 +18,7 @@ public class SimpleMessageContext implements MessageContext
 	private final Map<InetAddress, Key> verifiedKeys;
 	private final String name;
 	private final PingTracker pingTracker;
+	private final InetAddress address;
 	private Key encryptionKey;
 
 	/**
@@ -25,10 +26,19 @@ public class SimpleMessageContext implements MessageContext
 	 *
 	 * @param name The name of the context.
 	 */
-	public SimpleMessageContext(String name) {
+	public SimpleMessageContext(String name) { this(name, null); }
+
+	/**
+	 * Construct a new MessageContext with the given name, communicating with the given internet address.
+	 *
+	 * @param name The name of the context.
+	 * @param address The internet address of the "other end" of this context.
+	 */
+	public SimpleMessageContext(String name, InetAddress address) {
 		this.name = name;
 		this.pingTracker = new PingTracker();
 		this.verifiedKeys = new HashMap<>(10);
+		this.address = address;
 	}
 
 	@Override
@@ -58,4 +68,7 @@ public class SimpleMessageContext implements MessageContext
 		}
 		verifiedKeys.put(address, key);
 	}
+
+	@Override
+	public InetAddress getAddress() { return address; }
 }
