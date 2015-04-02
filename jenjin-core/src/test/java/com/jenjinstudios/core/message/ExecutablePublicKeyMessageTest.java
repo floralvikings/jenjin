@@ -61,6 +61,7 @@ public class ExecutablePublicKeyMessageTest
 
 		when(connection.getMessageStreamPair()).thenReturn(messageStreamPair);
 		when(context.getVerifiedKeys()).thenReturn(keys);
+		when(context.getAddress()).thenReturn(address);
 
 		ExecutablePublicKeyMessage executable = new ExecutablePublicKeyMessage(connection, message, context);
 		executable.execute();
