@@ -26,7 +26,7 @@ public class Connection extends MessageThreadPool
 	 */
 	public Connection(MessageStreamPair streams) {
 		super(streams);
-		SimpleMessageContext messageContext = new SimpleMessageContext("Connection");
+		SimpleMessageContext messageContext = new SimpleMessageContext("Connection", streams.getAddress());
 		setMessageContext(messageContext);
 		pingTracker = messageContext.getPingTracker();
 		InputStream stream = getClass().getClassLoader().getResourceAsStream("com/jenjinstudios/core/io/Messages.xml");
