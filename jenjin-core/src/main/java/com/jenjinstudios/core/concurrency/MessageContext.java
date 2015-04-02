@@ -40,4 +40,12 @@ public interface MessageContext
 	 * correlated.
 	 */
 	Map<InetAddress, Key> getVerifiedKeys();
+
+	/**
+	 * Add a key to the map of verified keys, associated with the specified internet address.
+	 *
+	 * @param address The internet address that will be using the specified key.
+	 * @param key The key that will be used by the specified internet address.
+	 */
+	void addVerifiedKey(InetAddress address, Key key);
 }
