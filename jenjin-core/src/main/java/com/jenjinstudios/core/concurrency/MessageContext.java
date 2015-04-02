@@ -48,4 +48,11 @@ public interface MessageContext
 	 * @param key The key that will be used by the specified internet address.
 	 */
 	void addVerifiedKey(InetAddress address, Key key);
+
+	/**
+	 * Get the internet address at the other end of this context.  May be null if no address is set.
+	 *
+	 * @return The inernet address at the other end of this context, null if unset.
+	 */
+	default InetAddress getAddress() { return null; }
 }
