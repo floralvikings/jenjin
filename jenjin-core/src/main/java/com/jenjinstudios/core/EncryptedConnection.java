@@ -79,12 +79,4 @@ public class EncryptedConnection extends Connection
 		}
 	}
 
-	/**
-	 * Get the map of domains and verified keys for this client.
-	 *
-	 * @return The map of domains and verified keys for this client.
-	 */
-	@SuppressWarnings("ReturnOfCollectionOrArrayField")
-	public Map<InetAddress, Key> getVerifiedKeys() { return verifiedKeys; }
-
 }
