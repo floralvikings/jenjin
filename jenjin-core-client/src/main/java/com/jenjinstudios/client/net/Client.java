@@ -11,6 +11,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -20,10 +21,12 @@ import java.util.logging.Logger;
  */
 public class Client extends Connection
 {
-    private static final int UPDATES_PER_SECOND = 60;
-    /** The list of tasks that this client will execute each update cycle. */
-    private final List<Runnable> repeatedTasks;
-    /** The timer that manages the update loop. */
+	static final int THIRTY_SECONDS = 30000;
+	private static final int UPDATES_PER_SECOND = 60;
+	private static final Logger LOGGER = Logger.getLogger(Client.class.getName());
+	private final ClientUser user;
+	private final LoginTracker loginTracker;
+	private final List<Runnable> repeatedTasks;
     private Timer sendMessagesTimer;
     private final ClientLoop clientLoop = new ClientLoop(this);
 
@@ -32,11 +35,15 @@ public class Client extends Connection
      *
      * @param messageStreamPair The MessageIO used to send and receive messages.
      */
-    protected Client(MessageStreamPair messageStreamPair) {
-        super(messageStreamPair);
-        repeatedTasks = new LinkedList<>();
+	protected Client(MessageStreamPair messageStreamPair, ClientUser user) {
+		super(messageStreamPair);
+		ClientMessageContext context = new ClientMessageContext(getName(), messageStreamPair.getAddress());
+		setMessageContext(context);
+		this.loginTracker = context.getLoginTracker();
+		repeatedTasks = new LinkedList<>();
 		InputStream stream = getClass().getClassLoader().getResourceAsStream("com/jenjinstudios/client/Messages.xml");
 		MessageRegistry.getGlobalRegistry().register("Core Client/Server Messages", stream);
+		this.user = user;
 	}
 
     /**
@@ -50,8 +57,42 @@ public class Client extends Connection
         return pingRequest;
     }
 
-    /**
-     * Add a task to the repeated queue of this client.  Should be called to extend client functionality.
+	/**
+	 * Generate a LogoutRequest message.
+	 *
+	 * @return The LogoutRequestMessage.
+	 */
+	public static Message generateLogoutRequest() {
+		return MessageRegistry.getGlobalRegistry().createMessage
+			  ("LogoutRequest");
+	}
+
+	/**
+	 * Generate a LoginRequest message.  This message will be encrypted if possible.
+	 *
+	 * @param user The User for which to generate the login request.
+	 *
+	 * @return The LoginRequest message.
+	 */
+	public static Message generateLoginRequest(ClientUser user) {// Create the login request.
+		Message loginRequest = MessageRegistry.getGlobalRegistry().createMessage("LoginRequest");
+		loginRequest.setArgument("username", user.getUsername());
+		loginRequest.setArgument("password", user.getPassword());
+		return loginRequest;
+	}
+
+	static void waitTenMillis() {
+		try
+		{
+			Thread.sleep(10);
+		} catch (InterruptedException e)
+		{
+			LOGGER.log(Level.WARNING, "Interrupted while waiting for login response.", e);
+		}
+	}
+
+	/**
+	 * Add a task to the repeated queue of this client.  Should be called to extend client functionality.
      *
      * @param r The task to be performed.
      */
@@ -84,11 +125,53 @@ public class Client extends Connection
         int period = 1000 / UPDATES_PER_SECOND;
         sendMessagesTimer.scheduleAtFixedRate(clientLoop, 0, period);
 
-        super.start();
-    }
+		super.start();
+	}
 
-    /** Run the repeated synchronized tasks. */
-    protected void runRepeatedTasks() {
+	/**
+	 * Send a logout request and block execution until the response is received.
+	 */
+	public void logoutAndWait() {
+		sendLogoutRequest();
+		long startTime = System.currentTimeMillis();
+		while (loginTracker.isWaitingForResponse() && ((System.currentTimeMillis() - startTime) < THIRTY_SECONDS))
+		{
+			waitTenMillis();
+		}
+	}
+
+	/**
+	 * Send a login request and await the response.
+	 *
+	 * @return Whether the login was successful.
+	 */
+	@SuppressWarnings("BooleanMethodNameMustStartWithQuestion")
+	public boolean loginAndWait() {
+		sendLoginRequest();
+		long startTime = System.currentTimeMillis();
+		while (loginTracker.isWaitingForResponse() && ((System.currentTimeMillis() - startTime) < THIRTY_SECONDS))
+		{
+			waitTenMillis();
+		}
+		return loginTracker.isLoggedIn();
+	}
+
+	/**
+	 * Get the LoginTracker managed by this client.
+	 *
+	 * @return The login tracker managed by this client.
+	 */
+	public LoginTracker getLoginTracker() { return loginTracker; }
+
+	/**
+	 * Get the username of this client.
+	 *
+	 * @return The username of this client.
+	 */
+	public ClientUser getUser() { return user; }
+
+	/** Run the repeated synchronized tasks. */
+	protected void runRepeatedTasks() {
         synchronized (repeatedTasks)
         {
             for (Runnable r : repeatedTasks)
@@ -103,8 +186,17 @@ public class Client extends Connection
      */
     public double getAverageUPS() { return 1.0d / clientLoop.getAverageRunTime(); }
 
-    /**
-     * The ClientLoop class is essentially what amounts to the output thread.
+	/**
+	 * Send a login request.
+	 */
+	protected void sendLoginRequest() {
+		loginTracker.setWaitingForResponse(true);
+		Message message = generateLoginRequest(user);
+		enqueueMessage(message);
+	}
+
+	/**
+	 * The ClientLoop class is essentially what amounts to the output thread.
      *
      * @author Caleb Brinkman
      */
@@ -149,9 +241,15 @@ public class Client extends Connection
             for (int i = 0; i < maxIndex; i++)
             {
                 total += updateTimesNanos[i];
-            }
-            return total / maxIndex / NANOS_TO_SECOND;
-        }
+			}
+			return total / maxIndex / NANOS_TO_SECOND;
+		}
 
-    }
+	}
+
+	void sendLogoutRequest() {
+		loginTracker.setWaitingForResponse(true);
+		Message message = generateLogoutRequest();
+		enqueueMessage(message);
+	}
 }

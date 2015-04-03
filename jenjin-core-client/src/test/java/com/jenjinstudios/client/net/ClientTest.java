@@ -36,8 +36,8 @@ public class ClientTest
      */
     @Test
     public void testGenerateLogoutRequest() {
-        Message message = AuthClient.generateLogoutRequest();
-        Assert.assertEquals(message.name, "LogoutRequest", "Expectet LogoutRequest message");
+		Message message = Client.generateLogoutRequest();
+		Assert.assertEquals(message.name, "LogoutRequest", "Expectet LogoutRequest message");
     }
 
     /**
@@ -45,8 +45,8 @@ public class ClientTest
      */
     @Test
     public void testGenerateLoginRequest() {
-        Message message = AuthClient.generateLoginRequest(new ClientUser("Foo", "Bar"));
-        Assert.assertEquals(message.name, "LoginRequest", "Expected login request");
+		Message message = Client.generateLoginRequest(new ClientUser("Foo", "Bar"));
+		Assert.assertEquals(message.name, "LoginRequest", "Expected login request");
         Assert.assertEquals(message.getArgument("username"), "Foo", "Username was not expected.");
         Assert.assertEquals(message.getArgument("password"), "Bar", "Password was not expected.");
     }
