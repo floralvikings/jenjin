@@ -2,9 +2,6 @@ package com.jenjinstudios.client.net;
 
 import com.jenjinstudios.core.io.Message;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 /**
  * Used to track the status of login requests and responses.
  *
@@ -12,8 +9,6 @@ import java.util.logging.Logger;
  */
 public class LoginTracker
 {
-	private static final Logger LOGGER = Logger.getLogger(LoginTracker.class.getName());
-	private static final int MILLIS_IN_30_SECONDS = 30000;
 	private volatile boolean loggedIn;
 	private volatile boolean waitingForResponse;
 	private long loggedInTime;
@@ -58,33 +53,14 @@ public class LoginTracker
 	public void setLoggedInTime(long loggedInTime) { this.loggedInTime = loggedInTime; }
 
 	/**
-	 * Send a login request and await the response.
-	 *
-	 * @return Whether the login was successful.
-	 * @param loginTracker The tracker.
-	 * @param client The client.
-	 */
-	@SuppressWarnings("BooleanMethodNameMustStartWithQuestion")
-	public static boolean sendLoginRequestAndWaitForResponse(LoginTracker loginTracker, AuthClient client) {
-		client.sendLoginRequest();
-		long startTime = System.currentTimeMillis();
-		while (loginTracker.isWaitingForResponse() && ((System.currentTimeMillis() - startTime) <
-			  MILLIS_IN_30_SECONDS))
-		{
-			waitTenMillis();
-		}
-		return loginTracker.isLoggedIn();
-	}
-
-	/**
 	 * Send a logout request and block execution until the response is received.
 	 */
 	public void sendLogoutRequestAndWaitForResponse() {
 		sendLogoutRequest();
 		long startTime = System.currentTimeMillis();
-		while (waitingForResponse && ((System.currentTimeMillis() - startTime) < MILLIS_IN_30_SECONDS))
+		while (waitingForResponse && ((System.currentTimeMillis() - startTime) < AuthClient.MILLIS_IN_30_SECONDS))
 		{
-			waitTenMillis();
+			AuthClient.waitTenMillis();
 		}
 	}
 
@@ -106,16 +82,6 @@ public class LoginTracker
 		waitingForResponse = true;
 		Message message = AuthClient.generateLogoutRequest();
 		client.enqueueMessage(message);
-	}
-
-	private static void waitTenMillis() {
-		try
-		{
-			Thread.sleep(10);
-		} catch (InterruptedException e)
-		{
-			LOGGER.log(Level.WARNING, "Interrupted while waiting for login response.", e);
-		}
 	}
 
 }

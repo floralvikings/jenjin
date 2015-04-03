@@ -4,6 +4,9 @@ import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageRegistry;
 import com.jenjinstudios.core.io.MessageStreamPair;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  * The {@code AuthClient} class is a {@code Client} with the ability to store user information and attempt to log into a
  * {@code Server} using a username and password.
@@ -12,8 +15,11 @@ import com.jenjinstudios.core.io.MessageStreamPair;
  */
 public class AuthClient extends Client
 {
-    private final ClientUser user;
-    private final LoginTracker loginTracker;
+	private static final Logger LOGGER = Logger.getLogger(AuthClient.class.getName());
+	static final int MILLIS_IN_30_SECONDS = 30000;
+
+	private final ClientUser user;
+	private final LoginTracker loginTracker;
 
     /**
      * Construct a new client with authentication abilities.
@@ -49,6 +55,36 @@ public class AuthClient extends Client
         loginRequest.setArgument("password", user.getPassword());
         return loginRequest;
     }
+
+	/**
+	 * Send a login request and await the response.
+	 *
+	 * @param loginTracker The tracker.
+	 * @param client The client.
+	 *
+	 * @return Whether the login was successful.
+	 */
+	@SuppressWarnings("BooleanMethodNameMustStartWithQuestion")
+	public static boolean sendLoginRequestAndWaitForResponse(LoginTracker loginTracker, AuthClient client) {
+		client.sendLoginRequest();
+		long startTime = System.currentTimeMillis();
+		while (loginTracker.isWaitingForResponse() && ((System.currentTimeMillis() - startTime) <
+			  MILLIS_IN_30_SECONDS))
+		{
+			waitTenMillis();
+		}
+		return loginTracker.isLoggedIn();
+	}
+
+	static void waitTenMillis() {
+		try
+		{
+			Thread.sleep(10);
+		} catch (InterruptedException e)
+		{
+			LOGGER.log(Level.WARNING, "Interrupted while waiting for login response.", e);
+		}
+	}
 
 	/**
 	 * Send a login request.
