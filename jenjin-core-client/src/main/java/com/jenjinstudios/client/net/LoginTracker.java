@@ -61,16 +61,19 @@ public class LoginTracker
 	 * Send a login request and await the response.
 	 *
 	 * @return Whether the login was successful.
+	 * @param loginTracker The tracker.
+	 * @param client The client.
 	 */
 	@SuppressWarnings("BooleanMethodNameMustStartWithQuestion")
-	public boolean sendLoginRequestAndWaitForResponse() {
+	public static boolean sendLoginRequestAndWaitForResponse(LoginTracker loginTracker, AuthClient client) {
 		client.sendLoginRequest();
 		long startTime = System.currentTimeMillis();
-		while (waitingForResponse && ((System.currentTimeMillis() - startTime) < MILLIS_IN_30_SECONDS))
+		while (loginTracker.isWaitingForResponse() && ((System.currentTimeMillis() - startTime) <
+			  MILLIS_IN_30_SECONDS))
 		{
 			waitTenMillis();
 		}
-		return loggedIn;
+		return loginTracker.isLoggedIn();
 	}
 
 	/**
