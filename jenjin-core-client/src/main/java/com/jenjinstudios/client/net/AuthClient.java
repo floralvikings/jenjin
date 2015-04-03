@@ -58,15 +58,11 @@ public class AuthClient extends Client
 
 	/**
 	 * Send a logout request and block execution until the response is received.
-	 *
-	 * @param loginTracker
-	 * @param client
 	 */
-	public static void logoutAndWait(LoginTracker loginTracker, AuthClient client) {
-		client.sendLogoutRequest();
+	public void logoutAndWait() {
+		sendLogoutRequest();
 		long startTime = System.currentTimeMillis();
-		while (loginTracker.isWaitingForResponse() &&
-			  ((System.currentTimeMillis() - startTime) < THIRTY_SECONDS))
+		while (loginTracker.isWaitingForResponse() && ((System.currentTimeMillis() - startTime) < THIRTY_SECONDS))
 		{
 			waitTenMillis();
 		}
