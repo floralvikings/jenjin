@@ -25,7 +25,7 @@ public class ClientTest
 		MessageOutputStream mos = mock(MessageOutputStream.class);
 		MessageStreamPair messageStreamPair = new MessageStreamPair(mis, mos);
 		Runnable r = mock(Runnable.class);
-		Client client = new Client(messageStreamPair);
+		Client client = new Client(messageStreamPair, mock(ClientUser.class));
 		client.addRepeatedTask(r);
 		client.runRepeatedTasks();
 		verify(r).run();
@@ -50,5 +50,51 @@ public class ClientTest
         Assert.assertEquals(message.getArgument("username"), "Foo", "Username was not expected.");
         Assert.assertEquals(message.getArgument("password"), "Bar", "Password was not expected.");
     }
+
+	/**
+	 * Test the isLoggedIn method.
+	 */
+	@Test
+	public void testIsLoggedIn() {
+		MessageInputStream mis = mock(MessageInputStream.class);
+		MessageOutputStream mos = mock(MessageOutputStream.class);
+		MessageStreamPair messageStreamPair = new MessageStreamPair(mis, mos);
+		ClientUser clientUser = mock(ClientUser.class);
+		boolean random = ((Math.random() * 10) % 2) == 0;
+		Client client = new Client(messageStreamPair, clientUser);
+		client.getLoginTracker().setLoggedIn(random);
+
+		Assert.assertEquals(client.getLoginTracker().isLoggedIn(), random, "Login status was not expected.");
+	}
+
+	/**
+	 * Test the getLoggedInTime method.
+	 */
+	@Test
+	public void testLoggedInTime() {
+		MessageInputStream mis = mock(MessageInputStream.class);
+		MessageOutputStream mos = mock(MessageOutputStream.class);
+		MessageStreamPair messageStreamPair = new MessageStreamPair(mis, mos);
+		ClientUser clientUser = mock(ClientUser.class);
+		long random = (long) (Math.random() * 1000);
+		Client client = new Client(messageStreamPair, clientUser);
+		client.getLoginTracker().setLoggedInTime(random);
+
+		Assert.assertEquals(client.getLoginTracker().getLoggedInTime(), random, "Login time was incorrect.");
+	}
+
+	/**
+	 * Test the getUser method.
+	 */
+	@Test
+	public void testGetUser() {
+		MessageInputStream mis = mock(MessageInputStream.class);
+		MessageOutputStream mos = mock(MessageOutputStream.class);
+		MessageStreamPair messageStreamPair = new MessageStreamPair(mis, mos);
+		ClientUser clientUser = mock(ClientUser.class);
+		Client client = new Client(messageStreamPair, clientUser);
+
+		Assert.assertEquals(client.getUser(), clientUser, "User was incorrect.");
+	}
 
 }
