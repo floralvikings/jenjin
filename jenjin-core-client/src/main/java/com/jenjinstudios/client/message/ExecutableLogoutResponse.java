@@ -26,8 +26,7 @@ public class ExecutableLogoutResponse extends ExecutableMessage<ClientMessageCon
 
     @Override
 	public Message execute() {
-		((Client) getThreadPool()).getLoginTracker().setLoggedIn(!((boolean) getMessage().getArgument
-			  ("success")));
+		getContext().getLoginTracker().setLoggedIn(!((boolean) getMessage().getArgument("success")));
 		return null;
 	}
 
