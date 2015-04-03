@@ -52,11 +52,14 @@ public class LoginTracker
 
 	/**
 	 * Send a logout request and block execution until the response is received.
+	 * @param loginTracker
+	 * @param client
 	 */
-	public void sendLogoutRequestAndWaitForResponse() {
+	public static void sendLogoutRequestAndWaitForResponse(LoginTracker loginTracker, AuthClient client) {
 		client.sendLogoutRequest();
 		long startTime = System.currentTimeMillis();
-		while (waitingForResponse && ((System.currentTimeMillis() - startTime) < AuthClient.THIRTY_SECONDS))
+		while (loginTracker.isWaitingForResponse() &&
+			  ((System.currentTimeMillis() - startTime) < AuthClient.THIRTY_SECONDS))
 		{
 			AuthClient.waitTenMillis();
 		}

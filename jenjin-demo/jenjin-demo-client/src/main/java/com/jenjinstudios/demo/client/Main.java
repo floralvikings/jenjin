@@ -1,5 +1,6 @@
 package com.jenjinstudios.demo.client;
 
+import com.jenjinstudios.client.net.LoginTracker;
 import com.jenjinstudios.core.io.MessageRegistry;
 import com.jenjinstudios.demo.client.ui.ClientPane;
 import com.jenjinstudios.demo.client.ui.LoginPane;
@@ -62,7 +63,7 @@ public class Main extends Application implements EventHandler<WindowEvent>
 	public void handle(WindowEvent windowEvent) {
 		if (worldClient != null)
 		{
-			worldClient.getLoginTracker().sendLogoutRequestAndWaitForResponse();
+			LoginTracker.sendLogoutRequestAndWaitForResponse(worldClient.getLoginTracker(), worldClient);
 			worldClient.shutdown();
 		}
 		Platform.exit();
