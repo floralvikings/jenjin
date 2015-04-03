@@ -63,7 +63,7 @@ public class Main extends Application implements EventHandler<WindowEvent>
 	public void handle(WindowEvent windowEvent) {
 		if (worldClient != null)
 		{
-			LoginTracker.sendLogoutRequestAndWaitForResponse(worldClient.getLoginTracker(), worldClient);
+			LoginTracker.logoutAndWait(worldClient.getLoginTracker(), worldClient);
 			worldClient.shutdown();
 		}
 		Platform.exit();

@@ -55,7 +55,7 @@ public class LoginTracker
 	 * @param loginTracker
 	 * @param client
 	 */
-	public static void sendLogoutRequestAndWaitForResponse(LoginTracker loginTracker, AuthClient client) {
+	public static void logoutAndWait(LoginTracker loginTracker, AuthClient client) {
 		client.sendLogoutRequest();
 		long startTime = System.currentTimeMillis();
 		while (loginTracker.isWaitingForResponse() &&
