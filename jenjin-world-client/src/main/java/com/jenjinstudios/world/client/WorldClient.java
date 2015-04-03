@@ -1,6 +1,6 @@
 package com.jenjinstudios.world.client;
 
-import com.jenjinstudios.client.net.AuthClient;
+import com.jenjinstudios.client.net.Client;
 import com.jenjinstudios.client.net.ClientUser;
 import com.jenjinstudios.core.io.MessageRegistry;
 import com.jenjinstudios.core.io.MessageStreamPair;
@@ -20,7 +20,7 @@ import java.util.logging.Logger;
  *
  * @author Caleb Brinkman
  */
-public class WorldClient extends AuthClient
+public class WorldClient extends Client
 {
     private static final Logger LOGGER = Logger.getLogger(WorldClient.class.getName());
     private final WorldClientMessageFactory messageFactory;
