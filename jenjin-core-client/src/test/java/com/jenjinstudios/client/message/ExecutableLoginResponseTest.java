@@ -1,6 +1,5 @@
 package com.jenjinstudios.client.message;
 
-import com.jenjinstudios.client.net.AuthClient;
 import com.jenjinstudios.client.net.Client;
 import com.jenjinstudios.client.net.ClientUser;
 import com.jenjinstudios.client.net.LoginTracker;
@@ -27,7 +26,7 @@ public class ExecutableLoginResponseTest
 		when(loginResponse.getArgument("loginTime")).thenReturn(12345L);
 
         ClientUser user = mock(ClientUser.class);
-		Client client = mock(AuthClient.class);
+		Client client = mock(Client.class);
 		LoginTracker loginTracker = mock(LoginTracker.class);
 		when(loginTracker.isLoggedIn()).thenReturn(true);
         when(loginTracker.getLoggedInTime()).thenReturn(12345L);
