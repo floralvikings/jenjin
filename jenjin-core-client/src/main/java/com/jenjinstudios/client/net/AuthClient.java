@@ -50,8 +50,20 @@ public class AuthClient extends Client
         return loginRequest;
     }
 
-    /**
-     * Get the LoginTracker managed by this client.
+	/**
+	 * Send a login request for this tracker's client.
+	 *
+	 * @param loginTracker The login tracker used to track the login response.
+	 * @param client The client.
+	 */
+	protected static void sendLoginRequest(LoginTracker loginTracker, AuthClient client) {
+		loginTracker.setWaitingForResponse(true);
+		Message message = generateLoginRequest(client.getUser());
+		client.enqueueMessage(message);
+	}
+
+	/**
+	 * Get the LoginTracker managed by this client.
      *
      * @return The login tracker managed by this client.
      */
