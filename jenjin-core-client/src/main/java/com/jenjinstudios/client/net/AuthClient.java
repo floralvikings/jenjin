@@ -68,8 +68,7 @@ public class AuthClient extends Client
 	public static boolean loginAndWait(LoginTracker loginTracker, AuthClient client) {
 		client.sendLoginRequest();
 		long startTime = System.currentTimeMillis();
-		while (loginTracker.isWaitingForResponse() && ((System.currentTimeMillis() - startTime) <
-			  THIRTY_SECONDS))
+		while (loginTracker.isWaitingForResponse() && ((System.currentTimeMillis() - startTime) < THIRTY_SECONDS))
 		{
 			waitTenMillis();
 		}
