@@ -1,9 +1,8 @@
 package com.jenjinstudios.client.message;
 
-import com.jenjinstudios.client.net.AuthClient;
+import com.jenjinstudios.client.net.Client;
 import com.jenjinstudios.client.net.ClientMessageContext;
 import com.jenjinstudios.core.concurrency.ExecutableMessage;
-import com.jenjinstudios.core.concurrency.MessageContext;
 import com.jenjinstudios.core.io.Message;
 
 /**
@@ -21,13 +20,13 @@ public class ExecutableLogoutResponse extends ExecutableMessage<ClientMessageCon
      * @param message The Message.
 	 * @param context The context in which to execute the message.
 	 */
-	public ExecutableLogoutResponse(AuthClient client, Message message, ClientMessageContext context) {
+	public ExecutableLogoutResponse(Client client, Message message, ClientMessageContext context) {
 		super(client, message, context);
 	}
 
     @Override
 	public Message execute() {
-		((AuthClient) getThreadPool()).getLoginTracker().setLoggedIn(!((boolean) getMessage().getArgument
+		((Client) getThreadPool()).getLoginTracker().setLoggedIn(!((boolean) getMessage().getArgument
 			  ("success")));
 		return null;
 	}

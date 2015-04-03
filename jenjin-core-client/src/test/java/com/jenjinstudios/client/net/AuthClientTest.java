@@ -25,11 +25,11 @@ public class AuthClientTest
         MessageStreamPair messageStreamPair = new MessageStreamPair(mis, mos);
         ClientUser clientUser = mock(ClientUser.class);
         boolean random = ((Math.random() * 10) % 2) == 0;
-        AuthClient authClient = new AuthClient(messageStreamPair, clientUser);
-        authClient.getLoginTracker().setLoggedIn(random);
+		Client client = new AuthClient(messageStreamPair, clientUser);
+		client.getLoginTracker().setLoggedIn(random);
 
-        Assert.assertEquals(authClient.getLoginTracker().isLoggedIn(), random, "Login status was not expected.");
-    }
+		Assert.assertEquals(client.getLoginTracker().isLoggedIn(), random, "Login status was not expected.");
+	}
 
     /**
      * Test the getLoggedInTime method.
@@ -41,11 +41,11 @@ public class AuthClientTest
         MessageStreamPair messageStreamPair = new MessageStreamPair(mis, mos);
         ClientUser clientUser = mock(ClientUser.class);
         long random = (long) (Math.random() * 1000);
-        AuthClient authClient = new AuthClient(messageStreamPair, clientUser);
-        authClient.getLoginTracker().setLoggedInTime(random);
+		Client client = new AuthClient(messageStreamPair, clientUser);
+		client.getLoginTracker().setLoggedInTime(random);
 
-        Assert.assertEquals(authClient.getLoginTracker().getLoggedInTime(), random, "Login time was incorrect.");
-    }
+		Assert.assertEquals(client.getLoginTracker().getLoggedInTime(), random, "Login time was incorrect.");
+	}
 
     /**
      * Test the getUser method.
@@ -56,8 +56,8 @@ public class AuthClientTest
         MessageOutputStream mos = mock(MessageOutputStream.class);
         MessageStreamPair messageStreamPair = new MessageStreamPair(mis, mos);
         ClientUser clientUser = mock(ClientUser.class);
-        AuthClient authClient = new AuthClient(messageStreamPair, clientUser);
+		Client client = new AuthClient(messageStreamPair, clientUser);
 
-        Assert.assertEquals(authClient.getUser(), clientUser, "User was incorrect.");
-    }
+		Assert.assertEquals(client.getUser(), clientUser, "User was incorrect.");
+	}
 }

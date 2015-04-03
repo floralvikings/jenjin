@@ -1,6 +1,7 @@
 package com.jenjinstudios.client.message;
 
 import com.jenjinstudios.client.net.AuthClient;
+import com.jenjinstudios.client.net.Client;
 import com.jenjinstudios.client.net.LoginTracker;
 import com.jenjinstudios.core.io.Message;
 import org.testng.annotations.Test;
@@ -22,11 +23,11 @@ public class ExecutableLogoutResponseTest
 		Message loginResponse = mock(Message.class);
 		when(loginResponse.getArgument("success")).thenReturn(true);
 
-        AuthClient authClient = mock(AuthClient.class);
+		Client client = mock(AuthClient.class);
 		LoginTracker loginTracker = mock(LoginTracker.class);
-		when(authClient.getLoginTracker()).thenReturn(loginTracker);
+		when(client.getLoginTracker()).thenReturn(loginTracker);
 
-		ExecutableLogoutResponse response = new ExecutableLogoutResponse(authClient, loginResponse, null);
+		ExecutableLogoutResponse response = new ExecutableLogoutResponse(client, loginResponse, null);
 		response.execute();
 
         verify(loginTracker).setLoggedIn(false);
