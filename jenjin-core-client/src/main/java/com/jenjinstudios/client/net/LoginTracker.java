@@ -54,7 +54,7 @@ public class LoginTracker
 	 * Send a logout request and block execution until the response is received.
 	 */
 	public void sendLogoutRequestAndWaitForResponse() {
-		AuthClient.sendLogoutRequest(this, client);
+		client.sendLogoutRequest();
 		long startTime = System.currentTimeMillis();
 		while (waitingForResponse && ((System.currentTimeMillis() - startTime) < AuthClient.THIRTY_SECONDS))
 		{
