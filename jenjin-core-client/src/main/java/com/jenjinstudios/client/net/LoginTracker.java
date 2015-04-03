@@ -51,21 +51,6 @@ public class LoginTracker
 	public void setLoggedInTime(long loggedInTime) { this.loggedInTime = loggedInTime; }
 
 	/**
-	 * Send a logout request and block execution until the response is received.
-	 * @param loginTracker
-	 * @param client
-	 */
-	public static void logoutAndWait(LoginTracker loginTracker, AuthClient client) {
-		client.sendLogoutRequest();
-		long startTime = System.currentTimeMillis();
-		while (loginTracker.isWaitingForResponse() &&
-			  ((System.currentTimeMillis() - startTime) < AuthClient.THIRTY_SECONDS))
-		{
-			AuthClient.waitTenMillis();
-		}
-	}
-
-	/**
 	 * Get whether this tracker is waiting for a response.
 	 *
 	 * @return Whether this tracker is waiting for a response.
