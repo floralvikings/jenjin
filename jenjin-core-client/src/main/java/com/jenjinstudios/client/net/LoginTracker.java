@@ -10,14 +10,6 @@ public class LoginTracker
 	private volatile boolean loggedIn;
 	private volatile boolean waitingForResponse;
 	private long loggedInTime;
-	private final AuthClient client;
-
-	/**
-	 * Construct a new LoginTracker working for the given client.
-	 *
-	 * @param client The client using this LoginTracker.
-	 */
-	public LoginTracker(AuthClient client) { this.client = client; }
 
 	/**
 	 * Returns whether this login tracker has received a successful login response.

@@ -29,8 +29,8 @@ public class AuthClient extends Client
      */
     public AuthClient(MessageStreamPair messageStreamPair, ClientUser user) {
         super(messageStreamPair);
-        this.loginTracker = new LoginTracker(this);
-        this.user = user;
+		this.loginTracker = new LoginTracker();
+		this.user = user;
     }
 
     /**
