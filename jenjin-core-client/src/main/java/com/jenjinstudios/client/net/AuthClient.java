@@ -65,7 +65,7 @@ public class AuthClient extends Client
 	 * @return Whether the login was successful.
 	 */
 	@SuppressWarnings("BooleanMethodNameMustStartWithQuestion")
-	public static boolean sendLoginRequestAndWaitForResponse(LoginTracker loginTracker, AuthClient client) {
+	public static boolean loginAndWait(LoginTracker loginTracker, AuthClient client) {
 		client.sendLoginRequest();
 		long startTime = System.currentTimeMillis();
 		while (loginTracker.isWaitingForResponse() && ((System.currentTimeMillis() - startTime) <
