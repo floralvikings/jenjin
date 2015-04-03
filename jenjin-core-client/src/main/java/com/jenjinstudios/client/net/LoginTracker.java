@@ -96,6 +96,20 @@ public class LoginTracker
 		}
 	}
 
+	/**
+	 * Get whether this tracker is waiting for a response.
+	 *
+	 * @return Whether this tracker is waiting for a response.
+	 */
+	public boolean isWaitingForResponse() { return waitingForResponse; }
+
+	/**
+	 * Set whether this tracker is waiting for a response.
+	 *
+	 * @param waitingForResponse Whether this tracker is waiting for a response.
+	 */
+	public void setWaitingForResponse(boolean waitingForResponse) { this.waitingForResponse = waitingForResponse; }
+
 	private void sendLogoutRequest() {
 		waitingForResponse = true;
 		Message message = AuthClient.generateLogoutRequest();
