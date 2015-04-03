@@ -58,7 +58,7 @@ public class LoginTracker
 	public void sendLogoutRequestAndWaitForResponse() {
 		sendLogoutRequest();
 		long startTime = System.currentTimeMillis();
-		while (waitingForResponse && ((System.currentTimeMillis() - startTime) < AuthClient.MILLIS_IN_30_SECONDS))
+		while (waitingForResponse && ((System.currentTimeMillis() - startTime) < AuthClient.THIRTY_SECONDS))
 		{
 			AuthClient.waitTenMillis();
 		}

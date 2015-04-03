@@ -16,7 +16,7 @@ import java.util.logging.Logger;
 public class AuthClient extends Client
 {
 	private static final Logger LOGGER = Logger.getLogger(AuthClient.class.getName());
-	static final int MILLIS_IN_30_SECONDS = 30000;
+	static final int THIRTY_SECONDS = 30000;
 
 	private final ClientUser user;
 	private final LoginTracker loginTracker;
@@ -69,7 +69,7 @@ public class AuthClient extends Client
 		client.sendLoginRequest();
 		long startTime = System.currentTimeMillis();
 		while (loginTracker.isWaitingForResponse() && ((System.currentTimeMillis() - startTime) <
-			  MILLIS_IN_30_SECONDS))
+			  THIRTY_SECONDS))
 		{
 			waitTenMillis();
 		}
