@@ -1,6 +1,5 @@
 package com.jenjinstudios.demo.client.ui;
 
-import com.jenjinstudios.client.net.AuthClient;
 import com.jenjinstudios.client.net.ClientUser;
 import com.jenjinstudios.core.io.MessageInputStream;
 import com.jenjinstudios.core.io.MessageOutputStream;
@@ -107,7 +106,7 @@ public final class LoginPane extends GridPane
 	}
 
 	private void logIn() {
-		if (AuthClient.loginAndWait(worldClient.getLoginTracker(), worldClient))
+		if (worldClient.loginAndWait())
 		{
 			LOGGER.log(Level.INFO, "Successfully logged in!");
 			main.successfulLogin(worldClient);
