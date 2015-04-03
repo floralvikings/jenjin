@@ -107,8 +107,7 @@ public final class LoginPane extends GridPane
 	}
 
 	private void logIn() {
-		if (LoginTracker.sendLoginRequestAndWaitForResponse(worldClient.getLoginTracker(), worldClient.getLoginTracker
-			  ().client))
+		if (LoginTracker.sendLoginRequestAndWaitForResponse(worldClient.getLoginTracker(), worldClient))
 		{
 			LOGGER.log(Level.INFO, "Successfully logged in!");
 			main.successfulLogin(worldClient);
