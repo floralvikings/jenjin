@@ -1,7 +1,7 @@
 package com.jenjinstudios.world.client.message;
 
-import com.jenjinstudios.client.net.AuthClient.LoginTracker;
 import com.jenjinstudios.client.net.ClientUser;
+import com.jenjinstudios.client.net.LoginTracker;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.client.WorldClient;

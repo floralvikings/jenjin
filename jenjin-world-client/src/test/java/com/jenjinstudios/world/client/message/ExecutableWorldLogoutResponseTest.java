@@ -1,6 +1,6 @@
 package com.jenjinstudios.world.client.message;
 
-import com.jenjinstudios.client.net.AuthClient;
+import com.jenjinstudios.client.net.LoginTracker;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageRegistry;
 import com.jenjinstudios.world.client.WorldClient;
@@ -20,8 +20,8 @@ public class ExecutableWorldLogoutResponseTest
 		when(worldLogoutResponse.getArgument("success")).thenReturn(true);
 
         WorldClient worldClient = mock(WorldClient.class);
-        AuthClient.LoginTracker loginTracker = mock(AuthClient.LoginTracker.class);
-        when(worldClient.getLoginTracker()).thenReturn(loginTracker);
+		LoginTracker loginTracker = mock(LoginTracker.class);
+		when(worldClient.getLoginTracker()).thenReturn(loginTracker);
 
 		ExecutableWorldLogoutResponse message = new ExecutableWorldLogoutResponse(worldClient, worldLogoutResponse,
 			  null);
