@@ -64,7 +64,7 @@ public class LoginTracker
 	 */
 	@SuppressWarnings("BooleanMethodNameMustStartWithQuestion")
 	public boolean sendLoginRequestAndWaitForResponse() {
-		AuthClient.sendLoginRequest(this, client);
+		client.sendLoginRequest();
 		long startTime = System.currentTimeMillis();
 		while (waitingForResponse && ((System.currentTimeMillis() - startTime) < MILLIS_IN_30_SECONDS))
 		{
