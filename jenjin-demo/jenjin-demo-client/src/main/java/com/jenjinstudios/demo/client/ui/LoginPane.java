@@ -101,19 +101,16 @@ public final class LoginPane extends GridPane
 		worldClient = tryCreateWorldClient(address, port, clientUser);
 		if (worldClient != null)
 		{
-			logIn();
+			if (worldClient.loginAndWait())
+			{
+				LOGGER.log(Level.INFO, "Successfully logged in!");
+				main.successfulLogin(worldClient);
+			} else
+			{
+				LOGGER.log(Level.WARNING, "Login unsuccessful");
+				worldClient.shutdown();
+			}
 		}
 	}
 
-	private void logIn() {
-		if (worldClient.loginAndWait())
-		{
-			LOGGER.log(Level.INFO, "Successfully logged in!");
-			main.successfulLogin(worldClient);
-		} else
-		{
-			LOGGER.log(Level.WARNING, "Login unsuccessful");
-			worldClient.shutdown();
-		}
-	}
 }
