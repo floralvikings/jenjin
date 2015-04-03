@@ -1,7 +1,7 @@
 package com.jenjinstudios.world.client.message;
 
+import com.jenjinstudios.client.net.ClientMessageContext;
 import com.jenjinstudios.core.concurrency.ExecutableMessage;
-import com.jenjinstudios.core.concurrency.MessageContext;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.world.client.WorldClient;
 
@@ -10,7 +10,7 @@ import com.jenjinstudios.world.client.WorldClient;
  *
  * @author Caleb Brinkman
  */
-public abstract class WorldClientExecutableMessage<T extends MessageContext> extends ExecutableMessage<T>
+public abstract class WorldClientExecutableMessage<T extends ClientMessageContext> extends ExecutableMessage<T>
 {
     /**
      * Construct an ExecutableMessage with the given Message.
