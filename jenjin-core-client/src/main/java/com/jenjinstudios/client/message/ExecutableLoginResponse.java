@@ -26,12 +26,10 @@ public class ExecutableLoginResponse extends ExecutableMessage<ClientMessageCont
 
     @Override
 	public Message execute() {
-		Client client = (Client) getThreadPool();
-		client.getLoginTracker().setLoggedIn((boolean) getMessage().getArgument("success"));
-		if (client.getLoginTracker().isLoggedIn())
+		getContext().getLoginTracker().setLoggedIn((boolean) getMessage().getArgument("success"));
+		if (getContext().getLoginTracker().isLoggedIn())
 		{
-			client.getLoginTracker().setLoggedInTime((long) getMessage().getArgument("loginTime"));
-			client.setName("Client: " + client.getUser().getUsername());
+			getContext().getLoginTracker().setLoggedInTime((long) getMessage().getArgument("loginTime"));
 		}
 		return null;
 	}
