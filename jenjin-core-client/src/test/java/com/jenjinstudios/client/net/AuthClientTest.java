@@ -25,7 +25,7 @@ public class AuthClientTest
         MessageStreamPair messageStreamPair = new MessageStreamPair(mis, mos);
         ClientUser clientUser = mock(ClientUser.class);
         boolean random = ((Math.random() * 10) % 2) == 0;
-		Client client = new AuthClient(messageStreamPair, clientUser);
+		Client client = new Client(messageStreamPair, clientUser);
 		client.getLoginTracker().setLoggedIn(random);
 
 		Assert.assertEquals(client.getLoginTracker().isLoggedIn(), random, "Login status was not expected.");
@@ -41,7 +41,7 @@ public class AuthClientTest
         MessageStreamPair messageStreamPair = new MessageStreamPair(mis, mos);
         ClientUser clientUser = mock(ClientUser.class);
         long random = (long) (Math.random() * 1000);
-		Client client = new AuthClient(messageStreamPair, clientUser);
+		Client client = new Client(messageStreamPair, clientUser);
 		client.getLoginTracker().setLoggedInTime(random);
 
 		Assert.assertEquals(client.getLoginTracker().getLoggedInTime(), random, "Login time was incorrect.");
@@ -56,7 +56,7 @@ public class AuthClientTest
         MessageOutputStream mos = mock(MessageOutputStream.class);
         MessageStreamPair messageStreamPair = new MessageStreamPair(mis, mos);
         ClientUser clientUser = mock(ClientUser.class);
-		Client client = new AuthClient(messageStreamPair, clientUser);
+		Client client = new Client(messageStreamPair, clientUser);
 
 		Assert.assertEquals(client.getUser(), clientUser, "User was incorrect.");
 	}
