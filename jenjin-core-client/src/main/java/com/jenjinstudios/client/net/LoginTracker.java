@@ -63,7 +63,7 @@ public class LoginTracker
 	 * @param client The client.
 	 */
 	protected static void sendLoginRequest(LoginTracker loginTracker, AuthClient client) {
-		loginTracker.waitingForResponse = true;
+		loginTracker.setWaitingForResponse(true);
 		Message message = AuthClient.generateLoginRequest(client.getUser());
 		client.enqueueMessage(message);
 	}
