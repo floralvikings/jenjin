@@ -29,7 +29,9 @@ public class AuthClient extends Client
      */
     public AuthClient(MessageStreamPair messageStreamPair, ClientUser user) {
         super(messageStreamPair);
-		this.loginTracker = new LoginTracker();
+		ClientMessageContext context = new ClientMessageContext(getName(), messageStreamPair.getAddress());
+		setMessageContext(context);
+		this.loginTracker = context.getLoginTracker();
 		this.user = user;
     }
 
