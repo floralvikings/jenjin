@@ -59,9 +59,11 @@ public class LoginTracker
 
 	/**
 	 * Send a login request for this tracker's client.
+	 * @param loginTracker The login tracker used to track the login response.
+	 * @param client The client.
 	 */
-	protected void sendLoginRequest() {
-		waitingForResponse = true;
+	protected static void sendLoginRequest(LoginTracker loginTracker, AuthClient client) {
+		loginTracker.waitingForResponse = true;
 		Message message = AuthClient.generateLoginRequest(client.getUser());
 		client.enqueueMessage(message);
 	}
@@ -73,7 +75,7 @@ public class LoginTracker
 	 */
 	@SuppressWarnings("BooleanMethodNameMustStartWithQuestion")
 	public boolean sendLoginRequestAndWaitForResponse() {
-		sendLoginRequest();
+		sendLoginRequest(this, client);
 		long startTime = System.currentTimeMillis();
 		while (waitingForResponse && ((System.currentTimeMillis() - startTime) < MILLIS_IN_30_SECONDS))
 		{
