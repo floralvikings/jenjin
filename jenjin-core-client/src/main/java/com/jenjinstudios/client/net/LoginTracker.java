@@ -1,7 +1,5 @@
 package com.jenjinstudios.client.net;
 
-import com.jenjinstudios.core.io.Message;
-
 /**
  * Used to track the status of login requests and responses.
  *
@@ -56,7 +54,7 @@ public class LoginTracker
 	 * Send a logout request and block execution until the response is received.
 	 */
 	public void sendLogoutRequestAndWaitForResponse() {
-		sendLogoutRequest(this, client);
+		AuthClient.sendLogoutRequest(this, client);
 		long startTime = System.currentTimeMillis();
 		while (waitingForResponse && ((System.currentTimeMillis() - startTime) < AuthClient.THIRTY_SECONDS))
 		{
@@ -77,11 +75,5 @@ public class LoginTracker
 	 * @param waitingForResponse Whether this tracker is waiting for a response.
 	 */
 	public void setWaitingForResponse(boolean waitingForResponse) { this.waitingForResponse = waitingForResponse; }
-
-	private static void sendLogoutRequest(LoginTracker loginTracker, AuthClient client) {
-		loginTracker.setWaitingForResponse(true);
-		Message message = AuthClient.generateLogoutRequest();
-		client.enqueueMessage(message);
-	}
 
 }

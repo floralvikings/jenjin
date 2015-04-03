@@ -56,6 +56,12 @@ public class AuthClient extends Client
         return loginRequest;
     }
 
+	static void sendLogoutRequest(LoginTracker loginTracker, AuthClient client) {
+		loginTracker.setWaitingForResponse(true);
+		Message message = generateLogoutRequest();
+		client.enqueueMessage(message);
+	}
+
 	/**
 	 * Send a login request and await the response.
 	 *
