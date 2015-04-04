@@ -21,7 +21,7 @@ import java.util.logging.Logger;
  *
  * @author Caleb Brinkman
  */
-public class Connection extends MessageThreadPool
+public class Connection extends MessageThreadPool<SimpleMessageContext>
 {
 	private static final int KEYSIZE = 512;
 	private static final Logger LOGGER = Logger.getLogger(Connection.class.getName());
