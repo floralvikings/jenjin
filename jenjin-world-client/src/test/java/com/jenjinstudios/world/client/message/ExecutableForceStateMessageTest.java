@@ -4,6 +4,7 @@ import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.client.WorldClient;
+import com.jenjinstudios.world.client.WorldClientMessageContext;
 import com.jenjinstudios.world.math.Angle;
 import com.jenjinstudios.world.math.Vector2D;
 import org.testng.annotations.Test;
@@ -29,12 +30,13 @@ public class ExecutableForceStateMessageTest
 		WorldClient worldClient = mock(WorldClient.class);
 		Actor clientPlayer = mock(Actor.class);
 		World world = new World();
-		when(worldClient.getWorld()).thenReturn(world);
+		WorldClientMessageContext context = mock(WorldClientMessageContext.class);
+		when(context.getWorld()).thenReturn(world);
 		when(clientPlayer.getWorld()).thenReturn(world);
-		when(worldClient.getPlayer()).thenReturn(clientPlayer);
+		when(context.getPlayer()).thenReturn(clientPlayer);
 		when(clientPlayer.getAngle()).thenReturn(new Angle());
 
-		ExecutableForceStateMessage message = new ExecutableForceStateMessage(worldClient, forceStateMessage, null);
+		ExecutableForceStateMessage message = new ExecutableForceStateMessage(worldClient, forceStateMessage, context);
 		message.execute();
 		world.update();
 
