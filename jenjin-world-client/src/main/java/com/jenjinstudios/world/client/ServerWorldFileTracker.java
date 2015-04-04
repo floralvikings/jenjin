@@ -35,7 +35,7 @@ public class ServerWorldFileTracker
 		worldClient.enqueueMessage(worldFileChecksumRequest);
 	}
 
-	public void requestServerWorldFile() {
+	public void requestWorldFile() {
 		if (needsWorldFile())
 		{
 			worldClient.enqueueMessage(this.worldClient.getMessageFactory()
