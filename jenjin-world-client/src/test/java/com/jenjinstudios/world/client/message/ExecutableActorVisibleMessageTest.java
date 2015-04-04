@@ -1,8 +1,10 @@
 package com.jenjinstudios.world.client.message;
 
+import com.jenjinstudios.core.concurrency.ExecutableMessage;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.client.WorldClient;
+import com.jenjinstudios.world.client.WorldClientMessageContext;
 import com.jenjinstudios.world.collections.WorldObjectList;
 import com.jenjinstudios.world.math.Angle;
 import org.testng.annotations.Test;
@@ -30,11 +32,11 @@ public class ExecutableActorVisibleMessageTest
 		WorldClient worldClient = mock(WorldClient.class);
 		World world = mock(World.class);
 		WorldObjectList worldObjectMap = mock(WorldObjectList.class);
+		WorldClientMessageContext context = mock(WorldClientMessageContext.class);
 		when(world.getWorldObjects()).thenReturn(worldObjectMap);
 		when(worldClient.getWorld()).thenReturn(world);
 
-		ExecutableActorVisibleMessage message = new ExecutableActorVisibleMessage(worldClient, actorVisibleMessage,
-			  null);
+		ExecutableMessage message = new ExecutableActorVisibleMessage(worldClient, actorVisibleMessage, context);
 		message.execute();
 
 		verify(world).scheduleUpdateTask(any());
