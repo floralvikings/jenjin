@@ -45,12 +45,12 @@ public class ExecutableWorldLoginResponse extends WorldClientExecutableMessage<C
 		WorldClient client = getWorldClient();
 		client.getWorld().scheduleUpdateTask(() -> {
 			boolean success = (boolean) getMessage().getArgument("success");
-			client.getLoginTracker().setLoggedIn(success);
+			getContext().getLoginTracker().setLoggedIn(success);
 			if (success)
 			{
 				LOGGER.log(Level.INFO, "Logged in successfully; Player ID: " + player.getId());
-				client.getLoginTracker().setLoggedInTime((long) getMessage().getArgument("loginTime"));
-				client.setName(getContext().getUser().getUsername());
+				getContext().getLoginTracker().setLoggedInTime((long) getMessage().getArgument("loginTime"));
+				getContext().setName(getContext().getUser().getUsername());
 				client.setPlayer(player);
 				client.getWorld().getWorldObjects().set(player.getId(), player);
 
