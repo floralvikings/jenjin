@@ -13,7 +13,7 @@ import java.util.logging.Logger;
  *
  * @author Caleb Brinkman
  */
-public class MessageThreadPool
+public class MessageThreadPool<T extends MessageContext>
 {
 	private static final Logger LOGGER = Logger.getLogger(MessageThreadPool.class.getName());
 	private final MessageStreamPair messageStreamPair;
@@ -21,6 +21,7 @@ public class MessageThreadPool
 	private final MessageReader messageReader;
 	private final MessageWriter messageWriter;
 	private final ErrorChecker errorChecker;
+	private T messageContext;
 
 	/**
 	 * Construct a MessageThreadPool whose threads will read from and write to the given MessageIO streams.
@@ -40,10 +41,13 @@ public class MessageThreadPool
 	 *
 	 * @param context The context in which messages should be executed.
 	 */
-	protected void setMessageContext(MessageContext context) {
+	protected void setMessageContext(T context) {
+		this.messageContext = context;
 		messageExecutor.setMessageContext(context);
 		messageWriter.setMessageContext(context);
 	}
+
+	public T getMessageContext() { return messageContext; }
 
 	/**
 	 * Start the message reader thread managed by this connection.
