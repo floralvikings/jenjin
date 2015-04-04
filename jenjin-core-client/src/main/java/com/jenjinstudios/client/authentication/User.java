@@ -20,4 +20,18 @@ public interface User
 	 * @return The password of this user.
 	 */
 	String getPassword();
+
+	/**
+	 * Set this user's username.
+	 *
+	 * @param username The username.
+	 */
+	void setUsername(String username);
+
+	/**
+	 * Set this user's password
+	 *
+	 * @param password The password.
+	 */
+	void setPassword(String password);
 }
