@@ -63,8 +63,8 @@ public class WorldClient<T extends WorldClientMessageContext> extends Client<T>
 
     public void initializeWorldFromServer() throws WorldDocumentException {
         getServerWorldFileTracker().setWaitingForChecksum(true);
-        getServerWorldFileTracker().requestServerWorldFileChecksum();
-        LOGGER.log(Level.INFO, "Requested World Checksum.");
+		ServerWorldFileTracker.requestServerWorldFileChecksum(this);
+		LOGGER.log(Level.INFO, "Requested World Checksum.");
         getServerWorldFileTracker().waitForWorldFileChecksum();
         LOGGER.log(Level.INFO, "Received World Checksum.");
         getServerWorldFileTracker().setWaitingForFile(true);

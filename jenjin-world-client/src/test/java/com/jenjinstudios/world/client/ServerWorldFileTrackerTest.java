@@ -31,7 +31,7 @@ public class ServerWorldFileTrackerTest
 		ServerWorldFileTracker serverWorldFileTracker = new ServerWorldFileTracker(worldClient, worldFile);
 		Mockito.when(worldClient.getServerWorldFileTracker()).thenReturn(serverWorldFileTracker);
 		serverWorldFileTracker.setWaitingForChecksum(true);
-		serverWorldFileTracker.requestServerWorldFileChecksum();
+		ServerWorldFileTracker.requestServerWorldFileChecksum(worldClient);
 
 		Assert.assertTrue(serverWorldFileTracker.isWaitingForChecksum());
 
