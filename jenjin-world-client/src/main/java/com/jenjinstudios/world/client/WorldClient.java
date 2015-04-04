@@ -1,6 +1,7 @@
 package com.jenjinstudios.world.client;
 
 import com.jenjinstudios.client.net.Client;
+import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageRegistry;
 import com.jenjinstudios.core.io.MessageStreamPair;
 import com.jenjinstudios.world.Actor;
@@ -39,6 +40,11 @@ public class WorldClient<T extends WorldClientMessageContext> extends Client<T>
 		MessageRegistry.getGlobalRegistry().register("World Client/Server Messages", stream);
 	}
 
+	public static void requestChecksum(WorldClient worldClient) {
+		Message checksumRequest = worldClient.getMessageFactory().generateWorldChecksumRequest();
+		worldClient.enqueueMessage(checksumRequest);
+	}
+
 	public void requestWorldFile() {
 		if (serverWorldFileTracker.needsWorldFile())
 		{
@@ -63,7 +69,7 @@ public class WorldClient<T extends WorldClientMessageContext> extends Client<T>
 
     public void initializeWorldFromServer() throws WorldDocumentException {
         getServerWorldFileTracker().setWaitingForChecksum(true);
-		ServerWorldFileTracker.requestChecksum(this);
+		requestChecksum(this);
 		LOGGER.log(Level.INFO, "Requested World Checksum.");
         getServerWorldFileTracker().waitForWorldFileChecksum();
         LOGGER.log(Level.INFO, "Received World Checksum.");

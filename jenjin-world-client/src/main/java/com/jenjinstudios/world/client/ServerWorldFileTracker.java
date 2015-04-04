@@ -1,6 +1,5 @@
 package com.jenjinstudios.world.client;
 
-import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.io.WorldDocumentException;
 import com.jenjinstudios.world.io.WorldDocumentReader;
@@ -28,11 +27,6 @@ public class ServerWorldFileTracker
 	public ServerWorldFileTracker(WorldClient worldClient, File worldFile) {
 		this.worldClient = worldClient;
 		this.worldFile = worldFile;
-	}
-
-	public static void requestChecksum(WorldClient worldClient) {
-		Message checksumRequest = worldClient.getMessageFactory().generateWorldChecksumRequest();
-		worldClient.enqueueMessage(checksumRequest);
 	}
 
 	public void writeReceivedWorldToFile() throws WorldDocumentException {
