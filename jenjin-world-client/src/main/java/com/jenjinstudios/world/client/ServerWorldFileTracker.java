@@ -35,14 +35,14 @@ public class ServerWorldFileTracker
 		worldClient.enqueueMessage(worldFileChecksumRequest);
 	}
 
-	public void requestWorldFile() {
-		if (needsWorldFile())
+	public static void requestWorldFile(ServerWorldFileTracker serverWorldFileTracker, WorldClient worldClient) {
+		if (serverWorldFileTracker.needsWorldFile())
 		{
-			worldClient.enqueueMessage(this.worldClient.getMessageFactory()
+			worldClient.enqueueMessage(serverWorldFileTracker.worldClient.getMessageFactory()
 				  .generateWorldFileRequest());
 		} else
 		{
-			setWaitingForFile(false);
+			serverWorldFileTracker.setWaitingForFile(false);
 		}
 	}
 

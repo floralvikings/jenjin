@@ -58,7 +58,7 @@ public class WorldClient<T extends WorldClientMessageContext> extends Client<T>
         getServerWorldFileTracker().waitForWorldFileChecksum();
         LOGGER.log(Level.INFO, "Received World Checksum.");
         getServerWorldFileTracker().setWaitingForFile(true);
-		getServerWorldFileTracker().requestWorldFile();
+		ServerWorldFileTracker.requestWorldFile(getServerWorldFileTracker(), this);
 		LOGGER.log(Level.INFO, "Requested World File.");
         getServerWorldFileTracker().waitForWorldFile();
         LOGGER.log(Level.INFO, "Received World File.");
