@@ -62,4 +62,11 @@ public interface MessageContext
 	 * @return The inernet address at the other end of this context, null if unset.
 	 */
 	InetAddress getAddress();
+
+	/**
+	 * Set the internet address at the other end of this context.
+	 *
+	 * @param address The new address.
+	 */
+	void setAddress(InetAddress address);
 }
