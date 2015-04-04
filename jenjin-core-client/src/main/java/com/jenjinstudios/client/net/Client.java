@@ -1,6 +1,6 @@
 package com.jenjinstudios.client.net;
 
-import com.jenjinstudios.client.authentication.ClientUser;
+import com.jenjinstudios.client.authentication.User;
 import com.jenjinstudios.core.Connection;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageRegistry;
@@ -25,7 +25,7 @@ public class Client extends Connection
 	static final int THIRTY_SECONDS = 30000;
 	private static final int UPDATES_PER_SECOND = 60;
 	private static final Logger LOGGER = Logger.getLogger(Client.class.getName());
-	private final ClientUser user;
+	private final User user;
 	private final LoginTracker loginTracker;
 	private final List<Runnable> repeatedTasks;
     private Timer sendMessagesTimer;
@@ -36,7 +36,7 @@ public class Client extends Connection
      *
      * @param messageStreamPair The MessageIO used to send and receive messages.
      */
-	protected Client(MessageStreamPair messageStreamPair, ClientUser user) {
+	protected Client(MessageStreamPair messageStreamPair, User user) {
 		super(messageStreamPair);
 		ClientMessageContext context = new ClientMessageContext(getName(), messageStreamPair.getAddress());
 		setMessageContext(context);
@@ -75,7 +75,7 @@ public class Client extends Connection
 	 *
 	 * @return The LoginRequest message.
 	 */
-	public static Message generateLoginRequest(ClientUser user) {// Create the login request.
+	public static Message generateLoginRequest(User user) {// Create the login request.
 		Message loginRequest = MessageRegistry.getGlobalRegistry().createMessage("LoginRequest");
 		loginRequest.setArgument("username", user.getUsername());
 		loginRequest.setArgument("password", user.getPassword());
@@ -169,7 +169,7 @@ public class Client extends Connection
 	 *
 	 * @return The username of this client.
 	 */
-	public ClientUser getUser() { return user; }
+	public User getUser() { return user; }
 
 	/** Run the repeated synchronized tasks. */
 	protected void runRepeatedTasks() {

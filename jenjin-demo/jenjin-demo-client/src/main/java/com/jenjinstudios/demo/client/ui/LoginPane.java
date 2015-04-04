@@ -1,6 +1,7 @@
 package com.jenjinstudios.demo.client.ui;
 
 import com.jenjinstudios.client.authentication.ClientUser;
+import com.jenjinstudios.client.authentication.User;
 import com.jenjinstudios.core.io.MessageInputStream;
 import com.jenjinstudios.core.io.MessageOutputStream;
 import com.jenjinstudios.core.io.MessageStreamPair;
@@ -44,7 +45,7 @@ public final class LoginPane extends GridPane
 		createForm();
 	}
 
-	public static WorldClient tryCreateWorldClient(String address, int port, ClientUser user) {
+	public static WorldClient tryCreateWorldClient(String address, int port, User user) {
 		WorldClient worldClient;
 		try
 		{
@@ -60,14 +61,14 @@ public final class LoginPane extends GridPane
 		return worldClient;
 	}
 
-	private static WorldClient createWorldClient(String address, int port, ClientUser clientUser) throws IOException {
+	private static WorldClient createWorldClient(String address, int port, User user) throws IOException {
 		String slash = File.separator;
 		File worldFile = new File(System.getProperty("user.home") + slash + ".jenjin-demo" + slash + "World.json");
 		Socket socket = new Socket(address, port);
 		MessageInputStream messageInputStream = new MessageInputStream(socket.getInputStream());
 		MessageOutputStream messageOutputStream = new MessageOutputStream(socket.getOutputStream());
 		MessageStreamPair messageStreamPair = new MessageStreamPair(messageInputStream, messageOutputStream);
-		return new WorldClient(messageStreamPair, clientUser, worldFile);
+		return new WorldClient(messageStreamPair, user, worldFile);
 	}
 
 	private void createForm() {
@@ -95,10 +96,10 @@ public final class LoginPane extends GridPane
 
 	private void loginButtonFired(ActionEvent event) {
 		LOGGER.log(Level.FINE, "Login Button Fired: {0}", event);
-		ClientUser clientUser = new ClientUser(usernameField.getText(), passwordField.getText());
+		User user = new ClientUser(usernameField.getText(), passwordField.getText());
 		String address = addressField.getText();
 		int port = Integer.parseInt(portField.getText());
-		worldClient = tryCreateWorldClient(address, port, clientUser);
+		worldClient = tryCreateWorldClient(address, port, user);
 		if (worldClient != null)
 		{
 			if (worldClient.loginAndWait())

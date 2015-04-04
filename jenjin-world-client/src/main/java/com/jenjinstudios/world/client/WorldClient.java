@@ -1,6 +1,6 @@
 package com.jenjinstudios.world.client;
 
-import com.jenjinstudios.client.authentication.ClientUser;
+import com.jenjinstudios.client.authentication.User;
 import com.jenjinstudios.client.net.Client;
 import com.jenjinstudios.core.io.MessageRegistry;
 import com.jenjinstudios.core.io.MessageStreamPair;
@@ -28,9 +28,9 @@ public class WorldClient extends Client
     private World world;
     private Actor player;
 
-    public WorldClient(MessageStreamPair messageStreamPair, ClientUser clientUser, File worldFile) throws WorldDocumentException {
-        super(messageStreamPair, clientUser);
-        this.messageFactory = new WorldClientMessageFactory();
+	public WorldClient(MessageStreamPair messageStreamPair, User user, File worldFile) throws WorldDocumentException {
+		super(messageStreamPair, user);
+		this.messageFactory = new WorldClientMessageFactory();
         serverWorldFileTracker = new ServerWorldFileTracker(this, worldFile);
         world = serverWorldFileTracker.readWorldFromFile();
 		InputStream stream = getClass().getClassLoader().

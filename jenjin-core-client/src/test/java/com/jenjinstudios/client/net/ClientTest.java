@@ -1,6 +1,7 @@
 package com.jenjinstudios.client.net;
 
 import com.jenjinstudios.client.authentication.ClientUser;
+import com.jenjinstudios.client.authentication.User;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageInputStream;
 import com.jenjinstudios.core.io.MessageOutputStream;
@@ -60,9 +61,9 @@ public class ClientTest
 		MessageInputStream mis = mock(MessageInputStream.class);
 		MessageOutputStream mos = mock(MessageOutputStream.class);
 		MessageStreamPair messageStreamPair = new MessageStreamPair(mis, mos);
-		ClientUser clientUser = mock(ClientUser.class);
+		User user = mock(ClientUser.class);
 		boolean random = ((Math.random() * 10) % 2) == 0;
-		Client client = new Client(messageStreamPair, clientUser);
+		Client client = new Client(messageStreamPair, user);
 		client.getLoginTracker().setLoggedIn(random);
 
 		Assert.assertEquals(client.getLoginTracker().isLoggedIn(), random, "Login status was not expected.");
@@ -76,9 +77,9 @@ public class ClientTest
 		MessageInputStream mis = mock(MessageInputStream.class);
 		MessageOutputStream mos = mock(MessageOutputStream.class);
 		MessageStreamPair messageStreamPair = new MessageStreamPair(mis, mos);
-		ClientUser clientUser = mock(ClientUser.class);
+		User user = mock(ClientUser.class);
 		long random = (long) (Math.random() * 1000);
-		Client client = new Client(messageStreamPair, clientUser);
+		Client client = new Client(messageStreamPair, user);
 		client.getLoginTracker().setLoggedInTime(random);
 
 		Assert.assertEquals(client.getLoginTracker().getLoggedInTime(), random, "Login time was incorrect.");
@@ -92,10 +93,10 @@ public class ClientTest
 		MessageInputStream mis = mock(MessageInputStream.class);
 		MessageOutputStream mos = mock(MessageOutputStream.class);
 		MessageStreamPair messageStreamPair = new MessageStreamPair(mis, mos);
-		ClientUser clientUser = mock(ClientUser.class);
-		Client client = new Client(messageStreamPair, clientUser);
+		User user = mock(ClientUser.class);
+		Client client = new Client(messageStreamPair, user);
 
-		Assert.assertEquals(client.getUser(), clientUser, "User was incorrect.");
+		Assert.assertEquals(client.getUser(), user, "User was incorrect.");
 	}
 
 }
