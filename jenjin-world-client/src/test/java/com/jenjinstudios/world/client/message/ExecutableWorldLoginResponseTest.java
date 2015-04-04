@@ -1,5 +1,6 @@
 package com.jenjinstudios.world.client.message;
 
+import com.jenjinstudios.client.net.ClientMessageContext;
 import com.jenjinstudios.client.net.LoginTracker;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.world.World;
@@ -27,13 +28,14 @@ public class ExecutableWorldLoginResponseTest
 		WorldClient worldClient = mock(WorldClient.class);
 		World world = spy(new World());
 		WorldObjectList worldObjectMap = mock(WorldObjectList.class);
+		ClientMessageContext context = mock(ClientMessageContext.class);
 		when(world.getWorldObjects()).thenReturn(worldObjectMap);
 		LoginTracker loginTracker = mock(LoginTracker.class);
 		when(loginTracker.isLoggedIn()).thenReturn(true);
 		when(worldClient.getWorld()).thenReturn(world);
-		when(worldClient.getLoginTracker()).thenReturn(loginTracker);
+		when(context.getLoginTracker()).thenReturn(loginTracker);
 
-		ExecutableWorldLoginResponse response = new ExecutableWorldLoginResponse(worldClient, message, null);
+		ExecutableWorldLoginResponse response = new ExecutableWorldLoginResponse(worldClient, message, context);
 		response.execute();
 		world.update();
 

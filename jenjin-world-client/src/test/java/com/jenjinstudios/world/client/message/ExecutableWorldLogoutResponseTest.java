@@ -1,8 +1,9 @@
 package com.jenjinstudios.world.client.message;
 
+import com.jenjinstudios.client.net.ClientMessageContext;
 import com.jenjinstudios.client.net.LoginTracker;
+import com.jenjinstudios.core.concurrency.ExecutableMessage;
 import com.jenjinstudios.core.io.Message;
-import com.jenjinstudios.core.io.MessageRegistry;
 import com.jenjinstudios.world.client.WorldClient;
 import org.testng.annotations.Test;
 
@@ -15,16 +16,15 @@ public class ExecutableWorldLogoutResponseTest
 {
     @Test
     public void testMessageExecution() throws Exception {
-		MessageRegistry messageRegistry = MessageRegistry.getGlobalRegistry();
 		Message worldLogoutResponse = mock(Message.class);
 		when(worldLogoutResponse.getArgument("success")).thenReturn(true);
 
-        WorldClient worldClient = mock(WorldClient.class);
+		ClientMessageContext context = mock(ClientMessageContext.class);
+		WorldClient worldClient = mock(WorldClient.class);
 		LoginTracker loginTracker = mock(LoginTracker.class);
-		when(worldClient.getLoginTracker()).thenReturn(loginTracker);
+		when(context.getLoginTracker()).thenReturn(loginTracker);
 
-		ExecutableWorldLogoutResponse message = new ExecutableWorldLogoutResponse(worldClient, worldLogoutResponse,
-			  null);
+		ExecutableMessage message = new ExecutableWorldLogoutResponse(worldClient, worldLogoutResponse, context);
 		message.execute();
 
         verify(loginTracker).setLoggedIn(false);
