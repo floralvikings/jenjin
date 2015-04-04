@@ -34,9 +34,9 @@ public class Client<T extends ClientMessageContext> extends Connection<T>
     /**
      * Construct a new client and attempt to connect to the server over the specified port.
      *
-     * @param messageStreamPair The MessageIO used to send and receive messages.
-     */
-	protected Client(MessageStreamPair messageStreamPair, User user, T context) {
+	 * @param messageStreamPair The MessageIO used to send and receive messages.
+	 */
+	protected Client(MessageStreamPair messageStreamPair, T context) {
 		super(messageStreamPair, context);
 		this.loginTracker = getMessageContext().getLoginTracker();
 		getMessageContext().setUser(user);

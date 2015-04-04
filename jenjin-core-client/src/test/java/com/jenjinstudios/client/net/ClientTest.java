@@ -26,7 +26,7 @@ public class ClientTest
 		MessageOutputStream mos = mock(MessageOutputStream.class);
 		MessageStreamPair messageStreamPair = new MessageStreamPair(mis, mos);
 		Runnable r = mock(Runnable.class);
-		Client client = new Client<>(messageStreamPair, mock(ClientUser.class), mock(ClientMessageContext.class));
+		Client client = new Client<>(messageStreamPair, mock(ClientMessageContext.class));
 		client.addRepeatedTask(r);
 		client.runRepeatedTasks();
 		verify(r).run();
@@ -65,7 +65,7 @@ public class ClientTest
 		User user = mock(ClientUser.class);
 		when(messageContext.getLoginTracker()).thenReturn(loginTracker);
 		boolean random = ((Math.random() * 10) % 2) == 0;
-		Client client = new Client<>(messageStreamPair, user, messageContext);
+		Client client = new Client<>(messageStreamPair, messageContext);
 		client.getLoginTracker().setLoggedIn(random);
 
 		Assert.assertEquals(client.getLoginTracker().isLoggedIn(), random, "Login status was not expected.");
@@ -84,7 +84,7 @@ public class ClientTest
 		User user = mock(ClientUser.class);
 		when(messageContext.getLoginTracker()).thenReturn(loginTracker);
 		long random = (long) (Math.random() * 1000);
-		Client client = new Client<>(messageStreamPair, user, messageContext);
+		Client client = new Client<>(messageStreamPair, messageContext);
 		client.getLoginTracker().setLoggedInTime(random);
 
 		Assert.assertEquals(client.getLoginTracker().getLoggedInTime(), random, "Login time was incorrect.");
@@ -99,7 +99,7 @@ public class ClientTest
 		MessageOutputStream mos = mock(MessageOutputStream.class);
 		MessageStreamPair messageStreamPair = new MessageStreamPair(mis, mos);
 		User user = mock(ClientUser.class);
-		Client client = new Client<>(messageStreamPair, user, mock(ClientMessageContext.class));
+		Client client = new Client<>(messageStreamPair, mock(ClientMessageContext.class));
 
 		Assert.assertEquals(client.getUser(), user, "User was incorrect.");
 	}

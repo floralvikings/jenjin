@@ -31,7 +31,7 @@ public class WorldClient<T extends ClientMessageContext> extends Client<T>
 
 	public WorldClient(MessageStreamPair messageStreamPair, User user, File worldFile, T context) throws
 		  WorldDocumentException {
-		super(messageStreamPair, user, context);
+		super(messageStreamPair, context);
 		this.messageFactory = new WorldClientMessageFactory();
         serverWorldFileTracker = new ServerWorldFileTracker(this, worldFile);
         world = serverWorldFileTracker.readWorldFromFile();
