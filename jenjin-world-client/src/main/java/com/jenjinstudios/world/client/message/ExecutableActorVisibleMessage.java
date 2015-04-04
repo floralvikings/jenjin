@@ -1,11 +1,11 @@
 package com.jenjinstudios.world.client.message;
 
-import com.jenjinstudios.client.net.ClientMessageContext;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.WorldObject;
 import com.jenjinstudios.world.client.WorldClient;
+import com.jenjinstudios.world.client.WorldClientMessageContext;
 import com.jenjinstudios.world.math.Angle;
 import com.jenjinstudios.world.math.Vector2D;
 
@@ -17,14 +17,14 @@ import java.util.logging.Logger;
  *
  * @author Caleb Brinkman
  */
-public class ExecutableActorVisibleMessage extends WorldClientExecutableMessage<ClientMessageContext>
+public class ExecutableActorVisibleMessage extends WorldClientExecutableMessage<WorldClientMessageContext>
 {
     private static final Logger LOGGER = Logger.getLogger(ExecutableActorVisibleMessage.class.getName());
     private Actor newlyVisible;
 
-	public ExecutableActorVisibleMessage(WorldClient client, Message message, ClientMessageContext context) {
-		super(client,
-		  message, context); }
+	public ExecutableActorVisibleMessage(WorldClient client, Message message, WorldClientMessageContext context) {
+		super(client, message, context);
+	}
 
     @Override
 	public Message execute() {
@@ -50,7 +50,7 @@ public class ExecutableActorVisibleMessage extends WorldClientExecutableMessage<
         newlyVisible.setAngle(new Angle(absoluteAngle, relativeAngle));
         newlyVisible.setMoveSpeed(moveSpeed);
 
-		World world = getWorldClient().getWorld();
+		World world = getContext().getWorld();
 		world.scheduleUpdateTask(() -> {
 			try
 			{
