@@ -1,11 +1,11 @@
 package com.jenjinstudios.world.client.message;
 
-import com.jenjinstudios.client.net.ClientMessageContext;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.WorldObject;
 import com.jenjinstudios.world.client.WorldClient;
+import com.jenjinstudios.world.client.WorldClientMessageContext;
 import com.jenjinstudios.world.math.Angle;
 import com.jenjinstudios.world.math.Vector2D;
 
@@ -14,7 +14,7 @@ import com.jenjinstudios.world.math.Vector2D;
  *
  * @author Caleb Brinkman
  */
-public class ExecutableStateChangeMessage extends WorldClientExecutableMessage<ClientMessageContext>
+public class ExecutableStateChangeMessage extends WorldClientExecutableMessage<WorldClientMessageContext>
 {
 	private static final double MS_TO_S = 1000.0d;
 
@@ -25,7 +25,7 @@ public class ExecutableStateChangeMessage extends WorldClientExecutableMessage<C
      * @param message The Message.
 	 * @param context The context in which to execute the message.
 	 */
-	public ExecutableStateChangeMessage(WorldClient client, Message message, ClientMessageContext context) {
+	public ExecutableStateChangeMessage(WorldClient client, Message message, WorldClientMessageContext context) {
 		super(client, message, context);
 	}
 
@@ -40,7 +40,7 @@ public class ExecutableStateChangeMessage extends WorldClientExecutableMessage<C
 		Vector2D oldVector = new Vector2D(x, y);
 		Angle angle = new Angle(absoluteAngle, relativeAngle);
 
-		World world = getWorldClient().getWorld();
+		World world = getContext().getWorld();
 		world.scheduleUpdateTask(() -> {
 			WorldObject obj = world.getWorldObjects().get(actorID);
 			if (obj instanceof Actor)
