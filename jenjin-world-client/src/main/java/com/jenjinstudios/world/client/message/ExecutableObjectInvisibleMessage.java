@@ -1,9 +1,9 @@
 package com.jenjinstudios.world.client.message;
 
-import com.jenjinstudios.client.net.ClientMessageContext;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.client.WorldClient;
+import com.jenjinstudios.world.client.WorldClientMessageContext;
 
 /**
  * Handles processing an ActorInvisibleMessage.
@@ -11,16 +11,16 @@ import com.jenjinstudios.world.client.WorldClient;
  * @author Caleb Brinkman
  */
 @SuppressWarnings("WeakerAccess")
-public class ExecutableObjectInvisibleMessage extends WorldClientExecutableMessage<ClientMessageContext>
+public class ExecutableObjectInvisibleMessage extends WorldClientExecutableMessage<WorldClientMessageContext>
 {
-	public ExecutableObjectInvisibleMessage(WorldClient client, Message message, ClientMessageContext context) {
-		super
-		  (client, message, context); }
+	public ExecutableObjectInvisibleMessage(WorldClient client, Message message, WorldClientMessageContext context) {
+		super(client, message, context);
+	}
 
     @Override
 	public Message execute() {
 		int id = (int) getMessage().getArgument("id");
-		World world = getWorldClient().getWorld();
+		World world = getContext().getWorld();
 		world.scheduleUpdateTask(() -> world.getWorldObjects().remove(id));
 		return null;
 	}
