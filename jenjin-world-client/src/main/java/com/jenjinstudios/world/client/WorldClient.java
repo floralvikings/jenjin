@@ -1,7 +1,6 @@
 package com.jenjinstudios.world.client;
 
 import com.jenjinstudios.client.net.Client;
-import com.jenjinstudios.client.net.ClientMessageContext;
 import com.jenjinstudios.core.io.MessageRegistry;
 import com.jenjinstudios.core.io.MessageStreamPair;
 import com.jenjinstudios.world.Actor;
@@ -20,7 +19,7 @@ import java.util.logging.Logger;
  *
  * @author Caleb Brinkman
  */
-public class WorldClient<T extends ClientMessageContext> extends Client<T>
+public class WorldClient<T extends WorldClientMessageContext> extends Client<T>
 {
     private static final Logger LOGGER = Logger.getLogger(WorldClient.class.getName());
     private final WorldClientMessageFactory messageFactory;
