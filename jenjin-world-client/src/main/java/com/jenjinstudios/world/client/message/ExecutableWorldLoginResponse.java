@@ -50,7 +50,7 @@ public class ExecutableWorldLoginResponse extends WorldClientExecutableMessage<C
 			{
 				LOGGER.log(Level.INFO, "Logged in successfully; Player ID: " + player.getId());
 				client.getLoginTracker().setLoggedInTime((long) getMessage().getArgument("loginTime"));
-				client.setName(client.getUser().getUsername());
+				client.setName(getContext().getUser().getUsername());
 				client.setPlayer(player);
 				client.getWorld().getWorldObjects().set(player.getId(), player);
 
