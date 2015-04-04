@@ -1,10 +1,10 @@
 package com.jenjinstudios.world.client.message;
 
-import com.jenjinstudios.client.net.ClientMessageContext;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.WorldObject;
 import com.jenjinstudios.world.client.WorldClient;
+import com.jenjinstudios.world.client.WorldClientMessageContext;
 import com.jenjinstudios.world.math.Vector2D;
 
 /**
@@ -13,7 +13,7 @@ import com.jenjinstudios.world.math.Vector2D;
  * @author Caleb Brinkman
  */
 @SuppressWarnings("WeakerAccess")
-public class ExecutableObjectVisibleMessage extends WorldClientExecutableMessage<ClientMessageContext>
+public class ExecutableObjectVisibleMessage extends WorldClientExecutableMessage<WorldClientMessageContext>
 {
 	/**
 	 * Construct an ExecutableMessage with the given Message.
@@ -22,7 +22,7 @@ public class ExecutableObjectVisibleMessage extends WorldClientExecutableMessage
      * @param message The Message.
 	 * @param context The context in which to execute the message.
 	 */
-	public ExecutableObjectVisibleMessage(WorldClient client, Message message, ClientMessageContext context) {
+	public ExecutableObjectVisibleMessage(WorldClient client, Message message, WorldClientMessageContext context) {
 		super(client, message, context);
 	}
 
@@ -41,10 +41,8 @@ public class ExecutableObjectVisibleMessage extends WorldClientExecutableMessage
         newlyVisible.setResourceID(resourceID);
         newlyVisible.setVector2D(vector2D);
 
-		World world = getWorldClient().getWorld();
-		world.scheduleUpdateTask(() -> {
-			world.getWorldObjects().set(newlyVisible.getId(), newlyVisible);
-		});
+		World world = getContext().getWorld();
+		world.scheduleUpdateTask(() -> world.getWorldObjects().set(newlyVisible.getId(), newlyVisible));
 		return null;
 	}
 }
