@@ -16,8 +16,8 @@ import java.util.Map;
 public class SimpleMessageContext implements MessageContext
 {
 	private final Map<InetAddress, Key> verifiedKeys;
-	private String name;
 	private final PingTracker pingTracker;
+	private String name;
 	private InetAddress address;
 	private Key encryptionKey;
 
