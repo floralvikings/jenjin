@@ -22,6 +22,14 @@ public class SimpleMessageContext implements MessageContext
 	private Key encryptionKey;
 
 	/**
+	 * Construct a new SimpleMessageContext.
+	 */
+	public SimpleMessageContext() {
+		this.pingTracker = new PingTracker();
+		this.verifiedKeys = new HashMap<>(10);
+	}
+
+	/**
 	 * Construct a new MessageContext with the given name.
 	 *
 	 * @param name The name of the context.
@@ -35,9 +43,8 @@ public class SimpleMessageContext implements MessageContext
 	 * @param address The internet address of the "other end" of this context.
 	 */
 	public SimpleMessageContext(String name, InetAddress address) {
+		this();
 		this.name = name;
-		this.pingTracker = new PingTracker();
-		this.verifiedKeys = new HashMap<>(10);
 		this.address = address;
 	}
 
