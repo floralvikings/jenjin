@@ -1,6 +1,5 @@
 package com.jenjinstudios.world.client.message;
 
-import com.jenjinstudios.client.authentication.ClientUser;
 import com.jenjinstudios.client.net.LoginTracker;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.world.World;
@@ -32,7 +31,6 @@ public class ExecutableWorldLoginResponseTest
 		LoginTracker loginTracker = mock(LoginTracker.class);
 		when(loginTracker.isLoggedIn()).thenReturn(true);
 		when(worldClient.getWorld()).thenReturn(world);
-		when(worldClient.getUser()).thenReturn(mock(ClientUser.class));
 		when(worldClient.getLoginTracker()).thenReturn(loginTracker);
 
 		ExecutableWorldLoginResponse response = new ExecutableWorldLoginResponse(worldClient, message, null);

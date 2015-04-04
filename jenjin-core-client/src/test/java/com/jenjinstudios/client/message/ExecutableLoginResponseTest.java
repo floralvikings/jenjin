@@ -34,7 +34,6 @@ public class ExecutableLoginResponseTest
 		when(loginTracker.isLoggedIn()).thenReturn(true);
         when(loginTracker.getLoggedInTime()).thenReturn(12345L);
 		when(context.getLoginTracker()).thenReturn(loginTracker);
-		when(client.getUser()).thenReturn(user);
 
 		ExecutableLoginResponse response = new ExecutableLoginResponse(client, loginResponse, context);
 		response.execute();

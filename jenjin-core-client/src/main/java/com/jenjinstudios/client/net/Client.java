@@ -162,13 +162,6 @@ public class Client<T extends ClientMessageContext> extends Connection<T>
 	 */
 	public LoginTracker getLoginTracker() { return loginTracker; }
 
-	/**
-	 * Get the username of this client.
-	 *
-	 * @return The username of this client.
-	 */
-	public User getUser() { return user; }
-
 	/** Run the repeated synchronized tasks. */
 	protected void runRepeatedTasks() {
         synchronized (repeatedTasks)
@@ -190,7 +183,7 @@ public class Client<T extends ClientMessageContext> extends Connection<T>
 	 */
 	protected void sendLoginRequest() {
 		loginTracker.setWaitingForResponse(true);
-		Message message = generateLoginRequest(user);
+		Message message = generateLoginRequest(getMessageContext().getUser());
 		enqueueMessage(message);
 	}
 

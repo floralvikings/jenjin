@@ -93,18 +93,4 @@ public class ClientTest
 		Assert.assertEquals(client.getLoginTracker().getLoggedInTime(), random, "Login time was incorrect.");
 	}
 
-	/**
-	 * Test the getUser method.
-	 */
-	@Test
-	public void testGetUser() {
-		MessageInputStream mis = mock(MessageInputStream.class);
-		MessageOutputStream mos = mock(MessageOutputStream.class);
-		MessageStreamPair messageStreamPair = new MessageStreamPair(mis, mos);
-		User user = mock(ClientUser.class);
-		Client client = new Client<>(messageStreamPair, mock(ClientMessageContext.class));
-
-		Assert.assertEquals(client.getUser(), user, "User was incorrect.");
-	}
-
 }
