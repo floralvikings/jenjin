@@ -28,7 +28,7 @@ public class ServerWorldFileTrackerTest
 		Mockito.when(messageFactory.generateWorldChecksumRequest()).thenReturn(message);
 		Mockito.when(worldClient.getMessageStreamPair()).thenReturn(messageStreamPair);
 
-		ServerWorldFileTracker serverWorldFileTracker = new ServerWorldFileTracker(worldClient, worldFile);
+		ServerWorldFileTracker serverWorldFileTracker = new ServerWorldFileTracker(worldFile);
 		Mockito.when(worldClient.getServerWorldFileTracker()).thenReturn(serverWorldFileTracker);
 		serverWorldFileTracker.setWaitingForChecksum(true);
 		WorldClient.requestChecksum(worldClient);
@@ -55,7 +55,7 @@ public class ServerWorldFileTrackerTest
 		Mockito.when(messageFactory.generateWorldChecksumRequest()).thenReturn(message);
 		Mockito.when(worldClient.getMessageStreamPair()).thenReturn(messageStreamPair);
 
-		ServerWorldFileTracker serverWorldFileTracker = new ServerWorldFileTracker(worldClient, worldFile);
+		ServerWorldFileTracker serverWorldFileTracker = new ServerWorldFileTracker(worldFile);
 		Mockito.when(worldClient.getServerWorldFileTracker()).thenReturn(serverWorldFileTracker);
 		serverWorldFileTracker.setWaitingForFile(true);
 		worldClient.requestWorldFile();

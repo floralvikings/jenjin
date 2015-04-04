@@ -32,8 +32,8 @@ public class WorldClient<T extends WorldClientMessageContext> extends Client<T>
 		  WorldDocumentException {
 		super(messageStreamPair, context);
 		this.messageFactory = new WorldClientMessageFactory();
-        serverWorldFileTracker = new ServerWorldFileTracker(this, worldFile);
-        world = serverWorldFileTracker.readWorldFromFile();
+		serverWorldFileTracker = new ServerWorldFileTracker(worldFile);
+		world = serverWorldFileTracker.readWorldFromFile();
 		getMessageContext().setWorld(world);
 		InputStream stream = getClass().getClassLoader().
 			  getResourceAsStream("com/jenjinstudios/world/client/Messages.xml");

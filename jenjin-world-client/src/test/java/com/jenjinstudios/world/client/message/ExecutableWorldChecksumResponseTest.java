@@ -22,7 +22,7 @@ public class ExecutableWorldChecksumResponseTest
 		when(message.getArgument("checksum")).thenReturn(checksum);
 
 		WorldClient worldClient = mock(WorldClient.class);
-		ServerWorldFileTracker serverWorldFileTracker = new ServerWorldFileTracker(worldClient, null);
+		ServerWorldFileTracker serverWorldFileTracker = new ServerWorldFileTracker(null);
 		when(worldClient.getServerWorldFileTracker()).thenReturn(serverWorldFileTracker);
 
 		ExecutableWorldChecksumResponse response = new ExecutableWorldChecksumResponse(worldClient, message, null);

@@ -16,7 +16,6 @@ import java.util.logging.Logger;
 public class ServerWorldFileTracker
 {
 	private static final Logger LOGGER = Logger.getLogger(ServerWorldFileTracker.class.getName());
-	private final WorldClient worldClient;
 	private final File worldFile;
 	private boolean waitingForChecksum;
 	private byte[] checksum;
@@ -24,8 +23,7 @@ public class ServerWorldFileTracker
 	private byte[] bytes;
 	private WorldDocumentReader worldDocumentReader;
 
-	public ServerWorldFileTracker(WorldClient worldClient, File worldFile) {
-		this.worldClient = worldClient;
+	public ServerWorldFileTracker(File worldFile) {
 		this.worldFile = worldFile;
 	}
 
