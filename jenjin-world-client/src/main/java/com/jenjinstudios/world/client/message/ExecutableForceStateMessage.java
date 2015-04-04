@@ -1,6 +1,6 @@
 package com.jenjinstudios.world.client.message;
 
-import com.jenjinstudios.core.concurrency.MessageContext;
+import com.jenjinstudios.client.net.ClientMessageContext;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.World;
@@ -14,14 +14,15 @@ import com.jenjinstudios.world.util.ActorUtils;
  *
  * @author Caleb Brinkman
  */
-public class ExecutableForceStateMessage extends WorldClientExecutableMessage<MessageContext>
+public class ExecutableForceStateMessage extends WorldClientExecutableMessage<ClientMessageContext>
 {
 	private static final float MS_TO_S = 1000.0F;
 	private Vector2D vector2D;
 	private Angle angle;
     private long timeOfForce;
 
-	public ExecutableForceStateMessage(WorldClient client, Message message, MessageContext context) { super(client,
+	public ExecutableForceStateMessage(WorldClient client, Message message, ClientMessageContext context) {
+		super(client,
 		  message, context); }
 
     @Override

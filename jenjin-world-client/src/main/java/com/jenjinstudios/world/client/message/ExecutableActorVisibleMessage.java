@@ -1,6 +1,6 @@
 package com.jenjinstudios.world.client.message;
 
-import com.jenjinstudios.core.concurrency.MessageContext;
+import com.jenjinstudios.client.net.ClientMessageContext;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.World;
@@ -17,12 +17,13 @@ import java.util.logging.Logger;
  *
  * @author Caleb Brinkman
  */
-public class ExecutableActorVisibleMessage extends WorldClientExecutableMessage<MessageContext>
+public class ExecutableActorVisibleMessage extends WorldClientExecutableMessage<ClientMessageContext>
 {
     private static final Logger LOGGER = Logger.getLogger(ExecutableActorVisibleMessage.class.getName());
     private Actor newlyVisible;
 
-	public ExecutableActorVisibleMessage(WorldClient client, Message message, MessageContext context) { super(client,
+	public ExecutableActorVisibleMessage(WorldClient client, Message message, ClientMessageContext context) {
+		super(client,
 		  message, context); }
 
     @Override

@@ -1,6 +1,6 @@
 package com.jenjinstudios.world.client.message;
 
-import com.jenjinstudios.core.concurrency.MessageContext;
+import com.jenjinstudios.client.net.ClientMessageContext;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.actor.Vision;
@@ -16,7 +16,7 @@ import java.util.logging.Logger;
  *
  * @author Caleb Brinkman
  */
-public class ExecutableWorldLoginResponse extends WorldClientExecutableMessage<MessageContext>
+public class ExecutableWorldLoginResponse extends WorldClientExecutableMessage<ClientMessageContext>
 {
     private static final Logger LOGGER = Logger.getLogger(ExecutableWorldLoginResponse.class.getName());
 
@@ -27,7 +27,7 @@ public class ExecutableWorldLoginResponse extends WorldClientExecutableMessage<M
      * @param message The Message.
 	 * @param context The context in which to execute the message.
 	 */
-	public ExecutableWorldLoginResponse(WorldClient client, Message message, MessageContext context) {
+	public ExecutableWorldLoginResponse(WorldClient client, Message message, ClientMessageContext context) {
 		super(client, message, context);
 	}
 

@@ -1,6 +1,6 @@
 package com.jenjinstudios.world.client.message;
 
-import com.jenjinstudios.core.concurrency.MessageContext;
+import com.jenjinstudios.client.net.ClientMessageContext;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.World;
@@ -14,7 +14,7 @@ import com.jenjinstudios.world.math.Vector2D;
  *
  * @author Caleb Brinkman
  */
-public class ExecutableStateChangeMessage extends WorldClientExecutableMessage<MessageContext>
+public class ExecutableStateChangeMessage extends WorldClientExecutableMessage<ClientMessageContext>
 {
 	private static final double MS_TO_S = 1000.0d;
 
@@ -25,7 +25,7 @@ public class ExecutableStateChangeMessage extends WorldClientExecutableMessage<M
      * @param message The Message.
 	 * @param context The context in which to execute the message.
 	 */
-	public ExecutableStateChangeMessage(WorldClient client, Message message, MessageContext context) {
+	public ExecutableStateChangeMessage(WorldClient client, Message message, ClientMessageContext context) {
 		super(client, message, context);
 	}
 
