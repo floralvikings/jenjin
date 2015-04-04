@@ -30,13 +30,6 @@ public class SimpleMessageContext implements MessageContext
 	}
 
 	/**
-	 * Construct a new MessageContext with the given name.
-	 *
-	 * @param name The name of the context.
-	 */
-	public SimpleMessageContext(String name) { this(name, null); }
-
-	/**
 	 * Construct a new MessageContext with the given name, communicating with the given internet address.
 	 *
 	 * @param name The name of the context.
