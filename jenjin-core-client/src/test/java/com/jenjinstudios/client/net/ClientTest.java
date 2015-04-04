@@ -46,7 +46,10 @@ public class ClientTest
      */
     @Test
     public void testGenerateLoginRequest() {
-		Message message = Client.generateLoginRequest(new ClientUser("Foo", "Bar"));
+		User user = new ClientUser();
+		user.setUsername("Foo");
+		user.setPassword("Bar");
+		Message message = Client.generateLoginRequest(user);
 		Assert.assertEquals(message.name, "LoginRequest", "Expected login request");
         Assert.assertEquals(message.getArgument("username"), "Foo", "Username was not expected.");
         Assert.assertEquals(message.getArgument("password"), "Bar", "Password was not expected.");

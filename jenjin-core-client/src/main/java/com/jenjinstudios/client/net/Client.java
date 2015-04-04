@@ -1,5 +1,6 @@
 package com.jenjinstudios.client.net;
 
+import com.jenjinstudios.client.authentication.ClientUser;
 import com.jenjinstudios.client.authentication.User;
 import com.jenjinstudios.core.Connection;
 import com.jenjinstudios.core.io.Message;
@@ -25,7 +26,6 @@ public class Client<T extends ClientMessageContext> extends Connection<T>
 	static final int THIRTY_SECONDS = 30000;
 	private static final int UPDATES_PER_SECOND = 60;
 	private static final Logger LOGGER = Logger.getLogger(Client.class.getName());
-	private final User user;
 	private final LoginTracker loginTracker;
 	private final List<Runnable> repeatedTasks;
     private Timer sendMessagesTimer;
@@ -39,11 +39,10 @@ public class Client<T extends ClientMessageContext> extends Connection<T>
 	protected Client(MessageStreamPair messageStreamPair, T context) {
 		super(messageStreamPair, context);
 		this.loginTracker = getMessageContext().getLoginTracker();
-		getMessageContext().setUser(user);
+		getMessageContext().setUser(new ClientUser());
 		repeatedTasks = new LinkedList<>();
 		InputStream stream = getClass().getClassLoader().getResourceAsStream("com/jenjinstudios/client/Messages.xml");
 		MessageRegistry.getGlobalRegistry().register("Core Client/Server Messages", stream);
-		this.user = user;
 	}
 
     /**

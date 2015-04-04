@@ -97,7 +97,9 @@ public final class LoginPane extends GridPane
 
 	private void loginButtonFired(ActionEvent event) {
 		LOGGER.log(Level.FINE, "Login Button Fired: {0}", event);
-		User user = new ClientUser(usernameField.getText(), passwordField.getText());
+		User user = new ClientUser();
+		user.setUsername(usernameField.getText());
+		user.setPassword(passwordField.getText());
 		String address = addressField.getText();
 		int port = Integer.parseInt(portField.getText());
 		worldClient = tryCreateWorldClient(address, port, user);

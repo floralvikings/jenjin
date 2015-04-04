@@ -32,7 +32,7 @@ public class ExecutableWorldLoginResponseTest
 		LoginTracker loginTracker = mock(LoginTracker.class);
 		when(loginTracker.isLoggedIn()).thenReturn(true);
 		when(worldClient.getWorld()).thenReturn(world);
-		when(worldClient.getUser()).thenReturn(new ClientUser("Foo", "Bar"));
+		when(worldClient.getUser()).thenReturn(mock(ClientUser.class));
 		when(worldClient.getLoginTracker()).thenReturn(loginTracker);
 
 		ExecutableWorldLoginResponse response = new ExecutableWorldLoginResponse(worldClient, message, null);

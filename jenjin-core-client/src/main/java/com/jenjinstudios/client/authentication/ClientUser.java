@@ -7,23 +7,18 @@ package com.jenjinstudios.client.authentication;
  */
 public class ClientUser implements User
 {
-	private final String username;
-	private final String password;
-
-    /**
-     * Construct a new ClientUser with the given username and password.
-     *
-     * @param username The client's username.
-     * @param password The client's password.
-     */
-    public ClientUser(String username, String password) {
-		this.username = username;
-		this.password = password;
-	}
+	private String username;
+	private String password;
 
 	@Override
 	public String getUsername() { return username; }
 
 	@Override
 	public String getPassword() { return password; }
+
+	@Override
+	public void setUsername(String username) { this.username = username; }
+
+	@Override
+	public void setPassword(String password) { this.password = password; }
 }
