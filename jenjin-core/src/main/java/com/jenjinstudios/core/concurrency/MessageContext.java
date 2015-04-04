@@ -61,5 +61,5 @@ public interface MessageContext
 	 *
 	 * @return The inernet address at the other end of this context, null if unset.
 	 */
-	default InetAddress getAddress() { return null; }
+	InetAddress getAddress();
 }
