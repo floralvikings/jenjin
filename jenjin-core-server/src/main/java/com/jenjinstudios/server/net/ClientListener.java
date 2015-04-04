@@ -24,6 +24,7 @@ class ClientListener implements Runnable
 {
 	/** The Logger for this class. */
 	private static final Logger LOGGER = Logger.getLogger(ClientListener.class.getName());
+	private final Class<? extends MessageContext> contextClass;
 	/** The port on which this object listens. */
 	private final int PORT;
 	/** The list of new clients. */
@@ -48,6 +49,7 @@ class ClientListener implements Runnable
 						  Class<? extends MessageContext> contextClass, int port) throws IOException,
 		  NoSuchMethodException
 	{
+		this.contextClass = contextClass;
 		PORT = port;
 		/* The class of client handlers created by this listener. */
 		try
@@ -120,17 +122,29 @@ class ClientListener implements Runnable
 	 * Add a new Client using the specified socket as a connection.
 	 */
 	private void addNewClient(MessageInputStream in, MessageOutputStream out) {
+		MessageContext context = null;
 		try
 		{
-			MessageStreamPair messageStreamPair = new MessageStreamPair(in, out);
-			ClientHandler newHandler = handlerConstructor.newInstance(server, messageStreamPair);
-			addNewClient(newHandler);
-		} catch (InstantiationException | IllegalAccessException e)
+			context = contextClass.getConstructor().newInstance();
+		} catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e)
 		{
-			LOGGER.log(Level.SEVERE, "Unable to instantiate client handler:", e);
-		} catch (InvocationTargetException e)
+			LOGGER.log(Level.SEVERE, "Unable to instantiate context; missing default constructor?");
+		}
+
+		if (context != null)
 		{
-			LOGGER.log(Level.SEVERE, "Unable to instantiate client handler:", e.getCause());
+			try
+			{
+				MessageStreamPair messageStreamPair = new MessageStreamPair(in, out);
+				ClientHandler newHandler = handlerConstructor.newInstance(server, messageStreamPair, context);
+				addNewClient(newHandler);
+			} catch (InstantiationException | IllegalAccessException e)
+			{
+				LOGGER.log(Level.SEVERE, "Unable to instantiate client handler:", e);
+			} catch (InvocationTargetException e)
+			{
+				LOGGER.log(Level.SEVERE, "Unable to instantiate client handler:", e.getCause());
+			}
 		}
 	}
 
