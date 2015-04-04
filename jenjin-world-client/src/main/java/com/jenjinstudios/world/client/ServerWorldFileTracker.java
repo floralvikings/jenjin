@@ -31,8 +31,8 @@ public class ServerWorldFileTracker
 	}
 
 	public void requestServerWorldFileChecksum() {
-		Message worldFileChecksumRequest = this.worldClient.getMessageFactory().generateWorldChecksumRequest();
-		worldClient.enqueueMessage(worldFileChecksumRequest);
+		Message checksumRequest = this.worldClient.getMessageFactory().generateWorldChecksumRequest();
+		worldClient.enqueueMessage(checksumRequest);
 	}
 
 	public void writeReceivedWorldToFile() throws WorldDocumentException {
