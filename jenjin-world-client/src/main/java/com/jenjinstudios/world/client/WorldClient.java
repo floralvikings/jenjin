@@ -39,7 +39,17 @@ public class WorldClient<T extends WorldClientMessageContext> extends Client<T>
 		MessageRegistry.getGlobalRegistry().register("World Client/Server Messages", stream);
 	}
 
-    public WorldClientMessageFactory getMessageFactory() {return messageFactory; }
+	public static void requestWorldFile(ServerWorldFileTracker serverWorldFileTracker, WorldClient worldClient) {
+		if (serverWorldFileTracker.needsWorldFile())
+		{
+			worldClient.enqueueMessage(worldClient.getMessageFactory().generateWorldFileRequest());
+		} else
+		{
+			serverWorldFileTracker.setWaitingForFile(false);
+		}
+	}
+
+	public WorldClientMessageFactory getMessageFactory() {return messageFactory; }
 
     public ServerWorldFileTracker getServerWorldFileTracker() { return serverWorldFileTracker; }
 
@@ -58,7 +68,7 @@ public class WorldClient<T extends WorldClientMessageContext> extends Client<T>
         getServerWorldFileTracker().waitForWorldFileChecksum();
         LOGGER.log(Level.INFO, "Received World Checksum.");
         getServerWorldFileTracker().setWaitingForFile(true);
-		ServerWorldFileTracker.requestWorldFile(getServerWorldFileTracker(), this);
+		requestWorldFile(getServerWorldFileTracker(), this);
 		LOGGER.log(Level.INFO, "Requested World File.");
         getServerWorldFileTracker().waitForWorldFile();
         LOGGER.log(Level.INFO, "Received World File.");

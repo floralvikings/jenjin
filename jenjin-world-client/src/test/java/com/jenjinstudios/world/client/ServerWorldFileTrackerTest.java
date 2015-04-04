@@ -58,7 +58,7 @@ public class ServerWorldFileTrackerTest
 		ServerWorldFileTracker serverWorldFileTracker = new ServerWorldFileTracker(worldClient, worldFile);
 		Mockito.when(worldClient.getServerWorldFileTracker()).thenReturn(serverWorldFileTracker);
 		serverWorldFileTracker.setWaitingForFile(true);
-		ServerWorldFileTracker.requestWorldFile(serverWorldFileTracker, worldClient);
+		WorldClient.requestWorldFile(serverWorldFileTracker, worldClient);
 
 		Assert.assertTrue(serverWorldFileTracker.isWaitingForFile());
 

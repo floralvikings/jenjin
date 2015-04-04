@@ -35,16 +35,6 @@ public class ServerWorldFileTracker
 		worldClient.enqueueMessage(worldFileChecksumRequest);
 	}
 
-	public static void requestWorldFile(ServerWorldFileTracker serverWorldFileTracker, WorldClient worldClient) {
-		if (serverWorldFileTracker.needsWorldFile())
-		{
-			worldClient.enqueueMessage(worldClient.getMessageFactory().generateWorldFileRequest());
-		} else
-		{
-			serverWorldFileTracker.setWaitingForFile(false);
-		}
-	}
-
 	public void writeReceivedWorldToFile() throws WorldDocumentException {
 		createNewFileIfNecessary();
 		writeServerWorldToFile();
