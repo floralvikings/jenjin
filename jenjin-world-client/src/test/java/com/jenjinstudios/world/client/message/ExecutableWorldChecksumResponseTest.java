@@ -1,8 +1,8 @@
 package com.jenjinstudios.world.client.message;
 
 import com.jenjinstudios.core.io.Message;
-import com.jenjinstudios.world.client.ServerWorldFileTracker;
 import com.jenjinstudios.world.client.WorldClient;
+import com.jenjinstudios.world.client.WorldFileTracker;
 import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.mock;
@@ -22,13 +22,13 @@ public class ExecutableWorldChecksumResponseTest
 		when(message.getArgument("checksum")).thenReturn(checksum);
 
 		WorldClient worldClient = mock(WorldClient.class);
-		ServerWorldFileTracker serverWorldFileTracker = new ServerWorldFileTracker(null);
-		when(worldClient.getServerWorldFileTracker()).thenReturn(serverWorldFileTracker);
+		WorldFileTracker worldFileTracker = new WorldFileTracker(null);
+		when(worldClient.getWorldFileTracker()).thenReturn(worldFileTracker);
 
 		ExecutableWorldChecksumResponse response = new ExecutableWorldChecksumResponse(worldClient, message, null);
 		response.execute();
 
-		assertEquals(serverWorldFileTracker.getChecksum(), checksum);
-		assertFalse(serverWorldFileTracker.isWaitingForChecksum());
+		assertEquals(worldFileTracker.getChecksum(), checksum);
+		assertFalse(worldFileTracker.isWaitingForChecksum());
 	}
 }

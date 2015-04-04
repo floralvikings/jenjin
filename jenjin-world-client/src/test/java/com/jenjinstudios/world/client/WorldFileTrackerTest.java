@@ -14,7 +14,7 @@ import java.io.File;
 /**
  * @author Caleb Brinkman
  */
-public class ServerWorldFileTrackerTest
+public class WorldFileTrackerTest
 {
 	@Test(timeOut = 5000)
 	public void testRequestWorldServerFileChecksum() throws Exception {
@@ -28,18 +28,18 @@ public class ServerWorldFileTrackerTest
 		Mockito.when(messageFactory.generateWorldChecksumRequest()).thenReturn(message);
 		Mockito.when(worldClient.getMessageStreamPair()).thenReturn(messageStreamPair);
 
-		ServerWorldFileTracker serverWorldFileTracker = new ServerWorldFileTracker(worldFile);
-		Mockito.when(worldClient.getServerWorldFileTracker()).thenReturn(serverWorldFileTracker);
-		serverWorldFileTracker.setWaitingForChecksum(true);
+		WorldFileTracker worldFileTracker = new WorldFileTracker(worldFile);
+		Mockito.when(worldClient.getWorldFileTracker()).thenReturn(worldFileTracker);
+		worldFileTracker.setWaitingForChecksum(true);
 		WorldClient.requestChecksum(worldClient);
 
-		Assert.assertTrue(serverWorldFileTracker.isWaitingForChecksum());
+		Assert.assertTrue(worldFileTracker.isWaitingForChecksum());
 
 		ExecutableWorldChecksumResponse exec = new ExecutableWorldChecksumResponse(worldClient, message, null);
 		exec.execute();
 
-		Assert.assertFalse(serverWorldFileTracker.isWaitingForChecksum());
-		Assert.assertEquals(serverWorldFileTracker.getChecksum(), "abc123".getBytes());
+		Assert.assertFalse(worldFileTracker.isWaitingForChecksum());
+		Assert.assertEquals(worldFileTracker.getChecksum(), "abc123".getBytes());
 
 	}
 
@@ -55,17 +55,17 @@ public class ServerWorldFileTrackerTest
 		Mockito.when(messageFactory.generateWorldChecksumRequest()).thenReturn(message);
 		Mockito.when(worldClient.getMessageStreamPair()).thenReturn(messageStreamPair);
 
-		ServerWorldFileTracker serverWorldFileTracker = new ServerWorldFileTracker(worldFile);
-		Mockito.when(worldClient.getServerWorldFileTracker()).thenReturn(serverWorldFileTracker);
-		serverWorldFileTracker.setWaitingForFile(true);
+		WorldFileTracker worldFileTracker = new WorldFileTracker(worldFile);
+		Mockito.when(worldClient.getWorldFileTracker()).thenReturn(worldFileTracker);
+		worldFileTracker.setWaitingForFile(true);
 		worldClient.requestWorldFile();
 
-		Assert.assertTrue(serverWorldFileTracker.isWaitingForFile());
+		Assert.assertTrue(worldFileTracker.isWaitingForFile());
 
 		ExecutableWorldFileResponse exec = new ExecutableWorldFileResponse(worldClient, message, null);
 		exec.execute();
 
-		Assert.assertFalse(serverWorldFileTracker.isWaitingForFile());
-		Assert.assertEquals(serverWorldFileTracker.getBytes(), "abc123".getBytes());
+		Assert.assertFalse(worldFileTracker.isWaitingForFile());
+		Assert.assertEquals(worldFileTracker.getBytes(), "abc123".getBytes());
 	}
 }

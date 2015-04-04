@@ -1,8 +1,8 @@
 package com.jenjinstudios.world.client.message;
 
 import com.jenjinstudios.core.io.Message;
-import com.jenjinstudios.world.client.ServerWorldFileTracker;
 import com.jenjinstudios.world.client.WorldClient;
+import com.jenjinstudios.world.client.WorldFileTracker;
 import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.mock;
@@ -22,13 +22,13 @@ public class ExecutableWorldFileResponseTest
 		when(message.getArgument("fileBytes")).thenReturn(fileBytes);
 
 		WorldClient worldClient = mock(WorldClient.class);
-		ServerWorldFileTracker serverWorldFileTracker = new ServerWorldFileTracker(null);
-		when(worldClient.getServerWorldFileTracker()).thenReturn(serverWorldFileTracker);
+		WorldFileTracker worldFileTracker = new WorldFileTracker(null);
+		when(worldClient.getWorldFileTracker()).thenReturn(worldFileTracker);
 
 		ExecutableWorldFileResponse response = new ExecutableWorldFileResponse(worldClient, message, null);
 		response.execute();
 
-		assertEquals(serverWorldFileTracker.getBytes(), fileBytes);
-		assertFalse(serverWorldFileTracker.isWaitingForFile());
+		assertEquals(worldFileTracker.getBytes(), fileBytes);
+		assertFalse(worldFileTracker.isWaitingForFile());
 	}
 }

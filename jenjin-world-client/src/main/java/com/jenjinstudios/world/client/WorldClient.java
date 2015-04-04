@@ -24,7 +24,7 @@ public class WorldClient<T extends WorldClientMessageContext> extends Client<T>
 {
     private static final Logger LOGGER = Logger.getLogger(WorldClient.class.getName());
     private final WorldClientMessageFactory messageFactory;
-    private final ServerWorldFileTracker serverWorldFileTracker;
+    private final WorldFileTracker worldFileTracker;
     private World world;
     private Actor player;
 
@@ -32,8 +32,8 @@ public class WorldClient<T extends WorldClientMessageContext> extends Client<T>
 		  WorldDocumentException {
 		super(messageStreamPair, context);
 		this.messageFactory = new WorldClientMessageFactory();
-		serverWorldFileTracker = new ServerWorldFileTracker(worldFile);
-		world = serverWorldFileTracker.readWorldFromFile();
+		worldFileTracker = new WorldFileTracker(worldFile);
+		world = worldFileTracker.readWorldFromFile();
 		getMessageContext().setWorld(world);
 		InputStream stream = getClass().getClassLoader().
 			  getResourceAsStream("com/jenjinstudios/world/client/Messages.xml");
@@ -46,18 +46,18 @@ public class WorldClient<T extends WorldClientMessageContext> extends Client<T>
 	}
 
 	public void requestWorldFile() {
-		if (serverWorldFileTracker.needsWorldFile())
+		if (worldFileTracker.needsWorldFile())
 		{
 			enqueueMessage(getMessageFactory().generateWorldFileRequest());
 		} else
 		{
-			serverWorldFileTracker.setWaitingForFile(false);
+			worldFileTracker.setWaitingForFile(false);
 		}
 	}
 
 	public WorldClientMessageFactory getMessageFactory() {return messageFactory; }
 
-    public ServerWorldFileTracker getServerWorldFileTracker() { return serverWorldFileTracker; }
+    public WorldFileTracker getWorldFileTracker() { return worldFileTracker; }
 
     public Actor getPlayer() { return player; }
 
@@ -65,20 +65,20 @@ public class WorldClient<T extends WorldClientMessageContext> extends Client<T>
 
     public World getWorld() { return world; }
 
-    public void readWorldFile() throws WorldDocumentException { world = serverWorldFileTracker.readWorldFromFile(); }
+    public void readWorldFile() throws WorldDocumentException { world = worldFileTracker.readWorldFromFile(); }
 
     public void initializeWorldFromServer() throws WorldDocumentException {
-        getServerWorldFileTracker().setWaitingForChecksum(true);
+        getWorldFileTracker().setWaitingForChecksum(true);
 		requestChecksum(this);
 		LOGGER.log(Level.INFO, "Requested World Checksum.");
-        getServerWorldFileTracker().waitForWorldFileChecksum();
+        getWorldFileTracker().waitForWorldFileChecksum();
         LOGGER.log(Level.INFO, "Received World Checksum.");
-        getServerWorldFileTracker().setWaitingForFile(true);
+        getWorldFileTracker().setWaitingForFile(true);
 		requestWorldFile();
 		LOGGER.log(Level.INFO, "Requested World File.");
-        getServerWorldFileTracker().waitForWorldFile();
+        getWorldFileTracker().waitForWorldFile();
         LOGGER.log(Level.INFO, "Received World File.");
-        getServerWorldFileTracker().writeReceivedWorldToFile();
+        getWorldFileTracker().writeReceivedWorldToFile();
         readWorldFile();
     }
 
