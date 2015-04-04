@@ -29,18 +29,6 @@ public class SimpleMessageContext implements MessageContext
 		this.verifiedKeys = new HashMap<>(10);
 	}
 
-	/**
-	 * Construct a new MessageContext with the given name, communicating with the given internet address.
-	 *
-	 * @param name The name of the context.
-	 * @param address The internet address of the "other end" of this context.
-	 */
-	public SimpleMessageContext(String name, InetAddress address) {
-		this();
-		this.name = name;
-		this.address = address;
-	}
-
 	@Override
 	public String getName() { return name; }
 
