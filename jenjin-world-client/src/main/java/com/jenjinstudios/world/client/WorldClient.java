@@ -33,6 +33,7 @@ public class WorldClient<T extends WorldClientMessageContext> extends Client<T>
 		this.messageFactory = new WorldClientMessageFactory();
         serverWorldFileTracker = new ServerWorldFileTracker(this, worldFile);
         world = serverWorldFileTracker.readWorldFromFile();
+		getMessageContext().setWorld(world);
 		InputStream stream = getClass().getClassLoader().
 			  getResourceAsStream("com/jenjinstudios/world/client/Messages.xml");
 		MessageRegistry.getGlobalRegistry().register("World Client/Server Messages", stream);
