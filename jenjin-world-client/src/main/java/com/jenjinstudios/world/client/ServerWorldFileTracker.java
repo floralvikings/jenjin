@@ -95,7 +95,7 @@ public class ServerWorldFileTracker
 		return world;
 	}
 
-	private boolean needsWorldFile() {
+	public boolean needsWorldFile() {
 		boolean checksumsMatch = false;
 		boolean readerNull = worldDocumentReader == null;
 		if (!readerNull)
