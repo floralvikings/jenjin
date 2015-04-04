@@ -30,7 +30,7 @@ public class ServerWorldFileTracker
 		this.worldFile = worldFile;
 	}
 
-	public static void requestServerWorldFileChecksum(WorldClient worldClient) {
+	public static void requestChecksum(WorldClient worldClient) {
 		Message checksumRequest = worldClient.getMessageFactory().generateWorldChecksumRequest();
 		worldClient.enqueueMessage(checksumRequest);
 	}
