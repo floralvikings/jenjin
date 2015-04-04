@@ -36,7 +36,7 @@ public class ExecutableWorldLoginResponse extends WorldClientExecutableMessage<C
 		int id = (int) getMessage().getArgument("id");
         double xCoordinate = (double) getMessage().getArgument("xCoordinate");
         double yCoordinate = (double) getMessage().getArgument("yCoordinate");
-		Actor player = new Actor(getWorldClient().getUser().getUsername());
+		Actor player = new Actor(getContext().getUser().getUsername());
 		player.addPreUpdateEvent(Vision.EVENT_NAME, new Vision(player));
         player.setId(id);
         Vector2D vector2D = new Vector2D(xCoordinate, yCoordinate);
