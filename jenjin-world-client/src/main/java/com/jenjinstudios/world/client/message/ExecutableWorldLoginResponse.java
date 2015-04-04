@@ -1,10 +1,10 @@
 package com.jenjinstudios.world.client.message;
 
-import com.jenjinstudios.client.net.ClientMessageContext;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.actor.Vision;
 import com.jenjinstudios.world.client.WorldClient;
+import com.jenjinstudios.world.client.WorldClientMessageContext;
 import com.jenjinstudios.world.client.WorldClientUpdater;
 import com.jenjinstudios.world.math.Vector2D;
 
@@ -16,7 +16,7 @@ import java.util.logging.Logger;
  *
  * @author Caleb Brinkman
  */
-public class ExecutableWorldLoginResponse extends WorldClientExecutableMessage<ClientMessageContext>
+public class ExecutableWorldLoginResponse extends WorldClientExecutableMessage<WorldClientMessageContext>
 {
     private static final Logger LOGGER = Logger.getLogger(ExecutableWorldLoginResponse.class.getName());
 
@@ -27,7 +27,7 @@ public class ExecutableWorldLoginResponse extends WorldClientExecutableMessage<C
      * @param message The Message.
 	 * @param context The context in which to execute the message.
 	 */
-	public ExecutableWorldLoginResponse(WorldClient client, Message message, ClientMessageContext context) {
+	public ExecutableWorldLoginResponse(WorldClient client, Message message, WorldClientMessageContext context) {
 		super(client, message, context);
 	}
 
@@ -43,7 +43,7 @@ public class ExecutableWorldLoginResponse extends WorldClientExecutableMessage<C
         player.setVector2D(vector2D);
 
 		WorldClient client = getWorldClient();
-		client.getWorld().scheduleUpdateTask(() -> {
+		getContext().getWorld().scheduleUpdateTask(() -> {
 			boolean success = (boolean) getMessage().getArgument("success");
 			getContext().getLoginTracker().setLoggedIn(success);
 			if (success)
