@@ -1,10 +1,10 @@
 package com.jenjinstudios.world.client.message;
 
-import com.jenjinstudios.client.net.ClientMessageContext;
 import com.jenjinstudios.client.net.LoginTracker;
 import com.jenjinstudios.core.concurrency.ExecutableMessage;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.world.client.WorldClient;
+import com.jenjinstudios.world.client.WorldClientMessageContext;
 import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.*;
@@ -19,7 +19,7 @@ public class ExecutableWorldLogoutResponseTest
 		Message worldLogoutResponse = mock(Message.class);
 		when(worldLogoutResponse.getArgument("success")).thenReturn(true);
 
-		ClientMessageContext context = mock(ClientMessageContext.class);
+		WorldClientMessageContext context = mock(WorldClientMessageContext.class);
 		WorldClient worldClient = mock(WorldClient.class);
 		LoginTracker loginTracker = mock(LoginTracker.class);
 		when(context.getLoginTracker()).thenReturn(loginTracker);
