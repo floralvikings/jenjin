@@ -59,7 +59,7 @@ public class ConnectionTest
 		MessageInputStream messageInputStream = new MessageInputStream(in);
 		MessageOutputStream messageOutputStream = new MessageOutputStream(bos);
 		MessageStreamPair messageStreamPair = new MessageStreamPair(messageInputStream, messageOutputStream);
-		Connection connection = new Connection(messageStreamPair);
+		Connection connection = new Connection<>(messageStreamPair, new SimpleMessageContext());
 		connection.shutdown();
 
 		Assert.assertTrue(connection.getMessageStreamPair().getOut().isClosed(), "MessageOutputStream should be " +
@@ -84,7 +84,7 @@ public class ConnectionTest
         when(messageInputStream.readMessage()).thenReturn(pingRequest).thenReturn(MESSAGE_REGISTRY.createMessage
               ("BlankMessage"));
 		MessageStreamPair messageStreamPair = new MessageStreamPair(messageInputStream, messageOutputStream);
-		Connection connection = new Connection(messageStreamPair);
+		Connection connection = new Connection<>(messageStreamPair, new SimpleMessageContext());
 		connection.start();
 		Thread.sleep(100);
 		connection.shutdown();
@@ -116,7 +116,7 @@ public class ConnectionTest
 		MessageInputStream messageInputStream = new MessageInputStream(in);
 		MessageOutputStream messageOutputStream = new MessageOutputStream(bos);
 		MessageStreamPair messageStreamPair = new MessageStreamPair(messageInputStream, messageOutputStream);
-		Connection connection = new Connection(messageStreamPair);
+		Connection connection = new Connection<>(messageStreamPair, new SimpleMessageContext());
 
 		connection.start();
 		Thread.sleep(100);

@@ -1,5 +1,6 @@
 package com.jenjinstudios.world.server;
 
+import com.jenjinstudios.core.SimpleMessageContext;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageStreamPair;
 import com.jenjinstudios.server.net.ClientHandler;
@@ -17,12 +18,12 @@ import java.util.Set;
  *
  * @author Caleb Brinkman
  */
-public class WorldClientHandler extends ClientHandler
+public class WorldClientHandler<T extends SimpleMessageContext> extends ClientHandler<T>
 {
 	private boolean hasSentActorStepMessage;
 
-	public WorldClientHandler(WorldServer s, MessageStreamPair messageStreamPair) {
-		super(s, messageStreamPair);
+	public WorldClientHandler(WorldServer s, MessageStreamPair messageStreamPair, T context) {
+		super(s, messageStreamPair, context);
 	}
 
 	@Override

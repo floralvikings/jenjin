@@ -1,5 +1,6 @@
 package com.jenjinstudios.world.server.message;
 
+import com.jenjinstudios.core.SimpleMessageContext;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageStreamPair;
 import com.jenjinstudios.server.authentication.Authenticator;
@@ -48,7 +49,7 @@ public class ExecutableWorldLoginRequestTest extends PowerMockTestCase
 		WorldServer server = mock(WorldServer.class);
 		WorldObjectList worldObjectMap = mock(WorldObjectList.class);
 		MessageStreamPair messageStreamPair = mock(MessageStreamPair.class);
-		WorldClientHandler wch = new WorldClientHandler(server, messageStreamPair);
+		WorldClientHandler wch = new WorldClientHandler(server, messageStreamPair, new SimpleMessageContext());
 
 		ServerUpdateTask serverUpdateTask = mock(ServerUpdateTask.class);
 		when(server.getServerUpdateTask()).thenReturn(serverUpdateTask);

@@ -1,5 +1,6 @@
 package com.jenjinstudios.demo.server;
 
+import com.jenjinstudios.core.SimpleMessageContext;
 import com.jenjinstudios.core.io.MessageRegistry;
 import com.jenjinstudios.server.authentication.Authenticator;
 import com.jenjinstudios.server.authentication.UserLookup;
@@ -42,6 +43,7 @@ public class Main
 	private static WorldServer createWorldServer() throws Exception {
 		ServerInit serverInit = new ServerInit();
 		serverInit.setHandlerClass(WorldClientHandler.class);
+		serverInit.setContextClass(SimpleMessageContext.class);
 		Connection sqlConnection = createDemoConnection();
 		UserLookup<Player> userLookup = new PlayerTable(sqlConnection);
 		Authenticator<Player> worldAuthenticator = new Authenticator<>(userLookup);

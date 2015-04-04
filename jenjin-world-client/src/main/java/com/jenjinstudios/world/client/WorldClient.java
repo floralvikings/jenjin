@@ -2,6 +2,7 @@ package com.jenjinstudios.world.client;
 
 import com.jenjinstudios.client.authentication.User;
 import com.jenjinstudios.client.net.Client;
+import com.jenjinstudios.client.net.ClientMessageContext;
 import com.jenjinstudios.core.io.MessageRegistry;
 import com.jenjinstudios.core.io.MessageStreamPair;
 import com.jenjinstudios.world.Actor;
@@ -20,7 +21,7 @@ import java.util.logging.Logger;
  *
  * @author Caleb Brinkman
  */
-public class WorldClient extends Client
+public class WorldClient<T extends ClientMessageContext> extends Client<T>
 {
     private static final Logger LOGGER = Logger.getLogger(WorldClient.class.getName());
     private final WorldClientMessageFactory messageFactory;
@@ -28,8 +29,9 @@ public class WorldClient extends Client
     private World world;
     private Actor player;
 
-	public WorldClient(MessageStreamPair messageStreamPair, User user, File worldFile) throws WorldDocumentException {
-		super(messageStreamPair, user);
+	public WorldClient(MessageStreamPair messageStreamPair, User user, File worldFile, T context) throws
+		  WorldDocumentException {
+		super(messageStreamPair, user, context);
 		this.messageFactory = new WorldClientMessageFactory();
         serverWorldFileTracker = new ServerWorldFileTracker(this, worldFile);
         world = serverWorldFileTracker.readWorldFromFile();

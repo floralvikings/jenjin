@@ -20,7 +20,7 @@ import java.util.logging.Logger;
  *
  * @author Caleb Brinkman
  */
-public class Client extends Connection
+public class Client<T extends ClientMessageContext> extends Connection<T>
 {
 	static final int THIRTY_SECONDS = 30000;
 	private static final int UPDATES_PER_SECOND = 60;
@@ -36,10 +36,8 @@ public class Client extends Connection
      *
      * @param messageStreamPair The MessageIO used to send and receive messages.
      */
-	protected Client(MessageStreamPair messageStreamPair, User user) {
-		super(messageStreamPair);
-		ClientMessageContext context = new ClientMessageContext(getName(), messageStreamPair.getAddress());
-		setMessageContext(context);
+	protected Client(MessageStreamPair messageStreamPair, User user, T context) {
+		super(messageStreamPair, context);
 		this.loginTracker = context.getLoginTracker();
 		repeatedTasks = new LinkedList<>();
 		InputStream stream = getClass().getClassLoader().getResourceAsStream("com/jenjinstudios/client/Messages.xml");

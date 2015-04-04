@@ -2,6 +2,7 @@ package com.jenjinstudios.demo.client.ui;
 
 import com.jenjinstudios.client.authentication.ClientUser;
 import com.jenjinstudios.client.authentication.User;
+import com.jenjinstudios.client.net.ClientMessageContext;
 import com.jenjinstudios.core.io.MessageInputStream;
 import com.jenjinstudios.core.io.MessageOutputStream;
 import com.jenjinstudios.core.io.MessageStreamPair;
@@ -68,7 +69,8 @@ public final class LoginPane extends GridPane
 		MessageInputStream messageInputStream = new MessageInputStream(socket.getInputStream());
 		MessageOutputStream messageOutputStream = new MessageOutputStream(socket.getOutputStream());
 		MessageStreamPair messageStreamPair = new MessageStreamPair(messageInputStream, messageOutputStream);
-		return new WorldClient(messageStreamPair, user, worldFile);
+		return new WorldClient<>(messageStreamPair, user, worldFile, new ClientMessageContext("Connection", socket
+			  .getInetAddress()));
 	}
 
 	private void createForm() {

@@ -1,5 +1,6 @@
 package com.jenjinstudios.server.net;
 
+import com.jenjinstudios.core.concurrency.MessageContext;
 import com.jenjinstudios.core.io.MessageInputStream;
 import com.jenjinstudios.core.io.MessageOutputStream;
 import com.jenjinstudios.core.io.MessageStreamPair;
@@ -44,14 +45,14 @@ class ClientListener implements Runnable
 	 * constructor.
 	 */
 	public ClientListener(Class<? extends Server> serverClass, Class<? extends ClientHandler> handlerClass,
-						  int port) throws IOException,
+						  Class<? extends MessageContext> contextClass, int port) throws IOException,
 		  NoSuchMethodException
 	{
 		PORT = port;
 		/* The class of client handlers created by this listener. */
 		try
 		{
-			handlerConstructor = handlerClass.getConstructor(serverClass, MessageStreamPair.class);
+			handlerConstructor = handlerClass.getConstructor(serverClass, MessageStreamPair.class, contextClass);
 		} catch (NoSuchMethodException e)
 		{
 			LOGGER.log(Level.SEVERE, "Unable to find appropriate ClientHandler constructor: " + handlerClass.getName()

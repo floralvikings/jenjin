@@ -33,8 +33,9 @@ public class Server extends Thread
         LOGGER.log(Level.FINE, "Initializing Server.");
         UPS = initInfo.getUps();
         PERIOD = 1000 / UPS;
-        clientListener = new ClientListener(getClass(), initInfo.getHandlerClass(), initInfo.getPort());
-        clientHandlers = new TreeMap<>();
+		clientListener = new ClientListener(getClass(), initInfo.getHandlerClass(), initInfo.getContextClass(),
+			  initInfo.getPort());
+		clientHandlers = new TreeMap<>();
 		rsaKeyPair = (initInfo.getKeyPair() == null) ? Connection.generateRSAKeyPair() : initInfo
 			  .getKeyPair();
 		this.authenticator = authenticator;

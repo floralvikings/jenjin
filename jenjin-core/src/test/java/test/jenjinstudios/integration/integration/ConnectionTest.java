@@ -1,6 +1,7 @@
 package test.jenjinstudios.integration.integration;
 
 import com.jenjinstudios.core.Connection;
+import com.jenjinstudios.core.SimpleMessageContext;
 import com.jenjinstudios.core.io.*;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -148,8 +149,8 @@ public class ConnectionTest
 			MessageOutputStream outputStreamTwo = new MessageOutputStream(socketTwo.getOutputStream());
 			MessageStreamPair messageStreamPairTwo = new MessageStreamPair(inputStreamTwo, outputStreamTwo);
 
-			connectionOne = new Connection(messageStreamPairOne);
-			connectionTwo = new Connection(messageStreamPairTwo);
+			connectionOne = new Connection<>(messageStreamPairOne, new SimpleMessageContext());
+			connectionTwo = new Connection<>(messageStreamPairTwo, new SimpleMessageContext());
 		}
 	}
 }

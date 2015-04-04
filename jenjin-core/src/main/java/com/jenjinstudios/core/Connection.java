@@ -21,7 +21,7 @@ import java.util.logging.Logger;
  *
  * @author Caleb Brinkman
  */
-public class Connection extends MessageThreadPool<SimpleMessageContext>
+public class Connection<T extends SimpleMessageContext> extends MessageThreadPool<T>
 {
 	private static final int KEYSIZE = 512;
 	private static final Logger LOGGER = Logger.getLogger(Connection.class.getName());
@@ -32,14 +32,13 @@ public class Connection extends MessageThreadPool<SimpleMessageContext>
 	 * Construct a new connection using the given MessageIO for reading and writing messages.
 	 *
 	 * @param streams The MessageIO containing the input and output streams
+	 * @param context The context in which messages should be executed.
 	 */
-	public Connection(MessageStreamPair streams) {
-		super(streams);
-		SimpleMessageContext messageContext = new SimpleMessageContext();
-		messageContext.setAddress(streams.getAddress());
-		messageContext.setName("Connection");
-		setMessageContext(messageContext);
-		pingTracker = messageContext.getPingTracker();
+	public Connection(MessageStreamPair streams, T context) {
+		super(streams, context);
+		getMessageContext().setAddress(streams.getAddress());
+		getMessageContext().setName("Connection");
+		pingTracker = getMessageContext().getPingTracker();
 		InputStream stream = getClass().getClassLoader().getResourceAsStream("com/jenjinstudios/core/io/Messages.xml");
 		MessageRegistry.getGlobalRegistry().register("Core XML Registry", stream);
 	}

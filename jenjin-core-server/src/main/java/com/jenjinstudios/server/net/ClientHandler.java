@@ -1,6 +1,7 @@
 package com.jenjinstudios.server.net;
 
 import com.jenjinstudios.core.Connection;
+import com.jenjinstudios.core.SimpleMessageContext;
 import com.jenjinstudios.core.io.MessageStreamPair;
 import com.jenjinstudios.server.authentication.AuthenticationException;
 import com.jenjinstudios.server.authentication.User;
@@ -13,7 +14,7 @@ import java.util.logging.Logger;
  *
  * @author Caleb Brinkman
  */
-public class ClientHandler extends Connection
+public class ClientHandler<T extends SimpleMessageContext> extends Connection<T>
 {
     private static final Logger LOGGER = Logger.getLogger(ClientHandler.class.getName());
     /** The server. */
@@ -30,9 +31,10 @@ public class ClientHandler extends Connection
      *
      * @param s The server for which this handler works.
 	 * @param messageStreamPair The MessageIO used to send and receive messages.
+	 * @param context The context in which messages should be executed.
 	 */
-	public ClientHandler(Server s, MessageStreamPair messageStreamPair) {
-		super(messageStreamPair);
+	public ClientHandler(Server s, MessageStreamPair messageStreamPair, T context) {
+		super(messageStreamPair, context);
 		setName("ClientHandler with unset ID");
         server = s;
     }
