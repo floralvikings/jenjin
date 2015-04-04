@@ -33,7 +33,7 @@ public class ExecutableWorldLoginResponseTest
 		when(world.getWorldObjects()).thenReturn(worldObjectMap);
 		LoginTracker loginTracker = mock(LoginTracker.class);
 		when(loginTracker.isLoggedIn()).thenReturn(true);
-		when(worldClient.getWorld()).thenReturn(world);
+		when(context.getWorld()).thenReturn(world);
 		when(context.getLoginTracker()).thenReturn(loginTracker);
 		when(context.getUser()).thenReturn(mock(User.class));
 
@@ -43,7 +43,7 @@ public class ExecutableWorldLoginResponseTest
 
 		verify(loginTracker).setLoggedIn(true);
 		verify(loginTracker).setLoggedInTime(0l);
-		verify(worldClient).setPlayer(any());
+		verify(context).setPlayer(any());
 		verify(worldObjectMap).set(eq(0), any());
 	}
 }
