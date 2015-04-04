@@ -34,7 +34,7 @@ public class ExecutableActorVisibleMessageTest
 		WorldObjectList worldObjectMap = mock(WorldObjectList.class);
 		WorldClientMessageContext context = mock(WorldClientMessageContext.class);
 		when(world.getWorldObjects()).thenReturn(worldObjectMap);
-		when(worldClient.getWorld()).thenReturn(world);
+		when(context.getWorld()).thenReturn(world);
 
 		ExecutableMessage message = new ExecutableActorVisibleMessage(worldClient, actorVisibleMessage, context);
 		message.execute();
