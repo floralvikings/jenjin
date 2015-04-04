@@ -1,9 +1,11 @@
 package com.jenjinstudios.world.client.message;
 
+import com.jenjinstudios.core.concurrency.ExecutableMessage;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.client.WorldClient;
+import com.jenjinstudios.world.client.WorldClientMessageContext;
 import com.jenjinstudios.world.collections.WorldObjectList;
 import com.jenjinstudios.world.math.Angle;
 import org.testng.annotations.Test;
@@ -30,12 +32,13 @@ public class ExecutableStateChangeMessageTest
 		WorldClient worldClient = mock(WorldClient.class);
 		World world = spy(new World());
 		WorldObjectList worldObjectMap = mock(WorldObjectList.class);
+		WorldClientMessageContext context = mock(WorldClientMessageContext.class);
 		when(world.getWorldObjects()).thenReturn(worldObjectMap);
 		Actor clientActor = mock(Actor.class);
-		when(worldClient.getWorld()).thenReturn(world);
+		when(context.getWorld()).thenReturn(world);
 		when(worldObjectMap.get(100)).thenReturn(clientActor);
 
-		ExecutableStateChangeMessage message = new ExecutableStateChangeMessage(worldClient, stateChangeMessage, null);
+		ExecutableMessage message = new ExecutableStateChangeMessage(worldClient, stateChangeMessage, context);
 		message.execute();
 		world.update();
 
