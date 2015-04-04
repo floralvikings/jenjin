@@ -21,17 +21,9 @@ public class ClientUser implements User
 		this.password = password;
 	}
 
-    /**
-     * Get the username of this user.
-     *
-     * @return The username of this user.
-     */
-    public String getUsername() { return username; }
+	@Override
+	public String getUsername() { return username; }
 
-    /**
-     * Get the password of this user.
-     *
-     * @return The password of this user.
-     */
-    public String getPassword() { return password; }
+	@Override
+	public String getPassword() { return password; }
 }
