@@ -1,8 +1,8 @@
 package com.jenjinstudios.client.message;
 
+import com.jenjinstudios.client.authentication.ClientUser;
 import com.jenjinstudios.client.net.Client;
 import com.jenjinstudios.client.net.ClientMessageContext;
-import com.jenjinstudios.client.net.ClientUser;
 import com.jenjinstudios.client.net.LoginTracker;
 import com.jenjinstudios.core.io.Message;
 import org.testng.Assert;

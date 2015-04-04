@@ -1,5 +1,6 @@
 package com.jenjinstudios.client.net;
 
+import com.jenjinstudios.client.authentication.ClientUser;
 import com.jenjinstudios.core.Connection;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageRegistry;

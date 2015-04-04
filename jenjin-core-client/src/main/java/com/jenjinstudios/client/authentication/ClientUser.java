@@ -1,4 +1,4 @@
-package com.jenjinstudios.client.net;
+package com.jenjinstudios.client.authentication;
 
 /**
  * Used to represent a client-side user; contains fields for username and password.
