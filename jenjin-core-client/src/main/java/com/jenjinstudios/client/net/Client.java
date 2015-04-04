@@ -38,7 +38,8 @@ public class Client<T extends ClientMessageContext> extends Connection<T>
      */
 	protected Client(MessageStreamPair messageStreamPair, User user, T context) {
 		super(messageStreamPair, context);
-		this.loginTracker = context.getLoginTracker();
+		this.loginTracker = getMessageContext().getLoginTracker();
+		getMessageContext().setUser(user);
 		repeatedTasks = new LinkedList<>();
 		InputStream stream = getClass().getClassLoader().getResourceAsStream("com/jenjinstudios/client/Messages.xml");
 		MessageRegistry.getGlobalRegistry().register("Core Client/Server Messages", stream);
