@@ -18,7 +18,7 @@ public class SimpleMessageContext implements MessageContext
 	private final Map<InetAddress, Key> verifiedKeys;
 	private String name;
 	private final PingTracker pingTracker;
-	private final InetAddress address;
+	private InetAddress address;
 	private Key encryptionKey;
 
 	/**
@@ -74,4 +74,7 @@ public class SimpleMessageContext implements MessageContext
 
 	@Override
 	public InetAddress getAddress() { return address; }
+
+	@Override
+	public void setAddress(InetAddress address) { this.address = address; }
 }
