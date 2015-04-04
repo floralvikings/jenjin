@@ -19,6 +19,13 @@ public interface MessageContext
 	String getName();
 
 	/**
+	 * Set the name of this context.
+	 *
+	 * @param name The new name.
+	 */
+	void setName(String name);
+
+	/**
 	 * The key used to encrypt messages sent in this context.
 	 *
 	 * @return The key used to encrypt messages sent in this context.
