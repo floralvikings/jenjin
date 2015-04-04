@@ -1,6 +1,5 @@
 package com.jenjinstudios.world.client;
 
-import com.jenjinstudios.client.authentication.User;
 import com.jenjinstudios.client.net.Client;
 import com.jenjinstudios.client.net.ClientMessageContext;
 import com.jenjinstudios.core.io.MessageRegistry;
@@ -29,7 +28,7 @@ public class WorldClient<T extends ClientMessageContext> extends Client<T>
     private World world;
     private Actor player;
 
-	public WorldClient(MessageStreamPair messageStreamPair, User user, File worldFile, T context) throws
+	public WorldClient(MessageStreamPair messageStreamPair, File worldFile, T context) throws
 		  WorldDocumentException {
 		super(messageStreamPair, context);
 		this.messageFactory = new WorldClientMessageFactory();
