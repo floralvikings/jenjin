@@ -1,8 +1,10 @@
 package com.jenjinstudios.world.client.message;
 
+import com.jenjinstudios.core.concurrency.ExecutableMessage;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.client.WorldClient;
+import com.jenjinstudios.world.client.WorldClientMessageContext;
 import com.jenjinstudios.world.collections.WorldObjectList;
 import org.testng.annotations.Test;
 
@@ -25,11 +27,11 @@ public class ExecutableObjectVisibleMessageTest
 		WorldClient worldClient = mock(WorldClient.class);
 		World world = spy(new World());
 		WorldObjectList worldObjectMap = mock(WorldObjectList.class);
+		WorldClientMessageContext context = mock(WorldClientMessageContext.class);
 		when(world.getWorldObjects()).thenReturn(worldObjectMap);
-		when(worldClient.getWorld()).thenReturn(world);
+		when(context.getWorld()).thenReturn(world);
 
-		ExecutableObjectVisibleMessage message = new ExecutableObjectVisibleMessage(worldClient, actorVisibleMessage,
-			  null);
+		ExecutableMessage message = new ExecutableObjectVisibleMessage(worldClient, actorVisibleMessage, context);
 		message.execute();
 		world.update();
 
