@@ -5,7 +5,7 @@ package com.jenjinstudios.client.authentication;
  *
  * @author Caleb Brinkman
  */
-public class ClientUser
+public class ClientUser implements User
 {
 	private final String username;
 	private final String password;
