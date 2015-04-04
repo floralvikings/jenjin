@@ -3,6 +3,7 @@ package com.jenjinstudios.world.client.message;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.client.WorldClient;
+import com.jenjinstudios.world.client.WorldClientMessageContext;
 import com.jenjinstudios.world.collections.WorldObjectList;
 import org.testng.annotations.Test;
 
@@ -20,12 +21,12 @@ public class ExecutableObjectInvisibleMessageTest
 
 		WorldClient worldClient = mock(WorldClient.class);
 		World world = spy(new World());
+		WorldClientMessageContext context = mock(WorldClientMessageContext.class);
 		WorldObjectList worldObjectMap = mock(WorldObjectList.class);
 		when(world.getWorldObjects()).thenReturn(worldObjectMap);
-		when(worldClient.getWorld()).thenReturn(world);
+		when(context.getWorld()).thenReturn(world);
 
-		ExecutableObjectInvisibleMessage message =
-			  new ExecutableObjectInvisibleMessage(worldClient, msg, null);
+		ExecutableObjectInvisibleMessage message = new ExecutableObjectInvisibleMessage(worldClient, msg, context);
 		message.execute();
 		world.update();
 
