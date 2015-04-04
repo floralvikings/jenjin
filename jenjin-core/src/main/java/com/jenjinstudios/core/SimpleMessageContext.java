@@ -16,7 +16,7 @@ import java.util.Map;
 public class SimpleMessageContext implements MessageContext
 {
 	private final Map<InetAddress, Key> verifiedKeys;
-	private final String name;
+	private String name;
 	private final PingTracker pingTracker;
 	private final InetAddress address;
 	private Key encryptionKey;
@@ -43,6 +43,9 @@ public class SimpleMessageContext implements MessageContext
 
 	@Override
 	public String getName() { return name; }
+
+	@Override
+	public void setName(String name) { this.name = name; }
 
 	/**
 	 * Get the PingTracker associated with this MessageContext.
