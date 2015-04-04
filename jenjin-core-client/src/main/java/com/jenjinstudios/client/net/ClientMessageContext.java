@@ -14,12 +14,6 @@ public class ClientMessageContext extends SimpleMessageContext
 	private final LoginTracker loginTracker = new LoginTracker();
 
 	/**
-	 * Construct a ClientMessageContext with the specified name.
-	 * @param name The name of the context.
-	 */
-	public ClientMessageContext(String name) { super(name); }
-
-	/**
 	 * Construct a ClientMessageContext with the specified name and internet address.
 	 * @param name The name of the context.
 	 * @param address The address of the context.
