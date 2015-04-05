@@ -2,6 +2,7 @@ package com.jenjinstudios.world.client.message;
 
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.world.client.WorldClient;
+import com.jenjinstudios.world.client.WorldClientMessageContext;
 import com.jenjinstudios.world.client.WorldFileTracker;
 import org.testng.annotations.Test;
 
@@ -23,9 +24,10 @@ public class ExecutableWorldChecksumResponseTest
 
 		WorldClient worldClient = mock(WorldClient.class);
 		WorldFileTracker worldFileTracker = new WorldFileTracker();
-		when(worldClient.getWorldFileTracker()).thenReturn(worldFileTracker);
+		WorldClientMessageContext context = mock(WorldClientMessageContext.class);
+		when(context.getWorldFileTracker()).thenReturn(worldFileTracker);
 
-		ExecutableWorldChecksumResponse response = new ExecutableWorldChecksumResponse(worldClient, message, null);
+		ExecutableWorldChecksumResponse response = new ExecutableWorldChecksumResponse(worldClient, message, context);
 		response.execute();
 
 		assertEquals(worldFileTracker.getChecksum(), checksum);

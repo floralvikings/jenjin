@@ -49,7 +49,7 @@ public class WorldClient<T extends WorldClientMessageContext> extends Client<T>
 
 	public void writeWorldToFile() throws WorldDocumentException {
 		createNewFile();
-		byte[] bytes = worldFileTracker.getBytes();
+		byte[] bytes = getMessageContext().getWorldFileTracker().getBytes();
 		World readWorld = null;
 		if (bytes != null)
 		{
@@ -104,7 +104,7 @@ public class WorldClient<T extends WorldClientMessageContext> extends Client<T>
 			{
 				FileInputStream inputStream = new FileInputStream(worldFile);
 				reader = new WorldDocumentReader(inputStream);
-				worldFileTracker.setBytes(reader.getWorldFileBytes());
+				getMessageContext().getWorldFileTracker().setBytes(reader.getWorldFileBytes());
 			} catch (FileNotFoundException e)
 			{
 				throw new WorldDocumentException("Couldn't find world file.", e);
@@ -114,7 +114,7 @@ public class WorldClient<T extends WorldClientMessageContext> extends Client<T>
 	}
 
 	public void waitForCheckSum() {
-		while (worldFileTracker.isWaitingForChecksum())
+		while (getMessageContext().getWorldFileTracker().isWaitingForChecksum())
 		{
 			waitTenMillis();
 		}
@@ -132,26 +132,25 @@ public class WorldClient<T extends WorldClientMessageContext> extends Client<T>
 
 	public WorldClientMessageFactory getMessageFactory() {return messageFactory; }
 
-    public WorldFileTracker getWorldFileTracker() { return worldFileTracker; }
-
 	public Actor getPlayer() { return getMessageContext().getPlayer(); }
 
 	public World getWorld() { return world; }
 
 	public void initializeWorldFromServer() throws WorldDocumentException {
-		worldFileTracker.setWaitingForChecksum(true);
+		getMessageContext().getWorldFileTracker().setWaitingForChecksum(true);
 		enqueueMessage(messageFactory.generateWorldChecksumRequest());
 		LOGGER.log(Level.INFO, "Requested World Checksum.");
 		waitForCheckSum();
 		LOGGER.log(Level.INFO, "Received World Checksum.");
 
 		if ((worldDocumentReader != null) &&
-			  !Arrays.equals(worldFileTracker.getChecksum(), worldDocumentReader.getWorldFileChecksum()))
+			  !Arrays.equals(getMessageContext().getWorldFileTracker().getChecksum(),
+					worldDocumentReader.getWorldFileChecksum()))
 		{
-			worldFileTracker.setWaitingForFile(true);
+			getMessageContext().getWorldFileTracker().setWaitingForFile(true);
 			enqueueMessage(messageFactory.generateWorldFileRequest());
 			LOGGER.log(Level.INFO, "Requested World File.");
-			while (worldFileTracker.isWaitingForFile())
+			while (getMessageContext().getWorldFileTracker().isWaitingForFile())
 			{
 				waitTenMillis();
 			}
