@@ -86,13 +86,13 @@ public class WorldFileTracker
 	}
 
 	private void createNewFileIfNecessary() throws WorldDocumentException {
-		if (!tryCreateWorldFileDirectory() || !tryCreateWorldFile())
+		if (!tryCreateWorldFileDirectory() || !tryCreateWorldFile(worldFile))
 		{
 			throw new WorldDocumentException("Unable to create new world file!");
 		}
 	}
 
-	private boolean tryCreateWorldFile() throws WorldDocumentException {
+	private static boolean tryCreateWorldFile(File worldFile) throws WorldDocumentException {
 		try
 		{
 			return worldFile.exists() || worldFile.createNewFile();
