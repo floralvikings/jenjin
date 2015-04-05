@@ -8,8 +8,11 @@ import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.client.message.WorldClientMessageFactory;
 import com.jenjinstudios.world.io.WorldDocumentException;
+import com.jenjinstudios.world.io.WorldDocumentReader;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -34,7 +37,7 @@ public class WorldClient<T extends WorldClientMessageContext> extends Client<T>
 		this.worldFile = worldFile;
 		this.messageFactory = new WorldClientMessageFactory();
 		worldFileTracker = new WorldFileTracker(worldFile);
-		world = WorldFileTracker.readWorldFromFile(worldFileTracker, worldFile);
+		world = readWorldFromFile(worldFileTracker, worldFile);
 		getMessageContext().setWorld(world);
 		InputStream stream = getClass().getClassLoader().
 			  getResourceAsStream("com/jenjinstudios/world/client/Messages.xml");
@@ -44,6 +47,26 @@ public class WorldClient<T extends WorldClientMessageContext> extends Client<T>
 	public static void requestChecksum(WorldClient worldClient) {
 		Message checksumRequest = worldClient.getMessageFactory().generateWorldChecksumRequest();
 		worldClient.enqueueMessage(checksumRequest);
+	}
+
+	protected static World readWorldFromFile(WorldFileTracker worldFileTracker, File worldFile) throws
+		  WorldDocumentException
+	{
+		World world = null;
+		if ((worldFile != null) && worldFile.exists())
+		{
+			try
+			{
+				FileInputStream inputStream = new FileInputStream(worldFile);
+				WorldDocumentReader worldDocumentReader = new WorldDocumentReader(inputStream);
+				world = worldDocumentReader.read();
+				worldFileTracker.setBytes(worldDocumentReader.getWorldFileBytes());
+			} catch (FileNotFoundException e)
+			{
+				throw new WorldDocumentException("Couldn't find world file.", e);
+			}
+		}
+		return world;
 	}
 
 	public void waitForCheckSum() {
@@ -72,7 +95,7 @@ public class WorldClient<T extends WorldClientMessageContext> extends Client<T>
 	public World getWorld() { return world; }
 
 	public void readWorldFile() throws WorldDocumentException {
-		world = WorldFileTracker.readWorldFromFile(worldFileTracker, worldFile);
+		world = readWorldFromFile(worldFileTracker, worldFile);
 	}
 
     public void initializeWorldFromServer() throws WorldDocumentException {

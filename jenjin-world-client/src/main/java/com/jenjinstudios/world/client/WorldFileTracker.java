@@ -5,7 +5,10 @@ import com.jenjinstudios.world.io.WorldDocumentException;
 import com.jenjinstudios.world.io.WorldDocumentReader;
 import com.jenjinstudios.world.io.WorldDocumentWriter;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Arrays;
 
 /**
@@ -53,25 +56,6 @@ public class WorldFileTracker
 			ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
 			worldDocumentReader = new WorldDocumentReader(byteArrayInputStream);
 			world = worldDocumentReader.read();
-		}
-		return world;
-	}
-
-	protected static World readWorldFromFile(WorldFileTracker worldFileTracker, File worldFile) throws
-		  WorldDocumentException {
-		World world = null;
-		if (worldFile != null && worldFile.exists())
-		{
-			try
-			{
-				FileInputStream inputStream = new FileInputStream(worldFile);
-				worldFileTracker.worldDocumentReader = new WorldDocumentReader(inputStream);
-				world = worldFileTracker.worldDocumentReader.read();
-				worldFileTracker.bytes = worldFileTracker.worldDocumentReader.getWorldFileBytes();
-			} catch (FileNotFoundException e)
-			{
-				throw new WorldDocumentException("Couldn't find world file.", e);
-			}
 		}
 		return world;
 	}
