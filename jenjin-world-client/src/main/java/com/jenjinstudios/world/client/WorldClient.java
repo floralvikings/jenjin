@@ -45,6 +45,23 @@ public class WorldClient<T extends WorldClientMessageContext> extends Client<T>
 		worldClient.enqueueMessage(checksumRequest);
 	}
 
+	public static void waitForWorldFileChecksum(WorldFileTracker worldFileTracker) {
+		while (worldFileTracker.isWaitingForChecksum())
+		{
+			waitTenMillis();
+		}
+	}
+
+	static void waitTenMillis() {
+		try
+		{
+			Thread.sleep(10);
+		} catch (InterruptedException e)
+		{
+			LOGGER.log(Level.WARNING, "Interrupted while waiting.");
+		}
+	}
+
 	public void requestWorldFile() {
 		if (worldFileTracker.needsWorldFile())
 		{
@@ -71,8 +88,8 @@ public class WorldClient<T extends WorldClientMessageContext> extends Client<T>
         getWorldFileTracker().setWaitingForChecksum(true);
 		requestChecksum(this);
 		LOGGER.log(Level.INFO, "Requested World Checksum.");
-        getWorldFileTracker().waitForWorldFileChecksum();
-        LOGGER.log(Level.INFO, "Received World Checksum.");
+		waitForWorldFileChecksum(getWorldFileTracker());
+		LOGGER.log(Level.INFO, "Received World Checksum.");
         getWorldFileTracker().setWaitingForFile(true);
 		requestWorldFile();
 		LOGGER.log(Level.INFO, "Requested World File.");

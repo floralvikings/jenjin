@@ -7,7 +7,6 @@ import com.jenjinstudios.world.io.WorldDocumentWriter;
 
 import java.io.*;
 import java.util.Arrays;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -112,24 +111,7 @@ public class WorldFileTracker
 	public void waitForWorldFile() {
 		while (isWaitingForFile())
 		{
-			waitTenMillis();
-		}
-	}
-
-	private void waitTenMillis() {
-		try
-		{
-			Thread.sleep(10);
-		} catch (InterruptedException e)
-		{
-			LOGGER.log(Level.WARNING, "Interrupted while waiting.");
-		}
-	}
-
-	public void waitForWorldFileChecksum() {
-		while (isWaitingForChecksum())
-		{
-			waitTenMillis();
+			WorldClient.waitTenMillis();
 		}
 	}
 
