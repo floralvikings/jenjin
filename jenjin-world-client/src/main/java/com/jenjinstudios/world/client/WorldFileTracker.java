@@ -62,8 +62,7 @@ public class WorldFileTracker
 
 	public boolean needsWorldFile() {
 		boolean checksumMismatch = true;
-		boolean readerNull = worldDocumentReader == null;
-		if (!readerNull)
+		if (worldDocumentReader != null)
 		{
 			checksumMismatch = !Arrays.equals(getChecksum(),
 				  worldDocumentReader.getWorldFileChecksum());
