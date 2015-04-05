@@ -3,7 +3,6 @@ package com.jenjinstudios.world.client;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageStreamPair;
 import com.jenjinstudios.world.client.message.ExecutableWorldChecksumResponse;
-import com.jenjinstudios.world.client.message.ExecutableWorldFileResponse;
 import com.jenjinstudios.world.client.message.WorldClientMessageFactory;
 import org.mockito.Mockito;
 import org.testng.Assert;
@@ -43,29 +42,4 @@ public class WorldFileTrackerTest
 
 	}
 
-	@Test(timeOut = 5000)
-	public void testRequestServerWorldFile() throws Exception {
-		WorldClient worldClient = Mockito.mock(WorldClient.class);
-		WorldClientMessageFactory messageFactory = Mockito.mock(WorldClientMessageFactory.class);
-		File worldFile = Mockito.mock(File.class);
-		Message message = Mockito.mock(Message.class);
-		MessageStreamPair messageStreamPair = Mockito.mock(MessageStreamPair.class);
-		Mockito.when(worldClient.getMessageFactory()).thenReturn(messageFactory);
-		Mockito.when(message.getArgument("fileBytes")).thenReturn("abc123".getBytes());
-		Mockito.when(messageFactory.generateWorldChecksumRequest()).thenReturn(message);
-		Mockito.when(worldClient.getMessageStreamPair()).thenReturn(messageStreamPair);
-
-		WorldFileTracker worldFileTracker = new WorldFileTracker(worldFile);
-		Mockito.when(worldClient.getWorldFileTracker()).thenReturn(worldFileTracker);
-		worldFileTracker.setWaitingForFile(true);
-		worldClient.requestWorldFile();
-
-		Assert.assertTrue(worldFileTracker.isWaitingForFile());
-
-		ExecutableWorldFileResponse exec = new ExecutableWorldFileResponse(worldClient, message, null);
-		exec.execute();
-
-		Assert.assertFalse(worldFileTracker.isWaitingForFile());
-		Assert.assertEquals(worldFileTracker.getBytes(), "abc123".getBytes());
-	}
 }
