@@ -76,7 +76,7 @@ public class WorldClient<T extends WorldClientMessageContext> extends Client<T>
 
     public WorldFileTracker getWorldFileTracker() { return worldFileTracker; }
 
-    public Actor getPlayer() { return player; }
+	public Actor getPlayer() { return getMessageContext().getPlayer(); }
 
     public void setPlayer(Actor player) { this.player = player; }
 
