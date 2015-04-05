@@ -76,14 +76,14 @@ public class WorldFileTracker
 	}
 
 	public boolean needsWorldFile() {
-		boolean checksumsMatch = false;
+		boolean checksumMismatch = true;
 		boolean readerNull = worldDocumentReader == null;
 		if (!readerNull)
 		{
-			checksumsMatch = Arrays.equals(getChecksum(),
+			checksumMismatch = !Arrays.equals(getChecksum(),
 				  worldDocumentReader.getWorldFileChecksum());
 		}
-		return !checksumsMatch;
+		return checksumMismatch;
 	}
 
 	private static void createNewFile(File worldFile) throws WorldDocumentException {
