@@ -37,7 +37,7 @@ public class WorldClient<T extends WorldClientMessageContext> extends Client<T>
 		this.worldFile = worldFile;
 		this.messageFactory = new WorldClientMessageFactory();
 		worldFileTracker = new WorldFileTracker(worldFile);
-		world = readWorldFromFile(worldFileTracker, worldFile);
+		world = readWorldFromFile();
 		getMessageContext().setWorld(world);
 		InputStream stream = getClass().getClassLoader().
 			  getResourceAsStream("com/jenjinstudios/world/client/Messages.xml");
@@ -49,24 +49,23 @@ public class WorldClient<T extends WorldClientMessageContext> extends Client<T>
 		worldClient.enqueueMessage(checksumRequest);
 	}
 
-	protected static World readWorldFromFile(WorldFileTracker worldFileTracker, File worldFile) throws
-		  WorldDocumentException
+	protected World readWorldFromFile() throws WorldDocumentException
 	{
-		World world = null;
+		World readWorld = null;
 		if ((worldFile != null) && worldFile.exists())
 		{
 			try
 			{
 				FileInputStream inputStream = new FileInputStream(worldFile);
 				WorldDocumentReader worldDocumentReader = new WorldDocumentReader(inputStream);
-				world = worldDocumentReader.read();
+				readWorld = worldDocumentReader.read();
 				worldFileTracker.setBytes(worldDocumentReader.getWorldFileBytes());
 			} catch (FileNotFoundException e)
 			{
 				throw new WorldDocumentException("Couldn't find world file.", e);
 			}
 		}
-		return world;
+		return readWorld;
 	}
 
 	public void waitForCheckSum() {
@@ -94,12 +93,8 @@ public class WorldClient<T extends WorldClientMessageContext> extends Client<T>
 
 	public World getWorld() { return world; }
 
-	public void readWorldFile() throws WorldDocumentException {
-		world = readWorldFromFile(worldFileTracker, worldFile);
-	}
-
-    public void initializeWorldFromServer() throws WorldDocumentException {
-        getWorldFileTracker().setWaitingForChecksum(true);
+	public void initializeWorldFromServer() throws WorldDocumentException {
+		getWorldFileTracker().setWaitingForChecksum(true);
 		requestChecksum(this);
 		LOGGER.log(Level.INFO, "Requested World Checksum.");
 		waitForCheckSum();
@@ -113,7 +108,8 @@ public class WorldClient<T extends WorldClientMessageContext> extends Client<T>
 			LOGGER.log(Level.INFO, "Received World File.");
 			getWorldFileTracker().writeReceivedWorldToFile();
 		}
-		readWorldFile();
-    }
+		world = readWorldFromFile();
+		getMessageContext().setWorld(world);
+	}
 
 }
