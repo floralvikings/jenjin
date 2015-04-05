@@ -26,7 +26,6 @@ public class WorldClient<T extends WorldClientMessageContext> extends Client<T>
     private final WorldClientMessageFactory messageFactory;
     private final WorldFileTracker worldFileTracker;
     private World world;
-    private Actor player;
 
 	public WorldClient(MessageStreamPair messageStreamPair, File worldFile, T context) throws
 		  WorldDocumentException {
