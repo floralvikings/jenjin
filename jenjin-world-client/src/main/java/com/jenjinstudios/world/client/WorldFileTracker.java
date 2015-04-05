@@ -25,7 +25,7 @@ public class WorldFileTracker
 	}
 
 	public void writeReceivedWorldToFile() throws WorldDocumentException {
-		createNewFileIfNecessary(worldFile);
+		createNewFile(worldFile);
 		writeServerWorldToFile();
 	}
 
@@ -85,7 +85,7 @@ public class WorldFileTracker
 		return !checksumsMatch;
 	}
 
-	private static void createNewFileIfNecessary(File worldFile) throws WorldDocumentException {
+	private static void createNewFile(File worldFile) throws WorldDocumentException {
 		if (!tryCreateWorldFileDirectory(worldFile) || !tryCreateWorldFile(worldFile))
 		{
 			throw new WorldDocumentException("Unable to create new world file!");
