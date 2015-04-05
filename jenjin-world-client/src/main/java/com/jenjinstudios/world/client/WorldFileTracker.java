@@ -57,16 +57,17 @@ public class WorldFileTracker
 		return world;
 	}
 
-	protected World readWorldFromFile() throws WorldDocumentException {
+	protected static World readWorldFromFile(WorldFileTracker worldFileTracker, File worldFile) throws
+		  WorldDocumentException {
 		World world = null;
 		if (worldFile != null && worldFile.exists())
 		{
 			try
 			{
 				FileInputStream inputStream = new FileInputStream(worldFile);
-				worldDocumentReader = new WorldDocumentReader(inputStream);
-				world = worldDocumentReader.read();
-				bytes = worldDocumentReader.getWorldFileBytes();
+				worldFileTracker.worldDocumentReader = new WorldDocumentReader(inputStream);
+				world = worldFileTracker.worldDocumentReader.read();
+				worldFileTracker.bytes = worldFileTracker.worldDocumentReader.getWorldFileBytes();
 			} catch (FileNotFoundException e)
 			{
 				throw new WorldDocumentException("Couldn't find world file.", e);

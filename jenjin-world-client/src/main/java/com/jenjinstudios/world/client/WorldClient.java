@@ -25,14 +25,16 @@ public class WorldClient<T extends WorldClientMessageContext> extends Client<T>
     private static final Logger LOGGER = Logger.getLogger(WorldClient.class.getName());
     private final WorldClientMessageFactory messageFactory;
     private final WorldFileTracker worldFileTracker;
-    private World world;
+	private final File worldFile;
+	private World world;
 
 	public WorldClient(MessageStreamPair messageStreamPair, File worldFile, T context) throws
 		  WorldDocumentException {
 		super(messageStreamPair, context);
+		this.worldFile = worldFile;
 		this.messageFactory = new WorldClientMessageFactory();
 		worldFileTracker = new WorldFileTracker(worldFile);
-		world = worldFileTracker.readWorldFromFile();
+		world = WorldFileTracker.readWorldFromFile(worldFileTracker, worldFile);
 		getMessageContext().setWorld(world);
 		InputStream stream = getClass().getClassLoader().
 			  getResourceAsStream("com/jenjinstudios/world/client/Messages.xml");
@@ -69,7 +71,9 @@ public class WorldClient<T extends WorldClientMessageContext> extends Client<T>
 
 	public World getWorld() { return world; }
 
-    public void readWorldFile() throws WorldDocumentException { world = worldFileTracker.readWorldFromFile(); }
+	public void readWorldFile() throws WorldDocumentException {
+		world = WorldFileTracker.readWorldFromFile(worldFileTracker, worldFile);
+	}
 
     public void initializeWorldFromServer() throws WorldDocumentException {
         getWorldFileTracker().setWaitingForChecksum(true);
