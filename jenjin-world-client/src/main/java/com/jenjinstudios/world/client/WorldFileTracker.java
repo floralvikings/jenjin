@@ -64,8 +64,7 @@ public class WorldFileTracker
 		boolean checksumMismatch = true;
 		if (worldDocumentReader != null)
 		{
-			checksumMismatch = !Arrays.equals(getChecksum(),
-				  worldDocumentReader.getWorldFileChecksum());
+			checksumMismatch = !Arrays.equals(getChecksum(), worldDocumentReader.getWorldFileChecksum());
 		}
 		return checksumMismatch;
 	}
