@@ -90,13 +90,16 @@ public class WorldClient<T extends WorldClientMessageContext> extends Client<T>
 		LOGGER.log(Level.INFO, "Requested World Checksum.");
 		waitForCheckSum();
 		LOGGER.log(Level.INFO, "Received World Checksum.");
-        getWorldFileTracker().setWaitingForFile(true);
-		requestWorldFile();
-		LOGGER.log(Level.INFO, "Requested World File.");
-        getWorldFileTracker().waitForWorldFile();
-        LOGGER.log(Level.INFO, "Received World File.");
-        getWorldFileTracker().writeReceivedWorldToFile();
-        readWorldFile();
+		if (worldFileTracker.needsWorldFile())
+		{
+			worldFileTracker.setWaitingForFile(true);
+			enqueueMessage(messageFactory.generateWorldFileRequest());
+			LOGGER.log(Level.INFO, "Requested World File.");
+			getWorldFileTracker().waitForWorldFile();
+			LOGGER.log(Level.INFO, "Received World File.");
+			getWorldFileTracker().writeReceivedWorldToFile();
+		}
+		readWorldFile();
     }
 
 }
