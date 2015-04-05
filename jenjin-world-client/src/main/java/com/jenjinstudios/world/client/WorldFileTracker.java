@@ -27,7 +27,7 @@ public class WorldFileTracker
 		this.worldFile = worldFile;
 	}
 
-	public void writeReceivedWorldToFile() throws WorldDocumentException {
+	public void writeWorldToFile() throws WorldDocumentException {
 		createNewFile(worldFile);
 		World world = readWorldFromBytes(bytes);
 		writeWorldToFile(world);

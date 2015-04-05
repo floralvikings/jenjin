@@ -106,7 +106,7 @@ public class WorldClient<T extends WorldClientMessageContext> extends Client<T>
 			LOGGER.log(Level.INFO, "Requested World File.");
 			getWorldFileTracker().waitForWorldFile();
 			LOGGER.log(Level.INFO, "Received World File.");
-			getWorldFileTracker().writeReceivedWorldToFile();
+			getWorldFileTracker().writeWorldToFile();
 		}
 		world = readWorldFromFile();
 		getMessageContext().setWorld(world);
