@@ -116,7 +116,8 @@ public class WorldFileTracker
 	private void writeWorldToFile() throws WorldDocumentException {
 		try (FileOutputStream worldOut = new FileOutputStream(worldFile))
 		{
-			WorldDocumentWriter worldDocumentWriter = new WorldDocumentWriter(readWorldFromServer());
+			World world = readWorldFromServer();
+			WorldDocumentWriter worldDocumentWriter = new WorldDocumentWriter(world);
 			worldDocumentWriter.write(worldOut);
 		} catch (IOException ex)
 		{
