@@ -86,7 +86,7 @@ public class WorldFileTracker
 	}
 
 	private void createNewFileIfNecessary() throws WorldDocumentException {
-		if (!tryCreateWorldFileDirectory() || !tryCreateWorldFile(worldFile))
+		if (!tryCreateWorldFileDirectory(worldFile) || !tryCreateWorldFile(worldFile))
 		{
 			throw new WorldDocumentException("Unable to create new world file!");
 		}
@@ -102,7 +102,7 @@ public class WorldFileTracker
 		}
 	}
 
-	private boolean tryCreateWorldFileDirectory() {
+	private static boolean tryCreateWorldFileDirectory(File worldFile) {
 		return worldFile.getParentFile().exists() || worldFile.getParentFile().mkdirs();
 	}
 
