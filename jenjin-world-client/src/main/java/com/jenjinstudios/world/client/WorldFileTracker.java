@@ -26,7 +26,8 @@ public class WorldFileTracker
 
 	public void writeReceivedWorldToFile() throws WorldDocumentException {
 		createNewFile(worldFile);
-		writeWorldToFile();
+		World world = readWorldFromServer();
+		writeWorldToFile(world);
 	}
 
 	public byte[] getChecksum() { return checksum; }
@@ -113,10 +114,9 @@ public class WorldFileTracker
 		}
 	}
 
-	private void writeWorldToFile() throws WorldDocumentException {
+	private void writeWorldToFile(World world) throws WorldDocumentException {
 		try (FileOutputStream worldOut = new FileOutputStream(worldFile))
 		{
-			World world = readWorldFromServer();
 			WorldDocumentWriter worldDocumentWriter = new WorldDocumentWriter(world);
 			worldDocumentWriter.write(worldOut);
 		} catch (IOException ex)
