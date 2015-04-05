@@ -29,7 +29,7 @@ public class WorldFileTracker
 
 	public void writeReceivedWorldToFile() throws WorldDocumentException {
 		createNewFile(worldFile);
-		World world = readWorldFromServer();
+		World world = readWorldFromServer(bytes);
 		writeWorldToFile(world);
 	}
 
@@ -49,12 +49,12 @@ public class WorldFileTracker
 
 	public void setWaitingForFile(boolean waiting) { this.waitingForFile = waiting; }
 
-	protected World readWorldFromServer() throws WorldDocumentException {
+	protected static World readWorldFromServer(byte[] bytes) throws WorldDocumentException {
 		World world = null;
 		if (bytes != null)
 		{
 			ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
-			worldDocumentReader = new WorldDocumentReader(byteArrayInputStream);
+			WorldDocumentReader worldDocumentReader = new WorldDocumentReader(byteArrayInputStream);
 			world = worldDocumentReader.read();
 		}
 		return world;
