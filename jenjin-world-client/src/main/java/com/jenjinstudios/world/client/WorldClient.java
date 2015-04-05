@@ -78,9 +78,7 @@ public class WorldClient<T extends WorldClientMessageContext> extends Client<T>
 
 	public Actor getPlayer() { return getMessageContext().getPlayer(); }
 
-    public void setPlayer(Actor player) { this.player = player; }
-
-    public World getWorld() { return world; }
+	public World getWorld() { return world; }
 
     public void readWorldFile() throws WorldDocumentException { world = worldFileTracker.readWorldFromFile(); }
 
