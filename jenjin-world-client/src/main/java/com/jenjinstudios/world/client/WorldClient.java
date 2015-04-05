@@ -61,16 +61,6 @@ public class WorldClient<T extends WorldClientMessageContext> extends Client<T>
 		}
 	}
 
-	public void requestWorldFile() {
-		if (worldFileTracker.needsWorldFile())
-		{
-			enqueueMessage(getMessageFactory().generateWorldFileRequest());
-		} else
-		{
-			worldFileTracker.setWaitingForFile(false);
-		}
-	}
-
 	public WorldClientMessageFactory getMessageFactory() {return messageFactory; }
 
     public WorldFileTracker getWorldFileTracker() { return worldFileTracker; }
