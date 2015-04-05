@@ -37,7 +37,7 @@ public class WorldClientUpdater implements Runnable
 		if (player != null)
 		{
 			EventStack eventStack = player.getEventStack(StateChangeStack.STACK_NAME);
-			if (eventStack != null && eventStack instanceof StateChangeStack)
+			if (eventStack instanceof StateChangeStack)
 			{
 				StateChangeStack stateChangeStack = (StateChangeStack) eventStack;
 				List<MoveState> newStates = stateChangeStack.getStateChanges();
