@@ -25,7 +25,6 @@ public class WorldClient<T extends WorldClientMessageContext> extends Client<T>
 {
     private static final Logger LOGGER = Logger.getLogger(WorldClient.class.getName());
     private final WorldClientMessageFactory messageFactory;
-    private final WorldFileTracker worldFileTracker;
 	private final File worldFile;
 	private WorldDocumentReader worldDocumentReader;
 	private World world;
@@ -40,7 +39,6 @@ public class WorldClient<T extends WorldClientMessageContext> extends Client<T>
 		{
 			world = worldDocumentReader.read();
 		}
-		worldFileTracker = new WorldFileTracker();
 		getMessageContext().setWorld(world);
 		InputStream stream = getClass().getClassLoader().
 			  getResourceAsStream("com/jenjinstudios/world/client/Messages.xml");
