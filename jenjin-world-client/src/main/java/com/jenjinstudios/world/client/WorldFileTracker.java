@@ -7,14 +7,12 @@ import com.jenjinstudios.world.io.WorldDocumentWriter;
 
 import java.io.*;
 import java.util.Arrays;
-import java.util.logging.Logger;
 
 /**
  * @author Caleb Brinkman
  */
 public class WorldFileTracker
 {
-	private static final Logger LOGGER = Logger.getLogger(WorldFileTracker.class.getName());
 	private final File worldFile;
 	private boolean waitingForChecksum;
 	private byte[] checksum;
