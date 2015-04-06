@@ -14,7 +14,7 @@ import com.jenjinstudios.world.server.WorldServer;
  * Handles requests to log out of the world.
  * @author Caleb Brinkman
  */
-public class ExecutableWorldLogoutRequest extends WorldExecutableMessage<ServerMessageContext>
+public class ExecutableWorldLogoutRequest extends WorldExecutableMessage<ServerMessageContext<Player>>
 {
 	/** The SQLHandler used to log out the client. */
 	private final Authenticator<Player> authenticator;
@@ -25,7 +25,9 @@ public class ExecutableWorldLogoutRequest extends WorldExecutableMessage<ServerM
 	 * @param message The message.
 	 * @param context The context in which to execute the message.
 	 */
-	public ExecutableWorldLogoutRequest(WorldClientHandler handler, Message message, ServerMessageContext context) {
+	public ExecutableWorldLogoutRequest(WorldClientHandler handler, Message message,
+										ServerMessageContext<Player> context)
+	{
 		super(handler, message, context);
 		authenticator = ((WorldServer) handler.getServer()).getAuthenticator();
 
@@ -43,7 +45,7 @@ public class ExecutableWorldLogoutRequest extends WorldExecutableMessage<ServerM
 			response = ServerMessageFactory.generateLogoutResponse(false);
 		}
 
-		Player clientActor = getClientHandler().getUser();
+		Player clientActor = getContext().getUser();
 		World world = ((WorldServer) getClientHandler().getServer()).getWorld();
 		world.scheduleUpdateTask(() -> {
 			if ((clientActor != null) && !clientActor.isLoggedIn())
@@ -55,10 +57,9 @@ public class ExecutableWorldLogoutRequest extends WorldExecutableMessage<ServerM
 	}
 
 	private void tryLogOutUser() throws AuthenticationException {
-		WorldClientHandler handler = getClientHandler();
-		if (authenticator != null && handler.getUser() != null)
+		if ((authenticator != null) && (getContext().getUser() != null))
 		{
-			authenticator.logOutUser(handler.getUser().getUsername());
+			authenticator.logOutUser(getContext().getUser().getUsername());
 		} else throw new AuthenticationException("Missing ClientHandler username or Authenticator.");
 	}
 }
