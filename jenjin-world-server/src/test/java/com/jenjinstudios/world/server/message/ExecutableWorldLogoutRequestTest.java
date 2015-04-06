@@ -70,14 +70,16 @@ public class ExecutableWorldLogoutRequestTest extends PowerMockTestCase
 		WorldClientHandler handler = mock(WorldClientHandler.class);
 		WorldServer worldServer = mock(WorldServer.class);
 		Authenticator<Player> authenticator = mock(Authenticator.class);
-		when(worldServer.getAuthenticator()).thenReturn(authenticator);
+		ServerMessageContext<Player> context = mock(ServerMessageContext.class);
+
+		when(context.getAuthenticator()).thenReturn(authenticator);
 		when(worldServer.getWorld()).thenReturn(world);
 		when(handler.getServer()).thenReturn(worldServer);
-		when(handler.getUser()).thenReturn(null);
+		when(context.getUser()).thenReturn(null);
 		when(player.getId()).thenReturn(0);
 		when(player.getVector2D()).thenReturn(Vector2D.ORIGIN);
 
-		ExecutableWorldLogoutRequest exec = new ExecutableWorldLogoutRequest(handler, logOutRequest, null);
+		ExecutableWorldLogoutRequest exec = new ExecutableWorldLogoutRequest(handler, logOutRequest, context);
 		Message resp = exec.execute();
 
 		Assert.assertEquals(resp, response, "Response mocks should be equal");
