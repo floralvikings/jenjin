@@ -162,7 +162,7 @@ public class MessageExecutor
 			ExecutableMessage executableMessage = null;
 			try
 			{
-				executableMessage = (ExecutableMessage) constructor.newInstance(threadPool, msg, messageContext);
+				executableMessage = (ExecutableMessage) constructor.newInstance(msg, messageContext);
 			} catch (InvocationTargetException | InstantiationException | IllegalAccessException e)
 			{
 				LOGGER.log(Level.SEVERE, "Constructor not correct", e);
@@ -174,8 +174,8 @@ public class MessageExecutor
 			Constructor correctConstructor = null;
 			for (Constructor constructor : execConstructors)
 			{
-				Class<?> firstParam = constructor.getParameterTypes()[0];
-				if (firstParam.isAssignableFrom(threadPool.getClass()))
+				Class<?> firstParam = constructor.getParameterTypes()[1];
+				if (firstParam.isAssignableFrom(messageContext.getClass()))
 					correctConstructor = constructor;
 			}
 			return correctConstructor;
