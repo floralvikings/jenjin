@@ -21,10 +21,4 @@ public class MessageTypeException extends IOException
 		this.id = id;
 	}
 
-	/**
-	 * Get the id of the invalid message that caused this exception.
-	 *
-	 * @return The id of the invalid message that caused this exception.
-	 */
-	public short getId() { return id; }
 }
