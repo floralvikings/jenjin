@@ -14,6 +14,7 @@ public class WorldServerMessageContext extends ServerMessageContext<Player>
 {
 	private World world;
 	private byte[] worldChecksum;
+	private byte[] worldBytes;
 
 	/**
 	 * Get the world managed by this context.
@@ -42,4 +43,18 @@ public class WorldServerMessageContext extends ServerMessageContext<Player>
 	 * @param worldChecksum The checksum.
 	 */
 	public void setWorldChecksum(byte... worldChecksum) { this.worldChecksum = worldChecksum; }
+
+	/**
+	 * Get the byte array used to make up the world managed by this context.
+	 *
+	 * @return The bytes that comprise the world.
+	 */
+	public byte[] getWorldBytes() { return worldBytes; }
+
+	/**
+	 * Set the byte array used to make up the world managed by this context.
+	 *
+	 * @param worldBytes The bytes.
+	 */
+	public void setWorldBytes(byte[] worldBytes) { this.worldBytes = worldBytes; }
 }
