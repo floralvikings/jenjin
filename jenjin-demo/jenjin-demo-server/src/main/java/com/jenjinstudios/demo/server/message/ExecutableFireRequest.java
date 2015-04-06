@@ -5,6 +5,7 @@ import com.jenjinstudios.demo.server.Bullet;
 import com.jenjinstudios.server.net.ServerMessageContext;
 import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.World;
+import com.jenjinstudios.world.server.Player;
 import com.jenjinstudios.world.server.WorldClientHandler;
 import com.jenjinstudios.world.server.WorldServer;
 import com.jenjinstudios.world.server.message.WorldExecutableMessage;
@@ -12,7 +13,7 @@ import com.jenjinstudios.world.server.message.WorldExecutableMessage;
 /**
  * @author Caleb Brinkman
  */
-public class ExecutableFireRequest extends WorldExecutableMessage<ServerMessageContext>
+public class ExecutableFireRequest extends WorldExecutableMessage<ServerMessageContext<Player>>
 {
 	/**
 	 * Construct a new ExecutableMessage.  Must be implemented by subclasses.
@@ -20,7 +21,7 @@ public class ExecutableFireRequest extends WorldExecutableMessage<ServerMessageC
 	 * @param message The message.
 	 * @param context The context in which to execute the message.
 	 */
-	public ExecutableFireRequest(WorldClientHandler handler, Message message, ServerMessageContext context) {
+	public ExecutableFireRequest(WorldClientHandler handler, Message message, ServerMessageContext<Player> context) {
 		super(handler, message, context);
 	}
 
@@ -29,7 +30,7 @@ public class ExecutableFireRequest extends WorldExecutableMessage<ServerMessageC
 	public Message execute() {
 		World world = ((WorldServer) getClientHandler().getServer()).getWorld();
 		world.scheduleUpdateTask(() -> {
-			Actor player = getClientHandler().getUser();
+			Actor player = getContext().getUser();
 			Bullet bullet = new Bullet(player);
 			world.getWorldObjects().add(bullet);
 		});
