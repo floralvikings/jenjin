@@ -5,7 +5,6 @@ import com.jenjinstudios.core.io.MessageRegistry;
 import com.jenjinstudios.server.authentication.AuthenticationException;
 import com.jenjinstudios.server.authentication.Authenticator;
 import com.jenjinstudios.server.message.ServerMessageFactory;
-import com.jenjinstudios.server.net.ServerMessageContext;
 import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.collections.WorldObjectList;
@@ -13,6 +12,7 @@ import com.jenjinstudios.world.math.Vector2D;
 import com.jenjinstudios.world.server.Player;
 import com.jenjinstudios.world.server.WorldClientHandler;
 import com.jenjinstudios.world.server.WorldServer;
+import com.jenjinstudios.world.server.WorldServerMessageContext;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.testng.PowerMockTestCase;
@@ -42,7 +42,7 @@ public class ExecutableWorldLogoutRequestTest extends PowerMockTestCase
 		WorldServer worldServer = mock(WorldServer.class);
 		Authenticator<Player> authenticator = mock(Authenticator.class);
 		WorldObjectList worldObjectMap = mock(WorldObjectList.class);
-		ServerMessageContext<Player> context = mock(ServerMessageContext.class);
+		WorldServerMessageContext<Player> context = mock(WorldServerMessageContext.class);
 
 		when(world.getWorldObjects()).thenReturn(worldObjectMap);
 		when(context.getAuthenticator()).thenReturn(authenticator);
@@ -72,7 +72,7 @@ public class ExecutableWorldLogoutRequestTest extends PowerMockTestCase
 		WorldClientHandler handler = mock(WorldClientHandler.class);
 		WorldServer worldServer = mock(WorldServer.class);
 		Authenticator<Player> authenticator = mock(Authenticator.class);
-		ServerMessageContext<Player> context = mock(ServerMessageContext.class);
+		WorldServerMessageContext<Player> context = mock(WorldServerMessageContext.class);
 
 		when(context.getAuthenticator()).thenReturn(authenticator);
 		when(worldServer.getWorld()).thenReturn(world);
@@ -100,7 +100,7 @@ public class ExecutableWorldLogoutRequestTest extends PowerMockTestCase
 		WorldServer worldServer = mock(WorldServer.class);
 		WorldClientHandler handler = mock(WorldClientHandler.class);
 		Authenticator<Player> authenticator = mock(Authenticator.class);
-		ServerMessageContext<Player> context = mock(ServerMessageContext.class);
+		WorldServerMessageContext<Player> context = mock(WorldServerMessageContext.class);
 
 		when(context.getAuthenticator()).thenReturn(authenticator);
 		when(worldServer.getWorld()).thenReturn(world);
