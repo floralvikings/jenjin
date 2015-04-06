@@ -40,6 +40,11 @@ public class MessageThreadPool<T extends MessageContext>
 		messageWriter.setMessageContext(context);
 	}
 
+	/**
+	 * Get the message context in which messages received by this thread pool will be executed.
+	 *
+	 * @return The message context.
+	 */
 	public T getMessageContext() { return messageContext; }
 
 	/**
