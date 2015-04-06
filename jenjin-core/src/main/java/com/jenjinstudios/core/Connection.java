@@ -1,5 +1,6 @@
 package com.jenjinstudios.core;
 
+import com.jenjinstudios.core.concurrency.MessageContext;
 import com.jenjinstudios.core.concurrency.MessageThreadPool;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageRegistry;
@@ -21,7 +22,7 @@ import java.util.logging.Logger;
  *
  * @author Caleb Brinkman
  */
-public class Connection<T extends SimpleMessageContext> extends MessageThreadPool<T>
+public class Connection<T extends MessageContext> extends MessageThreadPool<T>
 {
 	private static final int KEYSIZE = 512;
 	private static final Logger LOGGER = Logger.getLogger(Connection.class.getName());
