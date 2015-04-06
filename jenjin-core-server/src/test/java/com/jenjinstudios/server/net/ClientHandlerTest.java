@@ -43,10 +43,11 @@ public class ClientHandlerTest extends PowerMockTestCase
 		MessageInputStream mis = mock(MessageInputStream.class);
 		MessageOutputStream mos = mock(MessageOutputStream.class);
 		MessageStreamPair messageStreamPair = new MessageStreamPair(mis, mos);
+		ServerMessageContext context = new ServerMessageContext();
 		when(server.getAuthenticator()).thenReturn(authenticator);
 
-		ClientHandler clientHandler = new ClientHandler(server, messageStreamPair, new ServerMessageContext());
-		clientHandler.setUser(user);
+		ClientHandler clientHandler = new ClientHandler(server, messageStreamPair, context);
+		context.setUser(user);
 		clientHandler.shutdown();
 
 		verify(authenticator).logOutUser(anyString());

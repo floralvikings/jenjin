@@ -17,7 +17,7 @@ import java.util.Set;
  *
  * @author Caleb Brinkman
  */
-public class WorldClientHandler<T extends WorldServerMessageContext> extends ClientHandler<T>
+public class WorldClientHandler<T extends WorldServerMessageContext<Player>> extends ClientHandler<T>
 {
 	private boolean hasSentActorStepMessage;
 
@@ -28,11 +28,13 @@ public class WorldClientHandler<T extends WorldServerMessageContext> extends Cli
 	@Override
 	public void update() {
 		super.update();
-		if (getUser() != null)
+		if (getMessageContext().getUser() != null)
 		{
 			if (!hasSentActorStepMessage)
 			{
-				enqueueMessage(WorldServerMessageFactory.generateActorMoveSpeedMessage(getUser().getMoveSpeed()));
+				double moveSpeed = getMessageContext().getUser().getMoveSpeed();
+				Message message = WorldServerMessageFactory.generateActorMoveSpeedMessage(moveSpeed);
+				enqueueMessage(message);
 				hasSentActorStepMessage = true;
 			}
 			queueForcesStateMessage();
@@ -42,10 +44,10 @@ public class WorldClientHandler<T extends WorldServerMessageContext> extends Cli
 		}
 	}
 
-	public Player getUser() { return (Player) super.getUser(); }
+	public Player getUser() { return getMessageContext().getUser(); }
 
 	private void queueNewlyVisibleMessages() {
-		Object o = getUser().getPreUpdateEvent(Vision.EVENT_NAME);
+		Object o = getMessageContext().getUser().getPreUpdateEvent(Vision.EVENT_NAME);
 		if (o != null && o instanceof Vision)
 		{
 			Vision vision = (Vision) o;
@@ -59,7 +61,7 @@ public class WorldClientHandler<T extends WorldServerMessageContext> extends Cli
 	}
 
 	private void queueNewlyInvisibleMessages() {
-		Object o = getUser().getPreUpdateEvent(Vision.EVENT_NAME);
+		Object o = getMessageContext().getUser().getPreUpdateEvent(Vision.EVENT_NAME);
 		if (o != null && o instanceof Vision)
 		{
 			Vision vision = (Vision) o;
@@ -72,7 +74,7 @@ public class WorldClientHandler<T extends WorldServerMessageContext> extends Cli
 	}
 
 	private void queueStateChangeMessages() {
-		Object o = getUser().getPreUpdateEvent(Vision.EVENT_NAME);
+		Object o = getMessageContext().getUser().getPreUpdateEvent(Vision.EVENT_NAME);
 		if (o != null && o instanceof Vision)
 		{
 			Vision vision = (Vision) o;
@@ -88,7 +90,7 @@ public class WorldClientHandler<T extends WorldServerMessageContext> extends Cli
 	}
 
 	private void queueForcesStateMessage() {
-		MoveState forcedState = getUser().getForcedState();
+		MoveState forcedState = getMessageContext().getUser().getForcedState();
 		if (forcedState != null)
 			enqueueMessage(WorldServerMessageFactory.generateForcedStateMessage(forcedState));
 	}

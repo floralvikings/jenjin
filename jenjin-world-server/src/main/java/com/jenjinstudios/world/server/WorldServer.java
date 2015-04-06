@@ -5,6 +5,7 @@ import com.jenjinstudios.server.authentication.Authenticator;
 import com.jenjinstudios.server.net.ClientHandler;
 import com.jenjinstudios.server.net.Server;
 import com.jenjinstudios.server.net.ServerInit;
+import com.jenjinstudios.server.net.ServerMessageContext;
 import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.io.WorldDocumentReader;
 import com.jenjinstudios.world.io.WorldDocumentWriter;
@@ -70,7 +71,8 @@ public class WorldServer extends Server
 	@Override
 	public void removeClient(ClientHandler handler) {
 		super.removeClient(handler);
-		if (((WorldClientHandler) handler).getUser() != null)
-			world.getWorldObjects().remove(((WorldClientHandler) handler).getUser().getId());
+		if (((ServerMessageContext) handler.getMessageContext()).getUser() != null)
+			world.getWorldObjects().remove(((ServerMessageContext<? extends Player>) handler.getMessageContext())
+				  .getUser().getId());
 	}
 }

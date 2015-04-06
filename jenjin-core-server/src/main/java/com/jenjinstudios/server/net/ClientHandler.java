@@ -52,8 +52,8 @@ public class ClientHandler<T extends ServerMessageContext> extends Connection<T>
     /** Shut down the client handler. */
     @Override
     public void shutdown() {
-        if (getUser() != null)
-        {
+		if (getMessageContext().getUser() != null)
+		{
             try
             {
 				server.getAuthenticator().logOutUser(getMessageContext().getUser().getUsername());
@@ -80,15 +80,8 @@ public class ClientHandler<T extends ServerMessageContext> extends Connection<T>
      */
     public int getHandlerId() { return handlerId; }
 
-    /**
-     * Get the User associated with this ClientHandler.
-     *
-     * @return The User associated with this ClientHandler.
-     */
-	public User getUser() { return user; }
-
-    /**
-     * Set the User associated with this ClientHandler.
+	/**
+	 * Set the User associated with this ClientHandler.
      *
 	 * @param user The User associated with this ClientHandler.
 	 */

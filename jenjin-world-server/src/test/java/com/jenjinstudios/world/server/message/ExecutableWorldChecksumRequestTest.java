@@ -4,6 +4,7 @@ import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageStreamPair;
 import com.jenjinstudios.world.server.WorldClientHandler;
 import com.jenjinstudios.world.server.WorldServer;
+import com.jenjinstudios.world.server.WorldServerMessageContext;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.testng.PowerMockTestCase;
@@ -29,15 +30,16 @@ public class ExecutableWorldChecksumRequestTest extends PowerMockTestCase
 		WorldClientHandler clientHandler = mock(WorldClientHandler.class);
 		Message message = mock(Message.class);
 		WorldServer server = mock(WorldServer.class);
+		WorldServerMessageContext context = mock(WorldServerMessageContext.class);
 		MessageStreamPair messageStreamPair = mock(MessageStreamPair.class);
 
 		// Mock returns
 		when(WorldServerMessageFactory.generateWorldChecksumResponse(any())).thenReturn(response);
-		when(server.getWorldFileChecksum()).thenReturn(checksum);
+		when(context.getWorldChecksum()).thenReturn(checksum);
 		when(clientHandler.getServer()).thenReturn(server);
 		when(clientHandler.getMessageStreamPair()).thenReturn(messageStreamPair);
 
-		ExecutableWorldChecksumRequest exec = new ExecutableWorldChecksumRequest(clientHandler, message, null);
+		ExecutableWorldChecksumRequest exec = new ExecutableWorldChecksumRequest(clientHandler, message, context);
 		Message resp = exec.execute();
 
 		Assert.assertEquals(resp, response, "Response mocks should be equal.");
