@@ -18,8 +18,6 @@ public class WorldClientUpdater implements Runnable
 {
 	/** The client being updated by this runnable. */
 	private final WorldClient worldClient;
-	/** The player being controlled by the world client. */
-	private final Actor player;
 
 	/**
 	 * Construct a new {@code WorldClientUpdater} for the given client.
@@ -28,12 +26,12 @@ public class WorldClientUpdater implements Runnable
 	 */
 	public WorldClientUpdater(WorldClient wc) {
 		this.worldClient = wc;
-		this.player = worldClient.getPlayer();
 	}
 
 	@Override
 	public void run() {
 		worldClient.getWorld().update();
+		Actor player = worldClient.getPlayer();
 		if (player != null)
 		{
 			EventStack eventStack = player.getEventStack(StateChangeStack.STACK_NAME);
