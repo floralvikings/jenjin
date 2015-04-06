@@ -1,7 +1,7 @@
 package com.jenjinstudios.world.server.message;
 
-import com.jenjinstudios.core.concurrency.MessageContext;
 import com.jenjinstudios.core.io.Message;
+import com.jenjinstudios.server.net.ServerMessageContext;
 import com.jenjinstudios.world.server.WorldClientHandler;
 import com.jenjinstudios.world.server.WorldServer;
 
@@ -10,7 +10,7 @@ import com.jenjinstudios.world.server.WorldServer;
  *
  * @author Caleb Brinkman
  */
-public class ExecutableWorldFileRequest extends WorldExecutableMessage<MessageContext>
+public class ExecutableWorldFileRequest extends WorldExecutableMessage<ServerMessageContext>
 {
 	/**
 	 * Construct a new ExecutableMessage.  Must be implemented by subclasses.
@@ -19,7 +19,7 @@ public class ExecutableWorldFileRequest extends WorldExecutableMessage<MessageCo
 	 * @param message The message.
 	 * @param context The context in which to execute the message.
 	 */
-	public ExecutableWorldFileRequest(WorldClientHandler handler, Message message, MessageContext context) {
+	public ExecutableWorldFileRequest(WorldClientHandler handler, Message message, ServerMessageContext context) {
 		super(handler, message, context);
 	}
 
