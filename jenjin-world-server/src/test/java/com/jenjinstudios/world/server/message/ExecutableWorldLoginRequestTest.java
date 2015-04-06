@@ -49,19 +49,21 @@ public class ExecutableWorldLoginRequestTest extends PowerMockTestCase
 		WorldServer server = mock(WorldServer.class);
 		WorldObjectList worldObjectMap = mock(WorldObjectList.class);
 		MessageStreamPair messageStreamPair = mock(MessageStreamPair.class);
-		WorldClientHandler wch = new WorldClientHandler(server, messageStreamPair, new ServerMessageContext());
-
 		ServerUpdateTask serverUpdateTask = mock(ServerUpdateTask.class);
+		ServerMessageContext<Player> context = mock(ServerMessageContext.class);
+		WorldClientHandler wch = new WorldClientHandler(server, messageStreamPair, context);
+
 		when(server.getServerUpdateTask()).thenReturn(serverUpdateTask);
 		when(serverUpdateTask.getCycleStartTime()).thenReturn(0L);
 		when(world.getWorldObjects()).thenReturn(worldObjectMap);
 		when(user.isLoggedIn()).thenReturn(true);
 		when(authenticator.logInUser(Matchers.anyString(), Matchers.anyString())).thenReturn(player);
-		when(server.getAuthenticator()).thenReturn(authenticator);
+		when(context.getAuthenticator()).thenReturn(authenticator);
+		when(context.getUser()).thenReturn(player);
 		when(server.getWorld()).thenReturn(world);
 		when(WorldServerMessageFactory.generateWorldLoginResponse()).thenReturn(message);
 		when(player.getVector2D()).thenReturn(Vector2D.ORIGIN);
-		ExecutableWorldLoginRequest exec = new ExecutableWorldLoginRequest(wch, message, null);
+		ExecutableWorldLoginRequest exec = new ExecutableWorldLoginRequest(wch, message, context);
 		exec.execute();
 		world.update();
 
