@@ -1,6 +1,5 @@
 package com.jenjinstudios.server.net;
 
-import com.jenjinstudios.core.concurrency.MessageContext;
 import com.jenjinstudios.core.io.MessageInputStream;
 import com.jenjinstudios.core.io.MessageOutputStream;
 import com.jenjinstudios.core.io.MessageStreamPair;
@@ -24,7 +23,7 @@ class ClientListener<T extends ClientHandler> implements Runnable
 {
 	/** The Logger for this class. */
 	private static final Logger LOGGER = Logger.getLogger(ClientListener.class.getName());
-	private final Class<? extends MessageContext> contextClass;
+	private final Class<? extends ServerMessageContext> contextClass;
 	/** The port on which this object listens. */
 	private final int PORT;
 	/** The list of new clients. */
@@ -46,7 +45,7 @@ class ClientListener<T extends ClientHandler> implements Runnable
 	 * constructor.
 	 */
 	public ClientListener(Class<? extends Server> serverClass, Class<? extends T> handlerClass,
-						  Class<? extends MessageContext> contextClass, int port) throws IOException,
+						  Class<? extends ServerMessageContext> contextClass, int port) throws IOException,
 		  NoSuchMethodException
 	{
 		this.contextClass = contextClass;
@@ -122,7 +121,7 @@ class ClientListener<T extends ClientHandler> implements Runnable
 	 * Add a new Client using the specified socket as a connection.
 	 */
 	private void addNewClient(MessageInputStream in, MessageOutputStream out) {
-		MessageContext context = null;
+		ServerMessageContext context = null;
 		try
 		{
 			context = contextClass.getConstructor().newInstance();
