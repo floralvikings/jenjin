@@ -4,17 +4,17 @@ import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.server.authentication.AuthenticationException;
 import com.jenjinstudios.server.authentication.Authenticator;
 import com.jenjinstudios.server.message.ServerMessageFactory;
-import com.jenjinstudios.server.net.ServerMessageContext;
 import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.server.Player;
 import com.jenjinstudios.world.server.WorldClientHandler;
 import com.jenjinstudios.world.server.WorldServer;
+import com.jenjinstudios.world.server.WorldServerMessageContext;
 
 /**
  * Handles requests to log out of the world.
  * @author Caleb Brinkman
  */
-public class ExecutableWorldLogoutRequest extends WorldExecutableMessage<ServerMessageContext<Player>>
+public class ExecutableWorldLogoutRequest extends WorldExecutableMessage<WorldServerMessageContext<Player>>
 {
 	/** The SQLHandler used to log out the client. */
 	private final Authenticator<Player> authenticator;
@@ -26,7 +26,7 @@ public class ExecutableWorldLogoutRequest extends WorldExecutableMessage<ServerM
 	 * @param context The context in which to execute the message.
 	 */
 	public ExecutableWorldLogoutRequest(WorldClientHandler handler, Message message,
-										ServerMessageContext<Player> context)
+										WorldServerMessageContext<Player> context)
 	{
 		super(handler, message, context);
 		authenticator = ((WorldServer) handler.getServer()).getAuthenticator();
