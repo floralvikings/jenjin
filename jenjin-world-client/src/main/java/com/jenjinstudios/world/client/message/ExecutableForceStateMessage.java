@@ -3,7 +3,6 @@ package com.jenjinstudios.world.client.message;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.World;
-import com.jenjinstudios.world.client.WorldClient;
 import com.jenjinstudios.world.client.WorldClientMessageContext;
 import com.jenjinstudios.world.math.Angle;
 import com.jenjinstudios.world.math.Vector2D;
@@ -21,8 +20,8 @@ public class ExecutableForceStateMessage extends WorldClientExecutableMessage<Wo
 	private Angle angle;
     private long timeOfForce;
 
-	public ExecutableForceStateMessage(WorldClient client, Message message, WorldClientMessageContext context) {
-		super(client, message, context);
+	public ExecutableForceStateMessage(Message message, WorldClientMessageContext context) {
+		super(context);
 	}
 
     @Override

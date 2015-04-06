@@ -2,7 +2,6 @@ package com.jenjinstudios.world.client.message;
 
 import com.jenjinstudios.core.concurrency.ExecutableMessage;
 import com.jenjinstudios.core.io.Message;
-import com.jenjinstudios.world.client.WorldClient;
 import com.jenjinstudios.world.client.WorldClientMessageContext;
 
 /**
@@ -15,11 +14,10 @@ public abstract class WorldClientExecutableMessage<T extends WorldClientMessageC
     /**
      * Construct an ExecutableMessage with the given Message.
      *
-     * @param client The client invoking this message.
      * @param message The Message.
 	 * @param context The context in which to execute the message.
 	 */
-	protected WorldClientExecutableMessage(WorldClient client, Message message, T context) {
+	protected WorldClientExecutableMessage(Message message, T context) {
 		super(message, context);
 	}
 

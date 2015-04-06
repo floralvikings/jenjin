@@ -27,7 +27,7 @@ public class ExecutableWorldFileResponseTest
 		WorldClientMessageContext context = mock(WorldClientMessageContext.class);
 		when(context.getWorldFileTracker()).thenReturn(worldFileTracker);
 
-		ExecutableWorldFileResponse response = new ExecutableWorldFileResponse(worldClient, message, context);
+		ExecutableWorldFileResponse response = new ExecutableWorldFileResponse(message, context);
 		response.execute();
 
 		assertEquals(worldFileTracker.getBytes(), fileBytes);

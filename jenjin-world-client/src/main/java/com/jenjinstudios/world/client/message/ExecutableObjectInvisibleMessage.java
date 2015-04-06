@@ -2,7 +2,6 @@ package com.jenjinstudios.world.client.message;
 
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.world.World;
-import com.jenjinstudios.world.client.WorldClient;
 import com.jenjinstudios.world.client.WorldClientMessageContext;
 
 /**
@@ -13,8 +12,8 @@ import com.jenjinstudios.world.client.WorldClientMessageContext;
 @SuppressWarnings("WeakerAccess")
 public class ExecutableObjectInvisibleMessage extends WorldClientExecutableMessage<WorldClientMessageContext>
 {
-	public ExecutableObjectInvisibleMessage(WorldClient client, Message message, WorldClientMessageContext context) {
-		super(client, message, context);
+	public ExecutableObjectInvisibleMessage(Message message, WorldClientMessageContext context) {
+		super(context);
 	}
 
     @Override

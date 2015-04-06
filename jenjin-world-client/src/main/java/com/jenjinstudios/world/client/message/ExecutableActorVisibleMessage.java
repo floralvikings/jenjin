@@ -4,7 +4,6 @@ import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.WorldObject;
-import com.jenjinstudios.world.client.WorldClient;
 import com.jenjinstudios.world.client.WorldClientMessageContext;
 import com.jenjinstudios.world.math.Angle;
 import com.jenjinstudios.world.math.Vector2D;
@@ -22,8 +21,8 @@ public class ExecutableActorVisibleMessage extends WorldClientExecutableMessage<
     private static final Logger LOGGER = Logger.getLogger(ExecutableActorVisibleMessage.class.getName());
     private Actor newlyVisible;
 
-	public ExecutableActorVisibleMessage(WorldClient client, Message message, WorldClientMessageContext context) {
-		super(client, message, context);
+	public ExecutableActorVisibleMessage(Message message, WorldClientMessageContext context) {
+		super(context);
 	}
 
     @Override

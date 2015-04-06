@@ -27,7 +27,7 @@ public class ExecutableWorldChecksumResponseTest
 		WorldClientMessageContext context = mock(WorldClientMessageContext.class);
 		when(context.getWorldFileTracker()).thenReturn(worldFileTracker);
 
-		ExecutableWorldChecksumResponse response = new ExecutableWorldChecksumResponse(worldClient, message, context);
+		ExecutableWorldChecksumResponse response = new ExecutableWorldChecksumResponse(message, context);
 		response.execute();
 
 		assertEquals(worldFileTracker.getChecksum(), checksum);

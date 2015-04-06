@@ -4,7 +4,6 @@ import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.WorldObject;
-import com.jenjinstudios.world.client.WorldClient;
 import com.jenjinstudios.world.client.WorldClientMessageContext;
 import com.jenjinstudios.world.math.Angle;
 import com.jenjinstudios.world.math.Vector2D;
@@ -21,12 +20,11 @@ public class ExecutableStateChangeMessage extends WorldClientExecutableMessage<W
 	/**
 	 * Construct an ExecutableMessage with the given Message.
      *
-     * @param client The client invoking this message.
      * @param message The Message.
 	 * @param context The context in which to execute the message.
 	 */
-	public ExecutableStateChangeMessage(WorldClient client, Message message, WorldClientMessageContext context) {
-		super(client, message, context);
+	public ExecutableStateChangeMessage(Message message, WorldClientMessageContext context) {
+		super(context);
 	}
 
     @Override

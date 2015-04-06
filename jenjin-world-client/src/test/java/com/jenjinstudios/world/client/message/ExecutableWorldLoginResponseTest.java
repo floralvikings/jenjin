@@ -37,7 +37,7 @@ public class ExecutableWorldLoginResponseTest
 		when(context.getLoginTracker()).thenReturn(loginTracker);
 		when(context.getUser()).thenReturn(mock(User.class));
 
-		ExecutableWorldLoginResponse response = new ExecutableWorldLoginResponse(worldClient, message, context);
+		ExecutableWorldLoginResponse response = new ExecutableWorldLoginResponse(message, context);
 		response.execute();
 		world.update();
 

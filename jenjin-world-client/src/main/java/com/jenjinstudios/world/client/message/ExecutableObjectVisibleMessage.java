@@ -3,7 +3,6 @@ package com.jenjinstudios.world.client.message;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.WorldObject;
-import com.jenjinstudios.world.client.WorldClient;
 import com.jenjinstudios.world.client.WorldClientMessageContext;
 import com.jenjinstudios.world.math.Vector2D;
 
@@ -18,12 +17,11 @@ public class ExecutableObjectVisibleMessage extends WorldClientExecutableMessage
 	/**
 	 * Construct an ExecutableMessage with the given Message.
      *
-     * @param client The client invoking this message.
      * @param message The Message.
 	 * @param context The context in which to execute the message.
 	 */
-	public ExecutableObjectVisibleMessage(WorldClient client, Message message, WorldClientMessageContext context) {
-		super(client, message, context);
+	public ExecutableObjectVisibleMessage(Message message, WorldClientMessageContext context) {
+		super(context);
 	}
 
     @Override

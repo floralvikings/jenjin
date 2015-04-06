@@ -31,7 +31,7 @@ public class ExecutableObjectVisibleMessageTest
 		when(world.getWorldObjects()).thenReturn(worldObjectMap);
 		when(context.getWorld()).thenReturn(world);
 
-		ExecutableMessage message = new ExecutableObjectVisibleMessage(worldClient, actorVisibleMessage, context);
+		ExecutableMessage message = new ExecutableObjectVisibleMessage(actorVisibleMessage, context);
 		message.execute();
 		world.update();
 

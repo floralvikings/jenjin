@@ -36,7 +36,7 @@ public class ExecutableForceStateMessageTest
 		when(context.getPlayer()).thenReturn(clientPlayer);
 		when(clientPlayer.getAngle()).thenReturn(new Angle());
 
-		ExecutableForceStateMessage message = new ExecutableForceStateMessage(worldClient, forceStateMessage, context);
+		ExecutableForceStateMessage message = new ExecutableForceStateMessage(forceStateMessage, context);
 		message.execute();
 		world.update();
 
