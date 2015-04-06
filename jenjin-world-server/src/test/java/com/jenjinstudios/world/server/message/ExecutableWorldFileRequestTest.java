@@ -4,6 +4,7 @@ import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageStreamPair;
 import com.jenjinstudios.world.server.WorldClientHandler;
 import com.jenjinstudios.world.server.WorldServer;
+import com.jenjinstudios.world.server.WorldServerMessageContext;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.testng.PowerMockTestCase;
@@ -30,13 +31,14 @@ public class ExecutableWorldFileRequestTest extends PowerMockTestCase
 		WorldClientHandler clientHandler = mock(WorldClientHandler.class);
 		WorldServer server = mock(WorldServer.class);
 		MessageStreamPair messageStreamPair = mock(MessageStreamPair.class);
+		WorldServerMessageContext context = mock(WorldServerMessageContext.class);
 
 		when(WorldServerMessageFactory.generateWorldFileResponse(any())).thenReturn(response);
-		when(server.getWorldFileChecksum()).thenReturn(fileBytes);
+		when(context.getWorldBytes()).thenReturn(fileBytes);
 		when(clientHandler.getServer()).thenReturn(server);
 		when(clientHandler.getMessageStreamPair()).thenReturn(messageStreamPair);
 
-		ExecutableWorldFileRequest exec = new ExecutableWorldFileRequest(message, null);
+		ExecutableWorldFileRequest exec = new ExecutableWorldFileRequest(message, context);
 		Message resp = exec.execute();
 
 		Assert.assertEquals(resp, response, "Response mocks should be equal");
