@@ -11,8 +11,6 @@ import com.jenjinstudios.world.server.WorldClientHandler;
  */
 public abstract class WorldExecutableMessage<T extends MessageContext> extends ServerExecutableMessage<T>
 {
-	/** The WorldClientHandler for which this executable message works. */
-	private final WorldClientHandler handler;
 
 	/**
 	 * Construct a new ExecutableMessage.  Must be implemented by subclasses.
@@ -22,11 +20,10 @@ public abstract class WorldExecutableMessage<T extends MessageContext> extends S
 	 */
 	protected WorldExecutableMessage(WorldClientHandler handler, Message message, T context) {
 		super(handler, message, context);
-		this.handler = handler;
 	}
 
 	@Override
 	protected WorldClientHandler getClientHandler() {
-		return handler;
+		return (WorldClientHandler) super.getClientHandler();
 	}
 }
