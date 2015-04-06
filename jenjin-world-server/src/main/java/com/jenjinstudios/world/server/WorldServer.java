@@ -71,6 +71,7 @@ public class WorldServer<T extends WorldClientHandler> extends Server<T>
 		super.clientHandlerAdded(h);
 		h.getMessageContext().setWorld(world);
 		h.getMessageContext().setWorldChecksum(worldFileChecksum);
+		h.getMessageContext().setWorldBytes(worldFileBytes);
 	}
 
 	@Override
