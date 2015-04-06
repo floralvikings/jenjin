@@ -21,7 +21,7 @@ public class ExecutableLoginResponse extends ExecutableMessage<ClientMessageCont
 	 * @param context The context in which to execute the message.
 	 */
 	public ExecutableLoginResponse(Client client, Message message, ClientMessageContext context) {
-		super(client, message, context);
+		super(message, context);
 	}
 
     @Override

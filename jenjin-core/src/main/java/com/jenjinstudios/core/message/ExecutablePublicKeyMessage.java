@@ -33,7 +33,7 @@ public class ExecutablePublicKeyMessage extends ExecutableMessage<MessageContext
 	 */
     @SuppressWarnings("WeakerAccess")
 	public ExecutablePublicKeyMessage(Connection connection, Message message, MessageContext context) {
-		super(connection, message, context);
+		super(message, context);
 	}
 
     @Override

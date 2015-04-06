@@ -14,20 +14,17 @@ public abstract class ExecutableMessage<T extends MessageContext>
 {
     private static final Logger LOGGER = Logger.getLogger(ExecutableMessage.class.getName());
     private final Message message;
-	private final MessageThreadPool threadPool;
 	private final T context;
 
 	/**
 	 * Construct a new ExecutableMessage; this should only ever be invoked reflectively, by a {@code Connection}'s
      * update cycle.
      *
-	 * @param threadPool The threadPool for which this ExecutbleMessage will work.
 	 * @param message The message that caused this {@code ExecutableMessage} to be created.
 	 * @param context The MessageContext in which to execute this message.
      */
-	protected ExecutableMessage(MessageThreadPool threadPool, Message message, T context) {
+	protected ExecutableMessage(Message message, T context) {
 		this.message = message;
-		this.threadPool = threadPool;
 		this.context = context;
 	}
 

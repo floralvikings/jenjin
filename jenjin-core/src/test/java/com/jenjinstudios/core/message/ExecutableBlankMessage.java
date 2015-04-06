@@ -26,7 +26,7 @@ public class ExecutableBlankMessage extends ExecutableMessage<MessageContext>
 	 */
     @SuppressWarnings("WeakerAccess")
 	public ExecutableBlankMessage(Connection connection, Message message, MessageContext context) {
-		super(connection, message, context);
+		super(message, context);
 	}
 
     @Override

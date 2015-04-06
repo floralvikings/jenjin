@@ -21,7 +21,8 @@ public class ExecutablePingRequest extends ExecutableMessage<MessageContext>
      * @param message The message which caused this executable message to be invoked.
 	 * @param context The context in which to execute the message.
 	 */
-	public ExecutablePingRequest(Connection connection, Message message, MessageContext context) { super(connection,
+	public ExecutablePingRequest(Connection connection, Message message, MessageContext context) {
+		super(
 		  message, context); }
 
     /**

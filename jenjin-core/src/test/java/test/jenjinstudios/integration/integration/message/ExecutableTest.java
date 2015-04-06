@@ -21,7 +21,7 @@ public class ExecutableTest extends ExecutableMessage<MessageContext>
 	 */
 	@SuppressWarnings("UnusedDeclaration")
 	public ExecutableTest(Connection connection, Message message, MessageContext context) {
-		super(connection, message, context);
+		super(message, context);
 	}
 
 	@Override

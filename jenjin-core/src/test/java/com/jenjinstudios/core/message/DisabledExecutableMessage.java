@@ -25,7 +25,7 @@ public class DisabledExecutableMessage extends ExecutableMessage<MessageContext>
 	 * @param context The context in which to execute the message.
 	 */
 	public DisabledExecutableMessage(Connection connection, Message message, MessageContext context) {
-		super(connection, message, context);
+		super(message, context);
 		LOGGER.log(Level.SEVERE, "DisabledExecutableMessage constructed in {0}", connection);
     }
 

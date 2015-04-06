@@ -20,7 +20,7 @@ public abstract class WorldClientExecutableMessage<T extends WorldClientMessageC
 	 * @param context The context in which to execute the message.
 	 */
 	protected WorldClientExecutableMessage(WorldClient client, Message message, T context) {
-		super(client, message, context);
+		super(message, context);
 	}
 
 }

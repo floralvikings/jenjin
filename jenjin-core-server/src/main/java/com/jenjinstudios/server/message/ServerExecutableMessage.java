@@ -21,7 +21,7 @@ public abstract class ServerExecutableMessage<T extends ServerMessageContext> ex
 	 * @param context The context in which to execute the message.
 	 */
 	protected ServerExecutableMessage(ClientHandler handler, Message message, T context) {
-		super(handler, message, context);
+		super(message, context);
 	}
 
 }

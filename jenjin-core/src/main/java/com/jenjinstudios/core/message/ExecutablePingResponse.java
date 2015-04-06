@@ -20,7 +20,7 @@ public class ExecutablePingResponse<T extends SimpleMessageContext> extends Exec
 	 * @param context The context in which to execute the message.
 	 */
 	public ExecutablePingResponse(Connection connection, Message message, T context) {
-		super(connection, message, context);
+		super(message, context);
 	}
 
     @Override
