@@ -33,7 +33,7 @@ public class ExecutableLoginRequest extends ServerExecutableMessage<ServerMessag
 	 */
 	public ExecutableLoginRequest(ClientHandler clientHandler, Message loginRequest, ServerMessageContext context) {
 		super(clientHandler, loginRequest, context);
-		authenticator = clientHandler.getServer().getAuthenticator();
+		authenticator = getContext().getAuthenticator();
 	}
 
 	@Override
@@ -48,9 +48,9 @@ public class ExecutableLoginRequest extends ServerExecutableMessage<ServerMessag
 			if (user != null)
 			{
 				long loggedInTime = System.currentTimeMillis();
-				handler.setLoggedInTime(loggedInTime);
+				getContext().setLoggedInTime(loggedInTime);
 				response = generateLoginResponse(true, loggedInTime);
-				handler.setUser(user);
+				getContext().setUser(user);
 			} else
 			{
 				response = generateLoginResponse(false, 0);
