@@ -80,17 +80,10 @@ public class ClientHandler<T extends ServerMessageContext> extends Connection<T>
      *
      * @return The time at which this client was successfully logged in.
      */
-    public long getLoggedInTime() { return loggedInTime; }
+	public long getLoggedInTime() { return getMessageContext().getLoggedInTime(); }
 
-    /**
-     * Queue a message indicating the success or failure of a login attempt.
-     *
-     * @param loggedInTime The time at which this client handler has been authenticated.
-     */
-    public void setLoggedInTime(long loggedInTime) { this.loggedInTime = loggedInTime; }
-
-    /**
-     * Get the ClientHandler ID for this client handler.
+	/**
+	 * Get the ClientHandler ID for this client handler.
      *
      * @return The ID of this client handler.
      */
