@@ -1,7 +1,5 @@
 package com.jenjinstudios.server.net;
 
-import com.jenjinstudios.core.concurrency.MessageContext;
-
 import java.security.KeyPair;
 
 /**
@@ -22,7 +20,7 @@ public class ServerInit
 	private Class<? extends ClientHandler> handlerClass;
 	private int port;
 	private KeyPair keyPair;
-	private Class<? extends MessageContext> contextClass;
+	private Class<? extends ServerMessageContext> contextClass;
 
 	/**
 	 * Construct a new {@code ServerInit}.
@@ -102,11 +100,11 @@ public class ServerInit
 	 */
 	public void setKeyPair(KeyPair keyPair) { this.keyPair = keyPair; }
 
-	public Class<? extends MessageContext> getContextClass() {
+	public Class<? extends ServerMessageContext> getContextClass() {
 		return contextClass;
 	}
 
-	public void setContextClass(Class<? extends MessageContext> contextClass) {
+	public void setContextClass(Class<? extends ServerMessageContext> contextClass) {
 		this.contextClass = contextClass;
 	}
 }
