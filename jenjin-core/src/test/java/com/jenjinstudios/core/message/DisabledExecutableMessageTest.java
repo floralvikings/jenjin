@@ -1,5 +1,6 @@
 package com.jenjinstudios.core.message;
 
+import com.jenjinstudios.core.concurrency.MessageContext;
 import com.jenjinstudios.core.io.Message;
 import org.testng.annotations.Test;
 
@@ -19,8 +20,9 @@ public class DisabledExecutableMessageTest
     @Test(expectedExceptions = IllegalStateException.class)
     public void testMessageExecution() {
 		Message message = mock(Message.class);
+		MessageContext context = mock(MessageContext.class);
 
-		DisabledExecutableMessage executableMessage = new DisabledExecutableMessage(message, null);
+		DisabledExecutableMessage executableMessage = new DisabledExecutableMessage(message, context);
 		executableMessage.execute();
 	}
 }
