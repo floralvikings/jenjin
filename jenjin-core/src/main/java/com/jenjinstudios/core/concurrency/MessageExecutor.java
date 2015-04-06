@@ -15,6 +15,7 @@ import java.util.logging.Logger;
  *
  * @author Caleb Brinkman
  */
+@SuppressWarnings("CyclicClassDependency")
 public class MessageExecutor
 {
 	private static final Logger LOGGER = Logger.getLogger(MessageExecutor.class.getName());

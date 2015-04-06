@@ -13,6 +13,7 @@ import java.util.logging.Logger;
  *
  * @author Caleb Brinkman
  */
+@SuppressWarnings("CyclicClassDependency")
 public class MessageThreadPool<T extends MessageContext>
 {
 	private static final Logger LOGGER = Logger.getLogger(MessageThreadPool.class.getName());
