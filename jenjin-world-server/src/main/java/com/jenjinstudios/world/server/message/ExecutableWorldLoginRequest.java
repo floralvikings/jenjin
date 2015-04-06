@@ -43,7 +43,7 @@ public class ExecutableWorldLoginRequest extends WorldExecutableMessage<ServerMe
 			handleLoginFailure();
 		}
 		long result = getClientHandler().getServer().getServerUpdateTask().getCycleStartTime();
-		getClientHandler().setLoggedInTime(result);
+		getContext().setLoggedInTime(result);
 		World world = ((WorldServer) getClientHandler().getServer()).getWorld();
 		world.scheduleUpdateTask(() -> {
 			if (getClientHandler().getUser() != null)
