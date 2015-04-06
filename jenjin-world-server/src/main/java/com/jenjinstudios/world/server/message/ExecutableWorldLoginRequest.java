@@ -8,7 +8,6 @@ import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.actor.Vision;
 import com.jenjinstudios.world.server.Player;
 import com.jenjinstudios.world.server.WorldClientHandler;
-import com.jenjinstudios.world.server.WorldServer;
 import com.jenjinstudios.world.server.WorldServerMessageContext;
 
 /**
@@ -46,7 +45,7 @@ public class ExecutableWorldLoginRequest extends WorldExecutableMessage<WorldSer
 		}
 		long result = System.currentTimeMillis();
 		getContext().setLoggedInTime(result);
-		World world = ((WorldServer) getClientHandler().getServer()).getWorld();
+		World world = getContext().getWorld();
 		world.scheduleUpdateTask(() -> {
 			if (getContext().getUser() != null)
 			{
