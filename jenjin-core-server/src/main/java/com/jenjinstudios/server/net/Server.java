@@ -1,7 +1,6 @@
 package com.jenjinstudios.server.net;
 
 import com.jenjinstudios.core.Connection;
-import com.jenjinstudios.core.concurrency.MessageContext;
 import com.jenjinstudios.core.io.MessageRegistry;
 import com.jenjinstudios.server.authentication.Authenticator;
 
@@ -36,7 +35,7 @@ public class Server<T extends ClientHandler<? extends ServerMessageContext>> ext
         PERIOD = 1000 / UPS;
 		Class<? extends Server> serverClass = getClass();
 		Class handlerClass = initInfo.getHandlerClass();
-		Class<? extends MessageContext> contextClass = initInfo.getContextClass();
+		Class<? extends ServerMessageContext> contextClass = initInfo.getContextClass();
 		//noinspection unchecked
 		clientListener = new ClientListener<>(serverClass, handlerClass, contextClass, initInfo.getPort());
 		clientHandlers = new TreeMap<>();
