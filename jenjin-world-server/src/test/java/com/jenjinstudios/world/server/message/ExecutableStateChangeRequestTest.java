@@ -2,12 +2,12 @@ package com.jenjinstudios.world.server.message;
 
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageRegistry;
-import com.jenjinstudios.server.net.ServerMessageContext;
 import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.math.Angle;
 import com.jenjinstudios.world.server.Player;
 import com.jenjinstudios.world.server.WorldClientHandler;
 import com.jenjinstudios.world.server.WorldServer;
+import com.jenjinstudios.world.server.WorldServerMessageContext;
 import com.jenjinstudios.world.util.WorldUtils;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -33,7 +33,7 @@ public class ExecutableStateChangeRequestTest
 		WorldClientHandler mock = mock(WorldClientHandler.class);
 		Message request = mock(Message.class);
 		WorldServer worldServer = mock(WorldServer.class);
-		ServerMessageContext<Player> context = mock(ServerMessageContext.class);
+		WorldServerMessageContext<Player> context = mock(WorldServerMessageContext.class);
 
 		when(context.getUser()).thenReturn(player);
 		when(mock.getServer()).thenReturn(worldServer);
@@ -60,7 +60,7 @@ public class ExecutableStateChangeRequestTest
 		world.getWorldObjects().add(player);
 		world.update();
 
-		ServerMessageContext<Player> context = mock(ServerMessageContext.class);
+		WorldServerMessageContext<Player> context = mock(WorldServerMessageContext.class);
 		WorldClientHandler mock = mock(WorldClientHandler.class);
 		WorldServer worldServer = mock(WorldServer.class);
 		when(worldServer.getUps()).thenReturn(50);
@@ -95,7 +95,7 @@ public class ExecutableStateChangeRequestTest
 		WorldClientHandler mock = mock(WorldClientHandler.class);
 		WorldServer worldServer = mock(WorldServer.class);
 		Message request = mock(Message.class);
-		ServerMessageContext<Player> context = mock(ServerMessageContext.class);
+		WorldServerMessageContext<Player> context = mock(WorldServerMessageContext.class);
 
 		when(context.getUser()).thenReturn(player);
 		when(mock.getServer()).thenReturn(worldServer);
@@ -122,7 +122,7 @@ public class ExecutableStateChangeRequestTest
 		WorldClientHandler mock = mock(WorldClientHandler.class);
 		WorldServer worldServer = mock(WorldServer.class);
 		Message request = mock(Message.class);
-		ServerMessageContext<Player> context = mock(ServerMessageContext.class);
+		WorldServerMessageContext<Player> context = mock(WorldServerMessageContext.class);
 
 		when(mock.getServer()).thenReturn(worldServer);
 		when(worldServer.getUps()).thenReturn(50);
