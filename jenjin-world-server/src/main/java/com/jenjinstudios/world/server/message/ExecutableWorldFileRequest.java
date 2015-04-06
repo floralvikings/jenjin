@@ -2,7 +2,6 @@ package com.jenjinstudios.world.server.message;
 
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.world.server.WorldClientHandler;
-import com.jenjinstudios.world.server.WorldServer;
 import com.jenjinstudios.world.server.WorldServerMessageContext;
 
 /**
@@ -25,7 +24,7 @@ public class ExecutableWorldFileRequest extends WorldExecutableMessage<WorldServ
 
 	@Override
 	public Message execute() {
-		byte[] worldFileBytes = ((WorldServer) getClientHandler().getServer()).getWorldFileBytes();
+		byte[] worldFileBytes = getContext().getWorldBytes();
 		return WorldServerMessageFactory.generateWorldFileResponse(worldFileBytes);
 	}
 }
