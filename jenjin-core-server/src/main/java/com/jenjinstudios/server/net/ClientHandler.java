@@ -1,7 +1,6 @@
 package com.jenjinstudios.server.net;
 
 import com.jenjinstudios.core.Connection;
-import com.jenjinstudios.core.SimpleMessageContext;
 import com.jenjinstudios.core.io.MessageStreamPair;
 import com.jenjinstudios.server.authentication.AuthenticationException;
 import com.jenjinstudios.server.authentication.User;
@@ -14,7 +13,7 @@ import java.util.logging.Logger;
  *
  * @author Caleb Brinkman
  */
-public class ClientHandler<T extends SimpleMessageContext> extends Connection<T>
+public class ClientHandler<T extends ServerMessageContext> extends Connection<T>
 {
     private static final Logger LOGGER = Logger.getLogger(ClientHandler.class.getName());
     /** The server. */
