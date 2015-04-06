@@ -24,12 +24,4 @@ public abstract class ServerExecutableMessage<T extends ServerMessageContext> ex
 		super(handler, message, context);
 	}
 
-    /**
-     * Get the ClientHandler invoking this message.
-     *
-     * @return The ClientHandler invoking this message.
-     */
-    protected ClientHandler getClientHandler() {
-		return (ClientHandler) getThreadPool();
-	}
 }

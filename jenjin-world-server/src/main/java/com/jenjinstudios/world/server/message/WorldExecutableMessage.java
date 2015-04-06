@@ -22,8 +22,7 @@ public abstract class WorldExecutableMessage<T extends ServerMessageContext> ext
 		super(handler, message, context);
 	}
 
-	@Override
 	protected WorldClientHandler getClientHandler() {
-		return (WorldClientHandler) super.getClientHandler();
+		return (WorldClientHandler) getThreadPool();
 	}
 }
