@@ -48,7 +48,7 @@ public class ExecutableLogoutRequestTest extends PowerMockTestCase
 		when(clientHandler.getServer()).thenReturn(server);
 		when(context.getUser()).thenReturn(user);
 
-		ExecutableMessage exec = new ExecutableLogoutRequest(clientHandler, logoutRequest, context);
+		ExecutableMessage exec = new ExecutableLogoutRequest(logoutRequest, context);
 		exec.execute();
 
 		verify(context).setUser(null);

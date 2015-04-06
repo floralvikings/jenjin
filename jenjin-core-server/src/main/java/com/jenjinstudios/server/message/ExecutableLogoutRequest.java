@@ -4,7 +4,6 @@ import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.server.authentication.AuthenticationException;
 import com.jenjinstudios.server.authentication.Authenticator;
 import com.jenjinstudios.server.authentication.User;
-import com.jenjinstudios.server.net.ClientHandler;
 import com.jenjinstudios.server.net.ServerMessageContext;
 
 import java.util.logging.Level;
@@ -23,11 +22,10 @@ public class ExecutableLogoutRequest extends ServerExecutableMessage<ServerMessa
 
 	/**
 	 * Construct a new ExecutableLogoutRequest.
-	 * @param clientHandler The client handler which created this message.
 	 * @param message The message used to create this ExecutableMessage.
 	 * @param context The context in which to execute the message.
 	 */
-	public ExecutableLogoutRequest(ClientHandler clientHandler, Message message, ServerMessageContext context) {
+	public ExecutableLogoutRequest(Message message, ServerMessageContext context) {
 		super(message, context);
 		authenticator = getContext().getAuthenticator();
 	}
