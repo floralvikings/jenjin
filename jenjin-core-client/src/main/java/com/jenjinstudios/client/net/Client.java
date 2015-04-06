@@ -54,30 +54,6 @@ public class Client<T extends ClientMessageContext> extends Connection<T>
         return pingRequest;
     }
 
-	/**
-	 * Generate a LogoutRequest message.
-	 *
-	 * @return The LogoutRequestMessage.
-	 */
-	public static Message generateLogoutRequest() {
-		return MessageRegistry.getGlobalRegistry().createMessage
-			  ("LogoutRequest");
-	}
-
-	/**
-	 * Generate a LoginRequest message.  This message will be encrypted if possible.
-	 *
-	 * @param user The User for which to generate the login request.
-	 *
-	 * @return The LoginRequest message.
-	 */
-	public static Message generateLoginRequest(User user) {// Create the login request.
-		Message loginRequest = MessageRegistry.getGlobalRegistry().createMessage("LoginRequest");
-		loginRequest.setArgument("username", user.getUsername());
-		loginRequest.setArgument("password", user.getPassword());
-		return loginRequest;
-	}
-
 	static void waitTenMillis() {
 		try
 		{
@@ -126,34 +102,6 @@ public class Client<T extends ClientMessageContext> extends Connection<T>
 	}
 
 	/**
-	 * Send a logout request and block execution until the response is received.
-	 */
-	public void logoutAndWait() {
-		sendLogoutRequest();
-		long startTime = System.currentTimeMillis();
-		while (getLoginTracker().isWaitingForResponse() && ((System.currentTimeMillis() - startTime) < THIRTY_SECONDS))
-		{
-			waitTenMillis();
-		}
-	}
-
-	/**
-	 * Send a login request and await the response.
-	 *
-	 * @return Whether the login was successful.
-	 */
-	@SuppressWarnings("BooleanMethodNameMustStartWithQuestion")
-	public boolean loginAndWait() {
-		sendLoginRequest();
-		long startTime = System.currentTimeMillis();
-		while (getLoginTracker().isWaitingForResponse() && ((System.currentTimeMillis() - startTime) < THIRTY_SECONDS))
-		{
-			waitTenMillis();
-		}
-		return getLoginTracker().isLoggedIn();
-	}
-
-	/**
 	 * Get the LoginTracker managed by this client.
 	 *
 	 * @return The login tracker managed by this client.
@@ -177,6 +125,34 @@ public class Client<T extends ClientMessageContext> extends Connection<T>
     public double getAverageUPS() { return 1.0d / clientLoop.getAverageRunTime(); }
 
 	/**
+	 * Send a login request and await the response.
+	 *
+	 * @return Whether the login was successful.
+	 */
+	@SuppressWarnings("BooleanMethodNameMustStartWithQuestion")
+	public boolean loginAndWait() {
+		sendLoginRequest();
+		long startTime = System.currentTimeMillis();
+		while (getLoginTracker().isWaitingForResponse() && ((System.currentTimeMillis() - startTime) < THIRTY_SECONDS))
+		{
+			waitTenMillis();
+		}
+		return getLoginTracker().isLoggedIn();
+	}
+
+	/**
+	 * Send a logout request and block execution until the response is received.
+	 */
+	public void logoutAndWait() {
+		sendLogoutRequest();
+		long startTime = System.currentTimeMillis();
+		while (getLoginTracker().isWaitingForResponse() && ((System.currentTimeMillis() - startTime) < THIRTY_SECONDS))
+		{
+			waitTenMillis();
+		}
+	}
+
+	/**
 	 * Send a login request.
 	 */
 	protected void sendLoginRequest() {
@@ -185,17 +161,46 @@ public class Client<T extends ClientMessageContext> extends Connection<T>
 		enqueueMessage(message);
 	}
 
+	void sendLogoutRequest() {
+		getLoginTracker().setWaitingForResponse(true);
+		Message message = generateLogoutRequest();
+		enqueueMessage(message);
+	}
+
+	/**
+	 * Generate a LogoutRequest message.
+	 *
+	 * @return The LogoutRequestMessage.
+	 */
+	public static Message generateLogoutRequest() {
+		return MessageRegistry.getGlobalRegistry().createMessage
+			  ("LogoutRequest");
+	}
+
+	/**
+	 * Generate a LoginRequest message.  This message will be encrypted if possible.
+	 *
+	 * @param user The User for which to generate the login request.
+	 *
+	 * @return The LoginRequest message.
+	 */
+	public static Message generateLoginRequest(User user) {// Create the login request.
+		Message loginRequest = MessageRegistry.getGlobalRegistry().createMessage("LoginRequest");
+		loginRequest.setArgument("username", user.getUsername());
+		loginRequest.setArgument("password", user.getPassword());
+		return loginRequest;
+	}
+
 	/**
 	 * The ClientLoop class is essentially what amounts to the output thread.
      *
      * @author Caleb Brinkman
      */
-
     private static class ClientLoop extends TimerTask
-    {
-        private static final int MAX_STORED_UPDATE_TIMES = 50;
-        private static final int NANOS_TO_SECOND = 1000000000;
-        private static final Logger LOGGER = Logger.getLogger(ClientLoop.class.getName());
+	{
+		private static final int MAX_STORED_UPDATE_TIMES = 50;
+		private static final int NANOS_TO_SECOND = 1000000000;
+		private static final Logger LOGGER = Logger.getLogger(ClientLoop.class.getName());
         /** The Client for this loop. */
         private final Client client;
         private int updateCount;
@@ -235,11 +240,5 @@ public class Client<T extends ClientMessageContext> extends Connection<T>
 			return total / maxIndex / NANOS_TO_SECOND;
 		}
 
-	}
-
-	void sendLogoutRequest() {
-		getLoginTracker().setWaitingForResponse(true);
-		Message message = generateLogoutRequest();
-		enqueueMessage(message);
 	}
 }
