@@ -123,8 +123,8 @@ public class Server<T extends ClientHandler<? extends ServerMessageContext>> ext
 			loopTimer.shutdown();
 	}
 
-    protected void removeClient(ClientHandler handler) {
-        synchronized (clientHandlers)
+	protected void removeClient(T handler) {
+		synchronized (clientHandlers)
         {
             clientHandlers.remove(handler.getHandlerId());
         }
