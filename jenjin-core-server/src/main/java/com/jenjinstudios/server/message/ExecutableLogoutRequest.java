@@ -1,11 +1,11 @@
 package com.jenjinstudios.server.message;
 
-import com.jenjinstudios.core.concurrency.MessageContext;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.server.authentication.AuthenticationException;
 import com.jenjinstudios.server.authentication.Authenticator;
 import com.jenjinstudios.server.authentication.User;
 import com.jenjinstudios.server.net.ClientHandler;
+import com.jenjinstudios.server.net.ServerMessageContext;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -15,7 +15,7 @@ import java.util.logging.Logger;
  * @author Caleb Brinkman
  */
 @SuppressWarnings("unused")
-public class ExecutableLogoutRequest extends ServerExecutableMessage<MessageContext>
+public class ExecutableLogoutRequest extends ServerExecutableMessage<ServerMessageContext>
 {
 	private static final Logger LOGGER = Logger.getLogger(ExecutableLogoutRequest.class.getName());
 	/** The SQLHandler used to log out the client. */
@@ -27,7 +27,7 @@ public class ExecutableLogoutRequest extends ServerExecutableMessage<MessageCont
 	 * @param message The message used to create this ExecutableMessage.
 	 * @param context The context in which to execute the message.
 	 */
-	public ExecutableLogoutRequest(ClientHandler clientHandler, Message message, MessageContext context) {
+	public ExecutableLogoutRequest(ClientHandler clientHandler, Message message, ServerMessageContext context) {
 		super(clientHandler, message, context);
 		authenticator = clientHandler.getServer().getAuthenticator();
 	}
