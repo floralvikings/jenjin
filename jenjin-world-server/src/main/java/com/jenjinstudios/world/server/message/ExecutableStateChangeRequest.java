@@ -1,7 +1,6 @@
 package com.jenjinstudios.world.server.message;
 
 import com.jenjinstudios.core.io.Message;
-import com.jenjinstudios.server.net.ServerMessageContext;
 import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.Location;
 import com.jenjinstudios.world.World;
@@ -10,6 +9,7 @@ import com.jenjinstudios.world.math.MathUtil;
 import com.jenjinstudios.world.math.Vector2D;
 import com.jenjinstudios.world.server.Player;
 import com.jenjinstudios.world.server.WorldClientHandler;
+import com.jenjinstudios.world.server.WorldServerMessageContext;
 import com.jenjinstudios.world.state.MoveState;
 import com.jenjinstudios.world.util.ZoneUtils;
 
@@ -22,7 +22,7 @@ import java.util.logging.Logger;
  * @author Caleb Brinkman
  */
 @SuppressWarnings("WeakerAccess")
-public class ExecutableStateChangeRequest extends WorldExecutableMessage<ServerMessageContext<Player>>
+public class ExecutableStateChangeRequest extends WorldExecutableMessage<WorldServerMessageContext<Player>>
 {
 	private static final Logger LOGGER = Logger.getLogger(ExecutableStateChangeRequest.class.getName());
 	private static final double MS_TO_S = 1000.0d;
@@ -42,7 +42,7 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage<ServerM
 	 * @param context The context in which to execute the message.
 	 */
 	public ExecutableStateChangeRequest(WorldClientHandler handler, Message message,
-										ServerMessageContext<Player> context)
+										WorldServerMessageContext<Player> context)
 	{
 		super(handler, message, context);
 	}
