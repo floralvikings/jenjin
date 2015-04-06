@@ -19,8 +19,8 @@ public class ExecutablePingRequest extends ExecutableMessage<MessageContext>
 	 * @param context The context in which to execute the message.
 	 */
 	public ExecutablePingRequest(Message message, MessageContext context) {
-		super(
-		  message, context); }
+		super(message, context);
+	}
 
     /**
      * Generate a PingResponse with the given time of request.

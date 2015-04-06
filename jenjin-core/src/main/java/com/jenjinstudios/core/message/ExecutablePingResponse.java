@@ -1,6 +1,5 @@
 package com.jenjinstudios.core.message;
 
-import com.jenjinstudios.core.Connection;
 import com.jenjinstudios.core.SimpleMessageContext;
 import com.jenjinstudios.core.concurrency.ExecutableMessage;
 import com.jenjinstudios.core.io.Message;
@@ -14,12 +13,10 @@ public class ExecutablePingResponse<T extends SimpleMessageContext> extends Exec
 {
     /**
      * Construct a new {@code PingResponse}.
-     *
-     * @param connection The connection invoking this executable message.
-     * @param message The message which caused this executable message to be invoked.
+	 *  @param message The message which caused this executable message to be invoked.
 	 * @param context The context in which to execute the message.
 	 */
-	public ExecutablePingResponse(Connection connection, Message message, T context) {
+	public ExecutablePingResponse(Message message, T context) {
 		super(message, context);
 	}
 
