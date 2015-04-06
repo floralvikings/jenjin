@@ -76,13 +76,6 @@ public class ClientHandler<T extends ServerMessageContext> extends Connection<T>
 	public Server getServer() { return server; }
 
 	/**
-	 * Get the time at which this client was successfully logged in.
-     *
-     * @return The time at which this client was successfully logged in.
-     */
-	public long getLoggedInTime() { return getMessageContext().getLoggedInTime(); }
-
-	/**
 	 * Get the ClientHandler ID for this client handler.
      *
      * @return The ID of this client handler.
