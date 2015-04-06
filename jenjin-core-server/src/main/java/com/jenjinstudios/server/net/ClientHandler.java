@@ -20,10 +20,9 @@ public class ClientHandler<T extends ServerMessageContext> extends Connection<T>
 	private final Server server;
 	/** The id of the client handler. */
 	private int handlerId = -1;
-	private User user;
 
-    /**
-     * Construct a new Client Handler using the given socket.  When constructing a new ClientHandler, it is necessary to
+	/**
+	 * Construct a new Client Handler using the given socket.  When constructing a new ClientHandler, it is necessary to
      * send the client a FirstConnectResponse message with the server's UPS
      *
      * @param s The server for which this handler works.
@@ -85,5 +84,5 @@ public class ClientHandler<T extends ServerMessageContext> extends Connection<T>
      *
 	 * @param user The User associated with this ClientHandler.
 	 */
-	public void setUser(User user) { this.user = user; }
+	public void setUser(User user) { }
 }
