@@ -47,7 +47,7 @@ public class ExecutableLoginRequest extends ServerExecutableMessage<MessageConte
 			User user = authenticator.logInUser(username, password);
 			if (user != null)
 			{
-				long loggedInTime = handler.getServer().getServerUpdateTask().getCycleStartTime();
+				long loggedInTime = System.currentTimeMillis();
 				handler.setLoggedInTime(loggedInTime);
 				response = generateLoginResponse(true, loggedInTime);
 				handler.setUser(user);
