@@ -7,7 +7,6 @@ import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.math.Angle;
 import com.jenjinstudios.world.math.MathUtil;
 import com.jenjinstudios.world.math.Vector2D;
-import com.jenjinstudios.world.server.WorldClientHandler;
 import com.jenjinstudios.world.server.WorldServerMessageContext;
 import com.jenjinstudios.world.state.MoveState;
 import com.jenjinstudios.world.util.ZoneUtils;
@@ -35,12 +34,10 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage<WorldSe
 
 	/**
 	 * Construct a new ExecutableMessage.  Must be implemented by subclasses.
-	 *
-	 * @param handler The handler using this ExecutableMessage.
-	 * @param message The message.
+	 *  @param message The message.
 	 * @param context The context in which to execute the message.
 	 */
-	public ExecutableStateChangeRequest(WorldClientHandler handler, Message message, WorldServerMessageContext context)
+	public ExecutableStateChangeRequest(Message message, WorldServerMessageContext context)
 	{
 		super(message, context);
 	}

@@ -7,7 +7,6 @@ import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.actor.Vision;
 import com.jenjinstudios.world.server.Player;
-import com.jenjinstudios.world.server.WorldClientHandler;
 import com.jenjinstudios.world.server.WorldServerMessageContext;
 
 /**
@@ -22,13 +21,10 @@ public class ExecutableWorldLoginRequest extends WorldExecutableMessage<WorldSer
 
 	/**
 	 * Construct a new ExecutableMessage.  Must be implemented by subclasses.
-	 *
-	 * @param handler The handler using this ExecutableMessage.
-	 * @param message The message.
+	 *  @param message The message.
 	 * @param context The context in which to execute the message.
 	 */
-	public ExecutableWorldLoginRequest(WorldClientHandler handler, Message message, WorldServerMessageContext context)
-	{
+	public ExecutableWorldLoginRequest(Message message, WorldServerMessageContext context) {
 		super(message, context);
 		authenticator = getContext().getAuthenticator();
 	}

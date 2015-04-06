@@ -1,7 +1,6 @@
 package com.jenjinstudios.world.server.message;
 
 import com.jenjinstudios.core.io.Message;
-import com.jenjinstudios.world.server.WorldClientHandler;
 import com.jenjinstudios.world.server.WorldServerMessageContext;
 
 /**
@@ -13,12 +12,10 @@ public class ExecutableWorldFileRequest extends WorldExecutableMessage<WorldServ
 {
 	/**
 	 * Construct a new ExecutableMessage.  Must be implemented by subclasses.
-	 *
-	 * @param handler The handler using this ExecutableMessage.
-	 * @param message The message.
+	 *  @param message The message.
 	 * @param context The context in which to execute the message.
 	 */
-	public ExecutableWorldFileRequest(WorldClientHandler handler, Message message, WorldServerMessageContext context) {
+	public ExecutableWorldFileRequest(Message message, WorldServerMessageContext context) {
 		super(message, context);
 	}
 

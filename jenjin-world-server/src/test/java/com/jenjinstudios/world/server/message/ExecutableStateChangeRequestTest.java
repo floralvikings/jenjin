@@ -44,7 +44,7 @@ public class ExecutableStateChangeRequestTest
 		when(request.getArgument("yCoordinate")).thenReturn(0.0);
 		when(request.getArgument("timeOfChange")).thenReturn(System.currentTimeMillis());
 
-		ExecutableStateChangeRequest exec = new ExecutableStateChangeRequest(mock, request, context);
+		ExecutableStateChangeRequest exec = new ExecutableStateChangeRequest(request, context);
 		exec.execute();
 		world.update();
 
@@ -76,7 +76,7 @@ public class ExecutableStateChangeRequestTest
 		when(request.getArgument("timeOfChange")).thenReturn(System.currentTimeMillis());
 
 		// Create the executable state change request
-		ExecutableStateChangeRequest exec = new ExecutableStateChangeRequest(mock, request, context);
+		ExecutableStateChangeRequest exec = new ExecutableStateChangeRequest(request, context);
 		exec.execute();
 
 		world.update();
@@ -105,7 +105,7 @@ public class ExecutableStateChangeRequestTest
 		when(request.getArgument("xCoordinate")).thenReturn(0.0);
 		when(request.getArgument("yCoordinate")).thenReturn(0.0);
 		when(request.getArgument("timeOfChange")).thenReturn(System.currentTimeMillis() - 2000);
-		ExecutableStateChangeRequest exec = new ExecutableStateChangeRequest(mock, request, context);
+		ExecutableStateChangeRequest exec = new ExecutableStateChangeRequest(request, context);
 		exec.execute();
 		world.update();
 
@@ -133,7 +133,7 @@ public class ExecutableStateChangeRequestTest
 		when(request.getArgument("yCoordinate")).thenReturn(0.0);
 		when(request.getArgument("timeOfChange")).thenReturn(System.currentTimeMillis());
 		Thread.sleep(1200);
-		ExecutableStateChangeRequest exec = new ExecutableStateChangeRequest(mock, request, context);
+		ExecutableStateChangeRequest exec = new ExecutableStateChangeRequest(request, context);
 		exec.execute();
 		world.update();
 

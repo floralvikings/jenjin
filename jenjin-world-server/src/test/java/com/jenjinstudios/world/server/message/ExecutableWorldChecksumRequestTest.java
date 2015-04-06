@@ -39,7 +39,7 @@ public class ExecutableWorldChecksumRequestTest extends PowerMockTestCase
 		when(clientHandler.getServer()).thenReturn(server);
 		when(clientHandler.getMessageStreamPair()).thenReturn(messageStreamPair);
 
-		ExecutableWorldChecksumRequest exec = new ExecutableWorldChecksumRequest(clientHandler, message, context);
+		ExecutableWorldChecksumRequest exec = new ExecutableWorldChecksumRequest(message, context);
 		Message resp = exec.execute();
 
 		Assert.assertEquals(resp, response, "Response mocks should be equal.");

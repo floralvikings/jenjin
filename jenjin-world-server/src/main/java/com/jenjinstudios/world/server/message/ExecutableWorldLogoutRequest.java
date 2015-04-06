@@ -6,7 +6,6 @@ import com.jenjinstudios.server.authentication.Authenticator;
 import com.jenjinstudios.server.message.ServerMessageFactory;
 import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.server.Player;
-import com.jenjinstudios.world.server.WorldClientHandler;
 import com.jenjinstudios.world.server.WorldServerMessageContext;
 
 /**
@@ -20,15 +19,13 @@ public class ExecutableWorldLogoutRequest extends WorldExecutableMessage<WorldSe
 
 	/**
 	 * Construct a new ExecutableMessage.  Must be implemented by subclasses.
-	 * @param handler The handler using this ExecutableMessage.
 	 * @param message The message.
 	 * @param context The context in which to execute the message.
 	 */
-	public ExecutableWorldLogoutRequest(WorldClientHandler handler, Message message, WorldServerMessageContext context)
+	public ExecutableWorldLogoutRequest(Message message, WorldServerMessageContext context)
 	{
 		super(message, context);
-		//noinspection unchecked
-		authenticator = handler.getServer().getAuthenticator();
+		authenticator = getContext().getAuthenticator();
 
 	}
 

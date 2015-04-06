@@ -53,7 +53,7 @@ public class ExecutableWorldLogoutRequestTest extends PowerMockTestCase
 		when(player.getId()).thenReturn(0);
 		when(player.getVector2D()).thenReturn(Vector2D.ORIGIN);
 
-		ExecutableWorldLogoutRequest exec = new ExecutableWorldLogoutRequest(handler, logOutRequest, context);
+		ExecutableWorldLogoutRequest exec = new ExecutableWorldLogoutRequest(logOutRequest, context);
 		exec.execute();
 		world.update();
 
@@ -81,7 +81,7 @@ public class ExecutableWorldLogoutRequestTest extends PowerMockTestCase
 		when(player.getId()).thenReturn(0);
 		when(player.getVector2D()).thenReturn(Vector2D.ORIGIN);
 
-		ExecutableWorldLogoutRequest exec = new ExecutableWorldLogoutRequest(handler, logOutRequest, context);
+		ExecutableWorldLogoutRequest exec = new ExecutableWorldLogoutRequest(logOutRequest, context);
 		Message resp = exec.execute();
 
 		Assert.assertEquals(resp, response, "Response mocks should be equal");
@@ -108,7 +108,7 @@ public class ExecutableWorldLogoutRequestTest extends PowerMockTestCase
 		when(handler.getServer()).thenReturn(worldServer);
 		when(context.getUser()).thenReturn(player);
 
-		ExecutableWorldLogoutRequest exec = new ExecutableWorldLogoutRequest(handler, logOutRequest, context);
+		ExecutableWorldLogoutRequest exec = new ExecutableWorldLogoutRequest(logOutRequest, context);
 		Message resp = exec.execute();
 
 		Assert.assertEquals(resp, response, "Response mocks should be equal");
