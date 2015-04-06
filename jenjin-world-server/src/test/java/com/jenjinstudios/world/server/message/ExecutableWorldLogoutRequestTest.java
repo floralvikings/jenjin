@@ -5,6 +5,7 @@ import com.jenjinstudios.core.io.MessageRegistry;
 import com.jenjinstudios.server.authentication.AuthenticationException;
 import com.jenjinstudios.server.authentication.Authenticator;
 import com.jenjinstudios.server.message.ServerMessageFactory;
+import com.jenjinstudios.server.net.ServerMessageContext;
 import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.collections.WorldObjectList;
@@ -95,13 +96,15 @@ public class ExecutableWorldLogoutRequestTest extends PowerMockTestCase
 		WorldServer worldServer = mock(WorldServer.class);
 		WorldClientHandler handler = mock(WorldClientHandler.class);
 		Authenticator<Player> authenticator = mock(Authenticator.class);
-		when(worldServer.getAuthenticator()).thenReturn(authenticator);
+		ServerMessageContext<Player> context = mock(ServerMessageContext.class);
+
+		when(context.getAuthenticator()).thenReturn(authenticator);
 		when(worldServer.getWorld()).thenReturn(world);
 		when(authenticator.logOutUser(any())).thenThrow(new AuthenticationException("Foo"));
 		when(handler.getServer()).thenReturn(worldServer);
-		when(handler.getUser()).thenReturn(player);
+		when(context.getUser()).thenReturn(player);
 
-		ExecutableWorldLogoutRequest exec = new ExecutableWorldLogoutRequest(handler, logOutRequest, null);
+		ExecutableWorldLogoutRequest exec = new ExecutableWorldLogoutRequest(handler, logOutRequest, context);
 		Message resp = exec.execute();
 
 		Assert.assertEquals(resp, response, "Response mocks should be equal");
