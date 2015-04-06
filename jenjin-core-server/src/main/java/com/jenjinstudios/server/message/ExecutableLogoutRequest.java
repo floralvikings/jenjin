@@ -28,7 +28,7 @@ public class ExecutableLogoutRequest extends ServerExecutableMessage<ServerMessa
 	 * @param context The context in which to execute the message.
 	 */
 	public ExecutableLogoutRequest(ClientHandler clientHandler, Message message, ServerMessageContext context) {
-		super(clientHandler, message, context);
+		super(message, context);
 		authenticator = getContext().getAuthenticator();
 	}
 

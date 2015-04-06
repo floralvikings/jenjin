@@ -19,7 +19,7 @@ public abstract class WorldExecutableMessage<T extends WorldServerMessageContext
 	 * @param context The context in which to execute the message.
 	 */
 	protected WorldExecutableMessage(WorldClientHandler handler, Message message, T context) {
-		super(handler, message, context);
+		super(message, context);
 	}
 
 }

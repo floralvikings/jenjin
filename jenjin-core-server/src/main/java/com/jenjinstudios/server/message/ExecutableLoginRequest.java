@@ -32,7 +32,7 @@ public class ExecutableLoginRequest extends ServerExecutableMessage<ServerMessag
 	 * @param context The context in which to execute the message.
 	 */
 	public ExecutableLoginRequest(ClientHandler clientHandler, Message loginRequest, ServerMessageContext context) {
-		super(clientHandler, loginRequest, context);
+		super(loginRequest, context);
 		authenticator = getContext().getAuthenticator();
 	}
 
