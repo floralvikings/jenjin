@@ -57,10 +57,11 @@ public class ExecutableStateChangeRequestTest
 		world.getWorldObjects().add(player);
 		world.update();
 
+		ServerMessageContext<Player> context = mock(ServerMessageContext.class);
 		WorldClientHandler mock = mock(WorldClientHandler.class);
 		WorldServer worldServer = mock(WorldServer.class);
 		when(worldServer.getUps()).thenReturn(50);
-		when(mock.getUser()).thenReturn(player);
+		when(context.getUser()).thenReturn(player);
 		when(mock.getServer()).thenReturn(worldServer);
 
 		// Create a state change request, with coordinates set further than the allowed error
@@ -72,8 +73,8 @@ public class ExecutableStateChangeRequestTest
 		when(request.getArgument("timeOfChange")).thenReturn(System.currentTimeMillis());
 
 		// Create the executable state change request
-		ExecutableStateChangeRequest executableStateChangeRequest = new ExecutableStateChangeRequest(mock, request, null);
-		executableStateChangeRequest.execute();
+		ExecutableStateChangeRequest exec = new ExecutableStateChangeRequest(mock, request, context);
+		exec.execute();
 
 		world.update();
 
