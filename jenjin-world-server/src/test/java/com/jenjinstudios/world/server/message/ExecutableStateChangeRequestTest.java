@@ -2,6 +2,7 @@ package com.jenjinstudios.world.server.message;
 
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageRegistry;
+import com.jenjinstudios.server.net.ServerMessageContext;
 import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.math.Angle;
 import com.jenjinstudios.world.server.Player;
@@ -110,20 +111,23 @@ public class ExecutableStateChangeRequestTest
 		Player player = new Player("FooBar");
 		world.getWorldObjects().add(player);
 		world.update();
+
 		WorldClientHandler mock = mock(WorldClientHandler.class);
 		WorldServer worldServer = mock(WorldServer.class);
+		Message request = mock(Message.class);
+		ServerMessageContext<Player> context = mock(ServerMessageContext.class);
+
 		when(mock.getServer()).thenReturn(worldServer);
 		when(worldServer.getUps()).thenReturn(50);
-		when(mock.getUser()).thenReturn(player);
-		Message request = mock(Message.class);
+		when(context.getUser()).thenReturn(player);
 		when(request.getArgument("relativeAngle")).thenReturn(Angle.FRONT);
 		when(request.getArgument("absoluteAngle")).thenReturn(0.0);
 		when(request.getArgument("xCoordinate")).thenReturn(0.0);
 		when(request.getArgument("yCoordinate")).thenReturn(0.0);
 		when(request.getArgument("timeOfChange")).thenReturn(System.currentTimeMillis());
 		Thread.sleep(1200);
-		ExecutableStateChangeRequest executableStateChangeRequest = new ExecutableStateChangeRequest(mock, request, null);
-		executableStateChangeRequest.execute();
+		ExecutableStateChangeRequest exec = new ExecutableStateChangeRequest(mock, request, context);
+		exec.execute();
 		world.update();
 
 		Assert.assertEquals(player.getAngle(), new Angle(0.0, Angle.IDLE));
