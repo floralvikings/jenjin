@@ -19,7 +19,7 @@ public class ExecutableWorldFileRequest extends WorldExecutableMessage<WorldServ
 	 * @param context The context in which to execute the message.
 	 */
 	public ExecutableWorldFileRequest(WorldClientHandler handler, Message message, WorldServerMessageContext context) {
-		super(handler, message, context);
+		super(message, context);
 	}
 
 	@Override

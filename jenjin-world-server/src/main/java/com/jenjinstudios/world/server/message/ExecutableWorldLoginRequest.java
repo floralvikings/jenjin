@@ -29,7 +29,7 @@ public class ExecutableWorldLoginRequest extends WorldExecutableMessage<WorldSer
 	 */
 	public ExecutableWorldLoginRequest(WorldClientHandler handler, Message message, WorldServerMessageContext context)
 	{
-		super(handler, message, context);
+		super(message, context);
 		authenticator = getContext().getAuthenticator();
 	}
 

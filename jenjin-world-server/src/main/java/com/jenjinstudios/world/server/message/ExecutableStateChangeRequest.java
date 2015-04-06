@@ -42,7 +42,7 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage<WorldSe
 	 */
 	public ExecutableStateChangeRequest(WorldClientHandler handler, Message message, WorldServerMessageContext context)
 	{
-		super(handler, message, context);
+		super(message, context);
 	}
 
 	private void forcePlayerToAngle(Actor player, Angle pAngle) {

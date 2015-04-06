@@ -26,7 +26,7 @@ public class ExecutableWorldLogoutRequest extends WorldExecutableMessage<WorldSe
 	 */
 	public ExecutableWorldLogoutRequest(WorldClientHandler handler, Message message, WorldServerMessageContext context)
 	{
-		super(handler, message, context);
+		super(message, context);
 		//noinspection unchecked
 		authenticator = handler.getServer().getAuthenticator();
 

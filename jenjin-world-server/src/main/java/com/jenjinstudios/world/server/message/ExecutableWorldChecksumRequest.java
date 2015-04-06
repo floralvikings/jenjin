@@ -21,7 +21,7 @@ public class ExecutableWorldChecksumRequest extends WorldExecutableMessage<World
 	public ExecutableWorldChecksumRequest(WorldClientHandler handler, Message message,
 										  WorldServerMessageContext context)
 	{
-		super(handler, message, context);
+		super(message, context);
 	}
 
 	@Override
