@@ -15,8 +15,6 @@ public class MessageTypeException extends IOException
 	 *
 	 * @param id The id of the invalid message type.
 	 */
-	public MessageTypeException(short id) {
-		super("Message " + id + " not registered.");
-	}
+	public MessageTypeException(short id) { super("Message " + id + " not registered."); }
 
 }
