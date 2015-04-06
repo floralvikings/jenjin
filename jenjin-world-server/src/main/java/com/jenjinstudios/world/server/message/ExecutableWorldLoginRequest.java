@@ -3,20 +3,20 @@ package com.jenjinstudios.world.server.message;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.server.authentication.AuthenticationException;
 import com.jenjinstudios.server.authentication.Authenticator;
-import com.jenjinstudios.server.net.ServerMessageContext;
 import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.actor.Vision;
 import com.jenjinstudios.world.server.Player;
 import com.jenjinstudios.world.server.WorldClientHandler;
 import com.jenjinstudios.world.server.WorldServer;
+import com.jenjinstudios.world.server.WorldServerMessageContext;
 
 /**
  * Handles requests to login to the world.
  *
  * @author Caleb Brinkman
  */
-public class ExecutableWorldLoginRequest extends WorldExecutableMessage<ServerMessageContext<Player>>
+public class ExecutableWorldLoginRequest extends WorldExecutableMessage<WorldServerMessageContext<Player>>
 {
 	private final Authenticator<Player> authenticator;
 	private Message loginResponse;
@@ -29,7 +29,7 @@ public class ExecutableWorldLoginRequest extends WorldExecutableMessage<ServerMe
 	 * @param context The context in which to execute the message.
 	 */
 	public ExecutableWorldLoginRequest(WorldClientHandler handler, Message message,
-									   ServerMessageContext<Player> context)
+									   WorldServerMessageContext<Player> context)
 	{
 		super(handler, message, context);
 		authenticator = getContext().getAuthenticator();
