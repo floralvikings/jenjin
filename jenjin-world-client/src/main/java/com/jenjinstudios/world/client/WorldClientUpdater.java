@@ -2,6 +2,7 @@ package com.jenjinstudios.world.client;
 
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.world.Actor;
+import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.actor.StateChangeStack;
 import com.jenjinstudios.world.client.message.WorldClientMessageFactory;
 import com.jenjinstudios.world.event.EventStack;
@@ -30,8 +31,12 @@ public class WorldClientUpdater implements Runnable
 
 	@Override
 	public void run() {
-		worldClient.getWorld().update();
+		World world = worldClient.getWorld();
 		Actor player = worldClient.getPlayer();
+		if (world != null)
+		{
+			world.update();
+		}
 		if (player != null)
 		{
 			EventStack eventStack = player.getEventStack(StateChangeStack.STACK_NAME);
