@@ -22,7 +22,4 @@ public abstract class WorldExecutableMessage<T extends WorldServerMessageContext
 		super(handler, message, context);
 	}
 
-	protected WorldClientHandler getClientHandler() {
-		return (WorldClientHandler) getThreadPool();
-	}
 }
