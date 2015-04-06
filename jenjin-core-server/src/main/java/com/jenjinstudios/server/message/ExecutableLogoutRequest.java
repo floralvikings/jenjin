@@ -29,13 +29,12 @@ public class ExecutableLogoutRequest extends ServerExecutableMessage<ServerMessa
 	 */
 	public ExecutableLogoutRequest(ClientHandler clientHandler, Message message, ServerMessageContext context) {
 		super(clientHandler, message, context);
-		authenticator = clientHandler.getServer().getAuthenticator();
+		authenticator = getContext().getAuthenticator();
 	}
 
 	@Override
 	public Message execute() {
-		ClientHandler handler = getClientHandler();
-		User user = handler.getUser();
+		User user = getContext().getUser();
 		Message response = null;
 		if ((authenticator != null) && (user != null))
 		{
@@ -44,7 +43,7 @@ public class ExecutableLogoutRequest extends ServerExecutableMessage<ServerMessa
 			{
 				user = authenticator.logOutUser(username);
 				response = ServerMessageFactory.generateLogoutResponse(!user.isLoggedIn());
-				handler.setUser(null);
+				getContext().setUser(null);
 			} catch (AuthenticationException e)
 			{
 				LOGGER.log(Level.INFO, "Exception when logging out user " + user.getUsername(), e);
