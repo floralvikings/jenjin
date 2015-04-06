@@ -11,7 +11,6 @@ import org.powermock.modules.testng.PowerMockTestCase;
 import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.*;
-import static org.testng.Assert.assertEquals;
 
 /**
  * @author Caleb Brinkman
@@ -20,20 +19,6 @@ import static org.testng.Assert.assertEquals;
 @PrepareForTest(ServerMessageFactory.class)
 public class ClientHandlerTest extends PowerMockTestCase
 {
-
-	@Test
-	public void testSetID() throws Exception {
-		Server server = mock(Server.class);
-		MessageInputStream mis = mock(MessageInputStream.class);
-		MessageOutputStream mos = mock(MessageOutputStream.class);
-		MessageStreamPair messageStreamPair = new MessageStreamPair(mis, mos);
-
-		ClientHandler clientHandler = new ClientHandler(server, messageStreamPair, new ServerMessageContext());
-		clientHandler.setHandlerId(123);
-
-		assertEquals(clientHandler.getHandlerId(), 123);
-		assertEquals(clientHandler.getName(), "Client Handler 123");
-	}
 
 	@Test
 	public void testShutDown() throws Exception {
