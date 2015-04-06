@@ -1,16 +1,16 @@
 package com.jenjinstudios.server.message;
 
 import com.jenjinstudios.core.concurrency.ExecutableMessage;
-import com.jenjinstudios.core.concurrency.MessageContext;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.server.net.ClientHandler;
+import com.jenjinstudios.server.net.ServerMessageContext;
 
 /**
  * The ServerExecutableMessage class is invoked to respond to messages server-side.
  *
  * @author Caleb Brinkman
  */
-public abstract class ServerExecutableMessage<T extends MessageContext> extends ExecutableMessage<T>
+public abstract class ServerExecutableMessage<T extends ServerMessageContext> extends ExecutableMessage<T>
 {
 
 	/**
