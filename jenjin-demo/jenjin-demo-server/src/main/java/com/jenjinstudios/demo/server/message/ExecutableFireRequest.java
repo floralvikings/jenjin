@@ -6,7 +6,6 @@ import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.server.Player;
 import com.jenjinstudios.world.server.WorldClientHandler;
-import com.jenjinstudios.world.server.WorldServer;
 import com.jenjinstudios.world.server.WorldServerMessageContext;
 import com.jenjinstudios.world.server.message.WorldExecutableMessage;
 
@@ -30,7 +29,7 @@ public class ExecutableFireRequest extends WorldExecutableMessage<WorldServerMes
 	/** Run asynchronous portion of this message. */
 	@Override
 	public Message execute() {
-		World world = ((WorldServer) getClientHandler().getServer()).getWorld();
+		World world = getContext().getWorld();
 		world.scheduleUpdateTask(() -> {
 			Actor player = getContext().getUser();
 			Bullet bullet = new Bullet(player);
