@@ -83,13 +83,6 @@ public class Connection<T extends SimpleMessageContext> extends MessageThreadPoo
 	public PingTracker getPingTracker() { return pingTracker; }
 
 	/**
-	 * Set the name of this {@code Connection}.
-	 *
-	 * @param name The name of this {@code Connection}.
-	 */
-	public void setName(String name) { this.name = name; }
-
-	/**
 	 * Set the RSA public/private key pair used to encrypt outgoing and decrypt incoming messages, and queue a message
 	 * containing the public key.
 	 *
