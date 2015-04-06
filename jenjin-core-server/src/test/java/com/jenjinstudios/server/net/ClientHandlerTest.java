@@ -53,14 +53,4 @@ public class ClientHandlerTest extends PowerMockTestCase
 		verify(server).removeClient(clientHandler);
 	}
 
-	@Test
-	public void testLoggedInTime() {
-		Server server = mock(Server.class);
-		MessageInputStream mis = mock(MessageInputStream.class);
-		MessageOutputStream mos = mock(MessageOutputStream.class);
-		MessageStreamPair messageStreamPair = new MessageStreamPair(mis, mos);
-		ClientHandler clientHandler = new ClientHandler(server, messageStreamPair, new ServerMessageContext());
-		clientHandler.setLoggedInTime(12345l);
-		assertEquals(clientHandler.getLoggedInTime(), 12345l);
-	}
 }
