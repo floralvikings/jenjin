@@ -9,9 +9,9 @@ import com.jenjinstudios.server.authentication.User;
  *
  * @author Caleb Brinkman
  */
-public class ServerMessageContext extends SimpleMessageContext
+public class ServerMessageContext<T extends User> extends SimpleMessageContext
 {
-	private Authenticator authenticator;
+	private Authenticator<T> authenticator;
 	private User user;
 	private long loggedInTime;
 
@@ -34,14 +34,14 @@ public class ServerMessageContext extends SimpleMessageContext
 	 *
 	 * @return The authenticator managed by this context.
 	 */
-	public Authenticator getAuthenticator() { return authenticator; }
+	public Authenticator<T> getAuthenticator() { return authenticator; }
 
 	/**
 	 * Set the authenticator managed by this context.
 	 *
 	 * @param authenticator The new authenticator.
 	 */
-	public void setAuthenticator(Authenticator authenticator) { this.authenticator = authenticator; }
+	public void setAuthenticator(Authenticator<T> authenticator) { this.authenticator = authenticator; }
 
 	/**
 	 * Set the time at which the user managed by this context was logged in.
