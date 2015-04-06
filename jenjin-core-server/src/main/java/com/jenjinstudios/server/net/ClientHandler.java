@@ -56,7 +56,7 @@ public class ClientHandler<T extends ServerMessageContext> extends Connection<T>
         {
             try
             {
-                server.getAuthenticator().logOutUser(user.getUsername());
+				server.getAuthenticator().logOutUser(getMessageContext().getUser().getUsername());
 			} catch (AuthenticationException e)
 			{
                 LOGGER.log(Level.WARNING, "Unable to perform emergency logout.", e);
