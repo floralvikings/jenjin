@@ -2,10 +2,8 @@ package com.jenjinstudios.world.server;
 
 import com.jenjinstudios.core.io.MessageRegistry;
 import com.jenjinstudios.server.authentication.Authenticator;
-import com.jenjinstudios.server.net.ClientHandler;
 import com.jenjinstudios.server.net.Server;
 import com.jenjinstudios.server.net.ServerInit;
-import com.jenjinstudios.server.net.ServerMessageContext;
 import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.io.WorldDocumentReader;
 import com.jenjinstudios.world.io.WorldDocumentWriter;
@@ -20,7 +18,8 @@ import java.io.InputStream;
  * The WorldServer class is responsible for updating a game world.
  * @author Caleb Brinkman
  */
-public class WorldServer<T extends WorldClientHandler> extends Server<T>
+public class WorldServer<T extends WorldClientHandler<? extends WorldServerMessageContext<? extends Player>>>
+	  extends Server<T>
 {
 	private final World world;
 	private final byte[] worldFileChecksum;
@@ -69,10 +68,16 @@ public class WorldServer<T extends WorldClientHandler> extends Server<T>
 	public byte[] getWorldFileBytes() { return worldFileBytes; }
 
 	@Override
-	public void removeClient(ClientHandler handler) {
+	public void clientHandlerAdded(T h) {
+		super.clientHandlerAdded(h);
+		h.getMessageContext().setWorld(world);
+		h.getMessageContext().setWorldChecksum(worldFileChecksum);
+	}
+
+	@Override
+	public void removeClient(T handler) {
 		super.removeClient(handler);
-		if (((ServerMessageContext) handler.getMessageContext()).getUser() != null)
-			world.getWorldObjects().remove(((ServerMessageContext<? extends Player>) handler.getMessageContext())
-				  .getUser().getId());
+		if (handler.getMessageContext().getUser() != null)
+			world.getWorldObjects().remove(handler.getMessageContext().getUser().getId());
 	}
 }
