@@ -26,7 +26,6 @@ public class Connection<T extends SimpleMessageContext> extends MessageThreadPoo
 	private static final int KEYSIZE = 512;
 	private static final Logger LOGGER = Logger.getLogger(Connection.class.getName());
 	private final PingTracker pingTracker;
-	private String name = "Connection";
 
 	/**
 	 * Construct a new connection using the given MessageIO for reading and writing messages.
