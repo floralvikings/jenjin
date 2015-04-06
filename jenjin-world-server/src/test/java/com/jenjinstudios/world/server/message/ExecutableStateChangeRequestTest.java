@@ -33,7 +33,7 @@ public class ExecutableStateChangeRequestTest
 		WorldClientHandler mock = mock(WorldClientHandler.class);
 		Message request = mock(Message.class);
 		WorldServer worldServer = mock(WorldServer.class);
-		WorldServerMessageContext<Player> context = mock(WorldServerMessageContext.class);
+		WorldServerMessageContext context = mock(WorldServerMessageContext.class);
 
 		when(context.getUser()).thenReturn(player);
 		when(mock.getServer()).thenReturn(worldServer);
@@ -60,7 +60,7 @@ public class ExecutableStateChangeRequestTest
 		world.getWorldObjects().add(player);
 		world.update();
 
-		WorldServerMessageContext<Player> context = mock(WorldServerMessageContext.class);
+		WorldServerMessageContext context = mock(WorldServerMessageContext.class);
 		WorldClientHandler mock = mock(WorldClientHandler.class);
 		WorldServer worldServer = mock(WorldServer.class);
 		when(worldServer.getUps()).thenReturn(50);
@@ -95,7 +95,7 @@ public class ExecutableStateChangeRequestTest
 		WorldClientHandler mock = mock(WorldClientHandler.class);
 		WorldServer worldServer = mock(WorldServer.class);
 		Message request = mock(Message.class);
-		WorldServerMessageContext<Player> context = mock(WorldServerMessageContext.class);
+		WorldServerMessageContext context = mock(WorldServerMessageContext.class);
 
 		when(context.getUser()).thenReturn(player);
 		when(mock.getServer()).thenReturn(worldServer);
@@ -122,7 +122,7 @@ public class ExecutableStateChangeRequestTest
 		WorldClientHandler mock = mock(WorldClientHandler.class);
 		WorldServer worldServer = mock(WorldServer.class);
 		Message request = mock(Message.class);
-		WorldServerMessageContext<Player> context = mock(WorldServerMessageContext.class);
+		WorldServerMessageContext context = mock(WorldServerMessageContext.class);
 
 		when(mock.getServer()).thenReturn(worldServer);
 		when(worldServer.getUps()).thenReturn(50);
