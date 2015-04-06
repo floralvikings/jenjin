@@ -9,7 +9,6 @@ import java.io.IOException;
  */
 public class MessageTypeException extends IOException
 {
-	private final short id;
 
 	/**
 	 * Construct a new {@code MessageTypeException} when an invalid message type is read with the given id.
@@ -18,7 +17,6 @@ public class MessageTypeException extends IOException
 	 */
 	public MessageTypeException(short id) {
 		super("Message " + id + " not registered.");
-		this.id = id;
 	}
 
 }
