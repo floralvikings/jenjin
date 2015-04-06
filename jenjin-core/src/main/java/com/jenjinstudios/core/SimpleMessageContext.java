@@ -35,11 +35,7 @@ public class SimpleMessageContext implements MessageContext
 	@Override
 	public void setName(String name) { this.name = name; }
 
-	/**
-	 * Get the PingTracker associated with this MessageContext.
-	 *
-	 * @return The PingTracker associated with this MessageContext.
-	 */
+	@Override
 	public PingTracker getPingTracker() { return pingTracker; }
 
 	@Override

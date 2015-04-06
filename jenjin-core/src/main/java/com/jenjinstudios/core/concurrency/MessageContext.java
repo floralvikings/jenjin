@@ -1,5 +1,7 @@
 package com.jenjinstudios.core.concurrency;
 
+import com.jenjinstudios.core.PingTracker;
+
 import java.net.InetAddress;
 import java.security.Key;
 import java.util.Map;
@@ -24,6 +26,13 @@ public interface MessageContext
 	 * @param name The new name.
 	 */
 	void setName(String name);
+
+	/**
+	 * Get the PingTracker associated with this MessageContext.
+	 *
+	 * @return The PingTracker associated with this MessageContext.
+	 */
+	PingTracker getPingTracker();
 
 	/**
 	 * The key used to encrypt messages sent in this context.
