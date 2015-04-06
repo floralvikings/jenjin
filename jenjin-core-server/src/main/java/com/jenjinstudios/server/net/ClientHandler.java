@@ -20,8 +20,6 @@ public class ClientHandler<T extends ServerMessageContext> extends Connection<T>
 	private final Server server;
 	/** The id of the client handler. */
 	private int handlerId = -1;
-    /** The time at which this client was successfully logged in. */
-    private long loggedInTime;
 	private User user;
 
     /**
