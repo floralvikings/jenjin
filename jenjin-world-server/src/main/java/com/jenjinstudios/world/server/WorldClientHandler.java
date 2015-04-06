@@ -17,11 +17,11 @@ import java.util.Set;
  *
  * @author Caleb Brinkman
  */
-public class WorldClientHandler<T extends WorldServerMessageContext<Player>> extends ClientHandler<T>
+public class WorldClientHandler extends ClientHandler<WorldServerMessageContext>
 {
 	private boolean hasSentActorStepMessage;
 
-	public WorldClientHandler(WorldServer s, MessageStreamPair messageStreamPair, T context) {
+	public WorldClientHandler(WorldServer s, MessageStreamPair messageStreamPair, WorldServerMessageContext context) {
 		super(s, messageStreamPair, context);
 	}
 
