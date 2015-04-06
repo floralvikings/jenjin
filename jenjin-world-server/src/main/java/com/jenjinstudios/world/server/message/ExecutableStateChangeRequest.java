@@ -7,7 +7,6 @@ import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.math.Angle;
 import com.jenjinstudios.world.math.MathUtil;
 import com.jenjinstudios.world.math.Vector2D;
-import com.jenjinstudios.world.server.Player;
 import com.jenjinstudios.world.server.WorldClientHandler;
 import com.jenjinstudios.world.server.WorldServerMessageContext;
 import com.jenjinstudios.world.state.MoveState;
@@ -22,7 +21,7 @@ import java.util.logging.Logger;
  * @author Caleb Brinkman
  */
 @SuppressWarnings("WeakerAccess")
-public class ExecutableStateChangeRequest extends WorldExecutableMessage<WorldServerMessageContext<Player>>
+public class ExecutableStateChangeRequest extends WorldExecutableMessage<WorldServerMessageContext>
 {
 	private static final Logger LOGGER = Logger.getLogger(ExecutableStateChangeRequest.class.getName());
 	private static final double MS_TO_S = 1000.0d;
@@ -41,8 +40,7 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage<WorldSe
 	 * @param message The message.
 	 * @param context The context in which to execute the message.
 	 */
-	public ExecutableStateChangeRequest(WorldClientHandler handler, Message message,
-										WorldServerMessageContext<Player> context)
+	public ExecutableStateChangeRequest(WorldClientHandler handler, Message message, WorldServerMessageContext context)
 	{
 		super(handler, message, context);
 	}
