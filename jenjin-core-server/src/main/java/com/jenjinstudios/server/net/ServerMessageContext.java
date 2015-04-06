@@ -12,7 +12,7 @@ import com.jenjinstudios.server.authentication.User;
 public class ServerMessageContext<T extends User> extends SimpleMessageContext
 {
 	private Authenticator<T> authenticator;
-	private User user;
+	private T user;
 	private long loggedInTime;
 
 	/**
@@ -20,14 +20,14 @@ public class ServerMessageContext<T extends User> extends SimpleMessageContext
 	 *
 	 * @return The user managed by this context.
 	 */
-	public User getUser() { return user; }
+	public T getUser() { return user; }
 
 	/**
 	 * Set the user managed by this context.
 	 *
 	 * @param user The new user.
 	 */
-	public void setUser(User user) { this.user = user; }
+	public void setUser(T user) { this.user = user; }
 
 	/**
 	 * Get the authenticator managed by this context.
