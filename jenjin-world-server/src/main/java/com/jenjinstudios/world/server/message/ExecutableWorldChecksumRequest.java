@@ -3,7 +3,6 @@ package com.jenjinstudios.world.server.message;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.world.server.Player;
 import com.jenjinstudios.world.server.WorldClientHandler;
-import com.jenjinstudios.world.server.WorldServer;
 import com.jenjinstudios.world.server.WorldServerMessageContext;
 
 /**
@@ -28,7 +27,7 @@ public class ExecutableWorldChecksumRequest extends WorldExecutableMessage<World
 
 	@Override
 	public Message execute() {
-		byte[] checkSum = ((WorldServer) getClientHandler().getServer()).getWorldFileChecksum();
+		byte[] checkSum = getContext().getWorldChecksum();
 		return WorldServerMessageFactory.generateWorldChecksumResponse(checkSum);
 	}
 
