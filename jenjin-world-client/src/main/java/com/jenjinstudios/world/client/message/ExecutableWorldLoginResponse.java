@@ -41,7 +41,6 @@ public class ExecutableWorldLoginResponse extends WorldClientExecutableMessage<W
         Vector2D vector2D = new Vector2D(xCoordinate, yCoordinate);
         player.setVector2D(vector2D);
 
-		WorldClient client = getWorldClient();
 		getContext().getWorld().scheduleUpdateTask(() -> {
 			boolean success = (boolean) getMessage().getArgument("success");
 			getContext().getLoginTracker().setLoggedIn(success);
