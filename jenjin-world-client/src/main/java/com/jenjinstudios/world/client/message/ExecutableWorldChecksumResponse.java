@@ -17,7 +17,7 @@ public class ExecutableWorldChecksumResponse extends WorldClientExecutableMessag
 	 * @param context The context in which to execute the message.
 	 */
 	public ExecutableWorldChecksumResponse(Message message, WorldClientMessageContext context) {
-		super(context);
+		super(message, context);
 	}
 
     @Override

@@ -14,7 +14,8 @@ public abstract class WorldClientExecutableMessage<T extends WorldClientMessageC
     /**
      * Construct an ExecutableMessage with the given Message.
      *
-     * @param message The Message.
+	 * @param client The client invoking this message.
+	 * @param message The Message.
 	 * @param context The context in which to execute the message.
 	 */
 	protected WorldClientExecutableMessage(Message message, T context) {

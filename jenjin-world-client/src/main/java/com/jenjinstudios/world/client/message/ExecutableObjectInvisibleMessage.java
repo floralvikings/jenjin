@@ -13,7 +13,7 @@ import com.jenjinstudios.world.client.WorldClientMessageContext;
 public class ExecutableObjectInvisibleMessage extends WorldClientExecutableMessage<WorldClientMessageContext>
 {
 	public ExecutableObjectInvisibleMessage(Message message, WorldClientMessageContext context) {
-		super(context);
+		super(message, context);
 	}
 
     @Override

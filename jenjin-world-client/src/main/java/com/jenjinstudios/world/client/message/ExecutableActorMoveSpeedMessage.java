@@ -16,7 +16,7 @@ public class ExecutableActorMoveSpeedMessage extends WorldClientExecutableMessag
 	 * @param context The context in which to execute the message.
 	 */
 	public ExecutableActorMoveSpeedMessage(Message message, WorldClientMessageContext context) {
-		super(context);
+		super(message, context);
 	}
 
 	/** Run asynchronous portion of this message. */

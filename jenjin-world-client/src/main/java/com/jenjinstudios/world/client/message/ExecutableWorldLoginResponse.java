@@ -25,7 +25,7 @@ public class ExecutableWorldLoginResponse extends WorldClientExecutableMessage<W
 	 * @param context The context in which to execute the message.
 	 */
 	public ExecutableWorldLoginResponse(Message message, WorldClientMessageContext context) {
-		super(context);
+		super(message, context);
 	}
 
     @Override

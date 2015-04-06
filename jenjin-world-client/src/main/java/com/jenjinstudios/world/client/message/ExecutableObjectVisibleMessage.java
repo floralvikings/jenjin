@@ -21,7 +21,7 @@ public class ExecutableObjectVisibleMessage extends WorldClientExecutableMessage
 	 * @param context The context in which to execute the message.
 	 */
 	public ExecutableObjectVisibleMessage(Message message, WorldClientMessageContext context) {
-		super(context);
+		super(message, context);
 	}
 
     @Override

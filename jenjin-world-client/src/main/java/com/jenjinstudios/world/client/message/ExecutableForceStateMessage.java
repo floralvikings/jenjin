@@ -21,7 +21,7 @@ public class ExecutableForceStateMessage extends WorldClientExecutableMessage<Wo
     private long timeOfForce;
 
 	public ExecutableForceStateMessage(Message message, WorldClientMessageContext context) {
-		super(context);
+		super(message, context);
 	}
 
     @Override

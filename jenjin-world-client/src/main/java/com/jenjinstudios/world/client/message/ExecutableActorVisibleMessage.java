@@ -22,7 +22,7 @@ public class ExecutableActorVisibleMessage extends WorldClientExecutableMessage<
     private Actor newlyVisible;
 
 	public ExecutableActorVisibleMessage(Message message, WorldClientMessageContext context) {
-		super(context);
+		super(message, context);
 	}
 
     @Override
