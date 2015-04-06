@@ -2,18 +2,18 @@ package com.jenjinstudios.demo.server.message;
 
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.demo.server.Bullet;
-import com.jenjinstudios.server.net.ServerMessageContext;
 import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.server.Player;
 import com.jenjinstudios.world.server.WorldClientHandler;
 import com.jenjinstudios.world.server.WorldServer;
+import com.jenjinstudios.world.server.WorldServerMessageContext;
 import com.jenjinstudios.world.server.message.WorldExecutableMessage;
 
 /**
  * @author Caleb Brinkman
  */
-public class ExecutableFireRequest extends WorldExecutableMessage<ServerMessageContext<Player>>
+public class ExecutableFireRequest extends WorldExecutableMessage<WorldServerMessageContext<Player>>
 {
 	/**
 	 * Construct a new ExecutableMessage.  Must be implemented by subclasses.
@@ -21,7 +21,9 @@ public class ExecutableFireRequest extends WorldExecutableMessage<ServerMessageC
 	 * @param message The message.
 	 * @param context The context in which to execute the message.
 	 */
-	public ExecutableFireRequest(WorldClientHandler handler, Message message, ServerMessageContext<Player> context) {
+	public ExecutableFireRequest(WorldClientHandler handler, Message message,
+								 WorldServerMessageContext<Player> context)
+	{
 		super(handler, message, context);
 	}
 
