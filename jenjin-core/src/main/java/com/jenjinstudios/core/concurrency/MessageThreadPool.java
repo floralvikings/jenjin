@@ -40,17 +40,6 @@ public class MessageThreadPool<T extends MessageContext>
 		messageWriter.setMessageContext(context);
 	}
 
-	/**
-	 * Set the context in which this thread pool should execute messages.
-	 *
-	 * @param context The context in which messages should be executed.
-	 */
-	protected void setMessageContext(T context) {
-		this.messageContext = context;
-		messageExecutor.setMessageContext(context);
-		messageWriter.setMessageContext(context);
-	}
-
 	public T getMessageContext() { return messageContext; }
 
 	/**
