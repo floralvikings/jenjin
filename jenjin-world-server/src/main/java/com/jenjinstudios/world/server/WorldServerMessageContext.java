@@ -3,6 +3,8 @@ package com.jenjinstudios.world.server;
 import com.jenjinstudios.server.net.ServerMessageContext;
 import com.jenjinstudios.world.World;
 
+import java.util.Arrays;
+
 /**
  * Used to maintain context for messages executed on a WorldServer connection.
  *
@@ -11,6 +13,7 @@ import com.jenjinstudios.world.World;
 public class WorldServerMessageContext<T extends Player> extends ServerMessageContext<T>
 {
 	private World world;
+	private byte[] worldChecksum;
 
 	/**
 	 * Get the world managed by this context.
@@ -25,4 +28,18 @@ public class WorldServerMessageContext<T extends Player> extends ServerMessageCo
 	 * @param world The world.
 	 */
 	public void setWorld(World world) { this.world = world; }
+
+	/**
+	 * Get the checksum of the file containing the world.
+	 *
+	 * @return The checksum.
+	 */
+	public byte[] getWorldChecksum() { return Arrays.copyOf(worldChecksum, worldChecksum.length); }
+
+	/**
+	 * Set the checksum of the file containing the world.
+	 *
+	 * @param worldChecksum The checksum.
+	 */
+	public void setWorldChecksum(byte... worldChecksum) { this.worldChecksum = worldChecksum; }
 }
