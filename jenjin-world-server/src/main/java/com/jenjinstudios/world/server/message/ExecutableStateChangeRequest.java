@@ -8,6 +8,7 @@ import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.math.Angle;
 import com.jenjinstudios.world.math.MathUtil;
 import com.jenjinstudios.world.math.Vector2D;
+import com.jenjinstudios.world.server.Player;
 import com.jenjinstudios.world.server.WorldClientHandler;
 import com.jenjinstudios.world.state.MoveState;
 import com.jenjinstudios.world.util.ZoneUtils;
@@ -21,7 +22,7 @@ import java.util.logging.Logger;
  * @author Caleb Brinkman
  */
 @SuppressWarnings("WeakerAccess")
-public class ExecutableStateChangeRequest extends WorldExecutableMessage<ServerMessageContext>
+public class ExecutableStateChangeRequest extends WorldExecutableMessage<ServerMessageContext<Player>>
 {
 	private static final Logger LOGGER = Logger.getLogger(ExecutableStateChangeRequest.class.getName());
 	private static final double MS_TO_S = 1000.0d;
@@ -40,7 +41,9 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage<ServerM
 	 * @param message The message.
 	 * @param context The context in which to execute the message.
 	 */
-	public ExecutableStateChangeRequest(WorldClientHandler handler, Message message, ServerMessageContext context) {
+	public ExecutableStateChangeRequest(WorldClientHandler handler, Message message,
+										ServerMessageContext<Player> context)
+	{
 		super(handler, message, context);
 	}
 
@@ -62,7 +65,7 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage<ServerM
 		timePast = (System.currentTimeMillis() - timeOfChange);
 
 		getClientHandler().getUser().getWorld().scheduleUpdateTask(() -> {
-			Actor player = getClientHandler().getUser();
+			Actor player = getContext().getUser();
 			if ((player != null) && (player.getWorld() != null))
 			{
 				double distance = MathUtil.round(player.getMoveSpeed() * (timePast / MS_TO_S), 2);
