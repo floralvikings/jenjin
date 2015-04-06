@@ -26,7 +26,6 @@ public class Client<T extends ClientMessageContext> extends Connection<T>
 	static final int THIRTY_SECONDS = 30000;
 	private static final int UPDATES_PER_SECOND = 60;
 	private static final Logger LOGGER = Logger.getLogger(Client.class.getName());
-	private final LoginTracker loginTracker;
 	private final List<Runnable> repeatedTasks;
     private Timer sendMessagesTimer;
     private final ClientLoop clientLoop = new ClientLoop(this);
@@ -38,7 +37,6 @@ public class Client<T extends ClientMessageContext> extends Connection<T>
 	 */
 	protected Client(MessageStreamPair messageStreamPair, T context) {
 		super(messageStreamPair, context);
-		this.loginTracker = getMessageContext().getLoginTracker();
 		getMessageContext().setUser(new ClientUser());
 		repeatedTasks = new LinkedList<>();
 		InputStream stream = getClass().getClassLoader().getResourceAsStream("com/jenjinstudios/client/Messages.xml");
@@ -133,7 +131,7 @@ public class Client<T extends ClientMessageContext> extends Connection<T>
 	public void logoutAndWait() {
 		sendLogoutRequest();
 		long startTime = System.currentTimeMillis();
-		while (loginTracker.isWaitingForResponse() && ((System.currentTimeMillis() - startTime) < THIRTY_SECONDS))
+		while (getLoginTracker().isWaitingForResponse() && ((System.currentTimeMillis() - startTime) < THIRTY_SECONDS))
 		{
 			waitTenMillis();
 		}
@@ -148,11 +146,11 @@ public class Client<T extends ClientMessageContext> extends Connection<T>
 	public boolean loginAndWait() {
 		sendLoginRequest();
 		long startTime = System.currentTimeMillis();
-		while (loginTracker.isWaitingForResponse() && ((System.currentTimeMillis() - startTime) < THIRTY_SECONDS))
+		while (getLoginTracker().isWaitingForResponse() && ((System.currentTimeMillis() - startTime) < THIRTY_SECONDS))
 		{
 			waitTenMillis();
 		}
-		return loginTracker.isLoggedIn();
+		return getLoginTracker().isLoggedIn();
 	}
 
 	/**
@@ -160,7 +158,7 @@ public class Client<T extends ClientMessageContext> extends Connection<T>
 	 *
 	 * @return The login tracker managed by this client.
 	 */
-	public LoginTracker getLoginTracker() { return loginTracker; }
+	public LoginTracker getLoginTracker() { return getMessageContext().getLoginTracker(); }
 
 	/** Run the repeated synchronized tasks. */
 	protected void runRepeatedTasks() {
@@ -182,7 +180,7 @@ public class Client<T extends ClientMessageContext> extends Connection<T>
 	 * Send a login request.
 	 */
 	protected void sendLoginRequest() {
-		loginTracker.setWaitingForResponse(true);
+		getLoginTracker().setWaitingForResponse(true);
 		Message message = generateLoginRequest(getMessageContext().getUser());
 		enqueueMessage(message);
 	}
@@ -240,7 +238,7 @@ public class Client<T extends ClientMessageContext> extends Connection<T>
 	}
 
 	void sendLogoutRequest() {
-		loginTracker.setWaitingForResponse(true);
+		getLoginTracker().setWaitingForResponse(true);
 		Message message = generateLogoutRequest();
 		enqueueMessage(message);
 	}
