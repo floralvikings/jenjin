@@ -43,6 +43,7 @@ public class WorldClient<T extends WorldClientMessageContext> extends Client<T>
 		InputStream stream = getClass().getClassLoader().
 			  getResourceAsStream("com/jenjinstudios/world/client/Messages.xml");
 		MessageRegistry.getGlobalRegistry().register("World Client/Server Messages", stream);
+		addRepeatedTask(new WorldClientUpdater(this));
 	}
 
 	public void writeWorldToFile() throws WorldDocumentException {
