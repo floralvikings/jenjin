@@ -20,7 +20,7 @@ import java.io.InputStream;
  * The WorldServer class is responsible for updating a game world.
  * @author Caleb Brinkman
  */
-public class WorldServer extends Server
+public class WorldServer<T extends WorldClientHandler> extends Server<T>
 {
 	private final World world;
 	private final byte[] worldFileChecksum;
