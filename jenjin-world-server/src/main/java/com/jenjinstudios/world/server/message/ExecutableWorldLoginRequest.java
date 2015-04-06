@@ -16,7 +16,7 @@ import com.jenjinstudios.world.server.WorldServer;
  *
  * @author Caleb Brinkman
  */
-public class ExecutableWorldLoginRequest extends WorldExecutableMessage<ServerMessageContext>
+public class ExecutableWorldLoginRequest extends WorldExecutableMessage<ServerMessageContext<Player>>
 {
 	private final Authenticator<Player> authenticator;
 	private Message loginResponse;
@@ -28,9 +28,11 @@ public class ExecutableWorldLoginRequest extends WorldExecutableMessage<ServerMe
 	 * @param message The message.
 	 * @param context The context in which to execute the message.
 	 */
-	public ExecutableWorldLoginRequest(WorldClientHandler handler, Message message, ServerMessageContext context) {
+	public ExecutableWorldLoginRequest(WorldClientHandler handler, Message message,
+									   ServerMessageContext<Player> context)
+	{
 		super(handler, message, context);
-		authenticator = ((WorldServer) handler.getServer()).getAuthenticator();
+		authenticator = getContext().getAuthenticator();
 	}
 
 	@Override
@@ -42,31 +44,28 @@ public class ExecutableWorldLoginRequest extends WorldExecutableMessage<ServerMe
 		{
 			handleLoginFailure();
 		}
-		long result = getClientHandler().getServer().getServerUpdateTask().getCycleStartTime();
+		long result = System.currentTimeMillis();
 		getContext().setLoggedInTime(result);
 		World world = ((WorldServer) getClientHandler().getServer()).getWorld();
 		world.scheduleUpdateTask(() -> {
-			if (getClientHandler().getUser() != null)
+			if (getContext().getUser() != null)
 			{
 				handleLoginSuccess();
-				getClientHandler().getUser().addPreUpdateEvent(Vision.EVENT_NAME, new Vision(getClientHandler()
-					  .getUser()));
-				world.getWorldObjects().add(
-					  getClientHandler().getUser());
-				loginResponse.setArgument("id", getClientHandler().getUser().getId());
+				getContext().getUser().addPreUpdateEvent(Vision.EVENT_NAME, new Vision(getContext().getUser()));
+				world.getWorldObjects().add(getContext().getUser());
+				loginResponse.setArgument("id", getContext().getUser().getId());
 			}
 		});
 		return loginResponse;
 	}
 
 	private void tryLogInUser() throws AuthenticationException {
-		WorldClientHandler handler = getClientHandler();
-		if ((authenticator != null) && (handler.getUser() == null))
+		if ((authenticator != null) && (getContext().getUser() == null))
 		{
 			String username = (String) getMessage().getArgument("username");
 			String password = (String) getMessage().getArgument("password");
-			Player player = (Player) authenticator.logInUser(username, password);
-			handler.setUser(player);
+			Player player = authenticator.logInUser(username, password);
+			getContext().setUser(player);
 		}
 	}
 
@@ -75,25 +74,22 @@ public class ExecutableWorldLoginRequest extends WorldExecutableMessage<ServerMe
 	}
 
 	private Message createFailureResponse() {
-		WorldClientHandler handler = getClientHandler();
 		Message loginResponse = WorldServerMessageFactory.generateWorldLoginResponse();
 		loginResponse.setArgument("success", false);
 		loginResponse.setArgument("id", -1);
-		loginResponse.setArgument("loginTime", handler.getLoggedInTime());
+		loginResponse.setArgument("loginTime", getContext().getLoggedInTime());
 		loginResponse.setArgument("xCoordinate", 0d);
 		loginResponse.setArgument("yCoordinate", 0d);
 		loginResponse.setArgument("zoneNumber", -1);
 		return loginResponse;
 	}
 
-	private void handleLoginSuccess() {
-		loginResponse = createSuccessResponse(getClientHandler().getUser());
-	}
+	private void handleLoginSuccess() { loginResponse = createSuccessResponse(getContext().getUser()); }
 
 	private Message createSuccessResponse(Actor player) {
 		Message loginResponse = WorldServerMessageFactory.generateWorldLoginResponse();
 		loginResponse.setArgument("success", true);
-		loginResponse.setArgument("loginTime", getClientHandler().getLoggedInTime());
+		loginResponse.setArgument("loginTime", getContext().getLoggedInTime());
 		loginResponse.setArgument("xCoordinate", player.getVector2D().getXCoordinate());
 		loginResponse.setArgument("yCoordinate", player.getVector2D().getYCoordinate());
 		loginResponse.setArgument("zoneNumber", player.getZoneID());
