@@ -47,13 +47,6 @@ public abstract class ExecutableMessage<T extends MessageContext>
      */
 	public Message getMessage() { return message; }
 
-    /**
-	 * Get the threadPool associated with this ExecutableMessage.
-	 *
-	 * @return The threadPool associated with this ExecutableMessage.
-	 */
-	public MessageThreadPool getThreadPool() { return threadPool; }
-
 	/**
 	 * Get the MessageContext for this executable.
 	 *
