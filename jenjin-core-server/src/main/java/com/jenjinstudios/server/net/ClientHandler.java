@@ -41,8 +41,8 @@ public class ClientHandler<T extends ServerMessageContext> extends Connection<T>
      */
     public void setHandlerId(int id) {
         handlerId = id;
-        super.setName("Client Handler " + handlerId);
-    }
+		getMessageContext().setName("Client Handler " + handlerId);
+	}
 
     /** Update anything that needs to be taken care of before sendAllMessages. */
     public void update() { }
