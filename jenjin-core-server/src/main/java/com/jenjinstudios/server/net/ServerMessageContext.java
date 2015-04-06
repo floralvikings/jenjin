@@ -13,6 +13,7 @@ public class ServerMessageContext extends SimpleMessageContext
 {
 	private Authenticator authenticator;
 	private User user;
+	private long loggedInTime;
 
 	/**
 	 * Get the user managed by this context.
@@ -41,4 +42,18 @@ public class ServerMessageContext extends SimpleMessageContext
 	 * @param authenticator The new authenticator.
 	 */
 	public void setAuthenticator(Authenticator authenticator) { this.authenticator = authenticator; }
+
+	/**
+	 * Set the time at which the user managed by this context was logged in.
+	 *
+	 * @param loggedInTime The time, in millis (per System.currentTimeMillis).
+	 */
+	public void setLoggedInTime(long loggedInTime) { this.loggedInTime = loggedInTime; }
+
+	/**
+	 * Get the time at which the user managed by this context was logged in.
+	 *
+	 * @return The time in milliseconds from the epoch.
+	 */
+	public long getLoggedInTime() { return loggedInTime; }
 }
