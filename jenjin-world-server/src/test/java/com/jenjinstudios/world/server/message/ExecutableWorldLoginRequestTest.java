@@ -50,7 +50,7 @@ public class ExecutableWorldLoginRequestTest extends PowerMockTestCase
 		WorldObjectList worldObjectMap = mock(WorldObjectList.class);
 		MessageStreamPair messageStreamPair = mock(MessageStreamPair.class);
 		ServerUpdateTask serverUpdateTask = mock(ServerUpdateTask.class);
-		WorldServerMessageContext<Player> context = mock(WorldServerMessageContext.class);
+		WorldServerMessageContext context = mock(WorldServerMessageContext.class);
 		WorldClientHandler wch = new WorldClientHandler(server, messageStreamPair, context);
 
 		when(server.getServerUpdateTask()).thenReturn(serverUpdateTask);
