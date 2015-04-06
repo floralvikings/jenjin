@@ -23,12 +23,4 @@ public abstract class WorldClientExecutableMessage<T extends WorldClientMessageC
 		super(client, message, context);
 	}
 
-	/**
-	 * Get the WorldClient associated with this message.
-	 *
-	 * @return The WorldClient associated with this message.
-	 */
-	public WorldClient getWorldClient() {
-		return (WorldClient) getThreadPool();
-	}
 }
