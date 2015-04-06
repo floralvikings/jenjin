@@ -16,15 +16,15 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class Server extends Thread
+public class Server<T extends ClientHandler> extends Thread
 {
 	private static final Logger LOGGER = Logger.getLogger(Server.class.getName());
 	private final int UPS;
 	private final int PERIOD;
 	private final Authenticator authenticator;
-	private final ClientListener clientListener;
-    private final Map<Integer, ClientHandler> clientHandlers;
-    private final KeyPair rsaKeyPair;
+	private final ClientListener<T> clientListener;
+	private final Map<Integer, T> clientHandlers;
+	private final KeyPair rsaKeyPair;
 	private ScheduledExecutorService loopTimer;
 	private ServerUpdateTask serverUpdateTask = new ServerUpdateTask(this);
 
@@ -33,8 +33,9 @@ public class Server extends Thread
         LOGGER.log(Level.FINE, "Initializing Server.");
         UPS = initInfo.getUps();
         PERIOD = 1000 / UPS;
-		clientListener = new ClientListener(getClass(), initInfo.getHandlerClass(), initInfo.getContextClass(),
-			  initInfo.getPort());
+		//noinspection unchecked
+		clientListener = new ClientListener<>(getClass(), (Class<? extends T>) initInfo.getHandlerClass(),
+			  initInfo.getContextClass(), initInfo.getPort());
 		clientHandlers = new TreeMap<>();
 		rsaKeyPair = (initInfo.getKeyPair() == null) ? Connection.generateRSAKeyPair() : initInfo
 			  .getKeyPair();
@@ -46,9 +47,9 @@ public class Server extends Thread
 	public ServerUpdateTask getServerUpdateTask() { return serverUpdateTask; }
 
     public void checkListenerForClients() {
-		Iterable<ClientHandler> nc = clientListener.getNewClients();
-		for (ClientHandler h : nc)
-        {
+		Iterable<T> nc = clientListener.getNewClients();
+		for (T h : nc)
+		{
             addClientHandler(h);
             h.start();
         }
@@ -57,7 +58,7 @@ public class Server extends Thread
 
 	public int getUps() { return UPS; }
 
-	private void addClientHandler(ClientHandler h) {
+	private void addClientHandler(T h) {
 		int nullIndex = 0;
         synchronized (clientHandlers)
         {
