@@ -7,14 +7,13 @@ import com.jenjinstudios.server.message.ServerMessageFactory;
 import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.server.Player;
 import com.jenjinstudios.world.server.WorldClientHandler;
-import com.jenjinstudios.world.server.WorldServer;
 import com.jenjinstudios.world.server.WorldServerMessageContext;
 
 /**
  * Handles requests to log out of the world.
  * @author Caleb Brinkman
  */
-public class ExecutableWorldLogoutRequest extends WorldExecutableMessage<WorldServerMessageContext<Player>>
+public class ExecutableWorldLogoutRequest extends WorldExecutableMessage<WorldServerMessageContext>
 {
 	/** The SQLHandler used to log out the client. */
 	private final Authenticator<Player> authenticator;
@@ -25,11 +24,11 @@ public class ExecutableWorldLogoutRequest extends WorldExecutableMessage<WorldSe
 	 * @param message The message.
 	 * @param context The context in which to execute the message.
 	 */
-	public ExecutableWorldLogoutRequest(WorldClientHandler handler, Message message,
-										WorldServerMessageContext<Player> context)
+	public ExecutableWorldLogoutRequest(WorldClientHandler handler, Message message, WorldServerMessageContext context)
 	{
 		super(handler, message, context);
-		authenticator = ((WorldServer) handler.getServer()).getAuthenticator();
+		//noinspection unchecked
+		authenticator = handler.getServer().getAuthenticator();
 
 	}
 
