@@ -1,5 +1,6 @@
 package com.jenjinstudios.server.message;
 
+import com.jenjinstudios.core.concurrency.ExecutableMessage;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageRegistry;
 import com.jenjinstudios.server.authentication.Authenticator;
@@ -7,6 +8,7 @@ import com.jenjinstudios.server.authentication.BasicUser;
 import com.jenjinstudios.server.authentication.User;
 import com.jenjinstudios.server.net.ClientHandler;
 import com.jenjinstudios.server.net.Server;
+import com.jenjinstudios.server.net.ServerMessageContext;
 import com.jenjinstudios.server.net.ServerUpdateTask;
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
@@ -37,6 +39,7 @@ public class ExecutableLogoutRequestTest extends PowerMockTestCase
 		ClientHandler clientHandler = mock(ClientHandler.class);
 		Server server = mock(Server.class);
 		Authenticator<BasicUser> authenticator = mock(Authenticator.class);
+		ServerMessageContext context = mock(ServerMessageContext.class);
 		when(server.getAuthenticator()).thenReturn(authenticator);
 		ServerUpdateTask serverUpdateTask = mock(ServerUpdateTask.class);
 		when(server.getServerUpdateTask()).thenReturn(serverUpdateTask);
@@ -45,10 +48,9 @@ public class ExecutableLogoutRequestTest extends PowerMockTestCase
 		when(clientHandler.getServer()).thenReturn(server);
 		when(clientHandler.getUser()).thenReturn(user);
 
-		ExecutableLogoutRequest executableLogoutRequest = new ExecutableLogoutRequest(clientHandler, logoutRequest,
-			  null);
-		executableLogoutRequest.execute();
+		ExecutableMessage exec = new ExecutableLogoutRequest(clientHandler, logoutRequest, context);
+		exec.execute();
 
-		verify(clientHandler).setUser(null);
+		verify(context).setUser(null);
 	}
 }
