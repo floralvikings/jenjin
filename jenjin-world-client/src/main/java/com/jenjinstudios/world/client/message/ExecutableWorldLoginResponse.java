@@ -5,7 +5,6 @@ import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.actor.Vision;
 import com.jenjinstudios.world.client.WorldClient;
 import com.jenjinstudios.world.client.WorldClientMessageContext;
-import com.jenjinstudios.world.client.WorldClientUpdater;
 import com.jenjinstudios.world.math.Vector2D;
 
 import java.util.logging.Level;
@@ -53,8 +52,6 @@ public class ExecutableWorldLoginResponse extends WorldClientExecutableMessage<W
 				getContext().setName(getContext().getUser().getUsername());
 				getContext().setPlayer(player);
 				getContext().getWorld().getWorldObjects().set(player.getId(), player);
-
-				client.addRepeatedTask(new WorldClientUpdater(client));
 			}
 		});
 		return null;
