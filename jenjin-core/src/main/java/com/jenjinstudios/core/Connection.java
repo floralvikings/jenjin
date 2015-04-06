@@ -83,13 +83,6 @@ public class Connection<T extends SimpleMessageContext> extends MessageThreadPoo
 	public PingTracker getPingTracker() { return pingTracker; }
 
 	/**
-	 * Get the name of this {@code Connection}.
-	 *
-	 * @return The name of this {@code Connection}.
-	 */
-	public String getName() { return name; }
-
-	/**
 	 * Set the name of this {@code Connection}.
 	 *
 	 * @param name The name of this {@code Connection}.
