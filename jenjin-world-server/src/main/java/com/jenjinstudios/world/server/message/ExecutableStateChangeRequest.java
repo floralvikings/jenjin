@@ -1,7 +1,7 @@
 package com.jenjinstudios.world.server.message;
 
-import com.jenjinstudios.core.concurrency.MessageContext;
 import com.jenjinstudios.core.io.Message;
+import com.jenjinstudios.server.net.ServerMessageContext;
 import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.Location;
 import com.jenjinstudios.world.World;
@@ -21,7 +21,7 @@ import java.util.logging.Logger;
  * @author Caleb Brinkman
  */
 @SuppressWarnings("WeakerAccess")
-public class ExecutableStateChangeRequest extends WorldExecutableMessage<MessageContext>
+public class ExecutableStateChangeRequest extends WorldExecutableMessage<ServerMessageContext>
 {
 	private static final Logger LOGGER = Logger.getLogger(ExecutableStateChangeRequest.class.getName());
 	private static final double MS_TO_S = 1000.0d;
@@ -40,7 +40,7 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage<Message
 	 * @param message The message.
 	 * @param context The context in which to execute the message.
 	 */
-	public ExecutableStateChangeRequest(WorldClientHandler handler, Message message, MessageContext context) {
+	public ExecutableStateChangeRequest(WorldClientHandler handler, Message message, ServerMessageContext context) {
 		super(handler, message, context);
 	}
 
