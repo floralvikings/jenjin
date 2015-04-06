@@ -21,7 +21,7 @@ public class MessageThreadPool<T extends MessageContext>
 	private final MessageReader messageReader;
 	private final MessageWriter messageWriter;
 	private final ErrorChecker errorChecker;
-	private T messageContext;
+	private final T messageContext;
 
 	/**
 	 * Construct a MessageThreadPool whose threads will read from and write to the given MessageIO streams.
