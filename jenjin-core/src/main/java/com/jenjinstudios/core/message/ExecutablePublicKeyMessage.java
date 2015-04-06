@@ -1,6 +1,5 @@
 package com.jenjinstudios.core.message;
 
-import com.jenjinstudios.core.Connection;
 import com.jenjinstudios.core.concurrency.ExecutableMessage;
 import com.jenjinstudios.core.concurrency.MessageContext;
 import com.jenjinstudios.core.io.Message;
@@ -26,13 +25,11 @@ public class ExecutablePublicKeyMessage extends ExecutableMessage<MessageContext
 
     /**
      * Construct a new {@code ExecutablePublicKeyMessage}.
-     *
-     * @param connection The connection invoking this executable message.
-     * @param message The message which caused this executable message to be invoked.
+	 *  @param message The message which caused this executable message to be invoked.
 	 * @param context The context in which to execute the message.
 	 */
     @SuppressWarnings("WeakerAccess")
-	public ExecutablePublicKeyMessage(Connection connection, Message message, MessageContext context) {
+	public ExecutablePublicKeyMessage(Message message, MessageContext context) {
 		super(message, context);
 	}
 

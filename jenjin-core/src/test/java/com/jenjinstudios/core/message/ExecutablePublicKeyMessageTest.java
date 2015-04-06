@@ -63,7 +63,7 @@ public class ExecutablePublicKeyMessageTest
 		when(context.getVerifiedKeys()).thenReturn(keys);
 		when(context.getAddress()).thenReturn(address);
 
-		ExecutablePublicKeyMessage executable = new ExecutablePublicKeyMessage(connection, message, context);
+		ExecutablePublicKeyMessage executable = new ExecutablePublicKeyMessage(message, context);
 		executable.execute();
 
 		verify(context).setEncryptionKey(rsaKeyPair.getPublic());
@@ -89,7 +89,7 @@ public class ExecutablePublicKeyMessageTest
 		when(context.getAddress()).thenReturn(address);
 		when(context.getVerifiedKeys()).thenReturn(keys);
 
-		ExecutablePublicKeyMessage executable = new ExecutablePublicKeyMessage(connection, message, context);
+		ExecutablePublicKeyMessage executable = new ExecutablePublicKeyMessage(message, context);
 		executable.execute();
 
 		verify(context).setEncryptionKey(rsaKeyPair.getPublic());
@@ -117,7 +117,7 @@ public class ExecutablePublicKeyMessageTest
 		when(context.getAddress()).thenReturn(address);
 		when(context.getVerifiedKeys()).thenReturn(keys);
 
-		ExecutablePublicKeyMessage executable = new ExecutablePublicKeyMessage(connection, message, context);
+		ExecutablePublicKeyMessage executable = new ExecutablePublicKeyMessage(message, context);
 		executable.execute();
 
 		verify(context, times(0)).setEncryptionKey(any());
@@ -144,7 +144,7 @@ public class ExecutablePublicKeyMessageTest
 		when(connection.getMessageStreamPair()).thenReturn(messageStreamPair);
 		when(context.getVerifiedKeys()).thenReturn(keys);
 
-		ExecutablePublicKeyMessage executable = new ExecutablePublicKeyMessage(connection, message, context);
+		ExecutablePublicKeyMessage executable = new ExecutablePublicKeyMessage(message, context);
 		executable.execute();
 
 		verify(context, times(0)).setEncryptionKey(any());
