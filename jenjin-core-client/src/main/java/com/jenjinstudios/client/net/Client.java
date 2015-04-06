@@ -1,7 +1,6 @@
 package com.jenjinstudios.client.net;
 
 import com.jenjinstudios.client.authentication.ClientUser;
-import com.jenjinstudios.client.authentication.User;
 import com.jenjinstudios.core.Connection;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageRegistry;
@@ -13,7 +12,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -23,9 +21,7 @@ import java.util.logging.Logger;
  */
 public class Client<T extends ClientMessageContext> extends Connection<T>
 {
-	static final int THIRTY_SECONDS = 30000;
 	private static final int UPDATES_PER_SECOND = 60;
-	private static final Logger LOGGER = Logger.getLogger(Client.class.getName());
 	private final List<Runnable> repeatedTasks;
     private Timer sendMessagesTimer;
     private final ClientLoop clientLoop = new ClientLoop(this);
@@ -53,16 +49,6 @@ public class Client<T extends ClientMessageContext> extends Connection<T>
 		pingRequest.setArgument("requestTimeMillis", System.currentTimeMillis());
         return pingRequest;
     }
-
-	static void waitTenMillis() {
-		try
-		{
-			Thread.sleep(10);
-		} catch (InterruptedException e)
-		{
-			LOGGER.log(Level.WARNING, "Interrupted while waiting for login response.", e);
-		}
-	}
 
 	/**
 	 * Add a task to the repeated queue of this client.  Should be called to extend client functionality.
@@ -123,73 +109,6 @@ public class Client<T extends ClientMessageContext> extends Connection<T>
      * @return The average number of updates per second that this client is executing.
      */
     public double getAverageUPS() { return 1.0d / clientLoop.getAverageRunTime(); }
-
-	/**
-	 * Send a login request and await the response.
-	 *
-	 * @return Whether the login was successful.
-	 */
-	@SuppressWarnings("BooleanMethodNameMustStartWithQuestion")
-	public boolean loginAndWait() {
-		sendLoginRequest();
-		long startTime = System.currentTimeMillis();
-		while (getLoginTracker().isWaitingForResponse() && ((System.currentTimeMillis() - startTime) < THIRTY_SECONDS))
-		{
-			waitTenMillis();
-		}
-		return getLoginTracker().isLoggedIn();
-	}
-
-	/**
-	 * Send a logout request and block execution until the response is received.
-	 */
-	public void logoutAndWait() {
-		sendLogoutRequest();
-		long startTime = System.currentTimeMillis();
-		while (getLoginTracker().isWaitingForResponse() && ((System.currentTimeMillis() - startTime) < THIRTY_SECONDS))
-		{
-			waitTenMillis();
-		}
-	}
-
-	/**
-	 * Send a login request.
-	 */
-	protected void sendLoginRequest() {
-		getLoginTracker().setWaitingForResponse(true);
-		Message message = generateLoginRequest(getMessageContext().getUser());
-		enqueueMessage(message);
-	}
-
-	void sendLogoutRequest() {
-		getLoginTracker().setWaitingForResponse(true);
-		Message message = generateLogoutRequest();
-		enqueueMessage(message);
-	}
-
-	/**
-	 * Generate a LogoutRequest message.
-	 *
-	 * @return The LogoutRequestMessage.
-	 */
-	public static Message generateLogoutRequest() {
-		return MessageRegistry.getGlobalRegistry().createMessage
-			  ("LogoutRequest");
-	}
-
-	/**
-	 * Generate a LoginRequest message.  This message will be encrypted if possible.
-	 *
-	 * @param user The User for which to generate the login request.
-	 *
-	 * @return The LoginRequest message.
-	 */
-	public static Message generateLoginRequest(User user) {// Create the login request.
-		Message loginRequest = MessageRegistry.getGlobalRegistry().createMessage("LoginRequest");
-		loginRequest.setArgument("username", user.getUsername());
-		loginRequest.setArgument("password", user.getPassword());
-		return loginRequest;
-	}
 
 	/**
 	 * The ClientLoop class is essentially what amounts to the output thread.

@@ -1,5 +1,6 @@
 package com.jenjinstudios.demo.client.ui;
 
+import com.jenjinstudios.client.authentication.AuthenticationHelper;
 import com.jenjinstudios.client.authentication.ClientUser;
 import com.jenjinstudios.client.authentication.User;
 import com.jenjinstudios.core.io.MessageInputStream;
@@ -105,7 +106,7 @@ public final class LoginPane extends GridPane
 		worldClient = tryCreateWorldClient(address, port, user);
 		if (worldClient != null)
 		{
-			if (worldClient.loginAndWait())
+			if (AuthenticationHelper.loginAndWait(worldClient))
 			{
 				LOGGER.log(Level.INFO, "Successfully logged in!");
 				main.successfulLogin(worldClient);
