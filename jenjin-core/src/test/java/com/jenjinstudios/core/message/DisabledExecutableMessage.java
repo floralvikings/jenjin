@@ -1,6 +1,5 @@
 package com.jenjinstudios.core.message;
 
-import com.jenjinstudios.core.Connection;
 import com.jenjinstudios.core.concurrency.ExecutableMessage;
 import com.jenjinstudios.core.concurrency.MessageContext;
 import com.jenjinstudios.core.io.Message;
@@ -19,15 +18,13 @@ public class DisabledExecutableMessage extends ExecutableMessage<MessageContext>
 
     /**
      * Cosntruct a new {@code DisabledExecutableMessage}; not meant to be used in production code.
-     *
-     * @param connection The connection invoking this executable message.
-     * @param message The message that caused this executable message to be invoked.
+	 *  @param message The message that caused this executable message to be invoked.
 	 * @param context The context in which to execute the message.
 	 */
-	public DisabledExecutableMessage(Connection connection, Message message, MessageContext context) {
+	public DisabledExecutableMessage(Message message, MessageContext context) {
 		super(message, context);
-		LOGGER.log(Level.SEVERE, "DisabledExecutableMessage constructed in {0}", connection);
-    }
+		LOGGER.log(Level.SEVERE, "DisabledExecutableMessage constructed");
+	}
 
     @Override
 	public Message execute() { throw new IllegalStateException("This message should be disabled."); }
