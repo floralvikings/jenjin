@@ -40,13 +40,13 @@ public class ExecutableLogoutRequestTest extends PowerMockTestCase
 		Server server = mock(Server.class);
 		Authenticator<BasicUser> authenticator = mock(Authenticator.class);
 		ServerMessageContext context = mock(ServerMessageContext.class);
-		when(server.getAuthenticator()).thenReturn(authenticator);
+		when(context.getAuthenticator()).thenReturn(authenticator);
 		ServerUpdateTask serverUpdateTask = mock(ServerUpdateTask.class);
 		when(server.getServerUpdateTask()).thenReturn(serverUpdateTask);
 		when(serverUpdateTask.getCycleStartTime()).thenReturn(12345L);
 		when(authenticator.logOutUser(Mockito.<String>any())).thenReturn(new BasicUser());
 		when(clientHandler.getServer()).thenReturn(server);
-		when(clientHandler.getUser()).thenReturn(user);
+		when(context.getUser()).thenReturn(user);
 
 		ExecutableMessage exec = new ExecutableLogoutRequest(clientHandler, logoutRequest, context);
 		exec.execute();
