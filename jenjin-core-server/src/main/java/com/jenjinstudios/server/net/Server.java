@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class Server<T extends ClientHandler> extends Thread
+public class Server<T extends ClientHandler<? extends ServerMessageContext>> extends Thread
 {
 	private static final Logger LOGGER = Logger.getLogger(Server.class.getName());
 	private final int UPS;
@@ -33,9 +33,11 @@ public class Server<T extends ClientHandler> extends Thread
         LOGGER.log(Level.FINE, "Initializing Server.");
         UPS = initInfo.getUps();
         PERIOD = 1000 / UPS;
+		Class<? extends Server> serverClass = getClass();
+		Class handlerClass = initInfo.getHandlerClass();
 		//noinspection unchecked
-		clientListener = new ClientListener<>(getClass(), (Class<? extends T>) initInfo.getHandlerClass(),
-			  initInfo.getContextClass(), initInfo.getPort());
+		clientListener = new ClientListener<>(serverClass, handlerClass, initInfo.getContextClass(), initInfo.getPort
+			  ());
 		clientHandlers = new TreeMap<>();
 		rsaKeyPair = (initInfo.getKeyPair() == null) ? Connection.generateRSAKeyPair() : initInfo
 			  .getKeyPair();
@@ -71,6 +73,8 @@ public class Server<T extends ClientHandler> extends Thread
 
 	protected void clientHandlerAdded(T h) {
 		h.setRSAKeyPair(rsaKeyPair);
+		//noinspection unchecked
+		h.getMessageContext().setAuthenticator(authenticator);
 	}
 
 	public void update() {
