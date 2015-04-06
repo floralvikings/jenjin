@@ -3,7 +3,6 @@ package com.jenjinstudios.world.server;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageStreamPair;
 import com.jenjinstudios.server.net.ClientHandler;
-import com.jenjinstudios.server.net.ServerMessageContext;
 import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.WorldObject;
 import com.jenjinstudios.world.actor.Vision;
@@ -18,7 +17,7 @@ import java.util.Set;
  *
  * @author Caleb Brinkman
  */
-public class WorldClientHandler<T extends ServerMessageContext> extends ClientHandler<T>
+public class WorldClientHandler<T extends WorldServerMessageContext> extends ClientHandler<T>
 {
 	private boolean hasSentActorStepMessage;
 
