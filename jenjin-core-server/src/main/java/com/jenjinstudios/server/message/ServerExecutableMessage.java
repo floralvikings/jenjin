@@ -12,11 +12,9 @@ import com.jenjinstudios.server.net.ClientHandler;
  */
 public abstract class ServerExecutableMessage<T extends MessageContext> extends ExecutableMessage<T>
 {
-    /** The ClientHandler for this object. */
-    private final ClientHandler clientHandler;
 
-    /**
-     * Construct a new ExecutableMessage.  Must be implemented by subclasses.
+	/**
+	 * Construct a new ExecutableMessage.  Must be implemented by subclasses.
      *
      * @param handler The handler using this ExecutableMessage.
      * @param message The message.
@@ -24,8 +22,7 @@ public abstract class ServerExecutableMessage<T extends MessageContext> extends 
 	 */
 	protected ServerExecutableMessage(ClientHandler handler, Message message, T context) {
 		super(handler, message, context);
-		clientHandler = handler;
-    }
+	}
 
     /**
      * Get the ClientHandler invoking this message.
@@ -33,6 +30,6 @@ public abstract class ServerExecutableMessage<T extends MessageContext> extends 
      * @return The ClientHandler invoking this message.
      */
     protected ClientHandler getClientHandler() {
-        return clientHandler;
-    }
+		return (ClientHandler) getThreadPool();
+	}
 }
