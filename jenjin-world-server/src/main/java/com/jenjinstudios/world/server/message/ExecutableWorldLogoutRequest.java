@@ -46,7 +46,7 @@ public class ExecutableWorldLogoutRequest extends WorldExecutableMessage<WorldSe
 		}
 
 		Player clientActor = getContext().getUser();
-		World world = ((WorldServer) getClientHandler().getServer()).getWorld();
+		World world = getContext().getWorld();
 		world.scheduleUpdateTask(() -> {
 			if ((clientActor != null) && !clientActor.isLoggedIn())
 			{
