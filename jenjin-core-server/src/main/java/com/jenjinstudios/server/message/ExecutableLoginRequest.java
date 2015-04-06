@@ -1,11 +1,11 @@
 package com.jenjinstudios.server.message;
 
-import com.jenjinstudios.core.concurrency.MessageContext;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.server.authentication.AuthenticationException;
 import com.jenjinstudios.server.authentication.Authenticator;
 import com.jenjinstudios.server.authentication.User;
 import com.jenjinstudios.server.net.ClientHandler;
+import com.jenjinstudios.server.net.ServerMessageContext;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -18,7 +18,7 @@ import static com.jenjinstudios.server.message.ServerMessageFactory.generateLogi
  * @author Caleb Brinkman
  */
 @SuppressWarnings("unused")
-public class ExecutableLoginRequest extends ServerExecutableMessage<MessageContext>
+public class ExecutableLoginRequest extends ServerExecutableMessage<ServerMessageContext>
 {
 	private static final Logger LOGGER = Logger.getLogger(ExecutableLoginRequest.class.getName());
 	/** The SQL handler used by this executable message. */
@@ -31,7 +31,7 @@ public class ExecutableLoginRequest extends ServerExecutableMessage<MessageConte
 	 * @param loginRequest The request sent by the client.
 	 * @param context The context in which to execute the message.
 	 */
-	public ExecutableLoginRequest(ClientHandler clientHandler, Message loginRequest, MessageContext context) {
+	public ExecutableLoginRequest(ClientHandler clientHandler, Message loginRequest, ServerMessageContext context) {
 		super(clientHandler, loginRequest, context);
 		authenticator = clientHandler.getServer().getAuthenticator();
 	}
