@@ -2,14 +2,14 @@ package com.jenjinstudios.world.server.message;
 
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.server.message.ServerExecutableMessage;
-import com.jenjinstudios.server.net.ServerMessageContext;
 import com.jenjinstudios.world.server.WorldClientHandler;
+import com.jenjinstudios.world.server.WorldServerMessageContext;
 
 /**
  * Handles messages from clients of the game world.
  * @author Caleb Brinkman
  */
-public abstract class WorldExecutableMessage<T extends ServerMessageContext> extends ServerExecutableMessage<T>
+public abstract class WorldExecutableMessage<T extends WorldServerMessageContext> extends ServerExecutableMessage<T>
 {
 
 	/**
