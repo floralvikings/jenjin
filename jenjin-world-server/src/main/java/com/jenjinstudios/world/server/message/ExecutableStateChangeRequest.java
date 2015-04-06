@@ -64,7 +64,7 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage<ServerM
 		angle = new Angle(absoluteAngle, relativeAngle);
 		timePast = (System.currentTimeMillis() - timeOfChange);
 
-		getClientHandler().getUser().getWorld().scheduleUpdateTask(() -> {
+		getContext().getUser().getWorld().scheduleUpdateTask(() -> {
 			Actor player = getContext().getUser();
 			if ((player != null) && (player.getWorld() != null))
 			{
