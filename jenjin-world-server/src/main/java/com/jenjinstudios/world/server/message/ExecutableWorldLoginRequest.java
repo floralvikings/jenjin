@@ -1,9 +1,9 @@
 package com.jenjinstudios.world.server.message;
 
-import com.jenjinstudios.core.concurrency.MessageContext;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.server.authentication.AuthenticationException;
 import com.jenjinstudios.server.authentication.Authenticator;
+import com.jenjinstudios.server.net.ServerMessageContext;
 import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.actor.Vision;
@@ -16,7 +16,7 @@ import com.jenjinstudios.world.server.WorldServer;
  *
  * @author Caleb Brinkman
  */
-public class ExecutableWorldLoginRequest extends WorldExecutableMessage<MessageContext>
+public class ExecutableWorldLoginRequest extends WorldExecutableMessage<ServerMessageContext>
 {
 	private final Authenticator<Player> authenticator;
 	private Message loginResponse;
@@ -28,7 +28,7 @@ public class ExecutableWorldLoginRequest extends WorldExecutableMessage<MessageC
 	 * @param message The message.
 	 * @param context The context in which to execute the message.
 	 */
-	public ExecutableWorldLoginRequest(WorldClientHandler handler, Message message, MessageContext context) {
+	public ExecutableWorldLoginRequest(WorldClientHandler handler, Message message, ServerMessageContext context) {
 		super(handler, message, context);
 		authenticator = ((WorldServer) handler.getServer()).getAuthenticator();
 	}
