@@ -66,8 +66,12 @@ public class Server<T extends ClientHandler> extends Thread
             clientHandlers.put(nullIndex, h);
         }
         h.setHandlerId(nullIndex);
-        h.setRSAKeyPair(rsaKeyPair);
-    }
+		clientHandlerAdded(h);
+	}
+
+	protected void clientHandlerAdded(T h) {
+		h.setRSAKeyPair(rsaKeyPair);
+	}
 
 	public void update() {
 		synchronized (clientHandlers)
