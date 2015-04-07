@@ -13,7 +13,7 @@ import java.util.Map;
  *
  * @author Caleb Brinkman
  */
-public class SimpleMessageContext implements MessageContext
+public class SimpleMessageContext extends MessageContext
 {
 	private final Map<InetAddress, Key> verifiedKeys;
 	private final PingTracker pingTracker;
