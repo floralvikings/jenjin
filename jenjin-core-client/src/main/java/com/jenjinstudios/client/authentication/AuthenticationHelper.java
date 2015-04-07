@@ -80,7 +80,8 @@ public final class AuthenticationHelper
 
 	private static <T extends ClientMessageContext> void sendLoginRequest(Client<T> client) {
 		client.getLoginTracker().setWaitingForResponse(true);
-		Message message = generateLoginRequest(client.getMessageContext().getUser());
+		User user = client.getMessageContext().getUser();
+		Message message = generateLoginRequest(user);
 		client.enqueueMessage(message);
 	}
 
