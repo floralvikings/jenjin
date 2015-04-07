@@ -48,9 +48,10 @@ public class ExecutableWorldLoginRequest extends WorldExecutableMessage<WorldSer
 				getContext().getUser().addPreUpdateEvent(Vision.EVENT_NAME, new Vision(getContext().getUser()));
 				world.getWorldObjects().add(getContext().getUser());
 				loginResponse.setArgument("id", getContext().getUser().getId());
+				getContext().enqueue(loginResponse);
 			}
 		});
-		return loginResponse;
+		return null;
 	}
 
 	private void tryLogInUser() throws AuthenticationException {
