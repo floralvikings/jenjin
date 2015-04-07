@@ -1,5 +1,6 @@
 package com.jenjinstudios.core;
 
+import com.jenjinstudios.core.concurrency.MessageContext;
 import com.jenjinstudios.core.io.*;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -59,7 +60,7 @@ public class ConnectionTest
 		MessageInputStream messageInputStream = new MessageInputStream(in);
 		MessageOutputStream messageOutputStream = new MessageOutputStream(bos);
 		MessageStreamPair messageStreamPair = new MessageStreamPair(messageInputStream, messageOutputStream);
-		Connection connection = new Connection<>(messageStreamPair, new SimpleMessageContext());
+		Connection connection = new Connection<>(messageStreamPair, new MessageContext());
 		connection.shutdown();
 
 		Assert.assertTrue(connection.getMessageStreamPair().getOut().isClosed(), "MessageOutputStream should be " +
@@ -84,7 +85,7 @@ public class ConnectionTest
         when(messageInputStream.readMessage()).thenReturn(pingRequest).thenReturn(MESSAGE_REGISTRY.createMessage
               ("BlankMessage"));
 		MessageStreamPair messageStreamPair = new MessageStreamPair(messageInputStream, messageOutputStream);
-		Connection connection = new Connection<>(messageStreamPair, new SimpleMessageContext());
+		Connection connection = new Connection<>(messageStreamPair, new MessageContext());
 		connection.start();
 		Thread.sleep(100);
 		connection.shutdown();
@@ -116,7 +117,7 @@ public class ConnectionTest
 		MessageInputStream messageInputStream = new MessageInputStream(in);
 		MessageOutputStream messageOutputStream = new MessageOutputStream(bos);
 		MessageStreamPair messageStreamPair = new MessageStreamPair(messageInputStream, messageOutputStream);
-		Connection connection = new Connection<>(messageStreamPair, new SimpleMessageContext());
+		Connection connection = new Connection<>(messageStreamPair, new MessageContext());
 
 		connection.start();
 		Thread.sleep(100);

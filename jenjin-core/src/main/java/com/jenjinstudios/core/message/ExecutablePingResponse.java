@@ -1,7 +1,7 @@
 package com.jenjinstudios.core.message;
 
-import com.jenjinstudios.core.SimpleMessageContext;
 import com.jenjinstudios.core.concurrency.ExecutableMessage;
+import com.jenjinstudios.core.concurrency.MessageContext;
 import com.jenjinstudios.core.io.Message;
 
 /**
@@ -9,7 +9,7 @@ import com.jenjinstudios.core.io.Message;
  *
  * @author Caleb Brinkman
  */
-public class ExecutablePingResponse<T extends SimpleMessageContext> extends ExecutableMessage<T>
+public class ExecutablePingResponse<T extends MessageContext> extends ExecutableMessage<T>
 {
     /**
      * Construct a new {@code PingResponse}.

@@ -1,14 +1,14 @@
 package com.jenjinstudios.client.net;
 
 import com.jenjinstudios.client.authentication.User;
-import com.jenjinstudios.core.SimpleMessageContext;
+import com.jenjinstudios.core.concurrency.MessageContext;
 
 /**
  * Message context in which messages received by a {@code Client} should execute.
  *
  * @author Caleb Brinkman
  */
-public class ClientMessageContext extends SimpleMessageContext
+public class ClientMessageContext extends MessageContext
 {
 	private final LoginTracker loginTracker = new LoginTracker();
 	private User user;

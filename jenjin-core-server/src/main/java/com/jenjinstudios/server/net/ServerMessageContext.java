@@ -1,6 +1,6 @@
 package com.jenjinstudios.server.net;
 
-import com.jenjinstudios.core.SimpleMessageContext;
+import com.jenjinstudios.core.concurrency.MessageContext;
 import com.jenjinstudios.server.authentication.Authenticator;
 import com.jenjinstudios.server.authentication.User;
 
@@ -9,7 +9,7 @@ import com.jenjinstudios.server.authentication.User;
  *
  * @author Caleb Brinkman
  */
-public class ServerMessageContext<T extends User> extends SimpleMessageContext
+public class ServerMessageContext<T extends User> extends MessageContext
 {
 	private Authenticator<T> authenticator;
 	private T user;

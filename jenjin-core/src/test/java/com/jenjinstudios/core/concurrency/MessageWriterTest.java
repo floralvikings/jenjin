@@ -1,6 +1,5 @@
 package com.jenjinstudios.core.concurrency;
 
-import com.jenjinstudios.core.SimpleMessageContext;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageOutputStream;
 import org.mockito.Mockito;
@@ -28,7 +27,7 @@ public class MessageWriterTest
 	public void testAsynchronousWrite() throws Exception {
 		Message message = mock(Message.class);
 		MessageOutputStream outputStream = mock(MessageOutputStream.class);
-		MessageContext messageContext = new SimpleMessageContext();
+		MessageContext messageContext = new MessageContext();
 
 		MessageWriter writer = new MessageWriter(outputStream, messageContext);
 		messageContext.enqueue(message);
@@ -48,7 +47,7 @@ public class MessageWriterTest
 	public void testIsErrored() throws Exception {
 		Message message = mock(Message.class);
 		MessageOutputStream outputStream = mock(MessageOutputStream.class);
-		MessageContext context = new SimpleMessageContext();
+		MessageContext context = new MessageContext();
 
 		MessageWriter writer = new MessageWriter(outputStream, context);
 		context.enqueue(message);
@@ -68,7 +67,7 @@ public class MessageWriterTest
 	public void testIsErroredWithError() throws Exception {
 		Message message = mock(Message.class);
 		MessageOutputStream outputStream = mock(MessageOutputStream.class);
-		MessageContext context = new SimpleMessageContext();
+		MessageContext context = new MessageContext();
 		Mockito.doThrow(new IOException("Error")).when(outputStream).writeMessage(message);
 
 		MessageWriter writer = new MessageWriter(outputStream, context);
