@@ -1,6 +1,5 @@
 package com.jenjinstudios.client.net;
 
-import com.jenjinstudios.client.authentication.ClientUser;
 import com.jenjinstudios.core.Connection;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageRegistry;
@@ -33,7 +32,6 @@ public class Client<T extends ClientMessageContext> extends Connection<T>
 	 */
 	protected Client(MessageStreamPair messageStreamPair, T context) {
 		super(messageStreamPair, context);
-		getMessageContext().setUser(new ClientUser());
 		repeatedTasks = new LinkedList<>();
 		InputStream stream = getClass().getClassLoader().getResourceAsStream("com/jenjinstudios/client/Messages.xml");
 		MessageRegistry.getGlobalRegistry().register("Core Client/Server Messages", stream);
