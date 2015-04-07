@@ -50,13 +50,18 @@ public class WorldServer<T extends WorldClientHandler> extends Server<T>
 		}
 		worldFileBytes = reader.getWorldFileBytes();
 		worldFileChecksum = reader.getWorldFileChecksum();
-		getServerUpdateTask().addRepeatedTask(world::update);
 		InputStream stream = getClass().getClassLoader().
 			  getResourceAsStream("com/jenjinstudios/world/server/Messages.xml");
 		MessageRegistry.getGlobalRegistry().register("World Client/Server Messages", stream);
 	}
 
 	public World getWorld() { return world; }
+
+	@Override
+	public void run() {
+		super.run();
+		getServerUpdateTask().addRepeatedTask(world::update);
+	}
 
 	@SuppressWarnings("unchecked")
 	@Override

@@ -26,7 +26,7 @@ public class Server<T extends ClientHandler<? extends ServerMessageContext>> ext
 	private final Map<Integer, T> clientHandlers;
 	private final KeyPair rsaKeyPair;
 	private ScheduledExecutorService loopTimer;
-	private ServerUpdateTask serverUpdateTask = new ServerUpdateTask(this);
+	private ServerUpdateTask serverUpdateTask;
 
 	protected Server(ServerInit initInfo, Authenticator authenticator) throws IOException, NoSuchMethodException {
 		super("Server");

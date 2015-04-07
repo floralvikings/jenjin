@@ -50,6 +50,7 @@ public class World
 			worldObjects.forEach(WorldObject::update);
 			worldObjects.forEach(WorldObject::postUpdate);
 			scheduledUpdateTasks.forEach(Runnable::run);
+			scheduledUpdateTasks.clear();
 		}
 		lastUpdateCompleted = System.currentTimeMillis();
 	}
