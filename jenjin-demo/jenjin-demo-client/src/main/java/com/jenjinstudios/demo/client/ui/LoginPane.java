@@ -70,7 +70,9 @@ public final class LoginPane extends GridPane
 		MessageInputStream messageInputStream = new MessageInputStream(socket.getInputStream());
 		MessageOutputStream messageOutputStream = new MessageOutputStream(socket.getOutputStream());
 		MessageStreamPair messageStreamPair = new MessageStreamPair(messageInputStream, messageOutputStream);
-		return new WorldClient<>(messageStreamPair, worldFile, new WorldClientMessageContext());
+		WorldClientMessageContext context = new WorldClientMessageContext();
+		context.setUser(user);
+		return new WorldClient<>(messageStreamPair, worldFile, context);
 	}
 
 	private void createForm() {
