@@ -81,7 +81,7 @@ public class MessageThreadPool<T extends MessageContext>
 	 *
 	 * @param message The message to be sent.
 	 */
-	public void enqueueMessage(Message message) { messageWriter.enqueue(message); }
+	public void enqueueMessage(Message message) { messageContext.enqueue(message); }
 
 	/**
 	 * Get the messages received by the MessageReader since the last time this method was called.

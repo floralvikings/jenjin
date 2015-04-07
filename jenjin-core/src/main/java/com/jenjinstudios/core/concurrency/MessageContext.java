@@ -1,9 +1,11 @@
 package com.jenjinstudios.core.concurrency;
 
 import com.jenjinstudios.core.PingTracker;
+import com.jenjinstudios.core.io.Message;
 
 import java.net.InetAddress;
 import java.security.Key;
+import java.util.LinkedList;
 import java.util.Map;
 
 /**
@@ -13,6 +15,37 @@ import java.util.Map;
  */
 public abstract class MessageContext
 {
+	private LinkedList<Message> outgoing = new LinkedList<>();
+
+	/**
+	 * Enqueue a message to be written to the output stream.
+	 *
+	 * @param message The message to add to the outgoing queue.
+	 */
+	public void enqueue(Message message) {
+		synchronized (outgoing)
+		{
+			outgoing.add(message);
+		}
+	}
+
+	/**
+	 * Get the queued outgoing messages added since the last time this method was called.
+	 *
+	 * @return The messages queued since the last time this method was caled.
+	 */
+	public LinkedList<Message> getOutgoing() {
+		LinkedList<Message> list = new LinkedList<>();
+		synchronized (outgoing)
+		{
+			while (!outgoing.isEmpty())
+			{
+				list.add(outgoing.remove());
+			}
+		}
+		return list;
+	}
+
 	/**
 	 * Get the name of the context.
 	 *

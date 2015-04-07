@@ -5,6 +5,7 @@ import com.jenjinstudios.core.io.MessageOutputStream;
 
 import java.io.IOException;
 import java.security.Key;
+import java.util.Deque;
 import java.util.LinkedList;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -22,7 +23,6 @@ import java.util.logging.Logger;
 public class MessageWriter
 {
 	private static final Logger LOGGER = Logger.getLogger(MessageWriter.class.getName());
-	private final LinkedList<Message> outgoing;
 	private final MessageOutputStream outputStream;
 	private final Timer runTimer;
 	private final WriteTask writeTask;
@@ -36,7 +36,6 @@ public class MessageWriter
 	 */
 	public MessageWriter(MessageOutputStream outputStream) {
 		this.outputStream = outputStream;
-		outgoing = new LinkedList<>();
 		runTimer = new Timer("MessageWriter");
 		writeTask = new WriteTask();
 	}
@@ -68,18 +67,6 @@ public class MessageWriter
 	}
 
 	/**
-	 * Enqueue a message to be written to the output stream.
-	 *
-	 * @param message The message to add to the outgoing queue.
-	 */
-	public void enqueue(Message message) {
-		synchronized (outgoing)
-		{
-			outgoing.add(message);
-		}
-	}
-
-	/**
 	 * Set the message context in which messages should be written.
 	 *
 	 * @param messageContext The context in which messages should be written.
@@ -91,31 +78,30 @@ public class MessageWriter
 		@Override
 		public void run() {
 			Key encryptionKey = (context != null) ? context.getEncryptionKey() : null;
-			synchronized (outgoing)
+			Deque<Message> outgoing = (context != null) ? context.getOutgoing() : new LinkedList<>();
+			boolean noErrorThisExecution = true;
+			while (!outgoing.isEmpty() && noErrorThisExecution)
 			{
-				boolean noErrorThisExecution = true;
-				while (!outgoing.isEmpty() && noErrorThisExecution)
+				Message message = outgoing.removeFirst();
+				try
 				{
-					Message message = outgoing.removeFirst();
-					try
+					if (encryptionKey != null)
 					{
-						if (encryptionKey != null)
-						{
-							outputStream.writeMessage(message, encryptionKey);
-						} else
-						{
-							outputStream.writeMessage(message);
-						}
-						errored = false;
-					} catch (IOException e)
+						outputStream.writeMessage(message, encryptionKey);
+					} else
 					{
-						LOGGER.log(Level.WARNING, "MessageWriter encountered an error while writing message", e);
-						outgoing.addFirst(message);
-						errored = true;
-						noErrorThisExecution = false;
+						outputStream.writeMessage(message);
 					}
+					errored = false;
+				} catch (IOException e)
+				{
+					LOGGER.log(Level.WARNING, "MessageWriter encountered an error while writing message", e);
+					outgoing.addFirst(message);
+					errored = true;
+					noErrorThisExecution = false;
 				}
 			}
+
 		}
 	}
 }
