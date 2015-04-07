@@ -42,7 +42,6 @@ public class ClientTest
 		MessageOutputStream mos = mock(MessageOutputStream.class);
 		ClientMessageContext messageContext = mock(ClientMessageContext.class);
 		MessageStreamPair messageStreamPair = new MessageStreamPair(mis, mos);
-		User user = mock(ClientUser.class);
 		when(messageContext.getLoginTracker()).thenReturn(loginTracker);
 		boolean random = ((Math.random() * 10) % 2) == 0;
 		Client client = new Client<>(messageStreamPair, messageContext);
