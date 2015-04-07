@@ -25,6 +25,7 @@ public class ExecutableLoginResponse extends ExecutableMessage<ClientMessageCont
     @Override
 	public Message execute() {
 		getContext().getLoginTracker().setLoggedIn((boolean) getMessage().getArgument("success"));
+		getContext().getLoginTracker().setWaitingForResponse(false);
 		if (getContext().getLoginTracker().isLoggedIn())
 		{
 			getContext().getLoginTracker().setLoggedInTime((long) getMessage().getArgument("loginTime"));
