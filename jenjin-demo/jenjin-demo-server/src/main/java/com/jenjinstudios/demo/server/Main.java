@@ -4,6 +4,7 @@ import com.jenjinstudios.core.io.MessageRegistry;
 import com.jenjinstudios.server.authentication.Authenticator;
 import com.jenjinstudios.server.authentication.UserLookup;
 import com.jenjinstudios.server.net.ServerInit;
+import com.jenjinstudios.world.io.WorldDocumentReader;
 import com.jenjinstudios.world.server.Player;
 import com.jenjinstudios.world.server.WorldClientHandler;
 import com.jenjinstudios.world.server.WorldServer;
@@ -47,7 +48,9 @@ public class Main
 		Connection sqlConnection = createDemoConnection();
 		UserLookup<Player> userLookup = new PlayerTable(sqlConnection);
 		Authenticator<Player> worldAuthenticator = new Authenticator<>(userLookup);
-		return new WorldServer(serverInit, worldAuthenticator, null);
+		InputStream stream = Main.class.getClassLoader().getResourceAsStream("com/jenjinstudios/demo/server/World" +
+			  ".json");
+		return new WorldServer(serverInit, worldAuthenticator, new WorldDocumentReader(stream));
 	}
 
 	private static Connection createDemoConnection() throws Exception {
