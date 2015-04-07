@@ -30,8 +30,7 @@ public class MessageWriterTest
 		MessageOutputStream outputStream = mock(MessageOutputStream.class);
 		MessageContext messageContext = new SimpleMessageContext();
 
-		MessageWriter writer = new MessageWriter(outputStream);
-		writer.setMessageContext(messageContext);
+		MessageWriter writer = new MessageWriter(outputStream, messageContext);
 		messageContext.enqueue(message);
 		writer.start();
 		// Give the writer time to write the message.
@@ -51,7 +50,7 @@ public class MessageWriterTest
 		MessageOutputStream outputStream = mock(MessageOutputStream.class);
 		MessageContext context = new SimpleMessageContext();
 
-		MessageWriter writer = new MessageWriter(outputStream);
+		MessageWriter writer = new MessageWriter(outputStream, context);
 		context.enqueue(message);
 		writer.start();
 		// Give the writer time to write the message.
@@ -72,8 +71,7 @@ public class MessageWriterTest
 		MessageContext context = new SimpleMessageContext();
 		Mockito.doThrow(new IOException("Error")).when(outputStream).writeMessage(message);
 
-		MessageWriter writer = new MessageWriter(outputStream);
-		writer.setMessageContext(context);
+		MessageWriter writer = new MessageWriter(outputStream, context);
 		context.enqueue(message);
 		writer.start();
 		// Give the writer time to error.

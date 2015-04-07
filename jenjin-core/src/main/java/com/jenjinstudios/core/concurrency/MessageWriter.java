@@ -26,16 +26,18 @@ public class MessageWriter
 	private final MessageOutputStream outputStream;
 	private final Timer runTimer;
 	private final WriteTask writeTask;
-	private MessageContext context;
+	private final MessageContext context;
 	private volatile boolean errored;
 
 	/**
 	 * Construct a MessageWriter that will write messages to the given MessageOutputStream.
 	 *
 	 * @param outputStream The output stream to which this writer will write.
+	 * @param context The context in which messages should be executed.
 	 */
-	public MessageWriter(MessageOutputStream outputStream) {
+	public MessageWriter(MessageOutputStream outputStream, MessageContext context) {
 		this.outputStream = outputStream;
+		this.context = context;
 		runTimer = new Timer("MessageWriter");
 		writeTask = new WriteTask();
 	}
@@ -65,13 +67,6 @@ public class MessageWriter
 			LOGGER.log(Level.FINE, "Exception when closing output stream", e);
 		}
 	}
-
-	/**
-	 * Set the message context in which messages should be written.
-	 *
-	 * @param messageContext The context in which messages should be written.
-	 */
-	public void setMessageContext(MessageContext messageContext) { this.context = messageContext; }
 
 	private class WriteTask extends TimerTask
 	{

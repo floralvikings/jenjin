@@ -33,12 +33,11 @@ public class MessageThreadPool<T extends MessageContext>
 	protected MessageThreadPool(MessageStreamPair messageStreamPair, T context) {
 		this.messageStreamPair = messageStreamPair;
 		this.messageContext = context;
-		messageWriter = new MessageWriter(messageStreamPair.getOut());
+		messageWriter = new MessageWriter(messageStreamPair.getOut(), context);
 		messageReader = new MessageReader(messageStreamPair.getIn());
 		errorChecker = new ErrorChecker();
 		messageExecutor = new MessageExecutor(this);
 		messageExecutor.setMessageContext(context);
-		messageWriter.setMessageContext(context);
 	}
 
 	/**
