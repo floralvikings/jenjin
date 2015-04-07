@@ -1,4 +1,4 @@
-package com.jenjinstudios.core;
+package com.jenjinstudios.core.concurrency;
 
 import java.util.Collection;
 import java.util.LinkedList;

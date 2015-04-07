@@ -1,6 +1,5 @@
 package com.jenjinstudios.core.concurrency;
 
-import com.jenjinstudios.core.PingTracker;
 import com.jenjinstudios.core.io.Message;
 
 import java.net.InetAddress;
