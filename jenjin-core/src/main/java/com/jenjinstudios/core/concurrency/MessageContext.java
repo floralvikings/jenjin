@@ -5,17 +5,29 @@ import com.jenjinstudios.core.io.Message;
 
 import java.net.InetAddress;
 import java.security.Key;
-import java.util.LinkedList;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Used to represent data that should be passed into an executable message on construction.
  *
  * @author Caleb Brinkman
  */
-public abstract class MessageContext
+public class MessageContext
 {
-	private LinkedList<Message> outgoing = new LinkedList<>();
+	private final Map<InetAddress, Key> verifiedKeys;
+	private final PingTracker pingTracker;
+	private final LinkedList<Message> outgoing = new LinkedList<>();
+	private String name;
+	private InetAddress address;
+	private Key encryptionKey;
+
+	/**
+	 * Construct a new MessageContext.
+	 */
+	public MessageContext() {
+		this.pingTracker = new PingTracker();
+		this.verifiedKeys = new HashMap<>(10);
+	}
 
 	/**
 	 * Enqueue a message to be written to the output stream.
@@ -34,8 +46,8 @@ public abstract class MessageContext
 	 *
 	 * @return The messages queued since the last time this method was caled.
 	 */
-	public LinkedList<Message> getOutgoing() {
-		LinkedList<Message> list = new LinkedList<>();
+	public Deque<Message> getOutgoing() {
+		Deque<Message> list = new LinkedList<>();
 		synchronized (outgoing)
 		{
 			while (!outgoing.isEmpty())
@@ -51,35 +63,35 @@ public abstract class MessageContext
 	 *
 	 * @return The name of the context.
 	 */
-	public abstract String getName();
+	public String getName() { return name; }
 
 	/**
 	 * Set the name of this context.
 	 *
 	 * @param name The new name.
 	 */
-	public abstract void setName(String name);
+	public void setName(String name) { this.name = name; }
 
 	/**
 	 * Get the PingTracker associated with this MessageContext.
 	 *
 	 * @return The PingTracker associated with this MessageContext.
 	 */
-	public abstract PingTracker getPingTracker();
+	public PingTracker getPingTracker() { return pingTracker; }
 
 	/**
 	 * The key used to encrypt messages sent in this context.
 	 *
 	 * @return The key used to encrypt messages sent in this context.
 	 */
-	public abstract Key getEncryptionKey();
+	public Key getEncryptionKey() { return encryptionKey; }
 
 	/**
 	 * Set the key used to encrypt messages sent in this context.
 	 *
 	 * @param encryptionKey The key used to encrypt messages sent in this context.
 	 */
-	public abstract void setEncryptionKey(Key encryptionKey);
+	public void setEncryptionKey(Key encryptionKey) { this.encryptionKey = encryptionKey; }
 
 	/**
 	 * Get the (unmodifiable) map of internet addresses and keys with which they are associated that are verified to
@@ -88,7 +100,7 @@ public abstract class MessageContext
 	 * @return The map of internet addresses and keys with which they are associated that are verified to be
 	 * correlated.
 	 */
-	public abstract Map<InetAddress, Key> getVerifiedKeys();
+	public Map<InetAddress, Key> getVerifiedKeys() { return Collections.unmodifiableMap(verifiedKeys); }
 
 	/**
 	 * Add a key to the map of verified keys, associated with the specified internet address.
@@ -96,19 +108,25 @@ public abstract class MessageContext
 	 * @param newAddress The internet address that will be using the specified key.
 	 * @param key The key that will be used by the specified internet address.
 	 */
-	public abstract void addVerifiedKey(InetAddress newAddress, Key key);
+	public void addVerifiedKey(InetAddress newAddress, Key key) {
+		if (verifiedKeys.containsKey(newAddress))
+		{
+			throw new IllegalStateException("Internet address already has private key set.");
+		}
+		verifiedKeys.put(newAddress, key);
+	}
 
 	/**
 	 * Get the internet address at the other end of this context.  May be null if no address is set.
 	 *
 	 * @return The inernet address at the other end of this context, null if unset.
 	 */
-	public abstract InetAddress getAddress();
+	public InetAddress getAddress() { return address; }
 
 	/**
 	 * Set the internet address at the other end of this context.
 	 *
 	 * @param address The new address.
 	 */
-	public abstract void setAddress(InetAddress address);
+	public void setAddress(InetAddress address) { this.address = address; }
 }
