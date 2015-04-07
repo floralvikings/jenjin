@@ -1,7 +1,5 @@
 package com.jenjinstudios.client.net;
 
-import com.jenjinstudios.client.authentication.ClientUser;
-import com.jenjinstudios.client.authentication.User;
 import com.jenjinstudios.core.io.MessageInputStream;
 import com.jenjinstudios.core.io.MessageOutputStream;
 import com.jenjinstudios.core.io.MessageStreamPair;
@@ -60,7 +58,6 @@ public class ClientTest
 		MessageInputStream mis = mock(MessageInputStream.class);
 		MessageOutputStream mos = mock(MessageOutputStream.class);
 		MessageStreamPair messageStreamPair = new MessageStreamPair(mis, mos);
-		User user = mock(ClientUser.class);
 		when(messageContext.getLoginTracker()).thenReturn(loginTracker);
 		long random = (long) (Math.random() * 1000);
 		Client client = new Client<>(messageStreamPair, messageContext);
