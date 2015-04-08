@@ -68,6 +68,7 @@ public class MessageExecutor
 
 		@Override
 		public void run() {
+			// noinspection unchecked
 			Iterable<Message> messages = threadPool.getReceivedMessages();
 			messages.forEach(this::executeMessage);
 		}
