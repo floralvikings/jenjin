@@ -37,7 +37,7 @@ class ClientListener<T extends ClientHandler> implements Runnable
 	 * @throws NoSuchMethodException If there is no appropriate constructor for the specified ClientHandler
 	 * constructor.
 	 */
-	public ClientListener(Class<? extends Server> serverClass, Class<? extends T> handlerClass,
+	ClientListener(Class<? extends Server> serverClass, Class<? extends T> handlerClass,
 						  Class<? extends ServerMessageContext> contextClass, int port) throws IOException,
 		  NoSuchMethodException
 	{
