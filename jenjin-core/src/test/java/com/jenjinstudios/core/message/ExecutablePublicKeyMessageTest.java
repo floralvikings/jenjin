@@ -97,12 +97,7 @@ public class ExecutablePublicKeyMessageTest
         keys.put(address, rsaKeyPair.getPublic());
 
 		MessageContext context = mock(MessageContext.class);
-		Connection connection = mock(Connection.class);
-		MessageStreamPair messageStreamPair = mock(MessageStreamPair.class);
-		MessageOutputStream out = mock(MessageOutputStream.class);
 
-		when(messageStreamPair.getOut()).thenReturn(out);
-		when(connection.getMessageStreamPair()).thenReturn(messageStreamPair);
 		when(context.getAddress()).thenReturn(address);
 		when(context.getVerifiedKeys()).thenReturn(keys);
 
