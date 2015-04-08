@@ -80,17 +80,12 @@ public class ExecutableLoginRequestTest
 		user.setUsername("bar");
 		user.setLoggedIn(true);
 		ClientHandler clientHandler = mock(ClientHandler.class);
-		Server server = mock(Server.class);
 		Authenticator<BasicUser> authenticator = mock(Authenticator.class);
 		MessageStreamPair messageStreamPair = mock(MessageStreamPair.class);
 		ServerMessageContext context = mock(ServerMessageContext.class);
 		when(context.getAuthenticator()).thenReturn(authenticator);
-		ServerUpdateTask serverUpdateTask = mock(ServerUpdateTask.class);
-		when(server.getServerUpdateTask()).thenReturn(serverUpdateTask);
-		when(serverUpdateTask.getCycleStartTime()).thenReturn(12345L);
 		when(authenticator.logInUser("foo", "bar")).thenReturn(user);
 		when(authenticator.logInUser("foo-dapoo", "bar")).thenThrow(new AuthenticationException("Nope"));
-		when(clientHandler.getServer()).thenReturn(server);
 		when(clientHandler.getMessageStreamPair()).thenReturn(messageStreamPair);
 
 		ExecutableLoginRequest executableLoginRequest = new ExecutableLoginRequest(message, context);
