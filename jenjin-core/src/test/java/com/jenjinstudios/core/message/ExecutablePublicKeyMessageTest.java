@@ -74,12 +74,7 @@ public class ExecutablePublicKeyMessageTest
         Map<InetAddress, Key> keys = new HashMap<>(10);
 
 		MessageContext context = mock(MessageContext.class);
-		Connection connection = mock(Connection.class);
-		MessageStreamPair messageStreamPair = mock(MessageStreamPair.class);
-		MessageOutputStream out = mock(MessageOutputStream.class);
 
-		when(messageStreamPair.getOut()).thenReturn(out);
-		when(connection.getMessageStreamPair()).thenReturn(messageStreamPair);
 		when(context.getAddress()).thenReturn(address);
 		when(context.getVerifiedKeys()).thenReturn(keys);
 
