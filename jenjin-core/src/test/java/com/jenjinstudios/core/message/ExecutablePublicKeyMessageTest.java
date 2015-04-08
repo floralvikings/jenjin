@@ -55,13 +55,13 @@ public class ExecutablePublicKeyMessageTest
 		Connection connection = mock(Connection.class);
 		MessageInputStream in = mock(MessageInputStream.class);
         MessageOutputStream out = mock(MessageOutputStream.class);
-		MessageContext context = mock(MessageContext.class);
+		MessageContext context = spy(new MessageContext());
+		context.setAddress(address);
+		context.addVerifiedKey(address, rsaKeyPair.getPublic());
 
 		MessageStreamPair messageStreamPair = new MessageStreamPair(in, out, address);
 
 		when(connection.getMessageStreamPair()).thenReturn(messageStreamPair);
-		when(context.getVerifiedKeys()).thenReturn(keys);
-		when(context.getAddress()).thenReturn(address);
 
 		ExecutablePublicKeyMessage executable = new ExecutablePublicKeyMessage(message, context);
 		executable.execute();
