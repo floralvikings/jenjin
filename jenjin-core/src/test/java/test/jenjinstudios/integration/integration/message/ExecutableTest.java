@@ -24,6 +24,7 @@ public class ExecutableTest extends ExecutableMessage<MessageContext>
 
 	@Override
 	public Message execute() {
+		getContext().setName("Message Executed");
 		return null;
 	}
 }
