@@ -88,8 +88,8 @@ public class ExecutableLoginRequestTest
 		when(authenticator.logInUser("foo-dapoo", "bar")).thenThrow(new AuthenticationException("Nope"));
 		when(clientHandler.getMessageStreamPair()).thenReturn(messageStreamPair);
 
-		ExecutableLoginRequest executableLoginRequest = new ExecutableLoginRequest(message, context);
-		executableLoginRequest.execute();
+		ExecutableLoginRequest exec = new ExecutableLoginRequest(message, context);
+		exec.execute();
 
 		Mockito.verify(context, Mockito.never()).setLoggedInTime(anyLong());
 	}
