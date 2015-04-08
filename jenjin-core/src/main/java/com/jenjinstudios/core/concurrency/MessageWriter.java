@@ -72,31 +72,36 @@ public class MessageWriter
 	{
 		@Override
 		public void run() {
-			Key encryptionKey = (context != null) ? context.getEncryptionKey() : null;
 			Deque<Message> outgoing = (context != null) ? context.getOutgoing() : new LinkedList<>();
 			boolean noErrorThisExecution = true;
 			while (!outgoing.isEmpty() && noErrorThisExecution)
 			{
-				Message message = outgoing.removeFirst();
-				try
-				{
-					if (encryptionKey != null)
-					{
-						outputStream.writeMessage(message, encryptionKey);
-					} else
-					{
-						outputStream.writeMessage(message);
-					}
-					errored = false;
-				} catch (IOException e)
-				{
-					LOGGER.log(Level.WARNING, "MessageWriter encountered an error while writing message", e);
-					outgoing.addFirst(message);
-					errored = true;
-					noErrorThisExecution = false;
-				}
+				noErrorThisExecution = sendNextMessage(outgoing);
 			}
+		}
 
+		protected boolean sendNextMessage(Deque<Message> outgoing) {
+			boolean noErrorThisExecution = true;
+			Message message = outgoing.removeFirst();
+			Key encryptionKey = (context != null) ? context.getEncryptionKey() : null;
+			try
+			{
+				if (encryptionKey != null)
+				{
+					outputStream.writeMessage(message, encryptionKey);
+				} else
+				{
+					outputStream.writeMessage(message);
+				}
+				errored = false;
+			} catch (IOException e)
+			{
+				LOGGER.log(Level.WARNING, "MessageWriter encountered an error while writing message", e);
+				outgoing.addFirst(message);
+				errored = true;
+				noErrorThisExecution = false;
+			}
+			return noErrorThisExecution;
 		}
 	}
 }
