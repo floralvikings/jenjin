@@ -11,7 +11,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.logging.Logger;
 
 /**
  * The base class for any client.  This class uses a similar system to the JGSA.
@@ -117,10 +116,9 @@ public class Client<T extends ClientMessageContext> extends Connection<T>
 	{
 		private static final int MAX_STORED_UPDATE_TIMES = 50;
 		private static final int NANOS_TO_SECOND = 1000000000;
-		private static final Logger LOGGER = Logger.getLogger(ClientLoop.class.getName());
-        /** The Client for this loop. */
-        private final Client client;
-        private int updateCount;
+		/** The Client for this loop. */
+		private final Client client;
+		private int updateCount;
         private long lastStart = System.nanoTime();
         private final long[] updateTimesNanos = new long[MAX_STORED_UPDATE_TIMES];
 
