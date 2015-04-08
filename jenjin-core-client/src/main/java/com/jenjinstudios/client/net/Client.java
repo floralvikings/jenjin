@@ -28,6 +28,7 @@ public class Client<T extends ClientMessageContext> extends Connection<T>
      * Construct a new client and attempt to connect to the server over the specified port.
      *
 	 * @param messageStreamPair The MessageIO used to send and receive messages.
+	 * @param context The message context in which this client will execute messages.
 	 */
 	protected Client(MessageStreamPair messageStreamPair, T context) {
 		super(messageStreamPair, context);
