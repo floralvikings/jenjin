@@ -31,11 +31,11 @@ class ClientListener<T extends ClientHandler> implements Runnable
 	/** Flags whether this should be listening. */
 	private volatile boolean listening;
 	/** The server socket. */
-	private ServerSocket serverSock;
+	private final ServerSocket serverSock;
 	/** The server. */
 	private Server server;
 	/** The constructor called to create new handlers. */
-	private Constructor<? extends T> handlerConstructor;
+	private final Constructor<? extends T> handlerConstructor;
 
 	/**
 	 * Construct a new ClientListener for the given server on the given port.
