@@ -21,20 +21,13 @@ import java.util.logging.Logger;
  */
 class ClientListener<T extends ClientHandler> implements Runnable
 {
-	/** The Logger for this class. */
 	private static final Logger LOGGER = Logger.getLogger(ClientListener.class.getName());
 	private final Class<? extends ServerMessageContext> contextClass;
-	/** The port on which this object listens. */
 	private final int PORT;
-	/** The list of new clients. */
 	private final LinkedList<T> newClientHandlers;
-	/** Flags whether this should be listening. */
 	private volatile boolean listening;
-	/** The server socket. */
 	private final ServerSocket serverSock;
-	/** The server. */
 	private Server server;
-	/** The constructor called to create new handlers. */
 	private final Constructor<? extends T> handlerConstructor;
 
 	/**
