@@ -55,8 +55,8 @@ public class ExecutableLoginRequestTest
 		when(authenticator.logInUser("foo", "bar")).thenReturn(user);
 		when(clientHandler.getMessageStreamPair()).thenReturn(messageStreamPair);
 
-		ExecutableLoginRequest executableLoginRequest = new ExecutableLoginRequest(message, context);
-		executableLoginRequest.execute();
+		ExecutableLoginRequest exec = new ExecutableLoginRequest(message, context);
+		exec.execute();
 
 		Mockito.verify(context).setLoggedInTime(anyLong());
 	}
