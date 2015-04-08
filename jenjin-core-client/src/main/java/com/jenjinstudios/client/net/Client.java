@@ -95,9 +95,8 @@ public class Client<T extends ClientMessageContext> extends Connection<T>
 	protected void runRepeatedTasks() {
         synchronized (repeatedTasks)
         {
-            for (Runnable r : repeatedTasks)
-                r.run();
-        }
+			repeatedTasks.forEach(Runnable::run);
+		}
     }
 
     /**
