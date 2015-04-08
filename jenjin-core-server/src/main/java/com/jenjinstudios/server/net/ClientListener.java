@@ -23,7 +23,7 @@ class ClientListener<T extends ClientHandler> implements Runnable
 {
 	private static final Logger LOGGER = Logger.getLogger(ClientListener.class.getName());
 	private final Class<? extends ServerMessageContext> contextClass;
-	private final int PORT;
+	private final int port;
 	private final LinkedList<T> newClientHandlers;
 	private volatile boolean listening;
 	private final ServerSocket serverSock;
@@ -42,7 +42,7 @@ class ClientListener<T extends ClientHandler> implements Runnable
 		  NoSuchMethodException
 	{
 		this.contextClass = contextClass;
-		PORT = port;
+		this.port = port;
 		/* The class of client handlers created by this listener. */
 		try
 		{
@@ -55,8 +55,8 @@ class ClientListener<T extends ClientHandler> implements Runnable
 		}
 		listening = false;
 		newClientHandlers = new LinkedList<>();
-		LOGGER.log(Level.FINEST, "Opening socket on port: {0}", PORT);
-		serverSock = new ServerSocket(PORT);
+		LOGGER.log(Level.FINEST, "Opening socket on port: {0}", this.port);
+		serverSock = new ServerSocket(this.port);
 	}
 
 	/**
@@ -95,7 +95,7 @@ class ClientListener<T extends ClientHandler> implements Runnable
 		{
 			this.server = tServer;
 			listening = true;
-			new Thread(this, "Client Listener " + PORT).start();
+			new Thread(this, "Client Listener " + port).start();
 		}
 	}
 
