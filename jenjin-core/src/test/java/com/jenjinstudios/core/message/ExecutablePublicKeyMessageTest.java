@@ -3,9 +3,7 @@ package com.jenjinstudios.core.message;
 import com.jenjinstudios.core.Connection;
 import com.jenjinstudios.core.concurrency.MessageContext;
 import com.jenjinstudios.core.io.Message;
-import com.jenjinstudios.core.io.MessageOutputStream;
 import com.jenjinstudios.core.io.MessageRegistry;
-import com.jenjinstudios.core.io.MessageStreamPair;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -120,12 +118,6 @@ public class ExecutablePublicKeyMessageTest
         keys.put(address, rsaKeyPair.getPublic());
 
 		MessageContext context = mock(MessageContext.class);
-		Connection connection = mock(Connection.class);
-		MessageStreamPair messageStreamPair = mock(MessageStreamPair.class);
-		MessageOutputStream out = mock(MessageOutputStream.class);
-
-		when(messageStreamPair.getOut()).thenReturn(out);
-		when(connection.getMessageStreamPair()).thenReturn(messageStreamPair);
 		when(context.getVerifiedKeys()).thenReturn(keys);
 
 		ExecutablePublicKeyMessage executable = new ExecutablePublicKeyMessage(message, context);
