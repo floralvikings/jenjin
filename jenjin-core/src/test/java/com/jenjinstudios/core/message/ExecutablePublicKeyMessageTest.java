@@ -2,7 +2,10 @@ package com.jenjinstudios.core.message;
 
 import com.jenjinstudios.core.Connection;
 import com.jenjinstudios.core.concurrency.MessageContext;
-import com.jenjinstudios.core.io.*;
+import com.jenjinstudios.core.io.Message;
+import com.jenjinstudios.core.io.MessageOutputStream;
+import com.jenjinstudios.core.io.MessageRegistry;
+import com.jenjinstudios.core.io.MessageStreamPair;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -49,19 +52,10 @@ public class ExecutablePublicKeyMessageTest
 		KeyPair rsaKeyPair = Connection.generateRSAKeyPair();
 		Message message = Connection.generatePublicKeyMessage(rsaKeyPair.getPublic());
 		InetAddress address = InetAddress.getLoopbackAddress();
-        Map<InetAddress, Key> keys = new HashMap<>(10);
-        keys.put(address, rsaKeyPair.getPublic());
 
-		Connection connection = mock(Connection.class);
-		MessageInputStream in = mock(MessageInputStream.class);
-        MessageOutputStream out = mock(MessageOutputStream.class);
 		MessageContext context = spy(new MessageContext());
 		context.setAddress(address);
 		context.addVerifiedKey(address, rsaKeyPair.getPublic());
-
-		MessageStreamPair messageStreamPair = new MessageStreamPair(in, out, address);
-
-		when(connection.getMessageStreamPair()).thenReturn(messageStreamPair);
 
 		ExecutablePublicKeyMessage executable = new ExecutablePublicKeyMessage(message, context);
 		executable.execute();
