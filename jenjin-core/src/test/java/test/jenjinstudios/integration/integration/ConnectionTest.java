@@ -3,6 +3,7 @@ package test.jenjinstudios.integration.integration;
 import com.jenjinstudios.core.Connection;
 import com.jenjinstudios.core.concurrency.MessageContext;
 import com.jenjinstudios.core.io.*;
+import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -67,7 +68,7 @@ public class ConnectionTest
 
 		// Give the second connection time to read the message
 		Thread.sleep(100);
-		//TODO Add some sort of assertion.
+		Assert.assertEquals(connectionTwo.getMessageContext().getName(), "Message Executed", "Message not executed.");
 
 		// Sleep for a while, then send another message to mimic real communication.
 		Thread.sleep(100);
@@ -75,7 +76,7 @@ public class ConnectionTest
 
 		// Sleep to give the connection time to retrieve the message.
 		Thread.sleep(100);
-		// TODO Add some sort of assertion.
+		Assert.assertEquals(connectionOne.getMessageContext().getName(), "Message Executed", "Message not executed.");
 
 		// Make sure they can shut down w/o exceptions
 		connectionOne.shutdown();
