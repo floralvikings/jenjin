@@ -29,7 +29,7 @@ public interface User
 	void setUsername(String username);
 
 	/**
-	 * Set this user's password
+	 * Set this user's password.
 	 *
 	 * @param password The password.
 	 */
