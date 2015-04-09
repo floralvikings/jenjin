@@ -26,7 +26,6 @@ import static org.mockito.Mockito.*;
  *
  * @author Caleb Brinkman
  */
-@SuppressWarnings("unchecked")
 @PrepareForTest(ServerMessageFactory.class)
 public class ExecutableWorldLogoutRequestTest extends PowerMockTestCase
 {
