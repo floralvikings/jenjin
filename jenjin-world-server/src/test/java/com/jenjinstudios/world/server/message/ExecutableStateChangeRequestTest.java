@@ -109,6 +109,11 @@ public class ExecutableStateChangeRequestTest
 		Assert.assertEquals(player.getAngle(), new Angle(0.0, Angle.IDLE), "Player should be at angle 0.0 and idle");
 	}
 
+	/**
+	 * Test a state change request with an excessive amount of delay (lag).
+	 *
+	 * @throws InterruptedException If there's an exception.
+	 */
 	@Test
 	public void testExcessiveDelay() throws InterruptedException {
 		World world = WorldUtils.createDefaultWorld();
