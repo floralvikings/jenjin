@@ -1,7 +1,6 @@
 package com.jenjinstudios.world.server.message;
 
 import com.jenjinstudios.core.io.Message;
-import com.jenjinstudios.core.io.MessageRegistry;
 import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.math.Angle;
 import com.jenjinstudios.world.server.Player;
@@ -19,7 +18,6 @@ import static org.mockito.Mockito.when;
 @SuppressWarnings("unchecked")
 public class ExecutableStateChangeRequestTest
 {
-	private static final MessageRegistry messageRegistry = MessageRegistry.getGlobalRegistry();
 
 	/**
 	 * Test a valid state change request.
