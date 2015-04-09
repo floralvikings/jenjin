@@ -30,8 +30,6 @@ import static org.mockito.Mockito.*;
 @PrepareForTest(ServerMessageFactory.class)
 public class ExecutableWorldLogoutRequestTest extends PowerMockTestCase
 {
-	private static final MessageRegistry messageRegistry = MessageRegistry.getGlobalRegistry();
-
 	@Test
 	public void testSuccessfulLogout() {
 		PowerMockito.mockStatic(ServerMessageFactory.class);
