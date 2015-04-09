@@ -62,6 +62,11 @@ public class ExecutableWorldLogoutRequestTest extends PowerMockTestCase
 		verify(worldObjectMap).remove(player.getId());
 	}
 
+	/**
+	 * Test a logout attempt with a null user.
+	 *
+	 * @throws Exception If there's an exception.
+	 */
 	@Test
 	public void testNullUser() throws Exception {
 		PowerMockito.mockStatic(ServerMessageFactory.class);
