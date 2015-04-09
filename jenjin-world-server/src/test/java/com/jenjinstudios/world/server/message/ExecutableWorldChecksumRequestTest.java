@@ -1,9 +1,6 @@
 package com.jenjinstudios.world.server.message;
 
 import com.jenjinstudios.core.io.Message;
-import com.jenjinstudios.core.io.MessageStreamPair;
-import com.jenjinstudios.world.server.WorldClientHandler;
-import com.jenjinstudios.world.server.WorldServer;
 import com.jenjinstudios.world.server.WorldServerMessageContext;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -32,17 +29,12 @@ public class ExecutableWorldChecksumRequestTest extends PowerMockTestCase
 
 		// Mocks
 		PowerMockito.mockStatic(WorldServerMessageFactory.class);
-		WorldClientHandler clientHandler = mock(WorldClientHandler.class);
 		Message message = mock(Message.class);
-		WorldServer server = mock(WorldServer.class);
 		WorldServerMessageContext context = mock(WorldServerMessageContext.class);
-		MessageStreamPair messageStreamPair = mock(MessageStreamPair.class);
 
 		// Mock returns
 		when(WorldServerMessageFactory.generateWorldChecksumResponse(any())).thenReturn(response);
 		when(context.getWorldChecksum()).thenReturn(checksum);
-		when(clientHandler.getServer()).thenReturn(server);
-		when(clientHandler.getMessageStreamPair()).thenReturn(messageStreamPair);
 
 		ExecutableWorldChecksumRequest exec = new ExecutableWorldChecksumRequest(message, context);
 		Message resp = exec.execute();
