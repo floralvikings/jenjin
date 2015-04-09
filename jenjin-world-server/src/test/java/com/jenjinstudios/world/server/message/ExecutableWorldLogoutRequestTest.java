@@ -13,6 +13,7 @@ import com.jenjinstudios.world.server.Player;
 import com.jenjinstudios.world.server.WorldClientHandler;
 import com.jenjinstudios.world.server.WorldServer;
 import com.jenjinstudios.world.server.WorldServerMessageContext;
+import org.mockito.Mock;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.testng.PowerMockTestCase;
@@ -29,6 +30,9 @@ import static org.mockito.Mockito.*;
 @PrepareForTest(ServerMessageFactory.class)
 public class ExecutableWorldLogoutRequestTest extends PowerMockTestCase
 {
+	@Mock
+	private Authenticator<Player> authenticator;
+
 	/**
 	 * Test a successful logout request.
 	 */
