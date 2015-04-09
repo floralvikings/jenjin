@@ -42,7 +42,7 @@ public class ExecutableStateChangeRequestTest
 		exec.execute();
 		world.update();
 
-		Assert.assertEquals(player.getAngle(), new Angle(0.0, Angle.FRONT));
+		Assert.assertEquals(player.getAngle(), new Angle(0.0, Angle.FRONT), "Player should be at angle 0.0 and idle");
 	}
 
 	/**
