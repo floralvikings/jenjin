@@ -34,6 +34,9 @@ public class WorldServerMessageFactoryTest
 {
 	private WorldClientHandler clientHandler;
 
+	/**
+	 * Register XML messages for use in testing.
+	 */
 	@BeforeClass
 	public void registerMessages() {
 		MessageRegistry.getGlobalRegistry().register("Core Message Registry",
