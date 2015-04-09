@@ -36,7 +36,7 @@ public class ExecutableWorldLogoutRequestTest extends PowerMockTestCase
 	public void testSuccessfulLogout() {
 		PowerMockito.mockStatic(ServerMessageFactory.class);
 		when(ServerMessageFactory.generateLogoutResponse(anyBoolean())).thenReturn(mock(Message.class));
-		Message logOutRequest = messageRegistry.createMessage("WorldLogoutRequest");
+		Message logOutRequest = MessageRegistry.getGlobalRegistry().createMessage("WorldLogoutRequest");
 
 		World world = spy(new World());
 		Player player = mock(Player.class);
