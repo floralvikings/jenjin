@@ -51,6 +51,9 @@ public class WorldServerMessageFactoryTest
 		MessageRegistry.getGlobalRegistry().clear();
 	}
 
+	/**
+	 * Set up fields for testing.
+	 */
 	@SuppressWarnings("unchecked")
 	@BeforeMethod
 	public void setUp() {
