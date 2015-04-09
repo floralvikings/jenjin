@@ -65,6 +65,9 @@ public class WorldServerMessageFactoryTest
 		when(clientHandler.getServer()).thenReturn(worldServer);
 	}
 
+	/**
+	 * Test generation of an ObjectVisible Message.
+	 */
 	@Test
 	public void testGenerateNewlyVisibleObjectMessage() {
 		WorldObject object = mock(WorldObject.class);
