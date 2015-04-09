@@ -98,6 +98,9 @@ public class WorldServerMessageFactoryTest
 		assertEquals(newState.getArgument("yCoordinate"), m.position.getYCoordinate(), "Coordinates should be equal.");
 	}
 
+	/**
+	 * Test generation of a forced state message.
+	 */
 	@Test
 	public void testGenerateForcedStateMessage() {
 		MoveState forcedState = new MoveState(new Angle(), Vector2D.ORIGIN, 0);
