@@ -21,6 +21,11 @@ public class ExecutableStateChangeRequestTest
 {
 	private static final MessageRegistry messageRegistry = MessageRegistry.getGlobalRegistry();
 
+	/**
+	 * Test a valid state change request.
+	 *
+	 * @throws InterruptedException If there's an exception.
+	 */
 	@Test
 	public void testValidRequest() throws InterruptedException {
 		World world = WorldUtils.createDefaultWorld();
