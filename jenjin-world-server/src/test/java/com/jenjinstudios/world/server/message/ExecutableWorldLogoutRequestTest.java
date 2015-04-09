@@ -90,6 +90,11 @@ public class ExecutableWorldLogoutRequestTest extends PowerMockTestCase
 		Assert.assertEquals(resp, response, "Response mocks should be equal");
 	}
 
+	/**
+	 * Test a failed logout attempt.
+	 *
+	 * @throws Exception If there's an exception.
+	 */
 	@Test
 	public void testFailedLogout() throws Exception {
 		PowerMockito.mockStatic(ServerMessageFactory.class);
