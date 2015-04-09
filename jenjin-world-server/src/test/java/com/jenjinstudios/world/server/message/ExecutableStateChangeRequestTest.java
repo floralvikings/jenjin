@@ -5,8 +5,6 @@ import com.jenjinstudios.core.io.MessageRegistry;
 import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.math.Angle;
 import com.jenjinstudios.world.server.Player;
-import com.jenjinstudios.world.server.WorldClientHandler;
-import com.jenjinstudios.world.server.WorldServer;
 import com.jenjinstudios.world.server.WorldServerMessageContext;
 import com.jenjinstudios.world.util.WorldUtils;
 import org.testng.Assert;
@@ -30,14 +28,10 @@ public class ExecutableStateChangeRequestTest
 		world.getWorldObjects().add(player);
 		world.update();
 
-		WorldClientHandler mock = mock(WorldClientHandler.class);
 		Message request = mock(Message.class);
-		WorldServer worldServer = mock(WorldServer.class);
 		WorldServerMessageContext context = mock(WorldServerMessageContext.class);
 
 		when(context.getUser()).thenReturn(player);
-		when(mock.getServer()).thenReturn(worldServer);
-		when(worldServer.getUps()).thenReturn(50);
 		when(request.getArgument("relativeAngle")).thenReturn(Angle.FRONT);
 		when(request.getArgument("absoluteAngle")).thenReturn(0.0);
 		when(request.getArgument("xCoordinate")).thenReturn(0.0);
