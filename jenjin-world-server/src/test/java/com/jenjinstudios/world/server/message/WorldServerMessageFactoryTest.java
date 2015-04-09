@@ -112,13 +112,6 @@ public class WorldServerMessageFactoryTest
 	}
 
 	@Test
-	public void testGenerateActorMoveSpeedMessage() {
-		Message message = WorldServerMessageFactory.generateActorMoveSpeedMessage(Actor.DEFAULT_MOVE_SPEED);
-		assertEquals(message.name, "ActorMoveSpeed");
-		assertEquals(message.getArgument("moveSpeed"), Actor.DEFAULT_MOVE_SPEED);
-	}
-
-	@Test
 	public void testGenerateNewlyInvisibleMessage() {
 		WorldObject o = mock(WorldObject.class);
 		when(o.getId()).thenReturn(2468);
