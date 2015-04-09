@@ -51,6 +51,11 @@ public class ExecutableStateChangeRequestTest
 		Assert.assertEquals(player.getAngle(), new Angle(0.0, Angle.FRONT));
 	}
 
+	/**
+	 * Test a state change request with invalid coordinates.
+	 *
+	 * @throws Exception If there's an exception.
+	 */
 	@Test
 	public void testInvalidRequestCoordinates() throws Exception {
 		World world = WorldUtils.createDefaultWorld();
