@@ -119,13 +119,9 @@ public class ExecutableStateChangeRequestTest
 		world.getWorldObjects().add(player);
 		world.update();
 
-		WorldClientHandler mock = mock(WorldClientHandler.class);
-		WorldServer worldServer = mock(WorldServer.class);
 		Message request = mock(Message.class);
 		WorldServerMessageContext context = mock(WorldServerMessageContext.class);
 
-		when(mock.getServer()).thenReturn(worldServer);
-		when(worldServer.getUps()).thenReturn(50);
 		when(context.getUser()).thenReturn(player);
 		when(request.getArgument("relativeAngle")).thenReturn(Angle.FRONT);
 		when(request.getArgument("absoluteAngle")).thenReturn(0.0);
