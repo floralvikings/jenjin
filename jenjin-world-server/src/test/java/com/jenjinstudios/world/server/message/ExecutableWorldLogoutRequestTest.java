@@ -76,13 +76,10 @@ public class ExecutableWorldLogoutRequestTest extends PowerMockTestCase
 
 		World world = mock(World.class);
 		Actor player = mock(Actor.class);
-		WorldClientHandler handler = mock(WorldClientHandler.class);
-		WorldServer worldServer = mock(WorldServer.class);
 		WorldServerMessageContext context = mock(WorldServerMessageContext.class);
 
 		when(context.getAuthenticator()).thenReturn(authenticator);
 		when(context.getWorld()).thenReturn(world);
-		when(handler.getServer()).thenReturn(worldServer);
 		when(context.getUser()).thenReturn(null);
 		when(player.getId()).thenReturn(0);
 		when(player.getVector2D()).thenReturn(Vector2D.ORIGIN);
