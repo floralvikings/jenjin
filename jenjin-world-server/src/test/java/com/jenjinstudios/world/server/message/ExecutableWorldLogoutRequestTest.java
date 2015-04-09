@@ -40,8 +40,6 @@ public class ExecutableWorldLogoutRequestTest extends PowerMockTestCase
 
 		World world = spy(new World());
 		Player player = mock(Player.class);
-		WorldClientHandler handler = mock(WorldClientHandler.class);
-		WorldServer worldServer = mock(WorldServer.class);
 		Authenticator<Player> authenticator = mock(Authenticator.class);
 		WorldObjectList worldObjectMap = mock(WorldObjectList.class);
 		WorldServerMessageContext context = mock(WorldServerMessageContext.class);
@@ -49,7 +47,6 @@ public class ExecutableWorldLogoutRequestTest extends PowerMockTestCase
 		when(world.getWorldObjects()).thenReturn(worldObjectMap);
 		when(context.getAuthenticator()).thenReturn(authenticator);
 		when(context.getWorld()).thenReturn(world);
-		when(handler.getServer()).thenReturn(worldServer);
 		when(context.getUser()).thenReturn(player);
 		when(player.getWorld()).thenReturn(world);
 		when(player.getId()).thenReturn(0);
