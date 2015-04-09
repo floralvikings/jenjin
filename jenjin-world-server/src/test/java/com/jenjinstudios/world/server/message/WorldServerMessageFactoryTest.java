@@ -60,6 +60,9 @@ public class WorldServerMessageFactoryTest
 		assertEquals(message.getArgument("name"), "Foo", "Argument should be Foo");
 	}
 
+	/**
+	 * Test generation of an ActorVisibleMessage.
+	 */
 	@Test
 	public void testGenerateNewlyVisibleActorMessage() {
 		Actor actor = mock(Actor.class);
