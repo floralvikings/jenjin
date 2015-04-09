@@ -61,11 +61,7 @@ public class ExecutableStateChangeRequestTest
 		world.update();
 
 		WorldServerMessageContext context = mock(WorldServerMessageContext.class);
-		WorldClientHandler mock = mock(WorldClientHandler.class);
-		WorldServer worldServer = mock(WorldServer.class);
-		when(worldServer.getUps()).thenReturn(50);
 		when(context.getUser()).thenReturn(player);
-		when(mock.getServer()).thenReturn(worldServer);
 
 		// Create a state change request, with coordinates set further than the allowed error
 		Message request = mock(Message.class);
