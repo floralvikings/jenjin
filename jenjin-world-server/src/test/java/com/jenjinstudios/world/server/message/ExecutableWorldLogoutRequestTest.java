@@ -22,6 +22,8 @@ import org.testng.annotations.Test;
 import static org.mockito.Mockito.*;
 
 /**
+ * Test the ExecutableWorldLogoutRequest class.
+ *
  * @author Caleb Brinkman
  */
 @SuppressWarnings("unchecked")
