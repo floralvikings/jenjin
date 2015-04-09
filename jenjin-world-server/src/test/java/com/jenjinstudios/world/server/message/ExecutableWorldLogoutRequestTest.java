@@ -10,8 +10,6 @@ import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.collections.WorldObjectList;
 import com.jenjinstudios.world.math.Vector2D;
 import com.jenjinstudios.world.server.Player;
-import com.jenjinstudios.world.server.WorldClientHandler;
-import com.jenjinstudios.world.server.WorldServer;
 import com.jenjinstudios.world.server.WorldServerMessageContext;
 import org.mockito.Mock;
 import org.powermock.api.mockito.PowerMockito;
@@ -105,14 +103,11 @@ public class ExecutableWorldLogoutRequestTest extends PowerMockTestCase
 		World world = mock(World.class);
 		Player player = new Player("Player");
 		player.setLoggedIn(true);
-		WorldServer worldServer = mock(WorldServer.class);
-		WorldClientHandler handler = mock(WorldClientHandler.class);
 		WorldServerMessageContext context = mock(WorldServerMessageContext.class);
 
 		when(context.getAuthenticator()).thenReturn(authenticator);
 		when(context.getWorld()).thenReturn(world);
 		when(authenticator.logOutUser(any())).thenThrow(new AuthenticationException("Foo"));
-		when(handler.getServer()).thenReturn(worldServer);
 		when(context.getUser()).thenReturn(player);
 
 		ExecutableWorldLogoutRequest exec = new ExecutableWorldLogoutRequest(logOutRequest, context);
