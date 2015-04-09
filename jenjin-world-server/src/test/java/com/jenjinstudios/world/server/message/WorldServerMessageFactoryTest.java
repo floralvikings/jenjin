@@ -90,12 +90,12 @@ public class WorldServerMessageFactoryTest
 		List<Message> messages = WorldServerMessageFactory.generateChangeStateMessages(actor);
 
 		Message newState = messages.get(0);
-		assertEquals(newState.getArgument("id"), actor.getId());
-		assertEquals(newState.getArgument("relativeAngle"), m.angle.getRelativeAngle());
-		assertEquals(newState.getArgument("absoluteAngle"), m.angle.getAbsoluteAngle());
-		assertEquals(newState.getArgument("timeOfChange"), m.timeOfChange);
-		assertEquals(newState.getArgument("xCoordinate"), m.position.getXCoordinate());
-		assertEquals(newState.getArgument("yCoordinate"), m.position.getYCoordinate());
+		assertEquals(newState.getArgument("id"), actor.getId(), "Id should be actor id.");
+		assertEquals(newState.getArgument("relativeAngle"), m.angle.getRelativeAngle(), "Angles should be equal.");
+		assertEquals(newState.getArgument("absoluteAngle"), m.angle.getAbsoluteAngle(), "Angles should be equal.");
+		assertEquals(newState.getArgument("timeOfChange"), m.timeOfChange, "Times of change should be equal.");
+		assertEquals(newState.getArgument("xCoordinate"), m.position.getXCoordinate(), "Coordinates should be equal.");
+		assertEquals(newState.getArgument("yCoordinate"), m.position.getYCoordinate(), "Coordinates should be equal.");
 	}
 
 	@Test
