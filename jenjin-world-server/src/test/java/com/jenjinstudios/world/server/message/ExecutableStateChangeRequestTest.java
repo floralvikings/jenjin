@@ -80,6 +80,9 @@ public class ExecutableStateChangeRequestTest
 		Assert.assertEquals(player.getAngle(), new Angle(0.0, Angle.IDLE), "Player should be at 0.0 and idle.");
 	}
 
+	/**
+	 * Test a state change request with an invalid request time.
+	 */
 	@Test
 	public void testInvalidRequestTime() {
 		// Functionally the same as testing excessive delay.
