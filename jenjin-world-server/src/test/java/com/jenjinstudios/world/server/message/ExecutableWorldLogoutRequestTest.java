@@ -29,6 +29,9 @@ import static org.mockito.Mockito.*;
 @PrepareForTest(ServerMessageFactory.class)
 public class ExecutableWorldLogoutRequestTest extends PowerMockTestCase
 {
+	/**
+	 * Test a successful logout request.
+	 */
 	@Test
 	public void testSuccessfulLogout() {
 		PowerMockito.mockStatic(ServerMessageFactory.class);
