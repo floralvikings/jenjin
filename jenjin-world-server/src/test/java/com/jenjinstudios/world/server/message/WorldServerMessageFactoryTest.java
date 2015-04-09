@@ -56,8 +56,8 @@ public class WorldServerMessageFactoryTest
 		when(object.getVector2D()).thenReturn(Vector2D.ORIGIN);
 
 		Message message = WorldServerMessageFactory.generateNewlyVisibleMessage(object);
-		assertEquals(message.name, "ObjectVisibleMessage");
-		assertEquals(message.getArgument("name"), "Foo");
+		assertEquals(message.name, "ObjectVisibleMessage", "Message should be ObjectVisibleMessage");
+		assertEquals(message.getArgument("name"), "Foo", "Argument should be Foo");
 	}
 
 	@Test
