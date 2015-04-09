@@ -2,20 +2,16 @@ package com.jenjinstudios.world.server.message;
 
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageRegistry;
-import com.jenjinstudios.server.net.ServerUpdateTask;
 import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.WorldObject;
 import com.jenjinstudios.world.actor.StateChangeStack;
 import com.jenjinstudios.world.math.Angle;
 import com.jenjinstudios.world.math.Vector2D;
-import com.jenjinstudios.world.server.WorldClientHandler;
-import com.jenjinstudios.world.server.WorldServer;
 import com.jenjinstudios.world.state.MoveState;
 import com.jenjinstudios.world.util.WorldUtils;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.util.Arrays;
@@ -32,7 +28,6 @@ import static org.testng.Assert.assertEquals;
  */
 public class WorldServerMessageFactoryTest
 {
-	private WorldClientHandler clientHandler;
 
 	/**
 	 * Register XML messages for use in testing.
@@ -49,20 +44,6 @@ public class WorldServerMessageFactoryTest
 	@AfterClass
 	public void clearMessageRegistry() {
 		MessageRegistry.getGlobalRegistry().clear();
-	}
-
-	/**
-	 * Set up fields for testing.
-	 */
-	@SuppressWarnings("unchecked")
-	@BeforeMethod
-	public void setUp() {
-		WorldServer worldServer = mock(WorldServer.class);
-		ServerUpdateTask serverUpdateTask = mock(ServerUpdateTask.class);
-		when(worldServer.getServerUpdateTask()).thenReturn(serverUpdateTask);
-		when(serverUpdateTask.getCycleStartTime()).thenReturn(0L);
-		clientHandler = mock(WorldClientHandler.class);
-		when(clientHandler.getServer()).thenReturn(worldServer);
 	}
 
 	/**
@@ -120,7 +101,7 @@ public class WorldServerMessageFactoryTest
 		assertEquals(message.getArgument("absoluteAngle"), forcedState.angle.getAbsoluteAngle());
 		assertEquals(message.getArgument("xCoordinate"), forcedState.position.getXCoordinate());
 		assertEquals(message.getArgument("yCoordinate"), forcedState.position.getYCoordinate());
-		long result = clientHandler.getServer().getServerUpdateTask().getCycleStartTime();
+		long result = 0L;
 		assertEquals(message.getArgument("timeOfForce"), result);
 	}
 
