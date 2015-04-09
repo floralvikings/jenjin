@@ -21,6 +21,9 @@ import static org.mockito.Mockito.*;
 @PrepareForTest(WorldServerMessageFactory.class)
 public class ExecutableWorldFileRequestTest extends PowerMockTestCase
 {
+	/**
+	 * Test execution of the message.
+	 */
 	@Test
 	@PrepareForTest(WorldServerMessageFactory.class)
 	public void testExecuteMessage() {
