@@ -77,6 +77,9 @@ public class WorldServerMessageFactoryTest
 		assertEquals(message.getArgument("relativeAngle"), Angle.IDLE, "Relative angle should be idle.");
 	}
 
+	/**
+	 * Test generation of a StateChangeMessage.
+	 */
 	@Test
 	public void testGenerateStateChangeMesage() {
 		Actor actor = mock(Actor.class);
