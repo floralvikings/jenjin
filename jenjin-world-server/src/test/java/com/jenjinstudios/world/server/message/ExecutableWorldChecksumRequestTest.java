@@ -21,6 +21,9 @@ import static org.mockito.Mockito.*;
 @PrepareForTest(WorldServerMessageFactory.class)
 public class ExecutableWorldChecksumRequestTest extends PowerMockTestCase
 {
+	/**
+	 * Test the execution of the message.
+	 */
 	@Test
 	public void testExecuteMessage() {
 		Message response = mock(Message.class);
