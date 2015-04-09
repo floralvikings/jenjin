@@ -16,7 +16,6 @@ import static org.mockito.Mockito.when;
  * Test the ExecutableStateChangeRequest class.
  * @author Caleb Brinkman
  */
-@SuppressWarnings("unchecked")
 public class ExecutableStateChangeRequestTest
 {
 
