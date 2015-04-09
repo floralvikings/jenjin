@@ -26,6 +26,8 @@ import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
 
 /**
+ * Test the WorldServerMessageFactory class.
+ *
  * @author Caleb Brinkman
  */
 public class WorldServerMessageFactoryTest
