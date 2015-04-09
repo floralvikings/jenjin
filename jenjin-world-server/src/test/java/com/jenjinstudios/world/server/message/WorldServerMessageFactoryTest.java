@@ -72,9 +72,9 @@ public class WorldServerMessageFactoryTest
 		when(actor.getWorld()).thenReturn(WorldUtils.createDefaultWorld());
 
 		Message message = WorldServerMessageFactory.generateNewlyVisibleMessage(actor);
-		assertEquals(message.name, "ActorVisibleMessage");
-		assertEquals(message.getArgument("name"), "Foo");
-		assertEquals(message.getArgument("relativeAngle"), Angle.IDLE);
+		assertEquals(message.name, "ActorVisibleMessage", "Message should be ActorVisibleMessage");
+		assertEquals(message.getArgument("name"), "Foo", "Name should be Foo.");
+		assertEquals(message.getArgument("relativeAngle"), Angle.IDLE, "Relative angle should be idle.");
 	}
 
 	@Test
