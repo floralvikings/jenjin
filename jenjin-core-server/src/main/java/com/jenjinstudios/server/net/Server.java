@@ -77,9 +77,6 @@ public class Server<T extends ClientHandler<? extends ServerMessageContext>> ext
 		h.getMessageContext().setAuthenticator(authenticator);
 	}
 
-	public void update() {
-    }
-
 	public Authenticator getAuthenticator() { return authenticator; }
 
 	@Override
