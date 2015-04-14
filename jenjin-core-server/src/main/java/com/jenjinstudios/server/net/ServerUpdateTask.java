@@ -86,7 +86,7 @@ public class ServerUpdateTask implements Runnable
 		{
 			total += l;
 		}
-		averageUPS = (ceilNumCycles() / total);
+		averageUPS = ceilNumCycles() / total;
 	}
 
 	private double ceilNumCycles() {
