@@ -21,7 +21,7 @@ import java.util.TimerTask;
  */
 public class WorldClientHandler extends ClientHandler<WorldServerMessageContext>
 {
-	private boolean hasSentActorStepMessage;
+	private boolean needsToSendSpeedMessage = true;
 	private final TimerTask updateTask = new UpdateTask();
 	private final Timer updateTimer = new Timer();
 
@@ -97,12 +97,12 @@ public class WorldClientHandler extends ClientHandler<WorldServerMessageContext>
 		public void run() {
 			if (getMessageContext().getUser() != null)
 			{
-				if (!hasSentActorStepMessage)
+				if (needsToSendSpeedMessage)
 				{
 					double moveSpeed = getMessageContext().getUser().getMoveSpeed();
 					Message message = WorldServerMessageFactory.generateActorMoveSpeedMessage(moveSpeed);
 					enqueueMessage(message);
-					hasSentActorStepMessage = true;
+					needsToSendSpeedMessage = false;
 				}
 				queueForcesStateMessage();
 				queueNewlyVisibleMessages();
