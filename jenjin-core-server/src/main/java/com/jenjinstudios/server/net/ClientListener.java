@@ -42,7 +42,6 @@ class ClientListener<T extends Connection> implements Runnable
 	{
 		this.contextClass = contextClass;
 		this.port = port;
-		/* The class of client handlers created by this listener. */
 		try
 		{
 			handlerConstructor = handlerClass.getConstructor(MessageStreamPair.class, contextClass);
