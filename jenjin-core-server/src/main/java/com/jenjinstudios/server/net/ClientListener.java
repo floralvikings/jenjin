@@ -32,13 +32,12 @@ class ClientListener<T extends ClientHandler> implements Runnable
 
 	/**
 	 * Construct a new ClientListener for the given server on the given port.
-	 * @param serverClass The server for which this listener will listen.
 	 * @throws IOException If there is an error listening on the port.
 	 * @throws NoSuchMethodException If there is no appropriate constructor for the specified ClientHandler
 	 * constructor.
 	 */
-	ClientListener(Class<? extends Server> serverClass, Class<? extends T> handlerClass,
-						  Class<? extends ServerMessageContext> contextClass, int port) throws IOException,
+	ClientListener(Class<? extends T> handlerClass,
+				   Class<? extends ServerMessageContext> contextClass, int port) throws IOException,
 		  NoSuchMethodException
 	{
 		this.contextClass = contextClass;

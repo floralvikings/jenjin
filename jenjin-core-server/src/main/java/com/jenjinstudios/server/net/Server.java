@@ -34,7 +34,7 @@ public class Server<T extends ClientHandler<? extends ServerMessageContext>>
 		Class handlerClass = initInfo.getHandlerClass();
 		Class<? extends ServerMessageContext> contextClass = initInfo.getContextClass();
 		//noinspection unchecked
-		clientListener = new ClientListener<>(serverClass, handlerClass, contextClass, initInfo.getPort());
+		clientListener = new ClientListener<>(handlerClass, contextClass, initInfo.getPort());
 		rsaKeyPair = (initInfo.getKeyPair() == null) ? Connection.generateRSAKeyPair() : initInfo
 			  .getKeyPair();
 		this.authenticator = authenticator;
