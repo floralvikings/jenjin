@@ -36,8 +36,7 @@ public class Server<T extends ClientHandler<? extends ServerMessageContext>>
 		Class<? extends ServerMessageContext> contextClass = initInfo.getContextClass();
 		//noinspection unchecked
 		clientListener = new ClientListener<>(handlerClass, contextClass, initInfo.getPort());
-		rsaKeyPair = (initInfo.getKeyPair() == null) ? Connection.generateRSAKeyPair() : initInfo
-			  .getKeyPair();
+		rsaKeyPair = (initInfo.getKeyPair() == null) ? Connection.generateRSAKeyPair() : initInfo.getKeyPair();
 		this.authenticator = authenticator;
 		InputStream stream = getClass().getClassLoader().getResourceAsStream("com/jenjinstudios/server/Messages.xml");
 		MessageRegistry.getGlobalRegistry().register("Core Client/Server Messages", stream);
