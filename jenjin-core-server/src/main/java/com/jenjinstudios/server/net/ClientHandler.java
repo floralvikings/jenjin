@@ -44,11 +44,8 @@ public class ClientHandler<T extends ServerMessageContext> extends Connection<T>
 		getMessageContext().setName("Client Handler " + handlerId);
 	}
 
-    /** Update anything that needs to be taken care of before sendAllMessages. */
-    public void update() { }
-
-    /** Shut down the client handler. */
-    @Override
+	/** Shut down the client handler. */
+	@Override
     public void shutdown() {
 		if (getMessageContext().getUser() != null)
 		{
