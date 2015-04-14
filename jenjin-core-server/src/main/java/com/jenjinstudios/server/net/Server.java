@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class Server<T extends ClientHandler<? extends ServerMessageContext>> extends Thread
+public class Server<T extends ClientHandler<? extends ServerMessageContext>>
 {
 	private static final Logger LOGGER = Logger.getLogger(Server.class.getName());
 	private final int UPS;
@@ -29,7 +29,6 @@ public class Server<T extends ClientHandler<? extends ServerMessageContext>> ext
 	private ServerUpdateTask serverUpdateTask;
 
 	protected Server(ServerInit initInfo, Authenticator authenticator) throws IOException, NoSuchMethodException {
-		super("Server");
         LOGGER.log(Level.FINE, "Initializing Server.");
         UPS = initInfo.getUps();
         PERIOD = 1000 / UPS;
@@ -79,9 +78,11 @@ public class Server<T extends ClientHandler<? extends ServerMessageContext>> ext
 
 	public Authenticator getAuthenticator() { return authenticator; }
 
-	@Override
-    public void run() {
-        clientListener.startListening(this);
+	/**
+	 * Start listening for and maintaining connections.
+	 */
+	public void start() {
+		clientListener.startListening(this);
 
 		serverUpdateTask = new ServerUpdateTask(this);
 

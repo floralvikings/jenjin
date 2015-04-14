@@ -58,8 +58,8 @@ public class WorldServer<T extends WorldClientHandler> extends Server<T>
 	public World getWorld() { return world; }
 
 	@Override
-	public void run() {
-		super.run();
+	public void start() {
+		super.start();
 		getServerUpdateTask().addRepeatedTask(world::update);
 	}
 
