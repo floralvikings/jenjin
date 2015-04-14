@@ -10,5 +10,10 @@ import com.jenjinstudios.core.Connection;
 @FunctionalInterface
 public interface UpdateTask<T extends Connection>
 {
+	/**
+	 * Perform some sort of update on the specified connection.
+	 *
+	 * @param connection The connection.
+	 */
 	void update(T connection);
 }
