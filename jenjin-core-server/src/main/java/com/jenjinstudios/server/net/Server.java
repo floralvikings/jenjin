@@ -32,7 +32,6 @@ public class Server<T extends ClientHandler<? extends ServerMessageContext>>
 		connectionPool = new ConnectionPool<>();
 		connectionPool.addShutdownTask(new EmergencyLogoutTask<>());
 		PERIOD = 1000 / UPS;
-		Class<? extends Server> serverClass = getClass();
 		Class handlerClass = initInfo.getHandlerClass();
 		Class<? extends ServerMessageContext> contextClass = initInfo.getContextClass();
 		//noinspection unchecked
