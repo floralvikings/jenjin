@@ -14,10 +14,10 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class Server<T extends Connection<? extends ServerMessageContext>>
+public class Server<T extends ServerMessageContext>
 {
 	private static final Logger LOGGER = Logger.getLogger(Server.class.getName());
-	private final ConnectionPool<T> connectionPool;
+	private final ConnectionPool connectionPool;
 	private final int UPS;
 	private final int PERIOD;
 	private final Authenticator authenticator;
@@ -29,10 +29,9 @@ public class Server<T extends Connection<? extends ServerMessageContext>>
 	protected Server(ServerInit initInfo, Authenticator authenticator) throws IOException, NoSuchMethodException {
         LOGGER.log(Level.FINE, "Initializing Server.");
         UPS = initInfo.getUps();
-		connectionPool = new ConnectionPool<>();
+		connectionPool = new ConnectionPool();
 		connectionPool.addShutdownTask(new EmergencyLogoutTask<>());
 		PERIOD = 1000 / UPS;
-		Class handlerClass = initInfo.getHandlerClass();
 		Class<? extends ServerMessageContext> contextClass = initInfo.getContextClass();
 		//noinspection unchecked
 		clientListener = new ClientListener(contextClass, initInfo.getPort());
@@ -45,8 +44,8 @@ public class Server<T extends Connection<? extends ServerMessageContext>>
 	public ServerUpdateTask getServerUpdateTask() { return serverUpdateTask; }
 
     public void checkListenerForClients() {
-		Iterable<T> nc = clientListener.getNewClients();
-		for (T h : nc)
+		Iterable<Connection> nc = clientListener.getNewClients();
+		for (Connection h : nc)
 		{
 			connectionPool.addConnection(h);
 			clientHandlerAdded(h);
@@ -57,7 +56,7 @@ public class Server<T extends Connection<? extends ServerMessageContext>>
 
 	public int getUps() { return UPS; }
 
-	protected void clientHandlerAdded(T h) {
+	protected void clientHandlerAdded(Connection<? extends T> h) {
 		h.setRSAKeyPair(rsaKeyPair);
 		//noinspection unchecked
 		h.getMessageContext().setAuthenticator(authenticator);
@@ -85,6 +84,6 @@ public class Server<T extends Connection<? extends ServerMessageContext>>
 			loopTimer.shutdown();
 	}
 
-	protected ConnectionPool<T> getConnectionPool() { return connectionPool; }
+	protected ConnectionPool getConnectionPool() { return connectionPool; }
 
 }
