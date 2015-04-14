@@ -46,7 +46,7 @@ class ClientListener<T extends ClientHandler> implements Runnable
 		/* The class of client handlers created by this listener. */
 		try
 		{
-			handlerConstructor = handlerClass.getConstructor(serverClass, MessageStreamPair.class, contextClass);
+			handlerConstructor = handlerClass.getConstructor(MessageStreamPair.class, contextClass);
 		} catch (NoSuchMethodException e)
 		{
 			LOGGER.log(Level.SEVERE, "Unable to find appropriate ClientHandler constructor: " + handlerClass.getName()
