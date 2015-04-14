@@ -1,5 +1,7 @@
 package com.jenjinstudios.server.net;
 
+import com.jenjinstudios.core.Connection;
+
 import java.security.KeyPair;
 
 /**
@@ -17,7 +19,7 @@ public class ServerInit
 	public static final int DEFAULT_PORT = 51015;
 
 	private int ups;
-	private Class<? extends ClientHandler> handlerClass;
+	private Class<? extends Connection> handlerClass;
 	private int port;
 	private KeyPair keyPair;
 	private Class<? extends ServerMessageContext> contextClass;
@@ -48,14 +50,14 @@ public class ServerInit
 	 *
 	 * @return The class of ClientHandler to be used by the server.
 	 */
-	public Class<? extends ClientHandler> getHandlerClass() { return handlerClass; }
+	public Class<? extends Connection> getHandlerClass() { return handlerClass; }
 
 	/**
 	 * Set the class of ClientHanlder to be used by the server.
 	 *
 	 * @param handlerClass The class of the ClientHandler to be used by the server.
 	 */
-	public void setHandlerClass(Class<? extends ClientHandler> handlerClass) { this.handlerClass = handlerClass; }
+	public void setHandlerClass(Class<? extends Connection> handlerClass) { this.handlerClass = handlerClass; }
 
 	/**
 	 * Get the port number on which the server will listen.
