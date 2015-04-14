@@ -102,7 +102,5 @@ public class ServerUpdateTask implements Runnable
 
 	private int getCycleArrayIndex() { return Math.abs(cycleNum) % lastCycles.length; }
 
-	double getAverageUPS() { return averageUPS; }
-
 	public long getCycleStartTime() { return cycleStart; }
 }
