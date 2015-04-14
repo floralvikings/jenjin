@@ -44,10 +44,6 @@ public class WorldClientHandler extends ClientHandler<WorldServerMessageContext>
 		super.shutdown();
 	}
 
-	@Override
-	public void update() {
-	}
-
 	public Player getUser() { return getMessageContext().getUser(); }
 
 	private void queueNewlyVisibleMessages() {
