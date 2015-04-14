@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class Server<T extends ClientHandler<? extends ServerMessageContext>>
+public class Server<T extends Connection<? extends ServerMessageContext>>
 {
 	private static final Logger LOGGER = Logger.getLogger(Server.class.getName());
 	private final ConnectionPool<T> connectionPool;

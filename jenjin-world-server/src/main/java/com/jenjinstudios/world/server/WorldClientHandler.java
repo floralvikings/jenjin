@@ -1,8 +1,8 @@
 package com.jenjinstudios.world.server;
 
+import com.jenjinstudios.core.Connection;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageStreamPair;
-import com.jenjinstudios.server.net.ClientHandler;
 import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.WorldObject;
 import com.jenjinstudios.world.actor.Vision;
@@ -19,7 +19,7 @@ import java.util.TimerTask;
  *
  * @author Caleb Brinkman
  */
-public class WorldClientHandler extends ClientHandler<WorldServerMessageContext>
+public class WorldClientHandler extends Connection<WorldServerMessageContext>
 {
 	private boolean needsToSendSpeedMessage = true;
 	private final TimerTask updateTask = new UpdateTask();
