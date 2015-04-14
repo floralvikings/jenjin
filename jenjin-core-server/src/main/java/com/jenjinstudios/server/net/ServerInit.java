@@ -1,7 +1,5 @@
 package com.jenjinstudios.server.net;
 
-import com.jenjinstudios.core.Connection;
-
 import java.security.KeyPair;
 
 /**
@@ -13,13 +11,10 @@ public class ServerInit
 {
 	/** The default number of updates per second. */
 	public static final int DEFAULT_UPS = 50;
-	/** The default client handler class. */
-	public static final Class<Connection> DEFAULT_CLASS = Connection.class;
 	/** The default port number on which to listen. */
 	public static final int DEFAULT_PORT = 51015;
 
 	private int ups;
-	private Class<? extends Connection> handlerClass;
 	private int port;
 	private KeyPair keyPair;
 	private Class<? extends ServerMessageContext> contextClass;
@@ -29,35 +24,19 @@ public class ServerInit
 	 */
 	public ServerInit() {
 		ups = DEFAULT_UPS;
-		handlerClass = DEFAULT_CLASS;
 		port = DEFAULT_PORT;
 	}
 
 	/**
 	 * Construct a copy of the given ServerInit.
 	 *
-	 * @param s The ServerInit to copy.
+	 * @param init The ServerInit to copy.
 	 */
-	public ServerInit(ServerInit s) {
-		setUps(s.getUps());
-		setPort(s.getPort());
-		setHandlerClass(s.getHandlerClass());
-		setKeyPair(s.getKeyPair());
+	public ServerInit(ServerInit init) {
+		this.ups = init.getUps();
+		this.port = init.getPort();
+		this.keyPair = init.getKeyPair();
 	}
-
-	/**
-	 * Get the class of ClientHandler to be used by the server.
-	 *
-	 * @return The class of ClientHandler to be used by the server.
-	 */
-	public Class<? extends Connection> getHandlerClass() { return handlerClass; }
-
-	/**
-	 * Set the class of ClientHanlder to be used by the server.
-	 *
-	 * @param handlerClass The class of the ClientHandler to be used by the server.
-	 */
-	public void setHandlerClass(Class<? extends Connection> handlerClass) { this.handlerClass = handlerClass; }
 
 	/**
 	 * Get the port number on which the server will listen.
@@ -101,10 +80,19 @@ public class ServerInit
 	 */
 	public void setKeyPair(KeyPair keyPair) { this.keyPair = keyPair; }
 
+	/**
+	 * Get the class of the MessageContext that will be used by connections to the server.
+	 *
+	 * @return The context class.
+	 */
 	public Class<? extends ServerMessageContext> getContextClass() {
 		return contextClass;
 	}
 
+	/**
+	 * Set the class of the MessageContext that will be used by connections to the server.
+	 * @param contextClass The context class.
+	 */
 	public void setContextClass(Class<? extends ServerMessageContext> contextClass) {
 		this.contextClass = contextClass;
 	}

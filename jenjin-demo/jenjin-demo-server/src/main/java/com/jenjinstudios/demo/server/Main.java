@@ -42,7 +42,6 @@ public class Main
 
 	private static WorldServer createWorldServer() throws Exception {
 		ServerInit serverInit = new ServerInit();
-		serverInit.setHandlerClass(com.jenjinstudios.core.Connection.class);
 		serverInit.setContextClass(WorldServerMessageContext.class);
 		Connection sqlConnection = createDemoConnection();
 		UserLookup<Player> userLookup = new PlayerTable(sqlConnection);
