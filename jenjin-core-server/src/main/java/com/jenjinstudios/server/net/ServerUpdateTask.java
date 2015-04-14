@@ -74,5 +74,4 @@ public class ServerUpdateTask implements Runnable
 
 	private int getCycleArrayIndex() { return Math.abs(cycleNum) % lastCycles.length; }
 
-	public long getCycleStartTime() { return cycleStart; }
 }
