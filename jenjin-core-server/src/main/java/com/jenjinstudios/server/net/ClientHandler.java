@@ -15,22 +15,17 @@ import java.util.logging.Logger;
 public class ClientHandler<T extends ServerMessageContext> extends Connection<T>
 {
     private static final Logger LOGGER = Logger.getLogger(ClientHandler.class.getName());
-    /** The server. */
-	private final Server server;
 
 	/**
 	 * Construct a new Client Handler using the given socket.  When constructing a new ClientHandler, it is necessary to
      * send the client a FirstConnectResponse message with the server's UPS
-     *
-     * @param s The server for which this handler works.
 	 * @param messageStreamPair The MessageIO used to send and receive messages.
 	 * @param context The context in which messages should be executed.
 	 */
-	public ClientHandler(Server s, MessageStreamPair messageStreamPair, T context) {
+	public ClientHandler(MessageStreamPair messageStreamPair, T context) {
 		super(messageStreamPair, context);
 		getMessageContext().setName("ClientHandler " + getId());
-		server = s;
-    }
+	}
 
 	/** Shut down the client handler. */
 	@Override
@@ -47,12 +42,5 @@ public class ClientHandler<T extends ServerMessageContext> extends Connection<T>
         }
 		super.shutdown();
 	}
-
-	/**
-	 * The server.
-     *
-     * @return The server for which this client handler works.
-     */
-	public Server getServer() { return server; }
 
 }

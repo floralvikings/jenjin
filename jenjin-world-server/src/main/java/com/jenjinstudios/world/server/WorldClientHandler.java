@@ -34,7 +34,7 @@ public class WorldClientHandler extends ClientHandler<WorldServerMessageContext>
 	 */
 	public WorldClientHandler(WorldServer server, MessageStreamPair messageStreamPair, WorldServerMessageContext
 		  context) {
-		super(server, messageStreamPair, context);
+		super(messageStreamPair, context);
 		updateTimer.schedule(updateTask, 0, 10);
 	}
 

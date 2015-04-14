@@ -31,7 +31,7 @@ public class ClientHandlerTest extends PowerMockTestCase
 		ServerMessageContext context = new ServerMessageContext();
 		when(server.getAuthenticator()).thenReturn(authenticator);
 
-		ClientHandler clientHandler = new ClientHandler(server, messageStreamPair, context);
+		ClientHandler clientHandler = new ClientHandler(messageStreamPair, context);
 		context.setUser(user);
 		clientHandler.shutdown();
 
