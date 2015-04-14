@@ -11,22 +11,22 @@ import java.util.stream.Collectors;
  *
  * @author Caleb Brinkman
  */
-public class ConnectionPool<T extends Connection>
+public class ConnectionPool
 {
-	private final Map<String, T> connections = new HashMap<>(1);
+	private final Map<String, Connection> connections = new HashMap<>(1);
 	private final Timer cleanupTimer = new Timer("Connection Pool Cleanup Timer");
 	private final Timer updateTimer = new Timer("Connection Pool Update Timer");
 	private final TimerTask cleanupTask = new CleanupTask();
 	private final UpdateAllTask updateAllTask = new UpdateAllTask();
-	private final Collection<ShutdownTask<T>> shutdownTasks = new ConcurrentLinkedQueue<>();
-	private final Collection<UpdateTask<T>> updateTasks = new ConcurrentLinkedQueue<>();
+	private final Collection<ShutdownTask<Connection>> shutdownTasks = new ConcurrentLinkedQueue<>();
+	private final Collection<UpdateTask<Connection>> updateTasks = new ConcurrentLinkedQueue<>();
 
 	/**
 	 * Add a connection to the pool.
 	 *
 	 * @param connection The connection to add.
 	 */
-	public void addConnection(T connection)
+	public void addConnection(Connection connection)
 	{
 		synchronized (connections)
 		{
@@ -39,7 +39,7 @@ public class ConnectionPool<T extends Connection>
 	 *
 	 * @param connection The connection to remove.
 	 */
-	public void removeConnection(T connection)
+	public void removeConnection(Connection connection)
 	{
 		synchronized (connections)
 		{
@@ -76,7 +76,7 @@ public class ConnectionPool<T extends Connection>
 	 *
 	 * @param task The task to be executed by each connection on shutdown.
 	 */
-	public void addShutdownTask(ShutdownTask<T> task) {
+	public void addShutdownTask(ShutdownTask<Connection> task) {
 		shutdownTasks.add(task);
 	}
 
@@ -85,7 +85,7 @@ public class ConnectionPool<T extends Connection>
 	 *
 	 * @param task The task to be executed.
 	 */
-	public void addUpdateTask(UpdateTask<T> task) {
+	public void addUpdateTask(UpdateTask<Connection> task) {
 		updateTasks.add(task);
 	}
 
@@ -101,7 +101,7 @@ public class ConnectionPool<T extends Connection>
 	{
 		@Override
 		public void run() {
-			List<T> shutdown;
+			List<Connection> shutdown;
 			synchronized (connections)
 			{
 				shutdown = connections.values().stream().
