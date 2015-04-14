@@ -6,26 +6,16 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- * Implements the update loop in the form of a TimerTask.
- * @author Caleb Brinkman
- */
 public class ServerUpdateTask implements Runnable
 {
-	/** The logger for this class. */
 	private static final Logger LOGGER = Logger.getLogger(ServerUpdateTask.class.getName());
 	private final List<Runnable> repeatedTasks;
 	private final Deque<Runnable> syncedTasks;
 	private static final double MILLIS_IN_SECOND = 1000.0d;
-	/** The time in nanoseconds of the last 50 update cycles. */
 	private final double[] lastCycles;
-	/** The server for which this loop runs. */
 	private final Server server;
-	/** The start time, in nanoseconds, of the current cycle. */
 	private volatile long cycleStart = 0;
-	/** The current cycle number. */
 	private int cycleNum;
-	/** The actual average UPS of this server. */
 	private double averageUPS;
 
 	/**
@@ -59,7 +49,6 @@ public class ServerUpdateTask implements Runnable
 		}
 	}
 
-	/** Run the repeated tasks in the server queue. */
 	private void runRepeatedTasks() {
 		try
 		{
@@ -73,7 +62,6 @@ public class ServerUpdateTask implements Runnable
 		}
 	}
 
-	/** Run the synchronized tasks in the server queue. */
 	private void runSynchronizedTasks() {
 		try
 		{
@@ -87,7 +75,6 @@ public class ServerUpdateTask implements Runnable
 		}
 	}
 
-	/** Called at the beginning of a new server update cycle. */
 	private void startNewCycle() {
 		long oldCycleStart = cycleStart == 0 ? System.currentTimeMillis() - 1000 / server.getUps() : cycleStart;
 		cycleStart = System.currentTimeMillis();
