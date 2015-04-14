@@ -1,7 +1,6 @@
 package com.jenjinstudios.world.server.message;
 
 import com.jenjinstudios.core.io.Message;
-import com.jenjinstudios.core.io.MessageStreamPair;
 import com.jenjinstudios.server.authentication.Authenticator;
 import com.jenjinstudios.server.authentication.BasicUser;
 import com.jenjinstudios.server.authentication.User;
@@ -10,7 +9,6 @@ import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.collections.WorldObjectList;
 import com.jenjinstudios.world.math.Vector2D;
 import com.jenjinstudios.world.server.Player;
-import com.jenjinstudios.world.server.WorldClientHandler;
 import com.jenjinstudios.world.server.WorldServer;
 import com.jenjinstudios.world.server.WorldServerMessageContext;
 import org.mockito.Matchers;
@@ -48,10 +46,8 @@ public class ExecutableWorldLoginRequestTest extends PowerMockTestCase
 		Authenticator<Player> authenticator = mock(Authenticator.class);
 		WorldServer server = mock(WorldServer.class);
 		WorldObjectList worldObjectMap = mock(WorldObjectList.class);
-		MessageStreamPair messageStreamPair = mock(MessageStreamPair.class);
 		ServerUpdateTask serverUpdateTask = mock(ServerUpdateTask.class);
 		WorldServerMessageContext context = mock(WorldServerMessageContext.class);
-		WorldClientHandler wch = new WorldClientHandler(messageStreamPair, context);
 
 		when(server.getServerUpdateTask()).thenReturn(serverUpdateTask);
 		when(world.getWorldObjects()).thenReturn(worldObjectMap);
