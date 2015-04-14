@@ -54,7 +54,6 @@ public class ExecutableWorldLoginRequestTest extends PowerMockTestCase
 		WorldClientHandler wch = new WorldClientHandler(server, messageStreamPair, context);
 
 		when(server.getServerUpdateTask()).thenReturn(serverUpdateTask);
-		when(serverUpdateTask.getCycleStartTime()).thenReturn(0L);
 		when(world.getWorldObjects()).thenReturn(worldObjectMap);
 		when(user.isLoggedIn()).thenReturn(true);
 		when(authenticator.logInUser(Matchers.anyString(), Matchers.anyString())).thenReturn(player);
