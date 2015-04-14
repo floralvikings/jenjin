@@ -1,4 +1,6 @@
-package com.jenjinstudios.core.concurrency;
+package com.jenjinstudios.server.concurrency;
+
+import com.jenjinstudios.core.concurrency.MessageThreadPool;
 
 /**
  * Used to represent a task which will be invoked when a thread pool is shut down.

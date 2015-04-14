@@ -1,7 +1,6 @@
 package com.jenjinstudios.server.concurrency;
 
 import com.jenjinstudios.core.Connection;
-import com.jenjinstudios.core.concurrency.ShutdownTask;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
