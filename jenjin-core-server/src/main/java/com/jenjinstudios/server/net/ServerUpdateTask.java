@@ -14,7 +14,7 @@ public class ServerUpdateTask implements Runnable
 	private static final double MILLIS_IN_SECOND = 1000.0d;
 	private final double[] lastCycles;
 	private final Server server;
-	private volatile long cycleStart = 0;
+	private long cycleStart;
 	private int cycleNum;
 	private double averageUPS;
 
