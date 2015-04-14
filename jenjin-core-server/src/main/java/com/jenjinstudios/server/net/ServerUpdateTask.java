@@ -90,8 +90,7 @@ public class ServerUpdateTask implements Runnable
 	}
 
 	private double ceilNumCycles() {
-		return cycleNum < 1 || cycleNum > lastCycles.length ?
-			  lastCycles.length : cycleNum;
+		return ((cycleNum < 1) || (cycleNum > lastCycles.length)) ? lastCycles.length : cycleNum;
 	}
 
 	public void addRepeatedTask(Runnable r) {
