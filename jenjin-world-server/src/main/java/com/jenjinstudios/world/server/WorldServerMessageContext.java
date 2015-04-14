@@ -15,6 +15,7 @@ public class WorldServerMessageContext extends ServerMessageContext<Player>
 	private World world;
 	private byte[] worldChecksum;
 	private byte[] worldBytes;
+	private boolean needsToSendSpeedMessage;
 
 	/**
 	 * Get the world managed by this context.
@@ -57,4 +58,18 @@ public class WorldServerMessageContext extends ServerMessageContext<Player>
 	 * @param worldBytes The bytes.
 	 */
 	public void setWorldBytes(byte[] worldBytes) { this.worldBytes = worldBytes; }
+
+	/**
+	 * Get whether the movement speed message needs to be sent.
+	 *
+	 * @return Whether the movement speed message needs to be sent.
+	 */
+	public boolean needsToSendSpeedMessage() { return needsToSendSpeedMessage; }
+
+	/**
+	 * Set whether the movement speed message needs to be sent.
+	 *
+	 * @param needs Whether the movememnt speed message needs to be sent.
+	 */
+	public void setNeedsToSendSpeedMessage(boolean needs) { this.needsToSendSpeedMessage = needs; }
 }
