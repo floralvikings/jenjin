@@ -5,6 +5,7 @@ import com.jenjinstudios.core.io.MessageStreamPair;
 
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -17,6 +18,7 @@ import java.util.logging.Logger;
 public class MessageThreadPool<T extends MessageContext>
 {
 	private static final Logger LOGGER = Logger.getLogger(MessageThreadPool.class.getName());
+	private final String id = UUID.randomUUID().toString();
 	private final MessageStreamPair messageStreamPair;
 	private final MessageExecutor messageExecutor;
 	private final MessageReader messageReader;
@@ -81,6 +83,13 @@ public class MessageThreadPool<T extends MessageContext>
 	 * @param message The message to be sent.
 	 */
 	public void enqueueMessage(Message message) { messageContext.enqueue(message); }
+
+	/**
+	 * Get the unique ID of this MessageThreadPool.
+	 *
+	 * @return The unique ID of this MessageThreadPool.
+	 */
+	public String getId() { return id; }
 
 	/**
 	 * Get the messages received by the MessageReader since the last time this method was called.
