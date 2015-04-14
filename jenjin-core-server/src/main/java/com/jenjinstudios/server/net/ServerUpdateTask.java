@@ -61,13 +61,6 @@ public class ServerUpdateTask implements Runnable
 	}
 
 	private void update() {
-		try
-		{
-			server.update();
-		} catch (Exception ex)
-		{
-			LOGGER.log(Level.WARNING, "Exception when updating server", ex);
-		}
 	}
 
 	/** Run the repeated tasks in the server queue. */
