@@ -17,8 +17,6 @@ public class ClientHandler<T extends ServerMessageContext> extends Connection<T>
     private static final Logger LOGGER = Logger.getLogger(ClientHandler.class.getName());
     /** The server. */
 	private final Server server;
-	/** The id of the client handler. */
-	private int handlerId = -1;
 
 	/**
 	 * Construct a new Client Handler using the given socket.  When constructing a new ClientHandler, it is necessary to
