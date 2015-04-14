@@ -11,6 +11,7 @@ import com.jenjinstudios.world.state.MoveState;
 
 import java.util.List;
 import java.util.Set;
+import java.util.Timer;
 import java.util.TimerTask;
 
 /**
@@ -21,28 +22,22 @@ import java.util.TimerTask;
 public class WorldClientHandler extends ClientHandler<WorldServerMessageContext>
 {
 	private boolean hasSentActorStepMessage;
+	private final TimerTask updateTask = new UpdateTask();
+	private final Timer updateTimer = new Timer();
 
 	public WorldClientHandler(WorldServer s, MessageStreamPair messageStreamPair, WorldServerMessageContext context) {
 		super(s, messageStreamPair, context);
+		updateTimer.schedule(updateTask, 0, 10);
+	}
+
+	@Override
+	public void shutdown() {
+		updateTimer.cancel();
+		super.shutdown();
 	}
 
 	@Override
 	public void update() {
-		super.update();
-		if (getMessageContext().getUser() != null)
-		{
-			if (!hasSentActorStepMessage)
-			{
-				double moveSpeed = getMessageContext().getUser().getMoveSpeed();
-				Message message = WorldServerMessageFactory.generateActorMoveSpeedMessage(moveSpeed);
-				enqueueMessage(message);
-				hasSentActorStepMessage = true;
-			}
-			queueForcesStateMessage();
-			queueNewlyVisibleMessages();
-			queueNewlyInvisibleMessages();
-			queueStateChangeMessages();
-		}
 	}
 
 	public Player getUser() { return getMessageContext().getUser(); }
