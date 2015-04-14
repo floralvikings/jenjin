@@ -1,6 +1,7 @@
 package com.jenjinstudios.server.concurrency;
 
 import com.jenjinstudios.core.Connection;
+import com.jenjinstudios.core.concurrency.MessageContext;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -11,22 +12,22 @@ import java.util.stream.Collectors;
  *
  * @author Caleb Brinkman
  */
-public class ConnectionPool
+public class ConnectionPool<T extends MessageContext>
 {
-	private final Map<String, Connection> connections = new HashMap<>(1);
+	private final Map<String, Connection<? extends T>> connections = new HashMap<>(1);
 	private final Timer cleanupTimer = new Timer("Connection Pool Cleanup Timer");
 	private final Timer updateTimer = new Timer("Connection Pool Update Timer");
 	private final TimerTask cleanupTask = new CleanupTask();
 	private final UpdateAllTask updateAllTask = new UpdateAllTask();
-	private final Collection<ShutdownTask<Connection>> shutdownTasks = new ConcurrentLinkedQueue<>();
-	private final Collection<UpdateTask<Connection>> updateTasks = new ConcurrentLinkedQueue<>();
+	private final Collection<ShutdownTask<T>> shutdownTasks = new ConcurrentLinkedQueue<>();
+	private final Collection<UpdateTask<T>> updateTasks = new ConcurrentLinkedQueue<>();
 
 	/**
 	 * Add a connection to the pool.
 	 *
 	 * @param connection The connection to add.
 	 */
-	public void addConnection(Connection connection)
+	public void addConnection(Connection<? extends T> connection)
 	{
 		synchronized (connections)
 		{
@@ -76,7 +77,7 @@ public class ConnectionPool
 	 *
 	 * @param task The task to be executed by each connection on shutdown.
 	 */
-	public void addShutdownTask(ShutdownTask<Connection> task) {
+	public void addShutdownTask(ShutdownTask<T> task) {
 		shutdownTasks.add(task);
 	}
 
@@ -85,7 +86,7 @@ public class ConnectionPool
 	 *
 	 * @param task The task to be executed.
 	 */
-	public void addUpdateTask(UpdateTask<Connection> task) {
+	public void addUpdateTask(UpdateTask<T> task) {
 		updateTasks.add(task);
 	}
 

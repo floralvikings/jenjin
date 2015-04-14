@@ -1,6 +1,7 @@
 package com.jenjinstudios.server.net;
 
 import com.jenjinstudios.core.Connection;
+import com.jenjinstudios.core.concurrency.MessageContext;
 import com.jenjinstudios.core.io.MessageInputStream;
 import com.jenjinstudios.core.io.MessageOutputStream;
 import com.jenjinstudios.core.io.MessageStreamPair;
@@ -19,10 +20,10 @@ import java.util.logging.Logger;
  * Listens for incoming client connections on behalf of a Server.
  * @author Caleb Brinkman
  */
-class ClientListener implements Runnable
+class ClientListener<T extends MessageContext> implements Runnable
 {
 	private static final Logger LOGGER = Logger.getLogger(ClientListener.class.getName());
-	private final Class<? extends ServerMessageContext> contextClass;
+	private final Class<? extends T> contextClass;
 	private final int port;
 	private final LinkedList<Connection> newConnections;
 	private volatile boolean listening;
@@ -33,7 +34,7 @@ class ClientListener implements Runnable
 	 * @throws IOException If there is an error listening on the port.
 	 * constructor.
 	 */
-	ClientListener(Class<? extends ServerMessageContext> contextClass, int port) throws IOException
+	ClientListener(Class<? extends T> contextClass, int port) throws IOException
 	{
 		this.contextClass = contextClass;
 		this.port = port;
@@ -96,7 +97,7 @@ class ClientListener implements Runnable
 	 * Add a new Client using the specified socket as a connection.
 	 */
 	private void addNewClient(MessageInputStream in, MessageOutputStream out) {
-		ServerMessageContext context = null;
+		T context = null;
 		try
 		{
 			context = contextClass.getConstructor().newInstance();
@@ -108,8 +109,7 @@ class ClientListener implements Runnable
 		if (context != null)
 		{
 			MessageStreamPair messageStreamPair = new MessageStreamPair(in, out);
-			// TODO Re-generify with context instead of handler class
-			Connection newHandler = new Connection(messageStreamPair, context);
+			Connection<T> newHandler = new Connection<>(messageStreamPair, context);
 			addNewClient(newHandler);
 		}
 	}

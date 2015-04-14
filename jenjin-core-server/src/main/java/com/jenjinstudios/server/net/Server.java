@@ -17,7 +17,7 @@ import java.util.logging.Logger;
 public class Server<T extends ServerMessageContext>
 {
 	private static final Logger LOGGER = Logger.getLogger(Server.class.getName());
-	private final ConnectionPool connectionPool;
+	private final ConnectionPool<T> connectionPool;
 	private final int UPS;
 	private final int PERIOD;
 	private final Authenticator authenticator;
@@ -29,8 +29,8 @@ public class Server<T extends ServerMessageContext>
 	protected Server(ServerInit initInfo, Authenticator authenticator) throws IOException, NoSuchMethodException {
         LOGGER.log(Level.FINE, "Initializing Server.");
         UPS = initInfo.getUps();
-		connectionPool = new ConnectionPool();
-		connectionPool.addShutdownTask(new EmergencyLogoutTask<>());
+		connectionPool = new ConnectionPool<>();
+		connectionPool.addShutdownTask(new EmergencyLogoutTask<T>());
 		PERIOD = 1000 / UPS;
 		Class<? extends ServerMessageContext> contextClass = initInfo.getContextClass();
 		//noinspection unchecked
@@ -84,6 +84,6 @@ public class Server<T extends ServerMessageContext>
 			loopTimer.shutdown();
 	}
 
-	protected ConnectionPool getConnectionPool() { return connectionPool; }
+	protected ConnectionPool<T> getConnectionPool() { return connectionPool; }
 
 }

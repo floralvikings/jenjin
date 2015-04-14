@@ -17,10 +17,10 @@ import java.util.Set;
  *
  * @author Caleb Brinkman
  */
-public class ClientHandlerUpdateTask<T extends Connection<? extends WorldServerMessageContext>> implements UpdateTask<T>
+public class ConnectionWorldUpdateTask<T extends WorldServerMessageContext> implements UpdateTask<T>
 {
 	@Override
-	public void update(T connection) {
+	public void update(Connection<? extends T> connection) {
 		WorldServerMessageContext context = connection.getMessageContext();
 		if (context.getUser() != null)
 		{
@@ -38,7 +38,7 @@ public class ClientHandlerUpdateTask<T extends Connection<? extends WorldServerM
 		}
 	}
 
-	private void queueNewlyVisibleMessages(T connection) {
+	private void queueNewlyVisibleMessages(Connection<? extends T> connection) {
 		Object o = connection.getMessageContext().getUser().getPreUpdateEvent(Vision.EVENT_NAME);
 		if (o instanceof Vision)
 		{
@@ -51,7 +51,7 @@ public class ClientHandlerUpdateTask<T extends Connection<? extends WorldServerM
 		}
 	}
 
-	private void queueNewlyInvisibleMessages(T connection) {
+	private void queueNewlyInvisibleMessages(Connection<? extends T> connection) {
 		Object o = connection.getMessageContext().getUser().getPreUpdateEvent(Vision.EVENT_NAME);
 		if (o instanceof Vision)
 		{
@@ -64,7 +64,7 @@ public class ClientHandlerUpdateTask<T extends Connection<? extends WorldServerM
 		}
 	}
 
-	private void queueStateChangeMessages(T connection) {
+	private void queueStateChangeMessages(Connection<? extends T> connection) {
 		Object o = connection.getMessageContext().getUser().getPreUpdateEvent(Vision.EVENT_NAME);
 		if (o instanceof Vision)
 		{
@@ -75,12 +75,12 @@ public class ClientHandlerUpdateTask<T extends Connection<? extends WorldServerM
 		}
 	}
 
-	private void queueActorStateChangeMessages(T connection, Actor object) {
+	private void queueActorStateChangeMessages(Connection<? extends T> connection, Actor object) {
 		List<Message> newState = WorldServerMessageFactory.generateChangeStateMessages(object);
 		newState.forEach(connection::enqueueMessage);
 	}
 
-	private void queueForcesStateMessage(T connection) {
+	private void queueForcesStateMessage(Connection<? extends T> connection) {
 		MoveState forcedState = connection.getMessageContext().getUser().getForcedState();
 		if (forcedState != null)
 			connection.enqueueMessage(WorldServerMessageFactory.generateForcedStateMessage(forcedState));

@@ -19,7 +19,7 @@ import java.io.InputStream;
  * The WorldServer class is responsible for updating a game world.
  * @author Caleb Brinkman
  */
-public class WorldServer<T extends Connection<WorldServerMessageContext>> extends Server<T>
+public class WorldServer<T extends WorldServerMessageContext> extends Server<T>
 {
 	private final World world;
 	private final byte[] worldFileChecksum;
@@ -55,14 +55,8 @@ public class WorldServer<T extends Connection<WorldServerMessageContext>> extend
 			  getResourceAsStream("com/jenjinstudios/world/server/Messages.xml");
 		MessageRegistry.getGlobalRegistry().register("World Client/Server Messages", stream);
 
-		getConnectionPool().addUpdateTask(new ClientHandlerUpdateTask<T>()::update);
-		getConnectionPool().addShutdownTask(connection -> {
-			Player user = connection.getMessageContext().getUser();
-			if (user != null)
-			{
-				world.getWorldObjects().remove(user.getId());
-			}
-		});
+		getConnectionPool().addUpdateTask(new ConnectionWorldUpdateTask<>());
+		getConnectionPool().addShutdownTask(new ConnectionWorldShutdownTask<>(world));
 	}
 
 	public World getWorld() { return world; }
@@ -82,7 +76,7 @@ public class WorldServer<T extends Connection<WorldServerMessageContext>> extend
 	public byte[] getWorldFileBytes() { return worldFileBytes; }
 
 	@Override
-	public void clientHandlerAdded(T h) {
+	public void clientHandlerAdded(Connection<? extends T> h) {
 		super.clientHandlerAdded(h);
 		h.getMessageContext().setWorld(world);
 		h.getMessageContext().setWorldChecksum(worldFileChecksum);
