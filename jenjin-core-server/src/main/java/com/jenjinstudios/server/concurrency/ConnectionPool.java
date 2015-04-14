@@ -15,8 +15,11 @@ public class ConnectionPool<T extends Connection>
 {
 	private final Map<String, T> connections = new HashMap<>(1);
 	private final Timer cleanupTimer = new Timer("Connection Pool Cleanup Timer");
+	private final Timer updateTimer = new Timer("Connection Pool Update Timer");
 	private final TimerTask cleanupTask = new CleanupTask();
+	private final UpdateAllTask updateAllTask = new UpdateAllTask();
 	private final Collection<ShutdownTask<T>> shutdownTasks = new ConcurrentLinkedQueue<>();
+	private final Collection<UpdateTask<T>> updateTasks = new ConcurrentLinkedQueue<>();
 
 	/**
 	 * Add a connection to the pool.
@@ -78,10 +81,20 @@ public class ConnectionPool<T extends Connection>
 	}
 
 	/**
+	 * Add a task to be executed repeatedly, at intervals, on each connection.
+	 *
+	 * @param task The task to be executed.
+	 */
+	public void addUpdateTask(UpdateTask<T> task) {
+		updateTasks.add(task);
+	}
+
+	/**
 	 * Start maintanence threads; responsible for updating and removing connections that have been added and shut down.
 	 */
 	public void start() {
 		cleanupTimer.schedule(cleanupTask, 0, 100);
+		updateTimer.schedule(updateAllTask, 0, 10);
 	}
 
 	private class CleanupTask extends TimerTask
@@ -96,6 +109,19 @@ public class ConnectionPool<T extends Connection>
 					  collect(Collectors.toList());
 			}
 			shutdown.forEach(ConnectionPool.this::removeConnection);
+		}
+	}
+
+	private class UpdateAllTask extends TimerTask
+	{
+		@Override
+		public void run() {
+			synchronized (connections)
+			{
+				connections.values().stream().forEach(connection ->
+					  updateTasks.forEach(task ->
+							task.update(connection)));
+			}
 		}
 	}
 }
