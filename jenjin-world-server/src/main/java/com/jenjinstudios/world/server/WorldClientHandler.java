@@ -11,6 +11,7 @@ import com.jenjinstudios.world.state.MoveState;
 
 import java.util.List;
 import java.util.Set;
+import java.util.TimerTask;
 
 /**
  * Handles clients for a world server.
@@ -93,5 +94,26 @@ public class WorldClientHandler extends ClientHandler<WorldServerMessageContext>
 		MoveState forcedState = getMessageContext().getUser().getForcedState();
 		if (forcedState != null)
 			enqueueMessage(WorldServerMessageFactory.generateForcedStateMessage(forcedState));
+	}
+
+	private class UpdateTask extends TimerTask
+	{
+		@Override
+		public void run() {
+			if (getMessageContext().getUser() != null)
+			{
+				if (!hasSentActorStepMessage)
+				{
+					double moveSpeed = getMessageContext().getUser().getMoveSpeed();
+					Message message = WorldServerMessageFactory.generateActorMoveSpeedMessage(moveSpeed);
+					enqueueMessage(message);
+					hasSentActorStepMessage = true;
+				}
+				queueForcesStateMessage();
+				queueNewlyVisibleMessages();
+				queueNewlyInvisibleMessages();
+				queueStateChangeMessages();
+			}
+		}
 	}
 }
