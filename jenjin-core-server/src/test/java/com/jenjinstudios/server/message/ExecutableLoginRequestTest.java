@@ -72,14 +72,11 @@ public class ExecutableLoginRequestTest
 		user.setUsername("foo");
 		user.setUsername("bar");
 		user.setLoggedIn(true);
-		ClientHandler clientHandler = mock(ClientHandler.class);
 		Authenticator<BasicUser> authenticator = mock(Authenticator.class);
-		MessageStreamPair messageStreamPair = mock(MessageStreamPair.class);
 		ServerMessageContext context = mock(ServerMessageContext.class);
 		when(context.getAuthenticator()).thenReturn(authenticator);
 		when(authenticator.logInUser("foo", "bar")).thenReturn(user);
 		when(authenticator.logInUser("foo-dapoo", "bar")).thenThrow(new AuthenticationException("Nope"));
-		when(clientHandler.getMessageStreamPair()).thenReturn(messageStreamPair);
 
 		ExecutableLoginRequest exec = new ExecutableLoginRequest(message, context);
 		exec.execute();
