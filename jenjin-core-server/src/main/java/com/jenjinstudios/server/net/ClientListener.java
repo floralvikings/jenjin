@@ -6,7 +6,6 @@ import com.jenjinstudios.core.io.MessageOutputStream;
 import com.jenjinstudios.core.io.MessageStreamPair;
 
 import java.io.IOException;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -20,39 +19,26 @@ import java.util.logging.Logger;
  * Listens for incoming client connections on behalf of a Server.
  * @author Caleb Brinkman
  */
-class ClientListener<T extends Connection> implements Runnable
+class ClientListener implements Runnable
 {
 	private static final Logger LOGGER = Logger.getLogger(ClientListener.class.getName());
 	private final Class<? extends ServerMessageContext> contextClass;
 	private final int port;
-	private final LinkedList<T> newClientHandlers;
+	private final LinkedList<Connection> newConnections;
 	private volatile boolean listening;
 	private final ServerSocket serverSock;
-	private final Constructor<? extends T> handlerConstructor;
 
 	/**
 	 * Construct a new ClientListener for the given server on the given port.
 	 * @throws IOException If there is an error listening on the port.
-	 * @throws NoSuchMethodException If there is no appropriate constructor for the specified ClientHandler
 	 * constructor.
 	 */
-	ClientListener(Class<? extends T> handlerClass,
-				   Class<? extends ServerMessageContext> contextClass, int port) throws IOException,
-		  NoSuchMethodException
+	ClientListener(Class<? extends ServerMessageContext> contextClass, int port) throws IOException
 	{
 		this.contextClass = contextClass;
 		this.port = port;
-		try
-		{
-			handlerConstructor = handlerClass.getConstructor(MessageStreamPair.class, contextClass);
-		} catch (NoSuchMethodException e)
-		{
-			LOGGER.log(Level.SEVERE, "Unable to find appropriate ClientHandler constructor: " + handlerClass.getName()
-				  , e);
-			throw e;
-		}
 		listening = false;
-		newClientHandlers = new LinkedList<>();
+		newConnections = new LinkedList<>();
 		LOGGER.log(Level.FINEST, "Opening socket on port: {0}", this.port);
 		serverSock = new ServerSocket(this.port);
 	}
@@ -61,15 +47,15 @@ class ClientListener<T extends Connection> implements Runnable
 	 * Get the new clients accrued since the last check.
 	 * @return A {@code LinkedList} containing the new clients.
 	 */
-	public Iterable<T> getNewClients() {
-		Collection<T> temp = new LinkedList<>();
-		synchronized (newClientHandlers)
+	public Iterable<Connection> getNewClients() {
+		Collection<Connection> temp = new LinkedList<>();
+		synchronized (newConnections)
 		{
-			if (!newClientHandlers.isEmpty())
+			if (!newConnections.isEmpty())
 			{
-				LOGGER.log(Level.FINE, newClientHandlers.peek().toString());
-				temp = new LinkedList<>(newClientHandlers);
-				newClientHandlers.removeAll(temp);
+				LOGGER.log(Level.FINE, newConnections.peek().getMessageContext().getName());
+				temp = new LinkedList<>(newConnections);
+				newConnections.removeAll(temp);
 			}
 		}
 		return temp;
@@ -86,9 +72,8 @@ class ClientListener<T extends Connection> implements Runnable
 
 	/**
 	 * Listen for clients in a new thread. If already listening this method does nothing.
-	 * @param tServer The server
 	 */
-	public void startListening(Server tServer) {
+	public void startListening() {
 		if (!listening)
 		{
 			listening = true;
@@ -100,10 +85,10 @@ class ClientListener<T extends Connection> implements Runnable
 	 * Add a new client to the list of new clients.
 	 * @param h The handler for the new client.
 	 */
-	void addNewClient(T h) {
-		synchronized (newClientHandlers)
+	void addNewClient(Connection h) {
+		synchronized (newConnections)
 		{
-			newClientHandlers.add(h);
+			newConnections.add(h);
 		}
 	}
 
@@ -122,18 +107,10 @@ class ClientListener<T extends Connection> implements Runnable
 
 		if (context != null)
 		{
-			try
-			{
-				MessageStreamPair messageStreamPair = new MessageStreamPair(in, out);
-				T newHandler = handlerConstructor.newInstance(messageStreamPair, context);
-				addNewClient(newHandler);
-			} catch (InstantiationException | IllegalAccessException e)
-			{
-				LOGGER.log(Level.SEVERE, "Unable to instantiate client handler:", e);
-			} catch (InvocationTargetException e)
-			{
-				LOGGER.log(Level.SEVERE, "Unable to instantiate client handler:", e.getCause());
-			}
+			MessageStreamPair messageStreamPair = new MessageStreamPair(in, out);
+			// TODO Re-generify with context instead of handler class
+			Connection newHandler = new Connection(messageStreamPair, context);
+			addNewClient(newHandler);
 		}
 	}
 

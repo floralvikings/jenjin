@@ -35,7 +35,7 @@ public class Server<T extends Connection<? extends ServerMessageContext>>
 		Class handlerClass = initInfo.getHandlerClass();
 		Class<? extends ServerMessageContext> contextClass = initInfo.getContextClass();
 		//noinspection unchecked
-		clientListener = new ClientListener<>(handlerClass, contextClass, initInfo.getPort());
+		clientListener = new ClientListener<>(contextClass, initInfo.getPort());
 		rsaKeyPair = (initInfo.getKeyPair() == null) ? Connection.generateRSAKeyPair() : initInfo.getKeyPair();
 		this.authenticator = authenticator;
 		InputStream stream = getClass().getClassLoader().getResourceAsStream("com/jenjinstudios/server/Messages.xml");
@@ -69,7 +69,7 @@ public class Server<T extends Connection<? extends ServerMessageContext>>
 	 * Start listening for and maintaining connections.
 	 */
 	public void start() {
-		clientListener.startListening(this);
+		clientListener.startListening();
 
 		serverUpdateTask = new ServerUpdateTask(this);
 
