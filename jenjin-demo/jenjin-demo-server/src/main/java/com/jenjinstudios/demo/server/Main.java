@@ -6,7 +6,6 @@ import com.jenjinstudios.server.authentication.UserLookup;
 import com.jenjinstudios.server.net.ServerInit;
 import com.jenjinstudios.world.io.WorldDocumentReader;
 import com.jenjinstudios.world.server.Player;
-import com.jenjinstudios.world.server.WorldClientHandler;
 import com.jenjinstudios.world.server.WorldServer;
 import com.jenjinstudios.world.server.WorldServerMessageContext;
 import com.jenjinstudios.world.server.sql.PlayerTable;
@@ -43,7 +42,7 @@ public class Main
 
 	private static WorldServer createWorldServer() throws Exception {
 		ServerInit serverInit = new ServerInit();
-		serverInit.setHandlerClass(WorldClientHandler.class);
+		serverInit.setHandlerClass(com.jenjinstudios.core.Connection.class);
 		serverInit.setContextClass(WorldServerMessageContext.class);
 		Connection sqlConnection = createDemoConnection();
 		UserLookup<Player> userLookup = new PlayerTable(sqlConnection);

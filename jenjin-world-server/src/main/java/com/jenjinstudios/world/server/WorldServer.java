@@ -1,5 +1,6 @@
 package com.jenjinstudios.world.server;
 
+import com.jenjinstudios.core.Connection;
 import com.jenjinstudios.core.io.MessageRegistry;
 import com.jenjinstudios.server.authentication.Authenticator;
 import com.jenjinstudios.server.net.Server;
@@ -18,7 +19,7 @@ import java.io.InputStream;
  * The WorldServer class is responsible for updating a game world.
  * @author Caleb Brinkman
  */
-public class WorldServer<T extends WorldClientHandler> extends Server<T>
+public class WorldServer<T extends Connection<WorldServerMessageContext>> extends Server<T>
 {
 	private final World world;
 	private final byte[] worldFileChecksum;
