@@ -57,7 +57,6 @@ public class ClientHandler<T extends ServerMessageContext> extends Connection<T>
                 LOGGER.log(Level.WARNING, "Unable to perform emergency logout.", e);
             }
         }
-        getServer().removeClient(this);
 		super.shutdown();
 	}
 

@@ -78,11 +78,4 @@ public class WorldServer<T extends WorldClientHandler> extends Server<T>
 		h.getMessageContext().setWorldChecksum(worldFileChecksum);
 		h.getMessageContext().setWorldBytes(worldFileBytes);
 	}
-
-	@Override
-	public void removeClient(T handler) {
-		super.removeClient(handler);
-		if (handler.getMessageContext().getUser() != null)
-			world.getWorldObjects().remove(handler.getMessageContext().getUser().getId());
-	}
 }

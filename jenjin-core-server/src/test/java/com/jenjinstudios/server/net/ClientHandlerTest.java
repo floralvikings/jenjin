@@ -36,7 +36,6 @@ public class ClientHandlerTest extends PowerMockTestCase
 		clientHandler.shutdown();
 
 		verify(authenticator).logOutUser(anyString());
-		verify(server).removeClient(clientHandler);
 	}
 
 }

@@ -41,6 +41,10 @@ public class WorldClientHandler extends ClientHandler<WorldServerMessageContext>
 	@Override
 	public void shutdown() {
 		updateTimer.cancel();
+		if (getMessageContext().getUser() != null)
+		{
+			((WorldServer) getServer()).getWorld().getWorldObjects().remove(getMessageContext().getUser().getId());
+		}
 		super.shutdown();
 	}
 

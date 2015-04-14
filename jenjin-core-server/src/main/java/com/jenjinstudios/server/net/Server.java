@@ -3,13 +3,11 @@ package com.jenjinstudios.server.net;
 import com.jenjinstudios.core.Connection;
 import com.jenjinstudios.core.io.MessageRegistry;
 import com.jenjinstudios.server.authentication.Authenticator;
+import com.jenjinstudios.server.concurrency.ConnectionPool;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.KeyPair;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -19,11 +17,11 @@ import java.util.logging.Logger;
 public class Server<T extends ClientHandler<? extends ServerMessageContext>>
 {
 	private static final Logger LOGGER = Logger.getLogger(Server.class.getName());
+	private final ConnectionPool<T> connectionPool = new ConnectionPool<>();
 	private final int UPS;
 	private final int PERIOD;
 	private final Authenticator authenticator;
 	private final ClientListener<T> clientListener;
-	private final Map<Integer, T> clientHandlers;
 	private final KeyPair rsaKeyPair;
 	private ScheduledExecutorService loopTimer;
 	private ServerUpdateTask serverUpdateTask;
@@ -37,7 +35,6 @@ public class Server<T extends ClientHandler<? extends ServerMessageContext>>
 		Class<? extends ServerMessageContext> contextClass = initInfo.getContextClass();
 		//noinspection unchecked
 		clientListener = new ClientListener<>(serverClass, handlerClass, contextClass, initInfo.getPort());
-		clientHandlers = new TreeMap<>();
 		rsaKeyPair = (initInfo.getKeyPair() == null) ? Connection.generateRSAKeyPair() : initInfo
 			  .getKeyPair();
 		this.authenticator = authenticator;
@@ -51,24 +48,14 @@ public class Server<T extends ClientHandler<? extends ServerMessageContext>>
 		Iterable<T> nc = clientListener.getNewClients();
 		for (T h : nc)
 		{
-            addClientHandler(h);
-            h.start();
+			connectionPool.addConnection(h);
+			clientHandlerAdded(h);
+			h.start();
         }
 
     }
 
 	public int getUps() { return UPS; }
-
-	private void addClientHandler(T h) {
-		int nullIndex = 0;
-        synchronized (clientHandlers)
-        {
-            while (clientHandlers.containsKey(nullIndex)) nullIndex++;
-            clientHandlers.put(nullIndex, h);
-        }
-        h.setHandlerId(nullIndex);
-		clientHandlerAdded(h);
-	}
 
 	protected void clientHandlerAdded(T h) {
 		h.setRSAKeyPair(rsaKeyPair);
@@ -91,28 +78,11 @@ public class Server<T extends ClientHandler<? extends ServerMessageContext>>
 	}
 
 	public void shutdown() throws IOException {
-		synchronized (clientHandlers)
-        {
-            Set<Integer> integers = clientHandlers.keySet();
-            for (int i : integers)
-            {
-                ClientHandler t = clientHandlers.get(i);
-                if (t != null)
-                {
-                    t.shutdown();
-                }
-            }
-        }
-        clientListener.stopListening();
+		connectionPool.shutdown();
+		clientListener.stopListening();
 
 		if (loopTimer != null)
 			loopTimer.shutdown();
 	}
 
-	protected void removeClient(T handler) {
-		synchronized (clientHandlers)
-        {
-            clientHandlers.remove(handler.getHandlerId());
-        }
-    }
 }
