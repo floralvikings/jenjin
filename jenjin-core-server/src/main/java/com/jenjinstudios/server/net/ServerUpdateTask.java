@@ -16,7 +16,7 @@ public class ServerUpdateTask implements Runnable
 	private static final Logger LOGGER = Logger.getLogger(ServerUpdateTask.class.getName());
 	private final List<Runnable> repeatedTasks;
 	private final Deque<Runnable> syncedTasks;
-	private static final double MILLIS_IN_SECOND = 1000d;
+	private static final double MILLIS_IN_SECOND = 1000.0d;
 	/** The time in nanoseconds of the last 50 update cycles. */
 	private final double[] lastCycles;
 	/** The server for which this loop runs. */
