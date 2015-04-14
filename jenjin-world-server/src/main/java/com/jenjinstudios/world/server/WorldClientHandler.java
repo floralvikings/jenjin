@@ -28,12 +28,13 @@ public class WorldClientHandler extends ClientHandler<WorldServerMessageContext>
 	/**
 	 * Construct a new WorldClientHandler.
 	 *
-	 * @param s The server.
+	 * @param server The server.
 	 * @param messageStreamPair The streams.
 	 * @param context The context.
 	 */
-	public WorldClientHandler(WorldServer s, MessageStreamPair messageStreamPair, WorldServerMessageContext context) {
-		super(s, messageStreamPair, context);
+	public WorldClientHandler(WorldServer server, MessageStreamPair messageStreamPair, WorldServerMessageContext
+		  context) {
+		super(server, messageStreamPair, context);
 		updateTimer.schedule(updateTask, 0, 10);
 	}
 
