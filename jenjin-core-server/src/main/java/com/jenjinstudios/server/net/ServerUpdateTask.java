@@ -9,11 +9,7 @@ public class ServerUpdateTask implements Runnable
 {
 	private static final Logger LOGGER = Logger.getLogger(ServerUpdateTask.class.getName());
 	private final List<Runnable> repeatedTasks;
-	private static final double MILLIS_IN_SECOND = 1000.0d;
-	private final double[] lastCycles;
 	private final Server server;
-	private long cycleStart;
-	private int cycleNum;
 
 	/**
 	 * Construct a new {@code ServerLoop} for the specified server.
@@ -22,8 +18,6 @@ public class ServerUpdateTask implements Runnable
 	@SuppressWarnings("unchecked")
 	public ServerUpdateTask(Server server) {
 		this.server = server;
-		lastCycles = new double[server.getUps() * 10];
-		cycleNum = 0;
 		repeatedTasks = new LinkedList<>();
 	}
 
