@@ -21,7 +21,7 @@ public class Server<T extends Connection<? extends ServerMessageContext>>
 	private final int UPS;
 	private final int PERIOD;
 	private final Authenticator authenticator;
-	private final ClientListener<T> clientListener;
+	private final ClientListener clientListener;
 	private final KeyPair rsaKeyPair;
 	private ScheduledExecutorService loopTimer;
 	private ServerUpdateTask serverUpdateTask;
@@ -35,7 +35,7 @@ public class Server<T extends Connection<? extends ServerMessageContext>>
 		Class handlerClass = initInfo.getHandlerClass();
 		Class<? extends ServerMessageContext> contextClass = initInfo.getContextClass();
 		//noinspection unchecked
-		clientListener = new ClientListener<>(contextClass, initInfo.getPort());
+		clientListener = new ClientListener(contextClass, initInfo.getPort());
 		rsaKeyPair = (initInfo.getKeyPair() == null) ? Connection.generateRSAKeyPair() : initInfo.getKeyPair();
 		this.authenticator = authenticator;
 		InputStream stream = getClass().getClassLoader().getResourceAsStream("com/jenjinstudios/server/Messages.xml");
