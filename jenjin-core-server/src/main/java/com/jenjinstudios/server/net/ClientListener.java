@@ -1,5 +1,6 @@
 package com.jenjinstudios.server.net;
 
+import com.jenjinstudios.core.Connection;
 import com.jenjinstudios.core.io.MessageInputStream;
 import com.jenjinstudios.core.io.MessageOutputStream;
 import com.jenjinstudios.core.io.MessageStreamPair;
@@ -19,7 +20,7 @@ import java.util.logging.Logger;
  * Listens for incoming client connections on behalf of a Server.
  * @author Caleb Brinkman
  */
-class ClientListener<T extends ClientHandler> implements Runnable
+class ClientListener<T extends Connection> implements Runnable
 {
 	private static final Logger LOGGER = Logger.getLogger(ClientListener.class.getName());
 	private final Class<? extends ServerMessageContext> contextClass;
