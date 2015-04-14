@@ -34,16 +34,6 @@ public class ClientHandler<T extends ServerMessageContext> extends Connection<T>
 		server = s;
     }
 
-    /**
-     * Set the id for this handler.
-     *
-     * @param id The new id number for the handler.
-     */
-    public void setHandlerId(int id) {
-        handlerId = id;
-		getMessageContext().setName("Client Handler " + handlerId);
-	}
-
 	/** Shut down the client handler. */
 	@Override
     public void shutdown() {
