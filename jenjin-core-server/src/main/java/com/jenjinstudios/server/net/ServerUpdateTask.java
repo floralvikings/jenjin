@@ -80,11 +80,6 @@ public class ServerUpdateTask implements Runnable
 		double cycleLength = (cycleStart - oldCycleStart) / MILLIS_IN_SECOND;
 		lastCycles[getCycleArrayIndex()] = cycleLength;
 		cycleNum++;
-		double total = 0;
-		for (double l : lastCycles)
-		{
-			total += l;
-		}
 	}
 
 	public void addRepeatedTask(Runnable r) {
