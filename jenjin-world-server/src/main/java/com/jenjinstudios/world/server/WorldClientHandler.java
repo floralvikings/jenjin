@@ -22,6 +22,4 @@ public class WorldClientHandler extends Connection<WorldServerMessageContext>
 		super(messageStreamPair, context);
 	}
 
-	public Player getUser() { return getMessageContext().getUser(); }
-
 }
