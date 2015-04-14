@@ -55,6 +55,13 @@ public class WorldServer<T extends WorldClientHandler> extends Server<T>
 		MessageRegistry.getGlobalRegistry().register("World Client/Server Messages", stream);
 
 		getConnectionPool().addUpdateTask(new ClientHandlerUpdateTask<T>()::update);
+		getConnectionPool().addShutdownTask(connection -> {
+			Player user = connection.getMessageContext().getUser();
+			if (user != null)
+			{
+				world.getWorldObjects().remove(user.getId());
+			}
+		});
 	}
 
 	public World getWorld() { return world; }

@@ -22,15 +22,6 @@ public class WorldClientHandler extends Connection<WorldServerMessageContext>
 		super(messageStreamPair, context);
 	}
 
-	@Override
-	public void shutdown() {
-		if (getMessageContext().getUser() != null)
-		{
-			getMessageContext().getWorld().getWorldObjects().remove(getMessageContext().getUser().getId());
-		}
-		super.shutdown();
-	}
-
 	public Player getUser() { return getMessageContext().getUser(); }
 
 }
