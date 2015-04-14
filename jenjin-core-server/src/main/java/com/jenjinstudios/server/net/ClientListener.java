@@ -28,7 +28,6 @@ class ClientListener<T extends Connection> implements Runnable
 	private final LinkedList<T> newClientHandlers;
 	private volatile boolean listening;
 	private final ServerSocket serverSock;
-	private Server server;
 	private final Constructor<? extends T> handlerConstructor;
 
 	/**
@@ -93,7 +92,6 @@ class ClientListener<T extends Connection> implements Runnable
 	public void startListening(Server tServer) {
 		if (!listening)
 		{
-			this.server = tServer;
 			listening = true;
 			new Thread(this, "Client Listener " + port).start();
 		}
