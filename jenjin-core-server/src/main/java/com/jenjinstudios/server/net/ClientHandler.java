@@ -57,11 +57,4 @@ public class ClientHandler<T extends ServerMessageContext> extends Connection<T>
      */
 	public Server getServer() { return server; }
 
-	/**
-	 * Get the ClientHandler ID for this client handler.
-     *
-     * @return The ID of this client handler.
-     */
-    public int getHandlerId() { return handlerId; }
-
 }
