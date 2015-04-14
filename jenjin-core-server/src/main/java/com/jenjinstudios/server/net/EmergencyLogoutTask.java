@@ -13,7 +13,7 @@ import java.util.logging.Logger;
  *
  * @author Caleb Brinkman
  */
-public class EmergencyLogoutTask<T extends Connection<? extends ServerMessageContext>> implements ShutdownTask<T>
+public class EmergencyLogoutTask<T extends Connection<ServerMessageContext>> implements ShutdownTask<T>
 {
 	private static final Logger LOGGER = Logger.getLogger(EmergencyLogoutTask.class.getName());
 
