@@ -1,5 +1,6 @@
 package com.jenjinstudios.server.net;
 
+import com.jenjinstudios.core.Connection;
 import com.jenjinstudios.server.authentication.AuthenticationException;
 import com.jenjinstudios.server.authentication.User;
 import com.jenjinstudios.server.concurrency.ShutdownTask;
@@ -12,13 +13,13 @@ import java.util.logging.Logger;
  *
  * @author Caleb Brinkman
  */
-public class EmergencyLogoutTask<T extends ClientHandler> implements ShutdownTask<T>
+public class EmergencyLogoutTask<T extends Connection<? extends ServerMessageContext>> implements ShutdownTask<T>
 {
 	private static final Logger LOGGER = Logger.getLogger(EmergencyLogoutTask.class.getName());
 
 	@Override
 	public void shutdown(T connection) {
-		ServerMessageContext context = (ServerMessageContext) connection.getMessageContext();
+		ServerMessageContext context = connection.getMessageContext();
 		User user = context.getUser();
 		if (user != null)
 		{
