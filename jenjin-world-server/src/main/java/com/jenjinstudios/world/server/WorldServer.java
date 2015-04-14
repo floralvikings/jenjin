@@ -53,6 +53,8 @@ public class WorldServer<T extends WorldClientHandler> extends Server<T>
 		InputStream stream = getClass().getClassLoader().
 			  getResourceAsStream("com/jenjinstudios/world/server/Messages.xml");
 		MessageRegistry.getGlobalRegistry().register("World Client/Server Messages", stream);
+
+		getConnectionPool().addUpdateTask(new ClientHandlerUpdateTask<T>()::update);
 	}
 
 	public World getWorld() { return world; }
