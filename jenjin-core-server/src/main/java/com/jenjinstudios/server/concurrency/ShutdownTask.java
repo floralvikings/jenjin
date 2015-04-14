@@ -13,7 +13,7 @@ public interface ShutdownTask<T extends MessageThreadPool>
 	/**
 	 * When added to a MessageThreadPool, this method will be called with the MessageThreadPool passed as a parameter.
 	 *
-	 * @param threadPool The MessageThreadPool being shut down.
+	 * @param connection The MessageThreadPool being shut down.
 	 */
-	void shutdown(T threadPool);
+	void shutdown(T connection);
 }
