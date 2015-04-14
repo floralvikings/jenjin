@@ -1,6 +1,7 @@
 package com.jenjinstudios.server.concurrency;
 
 import com.jenjinstudios.core.Connection;
+import com.jenjinstudios.core.concurrency.ShutdownTask;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -60,6 +61,18 @@ public class ConnectionPool<T extends Connection>
 		shutdownConnections();
 		cleanupTimer.cancel();
 		cleanupTask.run();
+	}
+
+	/**
+	 * Add a shutdown task to all connections managed by this pool.
+	 *
+	 * @param task The task to be executed by each connection on shutdown.
+	 */
+	public void addShutdownTask(ShutdownTask task) {
+		synchronized (connections)
+		{
+			connections.forEach((key, value) -> value.addShutdownTask(task));
+		}
 	}
 
 	/**
