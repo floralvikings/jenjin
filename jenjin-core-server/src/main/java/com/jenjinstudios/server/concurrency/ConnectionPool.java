@@ -4,6 +4,7 @@ import com.jenjinstudios.core.Connection;
 import com.jenjinstudios.core.concurrency.ShutdownTask;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.stream.Collectors;
 
 /**
@@ -16,6 +17,7 @@ public class ConnectionPool<T extends Connection>
 	private final Map<String, T> connections = new HashMap<>(1);
 	private final Timer cleanupTimer = new Timer("Connection Pool Cleanup Timer");
 	private final TimerTask cleanupTask = new CleanupTask();
+	private final Collection<ShutdownTask> shutdownTasks = new ConcurrentLinkedQueue<>();
 
 	/**
 	 * Add a connection to the pool.
@@ -50,7 +52,11 @@ public class ConnectionPool<T extends Connection>
 	{
 		synchronized (connections)
 		{
-			connections.forEach((key, value) -> value.shutdown());
+			connections.forEach((key, value) -> {
+				value.shutdown();
+				shutdownTasks.forEach(task -> task.shutdown(value));
+			});
+
 		}
 	}
 
@@ -69,10 +75,7 @@ public class ConnectionPool<T extends Connection>
 	 * @param task The task to be executed by each connection on shutdown.
 	 */
 	public void addShutdownTask(ShutdownTask task) {
-		synchronized (connections)
-		{
-			connections.forEach((key, value) -> value.addShutdownTask(task));
-		}
+		shutdownTasks.add(task);
 	}
 
 	/**
