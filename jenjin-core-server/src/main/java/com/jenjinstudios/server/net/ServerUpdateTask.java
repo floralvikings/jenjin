@@ -31,7 +31,7 @@ public class ServerUpdateTask implements Runnable
 		try
 		{
 			server.checkListenerForClients();
-		} catch (Exception ex)
+		} catch (RuntimeException ex)
 		{
 			LOGGER.log(Level.WARNING, "Exception when checking for new clients", ex);
 		}
@@ -44,7 +44,7 @@ public class ServerUpdateTask implements Runnable
 			{
 				repeatedTasks.forEach(Runnable::run);
 			}
-		} catch (Exception ex)
+		} catch (RuntimeException ex)
 		{
 			LOGGER.log(Level.WARNING, "Exception when running repeated tasks.", ex);
 		}
