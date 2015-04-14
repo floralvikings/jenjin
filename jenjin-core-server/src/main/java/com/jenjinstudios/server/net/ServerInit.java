@@ -14,7 +14,7 @@ public class ServerInit
 	/** The default number of updates per second. */
 	public static final int DEFAULT_UPS = 50;
 	/** The default client handler class. */
-	public static final Class<ClientHandler> DEFAULT_CLASS = ClientHandler.class;
+	public static final Class<Connection> DEFAULT_CLASS = Connection.class;
 	/** The default port number on which to listen. */
 	public static final int DEFAULT_PORT = 51015;
 
