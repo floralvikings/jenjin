@@ -30,7 +30,7 @@ public class ClientHandler<T extends ServerMessageContext> extends Connection<T>
 	 */
 	public ClientHandler(Server s, MessageStreamPair messageStreamPair, T context) {
 		super(messageStreamPair, context);
-		getMessageContext().setName("ClientHandler with unset ID");
+		getMessageContext().setName("ClientHandler " + getId());
 		server = s;
     }
 
