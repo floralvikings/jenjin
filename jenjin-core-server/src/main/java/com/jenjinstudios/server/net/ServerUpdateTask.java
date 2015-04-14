@@ -47,7 +47,6 @@ public class ServerUpdateTask implements Runnable
 		checkForNewClients();
 		runSynchronizedTasks();
 		runRepeatedTasks();
-		update();
 	}
 
 	private void checkForNewClients() {
@@ -58,9 +57,6 @@ public class ServerUpdateTask implements Runnable
 		{
 			LOGGER.log(Level.WARNING, "Exception when checking for new clients", ex);
 		}
-	}
-
-	private void update() {
 	}
 
 	/** Run the repeated tasks in the server queue. */
