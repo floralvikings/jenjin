@@ -29,7 +29,6 @@ public class ServerUpdateTask implements Runnable
 
 	@Override
 	public void run() {
-		startNewCycle();
 		checkForNewClients();
 		runRepeatedTasks();
 	}
@@ -57,21 +56,10 @@ public class ServerUpdateTask implements Runnable
 		}
 	}
 
-	private void startNewCycle() {
-		long oldCycleStart = (cycleStart == 0) ? (System.currentTimeMillis() - (1000 / server.getUps())) : cycleStart;
-		cycleStart = System.currentTimeMillis();
-		double cycleLength = (cycleStart - oldCycleStart) / MILLIS_IN_SECOND;
-		lastCycles[getCycleArrayIndex()] = cycleLength;
-		cycleNum++;
-	}
-
 	public void addRepeatedTask(Runnable r) {
 		synchronized (repeatedTasks)
 		{
 			repeatedTasks.add(r);
 		}
 	}
-
-	private int getCycleArrayIndex() { return Math.abs(cycleNum) % lastCycles.length; }
-
 }
