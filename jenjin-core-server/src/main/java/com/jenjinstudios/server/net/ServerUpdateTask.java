@@ -16,7 +16,6 @@ public class ServerUpdateTask implements Runnable
 	private final Server server;
 	private long cycleStart;
 	private int cycleNum;
-	private double averageUPS;
 
 	/**
 	 * Construct a new {@code ServerLoop} for the specified server.
@@ -86,7 +85,6 @@ public class ServerUpdateTask implements Runnable
 		{
 			total += l;
 		}
-		averageUPS = ceilNumCycles() / total;
 	}
 
 	private double ceilNumCycles() {
