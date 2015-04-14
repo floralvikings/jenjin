@@ -78,18 +78,6 @@ public class Server<T extends ClientHandler<? extends ServerMessageContext>> ext
 	}
 
 	public void update() {
-		synchronized (clientHandlers)
-        {
-            Set<Integer> integers = clientHandlers.keySet();
-            for (int i : integers)
-            {
-                ClientHandler t = clientHandlers.get(i);
-                if (t != null)
-                {
-                    t.update();
-                }
-            }
-        }
     }
 
 	public Authenticator getAuthenticator() { return authenticator; }
