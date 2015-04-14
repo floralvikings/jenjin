@@ -43,7 +43,7 @@ public class WorldClientHandler extends ClientHandler<WorldServerMessageContext>
 		updateTimer.cancel();
 		if (getMessageContext().getUser() != null)
 		{
-			((WorldServer) getServer()).getWorld().getWorldObjects().remove(getMessageContext().getUser().getId());
+			getMessageContext().getWorld().getWorldObjects().remove(getMessageContext().getUser().getId());
 		}
 		super.shutdown();
 	}
