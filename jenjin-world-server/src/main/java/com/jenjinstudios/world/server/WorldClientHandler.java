@@ -25,6 +25,13 @@ public class WorldClientHandler extends ClientHandler<WorldServerMessageContext>
 	private final TimerTask updateTask = new UpdateTask();
 	private final Timer updateTimer = new Timer();
 
+	/**
+	 * Construct a new WorldClientHandler.
+	 *
+	 * @param s The server.
+	 * @param messageStreamPair The streams.
+	 * @param context The context.
+	 */
 	public WorldClientHandler(WorldServer s, MessageStreamPair messageStreamPair, WorldServerMessageContext context) {
 		super(s, messageStreamPair, context);
 		updateTimer.schedule(updateTask, 0, 10);
