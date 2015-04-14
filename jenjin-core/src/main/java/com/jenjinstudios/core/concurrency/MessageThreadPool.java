@@ -25,6 +25,7 @@ public class MessageThreadPool<T extends MessageContext>
 	private final MessageWriter messageWriter;
 	private final ErrorChecker errorChecker;
 	private final T messageContext;
+	private boolean running;
 
 	/**
 	 * Construct a MessageThreadPool whose threads will read from and write to the given MessageIO streams.
@@ -57,6 +58,7 @@ public class MessageThreadPool<T extends MessageContext>
 		messageWriter.start();
 		errorChecker.start();
 		messageExecutor.start();
+		running = true;
 	}
 
 	/**
@@ -68,6 +70,7 @@ public class MessageThreadPool<T extends MessageContext>
 		messageReader.stop();
 		errorChecker.stop();
 		messageExecutor.stop();
+		running = false;
 	}
 
 	/**
@@ -90,6 +93,13 @@ public class MessageThreadPool<T extends MessageContext>
 	 * @return The unique ID of this MessageThreadPool.
 	 */
 	public String getId() { return id; }
+
+	/**
+	 * Return whether the threads managed by this pool are running.
+	 *
+	 * @return Whether the threads managed by this pool are running.
+	 */
+	public boolean isRunning() { return running; }
 
 	/**
 	 * Get the messages received by the MessageReader since the last time this method was called.
