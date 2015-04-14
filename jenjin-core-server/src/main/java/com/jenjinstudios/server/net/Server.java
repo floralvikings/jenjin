@@ -17,7 +17,7 @@ import java.util.logging.Logger;
 public class Server<T extends ClientHandler<? extends ServerMessageContext>>
 {
 	private static final Logger LOGGER = Logger.getLogger(Server.class.getName());
-	private final ConnectionPool<T> connectionPool = new ConnectionPool<>();
+	private final ConnectionPool<T> connectionPool;
 	private final int UPS;
 	private final int PERIOD;
 	private final Authenticator authenticator;
@@ -29,7 +29,9 @@ public class Server<T extends ClientHandler<? extends ServerMessageContext>>
 	protected Server(ServerInit initInfo, Authenticator authenticator) throws IOException, NoSuchMethodException {
         LOGGER.log(Level.FINE, "Initializing Server.");
         UPS = initInfo.getUps();
-        PERIOD = 1000 / UPS;
+		connectionPool = new ConnectionPool<>();
+		connectionPool.addShutdownTask(new EmergencyLogoutTask<>());
+		PERIOD = 1000 / UPS;
 		Class<? extends Server> serverClass = getClass();
 		Class handlerClass = initInfo.getHandlerClass();
 		Class<? extends ServerMessageContext> contextClass = initInfo.getContextClass();
