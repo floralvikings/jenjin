@@ -1,6 +1,5 @@
 package com.jenjinstudios.server.net;
 
-import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
@@ -10,7 +9,6 @@ public class ServerUpdateTask implements Runnable
 {
 	private static final Logger LOGGER = Logger.getLogger(ServerUpdateTask.class.getName());
 	private final List<Runnable> repeatedTasks;
-	private final Deque<Runnable> syncedTasks;
 	private static final double MILLIS_IN_SECOND = 1000.0d;
 	private final double[] lastCycles;
 	private final Server server;
@@ -27,14 +25,12 @@ public class ServerUpdateTask implements Runnable
 		lastCycles = new double[server.getUps() * 10];
 		cycleNum = 0;
 		repeatedTasks = new LinkedList<>();
-		syncedTasks = new LinkedList<>();
 	}
 
 	@Override
 	public void run() {
 		startNewCycle();
 		checkForNewClients();
-		runSynchronizedTasks();
 		runRepeatedTasks();
 	}
 
@@ -54,19 +50,6 @@ public class ServerUpdateTask implements Runnable
 			synchronized (repeatedTasks)
 			{
 				repeatedTasks.forEach(Runnable::run);
-			}
-		} catch (Exception ex)
-		{
-			LOGGER.log(Level.WARNING, "Exception when running repeated tasks.", ex);
-		}
-	}
-
-	private void runSynchronizedTasks() {
-		try
-		{
-			synchronized (syncedTasks)
-			{
-				while (!syncedTasks.isEmpty()) { syncedTasks.remove().run(); }
 			}
 		} catch (Exception ex)
 		{
