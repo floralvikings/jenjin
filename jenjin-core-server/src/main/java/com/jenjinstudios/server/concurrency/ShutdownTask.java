@@ -8,12 +8,12 @@ import com.jenjinstudios.core.concurrency.MessageThreadPool;
  * @author Caleb Brinkman
  */
 @FunctionalInterface
-public interface ShutdownTask
+public interface ShutdownTask<T extends MessageThreadPool>
 {
 	/**
 	 * When added to a MessageThreadPool, this method will be called with the MessageThreadPool passed as a parameter.
 	 *
 	 * @param threadPool The MessageThreadPool being shut down.
 	 */
-	void shutdown(MessageThreadPool threadPool);
+	void shutdown(T threadPool);
 }

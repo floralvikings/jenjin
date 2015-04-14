@@ -16,7 +16,7 @@ public class ConnectionPool<T extends Connection>
 	private final Map<String, T> connections = new HashMap<>(1);
 	private final Timer cleanupTimer = new Timer("Connection Pool Cleanup Timer");
 	private final TimerTask cleanupTask = new CleanupTask();
-	private final Collection<ShutdownTask> shutdownTasks = new ConcurrentLinkedQueue<>();
+	private final Collection<ShutdownTask<T>> shutdownTasks = new ConcurrentLinkedQueue<>();
 
 	/**
 	 * Add a connection to the pool.
@@ -73,7 +73,7 @@ public class ConnectionPool<T extends Connection>
 	 *
 	 * @param task The task to be executed by each connection on shutdown.
 	 */
-	public void addShutdownTask(ShutdownTask task) {
+	public void addShutdownTask(ShutdownTask<T> task) {
 		shutdownTasks.add(task);
 	}
 
