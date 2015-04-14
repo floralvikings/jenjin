@@ -3,7 +3,9 @@ package com.jenjinstudios.core.concurrency;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageStreamPair;
 
-import java.util.*;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -16,7 +18,6 @@ import java.util.logging.Logger;
 public class MessageThreadPool<T extends MessageContext>
 {
 	private static final Logger LOGGER = Logger.getLogger(MessageThreadPool.class.getName());
-	private final Collection<ShutdownTask> shutdownTasks;
 	private final String id = UUID.randomUUID().toString();
 	private final MessageStreamPair messageStreamPair;
 	private final MessageExecutor messageExecutor;
@@ -40,7 +41,6 @@ public class MessageThreadPool<T extends MessageContext>
 		errorChecker = new ErrorChecker();
 		messageExecutor = new MessageExecutor(this);
 		messageExecutor.setMessageContext(context);
-		shutdownTasks = new LinkedList<>();
 	}
 
 	/**
@@ -70,16 +70,8 @@ public class MessageThreadPool<T extends MessageContext>
 		messageReader.stop();
 		errorChecker.stop();
 		messageExecutor.stop();
-		shutdownTasks.forEach(task -> task.shutdown(this));
 		running = false;
 	}
-
-	/**
-	 * Add a shutdown task to the collection of tasks that will be executed when this thread pool shuts down.
-	 *
-	 * @param task The task to be executed.
-	 */
-	public void addShutdownTask(ShutdownTask task) { shutdownTasks.add(task); }
 
 	/**
 	 * Get the MessageIO containing the keys and streams used by this connection.
