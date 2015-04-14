@@ -2,11 +2,9 @@ package com.jenjinstudios.server.message;
 
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageRegistry;
-import com.jenjinstudios.core.io.MessageStreamPair;
 import com.jenjinstudios.server.authentication.AuthenticationException;
 import com.jenjinstudios.server.authentication.Authenticator;
 import com.jenjinstudios.server.authentication.BasicUser;
-import com.jenjinstudios.server.net.ClientHandler;
 import com.jenjinstudios.server.net.ServerMessageContext;
 import org.mockito.Mockito;
 import org.testng.annotations.AfterClass;
@@ -47,13 +45,10 @@ public class ExecutableLoginRequestTest
 		user.setUsername("foo");
 		user.setUsername("bar");
 		user.setLoggedIn(true);
-		ClientHandler clientHandler = mock(ClientHandler.class);
 		Authenticator<BasicUser> authenticator = mock(Authenticator.class);
-		MessageStreamPair messageStreamPair = mock(MessageStreamPair.class);
 		ServerMessageContext context = mock(ServerMessageContext.class);
 		when(context.getAuthenticator()).thenReturn(authenticator);
 		when(authenticator.logInUser("foo", "bar")).thenReturn(user);
-		when(clientHandler.getMessageStreamPair()).thenReturn(messageStreamPair);
 
 		ExecutableLoginRequest exec = new ExecutableLoginRequest(message, context);
 		exec.execute();
