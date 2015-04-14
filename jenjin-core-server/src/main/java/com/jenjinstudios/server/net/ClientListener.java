@@ -128,7 +128,7 @@ class ClientListener<T extends Connection> implements Runnable
 			try
 			{
 				MessageStreamPair messageStreamPair = new MessageStreamPair(in, out);
-				T newHandler = handlerConstructor.newInstance(server, messageStreamPair, context);
+				T newHandler = handlerConstructor.newInstance(messageStreamPair, context);
 				addNewClient(newHandler);
 			} catch (InstantiationException | IllegalAccessException e)
 			{
