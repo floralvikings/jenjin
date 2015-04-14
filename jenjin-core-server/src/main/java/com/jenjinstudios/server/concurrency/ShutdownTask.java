@@ -1,6 +1,6 @@
 package com.jenjinstudios.server.concurrency;
 
-import com.jenjinstudios.core.concurrency.MessageThreadPool;
+import com.jenjinstudios.core.Connection;
 
 /**
  * Used to represent a task which will be invoked when a thread pool is shut down.
@@ -8,7 +8,7 @@ import com.jenjinstudios.core.concurrency.MessageThreadPool;
  * @author Caleb Brinkman
  */
 @FunctionalInterface
-public interface ShutdownTask<T extends MessageThreadPool>
+public interface ShutdownTask<T extends Connection>
 {
 	/**
 	 * When added to a MessageThreadPool, this method will be called with the MessageThreadPool passed as a parameter.
