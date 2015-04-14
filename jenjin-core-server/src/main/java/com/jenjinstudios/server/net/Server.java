@@ -85,4 +85,6 @@ public class Server<T extends Connection<? extends ServerMessageContext>>
 			loopTimer.shutdown();
 	}
 
+	protected ConnectionPool<T> getConnectionPool() { return connectionPool; }
+
 }
