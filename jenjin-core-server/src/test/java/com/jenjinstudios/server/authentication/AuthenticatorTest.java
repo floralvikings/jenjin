@@ -14,7 +14,7 @@ import java.sql.Statement;
  */
 public class AuthenticatorTest
 {
-	private ConnectionFactory connectionFactory = new ConnectionFactory();
+	private final ConnectionFactory connectionFactory = new ConnectionFactory();
 
 	/**
 	 * Test the login functionality.
