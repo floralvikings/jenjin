@@ -7,8 +7,9 @@ import java.io.IOException;
 import java.security.Key;
 import java.util.Deque;
 import java.util.LinkedList;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -24,7 +25,7 @@ public class MessageWriter
 {
 	private static final Logger LOGGER = Logger.getLogger(MessageWriter.class.getName());
 	private final MessageOutputStream outputStream;
-	private final Timer runTimer;
+	private final ScheduledExecutorService executorService;
 	private final WriteTask writeTask;
 	private final MessageContext context;
 	private volatile boolean errored;
@@ -38,8 +39,8 @@ public class MessageWriter
 	public MessageWriter(MessageOutputStream outputStream, MessageContext context) {
 		this.outputStream = outputStream;
 		this.context = context;
-		runTimer = new Timer("MessageWriter");
 		writeTask = new WriteTask();
+		executorService = Executors.newSingleThreadScheduledExecutor();
 	}
 
 	/**
@@ -52,13 +53,13 @@ public class MessageWriter
 	/**
 	 * Begin writing messages to the output stream.
 	 */
-	public void start() { runTimer.scheduleAtFixedRate(writeTask, 0, 10); }
+	public void start() { executorService.scheduleAtFixedRate(writeTask, 0, 10, TimeUnit.MILLISECONDS); }
 
 	/**
 	 * Stop writing messages to the output stream.  Once this has been called, the timer may not be restarted.
 	 */
 	public void stop() {
-		runTimer.cancel();
+		executorService.shutdown();
 		try
 		{
 			outputStream.close();
@@ -68,7 +69,7 @@ public class MessageWriter
 		}
 	}
 
-	private class WriteTask extends TimerTask
+	private class WriteTask implements Runnable
 	{
 		@Override
 		public void run() {
