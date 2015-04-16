@@ -62,7 +62,7 @@ public class AuthenticatorTest
 		connector.logInUser(username, password);
 		connector.logOutUser(username);
 		User user = connector.getUserLookup().findUser(username);
-		Assert.assertFalse(user.isLoggedIn());
+		Assert.assertFalse(user.isLoggedIn(), "User should not be logged in.");
 
 	}
 
