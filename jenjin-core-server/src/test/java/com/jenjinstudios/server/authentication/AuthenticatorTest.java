@@ -2,11 +2,14 @@ package com.jenjinstudios.server.authentication;
 
 import com.jenjinstudios.server.database.sql.UserTable;
 import org.testng.Assert;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.LinkedList;
 
 /**
  * Test the Authenticator class.
@@ -15,6 +18,16 @@ import java.sql.Statement;
 public class AuthenticatorTest
 {
 	private final ConnectionFactory connectionFactory = new ConnectionFactory();
+
+	/**
+	 * Close all openend connections after execution.
+	 *
+	 * @throws SQLException If there's an exception when closing a connection.
+	 */
+	@AfterClass
+	public void closeTestConnections() throws SQLException {
+		connectionFactory.closeAll();
+	}
 
 	/**
 	 * Test the login functionality.
@@ -82,6 +95,7 @@ public class AuthenticatorTest
 
 	private static class ConnectionFactory
 	{
+		private LinkedList<Connection> connections = new LinkedList<>();
 		private int connectionNumber;
 
 		private Connection createTestConnection() throws Exception {
@@ -108,7 +122,15 @@ public class AuthenticatorTest
 							"'0')");
 			}
 			connectionNumber++;
+			connections.add(testConnection);
 			return testConnection;
+		}
+
+		private void closeAll() throws SQLException {
+			for (Connection connection : connections)
+			{
+				connection.close();
+			}
 		}
 	}
 }
