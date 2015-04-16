@@ -3,7 +3,6 @@ package com.jenjinstudios.core.concurrency;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageStreamPair;
 
-import java.util.TimerTask;
 import java.util.UUID;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -112,7 +111,7 @@ public class MessageThreadPool<T extends MessageContext>
 
 	private class ErrorChecker
 	{
-		private final CheckErrorsTask checkErrorTask = new CheckErrorsTask();
+		private final Runnable checkErrorTask = new CheckErrorsTask();
 		private final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
 
 		public void start() { executorService.scheduleWithFixedDelay(checkErrorTask, 0, 10, TimeUnit.MILLISECONDS); }
@@ -120,7 +119,7 @@ public class MessageThreadPool<T extends MessageContext>
 		public void stop() { executorService.shutdown(); }
 	}
 
-	private class CheckErrorsTask extends TimerTask
+	private class CheckErrorsTask implements Runnable
 	{
 		@Override
 		public void run() {
