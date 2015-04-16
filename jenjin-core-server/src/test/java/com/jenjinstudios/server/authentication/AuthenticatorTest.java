@@ -16,6 +16,11 @@ public class AuthenticatorTest
 {
 	private ConnectionFactory connectionFactory = new ConnectionFactory();
 
+	/**
+	 * Test the login functionality.
+	 *
+	 * @throws Exception If there's an exception.
+	 */
 	@Test
 	public void testLogInUser() throws Exception {
 		Connection connection = connectionFactory.createTestConnection();
@@ -28,6 +33,10 @@ public class AuthenticatorTest
 
 	}
 
+	/**
+	 * Test concurrent logins.
+	 * @throws Exception If there's an exception.
+	 */
 	@Test(expectedExceptions = AuthenticationException.class)
 	public void testConcurrentLogins() throws Exception {
 		Connection connection = connectionFactory.createTestConnection();
@@ -40,6 +49,10 @@ public class AuthenticatorTest
 
 	}
 
+	/**
+	 * Test logout functionality.
+	 * @throws Exception If there's an exception.
+	 */
 	@Test
 	public void testLogOutUser() throws Exception {
 		Connection connection = connectionFactory.createTestConnection();
@@ -53,6 +66,10 @@ public class AuthenticatorTest
 
 	}
 
+	/**
+	 * Test authentication with an invalid password.
+	 * @throws Exception If there's an exception.
+	 */
 	@Test
 	public void testInvalidPassword() throws Exception {
 		Connection connection = connectionFactory.createTestConnection();
