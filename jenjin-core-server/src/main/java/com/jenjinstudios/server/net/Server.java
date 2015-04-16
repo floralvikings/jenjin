@@ -70,6 +70,7 @@ public class Server<T extends ServerMessageContext>
 		clientListener.startListening();
 
 		serverUpdateTask = new ServerUpdateTask(this);
+		connectionPool.start();
 
 		loopTimer = Executors.newSingleThreadScheduledExecutor(new ServerUpdateThreadFactory());
 		loopTimer.scheduleAtFixedRate(serverUpdateTask, 0, PERIOD, TimeUnit.MILLISECONDS);
