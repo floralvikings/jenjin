@@ -17,7 +17,7 @@ import static com.jenjinstudios.server.message.ServerMessageFactory.generateLogi
  * @author Caleb Brinkman
  */
 @SuppressWarnings("unused")
-public class ExecutableLoginRequest extends ServerExecutableMessage<ServerMessageContext>
+public class ExecutableLoginRequest extends ServerExecutableMessage<ServerMessageContext<User>>
 {
 	private static final Logger LOGGER = Logger.getLogger(ExecutableLoginRequest.class.getName());
 	/** The SQL handler used by this executable message. */
@@ -29,7 +29,7 @@ public class ExecutableLoginRequest extends ServerExecutableMessage<ServerMessag
 	 * @param loginRequest The request sent by the client.
 	 * @param context The context in which to execute the message.
 	 */
-	public ExecutableLoginRequest(Message loginRequest, ServerMessageContext context) {
+	public ExecutableLoginRequest(Message loginRequest, ServerMessageContext<User> context) {
 		super(loginRequest, context);
 		authenticator = getContext().getAuthenticator();
 	}
