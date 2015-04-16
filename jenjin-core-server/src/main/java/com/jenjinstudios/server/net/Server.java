@@ -33,7 +33,6 @@ public class Server<T extends ServerMessageContext>
 		connectionPool.addShutdownTask(new EmergencyLogoutTask<>());
 		PERIOD = 1000 / UPS;
 		Class<? extends T> contextClass = initInfo.getContextClass();
-		//noinspection unchecked
 		clientListener = new ClientListener<>(contextClass, initInfo.getPort());
 		rsaKeyPair = (initInfo.getKeyPair() == null) ? Connection.generateRSAKeyPair() : initInfo.getKeyPair();
 		this.authenticator = authenticator;
