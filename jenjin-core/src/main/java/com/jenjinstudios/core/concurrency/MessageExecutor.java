@@ -73,6 +73,7 @@ public class MessageExecutor
 
 		@Override
 		public void run() {
+			// TODO Maybe have a common list of incoming messages instead of depending on the thread pool?
 			// noinspection unchecked
 			Iterable<Message> messages = threadPool.getReceivedMessages();
 			messages.forEach(this::executeMessage);
