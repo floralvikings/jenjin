@@ -9,10 +9,8 @@ import java.security.KeyPair;
  */
 public class ServerInit<T extends ServerMessageContext>
 {
-	/** The default number of updates per second. */
-	public static final int DEFAULT_UPS = 50;
-	/** The default port number on which to listen. */
-	public static final int DEFAULT_PORT = 51015;
+	private static final int DEFAULT_UPS = 50;
+	private static final int DEFAULT_PORT = 51015;
 
 	private int ups;
 	private int port;
