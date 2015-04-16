@@ -11,6 +11,7 @@ import java.sql.DriverManager;
 import java.sql.Statement;
 
 /**
+ * Test the Authenticator class.
  * @author Caleb Brinkman
  */
 public class AuthenticatorTest
