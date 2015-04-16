@@ -21,8 +21,8 @@ public class Client<T extends ClientMessageContext> extends Connection<T>
 {
 	private static final int UPDATES_PER_SECOND = 60;
 	private final List<Runnable> repeatedTasks;
-    private Timer sendMessagesTimer;
-    private final ClientLoop clientLoop = new ClientLoop(this);
+	private Timer updateTimer;
+	private final ClientLoop clientLoop = new ClientLoop(this);
 
     /**
      * Construct a new client and attempt to connect to the server over the specified port.
@@ -64,10 +64,10 @@ public class Client<T extends ClientMessageContext> extends Connection<T>
     @Override
     public void shutdown() {
         super.shutdown();
-        if (sendMessagesTimer != null)
-        {
-            sendMessagesTimer.cancel();
-        }
+		if (updateTimer != null)
+		{
+			updateTimer.cancel();
+		}
     }
 
     @Override
@@ -78,9 +78,9 @@ public class Client<T extends ClientMessageContext> extends Connection<T>
         // Finally, send a ping request to establish latency.
 		enqueueMessage(generatePingRequest());
 
-        sendMessagesTimer = new Timer("Client Update Loop", false);
-        int period = 1000 / UPDATES_PER_SECOND;
-        sendMessagesTimer.scheduleAtFixedRate(clientLoop, 0, period);
+		updateTimer = new Timer("Client Update Loop", false);
+		int period = 1000 / UPDATES_PER_SECOND;
+		updateTimer.scheduleAtFixedRate(clientLoop, 0, period);
 
 		super.start();
 	}
