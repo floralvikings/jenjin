@@ -95,7 +95,7 @@ public class AuthenticatorTest
 				  "  `salt` CHAR(48) NOT NULL," +
 				  "  `loggedin` TINYINT NOT NULL DEFAULT '0'," +
 				  "  PRIMARY KEY (username)" +
-				  ")");
+				  ')');
 			for (int i = 1; i < 10; i++)
 			{
 				statement.executeUpdate(
