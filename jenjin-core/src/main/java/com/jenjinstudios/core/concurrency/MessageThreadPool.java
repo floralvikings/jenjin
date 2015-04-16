@@ -3,9 +3,11 @@ package com.jenjinstudios.core.concurrency;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageStreamPair;
 
-import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -111,11 +113,11 @@ public class MessageThreadPool<T extends MessageContext>
 	private class ErrorChecker
 	{
 		private final CheckErrorsTask checkErrorTask = new CheckErrorsTask();
-		private final Timer checkErrorTimer = new Timer("Error Checker");
+		private final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
 
-		public void start() { checkErrorTimer.scheduleAtFixedRate(checkErrorTask, 0, 10); }
+		public void start() { executorService.scheduleWithFixedDelay(checkErrorTask, 0, 10, TimeUnit.MILLISECONDS); }
 
-		public void stop() { checkErrorTimer.cancel(); }
+		public void stop() { executorService.shutdown(); }
 	}
 
 	private class CheckErrorsTask extends TimerTask
