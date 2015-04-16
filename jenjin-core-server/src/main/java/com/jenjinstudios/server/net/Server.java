@@ -26,7 +26,7 @@ public class Server<T extends ServerMessageContext>
 	private ScheduledExecutorService loopTimer;
 	private ServerUpdateTask serverUpdateTask;
 
-	protected Server(ServerInit<T> initInfo, Authenticator authenticator) throws IOException, NoSuchMethodException {
+	protected Server(ServerInit<T> initInfo, Authenticator authenticator) throws IOException {
 		LOGGER.log(Level.FINE, "Initializing Server.");
         UPS = initInfo.getUps();
 		connectionPool = new ConnectionPool<>();
