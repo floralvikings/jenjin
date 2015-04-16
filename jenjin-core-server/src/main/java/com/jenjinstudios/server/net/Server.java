@@ -89,6 +89,11 @@ public class Server<T extends ServerMessageContext>
 			loopTimer.shutdown();
 	}
 
+	/**
+	 * Get the ConnectionPool that manages connections for this server.
+	 *
+	 * @return The ConnectionPool that manages connections for this server.
+	 */
 	protected ConnectionPool<T> getConnectionPool() { return connectionPool; }
 
 }
