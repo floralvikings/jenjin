@@ -103,7 +103,7 @@ class ClientListener<T extends MessageContext> implements Runnable
 			context = contextClass.getConstructor().newInstance();
 		} catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e)
 		{
-			LOGGER.log(Level.SEVERE, "Unable to instantiate context; missing default constructor?");
+			LOGGER.log(Level.SEVERE, "Unable to instantiate context; missing default constructor?", e);
 		}
 
 		if (context != null)
