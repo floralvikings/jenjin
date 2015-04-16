@@ -27,7 +27,6 @@ public class Connection<T extends MessageContext> extends MessageThreadPool<T>
 {
 	private static final int KEYSIZE = 512;
 	private static final Logger LOGGER = Logger.getLogger(Connection.class.getName());
-	private final PingTracker pingTracker;
 
 	/**
 	 * Construct a new connection using the given MessageIO for reading and writing messages.
@@ -39,7 +38,6 @@ public class Connection<T extends MessageContext> extends MessageThreadPool<T>
 		super(streams, context);
 		getMessageContext().setAddress(streams.getAddress());
 		getMessageContext().setName("Connection");
-		pingTracker = getMessageContext().getPingTracker();
 		InputStream stream = getClass().getClassLoader().getResourceAsStream("com/jenjinstudios/core/io/Messages.xml");
 		MessageRegistry.getGlobalRegistry().register("Core XML Registry", stream);
 	}
@@ -81,7 +79,7 @@ public class Connection<T extends MessageContext> extends MessageThreadPool<T>
 	 *
 	 * @return The PingTracker used by this connection to track latency.
 	 */
-	public PingTracker getPingTracker() { return pingTracker; }
+	public PingTracker getPingTracker() { return getMessageContext().getPingTracker(); }
 
 	/**
 	 * Set the RSA public/private key pair used to encrypt outgoing and decrypt incoming messages, and queue a message
