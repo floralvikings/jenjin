@@ -29,7 +29,7 @@ public class AuthenticatorTest
 		String password = "testPassword";
 		connector.logInUser(username, password);
 		User user = connector.getUserLookup().findUser(username);
-		Assert.assertTrue(user.isLoggedIn());
+		Assert.assertTrue(user.isLoggedIn(), "User should be logged in.");
 
 	}
 
