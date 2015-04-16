@@ -14,7 +14,7 @@ import java.util.logging.Logger;
  * @author Caleb Brinkman
  */
 @SuppressWarnings("unused")
-public class ExecutableLogoutRequest extends ServerExecutableMessage<ServerMessageContext>
+public class ExecutableLogoutRequest extends ServerExecutableMessage<ServerMessageContext<User>>
 {
 	private static final Logger LOGGER = Logger.getLogger(ExecutableLogoutRequest.class.getName());
 	/** The SQLHandler used to log out the client. */
@@ -25,7 +25,7 @@ public class ExecutableLogoutRequest extends ServerExecutableMessage<ServerMessa
 	 * @param message The message used to create this ExecutableMessage.
 	 * @param context The context in which to execute the message.
 	 */
-	public ExecutableLogoutRequest(Message message, ServerMessageContext context) {
+	public ExecutableLogoutRequest(Message message, ServerMessageContext<User> context) {
 		super(message, context);
 		authenticator = getContext().getAuthenticator();
 	}
