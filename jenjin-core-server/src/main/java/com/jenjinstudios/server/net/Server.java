@@ -76,6 +76,11 @@ public class Server<T extends ServerMessageContext>
 		loopTimer.scheduleAtFixedRate(serverUpdateTask, 0, PERIOD, TimeUnit.MILLISECONDS);
 	}
 
+	/**
+	 * Shutdown all active connections and stop listening for new ones.
+	 *
+	 * @throws IOException If there's an exception when whutting down clients.
+	 */
 	public void shutdown() throws IOException {
 		connectionPool.shutdown();
 		clientListener.stopListening();
