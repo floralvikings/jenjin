@@ -125,7 +125,8 @@ public class ConnectionTest
 
 		// Ping time should be extremely close to 0, but taking into account wonkiness with tests, I'll allow
 		// up to 1000
-        Assert.assertEquals(connection.getPingTracker().getAveragePingTime(), 0, 1000, "Ping response too high\n" +
-              "this may be a one off, try running again before digging too deeply.");
+		Assert.assertEquals(connection.getMessageContext().getPingTracker().getAveragePingTime(), 0, 1000, "Ping " +
+			  "response too high\n" +
+			  "this may be a one off, try running again before digging too deeply.");
     }
 }

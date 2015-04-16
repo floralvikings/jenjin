@@ -2,7 +2,6 @@ package com.jenjinstudios.core;
 
 import com.jenjinstudios.core.concurrency.MessageContext;
 import com.jenjinstudios.core.concurrency.MessageThreadPool;
-import com.jenjinstudios.core.concurrency.PingTracker;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageRegistry;
 import com.jenjinstudios.core.io.MessageStreamPair;
@@ -73,13 +72,6 @@ public class Connection<T extends MessageContext> extends MessageThreadPool<T>
 		}
 		return keyPair;
 	}
-
-	/**
-	 * Get the PingTracker used by this connection to track latency.
-	 *
-	 * @return The PingTracker used by this connection to track latency.
-	 */
-	public PingTracker getPingTracker() { return getMessageContext().getPingTracker(); }
 
 	/**
 	 * Set the RSA public/private key pair used to encrypt outgoing and decrypt incoming messages, and queue a message
