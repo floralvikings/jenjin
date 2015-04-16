@@ -9,8 +9,9 @@ import java.io.InputStream;
 import java.security.KeyPair;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * The base class for any client.  This class uses a similar system to the JGSA.
@@ -20,8 +21,8 @@ import java.util.TimerTask;
 public class Client<T extends ClientMessageContext> extends Connection<T>
 {
 	private static final int UPDATES_PER_SECOND = 60;
+	private final ScheduledExecutorService executorService;
 	private final List<Runnable> repeatedTasks;
-	private Timer updateTimer;
 	private final ClientLoop clientLoop = new ClientLoop(this);
 
     /**
@@ -32,6 +33,7 @@ public class Client<T extends ClientMessageContext> extends Connection<T>
 	 */
 	protected Client(MessageStreamPair messageStreamPair, T context) {
 		super(messageStreamPair, context);
+		executorService = Executors.newSingleThreadScheduledExecutor();
 		repeatedTasks = new LinkedList<>();
 		InputStream stream = getClass().getClassLoader().getResourceAsStream("com/jenjinstudios/client/Messages.xml");
 		MessageRegistry.getGlobalRegistry().register("Core Client/Server Messages", stream);
@@ -64,11 +66,8 @@ public class Client<T extends ClientMessageContext> extends Connection<T>
     @Override
     public void shutdown() {
         super.shutdown();
-		if (updateTimer != null)
-		{
-			updateTimer.cancel();
-		}
-    }
+		executorService.shutdown();
+	}
 
     @Override
     public void start() {
@@ -78,9 +77,8 @@ public class Client<T extends ClientMessageContext> extends Connection<T>
         // Finally, send a ping request to establish latency.
 		enqueueMessage(generatePingRequest());
 
-		updateTimer = new Timer("Client Update Loop", false);
 		int period = 1000 / UPDATES_PER_SECOND;
-		updateTimer.scheduleAtFixedRate(clientLoop, 0, period);
+		executorService.scheduleWithFixedDelay(clientLoop, 0, period, TimeUnit.MILLISECONDS);
 
 		super.start();
 	}
@@ -112,7 +110,7 @@ public class Client<T extends ClientMessageContext> extends Connection<T>
      *
      * @author Caleb Brinkman
      */
-    private static class ClientLoop extends TimerTask
+	private static class ClientLoop implements Runnable
 	{
 		private static final int MAX_STORED_UPDATE_TIMES = 50;
 		private static final int NANOS_TO_SECOND = 1000000000;
