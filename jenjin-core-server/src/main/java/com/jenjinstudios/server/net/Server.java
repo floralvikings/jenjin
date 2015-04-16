@@ -21,20 +21,20 @@ public class Server<T extends ServerMessageContext>
 	private final int UPS;
 	private final int PERIOD;
 	private final Authenticator authenticator;
-	private final ClientListener clientListener;
+	private final ClientListener<T> clientListener;
 	private final KeyPair rsaKeyPair;
 	private ScheduledExecutorService loopTimer;
 	private ServerUpdateTask serverUpdateTask;
 
-	protected Server(ServerInit initInfo, Authenticator authenticator) throws IOException, NoSuchMethodException {
-        LOGGER.log(Level.FINE, "Initializing Server.");
+	protected Server(ServerInit<T> initInfo, Authenticator authenticator) throws IOException, NoSuchMethodException {
+		LOGGER.log(Level.FINE, "Initializing Server.");
         UPS = initInfo.getUps();
 		connectionPool = new ConnectionPool<>();
-		connectionPool.addShutdownTask(new EmergencyLogoutTask<T>());
+		connectionPool.addShutdownTask(new EmergencyLogoutTask<>());
 		PERIOD = 1000 / UPS;
-		Class<? extends ServerMessageContext> contextClass = initInfo.getContextClass();
+		Class<? extends T> contextClass = initInfo.getContextClass();
 		//noinspection unchecked
-		clientListener = new ClientListener(contextClass, initInfo.getPort());
+		clientListener = new ClientListener<>(contextClass, initInfo.getPort());
 		rsaKeyPair = (initInfo.getKeyPair() == null) ? Connection.generateRSAKeyPair() : initInfo.getKeyPair();
 		this.authenticator = authenticator;
 		InputStream stream = getClass().getClassLoader().getResourceAsStream("com/jenjinstudios/server/Messages.xml");
@@ -44,8 +44,8 @@ public class Server<T extends ServerMessageContext>
 	public ServerUpdateTask getServerUpdateTask() { return serverUpdateTask; }
 
     public void checkListenerForClients() {
-		Iterable<Connection> nc = clientListener.getNewClients();
-		for (Connection h : nc)
+		Iterable<Connection<? extends T>> nc = clientListener.getNewClients();
+		for (Connection<? extends T> h : nc)
 		{
 			connectionPool.addConnection(h);
 			clientHandlerAdded(h);
