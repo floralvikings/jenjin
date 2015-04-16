@@ -6,7 +6,6 @@ import com.jenjinstudios.core.io.MessageInputStream;
 import java.io.IOException;
 import java.util.Deque;
 import java.util.LinkedList;
-import java.util.TimerTask;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -84,7 +83,7 @@ public class MessageReader
 		return messages;
 	}
 
-	private class ReadTask extends TimerTask
+	private class ReadTask implements Runnable
 	{
 		@Override
 		public void run() {
