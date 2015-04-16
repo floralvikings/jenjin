@@ -91,6 +91,7 @@ public class ServerInit<T extends ServerMessageContext>
 
 	/**
 	 * Set the class of the MessageContext that will be used by connections to the server.
+	 *
 	 * @param contextClass The context class.
 	 */
 	public void setContextClass(Class<? extends T> contextClass) {
