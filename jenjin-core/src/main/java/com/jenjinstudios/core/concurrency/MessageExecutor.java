@@ -9,7 +9,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.TimerTask;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -62,7 +61,7 @@ public class MessageExecutor
 	 */
 	protected void setMessageContext(MessageContext messageContext) { this.messageContext = messageContext; }
 
-	private class MessageExecutorTask extends TimerTask
+	private class MessageExecutorTask implements Runnable
 	{
 		private final ExecutableMessageFactory exMessageFactory;
 		private final MessageThreadPool threadPool;
