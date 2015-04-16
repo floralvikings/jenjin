@@ -25,7 +25,7 @@ class ClientListener<T extends MessageContext> implements Runnable
 	private static final Logger LOGGER = Logger.getLogger(ClientListener.class.getName());
 	private final Class<? extends T> contextClass;
 	private final int port;
-	private final LinkedList<Connection> newConnections;
+	private final LinkedList<Connection<? extends T>> newConnections;
 	private volatile boolean listening;
 	private final ServerSocket serverSock;
 
@@ -48,8 +48,8 @@ class ClientListener<T extends MessageContext> implements Runnable
 	 * Get the new clients accrued since the last check.
 	 * @return A {@code LinkedList} containing the new clients.
 	 */
-	public Iterable<Connection> getNewClients() {
-		Collection<Connection> temp = new LinkedList<>();
+	public Iterable<Connection<? extends T>> getNewClients() {
+		Collection<Connection<? extends T>> temp = new LinkedList<>();
 		synchronized (newConnections)
 		{
 			if (!newConnections.isEmpty())
