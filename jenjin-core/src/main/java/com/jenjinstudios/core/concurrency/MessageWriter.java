@@ -53,7 +53,7 @@ public class MessageWriter
 	/**
 	 * Begin writing messages to the output stream.
 	 */
-	public void start() { executorService.scheduleAtFixedRate(writeTask, 0, 10, TimeUnit.MILLISECONDS); }
+	public void start() { executorService.scheduleWithFixedDelay(writeTask, 0, 10, TimeUnit.MILLISECONDS); }
 
 	/**
 	 * Stop writing messages to the output stream.  Once this has been called, the timer may not be restarted.
