@@ -86,7 +86,7 @@ class ClientListener<T extends MessageContext> implements Runnable
 	 * Add a new client to the list of new clients.
 	 * @param h The handler for the new client.
 	 */
-	void addNewClient(Connection h) {
+	void addNewClient(Connection<? extends T> h) {
 		synchronized (newConnections)
 		{
 			newConnections.add(h);
