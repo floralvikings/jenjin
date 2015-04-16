@@ -7,7 +7,7 @@ import java.security.KeyPair;
  *
  * @author Caleb Brinkman
  */
-public class ServerInit
+public class ServerInit<T extends ServerMessageContext>
 {
 	/** The default number of updates per second. */
 	public static final int DEFAULT_UPS = 50;
@@ -17,7 +17,7 @@ public class ServerInit
 	private int ups;
 	private int port;
 	private KeyPair keyPair;
-	private Class<? extends ServerMessageContext> contextClass;
+	private Class<? extends T> contextClass;
 
 	/**
 	 * Construct a new {@code ServerInit}.
@@ -85,7 +85,7 @@ public class ServerInit
 	 *
 	 * @return The context class.
 	 */
-	public Class<? extends ServerMessageContext> getContextClass() {
+	public Class<? extends T> getContextClass() {
 		return contextClass;
 	}
 
@@ -93,7 +93,7 @@ public class ServerInit
 	 * Set the class of the MessageContext that will be used by connections to the server.
 	 * @param contextClass The context class.
 	 */
-	public void setContextClass(Class<? extends ServerMessageContext> contextClass) {
+	public void setContextClass(Class<? extends T> contextClass) {
 		this.contextClass = contextClass;
 	}
 }
