@@ -40,7 +40,7 @@ public class ConnectionPool<T extends MessageContext>
 	 *
 	 * @param connection The connection to remove.
 	 */
-	public void removeConnection(Connection connection)
+	protected void removeConnection(Connection connection)
 	{
 		synchronized (connections)
 		{
@@ -51,7 +51,7 @@ public class ConnectionPool<T extends MessageContext>
 	/**
 	 * Shutdown all connections in the pool.
 	 */
-	public void shutdownConnections()
+	protected void shutdownConnections()
 	{
 		synchronized (connections)
 		{
