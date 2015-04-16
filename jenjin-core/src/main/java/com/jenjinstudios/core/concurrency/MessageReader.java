@@ -6,8 +6,10 @@ import com.jenjinstudios.core.io.MessageInputStream;
 import java.io.IOException;
 import java.util.Deque;
 import java.util.LinkedList;
-import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -23,7 +25,7 @@ public class MessageReader
 	private static final Logger LOGGER = Logger.getLogger(MessageReader.class.getName());
 	private final Deque<Message> incoming;
 	private final MessageInputStream inputStream;
-	private final Timer runTimer;
+	private final ScheduledExecutorService executorService;
 	private final ReadTask readTask;
 	private volatile boolean errored;
 
@@ -35,8 +37,8 @@ public class MessageReader
 	public MessageReader(MessageInputStream inputStream) {
 		this.inputStream = inputStream;
 		incoming = new LinkedList<>();
-		runTimer = new Timer("MessageReader");
 		readTask = new ReadTask();
+		executorService = Executors.newSingleThreadScheduledExecutor();
 	}
 
 	/**
@@ -49,13 +51,13 @@ public class MessageReader
 	/**
 	 * Begin reading messages from the output stream.
 	 */
-	public void start() { runTimer.schedule(readTask, 0, 10); }
+	public void start() { executorService.scheduleWithFixedDelay(readTask, 0, 10, TimeUnit.MILLISECONDS); }
 
 	/**
 	 * Stop reading messages from the output stream.  Once this has been called, the timer may not be restarted.
 	 */
 	public void stop() {
-		runTimer.cancel();
+		executorService.shutdown();
 		try
 		{
 			inputStream.close();
