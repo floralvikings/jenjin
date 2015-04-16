@@ -6,7 +6,13 @@ import com.jenjinstudios.core.xml.MessageType;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.*;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.TimerTask;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -21,7 +27,7 @@ public class MessageExecutor
 	private static final Logger LOGGER = Logger.getLogger(MessageExecutor.class.getName());
 	private static final Constructor[] EMPTY_CONSTRUCTOR_ARRAY = new Constructor[0];
 	private final MessageExecutorTask messageExecutorTask;
-	private final Timer runTimer;
+	private final ScheduledExecutorService executorService;
 	private MessageContext messageContext;
 
 	/**
@@ -32,21 +38,21 @@ public class MessageExecutor
 	 */
 	public MessageExecutor(MessageThreadPool threadPool) {
 		this.messageExecutorTask = new MessageExecutorTask(threadPool);
-		runTimer = new Timer("MessageExecutor");
+		executorService = Executors.newSingleThreadScheduledExecutor();
 	}
 
 	/**
 	 * Start executing incoming messages.
 	 */
 	public void start() {
-		runTimer.schedule(messageExecutorTask, 0, 10);
+		executorService.scheduleWithFixedDelay(messageExecutorTask, 0, 10, TimeUnit.MILLISECONDS);
 	}
 
 	/**
 	 * Stop executing incoming messages.
 	 */
 	public void stop() {
-		runTimer.cancel();
+		executorService.shutdown();
 	}
 
 	/**
