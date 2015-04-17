@@ -25,7 +25,7 @@ public class EmergencyLogoutTask<T extends ServerMessageContext> implements Shut
 		{
 			try
 			{
-				context.getAuthenticator().logOutUser(user.getUsername());
+				context.getAuthenticator().logOutUser(user);
 			} catch (AuthenticationException e)
 			{
 				LOGGER.log(Level.WARNING, "Unable to perform emergency logout.", e);

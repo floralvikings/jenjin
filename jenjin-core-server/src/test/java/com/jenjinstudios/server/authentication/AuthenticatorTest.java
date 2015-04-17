@@ -72,9 +72,8 @@ public class AuthenticatorTest
 		Authenticator<BasicUser> connector = new Authenticator<>(new UserTable(connection));
 		String username = "TestAccount4";
 		String password = "testPassword";
-		connector.logInUser(username, password);
-		connector.logOutUser(username);
-		User user = connector.getUserLookup().findUser(username);
+		BasicUser user = connector.logInUser(username, password);
+		connector.logOutUser(user);
 		Assert.assertFalse(user.isLoggedIn(), "User should not be logged in.");
 
 	}

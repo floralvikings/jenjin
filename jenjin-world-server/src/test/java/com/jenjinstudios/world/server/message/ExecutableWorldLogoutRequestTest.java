@@ -107,7 +107,7 @@ public class ExecutableWorldLogoutRequestTest extends PowerMockTestCase
 
 		when(context.getAuthenticator()).thenReturn(authenticator);
 		when(context.getWorld()).thenReturn(world);
-		when(authenticator.logOutUser(any())).thenThrow(new AuthenticationException("Foo"));
+		doThrow(new AuthenticationException("Foo")).when(authenticator).logOutUser(any());
 		when(context.getUser()).thenReturn(player);
 
 		ExecutableWorldLogoutRequest exec = new ExecutableWorldLogoutRequest(logOutRequest, context);

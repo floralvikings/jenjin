@@ -35,7 +35,6 @@ public class ExecutableLogoutRequestTest extends PowerMockTestCase
 		Authenticator<BasicUser> authenticator = mock(Authenticator.class);
 		ServerMessageContext context = mock(ServerMessageContext.class);
 		when(context.getAuthenticator()).thenReturn(authenticator);
-		when(authenticator.logOutUser(any())).thenReturn(new BasicUser());
 		when(context.getUser()).thenReturn(user);
 
 		ExecutableMessage exec = new ExecutableLogoutRequest(logoutRequest, context);

@@ -39,7 +39,7 @@ public class ExecutableLogoutRequest extends ServerExecutableMessage<ServerMessa
 			String username = user.getUsername();
 			try
 			{
-				user = authenticator.logOutUser(username);
+				authenticator.logOutUser(user);
 				response = ServerMessageFactory.generateLogoutResponse(!user.isLoggedIn());
 				getContext().setUser(null);
 			} catch (AuthenticationException e)
