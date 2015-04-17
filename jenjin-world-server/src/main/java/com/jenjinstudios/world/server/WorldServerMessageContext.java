@@ -10,7 +10,7 @@ import java.util.Arrays;
  *
  * @author Caleb Brinkman
  */
-public class WorldServerMessageContext extends ServerMessageContext<Player>
+public class WorldServerMessageContext<U extends Player> extends ServerMessageContext<U>
 {
 	private World world;
 	private byte[] worldChecksum;

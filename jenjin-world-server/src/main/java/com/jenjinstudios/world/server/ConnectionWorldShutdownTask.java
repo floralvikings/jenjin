@@ -9,7 +9,8 @@ import com.jenjinstudios.world.World;
  *
  * @author Caleb Brinkman
  */
-public class ConnectionWorldShutdownTask<T extends WorldServerMessageContext> implements ShutdownTask<T>
+public class ConnectionWorldShutdownTask<T extends WorldServerMessageContext<? extends Player>> implements
+	  ShutdownTask<T>
 {
 	private final World world;
 

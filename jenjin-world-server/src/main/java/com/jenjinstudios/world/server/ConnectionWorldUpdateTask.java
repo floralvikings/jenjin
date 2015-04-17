@@ -17,11 +17,11 @@ import java.util.Set;
  *
  * @author Caleb Brinkman
  */
-public class ConnectionWorldUpdateTask<T extends WorldServerMessageContext> implements UpdateTask<T>
+public class ConnectionWorldUpdateTask<T extends WorldServerMessageContext<? extends Player>> implements UpdateTask<T>
 {
 	@Override
 	public void update(Connection<? extends T> connection) {
-		WorldServerMessageContext context = connection.getMessageContext();
+		WorldServerMessageContext<? extends Player> context = connection.getMessageContext();
 		if (context.getUser() != null)
 		{
 			if (context.needsToSendSpeedMessage())

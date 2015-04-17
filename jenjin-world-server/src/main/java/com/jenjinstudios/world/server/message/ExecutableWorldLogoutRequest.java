@@ -12,7 +12,7 @@ import com.jenjinstudios.world.server.WorldServerMessageContext;
  * Handles requests to log out of the world.
  * @author Caleb Brinkman
  */
-public class ExecutableWorldLogoutRequest extends WorldExecutableMessage<WorldServerMessageContext>
+public class ExecutableWorldLogoutRequest extends WorldExecutableMessage<WorldServerMessageContext<Player>>
 {
 	/** The SQLHandler used to log out the client. */
 	private final Authenticator<Player> authenticator;
@@ -22,7 +22,7 @@ public class ExecutableWorldLogoutRequest extends WorldExecutableMessage<WorldSe
 	 * @param message The message.
 	 * @param context The context in which to execute the message.
 	 */
-	public ExecutableWorldLogoutRequest(Message message, WorldServerMessageContext context)
+	public ExecutableWorldLogoutRequest(Message message, WorldServerMessageContext<Player> context)
 	{
 		super(message, context);
 		authenticator = getContext().getAuthenticator();

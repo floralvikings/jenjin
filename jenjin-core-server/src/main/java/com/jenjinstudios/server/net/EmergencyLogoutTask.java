@@ -13,14 +13,14 @@ import java.util.logging.Logger;
  *
  * @author Caleb Brinkman
  */
-public class EmergencyLogoutTask<T extends ServerMessageContext<User>> implements ShutdownTask<T>
+public class EmergencyLogoutTask<U extends User, T extends ServerMessageContext<U>> implements ShutdownTask<T>
 {
 	private static final Logger LOGGER = Logger.getLogger(EmergencyLogoutTask.class.getName());
 
 	@Override
 	public void shutdown(Connection<? extends T> connection) {
-		ServerMessageContext<User> context = connection.getMessageContext();
-		User user = context.getUser();
+		ServerMessageContext<U> context = connection.getMessageContext();
+		U user = context.getUser();
 		if (user != null)
 		{
 			try

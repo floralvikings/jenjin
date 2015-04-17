@@ -19,7 +19,7 @@ import java.io.InputStream;
  * The WorldServer class is responsible for updating a game world.
  * @author Caleb Brinkman
  */
-public class WorldServer<T extends WorldServerMessageContext> extends Server<T>
+public class WorldServer<U extends Player, T extends WorldServerMessageContext<U>> extends Server<U, T>
 {
 	private final World world;
 	private final byte[] worldFileChecksum;
@@ -33,7 +33,7 @@ public class WorldServer<T extends WorldServerMessageContext> extends Server<T>
 	 * @throws NoSuchMethodException If there is no appropriate constructor for the specified ClientHandler
 	 * constructor.
 	 */
-	public WorldServer(ServerInit init, Authenticator<Player> authenticator, WorldDocumentReader reader)
+	public WorldServer(ServerInit<T> init, Authenticator<U> authenticator, WorldDocumentReader reader)
 	throws IOException, NoSuchMethodException
 	{
 		super(init, authenticator);

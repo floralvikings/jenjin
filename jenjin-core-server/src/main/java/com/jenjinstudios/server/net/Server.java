@@ -3,6 +3,7 @@ package com.jenjinstudios.server.net;
 import com.jenjinstudios.core.Connection;
 import com.jenjinstudios.core.io.MessageRegistry;
 import com.jenjinstudios.server.authentication.Authenticator;
+import com.jenjinstudios.server.authentication.User;
 import com.jenjinstudios.server.concurrency.ConnectionPool;
 
 import java.io.IOException;
@@ -14,18 +15,18 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class Server<C extends ServerMessageContext>
+public class Server<U extends User, C extends ServerMessageContext<U>>
 {
 	private static final Logger LOGGER = Logger.getLogger(Server.class.getName());
 	private final ConnectionPool<C> connectionPool;
 	private final int UPS;
 	private final int PERIOD;
-	private final Authenticator authenticator;
+	private final Authenticator<U> authenticator;
 	private final KeyPair rsaKeyPair;
 	private ScheduledExecutorService loopTimer;
 	private ServerUpdateTask serverUpdateTask;
 
-	protected Server(ServerInit<C> initInfo, Authenticator authenticator) throws IOException {
+	protected Server(ServerInit<C> initInfo, Authenticator<U> authenticator) throws IOException {
 		LOGGER.log(Level.FINE, "Initializing Server.");
         UPS = initInfo.getUps();
 		connectionPool = new ConnectionPool<>(initInfo.getPort(), initInfo.getContextClass());
@@ -43,7 +44,6 @@ public class Server<C extends ServerMessageContext>
 
 	protected void clientHandlerAdded(Connection<? extends C> h) {
 		h.setRSAKeyPair(rsaKeyPair);
-		//noinspection unchecked
 		h.getMessageContext().setAuthenticator(authenticator);
 	}
 

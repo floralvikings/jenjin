@@ -7,6 +7,7 @@ import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.math.Angle;
 import com.jenjinstudios.world.math.MathUtil;
 import com.jenjinstudios.world.math.Vector2D;
+import com.jenjinstudios.world.server.Player;
 import com.jenjinstudios.world.server.WorldServerMessageContext;
 import com.jenjinstudios.world.state.MoveState;
 import com.jenjinstudios.world.util.ZoneUtils;
@@ -20,7 +21,7 @@ import java.util.logging.Logger;
  * @author Caleb Brinkman
  */
 @SuppressWarnings("WeakerAccess")
-public class ExecutableStateChangeRequest extends WorldExecutableMessage<WorldServerMessageContext>
+public class ExecutableStateChangeRequest extends WorldExecutableMessage<WorldServerMessageContext<Player>>
 {
 	private static final Logger LOGGER = Logger.getLogger(ExecutableStateChangeRequest.class.getName());
 	private static final double MS_TO_S = 1000.0d;
@@ -37,7 +38,7 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage<WorldSe
 	 *  @param message The message.
 	 * @param context The context in which to execute the message.
 	 */
-	public ExecutableStateChangeRequest(Message message, WorldServerMessageContext context)
+	public ExecutableStateChangeRequest(Message message, WorldServerMessageContext<Player> context)
 	{
 		super(message, context);
 	}
@@ -59,7 +60,7 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage<WorldSe
 		angle = new Angle(absoluteAngle, relativeAngle);
 		timePast = (System.currentTimeMillis() - timeOfChange);
 
-		getContext().getUser().getWorld().scheduleUpdateTask(() -> {
+		getContext().getWorld().scheduleUpdateTask(() -> {
 			Actor player = getContext().getUser();
 			if ((player != null) && (player.getWorld() != null))
 			{

@@ -14,7 +14,7 @@ import com.jenjinstudios.world.server.WorldServerMessageContext;
  *
  * @author Caleb Brinkman
  */
-public class ExecutableWorldLoginRequest extends WorldExecutableMessage<WorldServerMessageContext>
+public class ExecutableWorldLoginRequest extends WorldExecutableMessage<WorldServerMessageContext<Player>>
 {
 	private final Authenticator<Player> authenticator;
 	private Message loginResponse;
@@ -24,7 +24,7 @@ public class ExecutableWorldLoginRequest extends WorldExecutableMessage<WorldSer
 	 *  @param message The message.
 	 * @param context The context in which to execute the message.
 	 */
-	public ExecutableWorldLoginRequest(Message message, WorldServerMessageContext context) {
+	public ExecutableWorldLoginRequest(Message message, WorldServerMessageContext<Player> context) {
 		super(message, context);
 		authenticator = getContext().getAuthenticator();
 	}
