@@ -3,6 +3,7 @@ package com.jenjinstudios.server.concurrency;
 import com.jenjinstudios.core.Connection;
 import com.jenjinstudios.core.concurrency.MessageContext;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -21,11 +22,25 @@ import java.util.stream.Collectors;
 public class ConnectionPool<T extends MessageContext>
 {
 	private final Map<String, Connection<? extends T>> connections = new HashMap<>(1);
-	private final ScheduledExecutorService executorService = Executors.newScheduledThreadPool(2);
+	private final ScheduledExecutorService executorService = Executors.newScheduledThreadPool(4);
 	private final Runnable cleanupTask = new CleanupTask();
 	private final Runnable updateAllTask = new UpdateAllTask();
+	private final Runnable newConnectionsTask = new NewConnectionsTask();
+	private final ConnectionListener<T> connectionListener;
 	private final Collection<ShutdownTask<T>> shutdownTasks = new ConcurrentLinkedQueue<>();
 	private final Collection<UpdateTask<T>> updateTasks = new ConcurrentLinkedQueue<>();
+
+	/**
+	 * Construct a new ConnectionPool, listeneing on the given port and using MessageContexts of the given class.
+	 *
+	 * @param port The port on which to listen for new connections.
+	 * @param conextClass The class of MessageContext to pass to new connections.
+	 *
+	 * @throws IOException If there's an exception when creating the server socket.
+	 */
+	public ConnectionPool(int port, Class<T> conextClass) throws IOException {
+		connectionListener = new ConnectionListener<>(port, conextClass);
+	}
 
 	/**
 	 * Add a connection to the pool.
@@ -100,6 +115,8 @@ public class ConnectionPool<T extends MessageContext>
 	 */
 	public void start() {
 		executorService.scheduleWithFixedDelay(cleanupTask, 0, 100, TimeUnit.MILLISECONDS);
+		executorService.scheduleWithFixedDelay(newConnectionsTask, 0, 100, TimeUnit.MILLISECONDS);
+		executorService.scheduleWithFixedDelay(connectionListener, 0, 10, TimeUnit.MILLISECONDS);
 		executorService.scheduleWithFixedDelay(updateAllTask, 0, 10, TimeUnit.MILLISECONDS);
 	}
 
@@ -128,6 +145,15 @@ public class ConnectionPool<T extends MessageContext>
 					  updateTasks.forEach(task ->
 							task.update(connection)));
 			}
+		}
+	}
+
+	private class NewConnectionsTask implements Runnable
+	{
+		@Override
+		public void run() {
+			Iterable<Connection<T>> newConnections = connectionListener.getNewConnections();
+			newConnections.forEach(ConnectionPool.this::addConnection);
 		}
 	}
 }
