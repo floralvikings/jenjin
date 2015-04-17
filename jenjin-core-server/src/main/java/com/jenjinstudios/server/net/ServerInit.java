@@ -15,7 +15,7 @@ public class ServerInit<T extends ServerMessageContext>
 	private int ups;
 	private int port;
 	private KeyPair keyPair;
-	private Class<? extends T> contextClass;
+	private Class<T> contextClass;
 
 	/**
 	 * Construct a new {@code ServerInit}.
@@ -83,7 +83,7 @@ public class ServerInit<T extends ServerMessageContext>
 	 *
 	 * @return The context class.
 	 */
-	public Class<? extends T> getContextClass() {
+	public Class<T> getContextClass() {
 		return contextClass;
 	}
 
@@ -92,7 +92,5 @@ public class ServerInit<T extends ServerMessageContext>
 	 *
 	 * @param contextClass The context class.
 	 */
-	public void setContextClass(Class<? extends T> contextClass) {
-		this.contextClass = contextClass;
-	}
+	public void setContextClass(Class<T> contextClass) { this.contextClass = contextClass; }
 }
