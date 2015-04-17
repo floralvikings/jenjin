@@ -9,7 +9,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Deque;
+import java.util.Collection;
 import java.util.LinkedList;
 
 /**
@@ -95,7 +95,7 @@ public class AuthenticatorTest
 
 	private static class ConnectionFactory
 	{
-		private final Deque<Connection> connections = new LinkedList<>();
+		private final Collection<Connection> connections = new LinkedList<>();
 		private int connectionNumber;
 
 		private Connection createTestConnection() throws Exception {
