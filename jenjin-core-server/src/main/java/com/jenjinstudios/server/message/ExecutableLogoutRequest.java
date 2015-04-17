@@ -18,7 +18,7 @@ public class ExecutableLogoutRequest extends ServerExecutableMessage<ServerMessa
 {
 	private static final Logger LOGGER = Logger.getLogger(ExecutableLogoutRequest.class.getName());
 	/** The SQLHandler used to log out the client. */
-	private final Authenticator authenticator;
+	private final Authenticator<User> authenticator;
 
 	/**
 	 * Construct a new ExecutableLogoutRequest.
