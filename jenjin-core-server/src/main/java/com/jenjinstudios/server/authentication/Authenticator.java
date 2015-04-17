@@ -75,21 +75,11 @@ public class Authenticator<T extends User>
 	 * Attempt to log out the user with the given username.  Note that if a user is already logged out, this method has
 	 * no affect.
 	 *
-	 * @param username The username of the user to be logged out.
-	 *
-	 * @return The user that was logged out.
+	 * @param user The user to be logged out.
 	 *
 	 * @throws AuthenticationException If there is an exception when updating the database.
 	 */
-	public T logOutUser(String username) throws AuthenticationException {
-		T user;
-		try
-		{
-			user = userLookup.findUser(username);
-		} catch (DbException ex)
-		{
-			throw new AuthenticationException("Exception when accessing authentication database", ex);
-		}
+	public void logOutUser(T user) throws AuthenticationException {
 		if ((user != null) && user.isLoggedIn())
 		{
 			user.setLoggedIn(false);
@@ -109,7 +99,6 @@ public class Authenticator<T extends User>
 				throw new AuthenticationException("Database was not updated.");
 			}
 		}
-		return user;
 	}
 
 	private T getUserWithValidPassword(String username, String password) throws DbException {
