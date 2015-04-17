@@ -3,8 +3,14 @@ package com.jenjinstudios.server.concurrency;
 import com.jenjinstudios.core.Connection;
 import com.jenjinstudios.core.concurrency.MessageContext;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -15,10 +21,9 @@ import java.util.stream.Collectors;
 public class ConnectionPool<T extends MessageContext>
 {
 	private final Map<String, Connection<? extends T>> connections = new HashMap<>(1);
-	private final Timer cleanupTimer = new Timer("Connection Pool Cleanup Timer");
-	private final Timer updateTimer = new Timer("Connection Pool Update Timer");
-	private final TimerTask cleanupTask = new CleanupTask();
-	private final UpdateAllTask updateAllTask = new UpdateAllTask();
+	private final ScheduledExecutorService executorService = Executors.newScheduledThreadPool(2);
+	private final Runnable cleanupTask = new CleanupTask();
+	private final Runnable updateAllTask = new UpdateAllTask();
 	private final Collection<ShutdownTask<T>> shutdownTasks = new ConcurrentLinkedQueue<>();
 	private final Collection<UpdateTask<T>> updateTasks = new ConcurrentLinkedQueue<>();
 
@@ -68,7 +73,7 @@ public class ConnectionPool<T extends MessageContext>
 	 */
 	public void shutdown() {
 		shutdownConnections();
-		cleanupTimer.cancel();
+		executorService.shutdown();
 		cleanupTask.run();
 	}
 
@@ -94,11 +99,11 @@ public class ConnectionPool<T extends MessageContext>
 	 * Start maintanence threads; responsible for updating and removing connections that have been added and shut down.
 	 */
 	public void start() {
-		cleanupTimer.schedule(cleanupTask, 0, 100);
-		updateTimer.schedule(updateAllTask, 0, 10);
+		executorService.scheduleWithFixedDelay(cleanupTask, 0, 100, TimeUnit.MILLISECONDS);
+		executorService.scheduleWithFixedDelay(updateAllTask, 0, 10, TimeUnit.MILLISECONDS);
 	}
 
-	private class CleanupTask extends TimerTask
+	private class CleanupTask implements Runnable
 	{
 		@Override
 		public void run() {
@@ -113,7 +118,7 @@ public class ConnectionPool<T extends MessageContext>
 		}
 	}
 
-	private class UpdateAllTask extends TimerTask
+	private class UpdateAllTask implements Runnable
 	{
 		@Override
 		public void run() {
