@@ -14,10 +14,10 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class Server<T extends ServerMessageContext>
+public class Server<C extends ServerMessageContext>
 {
 	private static final Logger LOGGER = Logger.getLogger(Server.class.getName());
-	private final ConnectionPool<T> connectionPool;
+	private final ConnectionPool<C> connectionPool;
 	private final int UPS;
 	private final int PERIOD;
 	private final Authenticator authenticator;
@@ -25,7 +25,7 @@ public class Server<T extends ServerMessageContext>
 	private ScheduledExecutorService loopTimer;
 	private ServerUpdateTask serverUpdateTask;
 
-	protected Server(ServerInit<T> initInfo, Authenticator authenticator) throws IOException {
+	protected Server(ServerInit<C> initInfo, Authenticator authenticator) throws IOException {
 		LOGGER.log(Level.FINE, "Initializing Server.");
         UPS = initInfo.getUps();
 		connectionPool = new ConnectionPool<>(initInfo.getPort(), initInfo.getContextClass());
@@ -41,7 +41,7 @@ public class Server<T extends ServerMessageContext>
 
 	public int getUps() { return UPS; }
 
-	protected void clientHandlerAdded(Connection<? extends T> h) {
+	protected void clientHandlerAdded(Connection<? extends C> h) {
 		h.setRSAKeyPair(rsaKeyPair);
 		//noinspection unchecked
 		h.getMessageContext().setAuthenticator(authenticator);
@@ -77,6 +77,6 @@ public class Server<T extends ServerMessageContext>
 	 *
 	 * @return The ConnectionPool that manages connections for this server.
 	 */
-	protected ConnectionPool<T> getConnectionPool() { return connectionPool; }
+	protected ConnectionPool<C> getConnectionPool() { return connectionPool; }
 
 }
