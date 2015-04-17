@@ -23,18 +23,7 @@ public class ServerUpdateTask implements Runnable
 
 	@Override
 	public void run() {
-		checkForNewClients();
 		runRepeatedTasks();
-	}
-
-	private void checkForNewClients() {
-		try
-		{
-			server.checkListenerForClients();
-		} catch (RuntimeException ex)
-		{
-			LOGGER.log(Level.WARNING, "Exception when checking for new clients", ex);
-		}
 	}
 
 	private void runRepeatedTasks() {
