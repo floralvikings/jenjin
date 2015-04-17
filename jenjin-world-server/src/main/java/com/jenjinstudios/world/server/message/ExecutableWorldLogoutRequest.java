@@ -44,7 +44,7 @@ public class ExecutableWorldLogoutRequest extends WorldExecutableMessage<WorldSe
 		Player clientActor = getContext().getUser();
 		World world = getContext().getWorld();
 		world.scheduleUpdateTask(() -> {
-			if ((clientActor != null) && !clientActor.isLoggedIn())
+			if (clientActor != null)
 			{
 				clientActor.getWorld().getWorldObjects().remove(clientActor.getId());
 			}
