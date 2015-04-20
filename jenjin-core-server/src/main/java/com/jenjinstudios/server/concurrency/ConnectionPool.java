@@ -27,6 +27,7 @@ public class ConnectionPool<T extends MessageContext>
 	private final Runnable updateAllTask = new UpdateAllTask();
 	private final Runnable newConnectionsTask = new NewConnectionsTask();
 	private final ConnectionListener<T> connectionListener;
+	private final Collection<ConnectionAddedTask<T>> connectionAddedTasks = new ConcurrentLinkedQueue<>();
 	private final Collection<ShutdownTask<T>> shutdownTasks = new ConcurrentLinkedQueue<>();
 	private final Collection<UpdateTask<T>> updateTasks = new ConcurrentLinkedQueue<>();
 
@@ -47,12 +48,13 @@ public class ConnectionPool<T extends MessageContext>
 	 *
 	 * @param connection The connection to add.
 	 */
-	public void addConnection(Connection<? extends T> connection)
+	public void addConnection(Connection<T> connection)
 	{
 		synchronized (connections)
 		{
 			connections.put(connection.getId(), connection);
 		}
+		connectionAddedTasks.forEach(task -> task.connectionAdded(connection));
 	}
 
 	/**
@@ -109,6 +111,8 @@ public class ConnectionPool<T extends MessageContext>
 	public void addUpdateTask(UpdateTask<T> task) {
 		updateTasks.add(task);
 	}
+
+	public void addConnectionAddedTask(ConnectionAddedTask<T> task) { connectionAddedTasks.add(task); }
 
 	/**
 	 * Start maintanence threads; responsible for updating and removing connections that have been added and shut down.

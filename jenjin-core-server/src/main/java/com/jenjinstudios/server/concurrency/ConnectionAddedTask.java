@@ -1,5 +1,6 @@
 package com.jenjinstudios.server.concurrency;
 
+import com.jenjinstudios.core.Connection;
 import com.jenjinstudios.core.concurrency.MessageContext;
 
 /**
@@ -15,5 +16,5 @@ public interface ConnectionAddedTask<T extends MessageContext>
 	 *
 	 * @param connection The connection that has been added.
 	 */
-	void connectionAdded(T connection);
+	void connectionAdded(Connection<T> connection);
 }
