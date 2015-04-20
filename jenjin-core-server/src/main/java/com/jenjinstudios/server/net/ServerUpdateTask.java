@@ -39,10 +39,4 @@ public class ServerUpdateTask implements Runnable
 		}
 	}
 
-	public void addRepeatedTask(Runnable r) {
-		synchronized (repeatedTasks)
-		{
-			repeatedTasks.add(r);
-		}
-	}
 }
