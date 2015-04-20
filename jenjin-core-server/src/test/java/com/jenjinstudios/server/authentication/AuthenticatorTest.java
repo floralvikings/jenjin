@@ -1,6 +1,5 @@
 package com.jenjinstudios.server.authentication;
 
-import com.jenjinstudios.server.database.sql.UserTable;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;

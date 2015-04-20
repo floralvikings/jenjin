@@ -1,9 +1,7 @@
-package com.jenjinstudios.server.database.sql;
+package com.jenjinstudios.server.authentication;
 
-import com.jenjinstudios.server.authentication.BasicUser;
-import com.jenjinstudios.server.authentication.User;
-import com.jenjinstudios.server.authentication.UserLookup;
 import com.jenjinstudios.server.database.DbTable;
+import com.jenjinstudios.server.database.sql.TestConnectionFactory;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
