@@ -28,12 +28,16 @@ public class Server<U extends User, C extends ServerMessageContext<U>>
 
 	protected Server(ServerInit<C> initInfo, Authenticator<U> authenticator) throws IOException {
 		LOGGER.log(Level.FINE, "Initializing Server.");
-        UPS = initInfo.getUps();
-		connectionPool = new ConnectionPool<>(initInfo.getPort(), initInfo.getContextClass());
-		connectionPool.addShutdownTask(new EmergencyLogoutTask<>());
-		PERIOD = 1000 / UPS;
 		rsaKeyPair = (initInfo.getKeyPair() == null) ? Connection.generateRSAKeyPair() : initInfo.getKeyPair();
 		this.authenticator = authenticator;
+		UPS = initInfo.getUps();
+		PERIOD = 1000 / UPS;
+		connectionPool = new ConnectionPool<>(initInfo.getPort(), initInfo.getContextClass());
+		connectionPool.addShutdownTask(new EmergencyLogoutTask<>());
+		connectionPool.addConnectionAddedTask(connection -> {
+			connection.setRSAKeyPair(rsaKeyPair);
+			connection.getMessageContext().setAuthenticator(authenticator);
+		});
 		InputStream stream = getClass().getClassLoader().getResourceAsStream("com/jenjinstudios/server/Messages.xml");
 		MessageRegistry.getGlobalRegistry().register("Core Client/Server Messages", stream);
 	}
@@ -41,11 +45,6 @@ public class Server<U extends User, C extends ServerMessageContext<U>>
 	public ServerUpdateTask getServerUpdateTask() { return serverUpdateTask; }
 
 	public int getUps() { return UPS; }
-
-	protected void clientHandlerAdded(Connection<? extends C> h) {
-		h.setRSAKeyPair(rsaKeyPair);
-		h.getMessageContext().setAuthenticator(authenticator);
-	}
 
 	public Authenticator getAuthenticator() { return authenticator; }
 

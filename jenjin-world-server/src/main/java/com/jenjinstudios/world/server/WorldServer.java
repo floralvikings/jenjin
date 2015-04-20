@@ -1,6 +1,5 @@
 package com.jenjinstudios.world.server;
 
-import com.jenjinstudios.core.Connection;
 import com.jenjinstudios.core.io.MessageRegistry;
 import com.jenjinstudios.server.authentication.Authenticator;
 import com.jenjinstudios.server.net.Server;
@@ -57,6 +56,11 @@ public class WorldServer<U extends Player, T extends WorldServerMessageContext<U
 
 		getConnectionPool().addUpdateTask(new ConnectionWorldUpdateTask<>());
 		getConnectionPool().addShutdownTask(new ConnectionWorldShutdownTask<>(world));
+		getConnectionPool().addConnectionAddedTask(connection -> {
+			connection.getMessageContext().setWorld(world);
+			connection.getMessageContext().setWorldChecksum(worldFileChecksum);
+			connection.getMessageContext().setWorldBytes(worldFileBytes);
+		});
 	}
 
 	public World getWorld() { return world; }
@@ -74,12 +78,4 @@ public class WorldServer<U extends Player, T extends WorldServerMessageContext<U
 	public byte[] getWorldFileChecksum() { return worldFileChecksum; }
 
 	public byte[] getWorldFileBytes() { return worldFileBytes; }
-
-	@Override
-	public void clientHandlerAdded(Connection<? extends T> h) {
-		super.clientHandlerAdded(h);
-		h.getMessageContext().setWorld(world);
-		h.getMessageContext().setWorldChecksum(worldFileChecksum);
-		h.getMessageContext().setWorldBytes(worldFileBytes);
-	}
 }
