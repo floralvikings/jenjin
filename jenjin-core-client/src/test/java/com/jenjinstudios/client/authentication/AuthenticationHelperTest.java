@@ -1,8 +1,13 @@
 package com.jenjinstudios.client.authentication;
 
 import com.jenjinstudios.core.io.Message;
+import com.jenjinstudios.core.io.MessageRegistry;
 import org.testng.Assert;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+
+import java.io.InputStream;
 
 /**
  * Test the AuthenticaionHelper class.
@@ -11,6 +16,24 @@ import org.testng.annotations.Test;
  */
 public class AuthenticationHelperTest
 {
+	/**
+	 * Register messages for testing.
+	 */
+	@BeforeClass
+	public void registerMessages()
+	{
+		InputStream stream = getClass().getClassLoader().getResourceAsStream("com/jenjinstudios/client/Messages.xml");
+		MessageRegistry.getGlobalRegistry().register("Core Client/Server Messages", stream);
+	}
+
+	/**
+	 * Clear the registry after tests run.
+	 */
+	@AfterClass
+	public void clearRegistry()
+	{
+		MessageRegistry.getGlobalRegistry().clear();
+	}
 
 	/**
 	 * Test the generateLogoutRequest method.
