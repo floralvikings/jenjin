@@ -49,7 +49,7 @@ public class Server<U extends User, C extends ServerMessageContext<U>>
 	 * Start listening for and maintaining connections.
 	 */
 	public void start() {
-		Runnable serverUpdateTask = new ServerUpdateTask(this);
+		Runnable serverUpdateTask = new ServerUpdateTask();
 		connectionPool.start();
 
 		loopTimer = Executors.newSingleThreadScheduledExecutor(new ServerUpdateThreadFactory());

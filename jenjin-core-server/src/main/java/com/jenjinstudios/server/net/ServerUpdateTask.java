@@ -12,10 +12,9 @@ public class ServerUpdateTask implements Runnable
 
 	/**
 	 * Construct a new {@code ServerLoop} for the specified server.
-	 * @param server The server for which this server loop works.
 	 */
 	@SuppressWarnings("unchecked")
-	public ServerUpdateTask(Server server) {
+	public ServerUpdateTask() {
 		repeatedTasks = new LinkedList<>();
 	}
 
