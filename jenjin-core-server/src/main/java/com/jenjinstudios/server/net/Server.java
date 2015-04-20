@@ -9,8 +9,6 @@ import com.jenjinstudios.server.concurrency.ConnectionPool;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.KeyPair;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -22,7 +20,6 @@ public class Server<U extends User, C extends ServerMessageContext<U>>
 	private final int PERIOD;
 	private final Authenticator<U> authenticator;
 	private final KeyPair rsaKeyPair;
-	private ScheduledExecutorService loopTimer;
 
 	protected Server(ServerInit<C> initInfo, Authenticator<U> authenticator) throws IOException {
 		LOGGER.log(Level.FINE, "Initializing Server.");
@@ -49,8 +46,6 @@ public class Server<U extends User, C extends ServerMessageContext<U>>
 	 */
 	public void start() {
 		connectionPool.start();
-
-		loopTimer = Executors.newSingleThreadScheduledExecutor(new ServerUpdateThreadFactory());
 	}
 
 	/**
@@ -60,9 +55,6 @@ public class Server<U extends User, C extends ServerMessageContext<U>>
 	 */
 	public void shutdown() throws IOException {
 		connectionPool.shutdown();
-
-		if (loopTimer != null)
-			loopTimer.shutdown();
 	}
 
 	/**
