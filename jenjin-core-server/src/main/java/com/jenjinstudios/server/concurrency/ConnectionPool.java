@@ -55,6 +55,7 @@ public class ConnectionPool<T extends MessageContext>
 			connections.put(connection.getId(), connection);
 		}
 		connectionAddedTasks.forEach(task -> task.connectionAdded(connection));
+		connection.start();
 	}
 
 	/**
@@ -112,6 +113,11 @@ public class ConnectionPool<T extends MessageContext>
 		updateTasks.add(task);
 	}
 
+	/**
+	 * Add a task which will be executed when a connection is added to the pool, before it is started.
+	 *
+	 * @param task The task to perform on the connection after it is added to the pool, before it is started.
+	 */
 	public void addConnectionAddedTask(ConnectionAddedTask<T> task) { connectionAddedTasks.add(task); }
 
 	/**
