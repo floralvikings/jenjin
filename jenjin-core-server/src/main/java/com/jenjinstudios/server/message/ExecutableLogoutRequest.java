@@ -36,7 +36,6 @@ public class ExecutableLogoutRequest extends ServerExecutableMessage<ServerMessa
 		Message response = null;
 		if ((authenticator != null) && (user != null))
 		{
-			String username = user.getUsername();
 			try
 			{
 				authenticator.logOutUser(user);
