@@ -72,7 +72,7 @@ public class ConnectionListener<T extends MessageContext> implements Runnable
 	 */
 	public void start()
 	{
-		executorService.scheduleWithFixedDelay(this, 0, 100, TimeUnit.MILLISECONDS);
+		executorService.scheduleWithFixedDelay(this, 0, 10, TimeUnit.MILLISECONDS);
 	}
 
 	/**
