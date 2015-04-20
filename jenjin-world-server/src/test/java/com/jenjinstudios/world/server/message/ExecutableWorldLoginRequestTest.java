@@ -4,12 +4,10 @@ import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.server.authentication.Authenticator;
 import com.jenjinstudios.server.authentication.BasicUser;
 import com.jenjinstudios.server.authentication.User;
-import com.jenjinstudios.server.net.ServerUpdateTask;
 import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.collections.WorldObjectList;
 import com.jenjinstudios.world.math.Vector2D;
 import com.jenjinstudios.world.server.Player;
-import com.jenjinstudios.world.server.WorldServer;
 import com.jenjinstudios.world.server.WorldServerMessageContext;
 import org.mockito.Matchers;
 import org.mockito.Mockito;
@@ -44,12 +42,9 @@ public class ExecutableWorldLoginRequestTest extends PowerMockTestCase
 		User user = mock(BasicUser.class);
 		Player player = mock(Player.class);
 		Authenticator<Player> authenticator = mock(Authenticator.class);
-		WorldServer server = mock(WorldServer.class);
 		WorldObjectList worldObjectMap = mock(WorldObjectList.class);
-		ServerUpdateTask serverUpdateTask = mock(ServerUpdateTask.class);
 		WorldServerMessageContext context = mock(WorldServerMessageContext.class);
 
-		when(server.getServerUpdateTask()).thenReturn(serverUpdateTask);
 		when(world.getWorldObjects()).thenReturn(worldObjectMap);
 		when(user.isLoggedIn()).thenReturn(true);
 		when(authenticator.logInUser(Matchers.anyString(), Matchers.anyString())).thenReturn(player);
