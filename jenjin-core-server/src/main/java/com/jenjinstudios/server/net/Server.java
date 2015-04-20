@@ -24,7 +24,6 @@ public class Server<U extends User, C extends ServerMessageContext<U>>
 	private final Authenticator<U> authenticator;
 	private final KeyPair rsaKeyPair;
 	private ScheduledExecutorService loopTimer;
-	private ServerUpdateTask serverUpdateTask;
 
 	protected Server(ServerInit<C> initInfo, Authenticator<U> authenticator) throws IOException {
 		LOGGER.log(Level.FINE, "Initializing Server.");
@@ -50,7 +49,7 @@ public class Server<U extends User, C extends ServerMessageContext<U>>
 	 * Start listening for and maintaining connections.
 	 */
 	public void start() {
-		serverUpdateTask = new ServerUpdateTask(this);
+		Runnable serverUpdateTask = new ServerUpdateTask(this);
 		connectionPool.start();
 
 		loopTimer = Executors.newSingleThreadScheduledExecutor(new ServerUpdateThreadFactory());
