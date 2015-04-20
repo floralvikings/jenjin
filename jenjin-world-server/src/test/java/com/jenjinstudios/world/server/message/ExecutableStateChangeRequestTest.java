@@ -32,8 +32,8 @@ public class ExecutableStateChangeRequestTest
 		InputStream stream = getClass().getClassLoader().
 			  getResourceAsStream("com/jenjinstudios/world/server/Messages.xml");
 		MessageRegistry.getGlobalRegistry().register("World Client/Server Messages", stream);
-		InputStream coreStream = getClass().getClassLoader().getResourceAsStream("com/jenjinstudios/server/Messages" +
-			  ".xml");
+		InputStream coreStream = getClass().getClassLoader().
+			  getResourceAsStream("com/jenjinstudios/server/Messages.xml");
 		MessageRegistry.getGlobalRegistry().register("World Client/Server Messages", coreStream);
 	}
 
