@@ -17,7 +17,6 @@ public class Server<U extends User, C extends ServerMessageContext<U>>
 	private static final Logger LOGGER = Logger.getLogger(Server.class.getName());
 	private final ConnectionPool<C> connectionPool;
 	private final int UPS;
-	private final int PERIOD;
 	private final Authenticator<U> authenticator;
 	private final KeyPair rsaKeyPair;
 
@@ -26,7 +25,6 @@ public class Server<U extends User, C extends ServerMessageContext<U>>
 		rsaKeyPair = (initInfo.getKeyPair() == null) ? Connection.generateRSAKeyPair() : initInfo.getKeyPair();
 		this.authenticator = authenticator;
 		UPS = initInfo.getUps();
-		PERIOD = 1000 / UPS;
 		connectionPool = new ConnectionPool<>(initInfo.getPort(), initInfo.getContextClass());
 		connectionPool.addShutdownTask(new EmergencyLogoutTask<>());
 		connectionPool.addConnectionAddedTask(connection -> {
