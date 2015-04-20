@@ -1,13 +1,18 @@
 package com.jenjinstudios.world.server.message;
 
 import com.jenjinstudios.core.io.Message;
+import com.jenjinstudios.core.io.MessageRegistry;
 import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.math.Angle;
 import com.jenjinstudios.world.server.Player;
 import com.jenjinstudios.world.server.WorldServerMessageContext;
 import com.jenjinstudios.world.util.WorldUtils;
 import org.testng.Assert;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+
+import java.io.InputStream;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -18,6 +23,28 @@ import static org.mockito.Mockito.when;
  */
 public class ExecutableStateChangeRequestTest
 {
+	/**
+	 * Register messages for testing.
+	 */
+	@BeforeClass
+	public void registerMessages()
+	{
+		InputStream stream = getClass().getClassLoader().
+			  getResourceAsStream("com/jenjinstudios/world/server/Messages.xml");
+		MessageRegistry.getGlobalRegistry().register("World Client/Server Messages", stream);
+		InputStream coreStream = getClass().getClassLoader().getResourceAsStream("com/jenjinstudios/server/Messages" +
+			  ".xml");
+		MessageRegistry.getGlobalRegistry().register("World Client/Server Messages", coreStream);
+	}
+
+	/**
+	 * Clear messages after testing.
+	 */
+	@AfterClass
+	public void clearRegistry()
+	{
+		MessageRegistry.getGlobalRegistry().clear();
+	}
 
 	/**
 	 * Test a valid state change request.
@@ -35,6 +62,7 @@ public class ExecutableStateChangeRequestTest
 		WorldServerMessageContext context = mock(WorldServerMessageContext.class);
 
 		when(context.getUser()).thenReturn(player);
+		when(context.getWorld()).thenReturn(world);
 		when(request.getArgument("relativeAngle")).thenReturn(Angle.FRONT);
 		when(request.getArgument("absoluteAngle")).thenReturn(0.0);
 		when(request.getArgument("xCoordinate")).thenReturn(0.0);
@@ -64,6 +92,7 @@ public class ExecutableStateChangeRequestTest
 
 		WorldServerMessageContext context = mock(WorldServerMessageContext.class);
 		when(context.getUser()).thenReturn(player);
+		when(context.getWorld()).thenReturn(world);
 
 		// Create a state change request, with coordinates set further than the allowed error
 		Message request = mock(Message.class);
@@ -97,6 +126,7 @@ public class ExecutableStateChangeRequestTest
 		WorldServerMessageContext context = mock(WorldServerMessageContext.class);
 
 		when(context.getUser()).thenReturn(player);
+		when(context.getWorld()).thenReturn(world);
 		when(request.getArgument("relativeAngle")).thenReturn(Angle.FRONT);
 		when(request.getArgument("absoluteAngle")).thenReturn(0.0);
 		when(request.getArgument("xCoordinate")).thenReturn(0.0);
@@ -125,6 +155,7 @@ public class ExecutableStateChangeRequestTest
 		WorldServerMessageContext context = mock(WorldServerMessageContext.class);
 
 		when(context.getUser()).thenReturn(player);
+		when(context.getWorld()).thenReturn(world);
 		when(request.getArgument("relativeAngle")).thenReturn(Angle.FRONT);
 		when(request.getArgument("absoluteAngle")).thenReturn(0.0);
 		when(request.getArgument("xCoordinate")).thenReturn(0.0);
