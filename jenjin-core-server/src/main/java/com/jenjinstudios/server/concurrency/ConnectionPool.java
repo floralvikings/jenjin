@@ -48,7 +48,7 @@ public class ConnectionPool<T extends MessageContext>
 	 *
 	 * @param connection The connection to add.
 	 */
-	public void addConnection(Connection<T> connection)
+	protected void addConnection(Connection<T> connection)
 	{
 		synchronized (connections)
 		{
