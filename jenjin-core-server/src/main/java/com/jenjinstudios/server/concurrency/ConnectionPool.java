@@ -92,6 +92,7 @@ public class ConnectionPool<T extends MessageContext>
 	public void shutdown() {
 		shutdownConnections();
 		executorService.shutdown();
+		connectionListener.shutdown();
 		cleanupTask.run();
 	}
 
@@ -124,9 +125,9 @@ public class ConnectionPool<T extends MessageContext>
 	 * Start maintanence threads; responsible for updating and removing connections that have been added and shut down.
 	 */
 	public void start() {
+		connectionListener.start();
 		executorService.scheduleWithFixedDelay(cleanupTask, 0, 100, TimeUnit.MILLISECONDS);
 		executorService.scheduleWithFixedDelay(newConnectionsTask, 0, 100, TimeUnit.MILLISECONDS);
-		executorService.scheduleWithFixedDelay(connectionListener, 0, 10, TimeUnit.MILLISECONDS);
 		executorService.scheduleWithFixedDelay(updateAllTask, 0, 10, TimeUnit.MILLISECONDS);
 	}
 
