@@ -13,6 +13,9 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * The WorldServer class is responsible for updating a game world.
@@ -20,6 +23,8 @@ import java.io.InputStream;
  */
 public class WorldServer<U extends Player, T extends WorldServerMessageContext<U>> extends Server<U, T>
 {
+	private final ScheduledExecutorService worldUpdateExecutor = Executors.newSingleThreadScheduledExecutor();
+	private final WorldUpdateTask worldUpdateTask;
 	private final World world;
 	private final byte[] worldFileChecksum;
 	private final byte[] worldFileBytes;
@@ -61,6 +66,8 @@ public class WorldServer<U extends Player, T extends WorldServerMessageContext<U
 			connection.getMessageContext().setWorldChecksum(worldFileChecksum);
 			connection.getMessageContext().setWorldBytes(worldFileBytes);
 		});
+
+		worldUpdateTask = new WorldUpdateTask(world);
 	}
 
 	public World getWorld() { return world; }
@@ -68,7 +75,13 @@ public class WorldServer<U extends Player, T extends WorldServerMessageContext<U
 	@Override
 	public void start() {
 		super.start();
-		getServerUpdateTask().addRepeatedTask(world::update);
+		worldUpdateExecutor.scheduleAtFixedRate(worldUpdateTask, 0, 1000 / getUps(), TimeUnit.MILLISECONDS);
+	}
+
+	@Override
+	public void shutdown() throws IOException {
+		super.shutdown();
+		worldUpdateExecutor.shutdown();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -78,4 +91,19 @@ public class WorldServer<U extends Player, T extends WorldServerMessageContext<U
 	public byte[] getWorldFileChecksum() { return worldFileChecksum; }
 
 	public byte[] getWorldFileBytes() { return worldFileBytes; }
+
+	private class WorldUpdateTask implements Runnable
+	{
+		private final World world;
+
+		private WorldUpdateTask(World world)
+		{
+			this.world = world;
+		}
+
+		@Override
+		public void run() {
+			world.update();
+		}
+	}
 }
