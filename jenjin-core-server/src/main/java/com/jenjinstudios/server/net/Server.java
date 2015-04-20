@@ -42,8 +42,6 @@ public class Server<U extends User, C extends ServerMessageContext<U>>
 		MessageRegistry.getGlobalRegistry().register("Core Client/Server Messages", stream);
 	}
 
-	public ServerUpdateTask getServerUpdateTask() { return serverUpdateTask; }
-
 	public int getUps() { return UPS; }
 
 	public Authenticator getAuthenticator() { return authenticator; }
