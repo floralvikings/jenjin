@@ -11,7 +11,6 @@ import java.io.InputStream;
 import java.security.KeyPair;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -49,11 +48,9 @@ public class Server<U extends User, C extends ServerMessageContext<U>>
 	 * Start listening for and maintaining connections.
 	 */
 	public void start() {
-		Runnable serverUpdateTask = new ServerUpdateTask();
 		connectionPool.start();
 
 		loopTimer = Executors.newSingleThreadScheduledExecutor(new ServerUpdateThreadFactory());
-		loopTimer.scheduleAtFixedRate(serverUpdateTask, 0, PERIOD, TimeUnit.MILLISECONDS);
 	}
 
 	/**
