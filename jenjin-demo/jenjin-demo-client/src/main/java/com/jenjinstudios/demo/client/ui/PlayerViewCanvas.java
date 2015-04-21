@@ -30,7 +30,7 @@ public class PlayerViewCanvas extends Canvas
 	private static final int HUD_FONT_SIZE = 14;
 	private static final int HUD_VERTICAL_OFFSET = 12;
 	private static final double HUD_LINE_OFFSET = 1.5;
-	private final double locScale = (SCALE / Location.SIZE);
+	private final double locScale = SCALE / Location.SIZE;
 	private final Image playerTile;
 	private final Image bulletTile;
 	private final Actor clientPlayer;
