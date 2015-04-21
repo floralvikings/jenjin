@@ -21,7 +21,7 @@ import java.io.InputStream;
 /**
  * @author Caleb Brinkman
  */
-public class Main extends Application implements EventHandler<WindowEvent>
+public class DemoClientApplication extends Application implements EventHandler<WindowEvent>
 {
 	private static final int LOGIN_PANE_WIDTH = 400;
 	private static final int LOGIN_PANE_HEIGHT = 175;

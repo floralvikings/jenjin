@@ -6,7 +6,7 @@ import com.jenjinstudios.client.authentication.User;
 import com.jenjinstudios.core.io.MessageInputStream;
 import com.jenjinstudios.core.io.MessageOutputStream;
 import com.jenjinstudios.core.io.MessageStreamPair;
-import com.jenjinstudios.demo.client.Main;
+import com.jenjinstudios.demo.client.DemoClientApplication;
 import com.jenjinstudios.world.client.WorldClient;
 import com.jenjinstudios.world.client.WorldClientMessageContext;
 import com.jenjinstudios.world.io.WorldDocumentException;
@@ -39,15 +39,15 @@ public final class LoginPane extends GridPane
 	private final TextField usernameField = new TextField("TestAccount1");
 	private final Button loginButton = new Button("Login");
 	private final PasswordField passwordField = new PasswordField();
-	private final Main main;
+	private final DemoClientApplication demoClientApplication;
 
 	/**
 	 * Construct a new LoginPane.
 	 *
-	 * @param main The application using the login pane.
+	 * @param demoClientApplication The application using the login pane.
 	 */
-	public LoginPane(final Main main) {
-		this.main = main;
+	public LoginPane(final DemoClientApplication demoClientApplication) {
+		this.demoClientApplication = demoClientApplication;
 		setHgap(10);
 		setVgap(10);
 		setPadding(new Insets(PANE_PADDING, PANE_PADDING, PANE_PADDING, PANE_PADDING));
@@ -123,7 +123,7 @@ public final class LoginPane extends GridPane
 			if (AuthenticationHelper.loginAndWait(worldClient))
 			{
 				LOGGER.log(Level.INFO, "Successfully logged in!");
-				main.successfulLogin(worldClient);
+				demoClientApplication.successfulLogin(worldClient);
 			} else
 			{
 				LOGGER.log(Level.WARNING, "Login unsuccessful");
