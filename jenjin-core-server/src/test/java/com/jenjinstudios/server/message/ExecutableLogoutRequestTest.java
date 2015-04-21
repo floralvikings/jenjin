@@ -15,6 +15,7 @@ import org.testng.annotations.Test;
 import static org.mockito.Mockito.*;
 
 /**
+ * Test the ExecutableLogoutRequest class.
  * @author Caleb Brinkman
  */
 @PrepareForTest(ServerMessageFactory.class)
