@@ -61,9 +61,9 @@ public class PlayerViewCanvas extends Canvas
 	}
 
 	private void drawHUD() {
-		int fontSize = HUD_FONT_SIZE;
 		GraphicsContext graphicsContext2D = getGraphicsContext2D();
 		graphicsContext2D.setFill(Color.WHITE);
+		int fontSize = HUD_FONT_SIZE;
 		graphicsContext2D.setFont(Font.font("Arial", fontSize));
 
 		String[] hudStrings = {
