@@ -24,6 +24,13 @@ public class PlayerKeyFlags
 		return (keyEvent.getCode() == SPACE) && Objects.equals(keyEvent.getEventType(), KEY_PRESSED);
 	}
 
+	/**
+	 * Return whether the given key event was caused by a movement key.
+	 *
+	 * @param keyEvent The key event.
+	 *
+	 * @return Whether the even was caused by a movement key; arrow keys, or WASD.
+	 */
 	public static boolean isMovementKey(KeyEvent keyEvent) {
 		KeyCode keyCode = keyEvent.getCode();
 		boolean isMovementKey = keyCode.isArrowKey();
