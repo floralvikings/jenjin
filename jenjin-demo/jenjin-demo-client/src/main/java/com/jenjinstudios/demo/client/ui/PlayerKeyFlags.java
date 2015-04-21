@@ -69,6 +69,11 @@ public class PlayerKeyFlags
 	 */
 	protected boolean upKey() {return up && !down;}
 
+	/**
+	 * Set key flags based on the received key event.
+	 *
+	 * @param keyEvent The key event.
+	 */
 	protected void setKeyFlags(KeyEvent keyEvent) {
 		KeyCode keyCode = keyEvent.getCode();
 		up = ((keyCode == UP) || (keyCode == W)) ? Objects.equals(keyEvent.getEventType(), KEY_PRESSED) : up;
