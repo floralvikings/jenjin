@@ -125,7 +125,7 @@ public class PlayerViewCanvas extends Canvas
 
 	protected void drawObjects() {
 		Object object = clientPlayer.getPreUpdateEvent(Vision.EVENT_NAME);
-		if ((object != null) && (object instanceof Vision))
+		if (object instanceof Vision)
 		{
 			Vision vision = (Vision) object;
 			vision.getVisibleObjects().forEach(this::drawObject);
