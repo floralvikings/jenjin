@@ -47,7 +47,7 @@ public final class LoginPane extends GridPane
 		createForm();
 	}
 
-	public static WorldClient tryCreateWorldClient(String address, int port, User user) {
+	private static WorldClient tryCreateWorldClient(String address, int port, User user) {
 		WorldClient worldClient;
 		try
 		{
