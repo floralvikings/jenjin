@@ -18,14 +18,20 @@ public class ClientPane extends GridPane
 		canvas.setOnKeyReleased(playerControlKeyHandler);
 		add(canvas, 0, 0);
 
-		AnimationTimer animationTimer = new AnimationTimer()
-		{
-			@Override
-			public void handle(long now) {
-				canvas.drawWorld();
-			}
-		};
+		AnimationTimer animationTimer = new WorldDrawTimer(canvas);
 
 		animationTimer.start();
+	}
+
+	private static class WorldDrawTimer extends AnimationTimer
+	{
+		private final PlayerViewCanvas canvas;
+
+		public WorldDrawTimer(PlayerViewCanvas canvas) {this.canvas = canvas;}
+
+		@Override
+		public void handle(long now) {
+			canvas.drawWorld();
+		}
 	}
 }
