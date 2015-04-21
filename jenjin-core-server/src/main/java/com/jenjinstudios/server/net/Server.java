@@ -28,7 +28,15 @@ public class Server<U extends User, C extends ServerMessageContext<U>>
 	private final Authenticator<U> authenticator;
 	private final KeyPair rsaKeyPair;
 
-	protected Server(ServerInit<C> initInfo, Authenticator<U> authenticator) throws IOException {
+	/**
+	 * Construct a new Server.
+	 *
+	 * @param initInfo The information used to initialize the server.
+	 * @param authenticator The Authenticator used to authenticate users for this server.
+	 *
+	 * @throws IOException If there is an error registering messages.
+	 */
+	public Server(ServerInit<C> initInfo, Authenticator<U> authenticator) throws IOException {
 		LOGGER.log(Level.FINE, "Initializing Server.");
 		rsaKeyPair = (initInfo.getKeyPair() == null) ? Connection.generateRSAKeyPair() : initInfo.getKeyPair();
 		this.authenticator = authenticator;
