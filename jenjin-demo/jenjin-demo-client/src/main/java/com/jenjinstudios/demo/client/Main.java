@@ -32,15 +32,13 @@ public class Main extends Application implements EventHandler<WindowEvent>
 	 * Launch the application.
 	 *
 	 * @param args The command line arguments.
-	 *
-	 * @throws Exception If there's an exception.
 	 */
-	public static void main(String... args) throws Exception {
+	public static void main(String... args) {
 		launch(args);
 	}
 
 	@Override
-	public void start(Stage primaryStage) throws Exception {
+	public void start(Stage primaryStage) {
 		InputStream stream = getClass().getResourceAsStream("/com/jenjinstudios/demo/client/Messages.xml");
 		MessageRegistry.getGlobalRegistry().register("Demo Client Messages", stream);
 		LoginPane loginPane = new LoginPane(this);
