@@ -41,6 +41,11 @@ public class PlayerKeyFlags
 		return isMovementKey;
 	}
 
+	/**
+	 * Whether the right key (and not the left) is presesd.
+	 *
+	 * @return Whether the right but not left key is pressed.
+	 */
 	protected boolean rightKey() {return right && !left;}
 
 	protected boolean leftKey() {return left && !right;}
