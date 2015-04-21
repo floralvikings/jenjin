@@ -37,7 +37,6 @@ public final class LoginPane extends GridPane
 	private final Button loginButton = new Button("Login");
 	private final PasswordField passwordField = new PasswordField();
 	private final Main main;
-	private WorldClient worldClient;
 
 	public LoginPane(final Main main) {
 		this.main = main;
@@ -106,7 +105,7 @@ public final class LoginPane extends GridPane
 		user.setPassword(passwordField.getText());
 		String address = addressField.getText();
 		int port = Integer.parseInt(portField.getText());
-		worldClient = tryCreateWorldClient(address, port, user);
+		WorldClient worldClient = tryCreateWorldClient(address, port, user);
 		if (worldClient != null)
 		{
 			if (AuthenticationHelper.loginAndWait(worldClient))
