@@ -51,6 +51,12 @@ public class Server<U extends User, C extends ServerMessageContext<U>>
 		MessageRegistry.getGlobalRegistry().register("Core Client/Server Messages", stream);
 	}
 
+
+	/**
+	 * Get the updates per second of this server.
+	 *
+	 * @return The updates per second of this server.
+	 */
 	// TODO This should probably be removed, folded into World since that's the only time it's used.
 	public int getUps() { return ups; }
 
