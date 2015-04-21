@@ -12,6 +12,12 @@ import javafx.scene.layout.GridPane;
  */
 public class ClientPane extends GridPane
 {
+	/**
+	 * Construct a new ClientPane rendering the world for the given WorldClient and with the given size.
+	 *
+	 * @param worldClient The WorldClient containing the world and player to render.
+	 * @param size The size of the client pane.
+	 */
 	public ClientPane(WorldClient worldClient, Dimension2D size) {
 		PlayerViewCanvas canvas = new PlayerViewCanvas(worldClient, size.getWidth(), size.getHeight());
 		EventHandler<KeyEvent> controlHandler = new PlayerControlKeyHandler(worldClient);
