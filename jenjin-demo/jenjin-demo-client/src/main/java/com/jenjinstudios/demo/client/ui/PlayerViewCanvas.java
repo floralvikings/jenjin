@@ -30,7 +30,7 @@ public class PlayerViewCanvas extends Canvas
 	private static final int HUD_FONT_SIZE = 14;
 	private static final int HUD_VERTICAL_OFFSET = 12;
 	private static final double HUD_LINE_OFFSET = 1.5;
-	private final double locScale = SCALE / Location.SIZE;
+	private static final double LOC_SCALE = SCALE / Location.SIZE;
 	private final Image playerTile;
 	private final Image bulletTile;
 	private final Actor clientPlayer;
@@ -101,8 +101,8 @@ public class PlayerViewCanvas extends Canvas
 		double xBuff = clientPlayer.getVector2D().getXCoordinate() % Location.SIZE;
 		double yBuff = clientPlayer.getVector2D().getYCoordinate() % Location.SIZE;
 
-		double x = xOrig + ((xDiff * SCALE) - (xBuff * locScale));
-		double y = yOrig - ((yDiff * SCALE) - (yBuff * locScale)) - SCALE;
+		double x = xOrig + ((xDiff * SCALE) - (xBuff * LOC_SCALE));
+		double y = yOrig - ((yDiff * SCALE) - (yBuff * LOC_SCALE)) - SCALE;
 
 		GraphicsContext graphicsContext2D = getGraphicsContext2D();
 
@@ -137,8 +137,8 @@ public class PlayerViewCanvas extends Canvas
 		double xDiff = o.getVector2D().getXCoordinate() - clientPlayer.getVector2D().getXCoordinate();
 		double yDiff = o.getVector2D().getYCoordinate() - clientPlayer.getVector2D().getYCoordinate();
 
-		double x = xOrig + (xDiff * locScale);
-		double y = yOrig - (yDiff * locScale);
+		double x = xOrig + (xDiff * LOC_SCALE);
+		double y = yOrig - (yDiff * LOC_SCALE);
 
 		GraphicsContext graphicsContext2D = getGraphicsContext2D();
 		graphicsContext2D.save();
