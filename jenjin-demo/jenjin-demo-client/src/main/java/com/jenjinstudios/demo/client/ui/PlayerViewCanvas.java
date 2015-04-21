@@ -92,13 +92,13 @@ public class PlayerViewCanvas extends Canvas
 		}
 	}
 
-	protected void clearBackground() {
+	private void clearBackground() {
 		GraphicsContext graphicsContext2D = getGraphicsContext2D();
 		graphicsContext2D.setFill(Color.BLACK);
 		graphicsContext2D.fillRect(0, 0, getWidth(), getHeight());
 	}
 
-	protected void drawLocations() {
+	private void drawLocations() {
 		if (LocationUtils.getObjectLocation(clientPlayer) != null)
 		{
 			SightCalculator.getVisibleLocations(clientPlayer).stream().filter(l -> l != null).
@@ -106,7 +106,7 @@ public class PlayerViewCanvas extends Canvas
 		}
 	}
 
-	protected void drawLocation(Location location) {
+	private void drawLocation(Location location) {
 		Location pLoc = LocationUtils.getObjectLocation(clientPlayer);
 		int xDiff = location.getX() - pLoc.getX();
 		int yDiff = location.getY() - pLoc.getY();//+ 1;
@@ -135,7 +135,7 @@ public class PlayerViewCanvas extends Canvas
 		graphicsContext2D.fillRect(x, y, SCALE - 2, SCALE - 2);
 	}
 
-	protected void drawObjects() {
+	private void drawObjects() {
 		Object object = clientPlayer.getPreUpdateEvent(Vision.EVENT_NAME);
 		if (object instanceof Vision)
 		{
