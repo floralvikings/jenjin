@@ -51,21 +51,28 @@ public class Main extends Application implements EventHandler<WindowEvent>
 		Platform.runLater(() -> Platform.setImplicitExit(false));
 	}
 
-	public void successfulLogin(WorldClient worldClient) {
-		if (this.worldClient != null)
+	/**
+	 * Called on successful login from a LoginPane.
+	 *
+	 * @param wc The world client that has been created.
+	 */
+	public void successfulLogin(WorldClient wc) {
+		if (worldClient == null)
+		{
+			worldClient = wc;
+			Screen screen = Screen.getPrimary();
+			Rectangle2D bounds = screen.getVisualBounds();
+			stage.setX(bounds.getMinX());
+			stage.setY(bounds.getMinY());
+			GridPane worldPane = new ClientPane(worldClient, new Dimension2D(bounds.getWidth(), bounds.getHeight()));
+			stage.getScene().setRoot(worldPane);
+			stage.setWidth(bounds.getWidth());
+			stage.setHeight(bounds.getHeight());
+			stage.show();
+		} else
 		{
 			throw new IllegalStateException("WorldClient already set.");
 		}
-		this.worldClient = worldClient;
-		Screen screen = Screen.getPrimary();
-		Rectangle2D bounds = screen.getVisualBounds();
-		stage.setX(bounds.getMinX());
-		stage.setY(bounds.getMinY());
-		GridPane worldPane = new ClientPane(worldClient, new Dimension2D(bounds.getWidth(), bounds.getHeight()));
-		stage.getScene().setRoot(worldPane);
-		stage.setWidth(bounds.getWidth());
-		stage.setHeight(bounds.getHeight());
-		stage.show();
 	}
 
 	@Override
