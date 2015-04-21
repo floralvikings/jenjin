@@ -77,7 +77,7 @@ public class DemoClientApplication extends Application implements EventHandler<W
 	}
 
 	@Override
-	public void handle(WindowEvent windowEvent) {
+	public void handle(WindowEvent event) {
 		if (worldClient != null)
 		{
 			AuthenticationHelper.logoutAndWait(worldClient);
