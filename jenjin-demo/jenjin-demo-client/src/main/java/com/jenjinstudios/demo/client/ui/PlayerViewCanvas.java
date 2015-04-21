@@ -62,6 +62,9 @@ public class PlayerViewCanvas extends Canvas
 		bulletTile = new Image(bulletStream, BULLET_SCALE, BULLET_SCALE, false, true);
 	}
 
+	/**
+	 * Draw the player's view of the game world.
+	 */
 	public void drawWorld() {
 		clearBackground();
 		drawLocations();
