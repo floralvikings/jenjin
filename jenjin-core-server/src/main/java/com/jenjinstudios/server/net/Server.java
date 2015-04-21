@@ -25,7 +25,6 @@ public class Server<U extends User, C extends ServerMessageContext<U>>
 	private static final Logger LOGGER = Logger.getLogger(Server.class.getName());
 	private final ConnectionPool<C> connectionPool;
 	private final int ups;
-	private final Authenticator<U> authenticator;
 	private final KeyPair rsaKeyPair;
 
 	/**
@@ -39,7 +38,6 @@ public class Server<U extends User, C extends ServerMessageContext<U>>
 	public Server(ServerInit<C> initInfo, Authenticator<U> authenticator) throws IOException {
 		LOGGER.log(Level.FINE, "Initializing Server.");
 		rsaKeyPair = (initInfo.getKeyPair() == null) ? Connection.generateRSAKeyPair() : initInfo.getKeyPair();
-		this.authenticator = authenticator;
 		ups = initInfo.getUps();
 		connectionPool = new ConnectionPool<>(initInfo.getPort(), initInfo.getContextClass());
 		connectionPool.addShutdownTask(new EmergencyLogoutTask<>());
