@@ -41,6 +41,11 @@ public final class LoginPane extends GridPane
 	private final PasswordField passwordField = new PasswordField();
 	private final Main main;
 
+	/**
+	 * Construct a new LoginPane.
+	 *
+	 * @param main The application using the login pane.
+	 */
 	public LoginPane(final Main main) {
 		this.main = main;
 		setHgap(10);
