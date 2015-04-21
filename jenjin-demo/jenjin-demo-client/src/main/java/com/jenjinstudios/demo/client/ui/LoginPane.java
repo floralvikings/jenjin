@@ -26,6 +26,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
+ * Pane that handles logging into a world server.
+ *
  * @author Caleb Brinkman
  */
 public final class LoginPane extends GridPane
