@@ -9,6 +9,8 @@ import static javafx.scene.input.KeyCode.*;
 import static javafx.scene.input.KeyEvent.KEY_PRESSED;
 
 /**
+ * Keeps track of which control keys are pressed.
+ *
  * @author Caleb Brinkman
  */
 public class PlayerKeyFlags
