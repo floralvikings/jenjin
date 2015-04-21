@@ -21,6 +21,11 @@ import static org.mockito.Mockito.*;
 @PrepareForTest(ServerMessageFactory.class)
 public class ExecutableLogoutRequestTest extends PowerMockTestCase
 {
+	/**
+	 * Test the message execution.
+	 *
+	 * @throws Exception If there's an exception.
+	 */
 	@SuppressWarnings("unchecked")
 	@Test
 	public void testMessageExecution() throws Exception {
