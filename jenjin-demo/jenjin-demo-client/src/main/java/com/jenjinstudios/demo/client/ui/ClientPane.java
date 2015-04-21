@@ -8,6 +8,8 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 
 /**
+ * Pane responsible for rendering the world client.
+ *
  * @author Caleb Brinkman
  */
 public class ClientPane extends GridPane
