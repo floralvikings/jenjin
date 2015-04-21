@@ -13,6 +13,8 @@ import static com.jenjinstudios.demo.client.ui.PlayerKeyFlags.isMovementKey;
 import static com.jenjinstudios.world.math.Angle.*;
 
 /**
+ * Handles key events, queueing up requests to the server as need be.
+ *
  * @author Caleb Brinkman
  */
 public class PlayerControlKeyHandler implements EventHandler<KeyEvent>
