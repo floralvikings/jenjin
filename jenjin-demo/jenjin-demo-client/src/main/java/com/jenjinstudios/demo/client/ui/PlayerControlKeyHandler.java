@@ -60,7 +60,7 @@ public class PlayerControlKeyHandler implements EventHandler<KeyEvent>
 				absAngle = BACK_RIGHT;
 			} else
 			{
-				absAngle = (flags.rightKey() ? FRONT_RIGHT : RIGHT);
+				absAngle = flags.rightKey() ? FRONT_RIGHT : RIGHT;
 			}
 			angle = new Angle(absAngle, FRONT);
 		} else if (flags.leftKey())
