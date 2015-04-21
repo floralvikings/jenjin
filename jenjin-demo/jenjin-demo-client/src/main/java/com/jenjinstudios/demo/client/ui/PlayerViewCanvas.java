@@ -19,6 +19,8 @@ import java.io.InputStream;
 import java.util.Map;
 
 /**
+ * Canvas used to render a player view of the world.
+ *
  * @author Caleb Brinkman
  */
 public class PlayerViewCanvas extends Canvas
@@ -38,6 +40,13 @@ public class PlayerViewCanvas extends Canvas
 	private final double xOrig = getWidth() / 2;
 	private final WorldClient worldClient;
 
+	/**
+	 * Construct a new PlayerViewCanvas displaying data from the given world client, with the given dimensions.
+	 *
+	 * @param client The world client containing the player and visible data.
+	 * @param width The width of the canvas.
+	 * @param height The height of the canvas.
+	 */
 	public PlayerViewCanvas(WorldClient client, double width, double height) {
 		super(width, height);
 		this.worldClient = client;
