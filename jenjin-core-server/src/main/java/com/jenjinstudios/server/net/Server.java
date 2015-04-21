@@ -12,6 +12,14 @@ import java.security.KeyPair;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * Manages a ConnectionPool which listens for incoming connections an executes tasks on them as dictated by the tasks
+ * added; maintains the RSA key pair used to encrypt/decrypt messages, and the Authenticator used to authenticate
+ * users.
+ *
+ * @param <U> The type of user that will be added in this server.
+ * @param <C> The type of MessageContext that will be passed to messages received by connections on this server.
+ */
 public class Server<U extends User, C extends ServerMessageContext<U>>
 {
 	private static final Logger LOGGER = Logger.getLogger(Server.class.getName());
