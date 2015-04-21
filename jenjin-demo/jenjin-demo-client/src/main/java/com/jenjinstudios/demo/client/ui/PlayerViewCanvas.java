@@ -67,7 +67,7 @@ public class PlayerViewCanvas extends Canvas
 		graphicsContext2D.setFont(Font.font("Arial", fontSize));
 
 		String[] hudStrings = {
-			  "UPS: " + String.valueOf(worldClient.getAverageUPS()),
+			  "UPS: " + worldClient.getAverageUPS(),
 			  "Visible Object Count: " + ((Vision) clientPlayer.getPreUpdateEvent(Vision.EVENT_NAME)).
 					getVisibleObjects().size(),
 			  clientPlayer.getName(),
