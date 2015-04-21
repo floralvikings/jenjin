@@ -101,8 +101,8 @@ public class PlayerViewCanvas extends Canvas
 		double xBuff = clientPlayer.getVector2D().getXCoordinate() % Location.SIZE;
 		double yBuff = clientPlayer.getVector2D().getYCoordinate() % Location.SIZE;
 
-		double x = xOrig + (xDiff * SCALE - xBuff * locScale);
-		double y = yOrig - (yDiff * SCALE - yBuff * locScale) - SCALE;
+		double x = xOrig + ((xDiff * SCALE) - (xBuff * locScale));
+		double y = yOrig - ((yDiff * SCALE) - (yBuff * locScale)) - SCALE;
 
 		GraphicsContext graphicsContext2D = getGraphicsContext2D();
 
@@ -125,7 +125,7 @@ public class PlayerViewCanvas extends Canvas
 
 	protected void drawObjects() {
 		Object object = clientPlayer.getPreUpdateEvent(Vision.EVENT_NAME);
-		if (object != null && object instanceof Vision)
+		if ((object != null) && (object instanceof Vision))
 		{
 			Vision vision = (Vision) object;
 			vision.getVisibleObjects().forEach(this::drawObject);
@@ -145,7 +145,7 @@ public class PlayerViewCanvas extends Canvas
 		Rotate r = new Rotate(-Math.toDegrees(o.getAngle().getAbsoluteAngle()), x, y);
 		graphicsContext2D.setTransform(r.getMxx(), r.getMyx(), r.getMxy(), r.getMyy(), r.getTx(), r.getTy());
 		Image objectTile = getObjectTile(o);
-		graphicsContext2D.drawImage(objectTile, x - objectTile.getWidth() / 2, y - objectTile.getHeight() / 2);
+		graphicsContext2D.drawImage(objectTile, x - (objectTile.getWidth() / 2), y - (objectTile.getHeight() / 2));
 		graphicsContext2D.restore();
 	}
 
