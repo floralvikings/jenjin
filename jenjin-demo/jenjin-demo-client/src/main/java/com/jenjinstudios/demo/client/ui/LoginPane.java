@@ -92,7 +92,7 @@ public final class LoginPane extends GridPane
 	}
 
 	private void keyPressed(KeyEvent event) {
-		if (event.getCode().equals(KeyCode.ENTER))
+		if (event.getCode() == KeyCode.ENTER)
 		{
 			loginButton.fire();
 		}
