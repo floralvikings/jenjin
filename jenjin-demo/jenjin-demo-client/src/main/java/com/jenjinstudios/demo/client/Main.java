@@ -28,7 +28,7 @@ public class Main extends Application implements EventHandler<WindowEvent>
 	private WorldClient worldClient;
 	private Stage stage;
 
-	public static void main(String[] args) throws Exception {
+	public static void main(String... args) throws Exception {
 		launch(args);
 	}
 
