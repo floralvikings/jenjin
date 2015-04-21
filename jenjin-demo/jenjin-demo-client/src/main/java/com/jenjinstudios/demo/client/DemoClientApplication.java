@@ -19,6 +19,9 @@ import javafx.stage.WindowEvent;
 import java.io.InputStream;
 
 /**
+ * Demonstrates a very rudimentary game using the jenjin framework and javafx.  Use arrow keys or WASD to move,
+ * space to shoot.
+ *
  * @author Caleb Brinkman
  */
 public class DemoClientApplication extends Application implements EventHandler<WindowEvent>
