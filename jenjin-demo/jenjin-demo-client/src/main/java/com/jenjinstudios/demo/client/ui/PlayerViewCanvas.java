@@ -107,9 +107,9 @@ public class PlayerViewCanvas extends Canvas
 		GraphicsContext graphicsContext2D = getGraphicsContext2D();
 
 		Map<String, String> properties = location.getProperties();
-		boolean walkable = !"false".equals(properties.get("walkable"));
+		boolean isNotWalkable = "false".equals(properties.get("walkable"));
 		boolean indoors = "true".equals(properties.get("indoors"));
-		if (!walkable)
+		if (isNotWalkable)
 		{
 			graphicsContext2D.setFill(Color.GRAY);
 		} else if (indoors)
