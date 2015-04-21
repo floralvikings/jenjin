@@ -28,16 +28,16 @@ public class PlayerControlKeyHandler implements EventHandler<KeyEvent>
 	}
 
 	@Override
-	public void handle(KeyEvent keyEvent) {
-		if (isMovementKey(keyEvent))
+	public void handle(KeyEvent event) {
+		if (isMovementKey(event))
 		{
-			flags.setKeyFlags(keyEvent);
+			flags.setKeyFlags(event);
 			setNewAngle();
-		} else if (isFireKey(keyEvent))
+		} else if (isFireKey(event))
 		{
 			sendFireRequest();
 		}
-		keyEvent.consume();
+		event.consume();
 	}
 
 	protected Angle getMoveAngle(Angle angle) {
