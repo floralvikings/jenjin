@@ -14,9 +14,9 @@ public class ClientPane extends GridPane
 {
 	public ClientPane(WorldClient worldClient, Dimension2D size) {
 		PlayerViewCanvas canvas = new PlayerViewCanvas(worldClient, size.getWidth(), size.getHeight());
-		EventHandler<KeyEvent> playerControlKeyHandler = new PlayerControlKeyHandler(worldClient);
-		canvas.setOnKeyPressed(playerControlKeyHandler);
-		canvas.setOnKeyReleased(playerControlKeyHandler);
+		EventHandler<KeyEvent> controlHandler = new PlayerControlKeyHandler(worldClient);
+		canvas.setOnKeyPressed(controlHandler);
+		canvas.setOnKeyReleased(controlHandler);
 		add(canvas, 0, 0);
 
 		AnimationTimer animationTimer = new WorldDrawTimer(canvas);
