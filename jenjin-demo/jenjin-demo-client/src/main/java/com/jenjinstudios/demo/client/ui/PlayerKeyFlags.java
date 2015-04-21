@@ -35,9 +35,9 @@ public class PlayerKeyFlags
 
 	protected void setKeyFlags(KeyEvent keyEvent) {
 		KeyCode keyCode = keyEvent.getCode();
-		up = (((keyCode == UP) || (keyCode == W)) ? (keyEvent.getEventType() == KEY_PRESSED) : up);
-		down = (((keyCode == DOWN) || (keyCode == S)) ? (keyEvent.getEventType() == KEY_PRESSED) : down);
-		left = (((keyCode == LEFT) || (keyCode == A)) ? (keyEvent.getEventType() == KEY_PRESSED) : left);
-		right = (((keyCode == RIGHT) || (keyCode == D)) ? (keyEvent.getEventType() == KEY_PRESSED) : right);
+		up = ((keyCode == UP) || (keyCode == W)) ? (keyEvent.getEventType() == KEY_PRESSED) : up;
+		down = ((keyCode == DOWN) || (keyCode == S)) ? (keyEvent.getEventType() == KEY_PRESSED) : down;
+		left = ((keyCode == LEFT) || (keyCode == A)) ? (keyEvent.getEventType() == KEY_PRESSED) : left;
+		right = ((keyCode == RIGHT) || (keyCode == D)) ? (keyEvent.getEventType() == KEY_PRESSED) : right;
 	}
 }
