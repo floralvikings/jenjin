@@ -9,6 +9,7 @@ import com.jenjinstudios.core.io.MessageStreamPair;
 import com.jenjinstudios.demo.client.Main;
 import com.jenjinstudios.world.client.WorldClient;
 import com.jenjinstudios.world.client.WorldClientMessageContext;
+import com.jenjinstudios.world.io.WorldDocumentException;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
@@ -55,6 +56,10 @@ public final class LoginPane extends GridPane
 			worldClient.start();
 			worldClient.initializeWorldFromServer();
 			LOGGER.log(Level.INFO, "Created World Client.");
+		} catch (WorldDocumentException e)
+		{
+			LOGGER.log(Level.SEVERE, "Exception reading world document.", e);
+			worldClient = null;
 		} catch (IOException e)
 		{
 			LOGGER.log(Level.SEVERE, "Exception creating world client.", e);
