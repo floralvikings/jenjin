@@ -196,17 +196,17 @@ public class DemoClientApplication extends Application implements EventHandler<W
 			user.setPassword(passwordField.getText());
 			String address = addressField.getText();
 			int port = Integer.parseInt(portField.getText());
-			WorldClient worldClient = tryCreateWorldClient(address, port, user);
-			if (worldClient != null)
+			WorldClient wc = tryCreateWorldClient(address, port, user);
+			if (wc != null)
 			{
-				if (AuthenticationHelper.loginAndWait(worldClient))
+				if (AuthenticationHelper.loginAndWait(wc))
 				{
 					LOGGER.log(Level.INFO, "Successfully logged in!");
-					demoClientApplication.successfulLogin(worldClient);
+					demoClientApplication.successfulLogin(wc);
 				} else
 				{
 					LOGGER.log(Level.WARNING, "Login unsuccessful");
-					worldClient.shutdown();
+					wc.shutdown();
 				}
 			}
 		}
