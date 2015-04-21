@@ -30,6 +30,7 @@ import java.util.logging.Logger;
 public final class LoginPane extends GridPane
 {
 	private static final Logger LOGGER = Logger.getLogger(LoginPane.class.getName());
+	private static final int PANE_PADDING = 25;
 	private final TextField addressField = new TextField("127.0.0.1");
 	private final TextField portField = new TextField("51015");
 	private final TextField usernameField = new TextField("TestAccount1");
@@ -42,7 +43,7 @@ public final class LoginPane extends GridPane
 		this.main = main;
 		setHgap(10);
 		setVgap(10);
-		setPadding(new Insets(25, 25, 25, 25));
+		setPadding(new Insets(PANE_PADDING, PANE_PADDING, PANE_PADDING, PANE_PADDING));
 
 		createForm();
 	}

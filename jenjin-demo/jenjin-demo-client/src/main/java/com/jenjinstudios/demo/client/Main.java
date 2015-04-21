@@ -23,6 +23,8 @@ import java.io.InputStream;
  */
 public class Main extends Application implements EventHandler<WindowEvent>
 {
+	private static final int LOGIN_PANE_WIDTH = 400;
+	private static final int LOGIN_PANE_HEIGHT = 175;
 	private WorldClient worldClient;
 	private Stage stage;
 
@@ -37,7 +39,7 @@ public class Main extends Application implements EventHandler<WindowEvent>
 		LoginPane loginPane = new LoginPane(this);
 		stage = primaryStage;
 		stage.setOnCloseRequest(this);
-		stage.setScene(new Scene(loginPane, 400, 175));
+		stage.setScene(new Scene(loginPane, LOGIN_PANE_WIDTH, LOGIN_PANE_HEIGHT));
 		stage.show();
 		Platform.runLater(() -> Platform.setImplicitExit(false));
 	}
