@@ -23,6 +23,11 @@ public class PlayerControlKeyHandler implements EventHandler<KeyEvent>
 	private final Actor clientPlayer;
 	private final PlayerKeyFlags flags;
 
+	/**
+	 * Construct a new handler that will send requests via the supplied client.
+	 *
+	 * @param worldClient The client through which to send action requests.
+	 */
 	public PlayerControlKeyHandler(WorldClient worldClient) {
 		this.worldClient = worldClient;
 		this.clientPlayer = worldClient.getPlayer();
