@@ -84,10 +84,6 @@ public class WorldServer<U extends Player, T extends WorldServerMessageContext<U
 		worldUpdateExecutor.shutdown();
 	}
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public Authenticator<Player> getAuthenticator() { return (Authenticator<Player>) super.getAuthenticator(); }
-
 	public byte[] getWorldFileChecksum() { return worldFileChecksum; }
 
 	public byte[] getWorldFileBytes() { return worldFileBytes; }

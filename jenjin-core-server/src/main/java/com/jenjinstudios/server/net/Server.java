@@ -60,8 +60,6 @@ public class Server<U extends User, C extends ServerMessageContext<U>>
 	// TODO This should probably be removed, folded into World since that's the only time it's used.
 	public int getUps() { return ups; }
 
-	public Authenticator getAuthenticator() { return authenticator; }
-
 	/**
 	 * Start listening for and maintaining connections.
 	 */
