@@ -44,10 +44,10 @@ public final class LoginPane extends GridPane
 	/**
 	 * Construct a new LoginPane.
 	 *
-	 * @param demoClientApplication The application using the login pane.
+	 * @param application The application using the login pane.
 	 */
-	public LoginPane(final DemoClientApplication demoClientApplication) {
-		this.demoClientApplication = demoClientApplication;
+	public LoginPane(final DemoClientApplication application) {
+		this.demoClientApplication = application;
 		setHgap(10);
 		setVgap(10);
 		setPadding(new Insets(PANE_PADDING, PANE_PADDING, PANE_PADDING, PANE_PADDING));
