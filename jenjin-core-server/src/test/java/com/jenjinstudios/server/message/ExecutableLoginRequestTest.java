@@ -21,6 +21,9 @@ import static org.mockito.Mockito.when;
  */
 public class ExecutableLoginRequestTest
 {
+	/**
+	 * Register messages for testing.
+	 */
 	@BeforeClass
 	public void registerMessages() {
 		MessageRegistry.getGlobalRegistry().register("Core Message Registry",
