@@ -47,7 +47,7 @@ public class PlayerControlKeyHandler implements EventHandler<KeyEvent>
 		event.consume();
 	}
 
-	protected Angle getMoveAngle(Angle angle) {
+	private Angle getMoveAngle(Angle angle) {
 		if (flags.upKey())
 		{
 			double absAngle;
