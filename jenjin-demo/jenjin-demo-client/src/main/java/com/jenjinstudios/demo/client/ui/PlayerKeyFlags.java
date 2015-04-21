@@ -62,6 +62,11 @@ public class PlayerKeyFlags
 	 */
 	protected boolean downKey() {return down && !up;}
 
+	/**
+	 * Get whether the up key and not the down key is pressed.
+	 *
+	 * @return Wehther the up key and not the down key is pressed.
+	 */
 	protected boolean upKey() {return up && !down;}
 
 	protected void setKeyFlags(KeyEvent keyEvent) {
