@@ -24,7 +24,12 @@ public class PlayerKeyFlags
 
 	public static boolean isMovementKey(KeyEvent keyEvent) {
 		KeyCode c = keyEvent.getCode();
-		return c.isArrowKey() || (c == W) || (c == A) || (c == S) || (c == D);
+		boolean isMovementKey = c.isArrowKey();
+		isMovementKey |= c == W;
+		isMovementKey |= c == A;
+		isMovementKey |= c == S;
+		isMovementKey |= c == D;
+		return isMovementKey;
 	}
 
 	protected boolean rightKey() {return right && !left;}
