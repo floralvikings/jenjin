@@ -26,6 +26,10 @@ public class PlayerViewCanvas extends Canvas
 	private static final double PLAYER_SCALE = 75;
 	private static final double BULLET_SCALE = 15;
 	private static final double SCALE = 75;
+	private static final double TANK_WIDTH_MODIFIER = 1.25;
+	private static final int HUD_FONT_SIZE = 14;
+	private static final int HUD_VERTICAL_OFFSET = 12;
+	private static final double HUD_LINE_OFFSET = 1.5;
 	private final double locScale = (SCALE / Location.SIZE);
 	private final Image playerTile;
 	private final Image bulletTile;
@@ -42,7 +46,7 @@ public class PlayerViewCanvas extends Canvas
 
 		String tankImageFile = "com/jenjinstudios/demo/client/images/tank.png";
 		InputStream tankStream = getClass().getClassLoader().getResourceAsStream(tankImageFile);
-		playerTile = new Image(tankStream, PLAYER_SCALE * 1.25, PLAYER_SCALE, false, true);
+		playerTile = new Image(tankStream, PLAYER_SCALE * TANK_WIDTH_MODIFIER, PLAYER_SCALE, false, true);
 
 		String bulletImageFile = "com/jenjinstudios/demo/client/images/bullet.png";
 		InputStream bulletStream = getClass().getClassLoader().getResourceAsStream(bulletImageFile);
@@ -57,7 +61,7 @@ public class PlayerViewCanvas extends Canvas
 	}
 
 	private void drawHUD() {
-		int fontSize = 14;
+		int fontSize = HUD_FONT_SIZE;
 		GraphicsContext graphicsContext2D = getGraphicsContext2D();
 		graphicsContext2D.setFill(Color.WHITE);
 		graphicsContext2D.setFont(Font.font("Arial", fontSize));
@@ -72,7 +76,7 @@ public class PlayerViewCanvas extends Canvas
 
 		for (int i = 0; i < hudStrings.length; i++)
 		{
-			graphicsContext2D.fillText(hudStrings[i], 0, 12 + (i * fontSize * 1.5));
+			graphicsContext2D.fillText(hudStrings[i], 0, HUD_VERTICAL_OFFSET + (i * fontSize * HUD_LINE_OFFSET));
 		}
 	}
 
