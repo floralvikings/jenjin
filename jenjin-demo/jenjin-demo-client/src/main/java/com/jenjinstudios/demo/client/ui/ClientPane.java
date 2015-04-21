@@ -14,6 +14,8 @@ import javafx.scene.layout.GridPane;
  */
 public class ClientPane extends GridPane
 {
+	private final PlayerViewCanvas canvas;
+
 	/**
 	 * Construct a new ClientPane rendering the world for the given WorldClient and with the given size.
 	 *
@@ -21,23 +23,19 @@ public class ClientPane extends GridPane
 	 * @param size The size of the client pane.
 	 */
 	public ClientPane(WorldClient worldClient, Dimension2D size) {
-		PlayerViewCanvas canvas = new PlayerViewCanvas(worldClient, size.getWidth(), size.getHeight());
+		canvas = new PlayerViewCanvas(worldClient, size.getWidth(), size.getHeight());
 		EventHandler<KeyEvent> controlHandler = new PlayerControlKeyHandler(worldClient);
 		canvas.setOnKeyPressed(controlHandler);
 		canvas.setOnKeyReleased(controlHandler);
 		add(canvas, 0, 0);
 
-		AnimationTimer animationTimer = new WorldDrawTimer(canvas);
+		AnimationTimer animationTimer = new WorldDrawTimer();
 
 		animationTimer.start();
 	}
 
-	private static class WorldDrawTimer extends AnimationTimer
+	private class WorldDrawTimer extends AnimationTimer
 	{
-		private final PlayerViewCanvas canvas;
-
-		private WorldDrawTimer(PlayerViewCanvas canvas) {this.canvas = canvas;}
-
 		@Override
 		public void handle(long now) {
 			canvas.drawWorld();
