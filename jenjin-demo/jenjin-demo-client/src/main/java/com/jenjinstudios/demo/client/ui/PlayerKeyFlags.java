@@ -19,7 +19,7 @@ public class PlayerKeyFlags
 	private boolean right;
 
 	static boolean isFireKey(KeyEvent keyEvent) {
-		return (keyEvent.getCode() == SPACE) && (keyEvent.getEventType() == KEY_PRESSED);
+		return (keyEvent.getCode() == SPACE) && Objects.equals(keyEvent.getEventType(), KEY_PRESSED);
 	}
 
 	public static boolean isMovementKey(KeyEvent keyEvent) {
