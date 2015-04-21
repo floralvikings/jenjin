@@ -3,6 +3,8 @@ package com.jenjinstudios.demo.client.ui;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
+import java.util.Objects;
+
 import static javafx.scene.input.KeyCode.*;
 import static javafx.scene.input.KeyEvent.KEY_PRESSED;
 
@@ -35,9 +37,9 @@ public class PlayerKeyFlags
 
 	protected void setKeyFlags(KeyEvent keyEvent) {
 		KeyCode keyCode = keyEvent.getCode();
-		up = ((keyCode == UP) || (keyCode == W)) ? (keyEvent.getEventType() == KEY_PRESSED) : up;
-		down = ((keyCode == DOWN) || (keyCode == S)) ? (keyEvent.getEventType() == KEY_PRESSED) : down;
-		left = ((keyCode == LEFT) || (keyCode == A)) ? (keyEvent.getEventType() == KEY_PRESSED) : left;
-		right = ((keyCode == RIGHT) || (keyCode == D)) ? (keyEvent.getEventType() == KEY_PRESSED) : right;
+		up = ((keyCode == UP) || (keyCode == W)) ? Objects.equals(keyEvent.getEventType(), KEY_PRESSED) : up;
+		down = ((keyCode == DOWN) || (keyCode == S)) ? Objects.equals(keyEvent.getEventType(), KEY_PRESSED) : down;
+		left = ((keyCode == LEFT) || (keyCode == A)) ? Objects.equals(keyEvent.getEventType(), KEY_PRESSED) : left;
+		right = ((keyCode == RIGHT) || (keyCode == D)) ? Objects.equals(keyEvent.getEventType(), KEY_PRESSED) : right;
 	}
 }
