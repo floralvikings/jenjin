@@ -11,7 +11,10 @@ import static javafx.scene.input.KeyEvent.KEY_PRESSED;
  */
 public class PlayerKeyFlags
 {
-	private boolean up, down, left, right;
+	private boolean up;
+	private boolean down;
+	private boolean left;
+	private boolean right;
 
 	static boolean isFireKey(KeyEvent keyEvent) {
 		return keyEvent.getCode() == SPACE && keyEvent.getEventType() == KEY_PRESSED;
