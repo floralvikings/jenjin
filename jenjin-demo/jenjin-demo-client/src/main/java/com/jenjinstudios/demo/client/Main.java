@@ -28,6 +28,13 @@ public class Main extends Application implements EventHandler<WindowEvent>
 	private WorldClient worldClient;
 	private Stage stage;
 
+	/**
+	 * Launch the application.
+	 *
+	 * @param args The command line arguments.
+	 *
+	 * @throws Exception If there's an exception.
+	 */
 	public static void main(String... args) throws Exception {
 		launch(args);
 	}
