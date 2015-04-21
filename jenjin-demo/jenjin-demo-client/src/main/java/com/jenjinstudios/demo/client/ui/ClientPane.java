@@ -27,7 +27,7 @@ public class ClientPane extends GridPane
 	{
 		private final PlayerViewCanvas canvas;
 
-		public WorldDrawTimer(PlayerViewCanvas canvas) {this.canvas = canvas;}
+		private WorldDrawTimer(PlayerViewCanvas canvas) {this.canvas = canvas;}
 
 		@Override
 		public void handle(long now) {
