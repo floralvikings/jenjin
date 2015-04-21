@@ -16,6 +16,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 /**
+ * Tests the ExecutableLoginRequest class.
  * @author Caleb Brinkman
  */
 public class ExecutableLoginRequestTest
