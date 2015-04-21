@@ -48,6 +48,11 @@ public class PlayerKeyFlags
 	 */
 	protected boolean rightKey() {return right && !left;}
 
+	/**
+	 * Get whether the left key and not the right is pressed.
+	 *
+	 * @return Whether the left key and not the right is pressed.
+	 */
 	protected boolean leftKey() {return left && !right;}
 
 	protected boolean downKey() {return down && !up;}
