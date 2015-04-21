@@ -35,6 +35,11 @@ public class ExecutableLoginRequestTest
 		MessageRegistry.getGlobalRegistry().clear();
 	}
 
+	/**
+	 * Test the message execution.
+	 *
+	 * @throws Exception If there's an exception.
+	 */
 	@Test
 	@SuppressWarnings("unchecked")
 	public void testMessageExecution() throws Exception {
