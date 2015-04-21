@@ -62,6 +62,11 @@ public class ExecutableLoginRequestTest
 		Mockito.verify(context).setLoggedInTime(anyLong());
 	}
 
+	/**
+	 * Test a failed login.
+	 *
+	 * @throws Exception If there's an exception.
+	 */
 	@Test
 	@SuppressWarnings("unchecked")
 	public void testFailedLogin() throws Exception {
