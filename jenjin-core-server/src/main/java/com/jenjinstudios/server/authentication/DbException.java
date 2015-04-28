@@ -1,4 +1,4 @@
-package com.jenjinstudios.server.database;
+package com.jenjinstudios.server.authentication;
 
 /**
  * Thrown by a {@code DbTable} when there is a database error.

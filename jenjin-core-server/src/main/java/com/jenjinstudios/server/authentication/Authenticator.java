@@ -1,6 +1,5 @@
 package com.jenjinstudios.server.authentication;
 
-import com.jenjinstudios.server.database.DbException;
 import com.jenjinstudios.server.security.SHA256Hasher;
 
 /**

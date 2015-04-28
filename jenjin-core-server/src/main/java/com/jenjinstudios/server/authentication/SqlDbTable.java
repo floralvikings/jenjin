@@ -1,16 +1,9 @@
-package com.jenjinstudios.server.database.sql;
-
-import com.jenjinstudios.server.database.DbException;
-import com.jenjinstudios.server.database.DbTable;
+package com.jenjinstudios.server.authentication;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -23,7 +16,7 @@ import static java.sql.ResultSet.TYPE_SCROLL_INSENSITIVE;
  *
  * @author Caleb Brinkman
  */
-public abstract class SqlDbTable<T> implements DbTable<T>
+public abstract class SqlDbTable<T extends User> implements DbTable<T>
 {
 	private static final Logger LOGGER = Logger.getLogger(SqlDbTable.class.getName());
 	private final Connection connection;
@@ -52,30 +45,26 @@ public abstract class SqlDbTable<T> implements DbTable<T>
 	 */
 	protected abstract T buildFromRow(ResultSet resultSet) throws SQLException;
 
-	/**
-	 * Given an object, build a Map using the names of the columns to be updated as the keys, and the records as the
-	 * values.
-	 *
-	 * @param data The object for which to build to map.
-	 *
-	 * @return The map.
-	 */
-	protected abstract Map<String, Object> buildFromObject(T data);
-
 	@Override
-	public List<T> lookup(Map<String, Object> where) throws DbException {
-		List<T> lookup = new LinkedList<>();
+	public T lookup(String username) throws DbException {
+		T lookup = null;
 		PreparedStatement statement = null;
 		ResultSet resultSet = null;
 		try
 		{
-			statement = getLookupStatement(where);
+			statement = getLookupStatement(username);
 			resultSet = statement.executeQuery();
-			while (resultSet.next())
+			if (resultSet.next())
 			{
-				lookup.add(buildFromRow(resultSet));
+				lookup = buildFromRow(resultSet);
+				// Should only be one result; will throw a DbException if multiples show up
+				boolean multipleResults = resultSet.next();
+				resultSet.close();
+				if (multipleResults)
+				{
+					throw new DbException("Multiple users with this username exist: " + username);
+				}
 			}
-			resultSet.close();
 		} catch (SQLException e)
 		{
 			throw new DbException("SQL Exception when querying database: ", e);
@@ -106,13 +95,12 @@ public abstract class SqlDbTable<T> implements DbTable<T>
 	}
 
 	@Override
-	public boolean update(Map<String, Object> where, T row) throws DbException {
-		Map<String, Object> data = buildFromObject(row);
+	public boolean update(T user) throws DbException {
 		PreparedStatement statement = null;
 		boolean success = false;
 		try
 		{
-			statement = getUpdateStatement(where, data);
+			statement = getUpdateStatement(user);
 			success = statement.executeUpdate() > 0;
 		} catch (SQLException e)
 		{
@@ -134,73 +122,30 @@ public abstract class SqlDbTable<T> implements DbTable<T>
 		return success;
 	}
 
-	private PreparedStatement getLookupStatement(Map<String, Object> where) throws SQLException {
-		StringBuilder queryBuilder = new StringBuilder("SELECT * FROM " + tableName);
-		String whereClause = buildWhereClause(where);
-		String query = queryBuilder.append(whereClause).toString();
+	private PreparedStatement getLookupStatement(String username) throws SQLException {
+		String query = "SELECT * FROM " + tableName + " WHERE username = ?";
 		PreparedStatement statement;
 		synchronized (connection)
 		{
 			statement = connection.prepareStatement(query, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
-			int parameterCount = 1;
-			for (Entry<String, Object> entry : where.entrySet())
-			{
-				statement.setObject(parameterCount, entry.getValue());
-				parameterCount++;
-			}
+			statement.setObject(1, username);
 		}
 		return statement;
 	}
 
-	private PreparedStatement getUpdateStatement(Map<String, Object> where, Map<String, Object> data)
+	private PreparedStatement getUpdateStatement(T user)
 		  throws SQLException
 	{
-		StringBuilder queryBuilder = new StringBuilder("UPDATE " + tableName);
-		String setClause = buildSetClause(data);
-		String whereClause = buildWhereClause(where);
-		queryBuilder.append(setClause);
-		queryBuilder.append(whereClause);
-		String query = queryBuilder.toString();
+		String query = "UPDATE " + tableName + " SET loggedin = ? WHERE username = ?";
+
 
 		PreparedStatement statement;
 		synchronized (connection)
 		{
 			statement = connection.prepareStatement(query, TYPE_SCROLL_INSENSITIVE, CONCUR_UPDATABLE);
-			int parameterCount = 1;
-			for (Entry<String, Object> entry : data.entrySet())
-			{
-				statement.setObject(parameterCount, entry.getValue());
-				parameterCount++;
-			}
-			for (Entry<String, Object> entry : where.entrySet())
-			{
-				statement.setObject(parameterCount, entry.getValue());
-				parameterCount++;
-			}
+			statement.setObject(1, user.isLoggedIn());
+			statement.setObject(2, user.getUsername());
 		}
 		return statement;
 	}
-
-	private static String buildSetClause(Map<String, Object> data) {
-		StringBuilder setClauseBuilder = new StringBuilder(" SET ");
-		for (Entry<String, Object> entry : data.entrySet())
-		{
-			setClauseBuilder.append(entry.getKey()).append(" = ?,");
-		}
-		int lastComma = setClauseBuilder.lastIndexOf(",");
-		setClauseBuilder.delete(lastComma, lastComma + 1);
-		return setClauseBuilder.toString();
-	}
-
-	private static String buildWhereClause(Map<String, Object> where) {
-		StringBuilder whereClauseBuilder = new StringBuilder(" WHERE ");
-		for (Entry<String, Object> entry : where.entrySet())
-		{
-			whereClauseBuilder.append(entry.getKey()).append(" = ? AND ");
-		}
-		int lastAnd = whereClauseBuilder.lastIndexOf("AND");
-		whereClauseBuilder.delete(lastAnd, lastAnd + 3);
-		return whereClauseBuilder.toString();
-	}
-
 }

@@ -13,7 +13,7 @@ import java.util.HashMap;
 public class WorldObject extends EventExecutor
 {
 	private final HashMap<String, Object> properties;
-	private String name;
+	private final String name;
 	private int zoneID;
 	private int resourceID;
 	private int id = Integer.MIN_VALUE;
@@ -63,8 +63,6 @@ public class WorldObject extends EventExecutor
 	public void setZoneID(int zoneID) { this.zoneID = zoneID; }
 
 	public String getName() { return name; }
-
-	public void setName(String name) { this.name = name; }
 
 	@Override
 	public String toString() { return name + ": " + id; }

@@ -22,9 +22,6 @@ public class Player extends Actor implements User
 	public String getUsername() { return getName(); }
 
 	@Override
-	public void setUsername(String username) { setName(username); }
-
-	@Override
 	public String getPassword() { return password; }
 
 	@Override

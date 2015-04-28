@@ -15,14 +15,6 @@ public interface User
 	String getUsername();
 
 	/**
-	 * Set the username associated with this user.  This username must be unique; duplicate usernames can restult in
-	 * user data being overwritten in the database.
-	 *
-	 * @param username The uesrname associated with this user.  <b>Must be unique</b>.
-	 */
-	void setUsername(String username);
-
-	/**
 	 * Get the hashed, salted password of this user.
 	 *
 	 * @return The hashed, salted password of this user.

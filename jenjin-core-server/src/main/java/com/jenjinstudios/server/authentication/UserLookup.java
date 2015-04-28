@@ -1,7 +1,5 @@
 package com.jenjinstudios.server.authentication;
 
-import com.jenjinstudios.server.database.DbException;
-
 /**
  * Interface for all database calsses used to lookup users.
  *
@@ -16,7 +14,7 @@ public interface UserLookup<T extends User>
 	 *
 	 * @return The found User, or null if the user doesn't exist.
 	 *
-	 * @throws com.jenjinstudios.server.database.DbException If there is an error accessing the database.
+	 * @throws DbException If there is an error accessing the database.
 	 */
 	T findUser(String username) throws DbException;
 

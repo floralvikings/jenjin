@@ -1,18 +1,14 @@
 package com.jenjinstudios.world.server.sql;
 
+import com.jenjinstudios.server.authentication.DbException;
+import com.jenjinstudios.server.authentication.SqlDbTable;
 import com.jenjinstudios.server.authentication.UserLookup;
-import com.jenjinstudios.server.database.DbException;
-import com.jenjinstudios.server.database.sql.SqlDbTable;
 import com.jenjinstudios.world.math.Vector2D;
 import com.jenjinstudios.world.server.Player;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Used to look up and update players in a database.
@@ -21,7 +17,6 @@ import java.util.Map;
  */
 public class PlayerTable extends SqlDbTable<Player> implements UserLookup<Player>
 {
-	private static final String USER_COLUMN = "username";
 	private static final String USERNAME_COLUMN = "username";
 	private static final String LOGGED_IN_COLUMN = "loggedin";
 	private static final String PASSWORD_COLUMN = "password";
@@ -52,7 +47,6 @@ public class PlayerTable extends SqlDbTable<Player> implements UserLookup<Player
 		Vector2D vector2D = new Vector2D(xCoord, yCoord);
 
 		Player player = new Player(username);
-		player.setUsername(username);
 		player.setPassword(password);
 		player.setLoggedIn(loggedIn);
 		player.setSalt(salt);
@@ -62,28 +56,12 @@ public class PlayerTable extends SqlDbTable<Player> implements UserLookup<Player
 	}
 
 	@Override
-	protected Map<String, Object> buildFromObject(Player data) {
-		Map<String, Object> map = new HashMap<>(10);
-		map.put(LOGGED_IN_COLUMN, data.isLoggedIn());
-		map.put(SALT_COLUMN, data.getSalt());
-		map.put(PASSWORD_COLUMN, data.getPassword());
-		map.put(USERNAME_COLUMN, data.getUsername());
-		map.put(X_COORD_COLUMN, data.getVector2D().getXCoordinate());
-		map.put(Y_COORD_COLUMN, data.getVector2D().getYCoordinate());
-		map.put(ZONE_ID_COLUMN, data.getZoneID());
-		return map;
-	}
-
-	@Override
 	public Player findUser(String username) throws DbException {
-		Map<String, Object> where = Collections.singletonMap(USER_COLUMN, username);
-		List<Player> users = lookup(where);
-		return !users.isEmpty() ? users.get(0) : null;
+		return lookup(username);
 	}
 
 	@Override
 	public boolean updateUser(Player user) throws DbException {
-		Map<String, Object> where = Collections.singletonMap(USER_COLUMN, user.getUsername());
-		return update(where, user);
+		return update(user);
 	}
 }

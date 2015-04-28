@@ -7,17 +7,21 @@ package com.jenjinstudios.server.authentication;
  */
 public class BasicUser implements User
 {
+	private final String username;
 	private String salt;
 	private boolean loggedIn;
-	private String username;
 	/** The hashed, salted password of this user. */
 	private String password;
 
-	@Override
-	public String getUsername() { return username; }
+	/**
+	 * Cosntruct a new BasicUser with the given user name.
+	 *
+	 * @param username The username.
+	 */
+	public BasicUser(String username) { this.username = username; }
 
 	@Override
-	public void setUsername(String username) { this.username = username; }
+	public String getUsername() { return username; }
 
 	@Override
 	public String getPassword() { return password; }

@@ -1,16 +1,12 @@
 package com.jenjinstudios.server.authentication;
 
-import com.jenjinstudios.server.database.DbTable;
-import com.jenjinstudios.server.database.sql.TestConnectionFactory;
+import com.jenjinstudios.server.authentication.sql.TestConnectionFactory;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import java.sql.Connection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Test the UserTable class.
@@ -49,8 +45,7 @@ public class UserTableTest
 	@Test
 	public void testLookUpUser() throws Exception {
 		DbTable<BasicUser> table = new UserTable(connection);
-		List<BasicUser> users = table.lookup(Collections.singletonMap("username", "TestAccount1"));
-		User testAccount1 = users.isEmpty() ? null : users.get(0);
+		User testAccount1 = table.lookup("TestAccount1");
 		Assert.assertNotNull(testAccount1, "Test account was null");
 		Assert.assertEquals(testAccount1.getUsername(), "TestAccount1", "Incorrect user returned.");
 	}
@@ -75,14 +70,11 @@ public class UserTableTest
 	@Test
 	public void testUpdate() throws Exception {
 		DbTable<BasicUser> table = new UserTable(connection);
-		Map<String, Object> where = Collections.singletonMap("username", "TestAccount1");
-		List<BasicUser> users = table.lookup(where);
-		BasicUser testAccount1 = users.isEmpty() ? null : users.get(0);
+		BasicUser testAccount1 = table.lookup("TestAccount1");
 		Assert.assertNotNull(testAccount1, "Test account was null");
 		testAccount1.setLoggedIn(true);
-		table.update(where, testAccount1);
-		List<BasicUser> lookup = table.lookup(where);
-		User user = lookup.isEmpty() ? null : lookup.get(0);
+		table.update(testAccount1);
+		User user = table.lookup("TestAccount1");
 		Assert.assertNotNull(user, "Test account was null");
 		Assert.assertTrue(user.isLoggedIn(), "User not updated");
 	}

@@ -50,9 +50,7 @@ public class ExecutableLoginRequestTest
 		message.setArgument("username", "foo");
 		message.setArgument("password", "bar");
 
-		BasicUser user = new BasicUser();
-		user.setUsername("foo");
-		user.setUsername("bar");
+		BasicUser user = new BasicUser("foo");
 		user.setLoggedIn(true);
 		Authenticator<BasicUser> authenticator = mock(Authenticator.class);
 		ServerMessageContext context = mock(ServerMessageContext.class);
@@ -77,9 +75,7 @@ public class ExecutableLoginRequestTest
 		message.setArgument("username", "foo-dapoo");
 		message.setArgument("password", "bar");
 
-		BasicUser user = new BasicUser();
-		user.setUsername("foo");
-		user.setUsername("bar");
+		BasicUser user = new BasicUser("foo");
 		user.setLoggedIn(true);
 		Authenticator<BasicUser> authenticator = mock(Authenticator.class);
 		ServerMessageContext context = mock(ServerMessageContext.class);

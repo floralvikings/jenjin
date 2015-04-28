@@ -1,4 +1,4 @@
-package com.jenjinstudios.server.database.sql;
+package com.jenjinstudios.server.authentication.sql;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

@@ -1,15 +1,8 @@
 package com.jenjinstudios.server.authentication;
 
-import com.jenjinstudios.server.database.DbException;
-import com.jenjinstudios.server.database.sql.SqlDbTable;
-
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Used for looking up {@code User} objects from a backing SQL database.
@@ -18,7 +11,6 @@ import java.util.Map;
  */
 public class UserTable extends SqlDbTable<BasicUser> implements UserLookup<BasicUser>
 {
-	private static final String USER_COLUMN = "username";
 	private static final String USERNAME_COLUMN = "username";
 	private static final String LOGGED_IN_COLUMN = "loggedin";
 	private static final String PASSWORD_COLUMN = "password";
@@ -41,35 +33,21 @@ public class UserTable extends SqlDbTable<BasicUser> implements UserLookup<Basic
 		String password = resultSet.getString(PASSWORD_COLUMN);
 		String username = resultSet.getString(USERNAME_COLUMN);
 
-		BasicUser user = new BasicUser();
-		user.setUsername(username);
+		BasicUser user = new BasicUser(username);
 		user.setPassword(password);
 		user.setLoggedIn(loggedIn);
 		user.setSalt(salt);
 		return user;
 	}
 
-	@Override
-	protected Map<String, Object> buildFromObject(BasicUser data) {
-		Map<String, Object> map = new HashMap<>(10);
-		map.put(LOGGED_IN_COLUMN, data.isLoggedIn());
-		map.put(SALT_COLUMN, data.getSalt());
-		map.put(PASSWORD_COLUMN, data.getPassword());
-		map.put(USERNAME_COLUMN, data.getUsername());
-		return map;
-	}
-
 
 	@Override
 	public BasicUser findUser(String username) throws DbException {
-		Map<String, Object> where = Collections.singletonMap(USER_COLUMN, username);
-		List<BasicUser> users = lookup(where);
-		return !users.isEmpty() ? users.get(0) : null;
+		return lookup(username);
 	}
 
 	@Override
 	public boolean updateUser(BasicUser user) throws DbException {
-		Map<String, Object> where = Collections.singletonMap(USER_COLUMN, user.getUsername());
-		return update(where, user);
+		return update(user);
 	}
 }

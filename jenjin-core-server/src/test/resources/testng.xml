@@ -10,7 +10,7 @@
     <test name="database">
         <packages>
             <package name="com.jenjinstudios.server.database" />
-            <package name="com.jenjinstudios.server.database.sql" />
+            <package name="com.jenjinstudios.server.authentication.sql" />
         </packages>
     </test>
 
