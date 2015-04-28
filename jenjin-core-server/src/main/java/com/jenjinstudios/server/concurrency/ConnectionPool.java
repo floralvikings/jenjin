@@ -50,12 +50,12 @@ public class ConnectionPool<T extends MessageContext>
 	 */
 	protected void addConnection(Connection<T> connection)
 	{
+		connectionAddedTasks.forEach(task -> task.connectionAdded(connection));
+		connection.start();
 		synchronized (connections)
 		{
 			connections.put(connection.getId(), connection);
 		}
-		connectionAddedTasks.forEach(task -> task.connectionAdded(connection));
-		connection.start();
 	}
 
 	/**
