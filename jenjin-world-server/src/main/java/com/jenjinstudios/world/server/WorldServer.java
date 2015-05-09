@@ -38,7 +38,7 @@ public class WorldServer<U extends Player, T extends WorldServerMessageContext<U
 	 * constructor.
 	 */
 	public WorldServer(ServerInit<T> init, Authenticator<U> authenticator, WorldDocumentReader reader)
-	throws IOException, NoSuchMethodException
+		  throws IOException
 	{
 		super(init, authenticator);
 		if (reader != null)
