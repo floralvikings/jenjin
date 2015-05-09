@@ -9,12 +9,15 @@ import com.jenjinstudios.world.server.WorldServerMessageContext;
 import com.jenjinstudios.world.server.message.WorldExecutableMessage;
 
 /**
+ * Request executed when a client requests to fire a bullet.
+ *
  * @author Caleb Brinkman
  */
 public class ExecutableFireRequest extends WorldExecutableMessage<WorldServerMessageContext<Player>>
 {
 	/**
 	 * Construct a new ExecutableMessage.  Must be implemented by subclasses.
+	 *
 	 * @param message The message.
 	 * @param context The context in which to execute the message.
 	 */
