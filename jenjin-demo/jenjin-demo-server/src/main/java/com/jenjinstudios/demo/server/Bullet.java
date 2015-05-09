@@ -28,25 +28,7 @@ public class Bullet extends Actor
 		setZoneID(actorFiring.getZoneID());
 		startVector = getVector2D();
 
-		addPostUpdateEvent("Collision", new Collision(this)
-		{
-			@Override
-			public void onCollision(WorldObject collided) {
-				if (!(collided instanceof Bullet) && collided instanceof Actor && collided != actorFiring)
-				{
-					Actor actor = (Actor) collided;
-					Angle idle = new Angle();
-					if (idle.getAbsoluteAngle() == collided.getAngle().getAbsoluteAngle())
-					{
-						idle = idle.reverseAbsoluteAngle();
-					}
-					long forceTime = collided.getWorld().getLastUpdateCompleted();
-					actor.setVector2D(Vector2D.ORIGIN);
-					actor.setForcedState(new MoveState(idle, Vector2D.ORIGIN, forceTime));
-					getWorld().getWorldObjects().remove(Bullet.this);
-				}
-			}
-		});
+		addPostUpdateEvent("Collision", new BulletCollision(actorFiring));
 
 		addPreUpdateEvent("RangeStop", () -> {
 			if (!getAngle().isNotIdle() || startVector.getDistanceToVector(getVector2D()) > RANGE)
@@ -55,5 +37,30 @@ public class Bullet extends Actor
 			}
 		});
 
+	}
+
+	private class BulletCollision extends Collision
+	{
+		private final Actor actorFiring;
+
+		public BulletCollision(Actor actorFiring) {
+			super(Bullet.this);
+			this.actorFiring = actorFiring;
+		}
+
+		@Override
+		public void onCollision(WorldObject collided) {
+			if (!(collided instanceof Bullet) && collided instanceof Actor && collided != actorFiring) {
+				Actor actor = (Actor) collided;
+				Angle idle = new Angle();
+				if (idle.getAbsoluteAngle() == collided.getAngle().getAbsoluteAngle()) {
+					idle = idle.reverseAbsoluteAngle();
+				}
+				long forceTime = collided.getWorld().getLastUpdateCompleted();
+				actor.setVector2D(Vector2D.ORIGIN);
+				actor.setForcedState(new MoveState(idle, Vector2D.ORIGIN, forceTime));
+				getWorld().getWorldObjects().remove(Bullet.this);
+			}
+		}
 	}
 }
