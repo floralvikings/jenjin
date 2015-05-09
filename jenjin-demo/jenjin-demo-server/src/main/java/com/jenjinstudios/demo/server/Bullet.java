@@ -7,9 +7,13 @@ import com.jenjinstudios.world.math.Angle;
 import com.jenjinstudios.world.math.Vector2D;
 import com.jenjinstudios.world.state.MoveState;
 
+import java.util.Objects;
+
 import static com.jenjinstudios.world.math.Angle.FRONT;
 
 /**
+ * Represents a bullet in the game world.
+ *
  * @author Caleb Brinkman
  */
 public class Bullet extends Actor
@@ -17,6 +21,11 @@ public class Bullet extends Actor
 	private static final double RANGE = 100;
 	private final Vector2D startVector;
 
+	/**
+	 * Construct a new Bullet, fired from the specified actor.
+	 *
+	 * @param actorFiring The actor which fired the bullet.
+	 */
 	public Bullet(Actor actorFiring) {
 		super("Bullet");
 		getProperties().put(Collision.SIZE_PROPERTY, 1.0);
@@ -31,8 +40,7 @@ public class Bullet extends Actor
 		addPostUpdateEvent("Collision", new BulletCollision(actorFiring));
 
 		addPreUpdateEvent("RangeStop", () -> {
-			if (!getAngle().isNotIdle() || (startVector.getDistanceToVector(getVector2D()) > RANGE))
-			{
+			if (!getAngle().isNotIdle() || (startVector.getDistanceToVector(getVector2D()) > RANGE)) {
 				getWorld().getWorldObjects().remove(this);
 			}
 		});
@@ -51,7 +59,9 @@ public class Bullet extends Actor
 
 		@Override
 		public void onCollision(WorldObject collided) {
-			if (!(collided instanceof Bullet) && (collided instanceof Actor) && (collided != actorFiring)) {
+			if (!(collided instanceof Bullet) && (collided instanceof Actor) && !Objects.equals(collided,
+				  actorFiring))
+			{
 				Actor actor = (Actor) collided;
 				Angle idle = new Angle();
 				double comparison = idle.getAbsoluteAngle() - collided.getAngle().getAbsoluteAngle();
