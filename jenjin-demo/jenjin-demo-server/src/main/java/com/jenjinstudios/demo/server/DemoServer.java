@@ -17,54 +17,81 @@ import com.jenjinstudios.world.server.authentication.FullPlayerLookup;
 import com.jenjinstudios.world.server.authentication.FullPlayerUpdate;
 import com.jenjinstudios.world.server.authentication.PlayerFactory;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
+ * Demonstrates a very simple game server using the Jenjin WorldServer.
+ *
  * @author Caleb Brinkman
  */
-public class Main
+public final class DemoServer
 {
-	public static void main(String[] args) throws Exception {
-		InputStream stream = Main.class.getResourceAsStream("/com/jenjinstudios/demo/server/Messages.xml");
+	private static final Logger LOGGER = Logger.getLogger(DemoServer.class.getName());
+
+	private DemoServer() {}
+
+	/**
+	 * Begin running the demo; the demo will run until the "quit" command is entered at the console.
+	 *
+	 * @param args Ignored.
+	 *
+	 * @throws IOException If there is an exception caused by the demo.
+	 */
+	public static void main(String... args) throws IOException {
+		InputStream stream = DemoServer.class.getResourceAsStream("/com/jenjinstudios/demo/server/Messages.xml");
 		MessageRegistry.getGlobalRegistry().register("Demo Client Messages", stream);
 		Scanner input = new Scanner(System.in);
-		WorldServer demoServer;
 
-		demoServer = createWorldServer();
-		demoServer.start();
+		WorldServer demoServer = createWorldServer();
+		if (demoServer != null) {
+			demoServer.start();
 
-		String readLine = input.nextLine();
-		while (readLine != null && !"quit".equals(readLine))
-		{
-			Thread.sleep(100);
-			readLine = input.nextLine();
+			String readLine = input.nextLine();
+			while ((readLine != null) && !"quit".equals(readLine)) {
+				readLine = input.nextLine();
+			}
+
+			demoServer.shutdown();
+		}
+	}
+
+	private static WorldServer createWorldServer() {
+		ServerInit<WorldServerMessageContext> serverInit = new ServerInit<>();
+		serverInit.setContextClass(WorldServerMessageContext.class);
+		WorldServer ws = null;
+		try {
+			Connection sqlConnection = createDemoConnection();
+			DatabaseLookup<Map<String, String>> propertiesLookup = new UserPropertiesSqlLookup(sqlConnection);
+			DatabaseLookup<Player> playerLookup = new JenjinUserSqlLookup<>(new PlayerFactory(), sqlConnection);
+			DatabaseLookup<Player> fullPlayerLookup = new FullPlayerLookup<>(playerLookup, propertiesLookup);
+			DatabaseUpdate<Map<String, String>> propertiesUpdate = new UserPropertiesSqlUpdate(sqlConnection);
+			DatabaseUpdate<Player> playerUpdate = new JenjinUserSqlUpdate<>(sqlConnection);
+			DatabaseUpdate<Player> fullPlayerUpdate = new FullPlayerUpdate<>(playerUpdate, propertiesUpdate);
+			Authenticator<Player> worldAuthenticator = new Authenticator<>(fullPlayerLookup, fullPlayerUpdate);
+			InputStream stream = DemoServer.class.getClassLoader().getResourceAsStream
+				  ("com/jenjinstudios/demo/server/World.json");
+			ws = new WorldServer<>(serverInit, worldAuthenticator, new WorldDocumentReader(stream));
+		} catch (ClassNotFoundException e) {
+			LOGGER.log(Level.SEVERE, "org.h2.Driver class not loaded.", e);
+		} catch (SQLException e) {
+			LOGGER.log(Level.SEVERE, "SQL Exception when initializing demo database.", e);
+		} catch (IOException e) {
+			LOGGER.log(Level.SEVERE, "IOException when creating world server.", e);
 		}
 
-		demoServer.shutdown();
+		return ws;
 	}
 
-	private static WorldServer createWorldServer() throws Exception {
-		ServerInit serverInit = new ServerInit();
-		serverInit.setContextClass(WorldServerMessageContext.class);
-		Connection sqlConnection = createDemoConnection();
-		DatabaseLookup<Map<String, String>> propertiesLookup = new UserPropertiesSqlLookup(sqlConnection);
-		DatabaseLookup<Player> playerLookup = new JenjinUserSqlLookup<>(new PlayerFactory(), sqlConnection);
-		DatabaseLookup<Player> fullPlayerLookup = new FullPlayerLookup<>(playerLookup, propertiesLookup);
-		DatabaseUpdate<Map<String, String>> propertiesUpdate = new UserPropertiesSqlUpdate(sqlConnection);
-		DatabaseUpdate<Player> playerUpdate = new JenjinUserSqlUpdate<>(sqlConnection);
-		DatabaseUpdate<Player> fullPlayerUpdate = new FullPlayerUpdate<>(playerUpdate, propertiesUpdate);
-		Authenticator<Player> worldAuthenticator = new Authenticator<>(fullPlayerLookup, fullPlayerUpdate);
-		InputStream stream = Main.class.getClassLoader().getResourceAsStream("com/jenjinstudios/demo/server/World" +
-			  ".json");
-		return new WorldServer(serverInit, worldAuthenticator, new WorldDocumentReader(stream));
-	}
-
-	private static Connection createDemoConnection() throws Exception {
+	private static Connection createDemoConnection() throws ClassNotFoundException, SQLException {
 		Class.forName("org.h2.Driver");
 		String connectionUrl = "jdbc:h2:mem:jenjin_test";
 		Connection testConnection = DriverManager.getConnection(connectionUrl, "sa", "");
@@ -82,8 +109,7 @@ public class Main
 			  " `value` VARCHAR(64) NOT NULL, " +
 			  " PRIMARY KEY (username, propertyName)" +
 			  ')');
-		for (int i = 1; i < 100; i++)
-		{
+		for (int i = 1; i < 100; i++) {
 			statement.executeUpdate(
 				  "INSERT INTO JenjinUsers " +
 						"(`username`, `password`, `salt`, `loggedin`)" +
