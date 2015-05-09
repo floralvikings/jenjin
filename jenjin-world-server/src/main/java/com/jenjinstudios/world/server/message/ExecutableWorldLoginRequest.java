@@ -9,6 +9,9 @@ import com.jenjinstudios.world.actor.Vision;
 import com.jenjinstudios.world.server.Player;
 import com.jenjinstudios.world.server.WorldServerMessageContext;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  * Handles requests to login to the world.
  *
@@ -16,6 +19,7 @@ import com.jenjinstudios.world.server.WorldServerMessageContext;
  */
 public class ExecutableWorldLoginRequest extends WorldExecutableMessage<WorldServerMessageContext<Player>>
 {
+	private static final Logger LOGGER = Logger.getLogger(ExecutableWorldLoginRequest.class.getName());
 	private final Authenticator<Player> authenticator;
 	private Message loginResponse;
 
@@ -36,6 +40,7 @@ public class ExecutableWorldLoginRequest extends WorldExecutableMessage<WorldSer
 			tryLogInUser();
 		} catch (AuthenticationException e)
 		{
+			LOGGER.log(Level.INFO, "Encountered exception when authenticating user", e);
 			handleLoginFailure();
 		}
 		long result = System.currentTimeMillis();

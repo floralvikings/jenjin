@@ -1,5 +1,8 @@
 package com.jenjinstudios.server.authentication;
 
+import com.jenjinstudios.server.database.DatabaseException;
+import com.jenjinstudios.server.database.DatabaseLookup;
+import com.jenjinstudios.server.database.DatabaseUpdate;
 import com.jenjinstudios.server.security.SHA256Hasher;
 
 /**
@@ -9,21 +12,18 @@ import com.jenjinstudios.server.security.SHA256Hasher;
  */
 public class Authenticator<T extends User>
 {
-	private final UserLookup<T> userLookup;
+	private final DatabaseLookup<T> userLookup;
+	private final DatabaseUpdate<T> userUpdate;
 
 	/**
-	 * Construct an Authenticator using the given UserLookup to find and update users.
-	 *
-	 * @param userLookup The UserLookup used to find and update users.
+	 * Construct a new Authenticator using the given UserLookup and UserUpdate to find and update users.
+	 * @param lookup The user lookup.
+	 * @param update The user update.
 	 */
-	public Authenticator(UserLookup<T> userLookup) { this.userLookup = userLookup; }
-
-	/**
-	 * Get the UserLookup used to find and update users.
-	 *
-	 * @return The UserLookup used to find and update users.
-	 */
-	public UserLookup<T> getUserLookup() { return userLookup; }
+	public Authenticator(DatabaseLookup<T> lookup, DatabaseUpdate<T> update) {
+		this.userLookup = lookup;
+		this.userUpdate = update;
+	}
 
 	/**
 	 * Attempt to retrieve the User from the database with the given Username and valid password.
@@ -41,7 +41,7 @@ public class Authenticator<T extends User>
 		try
 		{
 			user = getUserWithValidPassword(username, clearTextPassword);
-		} catch (DbException e)
+		} catch (DatabaseException e)
 		{
 			throw new AuthenticationException("Database Exception when looking up user.", e);
 		}
@@ -54,11 +54,11 @@ public class Authenticator<T extends User>
 			user.setLoggedIn(true);
 			try
 			{
-				if (!userLookup.updateUser(user))
+				if (!userUpdate.update(user))
 				{
 					user.setLoggedIn(false);
 				}
-			} catch (DbException e)
+			} catch (DatabaseException e)
 			{
 				throw new AuthenticationException("Database Exception when updating user.", e);
 			}
@@ -84,11 +84,11 @@ public class Authenticator<T extends User>
 			user.setLoggedIn(false);
 			try
 			{
-				if (!userLookup.updateUser(user))
+				if (!userUpdate.update(user))
 				{
 					user.setLoggedIn(true);
 				}
-			} catch (DbException e)
+			} catch (DatabaseException e)
 			{
 				user.setLoggedIn(true);
 				throw new AuthenticationException("Unable to log out user", e);
@@ -100,8 +100,8 @@ public class Authenticator<T extends User>
 		}
 	}
 
-	private T getUserWithValidPassword(String username, String password) throws DbException {
-		T user = userLookup.findUser(username);
+	private T getUserWithValidPassword(String username, String password) throws DatabaseException {
+		T user = userLookup.lookup(username);
 		if (user != null)
 		{
 			String hashedPass = SHA256Hasher.getSaltedSHA256String(password, user.getSalt());
