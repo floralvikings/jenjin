@@ -14,7 +14,7 @@ import static com.jenjinstudios.world.math.Angle.FRONT;
  */
 public class Bullet extends Actor
 {
-	public static final double RANGE = 100;
+	private static final double RANGE = 100;
 	private final Vector2D startVector;
 
 	public Bullet(Actor actorFiring) {
@@ -31,9 +31,9 @@ public class Bullet extends Actor
 		addPostUpdateEvent("Collision", new BulletCollision(actorFiring));
 
 		addPreUpdateEvent("RangeStop", () -> {
-			if (!getAngle().isNotIdle() || startVector.getDistanceToVector(getVector2D()) > RANGE)
+			if (!getAngle().isNotIdle() || (startVector.getDistanceToVector(getVector2D()) > RANGE))
 			{
-				getWorld().getWorldObjects().remove(Bullet.this);
+				getWorld().getWorldObjects().remove(this);
 			}
 		});
 
@@ -41,6 +41,7 @@ public class Bullet extends Actor
 
 	private class BulletCollision extends Collision
 	{
+		private static final float FLOAT_COMPARE_TOLERANCE = 0.01F;
 		private final Actor actorFiring;
 
 		private BulletCollision(Actor actorFiring) {
@@ -50,10 +51,12 @@ public class Bullet extends Actor
 
 		@Override
 		public void onCollision(WorldObject collided) {
-			if (!(collided instanceof Bullet) && collided instanceof Actor && collided != actorFiring) {
+			if (!(collided instanceof Bullet) && (collided instanceof Actor) && (collided != actorFiring)) {
 				Actor actor = (Actor) collided;
 				Angle idle = new Angle();
-				if (idle.getAbsoluteAngle() == collided.getAngle().getAbsoluteAngle()) {
+				double comparison = idle.getAbsoluteAngle() - collided.getAngle().getAbsoluteAngle();
+				boolean floatsEqual = Math.abs(comparison) < FLOAT_COMPARE_TOLERANCE;
+				if (floatsEqual) {
 					idle = idle.reverseAbsoluteAngle();
 				}
 				long forceTime = collided.getWorld().getLastUpdateCompleted();
