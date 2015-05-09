@@ -43,7 +43,7 @@ public class Bullet extends Actor
 	{
 		private final Actor actorFiring;
 
-		public BulletCollision(Actor actorFiring) {
+		private BulletCollision(Actor actorFiring) {
 			super(Bullet.this);
 			this.actorFiring = actorFiring;
 		}
