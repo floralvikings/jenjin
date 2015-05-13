@@ -16,6 +16,7 @@ import java.util.*;
  */
 public class WorldObject
 {
+	private static final double DEFAULT_SIZE = Location.SIZE / 2.0;
 	private final HashMap<String, Object> properties = new HashMap<>(10);
 	private final Collection<WorldObjectTask> tasks = new LinkedList<>();
 	private final StateChangeTask stateChangeTask = new StateChangeTask();
@@ -28,10 +29,12 @@ public class WorldObject
 	private int id = Integer.MIN_VALUE;
 	private Angle angle;
 	private Vector2D position;
+	private Vector2D size;
 	private World world;
 
 	public WorldObject(String name) {
 		position = Vector2D.ORIGIN;
+		size = new Vector2D(DEFAULT_SIZE, DEFAULT_SIZE);
 		this.name = name;
 		angle = new Angle();
 		addTask(new TimingTask());
@@ -92,6 +95,10 @@ public class WorldObject
 	public void setLastUpdateEndTime(long lastUpdateEndTime) { this.lastUpdateEndTime = lastUpdateEndTime; }
 
 	public long getLastUpdateEndTime() { return lastUpdateEndTime; }
+
+	public Vector2D getSize() { return size; }
+
+	public void setSize(Vector2D size) { this.size = size; }
 
 	@Override
 	public String toString() { return name + ": " + id; }

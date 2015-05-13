@@ -24,9 +24,9 @@ public class WorldClientMessageFactory
 		stateChangeRequest.setArgument("relativeAngle", moveState.angle.getRelativeAngle());
         stateChangeRequest.setArgument("absoluteAngle", moveState.angle.getAbsoluteAngle());
         stateChangeRequest.setArgument("timeOfChange", moveState.timeOfChange);
-        stateChangeRequest.setArgument("xCoordinate", moveState.position.getXCoordinate());
-        stateChangeRequest.setArgument("yCoordinate", moveState.position.getYCoordinate());
-        return stateChangeRequest;
+		stateChangeRequest.setArgument("xCoordinate", moveState.position.getXValue());
+		stateChangeRequest.setArgument("yCoordinate", moveState.position.getYValue());
+		return stateChangeRequest;
     }
 
     /**

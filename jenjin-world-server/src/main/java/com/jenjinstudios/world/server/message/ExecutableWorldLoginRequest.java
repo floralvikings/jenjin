@@ -88,8 +88,8 @@ public class ExecutableWorldLoginRequest extends WorldExecutableMessage<WorldSer
 		Message loginResponse = WorldServerMessageFactory.generateWorldLoginResponse();
 		loginResponse.setArgument("success", true);
 		loginResponse.setArgument("loginTime", getContext().getLoggedInTime());
-		loginResponse.setArgument("xCoordinate", player.getPosition().getXCoordinate());
-		loginResponse.setArgument("yCoordinate", player.getPosition().getYCoordinate());
+		loginResponse.setArgument("xCoordinate", player.getPosition().getXValue());
+		loginResponse.setArgument("yCoordinate", player.getPosition().getYValue());
 		loginResponse.setArgument("zoneNumber", player.getZoneID());
 		return loginResponse;
 	}

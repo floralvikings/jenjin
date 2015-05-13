@@ -19,8 +19,8 @@ public class ZoneUtils
 	private static final int DEFAULT_SIZE = 50;
 
 	public static Location getLocationForCoordinates(Zone zone, Vector2D coordinates) {
-		double gridX = coordinates.getXCoordinate() / Location.SIZE;
-		double gridY = coordinates.getYCoordinate() / Location.SIZE;
+		double gridX = coordinates.getXValue() / Location.SIZE;
+		double gridY = coordinates.getYValue() / Location.SIZE;
 		gridX = gridX < 0 ? -1 : gridX;
 		gridY = gridY < 0 ? -1 : gridY;
 		return getLocationOnGrid(zone, (int) gridX, (int) gridY);

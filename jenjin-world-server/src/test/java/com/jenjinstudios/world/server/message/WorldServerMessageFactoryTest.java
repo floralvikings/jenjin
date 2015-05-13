@@ -91,8 +91,8 @@ public class WorldServerMessageFactoryTest
 		assertEquals(newState.getArgument("relativeAngle"), m.angle.getRelativeAngle(), "Angles should be equal.");
 		assertEquals(newState.getArgument("absoluteAngle"), m.angle.getAbsoluteAngle(), "Angles should be equal.");
 		assertEquals(newState.getArgument("timeOfChange"), m.timeOfChange, "Times of change should be equal.");
-		assertEquals(newState.getArgument("xCoordinate"), m.position.getXCoordinate(), "Coordinates should be equal.");
-		assertEquals(newState.getArgument("yCoordinate"), m.position.getYCoordinate(), "Coordinates should be equal.");
+		assertEquals(newState.getArgument("xCoordinate"), m.position.getXValue(), "Coordinates should be equal.");
+		assertEquals(newState.getArgument("yCoordinate"), m.position.getYValue(), "Coordinates should be equal.");
 	}
 
 	/**
@@ -105,8 +105,8 @@ public class WorldServerMessageFactoryTest
 		assertEquals(message.name, "ForceStateMessage");
 		assertEquals(message.getArgument("relativeAngle"), forcedState.angle.getRelativeAngle());
 		assertEquals(message.getArgument("absoluteAngle"), forcedState.angle.getAbsoluteAngle());
-		assertEquals(message.getArgument("xCoordinate"), forcedState.position.getXCoordinate());
-		assertEquals(message.getArgument("yCoordinate"), forcedState.position.getYCoordinate());
+		assertEquals(message.getArgument("xCoordinate"), forcedState.position.getXValue());
+		assertEquals(message.getArgument("yCoordinate"), forcedState.position.getYValue());
 		long result = 0L;
 		assertEquals(message.getArgument("timeOfForce"), result);
 	}

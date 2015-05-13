@@ -13,15 +13,15 @@ public class Vector2DTest
 	@Test
 	public void testVector2D() {
 		Vector2D vector2D01 = new Vector2D(5, 7);
-		Assert.assertEquals(7, vector2D01.getYCoordinate(), 0);
-		Assert.assertEquals(5, vector2D01.getXCoordinate(), 0);
+		Assert.assertEquals(7, vector2D01.getYValue(), 0);
+		Assert.assertEquals(5, vector2D01.getXValue(), 0);
 
 		Vector2D vector2D02 = new Vector2D(vector2D01);
-		Assert.assertEquals(7, vector2D02.getYCoordinate(), 0);
-		Assert.assertEquals(5, vector2D02.getXCoordinate(), 0);
+		Assert.assertEquals(7, vector2D02.getYValue(), 0);
+		Assert.assertEquals(5, vector2D02.getXValue(), 0);
 
-		Assert.assertEquals(5, vector2D02.getXCoordinate(), 0);
-		Assert.assertEquals(7, vector2D02.getYCoordinate(), 0);
+		Assert.assertEquals(5, vector2D02.getXValue(), 0);
+		Assert.assertEquals(7, vector2D02.getYValue(), 0);
 	}
 
 	/** Test the relativeAngle math methods. */
@@ -45,8 +45,8 @@ public class Vector2DTest
 		expectedX = 5 - Math.sqrt(2) / 2;
 		expectedY = 5 - Math.sqrt(2) / 2;
 		stepped = original.getVectorInDirection(1, backLeft);
-		Assert.assertEquals(expectedX, stepped.getXCoordinate(), 0.1);
-		Assert.assertEquals(expectedY, stepped.getYCoordinate(), 0.1);
+		Assert.assertEquals(expectedX, stepped.getXValue(), 0.1);
+		Assert.assertEquals(expectedY, stepped.getYValue(), 0.1);
 	}
 
 	private void testBackRight(Vector2D original) {
@@ -57,8 +57,8 @@ public class Vector2DTest
 		expectedX = 5 + Math.sqrt(2) / 2;
 		expectedY = 5 - Math.sqrt(2) / 2;
 		stepped = original.getVectorInDirection(1, backRight);
-		Assert.assertEquals(expectedX, stepped.getXCoordinate(), 0.1);
-		Assert.assertEquals(expectedY, stepped.getYCoordinate(), 0.1);
+		Assert.assertEquals(expectedX, stepped.getXValue(), 0.1);
+		Assert.assertEquals(expectedY, stepped.getYValue(), 0.1);
 	}
 
 	private void testForwardRight(Vector2D original) {
@@ -67,39 +67,39 @@ public class Vector2DTest
 		double expectedX = 5 + Math.sqrt(2) / 2;
 		double expectedY = 5 + Math.sqrt(2) / 2;
 		stepped = original.getVectorInDirection(1, forwardRight);
-		Assert.assertEquals(expectedX, stepped.getXCoordinate(), 0.001);
-		Assert.assertEquals(expectedY, stepped.getYCoordinate(), 0.001);
+		Assert.assertEquals(expectedX, stepped.getXValue(), 0.001);
+		Assert.assertEquals(expectedY, stepped.getYValue(), 0.001);
 	}
 
 	private void testForward(Vector2D original) {
 		Vector2D stepped;
 		double forward = Math.PI * .5;
 		stepped = original.getVectorInDirection(1, forward);
-		Assert.assertEquals(5, stepped.getXCoordinate(), 0.001);
-		Assert.assertEquals(6, stepped.getYCoordinate(), 0.001);
+		Assert.assertEquals(5, stepped.getXValue(), 0.001);
+		Assert.assertEquals(6, stepped.getYValue(), 0.001);
 	}
 
 	private void testBack(Vector2D original) {
 		Vector2D stepped;
 		double back = Math.PI * 1.5;
 		stepped = original.getVectorInDirection(1, back);
-		Assert.assertEquals(5, stepped.getXCoordinate(), 0.001);
-		Assert.assertEquals(4, stepped.getYCoordinate(), 0.001);
+		Assert.assertEquals(5, stepped.getXValue(), 0.001);
+		Assert.assertEquals(4, stepped.getYValue(), 0.001);
 	}
 
 	private void testLeft(Vector2D original) {
 		Vector2D stepped;
 		double left = Math.PI;
 		stepped = original.getVectorInDirection(1, left);
-		Assert.assertEquals(4, stepped.getXCoordinate(), 0.001);
-		Assert.assertEquals(5, stepped.getYCoordinate(), 0.001);
+		Assert.assertEquals(4, stepped.getXValue(), 0.001);
+		Assert.assertEquals(5, stepped.getYValue(), 0.001);
 	}
 
 	private void testRight(Vector2D original) {
 		double right = 0;
 		Vector2D stepped = original.getVectorInDirection(1, right);
-		Assert.assertEquals(6, stepped.getXCoordinate(), 0.001);
-		Assert.assertEquals(5, stepped.getYCoordinate(), 0.001);
+		Assert.assertEquals(6, stepped.getXValue(), 0.001);
+		Assert.assertEquals(5, stepped.getYValue(), 0.001);
 	}
 
 	@Test

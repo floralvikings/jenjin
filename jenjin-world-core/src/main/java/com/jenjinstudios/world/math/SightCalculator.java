@@ -39,12 +39,12 @@ public class SightCalculator
 	public static boolean isRoughlyVisible(WorldObject object, WorldObject visible, double rad) {
 		Vector2D vector2D = object.getPosition();
 		Vector2D otherVector = visible.getPosition();
-		double minX = vector2D.getXCoordinate() - rad;
-		double maxX = vector2D.getXCoordinate() + rad;
-		double minY = vector2D.getYCoordinate() - rad;
-		double maxY = vector2D.getYCoordinate() + rad;
-		double otherX = otherVector.getXCoordinate();
-		double otherY = otherVector.getYCoordinate();
+		double minX = vector2D.getXValue() - rad;
+		double maxX = vector2D.getXValue() + rad;
+		double minY = vector2D.getYValue() - rad;
+		double maxY = vector2D.getYValue() + rad;
+		double otherX = otherVector.getXValue();
+		double otherY = otherVector.getYValue();
 		return otherX >= minX && otherX <= maxX && otherY >= minY && otherY <= maxY;
 	}
 

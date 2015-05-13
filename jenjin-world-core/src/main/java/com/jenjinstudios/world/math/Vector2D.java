@@ -18,7 +18,7 @@ public class Vector2D
 	 * @param vector2D The vector2D to copy.
 	 */
 	public Vector2D(Vector2D vector2D) {
-		this(vector2D.getXCoordinate(), vector2D.getYCoordinate());
+		this(vector2D.getXValue(), vector2D.getYValue());
 	}
 
 	/**
@@ -57,7 +57,7 @@ public class Vector2D
 	 * Get the y coordinate.
 	 * @return The y coordinate.
 	 */
-	public double getYCoordinate() {
+	public double getYValue() {
 		return yCoordinate;
 	}
 
@@ -65,7 +65,7 @@ public class Vector2D
 	 * Get the x coordinate.
 	 * @return The x coordinate.
 	 */
-	public double getXCoordinate() {
+	public double getXValue() {
 		return xCoordinate;
 	}
 
@@ -106,8 +106,8 @@ public class Vector2D
 		Double angle = Double.NEGATIVE_INFINITY;
 		if (!vector2D.equals(this))
 		{
-			double xDist = vector2D.getXCoordinate() - xCoordinate;
-			double yDist = vector2D.getYCoordinate() - yCoordinate;
+			double xDist = vector2D.getXValue() - xCoordinate;
+			double yDist = vector2D.getYValue() - yCoordinate;
 			angle = java.lang.Math.atan2(yDist, xDist);
 		}
 		return angle;
@@ -124,8 +124,8 @@ public class Vector2D
 	}
 
 	public double getSquaredDistanceToVector(Vector2D vector2D) {
-		double xSquare = java.lang.Math.pow(vector2D.getXCoordinate() - xCoordinate, 2);
-		double ySquare = java.lang.Math.pow(vector2D.getYCoordinate() - yCoordinate, 2);
+		double xSquare = java.lang.Math.pow(vector2D.getXValue() - xCoordinate, 2);
+		double ySquare = java.lang.Math.pow(vector2D.getYValue() - yCoordinate, 2);
 		return xSquare + ySquare;
 	}
 }

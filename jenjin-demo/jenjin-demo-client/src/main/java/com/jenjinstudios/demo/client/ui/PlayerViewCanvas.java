@@ -110,8 +110,8 @@ public class PlayerViewCanvas extends Canvas
 		Location pLoc = LocationUtils.getObjectLocation(clientPlayer);
 		int xDiff = location.getX() - pLoc.getX();
 		int yDiff = location.getY() - pLoc.getY();//+ 1;
-		double xBuff = clientPlayer.getPosition().getXCoordinate() % Location.SIZE;
-		double yBuff = clientPlayer.getPosition().getYCoordinate() % Location.SIZE;
+		double xBuff = clientPlayer.getPosition().getXValue() % Location.SIZE;
+		double yBuff = clientPlayer.getPosition().getYValue() % Location.SIZE;
 
 		double x = xOrig + ((xDiff * SCALE) - (xBuff * LOC_SCALE));
 		double y = yOrig - ((yDiff * SCALE) - (yBuff * LOC_SCALE)) - SCALE;
@@ -141,8 +141,8 @@ public class PlayerViewCanvas extends Canvas
 	}
 
 	private void drawObject(WorldObject o) {
-		double xDiff = o.getPosition().getXCoordinate() - clientPlayer.getPosition().getXCoordinate();
-		double yDiff = o.getPosition().getYCoordinate() - clientPlayer.getPosition().getYCoordinate();
+		double xDiff = o.getPosition().getXValue() - clientPlayer.getPosition().getXValue();
+		double yDiff = o.getPosition().getYValue() - clientPlayer.getPosition().getYValue();
 
 		double x = xOrig + (xDiff * LOC_SCALE);
 		double y = yOrig - (yDiff * LOC_SCALE);

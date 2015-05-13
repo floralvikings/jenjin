@@ -30,7 +30,7 @@ public class Bullet extends Actor
 	 */
 	public Bullet(Actor actorFiring) {
 		super("Bullet");
-		getProperties().put(Collision.SIZE_PROPERTY, 1.0);
+		setSize(new Vector2D(1.0, 1.0));
 		setPosition(actorFiring.getPosition());
 		double targetAngle = actorFiring.getAngle().getAbsoluteAngle();
 		setAngle(new Angle(targetAngle, FRONT));

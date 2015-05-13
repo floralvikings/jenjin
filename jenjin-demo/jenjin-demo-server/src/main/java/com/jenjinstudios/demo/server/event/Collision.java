@@ -8,7 +8,6 @@ import com.jenjinstudios.world.task.WorldObjectTaskAdapter;
 import javafx.geometry.Rectangle2D;
 
 import java.util.Objects;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -54,23 +53,16 @@ public abstract class Collision extends WorldObjectTaskAdapter
 	private static Rectangle2D getCollisionRect(WorldObject obj) {
 		double objectRad = calculateCollisionRad(obj);
 		Vector2D objectVector = obj.getPosition();
-		double objectX = objectVector.getXCoordinate();
-		double objectY = objectVector.getYCoordinate();
+		double objectX = objectVector.getXValue();
+		double objectY = objectVector.getYValue();
 		double objectMinX = objectX - objectRad;
 		double objectMinY = objectY - objectRad;
 		return new Rectangle2D(objectMinX, objectMinY, objectRad, objectRad);
 	}
 
 	private static double calculateCollisionRad(WorldObject collider) {
-		Object o = collider.getProperties().get(SIZE_PROPERTY);
-		double rad;
-		try {
-			rad = ((o != null) ? (double) o : DEFAULT_OBJECT_SIZE) / 2;
-		} catch (ClassCastException ex) {
-			LOGGER.log(Level.WARNING, "Object size not instance of double: " + collider + ", " + o, ex);
-			rad = DEFAULT_OBJECT_SIZE / 2;
-		}
-		return rad;
+		Vector2D size = collider.getSize();
+		return (size.getXValue() * size.getYValue()) / 2;
 	}
 
 	/**
