@@ -3,6 +3,7 @@ package com.jenjinstudios.core.concurrency;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageInputStream;
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.util.Deque;
 import java.util.LinkedList;
@@ -95,6 +96,11 @@ public class MessageReader
 					incoming.add(message);
 				}
 				errored = false;
+			} catch (EOFException ignored) {
+				if (!errored) {    // Only log the message once.
+					LOGGER.log(Level.INFO, "Client Disconnected");
+				}
+				errored = true;
 			} catch (IOException e)
 			{
 				if (!errored)

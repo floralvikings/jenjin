@@ -2,10 +2,12 @@ package com.jenjinstudios.demo.server;
 
 import com.jenjinstudios.demo.server.event.Collision;
 import com.jenjinstudios.world.Actor;
+import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.WorldObject;
 import com.jenjinstudios.world.math.Angle;
 import com.jenjinstudios.world.math.Vector2D;
 import com.jenjinstudios.world.state.MoveState;
+import com.jenjinstudios.world.task.WorldObjectTaskAdapter;
 
 import java.util.Objects;
 
@@ -37,14 +39,22 @@ public class Bullet extends Actor
 		setZoneID(actorFiring.getZoneID());
 		startVector = getVector2D();
 
-		addPostUpdateEvent("Collision", new BulletCollision(actorFiring));
+		addTask(new BulletCollision(actorFiring));
 
-		addPreUpdateEvent("RangeStop", () -> {
-			if (!getAngle().isNotIdle() || (startVector.getDistanceToVector(getVector2D()) > RANGE)) {
-				getWorld().getWorldObjects().remove(this);
+		addTask(new CheckRangeTask());
+
+	}
+
+	private class CheckRangeTask extends WorldObjectTaskAdapter
+	{
+		@Override
+		public void onPreUpdate(World world, WorldObject worldObject) {
+			if (!worldObject.getAngle().isNotIdle() ||
+				  (startVector.getDistanceToVector(worldObject.getVector2D()) > RANGE))
+			{
+				world.getWorldObjects().remove(worldObject);
 			}
-		});
-
+		}
 	}
 
 	private class BulletCollision extends Collision
@@ -53,12 +63,11 @@ public class Bullet extends Actor
 		private final Actor actorFiring;
 
 		private BulletCollision(Actor actorFiring) {
-			super(Bullet.this);
 			this.actorFiring = actorFiring;
 		}
 
 		@Override
-		public void onCollision(WorldObject collided) {
+		public void onCollision(WorldObject target, WorldObject collided) {
 			if (!(collided instanceof Bullet) && (collided instanceof Actor) && !Objects.equals(collided,
 				  actorFiring))
 			{

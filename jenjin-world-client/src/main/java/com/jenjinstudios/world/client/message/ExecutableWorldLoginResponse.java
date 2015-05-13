@@ -2,7 +2,6 @@ package com.jenjinstudios.world.client.message;
 
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.world.Actor;
-import com.jenjinstudios.world.actor.Vision;
 import com.jenjinstudios.world.client.WorldClientMessageContext;
 import com.jenjinstudios.world.math.Vector2D;
 
@@ -34,7 +33,6 @@ public class ExecutableWorldLoginResponse extends WorldClientExecutableMessage<W
         double xCoordinate = (double) getMessage().getArgument("xCoordinate");
         double yCoordinate = (double) getMessage().getArgument("yCoordinate");
 		Actor player = new Actor(getContext().getUser().getUsername());
-		player.addPreUpdateEvent(Vision.EVENT_NAME, new Vision(player));
         player.setId(id);
         Vector2D vector2D = new Vector2D(xCoordinate, yCoordinate);
         player.setVector2D(vector2D);

@@ -1,6 +1,5 @@
 package com.jenjinstudios.world;
 
-import com.jenjinstudios.world.actor.Vision;
 import com.jenjinstudios.world.math.Dimension2D;
 import com.jenjinstudios.world.math.SightCalculator;
 import com.jenjinstudios.world.math.Vector2D;
@@ -15,14 +14,12 @@ public class SightedObjectTest
 		World world = WorldUtils.createDefaultWorld();
 		WorldObject visibleObject = new WorldObject("VisibleObject");
 		Actor sightedObject = new Actor("SightedObject");
-		sightedObject.addPreUpdateEvent(Vision.EVENT_NAME, new Vision(sightedObject));
 		world.getWorldObjects().add(visibleObject);
 		world.getWorldObjects().add(sightedObject);
 
 		world.update();
 		world.update();
-		Vision vision = (Vision) sightedObject.getPreUpdateEvent(Vision.EVENT_NAME);
-		Assert.assertTrue(vision.getVisibleObjects().contains(visibleObject));
+		Assert.assertTrue(sightedObject.getVisibleObjects().contains(visibleObject));
 	}
 
 	@Test
@@ -44,14 +41,11 @@ public class SightedObjectTest
 		World world = WorldUtils.createDefaultWorld();
 		WorldObject visibleObject = new WorldObject("VisibleObject");
 		WorldObject sightedObject = new Actor("SightedObject");
-		sightedObject.addPreUpdateEvent(Vision.EVENT_NAME, new Vision(sightedObject));
 		world.getWorldObjects().add(visibleObject);
 		world.getWorldObjects().add(sightedObject);
 
 		world.update();
-		//world.update();
-		Vision vision = (Vision) sightedObject.getPreUpdateEvent(Vision.EVENT_NAME);
-		Assert.assertTrue(vision.getNewlyVisibleObjects().contains(visibleObject));
+		Assert.assertTrue(sightedObject.getNewlyVisibleObjects().contains(visibleObject));
 	}
 
 	@Test
@@ -59,7 +53,6 @@ public class SightedObjectTest
 		World world = WorldUtils.createDefaultWorld();
 		WorldObject visibleObject = new WorldObject("VisibleObject");
 		WorldObject sightedObject = new Actor("SightedObject");
-		sightedObject.addPreUpdateEvent(Vision.EVENT_NAME, new Vision(sightedObject));
 		world.getWorldObjects().add(visibleObject);
 		world.getWorldObjects().add(sightedObject);
 
@@ -67,7 +60,6 @@ public class SightedObjectTest
 		world.getWorldObjects().remove(visibleObject.getId());
 		world.update();
 
-		Vision vision = (Vision) sightedObject.getPreUpdateEvent(Vision.EVENT_NAME);
-		Assert.assertTrue(vision.getNewlyInvisibleObjects().contains(visibleObject));
+		Assert.assertTrue(sightedObject.getNewlyInvisibleObjects().contains(visibleObject));
 	}
 }

@@ -46,9 +46,9 @@ public class World
 		synchronized (worldObjects)
 		{
 			worldObjects.refresh();
-			worldObjects.forEach(WorldObject::preUpdate);
-			worldObjects.forEach(WorldObject::update);
-			worldObjects.forEach(WorldObject::postUpdate);
+			worldObjects.forEach(o -> o.getTasks().forEach(t -> t.onPreUpdate(this, o)));
+			worldObjects.forEach(o -> o.getTasks().forEach(t -> t.onUpdate(this, o)));
+			worldObjects.forEach(o -> o.getTasks().forEach(t -> t.onPostUpdate(this, o)));
 			scheduledUpdateTasks.forEach(Runnable::run);
 			scheduledUpdateTasks.clear();
 		}

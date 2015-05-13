@@ -1,7 +1,7 @@
-package com.jenjinstudios.world.actor;
+package com.jenjinstudios.world.task;
 
+import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.WorldObject;
-import com.jenjinstudios.world.event.PreUpdateEvent;
 import com.jenjinstudios.world.math.SightCalculator;
 
 import java.util.Collection;
@@ -9,19 +9,15 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
+ * Tracks visible objects.
+ *
  * @author Caleb Brinkman
  */
-public class Vision implements PreUpdateEvent
+public class VisionTask extends WorldObjectTaskAdapter
 {
-	public static final String EVENT_NAME = "visionEvent";
-	private transient final Set<WorldObject> visibleObjects = new HashSet<>();
-	private transient final Set<WorldObject> newlyVisibleObjects = new HashSet<>();
-	private transient final Set<WorldObject> newlyInvisibleObjects = new HashSet<>();
-	private transient final WorldObject worldObject;
-
-	public Vision(WorldObject worldObject) {
-		this.worldObject = worldObject;
-	}
+	private final transient Set<WorldObject> visibleObjects = new HashSet<>(10);
+	private final transient Set<WorldObject> newlyVisibleObjects = new HashSet<>(10);
+	private final transient Set<WorldObject> newlyInvisibleObjects = new HashSet<>(10);
 
 	public Set<WorldObject> getVisibleObjects() {
 		synchronized (visibleObjects)
@@ -67,7 +63,7 @@ public class Vision implements PreUpdateEvent
 	}
 
 	@Override
-	public void onPreUpdate() {
+	public void onPreUpdate(World world, WorldObject worldObject) {
 		Collection<WorldObject> objects = SightCalculator.getVisibleObjects(worldObject);
 		setVisibleObjects(objects);
 	}

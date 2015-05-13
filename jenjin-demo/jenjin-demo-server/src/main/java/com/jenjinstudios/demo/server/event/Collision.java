@@ -1,9 +1,10 @@
 package com.jenjinstudios.demo.server.event;
 
 import com.jenjinstudios.world.Location;
+import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.WorldObject;
-import com.jenjinstudios.world.event.PostUpdateEvent;
 import com.jenjinstudios.world.math.Vector2D;
+import com.jenjinstudios.world.task.WorldObjectTaskAdapter;
 import javafx.geometry.Rectangle2D;
 
 import java.util.Objects;
@@ -15,42 +16,37 @@ import java.util.logging.Logger;
  *
  * @author Caleb Brinkman
  */
-public abstract class Collision implements PostUpdateEvent
+public abstract class Collision extends WorldObjectTaskAdapter
 {
 	/** The name of the property in the WorldObject that indicates size. */
 	public static final String SIZE_PROPERTY = "ObjectSize";
 	private static final double DEFAULT_OBJECT_SIZE = Location.SIZE;
 	private static final Logger LOGGER = Logger.getLogger(Collision.class.getName());
-	private final WorldObject worldObject;
-
-	/**
-	 * Consctruct a new Collision which will check for collisions with the specified WorldObject.
-	 *
-	 * @param worldObject The WorldObject which will be checked for collisions.
-	 */
-	public Collision(WorldObject worldObject) { this.worldObject = worldObject; }
 
 	@Override
-	public void onPostUpdate() {
-		worldObject.getWorld().getWorldObjects().stream().filter(this::checkForCollision).forEach(this::onCollision);
+	public void onPostUpdate(World world, WorldObject worldObject) {
+		world.getWorldObjects().
+			  stream().
+			  filter(collider -> checkForCollision(worldObject, collider)).
+			  forEach(collider -> onCollision(worldObject, collider));
 	}
 
-	private boolean checkForCollision(WorldObject collider) {
+	private boolean checkForCollision(WorldObject target, WorldObject collider) {
 		boolean collision = false;
-		if (checkRoughCollision(collider)) {
-			collision = checkFinerCollision(collider);
+		if (checkRoughCollision(target, collider)) {
+			collision = checkFinerCollision(target, collider);
 		}
 		return collision;
 	}
 
-	private boolean checkRoughCollision(WorldObject collider) {
+	private static boolean checkRoughCollision(WorldObject target, WorldObject collider) {
 		// TODO Make this more granular.
-		return !Objects.equals(collider, worldObject) && (collider.getZoneID() == worldObject.getZoneID());
+		return !Objects.equals(collider, target) && (collider.getZoneID() == target.getZoneID());
 	}
 
-	private boolean checkFinerCollision(WorldObject collider) {
+	private static boolean checkFinerCollision(WorldObject target, WorldObject collider) {
 		// TODO Probably shouldn't use JavaFX Rectangle; maybe a private inner class?
-		Rectangle2D objectRect = getCollisionRect(worldObject);
+		Rectangle2D objectRect = getCollisionRect(target);
 		Rectangle2D colliderRect = getCollisionRect(collider);
 		return objectRect.intersects(colliderRect);
 	}
@@ -80,7 +76,8 @@ public abstract class Collision implements PostUpdateEvent
 	/**
 	 * This method should be overridden in subclasses to specify what even should occur when a collision is triggered.
 	 *
+	 * @param target The object with which the collider collided.
 	 * @param collided The object with wich the WorldObject watched by this Collision has collided.
 	 */
-	public abstract void onCollision(WorldObject collided);
+	public abstract void onCollision(WorldObject target, WorldObject collided);
 }

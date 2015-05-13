@@ -1,11 +1,8 @@
 package com.jenjinstudios.world;
 
-import com.jenjinstudios.world.math.Vector2D;
 import com.jenjinstudios.world.util.WorldUtils;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import static org.mockito.Mockito.*;
 
 /**
  * @author Caleb Brinkman
@@ -42,18 +39,6 @@ public class WorldTest
 		world.getWorldObjects().remove(worldObject.getId());
 		world.update();
 		Assert.assertEquals(world.getWorldObjects().size(), 0);
-	}
-
-	@Test
-	public void testUpdate() {
-		WorldObject worldObject = mock(WorldObject.class);
-		when(worldObject.getVector2D()).thenReturn(Vector2D.ORIGIN);
-		World world = WorldUtils.createDefaultWorld();
-		world.getWorldObjects().add(worldObject);
-		world.update();
-		verify(worldObject, times(1)).preUpdate();
-		verify(worldObject, times(1)).update();
-		verify(worldObject, times(1)).postUpdate();
 	}
 
 	@Test

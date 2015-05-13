@@ -5,7 +5,6 @@ import com.jenjinstudios.server.authentication.AuthenticationException;
 import com.jenjinstudios.server.authentication.Authenticator;
 import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.World;
-import com.jenjinstudios.world.actor.Vision;
 import com.jenjinstudios.world.server.Player;
 import com.jenjinstudios.world.server.WorldServerMessageContext;
 
@@ -50,7 +49,6 @@ public class ExecutableWorldLoginRequest extends WorldExecutableMessage<WorldSer
 			if (getContext().getUser() != null)
 			{
 				handleLoginSuccess();
-				getContext().getUser().addPreUpdateEvent(Vision.EVENT_NAME, new Vision(getContext().getUser()));
 				world.getWorldObjects().add(getContext().getUser());
 				loginResponse.setArgument("id", getContext().getUser().getId());
 				getContext().enqueue(loginResponse);

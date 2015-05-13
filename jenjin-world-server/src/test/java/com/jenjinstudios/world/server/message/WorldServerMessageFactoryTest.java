@@ -4,7 +4,6 @@ import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageRegistry;
 import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.WorldObject;
-import com.jenjinstudios.world.actor.StateChangeStack;
 import com.jenjinstudios.world.math.Angle;
 import com.jenjinstudios.world.math.Vector2D;
 import com.jenjinstudios.world.state.MoveState;
@@ -14,7 +13,7 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.mockito.Mockito.mock;
@@ -83,10 +82,8 @@ public class WorldServerMessageFactoryTest
 	@Test
 	public void testGenerateStateChangeMesage() {
 		Actor actor = mock(Actor.class);
-		StateChangeStack stack = mock(StateChangeStack.class);
 		MoveState m = new MoveState(new Angle(), Vector2D.ORIGIN, 0);
-		when(stack.getStateChanges()).thenReturn(Arrays.asList(m));
-		when(actor.getEventStack(StateChangeStack.STACK_NAME)).thenReturn(stack);
+		when(actor.getStateChanges()).thenReturn(Collections.singletonList(m));
 		List<Message> messages = WorldServerMessageFactory.generateChangeStateMessages(actor);
 
 		Message newState = messages.get(0);

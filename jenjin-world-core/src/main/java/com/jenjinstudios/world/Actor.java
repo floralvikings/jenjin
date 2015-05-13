@@ -1,8 +1,7 @@
 package com.jenjinstudios.world;
 
-import com.jenjinstudios.world.actor.StateChangeStack;
 import com.jenjinstudios.world.state.MoveState;
-import com.jenjinstudios.world.util.ActorUtils;
+import com.jenjinstudios.world.task.MovementTask;
 
 
 /**
@@ -30,19 +29,7 @@ public class Actor extends WorldObject
 	public Actor(String name) {
 		super(name);
 		setMoveSpeed(DEFAULT_MOVE_SPEED);
-		addEventStack(StateChangeStack.STACK_NAME, new StateChangeStack(this));
-	}
-
-	@Override
-	public void preUpdate() {
-		super.preUpdate();
-		setForcedState(null);
-	}
-
-	@Override
-	public void update() {
-		super.update();
-		ActorUtils.stepForward(this);
+		addTask(new MovementTask());
 	}
 
 	public MoveState getForcedState() { return forcedState; }

@@ -1,18 +1,25 @@
 package com.jenjinstudios.world;
 
-import com.jenjinstudios.world.event.EventExecutor;
 import com.jenjinstudios.world.math.Angle;
 import com.jenjinstudios.world.math.Vector2D;
+import com.jenjinstudios.world.state.MoveState;
+import com.jenjinstudios.world.task.StateChangeTask;
+import com.jenjinstudios.world.task.TimingTask;
+import com.jenjinstudios.world.task.VisionTask;
+import com.jenjinstudios.world.task.WorldObjectTask;
 
-import java.util.HashMap;
+import java.util.*;
 
 /**
  * Represents an object that exists in the game world.
  * @author Caleb Brinkman
  */
-public class WorldObject extends EventExecutor
+public class WorldObject
 {
-	private final HashMap<String, Object> properties;
+	private final HashMap<String, Object> properties = new HashMap<>(10);
+	private final Collection<WorldObjectTask> tasks = new LinkedList<>();
+	private final StateChangeTask stateChangeTask = new StateChangeTask();
+	private final VisionTask visionTask = new VisionTask();
 	private final String name;
 	private int zoneID;
 	private int resourceID;
@@ -20,15 +27,29 @@ public class WorldObject extends EventExecutor
 	private Angle angle;
 	private Vector2D vector2D;
 	private World world;
-
-	public WorldObject() { this("World Object"); }
+	private long lastUpdateStartTime;
+	private long lastUpdateEndTime;
 
 	public WorldObject(String name) {
 		vector2D = Vector2D.ORIGIN;
 		this.name = name;
 		angle = new Angle();
-		properties = new HashMap<>();
+		addTask(new TimingTask());
+		addTask(stateChangeTask);
+		addTask(visionTask);
 	}
+
+	public Set<WorldObject> getVisibleObjects() { return visionTask.getVisibleObjects(); }
+
+	public Set<WorldObject> getNewlyVisibleObjects() { return visionTask.getNewlyVisibleObjects(); }
+
+	public Set<WorldObject> getNewlyInvisibleObjects() { return visionTask.getNewlyInvisibleObjects(); }
+
+	public List<MoveState> getStateChanges() { return stateChangeTask.getStateChanges(); }
+
+	public void addTask(WorldObjectTask task) { tasks.add(task); }
+
+	public Collection<WorldObjectTask> getTasks() { return Collections.unmodifiableCollection(tasks); }
 
 	public Angle getAngle() { return angle; }
 
@@ -85,4 +106,11 @@ public class WorldObject extends EventExecutor
 		return result;
 	}
 
+	public void setLastUpdateStartTime(long lastUpdateStartTime) { this.lastUpdateStartTime = lastUpdateStartTime; }
+
+	public long getLastUpdateStartTime() { return lastUpdateStartTime; }
+
+	public void setLastUpdateEndTime(long lastUpdateEndTime) { this.lastUpdateEndTime = lastUpdateEndTime; }
+
+	public long getLastUpdateEndTime() { return lastUpdateEndTime; }
 }

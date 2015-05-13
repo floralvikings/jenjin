@@ -3,9 +3,7 @@ package com.jenjinstudios.world.client;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.World;
-import com.jenjinstudios.world.actor.StateChangeStack;
 import com.jenjinstudios.world.client.message.WorldClientMessageFactory;
-import com.jenjinstudios.world.event.EventStack;
 import com.jenjinstudios.world.state.MoveState;
 
 import java.util.List;
@@ -39,18 +37,11 @@ public class WorldClientUpdater implements Runnable
 		}
 		if (player != null)
 		{
-			EventStack eventStack = player.getEventStack(StateChangeStack.STACK_NAME);
-			if (eventStack instanceof StateChangeStack)
-			{
-				StateChangeStack stateChangeStack = (StateChangeStack) eventStack;
-				List<MoveState> newStates = stateChangeStack.getStateChanges();
-				while (!newStates.isEmpty())
-				{
-					MoveState moveState = newStates.remove(0);
-					WorldClientMessageFactory messageFactory = worldClient.getMessageFactory();
-					Message stateChangeRequest = messageFactory.generateStateChangeRequest(moveState);
-					worldClient.enqueueMessage(stateChangeRequest);
-				}
+			List<MoveState> newStates = player.getStateChanges();
+			for (MoveState moveState : newStates) {
+				WorldClientMessageFactory messageFactory = worldClient.getMessageFactory();
+				Message stateChangeRequest = messageFactory.generateStateChangeRequest(moveState);
+				worldClient.enqueueMessage(stateChangeRequest);
 			}
 		}
 	}

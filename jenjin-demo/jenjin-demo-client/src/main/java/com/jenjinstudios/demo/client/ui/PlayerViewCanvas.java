@@ -3,7 +3,6 @@ package com.jenjinstudios.demo.client.ui;
 import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.Location;
 import com.jenjinstudios.world.WorldObject;
-import com.jenjinstudios.world.actor.Vision;
 import com.jenjinstudios.world.client.WorldClient;
 import com.jenjinstudios.world.math.SightCalculator;
 import com.jenjinstudios.world.util.LocationUtils;
@@ -80,8 +79,7 @@ public class PlayerViewCanvas extends Canvas
 
 		String[] hudStrings = {
 			  "UPS: " + worldClient.getAverageUPS(),
-			  "Visible Object Count: " + ((Vision) clientPlayer.getPreUpdateEvent(Vision.EVENT_NAME)).
-					getVisibleObjects().size(),
+			  "Visible Object Count: " + clientPlayer.getVisibleObjects().size(),
 			  clientPlayer.getName(),
 			  clientPlayer.getVector2D().toString()
 		};
@@ -138,13 +136,8 @@ public class PlayerViewCanvas extends Canvas
 	}
 
 	private void drawObjects() {
-		Object object = clientPlayer.getPreUpdateEvent(Vision.EVENT_NAME);
-		if (object instanceof Vision)
-		{
-			Vision vision = (Vision) object;
-			vision.getVisibleObjects().forEach(this::drawObject);
-			drawObject(clientPlayer);
-		}
+		clientPlayer.getVisibleObjects().forEach(this::drawObject);
+		drawObject(clientPlayer);
 	}
 
 	private void drawObject(WorldObject o) {

@@ -5,7 +5,6 @@ import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.server.concurrency.UpdateTask;
 import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.WorldObject;
-import com.jenjinstudios.world.actor.Vision;
 import com.jenjinstudios.world.server.message.WorldServerMessageFactory;
 import com.jenjinstudios.world.state.MoveState;
 
@@ -39,11 +38,9 @@ public class ConnectionWorldUpdateTask<T extends WorldServerMessageContext<? ext
 	}
 
 	private void queueNewlyVisibleMessages(Connection<? extends T> connection) {
-		Object o = connection.getMessageContext().getUser().getPreUpdateEvent(Vision.EVENT_NAME);
-		if (o instanceof Vision)
-		{
-			Vision vision = (Vision) o;
-			for (WorldObject object : vision.getNewlyVisibleObjects())
+		WorldServerMessageContext<? extends Player> context = connection.getMessageContext();
+		if (context.getUser() != null) {
+			for (WorldObject object : context.getUser().getNewlyVisibleObjects())
 			{
 				Message newlyVisibleMessage = WorldServerMessageFactory.generateNewlyVisibleMessage(object);
 				connection.enqueueMessage(newlyVisibleMessage);
@@ -52,12 +49,9 @@ public class ConnectionWorldUpdateTask<T extends WorldServerMessageContext<? ext
 	}
 
 	private void queueNewlyInvisibleMessages(Connection<? extends T> connection) {
-		Object o = connection.getMessageContext().getUser().getPreUpdateEvent(Vision.EVENT_NAME);
-		if (o instanceof Vision)
-		{
-			Vision vision = (Vision) o;
-			for (WorldObject object : vision.getNewlyInvisibleObjects())
-			{
+		WorldServerMessageContext<? extends Player> context = connection.getMessageContext();
+		if (context.getUser() != null) {
+			for (WorldObject object : context.getUser().getNewlyInvisibleObjects()) {
 				Message invisibleMessage = WorldServerMessageFactory.generateNewlyInvisibleMessage(object);
 				connection.enqueueMessage(invisibleMessage);
 			}
@@ -65,11 +59,9 @@ public class ConnectionWorldUpdateTask<T extends WorldServerMessageContext<? ext
 	}
 
 	private void queueStateChangeMessages(Connection<? extends T> connection) {
-		Object o = connection.getMessageContext().getUser().getPreUpdateEvent(Vision.EVENT_NAME);
-		if (o instanceof Vision)
-		{
-			Vision vision = (Vision) o;
-			Set<WorldObject> visibles = vision.getVisibleObjects();
+		WorldServerMessageContext<? extends Player> context = connection.getMessageContext();
+		if (context.getUser() != null) {
+			Set<WorldObject> visibles = context.getUser().getVisibleObjects();
 			visibles.stream().filter(object -> object instanceof Actor).forEach(object ->
 				  queueActorStateChangeMessages(connection, (Actor) object));
 		}
