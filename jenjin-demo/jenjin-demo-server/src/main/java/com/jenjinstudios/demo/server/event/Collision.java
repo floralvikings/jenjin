@@ -1,6 +1,5 @@
 package com.jenjinstudios.demo.server.event;
 
-import com.jenjinstudios.world.Location;
 import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.WorldObject;
 import com.jenjinstudios.world.math.Vector2D;
@@ -8,7 +7,6 @@ import com.jenjinstudios.world.task.WorldObjectTaskAdapter;
 import javafx.geometry.Rectangle2D;
 
 import java.util.Objects;
-import java.util.logging.Logger;
 
 /**
  * PostUpdateEvent class which determines if a WorldObject is colliding with another WorldObject.
@@ -17,11 +15,6 @@ import java.util.logging.Logger;
  */
 public abstract class Collision extends WorldObjectTaskAdapter
 {
-	/** The name of the property in the WorldObject that indicates size. */
-	public static final String SIZE_PROPERTY = "ObjectSize";
-	private static final double DEFAULT_OBJECT_SIZE = Location.SIZE;
-	private static final Logger LOGGER = Logger.getLogger(Collision.class.getName());
-
 	@Override
 	public void onPostUpdate(World world, WorldObject worldObject) {
 		world.getWorldObjects().
