@@ -21,14 +21,14 @@ public class WorldObject
 	private final StateChangeTask stateChangeTask = new StateChangeTask();
 	private final VisionTask visionTask = new VisionTask();
 	private final String name;
+	private long lastUpdateStartTime;
+	private long lastUpdateEndTime;
 	private int zoneID;
 	private int resourceID;
 	private int id = Integer.MIN_VALUE;
 	private Angle angle;
 	private Vector2D vector2D;
 	private World world;
-	private long lastUpdateStartTime;
-	private long lastUpdateEndTime;
 
 	public WorldObject(String name) {
 		vector2D = Vector2D.ORIGIN;
