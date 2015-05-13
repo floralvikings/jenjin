@@ -69,15 +69,15 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage<WorldSe
 				if (!locationWalkable(player))
 				{
 					LOGGER.log(Level.INFO, "Attempted move to unwalkable location: {0}", position);
-					Angle pAngle = player.getAngle().asIdle();
+					Angle pAngle = player.getOrientation().asIdle();
 					forcePlayerToAngle(player, pAngle);
 				} else if (!isCorrectionSafe(player))
 				{
-					Angle pAngle = player.getAngle();
+					Angle pAngle = player.getOrientation();
 					forcePlayerToAngle(player, pAngle);
 				} else
 				{
-					player.setAngle(angle);
+					player.setOrientation(angle);
 					player.setPosition(position);
 				}
 			}

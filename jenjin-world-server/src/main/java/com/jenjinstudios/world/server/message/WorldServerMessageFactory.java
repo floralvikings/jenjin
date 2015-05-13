@@ -90,8 +90,8 @@ public class WorldServerMessageFactory
 		newlyVisibleMessage.setArgument("resourceID", newlyVisible.getResourceID());
 		newlyVisibleMessage.setArgument("xCoordinate", newlyVisible.getPosition().getXValue());
 		newlyVisibleMessage.setArgument("yCoordinate", newlyVisible.getPosition().getYValue());
-		newlyVisibleMessage.setArgument("relativeAngle", newlyVisible.getAngle().getRelativeAngle());
-		newlyVisibleMessage.setArgument("absoluteAngle", newlyVisible.getAngle().getAbsoluteAngle());
+		newlyVisibleMessage.setArgument("relativeAngle", newlyVisible.getOrientation().getRelativeAngle());
+		newlyVisibleMessage.setArgument("absoluteAngle", newlyVisible.getOrientation().getAbsoluteAngle());
 		newlyVisibleMessage.setArgument("timeOfVisibility", newlyVisible.getWorld().getLastUpdateStarted());
 		newlyVisibleMessage.setArgument("moveSpeed", newlyVisible.getMoveSpeed());
 		return newlyVisibleMessage;

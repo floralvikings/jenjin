@@ -73,7 +73,8 @@ public class ExecutableStateChangeRequestTest
 		exec.execute();
 		world.update();
 
-		Assert.assertEquals(player.getAngle(), new Angle(0.0, Angle.FRONT), "Player should be at angle 0.0 and idle");
+		Assert.assertEquals(player.getOrientation(), new Angle(0.0, Angle.FRONT), "Player should be at angle 0.0 and " +
+			  "idle");
 	}
 
 	/**
@@ -108,7 +109,7 @@ public class ExecutableStateChangeRequestTest
 
 		world.update();
 
-		Assert.assertEquals(player.getAngle(), new Angle(0.0, Angle.IDLE), "Player should be at 0.0 and idle.");
+		Assert.assertEquals(player.getOrientation(), new Angle(0.0, Angle.IDLE), "Player should be at 0.0 and idle.");
 	}
 
 	/**
@@ -136,7 +137,7 @@ public class ExecutableStateChangeRequestTest
 		exec.execute();
 		world.update();
 
-		Assert.assertEquals(player.getAngle(), new Angle(0.0, Angle.IDLE), "Player should be at angle 0.0 and idle");
+		Assert.assertEquals(player.getOrientation(), new Angle(0.0, Angle.IDLE), "Player should be at angle 0.0 and idle");
 	}
 
 	/**
@@ -166,6 +167,6 @@ public class ExecutableStateChangeRequestTest
 		exec.execute();
 		world.update();
 
-		Assert.assertEquals(player.getAngle(), new Angle(0.0, Angle.IDLE), "Player should be at angle 0.0 and idle.");
+		Assert.assertEquals(player.getOrientation(), new Angle(0.0, Angle.IDLE), "Player should be at angle 0.0 and idle.");
 	}
 }

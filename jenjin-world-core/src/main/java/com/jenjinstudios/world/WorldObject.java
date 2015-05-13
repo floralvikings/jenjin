@@ -28,7 +28,7 @@ public class WorldObject
 	private int zoneID;
 	private int resourceID;
 	private int id = Integer.MIN_VALUE;
-	private Angle angle;
+	private Angle orientation;
 	private Vector2D position;
 	private Vector2D size;
 	private World world;
@@ -37,7 +37,7 @@ public class WorldObject
 		position = Vector2D.ORIGIN;
 		size = new Vector2D(DEFAULT_SIZE, DEFAULT_SIZE);
 		this.name = name;
-		angle = new Angle();
+		orientation = new Angle();
 		addTask(new TimingTask());
 		addTask(stateChangeTask);
 		addTask(visionTask);
@@ -55,9 +55,9 @@ public class WorldObject
 
 	public Collection<WorldObjectTask> getTasks() { return Collections.unmodifiableCollection(tasks); }
 
-	public Angle getAngle() { return angle; }
+	public Angle getOrientation() { return orientation; }
 
-	public void setAngle(Angle angle) { this.angle = angle; }
+	public void setOrientation(Angle orientation) { this.orientation = orientation; }
 
 	public Vector2D getPosition() { return position; }
 

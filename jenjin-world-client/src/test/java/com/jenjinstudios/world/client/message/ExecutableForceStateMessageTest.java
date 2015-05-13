@@ -34,13 +34,13 @@ public class ExecutableForceStateMessageTest
 		when(context.getWorld()).thenReturn(world);
 		when(clientPlayer.getWorld()).thenReturn(world);
 		when(context.getPlayer()).thenReturn(clientPlayer);
-		when(clientPlayer.getAngle()).thenReturn(new Angle());
+		when(clientPlayer.getOrientation()).thenReturn(new Angle());
 
 		ExecutableForceStateMessage message = new ExecutableForceStateMessage(forceStateMessage, context);
 		message.execute();
 		world.update();
 
-		verify(clientPlayer).setAngle(eq(new Angle(PI, IDLE)));
+		verify(clientPlayer).setOrientation(eq(new Angle(PI, IDLE)));
 		verify(clientPlayer).setPosition(eq(new Vector2D(PI, PI)));
 	}
 }

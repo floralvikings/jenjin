@@ -46,8 +46,8 @@ public class ExecutableActorVisibleMessage extends WorldClientExecutableMessage<
         Vector2D oldVector = new Vector2D(xCoordinate, yCoordinate);
         Vector2D newVector = oldVector.getVectorInDirection(dist, angle.getStepAngle());
 		newlyVisible.setPosition(newVector);
-		newlyVisible.setAngle(new Angle(absoluteAngle, relativeAngle));
-        newlyVisible.setMoveSpeed(moveSpeed);
+		newlyVisible.setOrientation(new Angle(absoluteAngle, relativeAngle));
+		newlyVisible.setMoveSpeed(moveSpeed);
 
 		World world = getContext().getWorld();
 		world.scheduleUpdateTask(() -> {

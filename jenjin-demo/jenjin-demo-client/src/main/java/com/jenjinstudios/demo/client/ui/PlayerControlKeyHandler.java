@@ -86,9 +86,9 @@ public class PlayerControlKeyHandler implements EventHandler<KeyEvent>
 	}
 
 	private void setNewAngle() {
-		Angle angle = clientPlayer.getAngle().asIdle();
+		Angle angle = clientPlayer.getOrientation().asIdle();
 		angle = getMoveAngle(angle);
-		clientPlayer.setAngle(angle);
+		clientPlayer.setOrientation(angle);
 	}
 
 }

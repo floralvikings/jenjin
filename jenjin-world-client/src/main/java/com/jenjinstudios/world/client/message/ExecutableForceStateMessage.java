@@ -40,7 +40,7 @@ public class ExecutableForceStateMessage extends WorldClientExecutableMessage<Wo
 			double dist = ((world.getLastUpdateCompleted() - timeOfForce) / MS_TO_S) * player.getMoveSpeed();
 			Vector2D corrected = vector2D.getVectorInDirection(dist, angle.getStepAngle());
 			player.setPosition(corrected);
-			player.setAngle(angle);
+			player.setOrientation(angle);
 
 			ActorUtils.forceIdle(player);
 		});

@@ -32,8 +32,8 @@ public class Bullet extends Actor
 		super("Bullet");
 		setSize(new Vector2D(1.0, 1.0));
 		setPosition(actorFiring.getPosition());
-		double targetAngle = actorFiring.getAngle().getAbsoluteAngle();
-		setAngle(new Angle(targetAngle, FRONT));
+		double targetAngle = actorFiring.getOrientation().getAbsoluteAngle();
+		setOrientation(new Angle(targetAngle, FRONT));
 		setMoveSpeed(Actor.DEFAULT_MOVE_SPEED * 3);
 		setResourceID(1);
 		setZoneID(actorFiring.getZoneID());
@@ -49,7 +49,7 @@ public class Bullet extends Actor
 	{
 		@Override
 		public void onPreUpdate(World world, WorldObject worldObject) {
-			if (!worldObject.getAngle().isNotIdle() ||
+			if (!worldObject.getOrientation().isNotIdle() ||
 				  (startVector.getDistanceToVector(worldObject.getPosition()) > RANGE))
 			{
 				world.getWorldObjects().remove(worldObject);
@@ -73,7 +73,7 @@ public class Bullet extends Actor
 			{
 				Actor actor = (Actor) collided;
 				Angle idle = new Angle();
-				double comparison = idle.getAbsoluteAngle() - collided.getAngle().getAbsoluteAngle();
+				double comparison = idle.getAbsoluteAngle() - collided.getOrientation().getAbsoluteAngle();
 				boolean floatsEqual = Math.abs(comparison) < FLOAT_COMPARE_TOLERANCE;
 				if (floatsEqual) {
 					idle = idle.reverseAbsoluteAngle();

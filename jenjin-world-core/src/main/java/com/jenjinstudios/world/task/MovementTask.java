@@ -24,7 +24,7 @@ public class MovementTask extends WorldObjectTaskAdapter
 	public void onUpdate(World world, WorldObject worldObject) {
 		if (worldObject instanceof Actor) {
 			Actor actor = (Actor) worldObject;
-			if (actor.getAngle().isNotIdle()) {
+			if (actor.getOrientation().isNotIdle()) {
 				ActorUtils.stepForward(actor);
 			}
 		}

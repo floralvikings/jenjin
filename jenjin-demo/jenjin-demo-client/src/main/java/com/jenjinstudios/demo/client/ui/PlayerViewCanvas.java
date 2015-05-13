@@ -149,7 +149,7 @@ public class PlayerViewCanvas extends Canvas
 
 		GraphicsContext graphicsContext2D = getGraphicsContext2D();
 		graphicsContext2D.save();
-		Rotate r = new Rotate(-Math.toDegrees(o.getAngle().getAbsoluteAngle()), x, y);
+		Rotate r = new Rotate(-Math.toDegrees(o.getOrientation().getAbsoluteAngle()), x, y);
 		graphicsContext2D.setTransform(r.getMxx(), r.getMyx(), r.getMxy(), r.getMyy(), r.getTx(), r.getTy());
 		Image objectTile = getObjectTile(o);
 		graphicsContext2D.drawImage(objectTile, x - (objectTile.getWidth() / 2), y - (objectTile.getHeight() / 2));

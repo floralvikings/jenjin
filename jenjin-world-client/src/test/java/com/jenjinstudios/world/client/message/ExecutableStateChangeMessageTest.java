@@ -43,6 +43,6 @@ public class ExecutableStateChangeMessageTest
 		world.update();
 
 		verify(worldObjectMap).get(100);
-		verify(clientActor).setAngle(eq(new Angle(PI)));
+		verify(clientActor).setOrientation(eq(new Angle(PI)));
 	}
 }

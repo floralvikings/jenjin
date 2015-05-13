@@ -35,7 +35,7 @@ public class StateChangeTask extends WorldObjectTaskAdapter
 
 	@Override
 	public void onPostUpdate(World world, WorldObject worldObject) {
-		Angle postAngle = worldObject.getAngle();
+		Angle postAngle = worldObject.getOrientation();
 
 		boolean stateChanged = (preUpdateAngle == null) ? (postAngle != null) : !preUpdateAngle.equals(postAngle);
 
@@ -53,6 +53,6 @@ public class StateChangeTask extends WorldObjectTaskAdapter
 			}
 		}
 
-		preUpdateAngle = worldObject.getAngle();
+		preUpdateAngle = worldObject.getOrientation();
 	}
 }

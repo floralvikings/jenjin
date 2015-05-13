@@ -67,7 +67,7 @@ public class WorldServerMessageFactoryTest
 		Actor actor = mock(Actor.class);
 		when(actor.getName()).thenReturn("Foo");
 		when(actor.getPosition()).thenReturn(Vector2D.ORIGIN);
-		when(actor.getAngle()).thenReturn(new Angle());
+		when(actor.getOrientation()).thenReturn(new Angle());
 		when(actor.getWorld()).thenReturn(WorldUtils.createDefaultWorld());
 
 		Message message = WorldServerMessageFactory.generateNewlyVisibleMessage(actor);

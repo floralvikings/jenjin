@@ -55,8 +55,8 @@ public class WorldObjectTest
 	 */
 	@Test
 	public void testSetDirection() throws Exception {
-		worldObject.setAngle(new Angle(direction));
-		Assert.assertEquals(direction, worldObject.getAngle().getAbsoluteAngle(), 0);
+		worldObject.setOrientation(new Angle(direction));
+		Assert.assertEquals(direction, worldObject.getOrientation().getAbsoluteAngle(), 0);
 	}
 
 	/**
