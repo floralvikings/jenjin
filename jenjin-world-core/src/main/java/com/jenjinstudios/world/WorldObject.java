@@ -16,8 +16,8 @@ import java.util.*;
  */
 public class WorldObject
 {
+	private static final double DEFAULT_VISION_RADIUS = Location.SIZE * 10;
 	private static final double DEFAULT_SIZE = Location.SIZE / 2.0;
-	private final HashMap<String, Object> properties = new HashMap<>(10);
 	private final Collection<WorldObjectTask> tasks = new LinkedList<>();
 	private final StateChangeTask stateChangeTask = new StateChangeTask();
 	private final VisionTask visionTask = new VisionTask();
@@ -36,6 +36,7 @@ public class WorldObject
 	public WorldObject(String name) {
 		position = Vector2D.ORIGIN;
 		size = new Vector2D(DEFAULT_SIZE, DEFAULT_SIZE);
+		visionRadius = DEFAULT_VISION_RADIUS;
 		this.name = name;
 		orientation = new Angle();
 		addTask(new TimingTask());
@@ -72,8 +73,6 @@ public class WorldObject
 	public int getId() { return id; }
 
 	public void setId(int id) { this.id = id; }
-
-	public HashMap<String, Object> getProperties() { return properties; }
 
 	public World getWorld() { return world; }
 
