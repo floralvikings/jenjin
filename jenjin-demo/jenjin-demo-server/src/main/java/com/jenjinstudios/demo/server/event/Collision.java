@@ -53,7 +53,7 @@ public abstract class Collision extends WorldObjectTaskAdapter
 
 	private static Rectangle2D getCollisionRect(WorldObject obj) {
 		double objectRad = calculateCollisionRad(obj);
-		Vector2D objectVector = obj.getVector2D();
+		Vector2D objectVector = obj.getPosition();
 		double objectX = objectVector.getXCoordinate();
 		double objectY = objectVector.getYCoordinate();
 		double objectMinX = objectX - objectRad;

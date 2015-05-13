@@ -52,7 +52,7 @@ public class WorldServerMessageFactoryTest
 	public void testGenerateNewlyVisibleObjectMessage() {
 		WorldObject object = mock(WorldObject.class);
 		when(object.getName()).thenReturn("Foo");
-		when(object.getVector2D()).thenReturn(Vector2D.ORIGIN);
+		when(object.getPosition()).thenReturn(Vector2D.ORIGIN);
 
 		Message message = WorldServerMessageFactory.generateNewlyVisibleMessage(object);
 		assertEquals(message.name, "ObjectVisibleMessage", "Message should be ObjectVisibleMessage");
@@ -66,7 +66,7 @@ public class WorldServerMessageFactoryTest
 	public void testGenerateNewlyVisibleActorMessage() {
 		Actor actor = mock(Actor.class);
 		when(actor.getName()).thenReturn("Foo");
-		when(actor.getVector2D()).thenReturn(Vector2D.ORIGIN);
+		when(actor.getPosition()).thenReturn(Vector2D.ORIGIN);
 		when(actor.getAngle()).thenReturn(new Angle());
 		when(actor.getWorld()).thenReturn(WorldUtils.createDefaultWorld());
 

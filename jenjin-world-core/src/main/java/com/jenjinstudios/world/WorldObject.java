@@ -27,11 +27,11 @@ public class WorldObject
 	private int resourceID;
 	private int id = Integer.MIN_VALUE;
 	private Angle angle;
-	private Vector2D vector2D;
+	private Vector2D position;
 	private World world;
 
 	public WorldObject(String name) {
-		vector2D = Vector2D.ORIGIN;
+		position = Vector2D.ORIGIN;
 		this.name = name;
 		angle = new Angle();
 		addTask(new TimingTask());
@@ -55,10 +55,10 @@ public class WorldObject
 
 	public void setAngle(Angle angle) { this.angle = angle; }
 
-	public Vector2D getVector2D() { return vector2D; }
+	public Vector2D getPosition() { return position; }
 
-	public void setVector2D(Vector2D vector2D) {
-		this.vector2D = vector2D;
+	public void setPosition(Vector2D position) {
+		this.position = position;
 	}
 
 	public int getResourceID() { return resourceID; }

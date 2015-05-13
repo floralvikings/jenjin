@@ -88,8 +88,8 @@ public class WorldServerMessageFactory
 		newlyVisibleMessage.setArgument("name", newlyVisible.getName());
 		newlyVisibleMessage.setArgument("id", newlyVisible.getId());
 		newlyVisibleMessage.setArgument("resourceID", newlyVisible.getResourceID());
-		newlyVisibleMessage.setArgument("xCoordinate", newlyVisible.getVector2D().getXCoordinate());
-		newlyVisibleMessage.setArgument("yCoordinate", newlyVisible.getVector2D().getYCoordinate());
+		newlyVisibleMessage.setArgument("xCoordinate", newlyVisible.getPosition().getXCoordinate());
+		newlyVisibleMessage.setArgument("yCoordinate", newlyVisible.getPosition().getYCoordinate());
 		newlyVisibleMessage.setArgument("relativeAngle", newlyVisible.getAngle().getRelativeAngle());
 		newlyVisibleMessage.setArgument("absoluteAngle", newlyVisible.getAngle().getAbsoluteAngle());
 		newlyVisibleMessage.setArgument("timeOfVisibility", newlyVisible.getWorld().getLastUpdateStarted());
@@ -103,8 +103,8 @@ public class WorldServerMessageFactory
 		newlyVisibleMessage.setArgument("name", object.getName());
 		newlyVisibleMessage.setArgument("id", object.getId());
 		newlyVisibleMessage.setArgument("resourceID", object.getResourceID());
-		newlyVisibleMessage.setArgument("xCoordinate", object.getVector2D().getXCoordinate());
-		newlyVisibleMessage.setArgument("yCoordinate", object.getVector2D().getYCoordinate());
+		newlyVisibleMessage.setArgument("xCoordinate", object.getPosition().getXCoordinate());
+		newlyVisibleMessage.setArgument("yCoordinate", object.getPosition().getYCoordinate());
 		return newlyVisibleMessage;
 	}
 }

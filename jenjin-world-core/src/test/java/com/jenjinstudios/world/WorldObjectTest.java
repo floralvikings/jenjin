@@ -44,7 +44,7 @@ public class WorldObjectTest
 		id = 123;
 		world = WorldUtils.createDefaultWorld();
 		/* The zone used for testing. */
-		worldObject.setVector2D(vector2D);
+		worldObject.setPosition(vector2D);
 		world.getWorldObjects().add(worldObject);
 		world.update();
 	}
@@ -65,11 +65,11 @@ public class WorldObjectTest
 	 */
 	@Test
 	public void testSetCoordinates() throws Exception {
-		worldObject.setVector2D(vector2D);
-		Assert.assertTrue(vector2D.equals(worldObject.getVector2D()));
+		worldObject.setPosition(vector2D);
+		Assert.assertTrue(vector2D.equals(worldObject.getPosition()));
 
-		worldObject.setVector2D(new Vector2D(xCoordinate, yCoordinate));
-		Assert.assertTrue(vector2D.equals(worldObject.getVector2D()));
+		worldObject.setPosition(new Vector2D(xCoordinate, yCoordinate));
+		Assert.assertTrue(vector2D.equals(worldObject.getPosition()));
 	}
 
 	/**
@@ -78,7 +78,7 @@ public class WorldObjectTest
 	 */
 	@Test
 	public void testGetLocation() throws Exception {
-		worldObject.setVector2D(vector2D);
+		worldObject.setPosition(vector2D);
 		Location loc = LocationUtils.getObjectLocation(worldObject);
 		Assert.assertTrue(loc == ZoneUtils.getLocationForCoordinates(world, 0, vector2D));
 	}

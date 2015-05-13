@@ -37,7 +37,7 @@ public class ExecutableObjectVisibleMessage extends WorldClientExecutableMessage
 		WorldObject newlyVisible = new WorldObject(name);
 		newlyVisible.setId(id);
         newlyVisible.setResourceID(resourceID);
-        newlyVisible.setVector2D(vector2D);
+		newlyVisible.setPosition(vector2D);
 
 		World world = getContext().getWorld();
 		world.scheduleUpdateTask(() -> world.getWorldObjects().set(newlyVisible.getId(), newlyVisible));

@@ -81,7 +81,7 @@ public class PlayerViewCanvas extends Canvas
 			  "UPS: " + worldClient.getAverageUPS(),
 			  "Visible Object Count: " + clientPlayer.getVisibleObjects().size(),
 			  clientPlayer.getName(),
-			  clientPlayer.getVector2D().toString()
+			  clientPlayer.getPosition().toString()
 		};
 
 		for (int i = 0; i < hudStrings.length; i++)
@@ -110,8 +110,8 @@ public class PlayerViewCanvas extends Canvas
 		Location pLoc = LocationUtils.getObjectLocation(clientPlayer);
 		int xDiff = location.getX() - pLoc.getX();
 		int yDiff = location.getY() - pLoc.getY();//+ 1;
-		double xBuff = clientPlayer.getVector2D().getXCoordinate() % Location.SIZE;
-		double yBuff = clientPlayer.getVector2D().getYCoordinate() % Location.SIZE;
+		double xBuff = clientPlayer.getPosition().getXCoordinate() % Location.SIZE;
+		double yBuff = clientPlayer.getPosition().getYCoordinate() % Location.SIZE;
 
 		double x = xOrig + ((xDiff * SCALE) - (xBuff * LOC_SCALE));
 		double y = yOrig - ((yDiff * SCALE) - (yBuff * LOC_SCALE)) - SCALE;
@@ -141,8 +141,8 @@ public class PlayerViewCanvas extends Canvas
 	}
 
 	private void drawObject(WorldObject o) {
-		double xDiff = o.getVector2D().getXCoordinate() - clientPlayer.getVector2D().getXCoordinate();
-		double yDiff = o.getVector2D().getYCoordinate() - clientPlayer.getVector2D().getYCoordinate();
+		double xDiff = o.getPosition().getXCoordinate() - clientPlayer.getPosition().getXCoordinate();
+		double yDiff = o.getPosition().getYCoordinate() - clientPlayer.getPosition().getYCoordinate();
 
 		double x = xOrig + (xDiff * LOC_SCALE);
 		double y = yOrig - (yDiff * LOC_SCALE);

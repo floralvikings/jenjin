@@ -17,7 +17,7 @@ public class ActorUtils
 		boolean canStep;
 		if (o.getAngle().isNotIdle())
 		{
-			Vector2D newVector = o.getVector2D().getVectorInDirection(stepLength, o.getAngle().getStepAngle());
+			Vector2D newVector = o.getPosition().getVectorInDirection(stepLength, o.getAngle().getStepAngle());
 			Location newLocation = ZoneUtils.getLocationForCoordinates(o.getWorld(), o.getZoneID(), newVector);
 			canStep = newLocation != null && !"false".equals(newLocation.getProperties().get("walkable"));
 		} else
@@ -38,8 +38,8 @@ public class ActorUtils
 		double stepLength = calcStepLength(actor);
 		if (canStepForward(actor, stepLength))
 		{
-			Vector2D newVector = actor.getVector2D().getVectorInDirection(stepLength, actor.getAngle().getStepAngle());
-			actor.setVector2D(newVector);
+			Vector2D newVector = actor.getPosition().getVectorInDirection(stepLength, actor.getAngle().getStepAngle());
+			actor.setPosition(newVector);
 		} else
 		{
 			forceIdle(actor);
@@ -48,11 +48,11 @@ public class ActorUtils
 
 	public static void forceIdle(Actor actor) {
 		Angle idle = actor.getAngle().asIdle();
-		Vector2D vector2D = actor.getVector2D();
+		Vector2D vector2D = actor.getPosition();
 		long lastUpdateCompleted = actor.getWorld().getLastUpdateCompleted();
 		MoveState forcedMoveState = new MoveState(idle, vector2D, lastUpdateCompleted);
 		actor.setForcedState(forcedMoveState);
-		actor.setVector2D(vector2D);
+		actor.setPosition(vector2D);
 		actor.setAngle(idle);
 	}
 }

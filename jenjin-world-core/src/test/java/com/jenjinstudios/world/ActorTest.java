@@ -23,7 +23,7 @@ public class ActorTest
 		world.update();
 		Thread.sleep(1000); // Sleep to move one DEFAULT_MOVE_SPEED forward
 		world.update();
-		double distance = Vector2D.ORIGIN.getDistanceToVector(actor.getVector2D());
+		double distance = Vector2D.ORIGIN.getDistanceToVector(actor.getPosition());
 		Assert.assertEquals(distance, 0, 0.1);
 	}
 

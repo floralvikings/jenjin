@@ -51,7 +51,7 @@ public class ExecutableWorldLogoutRequestTest extends PowerMockTestCase
 		when(context.getUser()).thenReturn(player);
 		when(player.getWorld()).thenReturn(world);
 		when(player.getId()).thenReturn(0);
-		when(player.getVector2D()).thenReturn(Vector2D.ORIGIN);
+		when(player.getPosition()).thenReturn(Vector2D.ORIGIN);
 
 		ExecutableWorldLogoutRequest exec = new ExecutableWorldLogoutRequest(logOutRequest, context);
 		exec.execute();
@@ -80,7 +80,7 @@ public class ExecutableWorldLogoutRequestTest extends PowerMockTestCase
 		when(context.getWorld()).thenReturn(world);
 		when(context.getUser()).thenReturn(null);
 		when(player.getId()).thenReturn(0);
-		when(player.getVector2D()).thenReturn(Vector2D.ORIGIN);
+		when(player.getPosition()).thenReturn(Vector2D.ORIGIN);
 
 		ExecutableWorldLogoutRequest exec = new ExecutableWorldLogoutRequest(logOutRequest, context);
 		Message resp = exec.execute();

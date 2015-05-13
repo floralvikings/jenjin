@@ -31,13 +31,13 @@ public class Bullet extends Actor
 	public Bullet(Actor actorFiring) {
 		super("Bullet");
 		getProperties().put(Collision.SIZE_PROPERTY, 1.0);
-		setVector2D(actorFiring.getVector2D());
+		setPosition(actorFiring.getPosition());
 		double targetAngle = actorFiring.getAngle().getAbsoluteAngle();
 		setAngle(new Angle(targetAngle, FRONT));
 		setMoveSpeed(Actor.DEFAULT_MOVE_SPEED * 3);
 		setResourceID(1);
 		setZoneID(actorFiring.getZoneID());
-		startVector = getVector2D();
+		startVector = getPosition();
 
 		addTask(new BulletCollision(actorFiring));
 
@@ -50,7 +50,7 @@ public class Bullet extends Actor
 		@Override
 		public void onPreUpdate(World world, WorldObject worldObject) {
 			if (!worldObject.getAngle().isNotIdle() ||
-				  (startVector.getDistanceToVector(worldObject.getVector2D()) > RANGE))
+				  (startVector.getDistanceToVector(worldObject.getPosition()) > RANGE))
 			{
 				world.getWorldObjects().remove(worldObject);
 			}
@@ -79,7 +79,7 @@ public class Bullet extends Actor
 					idle = idle.reverseAbsoluteAngle();
 				}
 				long forceTime = collided.getWorld().getLastUpdateCompleted();
-				actor.setVector2D(Vector2D.ORIGIN);
+				actor.setPosition(Vector2D.ORIGIN);
 				actor.setForcedState(new MoveState(idle, Vector2D.ORIGIN, forceTime));
 				getWorld().getWorldObjects().remove(Bullet.this);
 			}

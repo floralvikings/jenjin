@@ -41,6 +41,6 @@ public class ExecutableForceStateMessageTest
 		world.update();
 
 		verify(clientPlayer).setAngle(eq(new Angle(PI, IDLE)));
-		verify(clientPlayer).setVector2D(eq(new Vector2D(PI, PI)));
+		verify(clientPlayer).setPosition(eq(new Vector2D(PI, PI)));
 	}
 }

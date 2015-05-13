@@ -44,7 +44,7 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage<WorldSe
 	}
 
 	private void forcePlayerToAngle(Actor player, Angle pAngle) {
-		Vector2D vector2D = player.getVector2D();
+		Vector2D vector2D = player.getPosition();
 		MoveState forcedState = new MoveState(pAngle, vector2D, player.getWorld().getLastUpdateCompleted());
 		player.setForcedState(forcedState);
 	}
@@ -78,7 +78,7 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage<WorldSe
 				} else
 				{
 					player.setAngle(angle);
-					player.setVector2D(position);
+					player.setPosition(position);
 				}
 			}
 		});
@@ -131,8 +131,8 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage<WorldSe
 	}
 
 	private Vector2D getPlayerOrigin(Actor player) {
-		double originDistance = player.getVector2D().getDistanceToVector(uncorrectedPosition);
+		double originDistance = player.getPosition().getDistanceToVector(uncorrectedPosition);
 		double playerReverseAngle = angle.reverseStepAngle();
-		return player.getVector2D().getVectorInDirection(originDistance, playerReverseAngle);
+		return player.getPosition().getVectorInDirection(originDistance, playerReverseAngle);
 	}
 }

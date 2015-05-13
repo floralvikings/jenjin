@@ -28,7 +28,7 @@ public class SightedObjectTest
 		World world = new World(zone);
 		WorldObject sightedObject = new WorldObject("SightedObject");
 		world.getWorldObjects().add(sightedObject);
-		sightedObject.setVector2D(new Vector2D(55, 55));
+		sightedObject.setPosition(new Vector2D(55, 55));
 
 		world.update();
 		world.update();
