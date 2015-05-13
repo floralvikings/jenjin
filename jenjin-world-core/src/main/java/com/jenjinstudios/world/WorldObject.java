@@ -22,6 +22,7 @@ public class WorldObject
 	private final StateChangeTask stateChangeTask = new StateChangeTask();
 	private final VisionTask visionTask = new VisionTask();
 	private final String name;
+	private double visionRadius;
 	private long lastUpdateStartTime;
 	private long lastUpdateEndTime;
 	private int zoneID;
@@ -99,6 +100,10 @@ public class WorldObject
 	public Vector2D getSize() { return size; }
 
 	public void setSize(Vector2D size) { this.size = size; }
+
+	public double getVisionRadius() { return visionRadius; }
+
+	public void setVisionRadius(double visionRadius) { this.visionRadius = visionRadius; }
 
 	@Override
 	public String toString() { return name + ": " + id; }
