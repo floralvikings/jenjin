@@ -85,6 +85,14 @@ public class WorldObject
 
 	public String getName() { return name; }
 
+	public void setLastUpdateStartTime(long lastUpdateStartTime) { this.lastUpdateStartTime = lastUpdateStartTime; }
+
+	public long getLastUpdateStartTime() { return lastUpdateStartTime; }
+
+	public void setLastUpdateEndTime(long lastUpdateEndTime) { this.lastUpdateEndTime = lastUpdateEndTime; }
+
+	public long getLastUpdateEndTime() { return lastUpdateEndTime; }
+
 	@Override
 	public String toString() { return name + ": " + id; }
 
@@ -105,12 +113,4 @@ public class WorldObject
 		result = 31 * result + id;
 		return result;
 	}
-
-	public void setLastUpdateStartTime(long lastUpdateStartTime) { this.lastUpdateStartTime = lastUpdateStartTime; }
-
-	public long getLastUpdateStartTime() { return lastUpdateStartTime; }
-
-	public void setLastUpdateEndTime(long lastUpdateEndTime) { this.lastUpdateEndTime = lastUpdateEndTime; }
-
-	public long getLastUpdateEndTime() { return lastUpdateEndTime; }
 }
