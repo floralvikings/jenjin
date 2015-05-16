@@ -44,7 +44,7 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage<WorldSe
 	}
 
 	private void forcePlayerToAngle(Actor player, Angle pAngle) {
-		Vector2D vector2D = player.getPosition();
+		Vector2D vector2D = player.getGeometry2D().getPosition();
 		MoveState forcedState = new MoveState(pAngle, vector2D, player.getWorld().getLastUpdateCompleted());
 		player.setForcedState(forcedState);
 	}
@@ -64,21 +64,21 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage<WorldSe
 			Actor player = getContext().getUser();
 			if ((player != null) && (player.getWorld() != null))
 			{
-				double distance = MathUtil.round(player.getMoveSpeed() * (timePast / MS_TO_S), 2);
+				double distance = MathUtil.round(player.getGeometry2D().getSpeed() * (timePast / MS_TO_S), 2);
 				position = uncorrectedPosition.getVectorInDirection(distance, angle.getStepAngle());
 				if (!locationWalkable(player))
 				{
 					LOGGER.log(Level.INFO, "Attempted move to unwalkable location: {0}", position);
-					Angle pAngle = player.getOrientation().asIdle();
+					Angle pAngle = player.getGeometry2D().getOrientation().asIdle();
 					forcePlayerToAngle(player, pAngle);
 				} else if (!isCorrectionSafe(player))
 				{
-					Angle pAngle = player.getOrientation();
+					Angle pAngle = player.getGeometry2D().getOrientation();
 					forcePlayerToAngle(player, pAngle);
 				} else
 				{
-					player.setOrientation(angle);
-					player.setPosition(position);
+					player.getGeometry2D().setOrientation(angle);
+					player.getGeometry2D().setPosition(position);
 				}
 			}
 		});
@@ -106,7 +106,7 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage<WorldSe
 
 	private boolean isWithinMaxCorrect(Actor player) {
 		double clientDistance = uncorrectedPosition.getDistanceToVector(position);
-		double maxCorrect = player.getMoveSpeed();
+		double maxCorrect = player.getGeometry2D().getSpeed();
 		boolean withinMaxCorrect = clientDistance < maxCorrect;
 		if (!withinMaxCorrect)
 		{
@@ -118,7 +118,7 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage<WorldSe
 	}
 
 	private boolean isDistanceWithinTolerance(Actor player) {
-		double tolerance = player.getMoveSpeed() / 10; // Allows for 100ms lag.
+		double tolerance = player.getGeometry2D().getSpeed() / 10; // Allows for 100ms lag.
 		Vector2D proposedPlayerOrigin = getPlayerOrigin(player);
 		double distance = uncorrectedPosition.getDistanceToVector(proposedPlayerOrigin);
 		boolean distanceWithinTolerance = distance < tolerance;
@@ -131,8 +131,8 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage<WorldSe
 	}
 
 	private Vector2D getPlayerOrigin(Actor player) {
-		double originDistance = player.getPosition().getDistanceToVector(uncorrectedPosition);
+		double originDistance = player.getGeometry2D().getPosition().getDistanceToVector(uncorrectedPosition);
 		double playerReverseAngle = angle.reverseStepAngle();
-		return player.getPosition().getVectorInDirection(originDistance, playerReverseAngle);
+		return player.getGeometry2D().getPosition().getVectorInDirection(originDistance, playerReverseAngle);
 	}
 }

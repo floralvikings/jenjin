@@ -30,14 +30,14 @@ public class Bullet extends Actor
 	 */
 	public Bullet(Actor actorFiring) {
 		super("Bullet");
-		setSize(new Vector2D(1.0, 1.0));
-		setPosition(actorFiring.getPosition());
-		double targetAngle = actorFiring.getOrientation().getAbsoluteAngle();
-		setOrientation(new Angle(targetAngle, FRONT));
-		setMoveSpeed(Actor.DEFAULT_MOVE_SPEED * 3);
+		getGeometry2D().setSize(new Vector2D(1.0, 1.0));
+		getGeometry2D().setPosition(actorFiring.getGeometry2D().getPosition());
+		double targetAngle = actorFiring.getGeometry2D().getOrientation().getAbsoluteAngle();
+		getGeometry2D().setOrientation(new Angle(targetAngle, FRONT));
+		getGeometry2D().setSpeed(Actor.DEFAULT_MOVE_SPEED * 3);
 		setResourceID(1);
 		setZoneID(actorFiring.getZoneID());
-		startVector = getPosition();
+		startVector = getGeometry2D().getPosition();
 
 		addTask(new BulletCollision(actorFiring));
 
@@ -49,8 +49,8 @@ public class Bullet extends Actor
 	{
 		@Override
 		public void onPreUpdate(World world, WorldObject worldObject) {
-			if (!worldObject.getOrientation().isNotIdle() ||
-				  (startVector.getDistanceToVector(worldObject.getPosition()) > RANGE))
+			if (!worldObject.getGeometry2D().getOrientation().isNotIdle() ||
+				  (startVector.getDistanceToVector(worldObject.getGeometry2D().getPosition()) > RANGE))
 			{
 				world.getWorldObjects().remove(worldObject);
 			}
@@ -73,13 +73,14 @@ public class Bullet extends Actor
 			{
 				Actor actor = (Actor) collided;
 				Angle idle = new Angle();
-				double comparison = idle.getAbsoluteAngle() - collided.getOrientation().getAbsoluteAngle();
+				double comparison = idle.getAbsoluteAngle() - collided.getGeometry2D().getOrientation()
+					  .getAbsoluteAngle();
 				boolean floatsEqual = Math.abs(comparison) < FLOAT_COMPARE_TOLERANCE;
 				if (floatsEqual) {
 					idle = idle.reverseAbsoluteAngle();
 				}
 				long forceTime = collided.getWorld().getLastUpdateCompleted();
-				actor.setPosition(Vector2D.ORIGIN);
+				actor.getGeometry2D().setPosition(Vector2D.ORIGIN);
 				actor.setForcedState(new MoveState(idle, Vector2D.ORIGIN, forceTime));
 				getWorld().getWorldObjects().remove(Bullet.this);
 			}

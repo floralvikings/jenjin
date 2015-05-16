@@ -61,6 +61,6 @@ public class FullPlayerLookup<T extends Player> extends FullUserLookup<T>
 		}
 
 		user.setZoneID(zoneId);
-		user.setPosition(new Vector2D(xCoord, yCoord));
+		user.getGeometry2D().setPosition(new Vector2D(xCoord, yCoord));
 	}
 }

@@ -45,7 +45,7 @@ public abstract class Collision extends WorldObjectTaskAdapter
 
 	private static Rectangle2D getCollisionRect(WorldObject obj) {
 		double objectRad = calculateCollisionRad(obj);
-		Vector2D objectVector = obj.getPosition();
+		Vector2D objectVector = obj.getGeometry2D().getPosition();
 		double objectX = objectVector.getXValue();
 		double objectY = objectVector.getYValue();
 		double objectMinX = objectX - objectRad;
@@ -54,7 +54,7 @@ public abstract class Collision extends WorldObjectTaskAdapter
 	}
 
 	private static double calculateCollisionRad(WorldObject collider) {
-		Vector2D size = collider.getSize();
+		Vector2D size = collider.getGeometry2D().getSize();
 		return (size.getXValue() * size.getYValue()) / 2;
 	}
 

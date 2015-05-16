@@ -23,21 +23,16 @@ import com.jenjinstudios.world.task.MovementTask;
 public class Actor extends WorldObject
 {
 	public static double DEFAULT_MOVE_SPEED = 30.0d;
-	private double moveSpeed;
 	private MoveState forcedState;
 
 	public Actor(String name) {
 		super(name);
-		setMoveSpeed(DEFAULT_MOVE_SPEED);
+		getGeometry2D().setSpeed(DEFAULT_MOVE_SPEED);
 		addTask(new MovementTask());
 	}
 
 	public MoveState getForcedState() { return forcedState; }
 
 	public void setForcedState(MoveState forcedState) { this.forcedState = forcedState; }
-
-	public double getMoveSpeed() { return moveSpeed; }
-
-	public void setMoveSpeed(double moveSpeed) { this.moveSpeed = moveSpeed; }
 
 }

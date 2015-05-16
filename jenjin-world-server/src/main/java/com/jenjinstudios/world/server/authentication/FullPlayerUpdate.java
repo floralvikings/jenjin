@@ -37,8 +37,8 @@ public class FullPlayerUpdate<T extends Player> extends FullUserUpdate<T>
 	protected Map<String, String> getUserPropertiesMap(T user) {
 		Map<String, String> propertiesMap = new HashMap<>(3);
 		propertiesMap.put(ZONE_ID_KEY, String.valueOf(user.getZoneID()));
-		propertiesMap.put(X_COORD_KEY, String.valueOf(user.getPosition().getXValue()));
-		propertiesMap.put(Y_COORD_KEY, String.valueOf(user.getPosition().getYValue()));
+		propertiesMap.put(X_COORD_KEY, String.valueOf(user.getGeometry2D().getPosition().getXValue()));
+		propertiesMap.put(Y_COORD_KEY, String.valueOf(user.getGeometry2D().getPosition().getYValue()));
 		return propertiesMap;
 	}
 }

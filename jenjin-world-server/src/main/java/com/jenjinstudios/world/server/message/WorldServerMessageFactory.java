@@ -88,12 +88,14 @@ public class WorldServerMessageFactory
 		newlyVisibleMessage.setArgument("name", newlyVisible.getName());
 		newlyVisibleMessage.setArgument("id", newlyVisible.getId());
 		newlyVisibleMessage.setArgument("resourceID", newlyVisible.getResourceID());
-		newlyVisibleMessage.setArgument("xCoordinate", newlyVisible.getPosition().getXValue());
-		newlyVisibleMessage.setArgument("yCoordinate", newlyVisible.getPosition().getYValue());
-		newlyVisibleMessage.setArgument("relativeAngle", newlyVisible.getOrientation().getRelativeAngle());
-		newlyVisibleMessage.setArgument("absoluteAngle", newlyVisible.getOrientation().getAbsoluteAngle());
+		newlyVisibleMessage.setArgument("xCoordinate", newlyVisible.getGeometry2D().getPosition().getXValue());
+		newlyVisibleMessage.setArgument("yCoordinate", newlyVisible.getGeometry2D().getPosition().getYValue());
+		newlyVisibleMessage.setArgument("relativeAngle", newlyVisible.getGeometry2D().getOrientation()
+			  .getRelativeAngle());
+		newlyVisibleMessage.setArgument("absoluteAngle", newlyVisible.getGeometry2D().getOrientation()
+			  .getAbsoluteAngle());
 		newlyVisibleMessage.setArgument("timeOfVisibility", newlyVisible.getWorld().getLastUpdateStarted());
-		newlyVisibleMessage.setArgument("moveSpeed", newlyVisible.getMoveSpeed());
+		newlyVisibleMessage.setArgument("moveSpeed", newlyVisible.getGeometry2D().getSpeed());
 		return newlyVisibleMessage;
 	}
 
@@ -103,8 +105,8 @@ public class WorldServerMessageFactory
 		newlyVisibleMessage.setArgument("name", object.getName());
 		newlyVisibleMessage.setArgument("id", object.getId());
 		newlyVisibleMessage.setArgument("resourceID", object.getResourceID());
-		newlyVisibleMessage.setArgument("xCoordinate", object.getPosition().getXValue());
-		newlyVisibleMessage.setArgument("yCoordinate", object.getPosition().getYValue());
+		newlyVisibleMessage.setArgument("xCoordinate", object.getGeometry2D().getPosition().getXValue());
+		newlyVisibleMessage.setArgument("yCoordinate", object.getGeometry2D().getPosition().getYValue());
 		return newlyVisibleMessage;
 	}
 }

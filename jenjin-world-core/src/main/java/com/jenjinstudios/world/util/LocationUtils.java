@@ -19,7 +19,7 @@ public class LocationUtils
 			Zone zone = world.getZones().get(worldObject.getZoneID());
 			if (zone != null)
 			{
-				loc = ZoneUtils.getLocationForCoordinates(zone, worldObject.getPosition());
+				loc = ZoneUtils.getLocationForCoordinates(zone, worldObject.getGeometry2D().getPosition());
 			}
 		}
 		return loc;

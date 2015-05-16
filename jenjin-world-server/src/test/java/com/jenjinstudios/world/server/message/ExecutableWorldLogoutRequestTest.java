@@ -8,7 +8,7 @@ import com.jenjinstudios.server.message.ServerMessageFactory;
 import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.collections.WorldObjectList;
-import com.jenjinstudios.world.math.Vector2D;
+import com.jenjinstudios.world.math.Geometry2D;
 import com.jenjinstudios.world.server.Player;
 import com.jenjinstudios.world.server.WorldServerMessageContext;
 import org.mockito.Mock;
@@ -44,6 +44,7 @@ public class ExecutableWorldLogoutRequestTest extends PowerMockTestCase
 		Player player = mock(Player.class);
 		WorldObjectList worldObjectMap = mock(WorldObjectList.class);
 		WorldServerMessageContext context = mock(WorldServerMessageContext.class);
+		Geometry2D geometry2D = new Geometry2D();
 
 		when(world.getWorldObjects()).thenReturn(worldObjectMap);
 		when(context.getAuthenticator()).thenReturn(authenticator);
@@ -51,7 +52,7 @@ public class ExecutableWorldLogoutRequestTest extends PowerMockTestCase
 		when(context.getUser()).thenReturn(player);
 		when(player.getWorld()).thenReturn(world);
 		when(player.getId()).thenReturn(0);
-		when(player.getPosition()).thenReturn(Vector2D.ORIGIN);
+		when(player.getGeometry2D()).thenReturn(geometry2D);
 
 		ExecutableWorldLogoutRequest exec = new ExecutableWorldLogoutRequest(logOutRequest, context);
 		exec.execute();
@@ -75,12 +76,13 @@ public class ExecutableWorldLogoutRequestTest extends PowerMockTestCase
 		World world = mock(World.class);
 		Actor player = mock(Actor.class);
 		WorldServerMessageContext context = mock(WorldServerMessageContext.class);
+		Geometry2D geometry2D = new Geometry2D();
 
 		when(context.getAuthenticator()).thenReturn(authenticator);
 		when(context.getWorld()).thenReturn(world);
 		when(context.getUser()).thenReturn(null);
 		when(player.getId()).thenReturn(0);
-		when(player.getPosition()).thenReturn(Vector2D.ORIGIN);
+		when(player.getGeometry2D()).thenReturn(geometry2D);
 
 		ExecutableWorldLogoutRequest exec = new ExecutableWorldLogoutRequest(logOutRequest, context);
 		Message resp = exec.execute();

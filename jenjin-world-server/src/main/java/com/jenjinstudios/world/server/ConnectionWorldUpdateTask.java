@@ -25,7 +25,7 @@ public class ConnectionWorldUpdateTask<T extends WorldServerMessageContext<? ext
 		{
 			if (context.needsToSendSpeedMessage())
 			{
-				double moveSpeed = context.getUser().getMoveSpeed();
+				double moveSpeed = context.getUser().getGeometry2D().getSpeed();
 				Message message = WorldServerMessageFactory.generateActorMoveSpeedMessage(moveSpeed);
 				context.enqueue(message);
 				context.setNeedsToSendSpeedMessage(false);

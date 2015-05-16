@@ -6,7 +6,7 @@ import com.jenjinstudios.server.authentication.BasicUser;
 import com.jenjinstudios.server.authentication.User;
 import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.collections.WorldObjectList;
-import com.jenjinstudios.world.math.Vector2D;
+import com.jenjinstudios.world.math.Geometry2D;
 import com.jenjinstudios.world.server.Player;
 import com.jenjinstudios.world.server.WorldServerMessageContext;
 import org.mockito.Matchers;
@@ -44,6 +44,7 @@ public class ExecutableWorldLoginRequestTest extends PowerMockTestCase
 		Authenticator<Player> authenticator = mock(Authenticator.class);
 		WorldObjectList worldObjectMap = mock(WorldObjectList.class);
 		WorldServerMessageContext context = mock(WorldServerMessageContext.class);
+		Geometry2D geometry2D = new Geometry2D();
 
 		when(world.getWorldObjects()).thenReturn(worldObjectMap);
 		when(user.isLoggedIn()).thenReturn(true);
@@ -52,7 +53,7 @@ public class ExecutableWorldLoginRequestTest extends PowerMockTestCase
 		when(context.getUser()).thenReturn(player);
 		when(context.getWorld()).thenReturn(world);
 		when(WorldServerMessageFactory.generateWorldLoginResponse()).thenReturn(message);
-		when(player.getPosition()).thenReturn(Vector2D.ORIGIN);
+		when(player.getGeometry2D()).thenReturn(geometry2D);
 		ExecutableWorldLoginRequest exec = new ExecutableWorldLoginRequest(message, context);
 		exec.execute();
 		world.update();

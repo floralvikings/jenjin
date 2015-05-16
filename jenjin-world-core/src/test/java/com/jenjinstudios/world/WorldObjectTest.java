@@ -44,7 +44,7 @@ public class WorldObjectTest
 		id = 123;
 		world = WorldUtils.createDefaultWorld();
 		/* The zone used for testing. */
-		worldObject.setPosition(vector2D);
+		worldObject.getGeometry2D().setPosition(vector2D);
 		world.getWorldObjects().add(worldObject);
 		world.update();
 	}
@@ -55,8 +55,8 @@ public class WorldObjectTest
 	 */
 	@Test
 	public void testSetDirection() throws Exception {
-		worldObject.setOrientation(new Angle(direction));
-		Assert.assertEquals(direction, worldObject.getOrientation().getAbsoluteAngle(), 0);
+		worldObject.getGeometry2D().setOrientation(new Angle(direction));
+		Assert.assertEquals(direction, worldObject.getGeometry2D().getOrientation().getAbsoluteAngle(), 0);
 	}
 
 	/**
@@ -65,11 +65,11 @@ public class WorldObjectTest
 	 */
 	@Test
 	public void testSetCoordinates() throws Exception {
-		worldObject.setPosition(vector2D);
-		Assert.assertTrue(vector2D.equals(worldObject.getPosition()));
+		worldObject.getGeometry2D().setPosition(vector2D);
+		Assert.assertTrue(vector2D.equals(worldObject.getGeometry2D().getPosition()));
 
-		worldObject.setPosition(new Vector2D(xCoordinate, yCoordinate));
-		Assert.assertTrue(vector2D.equals(worldObject.getPosition()));
+		worldObject.getGeometry2D().setPosition(new Vector2D(xCoordinate, yCoordinate));
+		Assert.assertTrue(vector2D.equals(worldObject.getGeometry2D().getPosition()));
 	}
 
 	/**
@@ -78,7 +78,7 @@ public class WorldObjectTest
 	 */
 	@Test
 	public void testGetLocation() throws Exception {
-		worldObject.setPosition(vector2D);
+		worldObject.getGeometry2D().setPosition(vector2D);
 		Location loc = LocationUtils.getObjectLocation(worldObject);
 		Assert.assertTrue(loc == ZoneUtils.getLocationForCoordinates(world, 0, vector2D));
 	}

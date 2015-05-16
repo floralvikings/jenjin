@@ -19,11 +19,11 @@ public class ActorTest
 		world.getWorldObjects().add(actor);
 		world.update();
 		Angle angle = new Angle(0.0, Angle.BACK);
-		actor.setOrientation(angle);
+		actor.getGeometry2D().setOrientation(angle);
 		world.update();
 		Thread.sleep(1000); // Sleep to move one DEFAULT_MOVE_SPEED forward
 		world.update();
-		double distance = Vector2D.ORIGIN.getDistanceToVector(actor.getPosition());
+		double distance = Vector2D.ORIGIN.getDistanceToVector(actor.getGeometry2D().getPosition());
 		Assert.assertEquals(distance, 0, 0.1);
 	}
 
@@ -32,7 +32,7 @@ public class ActorTest
 		Actor actor = new Actor("Actor");
 		world.getWorldObjects().add(actor);
 		Angle angle = new Angle(0.0, Angle.BACK);
-		actor.setOrientation(angle);
+		actor.getGeometry2D().setOrientation(angle);
 		Thread.sleep(1000); // Sleep to move one DEFAULT_MOVE_SPEED backward
 		world.update();
 		Assert.assertNotNull(actor.getForcedState());

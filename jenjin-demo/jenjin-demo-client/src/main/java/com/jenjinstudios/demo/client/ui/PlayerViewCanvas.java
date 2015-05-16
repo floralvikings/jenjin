@@ -81,7 +81,7 @@ public class PlayerViewCanvas extends Canvas
 			  "UPS: " + worldClient.getAverageUPS(),
 			  "Visible Object Count: " + clientPlayer.getVisibleObjects().size(),
 			  clientPlayer.getName(),
-			  clientPlayer.getPosition().toString()
+			  clientPlayer.getGeometry2D().getPosition().toString()
 		};
 
 		for (int i = 0; i < hudStrings.length; i++)
@@ -110,8 +110,8 @@ public class PlayerViewCanvas extends Canvas
 		Location pLoc = LocationUtils.getObjectLocation(clientPlayer);
 		int xDiff = location.getX() - pLoc.getX();
 		int yDiff = location.getY() - pLoc.getY();//+ 1;
-		double xBuff = clientPlayer.getPosition().getXValue() % Location.SIZE;
-		double yBuff = clientPlayer.getPosition().getYValue() % Location.SIZE;
+		double xBuff = clientPlayer.getGeometry2D().getPosition().getXValue() % Location.SIZE;
+		double yBuff = clientPlayer.getGeometry2D().getPosition().getYValue() % Location.SIZE;
 
 		double x = xOrig + ((xDiff * SCALE) - (xBuff * LOC_SCALE));
 		double y = yOrig - ((yDiff * SCALE) - (yBuff * LOC_SCALE)) - SCALE;
@@ -141,15 +141,17 @@ public class PlayerViewCanvas extends Canvas
 	}
 
 	private void drawObject(WorldObject o) {
-		double xDiff = o.getPosition().getXValue() - clientPlayer.getPosition().getXValue();
-		double yDiff = o.getPosition().getYValue() - clientPlayer.getPosition().getYValue();
+		double xDiff = o.getGeometry2D().getPosition().getXValue() - clientPlayer.getGeometry2D().getPosition()
+			  .getXValue();
+		double yDiff = o.getGeometry2D().getPosition().getYValue() - clientPlayer.getGeometry2D().getPosition()
+			  .getYValue();
 
 		double x = xOrig + (xDiff * LOC_SCALE);
 		double y = yOrig - (yDiff * LOC_SCALE);
 
 		GraphicsContext graphicsContext2D = getGraphicsContext2D();
 		graphicsContext2D.save();
-		Rotate r = new Rotate(-Math.toDegrees(o.getOrientation().getAbsoluteAngle()), x, y);
+		Rotate r = new Rotate(-Math.toDegrees(o.getGeometry2D().getOrientation().getAbsoluteAngle()), x, y);
 		graphicsContext2D.setTransform(r.getMxx(), r.getMyx(), r.getMxy(), r.getMyy(), r.getTx(), r.getTy());
 		Image objectTile = getObjectTile(o);
 		graphicsContext2D.drawImage(objectTile, x - (objectTile.getWidth() / 2), y - (objectTile.getHeight() / 2));

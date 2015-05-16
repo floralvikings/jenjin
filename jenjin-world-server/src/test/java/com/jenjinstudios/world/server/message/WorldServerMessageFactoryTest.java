@@ -5,6 +5,7 @@ import com.jenjinstudios.core.io.MessageRegistry;
 import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.WorldObject;
 import com.jenjinstudios.world.math.Angle;
+import com.jenjinstudios.world.math.Geometry2D;
 import com.jenjinstudios.world.math.Vector2D;
 import com.jenjinstudios.world.state.MoveState;
 import com.jenjinstudios.world.util.WorldUtils;
@@ -51,8 +52,10 @@ public class WorldServerMessageFactoryTest
 	@Test
 	public void testGenerateNewlyVisibleObjectMessage() {
 		WorldObject object = mock(WorldObject.class);
+		Geometry2D geometry2D = new Geometry2D();
+
 		when(object.getName()).thenReturn("Foo");
-		when(object.getPosition()).thenReturn(Vector2D.ORIGIN);
+		when(object.getGeometry2D()).thenReturn(geometry2D);
 
 		Message message = WorldServerMessageFactory.generateNewlyVisibleMessage(object);
 		assertEquals(message.name, "ObjectVisibleMessage", "Message should be ObjectVisibleMessage");
@@ -65,9 +68,9 @@ public class WorldServerMessageFactoryTest
 	@Test
 	public void testGenerateNewlyVisibleActorMessage() {
 		Actor actor = mock(Actor.class);
+		Geometry2D geometry2D = new Geometry2D();
 		when(actor.getName()).thenReturn("Foo");
-		when(actor.getPosition()).thenReturn(Vector2D.ORIGIN);
-		when(actor.getOrientation()).thenReturn(new Angle());
+		when(actor.getGeometry2D()).thenReturn(geometry2D);
 		when(actor.getWorld()).thenReturn(WorldUtils.createDefaultWorld());
 
 		Message message = WorldServerMessageFactory.generateNewlyVisibleMessage(actor);

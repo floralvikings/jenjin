@@ -35,7 +35,7 @@ public class StateChangeTask extends WorldObjectTaskAdapter
 
 	@Override
 	public void onPostUpdate(World world, WorldObject worldObject) {
-		Angle postAngle = worldObject.getOrientation();
+		Angle postAngle = worldObject.getGeometry2D().getOrientation();
 
 		boolean stateChanged = (preUpdateAngle == null) ? (postAngle != null) : !preUpdateAngle.equals(postAngle);
 
@@ -46,13 +46,13 @@ public class StateChangeTask extends WorldObjectTaskAdapter
 		}
 
 		if (stateChanged) {
-			Vector2D vector2D = worldObject.getPosition();
+			Vector2D vector2D = worldObject.getGeometry2D().getPosition();
 			long timeOfChange = worldObject.getWorld().getLastUpdateCompleted();
 			synchronized (stateChanges) {
 				stateChanges.add(new MoveState(postAngle, vector2D, timeOfChange));
 			}
 		}
 
-		preUpdateAngle = worldObject.getOrientation();
+		preUpdateAngle = worldObject.getGeometry2D().getOrientation();
 	}
 }

@@ -15,9 +15,10 @@ public class ActorUtils
 
 	private static boolean canStepForward(WorldObject o, double stepLength) {
 		boolean canStep;
-		if (o.getOrientation().isNotIdle())
+		if (o.getGeometry2D().getOrientation().isNotIdle())
 		{
-			Vector2D newVector = o.getPosition().getVectorInDirection(stepLength, o.getOrientation().getStepAngle());
+			Vector2D newVector = o.getGeometry2D().getPosition().getVectorInDirection(stepLength, o.getGeometry2D()
+				  .getOrientation().getStepAngle());
 			Location newLocation = ZoneUtils.getLocationForCoordinates(o.getWorld(), o.getZoneID(), newVector);
 			canStep = newLocation != null && !"false".equals(newLocation.getProperties().get("walkable"));
 		} else
@@ -29,7 +30,7 @@ public class ActorUtils
 
 	private static double calcStepLength(Actor actor) {
 		double lastUpdateCompleted = (double) actor.getWorld().getLastUpdateCompleted();
-		double moveSpeed = actor.getMoveSpeed();
+		double moveSpeed = actor.getGeometry2D().getSpeed();
 		double timePastInSeconds = (System.currentTimeMillis() - lastUpdateCompleted) / 1000;
 		return timePastInSeconds * moveSpeed;
 	}
@@ -38,9 +39,11 @@ public class ActorUtils
 		double stepLength = calcStepLength(actor);
 		if (canStepForward(actor, stepLength))
 		{
-			Vector2D newVector = actor.getPosition().getVectorInDirection(stepLength, actor.getOrientation()
-				  .getStepAngle());
-			actor.setPosition(newVector);
+			Vector2D newVector = actor.
+				  getGeometry2D().
+				  getPosition().
+				  getVectorInDirection(stepLength, actor.getGeometry2D().getOrientation().getStepAngle());
+			actor.getGeometry2D().setPosition(newVector);
 		} else
 		{
 			forceIdle(actor);
@@ -48,12 +51,12 @@ public class ActorUtils
 	}
 
 	public static void forceIdle(Actor actor) {
-		Angle idle = actor.getOrientation().asIdle();
-		Vector2D vector2D = actor.getPosition();
+		Angle idle = actor.getGeometry2D().getOrientation().asIdle();
+		Vector2D vector2D = actor.getGeometry2D().getPosition();
 		long lastUpdateCompleted = actor.getWorld().getLastUpdateCompleted();
 		MoveState forcedMoveState = new MoveState(idle, vector2D, lastUpdateCompleted);
 		actor.setForcedState(forcedMoveState);
-		actor.setPosition(vector2D);
-		actor.setOrientation(idle);
+		actor.getGeometry2D().setPosition(vector2D);
+		actor.getGeometry2D().setOrientation(idle);
 	}
 }

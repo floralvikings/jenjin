@@ -3,9 +3,9 @@ package com.jenjinstudios.world.client.message;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.World;
-import com.jenjinstudios.world.client.WorldClient;
 import com.jenjinstudios.world.client.WorldClientMessageContext;
 import com.jenjinstudios.world.math.Angle;
+import com.jenjinstudios.world.math.Geometry2D;
 import com.jenjinstudios.world.math.Vector2D;
 import org.testng.annotations.Test;
 
@@ -27,20 +27,21 @@ public class ExecutableForceStateMessageTest
 		when(forceStateMessage.getArgument("yCoordinate")).thenReturn(PI);
 		when(forceStateMessage.getArgument("timeOfForce")).thenReturn(12345L);
 
-		WorldClient worldClient = mock(WorldClient.class);
 		Actor clientPlayer = mock(Actor.class);
 		World world = new World();
 		WorldClientMessageContext context = mock(WorldClientMessageContext.class);
+		Geometry2D geometry2D = mock(Geometry2D.class);
+		when(geometry2D.getOrientation()).thenReturn(new Angle());
 		when(context.getWorld()).thenReturn(world);
 		when(clientPlayer.getWorld()).thenReturn(world);
 		when(context.getPlayer()).thenReturn(clientPlayer);
-		when(clientPlayer.getOrientation()).thenReturn(new Angle());
+		when(clientPlayer.getGeometry2D()).thenReturn(geometry2D);
 
 		ExecutableForceStateMessage message = new ExecutableForceStateMessage(forceStateMessage, context);
 		message.execute();
 		world.update();
 
-		verify(clientPlayer).setOrientation(eq(new Angle(PI, IDLE)));
-		verify(clientPlayer).setPosition(eq(new Vector2D(PI, PI)));
+		verify(geometry2D).setOrientation(eq(new Angle(PI, IDLE)));
+		verify(geometry2D).setPosition(eq(new Vector2D(PI, PI)));
 	}
 }

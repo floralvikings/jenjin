@@ -37,10 +37,11 @@ public class ExecutableForceStateMessage extends WorldClientExecutableMessage<Wo
 		World world = getContext().getWorld();
 		world.scheduleUpdateTask(() -> {
 			Actor player = getContext().getPlayer();
-			double dist = ((world.getLastUpdateCompleted() - timeOfForce) / MS_TO_S) * player.getMoveSpeed();
+			double dist = ((world.getLastUpdateCompleted() - timeOfForce) / MS_TO_S) * player.getGeometry2D()
+				  .getSpeed();
 			Vector2D corrected = vector2D.getVectorInDirection(dist, angle.getStepAngle());
-			player.setPosition(corrected);
-			player.setOrientation(angle);
+			player.getGeometry2D().setPosition(corrected);
+			player.getGeometry2D().setOrientation(angle);
 
 			ActorUtils.forceIdle(player);
 		});

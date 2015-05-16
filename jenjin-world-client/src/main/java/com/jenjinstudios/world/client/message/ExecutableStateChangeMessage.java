@@ -44,10 +44,10 @@ public class ExecutableStateChangeMessage extends WorldClientExecutableMessage<W
 			if (obj instanceof Actor)
 			{
 				Actor actor = (Actor) obj;
-				double dist = actor.getMoveSpeed() * ((System.currentTimeMillis() - time) / MS_TO_S);
+				double dist = actor.getGeometry2D().getSpeed() * ((System.currentTimeMillis() - time) / MS_TO_S);
 				Vector2D position = oldVector.getVectorInDirection(dist, angle.getStepAngle());
-				actor.setOrientation(angle);
-				actor.setPosition(position);
+				actor.getGeometry2D().setOrientation(angle);
+				actor.getGeometry2D().setPosition(position);
 			}
 		});
 		return null;

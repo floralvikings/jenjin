@@ -4,10 +4,10 @@ import com.jenjinstudios.core.concurrency.ExecutableMessage;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.World;
-import com.jenjinstudios.world.client.WorldClient;
 import com.jenjinstudios.world.client.WorldClientMessageContext;
 import com.jenjinstudios.world.collections.WorldObjectList;
 import com.jenjinstudios.world.math.Angle;
+import com.jenjinstudios.world.math.Geometry2D;
 import org.testng.annotations.Test;
 
 import static com.jenjinstudios.world.math.Angle.IDLE;
@@ -29,12 +29,13 @@ public class ExecutableStateChangeMessageTest
 		when(stateChangeMessage.getArgument("xCoordinate")).thenReturn(PI);
 		when(stateChangeMessage.getArgument("yCoordinate")).thenReturn(PI);
 
-		WorldClient worldClient = mock(WorldClient.class);
+		Geometry2D geometry2D = spy(new Geometry2D());
 		World world = spy(new World());
 		WorldObjectList worldObjectMap = mock(WorldObjectList.class);
 		WorldClientMessageContext context = mock(WorldClientMessageContext.class);
 		when(world.getWorldObjects()).thenReturn(worldObjectMap);
 		Actor clientActor = mock(Actor.class);
+		when(clientActor.getGeometry2D()).thenReturn(geometry2D);
 		when(context.getWorld()).thenReturn(world);
 		when(worldObjectMap.get(100)).thenReturn(clientActor);
 
@@ -43,6 +44,6 @@ public class ExecutableStateChangeMessageTest
 		world.update();
 
 		verify(worldObjectMap).get(100);
-		verify(clientActor).setOrientation(eq(new Angle(PI)));
+		verify(geometry2D).setOrientation(eq(new Angle(PI)));
 	}
 }

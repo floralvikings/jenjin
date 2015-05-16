@@ -21,12 +21,12 @@ public class SightCalculator
 		World world = object.getWorld();
 		if (world == null) throw new IllegalStateException("WorldObject " + object + " does not have a set World.");
 		Collection<WorldObject> worldObjects = new LinkedList<>();
-		Vector2D vector2D = object.getPosition();
+		Vector2D vector2D = object.getGeometry2D().getPosition();
 		double rad = object.getVisionRadius();
 		double r2 = rad * rad;
 		for (WorldObject visible : world.getWorldObjects())
 		{
-			Vector2D otherVector = visible.getPosition();
+			Vector2D otherVector = visible.getGeometry2D().getPosition();
 			if (visible != object && isRoughlyVisible(object, visible, rad) &&
 				  otherVector.getSquaredDistanceToVector(vector2D) <= r2)
 			{
@@ -37,8 +37,8 @@ public class SightCalculator
 	}
 
 	public static boolean isRoughlyVisible(WorldObject object, WorldObject visible, double rad) {
-		Vector2D vector2D = object.getPosition();
-		Vector2D otherVector = visible.getPosition();
+		Vector2D vector2D = object.getGeometry2D().getPosition();
+		Vector2D otherVector = visible.getGeometry2D().getPosition();
 		double minX = vector2D.getXValue() - rad;
 		double maxX = vector2D.getXValue() + rad;
 		double minY = vector2D.getYValue() - rad;
@@ -57,7 +57,8 @@ public class SightCalculator
 			Zone zone = world.getZones().get(zoneId);
 			if (zone != null)
 			{
-				Location location = ZoneUtils.getLocationForCoordinates(zone, worldObject.getPosition());
+				Location location = ZoneUtils.getLocationForCoordinates(zone, worldObject.getGeometry2D().getPosition
+					  ());
 				int radius = (int) (worldObject.getVisionRadius() / Location.SIZE);
 				FieldOfVisionCalculator fov = new FieldOfVisionCalculator(zone, location, radius);
 				locations.addAll(fov.scan());
