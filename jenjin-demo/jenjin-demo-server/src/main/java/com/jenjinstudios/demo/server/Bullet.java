@@ -1,11 +1,11 @@
 package com.jenjinstudios.demo.server;
 
 import com.jenjinstudios.demo.server.event.Collision;
-import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.World;
-import com.jenjinstudios.world.WorldObject;
 import com.jenjinstudios.world.math.Angle;
 import com.jenjinstudios.world.math.Vector2D;
+import com.jenjinstudios.world.object.Actor;
+import com.jenjinstudios.world.object.WorldObject;
 import com.jenjinstudios.world.state.MoveState;
 import com.jenjinstudios.world.task.WorldObjectTaskAdapter;
 

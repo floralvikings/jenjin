@@ -1,4 +1,4 @@
-package com.jenjinstudios.world;
+package com.jenjinstudios.world.object;
 
 import com.jenjinstudios.world.state.MoveState;
 import com.jenjinstudios.world.task.MovementTask;

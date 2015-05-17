@@ -1,8 +1,8 @@
 package com.jenjinstudios.world.client;
 
 import com.jenjinstudios.client.net.ClientMessageContext;
-import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.World;
+import com.jenjinstudios.world.object.Actor;
 
 /**
  * Represents the context in which world client messages sould execute.

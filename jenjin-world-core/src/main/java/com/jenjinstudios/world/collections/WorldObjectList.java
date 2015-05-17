@@ -1,7 +1,7 @@
 package com.jenjinstudios.world.collections;
 
 import com.jenjinstudios.world.World;
-import com.jenjinstudios.world.WorldObject;
+import com.jenjinstudios.world.object.WorldObject;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;

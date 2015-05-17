@@ -1,7 +1,7 @@
 package com.jenjinstudios.world.server;
 
 import com.jenjinstudios.server.authentication.User;
-import com.jenjinstudios.world.Actor;
+import com.jenjinstudios.world.object.Actor;
 
 /**
  * Represents a Player in the game world.

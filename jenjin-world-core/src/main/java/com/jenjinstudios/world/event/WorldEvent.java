@@ -1,6 +1,6 @@
 package com.jenjinstudios.world.event;
 
-import com.jenjinstudios.world.WorldObject;
+import com.jenjinstudios.world.object.WorldObject;
 
 /**
  * Represents an event which has occurred in the world.

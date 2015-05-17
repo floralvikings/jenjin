@@ -3,8 +3,8 @@ package com.jenjinstudios.world.server;
 import com.jenjinstudios.core.Connection;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.server.concurrency.UpdateTask;
-import com.jenjinstudios.world.Actor;
-import com.jenjinstudios.world.WorldObject;
+import com.jenjinstudios.world.object.Actor;
+import com.jenjinstudios.world.object.WorldObject;
 import com.jenjinstudios.world.server.message.WorldServerMessageFactory;
 import com.jenjinstudios.world.state.MoveState;
 

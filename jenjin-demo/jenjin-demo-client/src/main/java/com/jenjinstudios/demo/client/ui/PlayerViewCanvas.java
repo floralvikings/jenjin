@@ -1,10 +1,10 @@
 package com.jenjinstudios.demo.client.ui;
 
-import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.Location;
-import com.jenjinstudios.world.WorldObject;
 import com.jenjinstudios.world.client.WorldClient;
 import com.jenjinstudios.world.math.SightCalculator;
+import com.jenjinstudios.world.object.Actor;
+import com.jenjinstudios.world.object.WorldObject;
 import com.jenjinstudios.world.util.LocationUtils;
 import javafx.application.Platform;
 import javafx.scene.canvas.Canvas;

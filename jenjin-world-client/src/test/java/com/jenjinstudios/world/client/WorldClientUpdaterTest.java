@@ -1,8 +1,8 @@
 package com.jenjinstudios.world.client;
 
-import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.collections.WorldObjectList;
+import com.jenjinstudios.world.object.Actor;
 import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.*;

@@ -1,7 +1,7 @@
 package com.jenjinstudios.world.task;
 
 import com.jenjinstudios.world.World;
-import com.jenjinstudios.world.WorldObject;
+import com.jenjinstudios.world.object.WorldObject;
 
 /**
  * Tracks the beginning and end of an object's update cycle.

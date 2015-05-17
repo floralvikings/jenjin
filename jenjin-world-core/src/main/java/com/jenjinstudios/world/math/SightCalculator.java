@@ -2,8 +2,8 @@ package com.jenjinstudios.world.math;
 
 import com.jenjinstudios.world.Location;
 import com.jenjinstudios.world.World;
-import com.jenjinstudios.world.WorldObject;
 import com.jenjinstudios.world.Zone;
+import com.jenjinstudios.world.object.WorldObject;
 import com.jenjinstudios.world.util.ZoneUtils;
 
 import java.util.Collection;

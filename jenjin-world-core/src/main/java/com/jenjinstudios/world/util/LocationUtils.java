@@ -2,9 +2,9 @@ package com.jenjinstudios.world.util;
 
 import com.jenjinstudios.world.Location;
 import com.jenjinstudios.world.World;
-import com.jenjinstudios.world.WorldObject;
 import com.jenjinstudios.world.Zone;
 import com.jenjinstudios.world.math.Vector2D;
+import com.jenjinstudios.world.object.WorldObject;
 
 /**
  * @author Caleb Brinkman

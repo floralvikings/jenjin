@@ -1,7 +1,10 @@
 package com.jenjinstudios.world.math;
 
+import com.jenjinstudios.world.object.WorldObject;
+
 /**
- * Represents the spatial properties of a {@link com.jenjinstudios.world.WorldObject}, including {@code orientation},
+ * Represents the spatial properties of a {@link WorldObject}, including
+ * {@code orientation},
  * {@code position}, {@code size} and {@code speed}.
  *
  * @author Caleb Brinkman

@@ -1,7 +1,7 @@
 package com.jenjinstudios.world.task;
 
 import com.jenjinstudios.world.World;
-import com.jenjinstudios.world.WorldObject;
+import com.jenjinstudios.world.object.WorldObject;
 
 /**
  * Represents a task to be executed during the pre-update, in-update, or post-update world loop cycle of a WorldObject.

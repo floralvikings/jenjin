@@ -1,7 +1,7 @@
 package com.jenjinstudios.world.task;
 
 import com.jenjinstudios.world.World;
-import com.jenjinstudios.world.WorldObject;
+import com.jenjinstudios.world.object.WorldObject;
 
 /**
  * Provides empty methods for a WorldObjectTask so that users can implement only needed methods.

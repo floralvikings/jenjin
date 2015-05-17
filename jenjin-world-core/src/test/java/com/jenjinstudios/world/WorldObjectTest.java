@@ -2,6 +2,7 @@ package com.jenjinstudios.world;
 
 import com.jenjinstudios.world.math.Angle;
 import com.jenjinstudios.world.math.Vector2D;
+import com.jenjinstudios.world.object.WorldObject;
 import com.jenjinstudios.world.util.LocationUtils;
 import com.jenjinstudios.world.util.WorldUtils;
 import com.jenjinstudios.world.util.ZoneUtils;

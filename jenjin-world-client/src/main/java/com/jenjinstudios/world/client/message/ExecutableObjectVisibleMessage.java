@@ -2,9 +2,9 @@ package com.jenjinstudios.world.client.message;
 
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.world.World;
-import com.jenjinstudios.world.WorldObject;
 import com.jenjinstudios.world.client.WorldClientMessageContext;
 import com.jenjinstudios.world.math.Vector2D;
+import com.jenjinstudios.world.object.WorldObject;
 
 /**
  * Process an ActorVisibleMessage.

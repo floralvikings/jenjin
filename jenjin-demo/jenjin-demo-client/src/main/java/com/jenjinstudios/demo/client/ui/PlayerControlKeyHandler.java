@@ -2,9 +2,9 @@ package com.jenjinstudios.demo.client.ui;
 
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageRegistry;
-import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.client.WorldClient;
 import com.jenjinstudios.world.math.Angle;
+import com.jenjinstudios.world.object.Actor;
 import javafx.event.EventHandler;
 import javafx.scene.input.KeyEvent;
 

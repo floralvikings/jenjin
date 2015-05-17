@@ -1,8 +1,8 @@
 package com.jenjinstudios.demo.server.event;
 
 import com.jenjinstudios.world.World;
-import com.jenjinstudios.world.WorldObject;
 import com.jenjinstudios.world.math.Vector2D;
+import com.jenjinstudios.world.object.WorldObject;
 import com.jenjinstudios.world.task.WorldObjectTaskAdapter;
 import javafx.geometry.Rectangle2D;
 

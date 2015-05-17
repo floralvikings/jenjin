@@ -1,8 +1,8 @@
 package com.jenjinstudios.world.task;
 
-import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.World;
-import com.jenjinstudios.world.WorldObject;
+import com.jenjinstudios.world.object.Actor;
+import com.jenjinstudios.world.object.WorldObject;
 import com.jenjinstudios.world.util.ActorUtils;
 
 /**

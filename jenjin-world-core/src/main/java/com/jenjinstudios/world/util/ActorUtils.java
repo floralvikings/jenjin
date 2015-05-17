@@ -1,10 +1,10 @@
 package com.jenjinstudios.world.util;
 
-import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.Location;
-import com.jenjinstudios.world.WorldObject;
 import com.jenjinstudios.world.math.Angle;
 import com.jenjinstudios.world.math.Vector2D;
+import com.jenjinstudios.world.object.Actor;
+import com.jenjinstudios.world.object.WorldObject;
 import com.jenjinstudios.world.state.MoveState;
 
 /**

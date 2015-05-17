@@ -1,9 +1,9 @@
 package com.jenjinstudios.world.client;
 
 import com.jenjinstudios.core.io.Message;
-import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.client.message.WorldClientMessageFactory;
+import com.jenjinstudios.world.object.Actor;
 import com.jenjinstudios.world.state.MoveState;
 
 import java.util.List;

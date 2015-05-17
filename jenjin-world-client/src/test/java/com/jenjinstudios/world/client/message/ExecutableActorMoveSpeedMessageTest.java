@@ -1,8 +1,8 @@
 package com.jenjinstudios.world.client.message;
 
 import com.jenjinstudios.core.io.Message;
-import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.client.WorldClient;
+import com.jenjinstudios.world.object.Actor;
 import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;

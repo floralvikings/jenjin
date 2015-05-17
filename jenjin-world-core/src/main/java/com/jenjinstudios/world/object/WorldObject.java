@@ -1,5 +1,7 @@
-package com.jenjinstudios.world;
+package com.jenjinstudios.world.object;
 
+import com.jenjinstudios.world.Location;
+import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.math.Geometry2D;
 import com.jenjinstudios.world.state.MoveState;
 import com.jenjinstudios.world.task.StateChangeTask;

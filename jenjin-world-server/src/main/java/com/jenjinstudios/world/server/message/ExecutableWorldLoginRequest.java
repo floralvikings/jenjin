@@ -3,8 +3,8 @@ package com.jenjinstudios.world.server.message;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.server.authentication.AuthenticationException;
 import com.jenjinstudios.server.authentication.Authenticator;
-import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.World;
+import com.jenjinstudios.world.object.Actor;
 import com.jenjinstudios.world.server.Player;
 import com.jenjinstudios.world.server.WorldServerMessageContext;
 

@@ -3,12 +3,12 @@ package com.jenjinstudios.world.client;
 import com.jenjinstudios.client.net.Client;
 import com.jenjinstudios.core.io.MessageRegistry;
 import com.jenjinstudios.core.io.MessageStreamPair;
-import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.client.message.WorldClientMessageFactory;
 import com.jenjinstudios.world.io.WorldDocumentException;
 import com.jenjinstudios.world.io.WorldDocumentReader;
 import com.jenjinstudios.world.io.WorldDocumentWriter;
+import com.jenjinstudios.world.object.Actor;
 
 import java.io.*;
 import java.util.Arrays;

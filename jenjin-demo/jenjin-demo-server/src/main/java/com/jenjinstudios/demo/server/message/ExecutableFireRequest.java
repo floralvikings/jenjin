@@ -2,8 +2,8 @@ package com.jenjinstudios.demo.server.message;
 
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.demo.server.Bullet;
-import com.jenjinstudios.world.Actor;
 import com.jenjinstudios.world.World;
+import com.jenjinstudios.world.object.Actor;
 import com.jenjinstudios.world.server.Player;
 import com.jenjinstudios.world.server.WorldServerMessageContext;
 import com.jenjinstudios.world.server.message.WorldExecutableMessage;
