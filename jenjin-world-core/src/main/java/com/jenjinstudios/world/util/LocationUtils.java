@@ -11,16 +11,13 @@ import com.jenjinstudios.world.object.WorldObject;
  */
 public class LocationUtils
 {
-	public static Location getObjectLocation(WorldObject worldObject) {
+	public static Location getObjectLocation(WorldObject worldObject, World
+		  world) {
 		Location loc = null;
-		World world = worldObject.getWorld();
-		if (world != null)
-		{
-			Zone zone = world.getZones().get(worldObject.getZoneID());
-			if (zone != null)
-			{
-				loc = ZoneUtils.getLocationForCoordinates(zone, worldObject.getGeometry2D().getPosition());
-			}
+		Zone zone = world.getZones().get(worldObject.getZoneID());
+		if (zone != null) {
+			loc = ZoneUtils.getLocationForCoordinates(zone,
+				  worldObject.getGeometry2D().getPosition());
 		}
 		return loc;
 	}

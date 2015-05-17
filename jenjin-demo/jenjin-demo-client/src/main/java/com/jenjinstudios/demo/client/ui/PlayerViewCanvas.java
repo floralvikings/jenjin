@@ -98,7 +98,8 @@ public class PlayerViewCanvas extends Canvas
 	}
 
 	private void drawLocations() {
-		if (LocationUtils.getObjectLocation(clientPlayer) != null)
+		if (LocationUtils.
+			  getObjectLocation(clientPlayer, worldClient.getWorld()) != null)
 		{
 			SightCalculator.getVisibleLocations(worldClient.getWorld(),
 				  clientPlayer).
@@ -109,7 +110,8 @@ public class PlayerViewCanvas extends Canvas
 	}
 
 	private void drawLocation(Location location) {
-		Location pLoc = LocationUtils.getObjectLocation(clientPlayer);
+		Location pLoc = LocationUtils.
+			  getObjectLocation(clientPlayer, worldClient.getWorld());
 		int xDiff = location.getX() - pLoc.getX();
 		int yDiff = location.getY() - pLoc.getY();//+ 1;
 		double xBuff = clientPlayer.getGeometry2D().getPosition().getXValue() % Location.SIZE;

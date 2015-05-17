@@ -80,7 +80,7 @@ public class WorldObjectTest
 	@Test
 	public void testGetLocation() throws Exception {
 		worldObject.getGeometry2D().setPosition(vector2D);
-		Location loc = LocationUtils.getObjectLocation(worldObject);
+		Location loc = LocationUtils.getObjectLocation(worldObject, world);
 		Assert.assertTrue(loc == ZoneUtils.getLocationForCoordinates(world, 0, vector2D));
 	}
 
