@@ -15,9 +15,9 @@ import java.util.LinkedList;
 public class SightCalculator
 {
 
-	public static Collection<WorldObject> getVisibleObjects(WorldObject object) {
-		World world = object.getWorld();
-		if (world == null) throw new IllegalStateException("WorldObject " + object + " does not have a set World.");
+	public static Collection<WorldObject> getVisibleObjects(World world,
+															WorldObject object)
+	{
 		Collection<WorldObject> worldObjects = new LinkedList<>();
 		Vector2D vector2D = object.getGeometry2D().getPosition();
 		double rad = object.getVision().getRadius();

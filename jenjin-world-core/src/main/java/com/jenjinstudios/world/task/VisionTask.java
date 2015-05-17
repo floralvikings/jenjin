@@ -64,7 +64,8 @@ public class VisionTask extends WorldObjectTaskAdapter
 
 	@Override
 	public void onPreUpdate(World world, WorldObject worldObject) {
-		Collection<WorldObject> objects = SightCalculator.getVisibleObjects(worldObject);
+		Collection<WorldObject> objects =
+			  SightCalculator.getVisibleObjects(world, worldObject);
 		setVisibleObjects(objects);
 	}
 }
