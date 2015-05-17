@@ -25,7 +25,7 @@ public class MovementTask extends WorldObjectTaskAdapter
 		if (worldObject instanceof Actor) {
 			Actor actor = (Actor) worldObject;
 			if (actor.getGeometry2D().getOrientation().isNotIdle()) {
-				ActorUtils.stepForward(actor);
+				ActorUtils.stepForward(world, actor);
 			}
 		}
 	}

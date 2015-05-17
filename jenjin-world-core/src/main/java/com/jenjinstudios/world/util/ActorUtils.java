@@ -1,6 +1,7 @@
 package com.jenjinstudios.world.util;
 
 import com.jenjinstudios.world.Location;
+import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.math.Angle;
 import com.jenjinstudios.world.math.Vector2D;
 import com.jenjinstudios.world.object.Actor;
@@ -13,13 +14,17 @@ import com.jenjinstudios.world.state.MoveState;
 public class ActorUtils
 {
 
-	private static boolean canStepForward(WorldObject o, double stepLength) {
+	private static boolean canStepForward(World world, WorldObject o, double
+		  stepLength) {
 		boolean canStep;
 		if (o.getGeometry2D().getOrientation().isNotIdle())
 		{
 			Vector2D newVector = o.getGeometry2D().getPosition().getVectorInDirection(stepLength, o.getGeometry2D()
 				  .getOrientation().getStepAngle());
-			Location newLocation = ZoneUtils.getLocationForCoordinates(o.getWorld(), o.getZoneID(), newVector);
+			Location newLocation =
+				  ZoneUtils.getLocationForCoordinates(world,
+						o.getZoneID(),
+						newVector);
 			canStep = newLocation != null && !"false".equals(newLocation.getProperties().get("walkable"));
 		} else
 		{
@@ -35,9 +40,9 @@ public class ActorUtils
 		return timePastInSeconds * moveSpeed;
 	}
 
-	public static void stepForward(Actor actor) {
+	public static void stepForward(World world, Actor actor) {
 		double stepLength = calcStepLength(actor);
-		if (canStepForward(actor, stepLength))
+		if (canStepForward(world, actor, stepLength))
 		{
 			Vector2D newVector = actor.
 				  getGeometry2D().
