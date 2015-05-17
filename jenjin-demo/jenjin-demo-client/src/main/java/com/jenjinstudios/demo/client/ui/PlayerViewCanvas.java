@@ -79,7 +79,8 @@ public class PlayerViewCanvas extends Canvas
 
 		String[] hudStrings = {
 			  "UPS: " + worldClient.getAverageUPS(),
-			  "Visible Object Count: " + clientPlayer.getVisibleObjects().size(),
+			  "Visible Object Count: " + clientPlayer.getVision()
+					.getVisibleObjects().size(),
 			  clientPlayer.getName(),
 			  clientPlayer.getGeometry2D().getPosition().toString()
 		};
@@ -136,7 +137,7 @@ public class PlayerViewCanvas extends Canvas
 	}
 
 	private void drawObjects() {
-		clientPlayer.getVisibleObjects().forEach(this::drawObject);
+		clientPlayer.getVision().getVisibleObjects().forEach(this::drawObject);
 		drawObject(clientPlayer);
 	}
 

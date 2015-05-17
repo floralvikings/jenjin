@@ -9,7 +9,10 @@ import com.jenjinstudios.world.task.TimingTask;
 import com.jenjinstudios.world.task.VisionTask;
 import com.jenjinstudios.world.task.WorldObjectTask;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Represents an object that exists in the game world.
@@ -22,8 +25,8 @@ public class WorldObject
 	private final StateChangeTask stateChangeTask = new StateChangeTask();
 	private final VisionTask visionTask = new VisionTask();
 	private Geometry2D geometry2D = new Geometry2D();
+	private final Vision vision = new Vision();
 	private final String name;
-	private double visionRadius;
 	private long lastUpdateStartTime;
 	private long lastUpdateEndTime;
 	private int zoneID;
@@ -32,18 +35,11 @@ public class WorldObject
 	private World world;
 
 	public WorldObject(String name) {
-		visionRadius = DEFAULT_VISION_RADIUS;
 		this.name = name;
 		addTask(new TimingTask());
 		addTask(stateChangeTask);
-		addTask(visionTask);
+		addTask(vision.getVisionTask());
 	}
-
-	public Set<WorldObject> getVisibleObjects() { return visionTask.getVisibleObjects(); }
-
-	public Set<WorldObject> getNewlyVisibleObjects() { return visionTask.getNewlyVisibleObjects(); }
-
-	public Set<WorldObject> getNewlyInvisibleObjects() { return visionTask.getNewlyInvisibleObjects(); }
 
 	public List<MoveState> getStateChanges() { return stateChangeTask.getStateChanges(); }
 
@@ -81,13 +77,11 @@ public class WorldObject
 
 	public long getLastUpdateEndTime() { return lastUpdateEndTime; }
 
-	public double getVisionRadius() { return visionRadius; }
-
-	public void setVisionRadius(double visionRadius) { this.visionRadius = visionRadius; }
-
 	public Geometry2D getGeometry2D() { return geometry2D; }
 
 	public void setGeometry2D(Geometry2D geometry) { this.geometry2D = geometry; }
+
+	public Vision getVision() { return vision; }
 
 	@Override
 	public String toString() { return name + ": " + id; }

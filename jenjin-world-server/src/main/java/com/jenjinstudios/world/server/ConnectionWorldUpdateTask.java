@@ -40,7 +40,8 @@ public class ConnectionWorldUpdateTask<T extends WorldServerMessageContext<? ext
 	private void queueNewlyVisibleMessages(Connection<? extends T> connection) {
 		WorldServerMessageContext<? extends Player> context = connection.getMessageContext();
 		if (context.getUser() != null) {
-			for (WorldObject object : context.getUser().getNewlyVisibleObjects())
+			for (WorldObject object : context.getUser().getVision()
+				  .getNewlyVisibleObjects())
 			{
 				Message newlyVisibleMessage = WorldServerMessageFactory.generateNewlyVisibleMessage(object);
 				connection.enqueueMessage(newlyVisibleMessage);
@@ -51,7 +52,8 @@ public class ConnectionWorldUpdateTask<T extends WorldServerMessageContext<? ext
 	private void queueNewlyInvisibleMessages(Connection<? extends T> connection) {
 		WorldServerMessageContext<? extends Player> context = connection.getMessageContext();
 		if (context.getUser() != null) {
-			for (WorldObject object : context.getUser().getNewlyInvisibleObjects()) {
+			for (WorldObject object : context.getUser().getVision()
+				  .getNewlyInvisibleObjects()) {
 				Message invisibleMessage = WorldServerMessageFactory.generateNewlyInvisibleMessage(object);
 				connection.enqueueMessage(invisibleMessage);
 			}
@@ -61,7 +63,7 @@ public class ConnectionWorldUpdateTask<T extends WorldServerMessageContext<? ext
 	private void queueStateChangeMessages(Connection<? extends T> connection) {
 		WorldServerMessageContext<? extends Player> context = connection.getMessageContext();
 		if (context.getUser() != null) {
-			Set<WorldObject> visibles = context.getUser().getVisibleObjects();
+			Set<WorldObject> visibles = context.getUser().getVision().getVisibleObjects();
 			visibles.stream().filter(object -> object instanceof Actor).forEach(object ->
 				  queueActorStateChangeMessages(connection, (Actor) object));
 		}

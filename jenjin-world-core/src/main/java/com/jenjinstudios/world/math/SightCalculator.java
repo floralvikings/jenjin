@@ -22,7 +22,7 @@ public class SightCalculator
 		if (world == null) throw new IllegalStateException("WorldObject " + object + " does not have a set World.");
 		Collection<WorldObject> worldObjects = new LinkedList<>();
 		Vector2D vector2D = object.getGeometry2D().getPosition();
-		double rad = object.getVisionRadius();
+		double rad = object.getVision().getRadius();
 		double r2 = rad * rad;
 		for (WorldObject visible : world.getWorldObjects())
 		{
@@ -59,7 +59,8 @@ public class SightCalculator
 			{
 				Location location = ZoneUtils.getLocationForCoordinates(zone, worldObject.getGeometry2D().getPosition
 					  ());
-				int radius = (int) (worldObject.getVisionRadius() / Location.SIZE);
+				int radius = (int) (worldObject.getVision().getRadius() /
+					  Location.SIZE);
 				FieldOfVisionCalculator fov = new FieldOfVisionCalculator(zone, location, radius);
 				locations.addAll(fov.scan());
 			}

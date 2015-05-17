@@ -21,7 +21,8 @@ public class SightedObjectTest
 
 		world.update();
 		world.update();
-		Assert.assertTrue(sightedObject.getVisibleObjects().contains(visibleObject));
+		Assert.assertTrue(sightedObject.getVision().getVisibleObjects()
+			  .contains(visibleObject));
 	}
 
 	@Test
@@ -47,7 +48,8 @@ public class SightedObjectTest
 		world.getWorldObjects().add(sightedObject);
 
 		world.update();
-		Assert.assertTrue(sightedObject.getNewlyVisibleObjects().contains(visibleObject));
+		Assert.assertTrue(sightedObject.getVision().getNewlyVisibleObjects()
+			  .contains(visibleObject));
 	}
 
 	@Test
@@ -62,6 +64,7 @@ public class SightedObjectTest
 		world.getWorldObjects().remove(visibleObject.getId());
 		world.update();
 
-		Assert.assertTrue(sightedObject.getNewlyInvisibleObjects().contains(visibleObject));
+		Assert.assertTrue(sightedObject.getVision().getNewlyInvisibleObjects()
+			  .contains(visibleObject));
 	}
 }
