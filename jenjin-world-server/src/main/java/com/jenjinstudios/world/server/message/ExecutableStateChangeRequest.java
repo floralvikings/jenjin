@@ -63,7 +63,7 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage<WorldSe
 
 		getContext().getWorld().scheduleUpdateTask(() -> {
 			Actor player = getContext().getUser();
-			if ((player != null) && (player.getWorld() != null))
+			if ((player != null) && (getContext().getWorld() != null))
 			{
 				double distance = MathUtil.round(player.getGeometry2D().getSpeed() * (timePast / MS_TO_S), 2);
 				position = uncorrectedPosition.getVectorInDirection(distance, angle.getStepAngle());
