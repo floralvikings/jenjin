@@ -1,12 +1,10 @@
 package com.jenjinstudios.world.object;
 
-import com.jenjinstudios.world.Location;
 import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.math.Geometry2D;
 import com.jenjinstudios.world.state.MoveState;
 import com.jenjinstudios.world.task.StateChangeTask;
 import com.jenjinstudios.world.task.TimingTask;
-import com.jenjinstudios.world.task.VisionTask;
 import com.jenjinstudios.world.task.WorldObjectTask;
 
 import java.util.Collection;
@@ -20,10 +18,8 @@ import java.util.List;
  */
 public class WorldObject
 {
-	private static final double DEFAULT_VISION_RADIUS = Location.SIZE * 10;
 	private final Collection<WorldObjectTask> tasks = new LinkedList<>();
 	private final StateChangeTask stateChangeTask = new StateChangeTask();
-	private final VisionTask visionTask = new VisionTask();
 	private Geometry2D geometry2D = new Geometry2D();
 	private final Vision vision = new Vision();
 	private final String name;
