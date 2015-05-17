@@ -67,7 +67,8 @@ public class Bullet extends Actor
 		}
 
 		@Override
-		public void onCollision(WorldObject target, WorldObject collided) {
+		public void onCollision(World world, WorldObject target, WorldObject
+			  collided) {
 			if (!(collided instanceof Bullet) && (collided instanceof Actor) && !Objects.equals(collided,
 				  actorFiring))
 			{
@@ -82,7 +83,7 @@ public class Bullet extends Actor
 				long forceTime = collided.getTiming().getLastUpdateEndTime();
 				actor.getGeometry2D().setPosition(Vector2D.ORIGIN);
 				actor.setForcedState(new MoveState(idle, Vector2D.ORIGIN, forceTime));
-				getWorld().getWorldObjects().remove(Bullet.this);
+				world.getWorldObjects().remove(Bullet.this);
 			}
 		}
 	}

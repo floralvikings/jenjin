@@ -20,7 +20,7 @@ public abstract class Collision extends WorldObjectTaskAdapter
 		world.getWorldObjects().
 			  stream().
 			  filter(collider -> checkForCollision(worldObject, collider)).
-			  forEach(collider -> onCollision(worldObject, collider));
+			  forEach(collider -> onCollision(world, worldObject, collider));
 	}
 
 	private boolean checkForCollision(WorldObject target, WorldObject collider) {
@@ -61,8 +61,12 @@ public abstract class Collision extends WorldObjectTaskAdapter
 	/**
 	 * This method should be overridden in subclasses to specify what even should occur when a collision is triggered.
 	 *
+	 * @param world The world in which the collision takes place
 	 * @param target The object with which the collider collided.
 	 * @param collided The object with wich the WorldObject watched by this Collision has collided.
+	 *
 	 */
-	public abstract void onCollision(WorldObject target, WorldObject collided);
+	public abstract void onCollision(World world,
+									 WorldObject target,
+									 WorldObject collided);
 }
