@@ -17,7 +17,8 @@ public class World
 	/** The list of in-world Zones. */
 	private final TreeMap<Integer, Zone> zones = new TreeMap<>();
 	/** The GameObjects contained in the world. */
-	private final transient WorldObjectList worldObjects = new WorldObjectList(this);
+	private final transient WorldObjectList worldObjects = new
+		  WorldObjectList();
 	private final transient Collection<Runnable> scheduledUpdateTasks = new ConcurrentLinkedQueue<>();
 	/** Construct a new World. */
 	public World() { }

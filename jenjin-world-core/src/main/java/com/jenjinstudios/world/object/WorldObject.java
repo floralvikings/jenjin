@@ -50,12 +50,6 @@ public class WorldObject
 
 	public void setId(int id) { this.id = id; }
 
-	public void setWorld(World world) {
-		if (this.world != null)
-			throw new IllegalArgumentException("The world has already been set for this object.");
-		this.world = world;
-	}
-
 	public int getZoneID() { return zoneID; }
 
 	public void setZoneID(int zoneID) { this.zoneID = zoneID; }

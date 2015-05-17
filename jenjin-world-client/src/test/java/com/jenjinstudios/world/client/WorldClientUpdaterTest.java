@@ -17,7 +17,7 @@ public class WorldClientUpdaterTest
 		WorldClient worldClient = mock(WorldClient.class);
 		Actor clientPlayer = mock(Actor.class);
 		World world = mock(World.class);
-		WorldObjectList worldObjectMap = new WorldObjectList(world);
+		WorldObjectList worldObjectMap = new WorldObjectList();
 		when(world.getWorldObjects()).thenReturn(worldObjectMap);
 
 		when(worldClient.getWorld()).thenReturn(world);

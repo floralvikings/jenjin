@@ -1,6 +1,5 @@
 package com.jenjinstudios.world.collections;
 
-import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.object.WorldObject;
 
 import java.util.*;
@@ -15,11 +14,6 @@ public class WorldObjectList implements List<WorldObject>
 	private final Map<Integer, WorldObject> objects = new ConcurrentHashMap<>();
 	private final Map<Integer, WorldObject> toAdd = new ConcurrentHashMap<>();
 	private final Map<Integer, WorldObject> toRemove = new ConcurrentHashMap<>();
-	private final World world;
-
-	public WorldObjectList(World world) {
-		this.world = world;
-	}
 
 	public void refresh() {
 		toRemove.keySet().forEach(objects::remove);
@@ -28,7 +22,6 @@ public class WorldObjectList implements List<WorldObject>
 			  filter(entry -> !objects.containsKey(entry.getKey())).
 			  forEach(entry -> {
 				  objects.put(entry.getKey(), entry.getValue());
-				  entry.getValue().setWorld(world);
 			  });
 		toAdd.clear();
 	}
