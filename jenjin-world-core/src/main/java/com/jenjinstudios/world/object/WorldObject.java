@@ -50,8 +50,6 @@ public class WorldObject
 
 	public void setId(int id) { this.id = id; }
 
-	public World getWorld() { return world; }
-
 	public void setWorld(World world) {
 		if (this.world != null)
 			throw new IllegalArgumentException("The world has already been set for this object.");
