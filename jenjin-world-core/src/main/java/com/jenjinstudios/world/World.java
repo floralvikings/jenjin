@@ -19,11 +19,6 @@ public class World
 	/** The GameObjects contained in the world. */
 	private final transient WorldObjectList worldObjects = new WorldObjectList(this);
 	private final transient Collection<Runnable> scheduledUpdateTasks = new ConcurrentLinkedQueue<>();
-	/** The time at which the most recent update completed. */
-	private transient long lastUpdateCompleted;
-	/** The start time of the most recent update. */
-	private transient long lastUpdateStarted;
-
 	/** Construct a new World. */
 	public World() { }
 
@@ -36,13 +31,11 @@ public class World
 		{
 			this.zones.put(z.getId(), z);
 		}
-		lastUpdateCompleted = lastUpdateStarted = System.currentTimeMillis();
 	}
 
 	public WorldObjectList getWorldObjects() { return worldObjects; }
 
 	public void update() {
-		lastUpdateStarted = System.currentTimeMillis();
 		synchronized (worldObjects)
 		{
 			worldObjects.refresh();
@@ -52,7 +45,6 @@ public class World
 			scheduledUpdateTasks.forEach(Runnable::run);
 			scheduledUpdateTasks.clear();
 		}
-		lastUpdateCompleted = System.currentTimeMillis();
 	}
 
 	public Map<Integer, Zone> getZones() { return zones; }
@@ -69,5 +61,4 @@ public class World
 		}
 	}
 
-	public long getLastUpdateStarted() { return lastUpdateStarted; }
 }
