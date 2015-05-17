@@ -14,8 +14,6 @@ import java.util.LinkedList;
  */
 public class SightCalculator
 {
-	public static final String VISION_RADIUS_PROPERTY = "visionRadius";
-	public static final double DEFAULT_VISION_RADIUS = 100d;
 
 	public static Collection<WorldObject> getVisibleObjects(WorldObject object) {
 		World world = object.getWorld();
