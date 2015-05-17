@@ -95,10 +95,4 @@ public class WorldObjectTest
 		Assert.assertEquals(id, worldObject1.getId());
 	}
 
-	/**
-	 * Test the world methods.
-	 * @throws Exception If there is an exception.
-	 */
-	@Test
-	public void testSetWorld() throws Exception { Assert.assertTrue(world == worldObject.getWorld()); }
 }
