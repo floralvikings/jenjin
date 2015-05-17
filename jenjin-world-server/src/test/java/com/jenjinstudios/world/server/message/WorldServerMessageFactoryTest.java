@@ -9,7 +9,6 @@ import com.jenjinstudios.world.object.Actor;
 import com.jenjinstudios.world.object.Timing;
 import com.jenjinstudios.world.object.WorldObject;
 import com.jenjinstudios.world.state.MoveState;
-import com.jenjinstudios.world.util.WorldUtils;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -72,7 +71,6 @@ public class WorldServerMessageFactoryTest
 		Geometry2D geometry2D = new Geometry2D();
 		when(actor.getName()).thenReturn("Foo");
 		when(actor.getGeometry2D()).thenReturn(geometry2D);
-		when(actor.getWorld()).thenReturn(WorldUtils.createDefaultWorld());
 		when(actor.getTiming()).thenReturn(new Timing());
 
 		Message message = WorldServerMessageFactory.generateNewlyVisibleMessage(actor);

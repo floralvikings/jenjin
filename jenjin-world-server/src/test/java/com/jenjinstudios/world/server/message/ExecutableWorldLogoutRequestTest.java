@@ -50,7 +50,6 @@ public class ExecutableWorldLogoutRequestTest extends PowerMockTestCase
 		when(context.getAuthenticator()).thenReturn(authenticator);
 		when(context.getWorld()).thenReturn(world);
 		when(context.getUser()).thenReturn(player);
-		when(player.getWorld()).thenReturn(world);
 		when(player.getId()).thenReturn(0);
 		when(player.getGeometry2D()).thenReturn(geometry2D);
 

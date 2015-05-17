@@ -34,7 +34,6 @@ public class ExecutableForceStateMessageTest
 		Geometry2D geometry2D = mock(Geometry2D.class);
 		when(geometry2D.getOrientation()).thenReturn(new Angle());
 		when(context.getWorld()).thenReturn(world);
-		when(clientPlayer.getWorld()).thenReturn(world);
 		when(context.getPlayer()).thenReturn(clientPlayer);
 		when(clientPlayer.getGeometry2D()).thenReturn(geometry2D);
 		when(clientPlayer.getTiming()).thenReturn(new Timing());
