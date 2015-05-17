@@ -100,7 +100,8 @@ public class PlayerViewCanvas extends Canvas
 	private void drawLocations() {
 		if (LocationUtils.getObjectLocation(clientPlayer) != null)
 		{
-			SightCalculator.getVisibleLocations(clientPlayer).
+			SightCalculator.getVisibleLocations(worldClient.getWorld(),
+				  clientPlayer).
 				  stream().
 				  filter(location -> location != null).
 				  forEach(this::drawLocation);

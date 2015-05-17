@@ -36,7 +36,8 @@ public class SightedObjectTest
 		world.update();
 		world.update();
 
-		Assert.assertEquals(SightCalculator.getVisibleLocations(sightedObject).size(), 210);
+		Assert.assertEquals(SightCalculator.
+			  getVisibleLocations(world, sightedObject).size(), 210);
 	}
 
 	@Test

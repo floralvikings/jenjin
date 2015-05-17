@@ -46,9 +46,10 @@ public class SightCalculator
 		return otherX >= minX && otherX <= maxX && otherY >= minY && otherY <= maxY;
 	}
 
-	public static Collection<Location> getVisibleLocations(WorldObject worldObject) {
+	public static Collection<Location> getVisibleLocations(World world,
+														   WorldObject
+																 worldObject) {
 		LinkedList<Location> locations = new LinkedList<>();
-		World world = worldObject.getWorld();
 		if (world != null)
 		{
 			int zoneId = worldObject.getZoneID();
