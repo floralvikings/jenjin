@@ -1,6 +1,5 @@
 package com.jenjinstudios.world.object;
 
-import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.math.Geometry2D;
 import com.jenjinstudios.world.state.MoveState;
 import com.jenjinstudios.world.task.StateChangeTask;
@@ -27,7 +26,6 @@ public class WorldObject
 	private int zoneID;
 	private int resourceID;
 	private int id = Integer.MIN_VALUE;
-	private World world;
 
 	public WorldObject(String name) {
 		this.name = name;
