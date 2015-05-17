@@ -20,11 +20,10 @@ public class WorldObject
 {
 	private final Collection<WorldObjectTask> tasks = new LinkedList<>();
 	private final StateChangeTask stateChangeTask = new StateChangeTask();
-	private Geometry2D geometry2D = new Geometry2D();
 	private final Vision vision = new Vision();
+	private final Timing timing = new Timing();
 	private final String name;
-	private long lastUpdateStartTime;
-	private long lastUpdateEndTime;
+	private Geometry2D geometry2D = new Geometry2D();
 	private int zoneID;
 	private int resourceID;
 	private int id = Integer.MIN_VALUE;
@@ -65,19 +64,13 @@ public class WorldObject
 
 	public String getName() { return name; }
 
-	public void setLastUpdateStartTime(long lastUpdateStartTime) { this.lastUpdateStartTime = lastUpdateStartTime; }
-
-	public long getLastUpdateStartTime() { return lastUpdateStartTime; }
-
-	public void setLastUpdateEndTime(long lastUpdateEndTime) { this.lastUpdateEndTime = lastUpdateEndTime; }
-
-	public long getLastUpdateEndTime() { return lastUpdateEndTime; }
-
 	public Geometry2D getGeometry2D() { return geometry2D; }
 
 	public void setGeometry2D(Geometry2D geometry) { this.geometry2D = geometry; }
 
 	public Vision getVision() { return vision; }
+
+	public Timing getTiming() { return timing; }
 
 	@Override
 	public String toString() { return name + ": " + id; }

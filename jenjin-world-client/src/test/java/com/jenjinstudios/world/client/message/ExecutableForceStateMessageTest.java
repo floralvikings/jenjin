@@ -7,6 +7,7 @@ import com.jenjinstudios.world.math.Angle;
 import com.jenjinstudios.world.math.Geometry2D;
 import com.jenjinstudios.world.math.Vector2D;
 import com.jenjinstudios.world.object.Actor;
+import com.jenjinstudios.world.object.Timing;
 import org.testng.annotations.Test;
 
 import static com.jenjinstudios.world.math.Angle.IDLE;
@@ -36,6 +37,7 @@ public class ExecutableForceStateMessageTest
 		when(clientPlayer.getWorld()).thenReturn(world);
 		when(context.getPlayer()).thenReturn(clientPlayer);
 		when(clientPlayer.getGeometry2D()).thenReturn(geometry2D);
+		when(clientPlayer.getTiming()).thenReturn(new Timing());
 
 		ExecutableForceStateMessage message = new ExecutableForceStateMessage(forceStateMessage, context);
 		message.execute();

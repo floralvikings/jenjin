@@ -6,6 +6,7 @@ import com.jenjinstudios.world.math.Angle;
 import com.jenjinstudios.world.math.Geometry2D;
 import com.jenjinstudios.world.math.Vector2D;
 import com.jenjinstudios.world.object.Actor;
+import com.jenjinstudios.world.object.Timing;
 import com.jenjinstudios.world.object.WorldObject;
 import com.jenjinstudios.world.state.MoveState;
 import com.jenjinstudios.world.util.WorldUtils;
@@ -72,6 +73,7 @@ public class WorldServerMessageFactoryTest
 		when(actor.getName()).thenReturn("Foo");
 		when(actor.getGeometry2D()).thenReturn(geometry2D);
 		when(actor.getWorld()).thenReturn(WorldUtils.createDefaultWorld());
+		when(actor.getTiming()).thenReturn(new Timing());
 
 		Message message = WorldServerMessageFactory.generateNewlyVisibleMessage(actor);
 		assertEquals(message.name, "ActorVisibleMessage", "Message should be ActorVisibleMessage");

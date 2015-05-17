@@ -12,11 +12,13 @@ public class TimingTask extends WorldObjectTaskAdapter
 {
 	@Override
 	public void onPreUpdate(World world, WorldObject worldObject) {
-		worldObject.setLastUpdateStartTime(System.currentTimeMillis());
+		worldObject.getTiming().setLastUpdateStartTime(System
+			  .currentTimeMillis());
 	}
 
 	@Override
 	public void onPostUpdate(World world, WorldObject worldObject) {
-		worldObject.setLastUpdateEndTime(System.currentTimeMillis());
+		worldObject.getTiming().setLastUpdateEndTime(System.currentTimeMillis
+			  ());
 	}
 }

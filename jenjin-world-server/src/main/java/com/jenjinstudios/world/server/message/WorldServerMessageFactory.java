@@ -94,8 +94,8 @@ public class WorldServerMessageFactory
 			  .getRelativeAngle());
 		newlyVisibleMessage.setArgument("absoluteAngle", newlyVisible.getGeometry2D().getOrientation()
 			  .getAbsoluteAngle());
-		newlyVisibleMessage.setArgument("timeOfVisibility", newlyVisible
-			  .getLastUpdateStartTime());
+		newlyVisibleMessage.setArgument("timeOfVisibility",
+			  newlyVisible.getTiming().getLastUpdateStartTime());
 		newlyVisibleMessage.setArgument("moveSpeed", newlyVisible.getGeometry2D().getSpeed());
 		return newlyVisibleMessage;
 	}
