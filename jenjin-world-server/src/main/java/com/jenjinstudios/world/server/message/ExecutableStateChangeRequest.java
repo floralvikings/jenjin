@@ -45,7 +45,8 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage<WorldSe
 
 	private void forcePlayerToAngle(Actor player, Angle pAngle) {
 		Vector2D vector2D = player.getGeometry2D().getPosition();
-		MoveState forcedState = new MoveState(pAngle, vector2D, player.getWorld().getLastUpdateCompleted());
+		MoveState forcedState = new MoveState(pAngle, vector2D, player
+			  .getLastUpdateEndTime());
 		player.setForcedState(forcedState);
 	}
 

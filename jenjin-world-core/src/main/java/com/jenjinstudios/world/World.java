@@ -69,7 +69,5 @@ public class World
 		}
 	}
 
-	public long getLastUpdateCompleted() { return lastUpdateCompleted; }
-
 	public long getLastUpdateStarted() { return lastUpdateStarted; }
 }

@@ -47,7 +47,7 @@ public class StateChangeTask extends WorldObjectTaskAdapter
 
 		if (stateChanged) {
 			Vector2D vector2D = worldObject.getGeometry2D().getPosition();
-			long timeOfChange = worldObject.getWorld().getLastUpdateCompleted();
+			long timeOfChange = worldObject.getLastUpdateEndTime();
 			synchronized (stateChanges) {
 				stateChanges.add(new MoveState(postAngle, vector2D, timeOfChange));
 			}

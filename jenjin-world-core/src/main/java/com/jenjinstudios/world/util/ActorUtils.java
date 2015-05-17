@@ -29,7 +29,7 @@ public class ActorUtils
 	}
 
 	private static double calcStepLength(Actor actor) {
-		double lastUpdateCompleted = (double) actor.getWorld().getLastUpdateCompleted();
+		double lastUpdateCompleted = actor.getLastUpdateEndTime();
 		double moveSpeed = actor.getGeometry2D().getSpeed();
 		double timePastInSeconds = (System.currentTimeMillis() - lastUpdateCompleted) / 1000;
 		return timePastInSeconds * moveSpeed;
@@ -53,7 +53,7 @@ public class ActorUtils
 	public static void forceIdle(Actor actor) {
 		Angle idle = actor.getGeometry2D().getOrientation().asIdle();
 		Vector2D vector2D = actor.getGeometry2D().getPosition();
-		long lastUpdateCompleted = actor.getWorld().getLastUpdateCompleted();
+		long lastUpdateCompleted = actor.getLastUpdateEndTime();
 		MoveState forcedMoveState = new MoveState(idle, vector2D, lastUpdateCompleted);
 		actor.setForcedState(forcedMoveState);
 		actor.getGeometry2D().setPosition(vector2D);

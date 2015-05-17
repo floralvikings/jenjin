@@ -79,7 +79,7 @@ public class Bullet extends Actor
 				if (floatsEqual) {
 					idle = idle.reverseAbsoluteAngle();
 				}
-				long forceTime = collided.getWorld().getLastUpdateCompleted();
+				long forceTime = collided.getLastUpdateEndTime();
 				actor.getGeometry2D().setPosition(Vector2D.ORIGIN);
 				actor.setForcedState(new MoveState(idle, Vector2D.ORIGIN, forceTime));
 				getWorld().getWorldObjects().remove(Bullet.this);
