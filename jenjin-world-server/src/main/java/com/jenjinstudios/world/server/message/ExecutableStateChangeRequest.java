@@ -61,23 +61,26 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage<WorldSe
 		angle = new Angle(absoluteAngle, relativeAngle);
 		timePast = (System.currentTimeMillis() - timeOfChange);
 
-		getContext().getWorld().scheduleUpdateTask(() -> {
+		World world = getContext().getWorld();
+		world.scheduleUpdateTask(() -> {
 			Actor player = getContext().getUser();
-			if ((player != null) && (getContext().getWorld() != null))
-			{
-				double distance = MathUtil.round(player.getGeometry2D().getSpeed() * (timePast / MS_TO_S), 2);
-				position = uncorrectedPosition.getVectorInDirection(distance, angle.getStepAngle());
-				if (!locationWalkable(player))
-				{
-					LOGGER.log(Level.INFO, "Attempted move to unwalkable location: {0}", position);
-					Angle pAngle = player.getGeometry2D().getOrientation().asIdle();
+			if ((player != null) && (world != null)) {
+				double distance = MathUtil.round(
+					  player.getGeometry2D().getSpeed() * (timePast / MS_TO_S),
+					  2);
+				position = uncorrectedPosition.getVectorInDirection(
+					  distance,
+					  angle.getStepAngle());
+				if (!locationWalkable(world, player)) {
+					LOGGER.log(Level.INFO, "Attempted move to unwalkable " +
+						  "location: {0}", position);
+					Angle pAngle =
+						  player.getGeometry2D().getOrientation().asIdle();
 					forcePlayerToAngle(player, pAngle);
-				} else if (!isCorrectionSafe(player))
-				{
+				} else if (!isCorrectionSafe(player)) {
 					Angle pAngle = player.getGeometry2D().getOrientation();
 					forcePlayerToAngle(player, pAngle);
-				} else
-				{
+				} else {
 					player.getGeometry2D().setOrientation(angle);
 					player.getGeometry2D().setPosition(position);
 				}
@@ -86,8 +89,7 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage<WorldSe
 		return null;
 	}
 
-	private boolean locationWalkable(Actor player) {
-		World world = player.getWorld();
+	private boolean locationWalkable(World world, Actor player) {
 		int zoneID = player.getZoneID();
 		Location location = ZoneUtils.getLocationForCoordinates(world, zoneID, position);
 		boolean walkable = false;
