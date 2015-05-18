@@ -72,7 +72,7 @@ public class WorldObjectList implements List<WorldObject>
 		boolean contains = false;
 		if (o instanceof WorldObject)
 		{
-			int id = ((WorldObject) o).getId();
+			int id = ((WorldObject) o).getIdentification().getId();
 			contains = contains(id);
 		}
 		return contains;
@@ -154,7 +154,7 @@ public class WorldObjectList implements List<WorldObject>
 	public boolean add(WorldObject worldObject) {
 		if (worldObject == null) throw new NullPointerException("Cannot add null WorldObject");
 		int uniqueId = getUniqueId();
-		worldObject.setId(uniqueId);
+		worldObject.getIdentification().setId(uniqueId);
 		synchronized (toAdd)
 		{
 			toAdd.put(uniqueId, worldObject);
@@ -181,7 +181,7 @@ public class WorldObjectList implements List<WorldObject>
 		if (o == null) throw new NullPointerException("Cannot remove null WorldObject");
 		if (!(o instanceof WorldObject)) throw new IllegalArgumentException("o must be WorldObject");
 		WorldObject worldObject = (WorldObject) o;
-		int id = worldObject.getId();
+		int id = worldObject.getIdentification().getId();
 		boolean changed = objects.containsKey(id);
 		if (changed)
 		{

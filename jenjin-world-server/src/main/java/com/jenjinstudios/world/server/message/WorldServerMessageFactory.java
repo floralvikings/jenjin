@@ -32,7 +32,8 @@ public class WorldServerMessageFactory
 		List<Message> messages = new LinkedList<>();
 		for (MoveState m : changedActor.getStateChanges()) {
 			Message newState = MessageRegistry.getGlobalRegistry().createMessage("StateChangeMessage");
-			newState.setArgument("id", changedActor.getId());
+			newState.setArgument("id", changedActor.getIdentification().getId
+				  ());
 			newState.setArgument("relativeAngle", m.angle.getRelativeAngle());
 			newState.setArgument("absoluteAngle", m.angle.getAbsoluteAngle());
 			newState.setArgument("timeOfChange", m.timeOfChange);
@@ -62,7 +63,7 @@ public class WorldServerMessageFactory
 
 	public static Message generateNewlyInvisibleMessage(WorldObject object) {
 		Message newlyInvisibleMessage = MessageRegistry.getGlobalRegistry().createMessage("ObjectInvisibleMessage");
-		newlyInvisibleMessage.setArgument("id", object.getId());
+		newlyInvisibleMessage.setArgument("id", object.getIdentification().getId());
 		return newlyInvisibleMessage;
 	}
 
@@ -86,8 +87,10 @@ public class WorldServerMessageFactory
 		Message newlyVisibleMessage;
 		newlyVisibleMessage = MessageRegistry.getGlobalRegistry().createMessage("ActorVisibleMessage");
 		newlyVisibleMessage.setArgument("name", newlyVisible.getName());
-		newlyVisibleMessage.setArgument("id", newlyVisible.getId());
-		newlyVisibleMessage.setArgument("resourceID", newlyVisible.getResourceID());
+		newlyVisibleMessage.setArgument("id", newlyVisible.getIdentification()
+			  .getId());
+		newlyVisibleMessage.setArgument("resourceID", newlyVisible
+			  .getIdentification().getTypeId());
 		newlyVisibleMessage.setArgument("xCoordinate", newlyVisible.getGeometry2D().getPosition().getXValue());
 		newlyVisibleMessage.setArgument("yCoordinate", newlyVisible.getGeometry2D().getPosition().getYValue());
 		newlyVisibleMessage.setArgument("relativeAngle", newlyVisible.getGeometry2D().getOrientation()
@@ -104,8 +107,9 @@ public class WorldServerMessageFactory
 		Message newlyVisibleMessage;
 		newlyVisibleMessage = MessageRegistry.getGlobalRegistry().createMessage("ObjectVisibleMessage");
 		newlyVisibleMessage.setArgument("name", object.getName());
-		newlyVisibleMessage.setArgument("id", object.getId());
-		newlyVisibleMessage.setArgument("resourceID", object.getResourceID());
+		newlyVisibleMessage.setArgument("id", object.getIdentification().getId
+			  ());
+		newlyVisibleMessage.setArgument("resourceID", object.getIdentification().getTypeId());
 		newlyVisibleMessage.setArgument("xCoordinate", object.getGeometry2D().getPosition().getXValue());
 		newlyVisibleMessage.setArgument("yCoordinate", object.getGeometry2D().getPosition().getYValue());
 		return newlyVisibleMessage;

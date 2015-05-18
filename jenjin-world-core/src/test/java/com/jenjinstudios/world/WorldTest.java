@@ -22,7 +22,7 @@ public class WorldTest
 		world.getWorldObjects().add(obj2);
 		world.update();
 
-		Assert.assertEquals(obj2.getId(), 2);
+		Assert.assertEquals(obj2.getIdentification().getId(), 2);
 	}
 
 	@Test(expectedExceptions = NullPointerException.class)
@@ -37,7 +37,8 @@ public class WorldTest
 		World world = WorldUtils.createDefaultWorld();
 		world.getWorldObjects().add(worldObject);
 		world.update();
-		world.getWorldObjects().remove(worldObject.getId());
+		world.getWorldObjects().remove(worldObject.getIdentification().getId
+			  ());
 		world.update();
 		Assert.assertEquals(world.getWorldObjects().size(), 0);
 	}

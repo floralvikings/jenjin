@@ -62,7 +62,8 @@ public class SightedObjectTest
 		world.getWorldObjects().add(sightedObject);
 
 		world.update();
-		world.getWorldObjects().remove(visibleObject.getId());
+		world.getWorldObjects().remove(visibleObject.getIdentification().getId
+			  ());
 		world.update();
 
 		Assert.assertTrue(sightedObject.getVision().getNewlyInvisibleObjects()

@@ -1,0 +1,42 @@
+package com.jenjinstudios.world.object;
+
+/**
+ * Encapsulates data used to identify a WorldObject.
+ *
+ * @author Caleb Brinkman
+ */
+public class Identification
+{
+	private int typeId;
+	private int id = Integer.MIN_VALUE;
+
+	/**
+	 * Get the "type" represented in this Identification.  This can be used for
+	 * things like loading resources, appearance, etc...
+	 *
+	 * @return The type identifier for this Identification.
+	 */
+	public int getTypeId() { return typeId; }
+
+	/**
+	 * Set the "type" represented in this Identification.  This can be used for
+	 * things like loading resources, appearance, etc...
+	 *
+	 * @param typeId The new type identifier for this Identification.
+	 */
+	public void setTypeId(int typeId) { this.typeId = typeId; }
+
+	/**
+	 * Get the unique identifier of this Idenfitication.
+	 *
+	 * @return The unique identifier of this Identification.
+	 */
+	public int getId() { return id; }
+
+	/**
+	 * Set the unique identifier of this Identification.
+	 *
+	 * @param id The unique identifier of this Identification.
+	 */
+	public void setId(int id) { this.id = id; }
+}

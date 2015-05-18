@@ -6,6 +6,7 @@ import com.jenjinstudios.world.math.Angle;
 import com.jenjinstudios.world.math.Geometry2D;
 import com.jenjinstudios.world.math.Vector2D;
 import com.jenjinstudios.world.object.Actor;
+import com.jenjinstudios.world.object.Identification;
 import com.jenjinstudios.world.object.Timing;
 import com.jenjinstudios.world.object.WorldObject;
 import com.jenjinstudios.world.state.MoveState;
@@ -52,8 +53,11 @@ public class WorldServerMessageFactoryTest
 	@Test
 	public void testGenerateNewlyVisibleObjectMessage() {
 		WorldObject object = mock(WorldObject.class);
+		Identification identification = mock(Identification.class);
 		Geometry2D geometry2D = new Geometry2D();
 
+		when(identification.getId()).thenReturn(2468);
+		when(object.getIdentification()).thenReturn(identification);
 		when(object.getName()).thenReturn("Foo");
 		when(object.getGeometry2D()).thenReturn(geometry2D);
 
@@ -68,7 +72,10 @@ public class WorldServerMessageFactoryTest
 	@Test
 	public void testGenerateNewlyVisibleActorMessage() {
 		Actor actor = mock(Actor.class);
+		Identification identification = mock(Identification.class);
 		Geometry2D geometry2D = new Geometry2D();
+		when(identification.getId()).thenReturn(2468);
+		when(actor.getIdentification()).thenReturn(identification);
 		when(actor.getName()).thenReturn("Foo");
 		when(actor.getGeometry2D()).thenReturn(geometry2D);
 		when(actor.getTiming()).thenReturn(new Timing());
@@ -85,12 +92,16 @@ public class WorldServerMessageFactoryTest
 	@Test
 	public void testGenerateStateChangeMesage() {
 		Actor actor = mock(Actor.class);
+		Identification identification = mock(Identification.class);
+		when(identification.getId()).thenReturn(2468);
+		when(actor.getIdentification()).thenReturn(identification);
 		MoveState m = new MoveState(new Angle(), Vector2D.ORIGIN, 0);
 		when(actor.getStateChanges()).thenReturn(Collections.singletonList(m));
 		List<Message> messages = WorldServerMessageFactory.generateChangeStateMessages(actor);
 
 		Message newState = messages.get(0);
-		assertEquals(newState.getArgument("id"), actor.getId(), "Id should be actor id.");
+		assertEquals(newState.getArgument("id"), actor.getIdentification()
+			  .getId(), "Id should be actor id.");
 		assertEquals(newState.getArgument("relativeAngle"), m.angle.getRelativeAngle(), "Angles should be equal.");
 		assertEquals(newState.getArgument("absoluteAngle"), m.angle.getAbsoluteAngle(), "Angles should be equal.");
 		assertEquals(newState.getArgument("timeOfChange"), m.timeOfChange, "Times of change should be equal.");
@@ -117,7 +128,9 @@ public class WorldServerMessageFactoryTest
 	@Test
 	public void testGenerateNewlyInvisibleMessage() {
 		WorldObject o = mock(WorldObject.class);
-		when(o.getId()).thenReturn(2468);
+		Identification identification = mock(Identification.class);
+		when(identification.getId()).thenReturn(2468);
+		when(o.getIdentification()).thenReturn(identification);
 		Message message = WorldServerMessageFactory.generateNewlyInvisibleMessage(o);
 		assertEquals(message.name, "ObjectInvisibleMessage");
 		assertEquals(message.getArgument("id"), 2468);

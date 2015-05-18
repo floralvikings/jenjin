@@ -28,7 +28,7 @@ public class ConnectionWorldShutdownTask<T extends WorldServerMessageContext<? e
 		Player user = connection.getMessageContext().getUser();
 		if (user != null)
 		{
-			world.getWorldObjects().remove(user.getId());
+			world.getWorldObjects().remove(user.getIdentification().getId());
 		}
 	}
 }

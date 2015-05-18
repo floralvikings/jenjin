@@ -35,12 +35,13 @@ public class ExecutableObjectVisibleMessage extends WorldClientExecutableMessage
         Vector2D vector2D = new Vector2D(xCoordinate, yCoordinate);
 
 		WorldObject newlyVisible = new WorldObject(name);
-		newlyVisible.setId(id);
-        newlyVisible.setResourceID(resourceID);
+		newlyVisible.getIdentification().setId(id);
+		newlyVisible.getIdentification().setTypeId(resourceID);
 		newlyVisible.getGeometry2D().setPosition(vector2D);
 
 		World world = getContext().getWorld();
-		world.scheduleUpdateTask(() -> world.getWorldObjects().set(newlyVisible.getId(), newlyVisible));
+		world.scheduleUpdateTask(() -> world.getWorldObjects().set
+			  (newlyVisible.getIdentification().getId(), newlyVisible));
 		return null;
 	}
 }

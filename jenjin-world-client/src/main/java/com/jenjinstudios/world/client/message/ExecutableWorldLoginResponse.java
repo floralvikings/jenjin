@@ -33,8 +33,8 @@ public class ExecutableWorldLoginResponse extends WorldClientExecutableMessage<W
         double xCoordinate = (double) getMessage().getArgument("xCoordinate");
         double yCoordinate = (double) getMessage().getArgument("yCoordinate");
 		Actor player = new Actor(getContext().getUser().getUsername());
-        player.setId(id);
-        Vector2D vector2D = new Vector2D(xCoordinate, yCoordinate);
+		player.getIdentification().setId(id);
+		Vector2D vector2D = new Vector2D(xCoordinate, yCoordinate);
 		player.getGeometry2D().setPosition(vector2D);
 
 		getContext().getWorld().scheduleUpdateTask(() -> {
@@ -42,11 +42,14 @@ public class ExecutableWorldLoginResponse extends WorldClientExecutableMessage<W
 			getContext().getLoginTracker().setLoggedIn(success);
 			if (success)
 			{
-				LOGGER.log(Level.INFO, "Logged in successfully; Player ID: " + player.getId());
+				LOGGER.log(Level.INFO, "Logged in successfully; Player ID: " +
+					  player.getIdentification().getId());
 				getContext().getLoginTracker().setLoggedInTime((long) getMessage().getArgument("loginTime"));
 				getContext().setName(getContext().getUser().getUsername());
 				getContext().setPlayer(player);
-				getContext().getWorld().getWorldObjects().set(player.getId(), player);
+				getContext().getWorld().getWorldObjects().set(
+					  player.getIdentification().getId(),
+					  player);
 			}
 		});
 		return null;

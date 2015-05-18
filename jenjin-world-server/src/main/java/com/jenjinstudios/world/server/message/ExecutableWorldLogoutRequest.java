@@ -49,7 +49,7 @@ public class ExecutableWorldLogoutRequest extends WorldExecutableMessage<WorldSe
 				getContext().
 					  getWorld().
 					  getWorldObjects().
-					  remove(clientActor.getId());
+					  remove(clientActor.getIdentification().getId());
 			}
 		});
 		return response;

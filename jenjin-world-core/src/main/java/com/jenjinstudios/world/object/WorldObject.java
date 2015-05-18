@@ -19,13 +19,12 @@ public class WorldObject
 {
 	private final Collection<WorldObjectTask> tasks = new LinkedList<>();
 	private final StateChangeTask stateChangeTask = new StateChangeTask();
+	private final Identification identification = new Identification();
 	private final Vision vision = new Vision();
 	private final Timing timing = new Timing();
 	private final String name;
 	private Geometry2D geometry2D = new Geometry2D();
 	private int zoneID;
-	private int resourceID;
-	private int id = Integer.MIN_VALUE;
 
 	public WorldObject(String name) {
 		this.name = name;
@@ -39,14 +38,6 @@ public class WorldObject
 	public void addTask(WorldObjectTask task) { tasks.add(task); }
 
 	public Collection<WorldObjectTask> getTasks() { return Collections.unmodifiableCollection(tasks); }
-
-	public int getResourceID() { return resourceID; }
-
-	public void setResourceID(int resourceID) { this.resourceID = resourceID; }
-
-	public int getId() { return id; }
-
-	public void setId(int id) { this.id = id; }
 
 	public int getZoneID() { return zoneID; }
 
@@ -62,8 +53,10 @@ public class WorldObject
 
 	public Timing getTiming() { return timing; }
 
+	public Identification getIdentification() { return identification; }
+
 	@Override
-	public String toString() { return name + ": " + id; }
+	public String toString() { return name + ": " + identification.getId(); }
 
 	@Override
 	public boolean equals(Object o) {
@@ -72,14 +65,15 @@ public class WorldObject
 
 		WorldObject that = (WorldObject) o;
 
-		return id == that.id && name.equals(that.name);
+		return (identification.getId() == that.getIdentification().getId()) &&
+			  name.equals(that.getName());
 
 	}
 
 	@Override
 	public int hashCode() {
 		int result = name.hashCode();
-		result = 31 * result + id;
+		result = 31 * result + identification.getId();
 		return result;
 	}
 }

@@ -164,7 +164,7 @@ public class PlayerViewCanvas extends Canvas
 
 	private Image getObjectTile(WorldObject object) {
 		Image tile;
-		switch (object.getResourceID())
+		switch (object.getIdentification().getTypeId())
 		{
 			case 0:
 				tile = playerTile;

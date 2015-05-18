@@ -9,6 +9,7 @@ import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.collections.WorldObjectList;
 import com.jenjinstudios.world.math.Geometry2D;
 import com.jenjinstudios.world.object.Actor;
+import com.jenjinstudios.world.object.Identification;
 import com.jenjinstudios.world.server.Player;
 import com.jenjinstudios.world.server.WorldServerMessageContext;
 import org.mockito.Mock;
@@ -45,19 +46,22 @@ public class ExecutableWorldLogoutRequestTest extends PowerMockTestCase
 		WorldObjectList worldObjectMap = mock(WorldObjectList.class);
 		WorldServerMessageContext context = mock(WorldServerMessageContext.class);
 		Geometry2D geometry2D = new Geometry2D();
+		Identification identification = mock(Identification.class);
 
+		when(identification.getId()).thenReturn(2468);
+		when(player.getIdentification()).thenReturn(identification);
 		when(world.getWorldObjects()).thenReturn(worldObjectMap);
 		when(context.getAuthenticator()).thenReturn(authenticator);
 		when(context.getWorld()).thenReturn(world);
 		when(context.getUser()).thenReturn(player);
-		when(player.getId()).thenReturn(0);
+		when(player.getIdentification().getId()).thenReturn(0);
 		when(player.getGeometry2D()).thenReturn(geometry2D);
 
 		ExecutableWorldLogoutRequest exec = new ExecutableWorldLogoutRequest(logOutRequest, context);
 		exec.execute();
 		world.update();
 
-		verify(worldObjectMap).remove(player.getId());
+		verify(worldObjectMap).remove(player.getIdentification().getId());
 	}
 
 	/**
@@ -76,11 +80,14 @@ public class ExecutableWorldLogoutRequestTest extends PowerMockTestCase
 		Actor player = mock(Actor.class);
 		WorldServerMessageContext context = mock(WorldServerMessageContext.class);
 		Geometry2D geometry2D = new Geometry2D();
+		Identification identification = mock(Identification.class);
 
+		when(identification.getId()).thenReturn(2468);
+		when(player.getIdentification()).thenReturn(identification);
 		when(context.getAuthenticator()).thenReturn(authenticator);
 		when(context.getWorld()).thenReturn(world);
 		when(context.getUser()).thenReturn(null);
-		when(player.getId()).thenReturn(0);
+		when(player.getIdentification().getId()).thenReturn(0);
 		when(player.getGeometry2D()).thenReturn(geometry2D);
 
 		ExecutableWorldLogoutRequest exec = new ExecutableWorldLogoutRequest(logOutRequest, context);

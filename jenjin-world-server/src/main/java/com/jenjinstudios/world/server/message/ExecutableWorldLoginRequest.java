@@ -50,7 +50,8 @@ public class ExecutableWorldLoginRequest extends WorldExecutableMessage<WorldSer
 			{
 				handleLoginSuccess();
 				world.getWorldObjects().add(getContext().getUser());
-				loginResponse.setArgument("id", getContext().getUser().getId());
+				loginResponse.setArgument("id",
+					  getContext().getUser().getIdentification().getId());
 				getContext().enqueue(loginResponse);
 			}
 		});

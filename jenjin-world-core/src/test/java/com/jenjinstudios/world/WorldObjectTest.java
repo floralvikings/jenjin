@@ -91,8 +91,8 @@ public class WorldObjectTest
 	@Test
 	public void testSetId() throws Exception {
 		WorldObject worldObject1 = new WorldObject("Test Object");
-		worldObject1.setId(id);
-		Assert.assertEquals(id, worldObject1.getId());
+		worldObject1.getIdentification().setId(id);
+		Assert.assertEquals(id, worldObject1.getIdentification().getId());
 	}
 
 }

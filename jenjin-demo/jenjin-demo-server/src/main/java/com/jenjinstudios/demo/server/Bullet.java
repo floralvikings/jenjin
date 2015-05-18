@@ -35,7 +35,7 @@ public class Bullet extends Actor
 		double targetAngle = actorFiring.getGeometry2D().getOrientation().getAbsoluteAngle();
 		getGeometry2D().setOrientation(new Angle(targetAngle, FRONT));
 		getGeometry2D().setSpeed(Actor.DEFAULT_MOVE_SPEED * 3);
-		setResourceID(1);
+		getIdentification().setTypeId(1);
 		setZoneID(actorFiring.getZoneID());
 		startVector = getGeometry2D().getPosition();
 
