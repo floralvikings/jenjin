@@ -89,7 +89,7 @@ public class WorldServerMessageFactory
 		newlyVisibleMessage.setArgument("name", newlyVisible.getName());
 		newlyVisibleMessage.setArgument("id", newlyVisible.getIdentification()
 			  .getId());
-		newlyVisibleMessage.setArgument("resourceID", newlyVisible
+		newlyVisibleMessage.setArgument("typeId", newlyVisible
 			  .getIdentification().getTypeId());
 		newlyVisibleMessage.setArgument("xCoordinate", newlyVisible.getGeometry2D().getPosition().getXValue());
 		newlyVisibleMessage.setArgument("yCoordinate", newlyVisible.getGeometry2D().getPosition().getYValue());
@@ -109,7 +109,8 @@ public class WorldServerMessageFactory
 		newlyVisibleMessage.setArgument("name", object.getName());
 		newlyVisibleMessage.setArgument("id", object.getIdentification().getId
 			  ());
-		newlyVisibleMessage.setArgument("resourceID", object.getIdentification().getTypeId());
+		newlyVisibleMessage.setArgument("typeId", object.getIdentification()
+			  .getTypeId());
 		newlyVisibleMessage.setArgument("xCoordinate", object.getGeometry2D().getPosition().getXValue());
 		newlyVisibleMessage.setArgument("yCoordinate", object.getGeometry2D().getPosition().getYValue());
 		return newlyVisibleMessage;

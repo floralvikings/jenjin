@@ -30,9 +30,9 @@ public class ExecutableActorVisibleMessage extends WorldClientExecutableMessage<
 		Message message = getMessage();
         String name = (String) message.getArgument("name");
         int id = (int) message.getArgument("id");
-        int resourceID = (int) message.getArgument("resourceID");
-        double xCoordinate = (double) message.getArgument("xCoordinate");
-        double yCoordinate = (double) message.getArgument("yCoordinate");
+		int typeId = (int) message.getArgument("typeId");
+		double xCoordinate = (double) message.getArgument("xCoordinate");
+		double yCoordinate = (double) message.getArgument("yCoordinate");
         double relativeAngle = (double) message.getArgument("relativeAngle");
         double absoluteAngle = (double) message.getArgument("absoluteAngle");
         long timeOfVisibility = (long) message.getArgument("timeOfVisibility");
@@ -40,7 +40,7 @@ public class ExecutableActorVisibleMessage extends WorldClientExecutableMessage<
 
         newlyVisible = new Actor(name);
 		newlyVisible.getIdentification().setId(id);
-		newlyVisible.getIdentification().setTypeId(resourceID);
+		newlyVisible.getIdentification().setTypeId(typeId);
 		double dist = moveSpeed * ((double) (System.currentTimeMillis() - timeOfVisibility) / 1000d);
         Angle angle = new Angle(absoluteAngle, relativeAngle);
         Vector2D oldVector = new Vector2D(xCoordinate, yCoordinate);

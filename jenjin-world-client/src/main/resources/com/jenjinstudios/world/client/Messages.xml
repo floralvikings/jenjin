@@ -15,7 +15,7 @@
         <executable>com.jenjinstudios.world.client.message.ExecutableObjectVisibleMessage</executable>
         <argument type="String" name="name" encrypt="true" />
         <argument type="int" name="id" />
-        <argument type="int" name="resourceID" />
+        <argument type="int" name="typeId" />
         <argument type="double" name="xCoordinate" />
         <argument type="double" name="yCoordinate" />
     </message>
@@ -24,7 +24,7 @@
         <executable>com.jenjinstudios.world.client.message.ExecutableActorVisibleMessage</executable>
         <argument type="String" name="name" encrypt="true" />
         <argument type="int" name="id" />
-        <argument type="int" name="resourceID" />
+        <argument type="int" name="typeId" />
         <argument type="double" name="xCoordinate" />
         <argument type="double" name="yCoordinate" />
         <argument type="double" name="relativeAngle" />

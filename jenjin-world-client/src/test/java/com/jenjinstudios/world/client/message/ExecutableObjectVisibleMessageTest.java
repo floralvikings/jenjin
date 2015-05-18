@@ -20,7 +20,7 @@ public class ExecutableObjectVisibleMessageTest
 		Message actorVisibleMessage = mock(Message.class);
 		when(actorVisibleMessage.getArgument("name")).thenReturn("a1b2c3d4e5f6890");
 		when(actorVisibleMessage.getArgument("id")).thenReturn(100);
-		when(actorVisibleMessage.getArgument("resourceID")).thenReturn(100);
+		when(actorVisibleMessage.getArgument("typeId")).thenReturn(100);
 		when(actorVisibleMessage.getArgument("xCoordinate")).thenReturn(1.0);
 		when(actorVisibleMessage.getArgument("yCoordinate")).thenReturn(1.0);
 
