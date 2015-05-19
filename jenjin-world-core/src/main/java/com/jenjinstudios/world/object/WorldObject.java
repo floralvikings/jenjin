@@ -1,5 +1,6 @@
 package com.jenjinstudios.world.object;
 
+import com.jenjinstudios.world.event.WorldObjectObserver;
 import com.jenjinstudios.world.math.Geometry2D;
 import com.jenjinstudios.world.state.MoveState;
 import com.jenjinstudios.world.task.StateChangeTask;
@@ -17,17 +18,25 @@ import java.util.List;
  */
 public class WorldObject
 {
-	private final Collection<WorldObjectTask> tasks = new LinkedList<>();
-	private final StateChangeTask stateChangeTask = new StateChangeTask();
-	private final Identification identification = new Identification();
-	private final Vision vision = new Vision();
-	private final Timing timing = new Timing();
+	private final Collection<WorldObjectTask> tasks;
+	private final Collection<WorldObjectObserver> observers;
+	private final StateChangeTask stateChangeTask;
+	private final Identification identification;
+	private final Vision vision;
+	private final Timing timing;
 	private final String name;
-	private Geometry2D geometry2D = new Geometry2D();
+	private Geometry2D geometry2D;
 	private int zoneID;
 
 	public WorldObject(String name) {
 		this.name = name;
+		tasks = new LinkedList<>();
+		observers = new LinkedList<>();
+		stateChangeTask = new StateChangeTask();
+		identification = new Identification();
+		geometry2D = new Geometry2D();
+		vision = new Vision();
+		timing = new Timing();
 		addTask(new TimingTask());
 		addTask(stateChangeTask);
 		addTask(vision.getVisionTask());
@@ -38,6 +47,18 @@ public class WorldObject
 	public void addTask(WorldObjectTask task) { tasks.add(task); }
 
 	public Collection<WorldObjectTask> getTasks() { return Collections.unmodifiableCollection(tasks); }
+
+	public void addObserver(WorldObjectObserver observer) {
+		observers.add(observer);
+	}
+
+	public void removeObserver(WorldObjectObserver observer) {
+		observers.remove(observer);
+	}
+
+	public Collection<WorldObjectObserver> getObservers() {
+		return Collections.unmodifiableCollection(observers);
+	}
 
 	public int getZoneID() { return zoneID; }
 
