@@ -2,15 +2,12 @@ package com.jenjinstudios.world.object;
 
 import com.jenjinstudios.world.event.WorldObjectObserver;
 import com.jenjinstudios.world.math.Geometry2D;
-import com.jenjinstudios.world.state.MoveState;
-import com.jenjinstudios.world.task.StateChangeTask;
 import com.jenjinstudios.world.task.TimingTask;
 import com.jenjinstudios.world.task.WorldObjectTask;
 
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
-import java.util.List;
 
 /**
  * Represents an object that exists in the game world.
@@ -20,7 +17,6 @@ public class WorldObject
 {
 	private final Collection<WorldObjectTask> tasks;
 	private final Collection<WorldObjectObserver> observers;
-	private final StateChangeTask stateChangeTask;
 	private final Identification identification;
 	private final Vision vision;
 	private final Timing timing;
@@ -32,17 +28,14 @@ public class WorldObject
 		this.name = name;
 		tasks = new LinkedList<>();
 		observers = new LinkedList<>();
-		stateChangeTask = new StateChangeTask();
 		identification = new Identification();
 		geometry2D = new Geometry2D();
 		vision = new Vision();
 		timing = new Timing();
 		addTask(new TimingTask());
-		addTask(stateChangeTask);
-		addTask(vision.getVisionTask());
+		addObserver(vision.getNewlyVisibleObserver());
+		addObserver(vision.getNewlyInvisibleObserver());
 	}
-
-	public List<MoveState> getStateChanges() { return stateChangeTask.getStateChanges(); }
 
 	public void addTask(WorldObjectTask task) { tasks.add(task); }
 

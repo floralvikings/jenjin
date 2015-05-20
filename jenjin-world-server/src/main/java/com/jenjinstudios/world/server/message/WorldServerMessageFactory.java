@@ -6,9 +6,6 @@ import com.jenjinstudios.world.object.Actor;
 import com.jenjinstudios.world.object.WorldObject;
 import com.jenjinstudios.world.state.MoveState;
 
-import java.util.LinkedList;
-import java.util.List;
-
 /**
  * Used to generate Message objects that are relevant to the World and WorldClientHandler classes.
  *
@@ -26,23 +23,6 @@ public class WorldServerMessageFactory
 			newlyVisibleMessage = generateObjectVisibleMessage(object);
 		}
 		return newlyVisibleMessage;
-	}
-
-	public static List<Message> generateChangeStateMessages(Actor changedActor) {
-		List<Message> messages = new LinkedList<>();
-		for (MoveState m : changedActor.getStateChanges()) {
-			Message newState = MessageRegistry.getGlobalRegistry().createMessage("StateChangeMessage");
-			newState.setArgument("id", changedActor.getIdentification().getId
-				  ());
-			newState.setArgument("relativeAngle", m.angle.getRelativeAngle());
-			newState.setArgument("absoluteAngle", m.angle.getAbsoluteAngle());
-			newState.setArgument("timeOfChange", m.timeOfChange);
-			newState.setArgument("xCoordinate", m.position.getXValue());
-			newState.setArgument("yCoordinate", m.position.getYValue());
-			messages.add(newState);
-		}
-
-		return messages;
 	}
 
 	public static Message generateForcedStateMessage(MoveState forcedState) {

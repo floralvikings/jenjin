@@ -1,8 +1,12 @@
 package com.jenjinstudios.world.object;
 
 import com.jenjinstudios.world.Location;
-import com.jenjinstudios.world.task.VisionTask;
+import com.jenjinstudios.world.event.NewlyInvisibleHandler;
+import com.jenjinstudios.world.event.NewlyInvisibleObserver;
+import com.jenjinstudios.world.event.NewlyVisibleHandler;
+import com.jenjinstudios.world.event.NewlyVisibleObserver;
 
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -14,15 +18,42 @@ import java.util.Set;
 public class Vision
 {
 	private static final double DEFAULT_VISION_RADIUS = Location.SIZE * 10;
-	private final VisionTask visionTask = new VisionTask();
-	private double radius = DEFAULT_VISION_RADIUS;
+	private final NewlyInvisibleObserver newlyInvisibleObserver;
+	private final NewlyVisibleObserver newlyVisibleObserver;
+	private final Set<WorldObject> visibleObjects;
+	private double radius;
 
 	/**
-	 * Get the task used by this Vision to update visible objects.
-	 *
-	 * @return The task used by this Vision to update visible objects.
+	 * Construct a new Vision object.
 	 */
-	VisionTask getVisionTask() { return visionTask; }
+	public Vision() {
+		newlyInvisibleObserver = new NewlyInvisibleObserver();
+		newlyVisibleObserver = new NewlyVisibleObserver();
+		newlyInvisibleObserver.
+			  registerEventHandler(new NewlyInvisibleHandler());
+		newlyVisibleObserver.
+			  registerEventHandler(new NewlyVisibleHandler());
+		visibleObjects = new HashSet<>(10);
+		radius = DEFAULT_VISION_RADIUS;
+	}
+
+	/**
+	 * Get the observer used to watch for newly visible objects.
+	 *
+	 * @return The observer used to watch for newly visible objects.
+	 */
+	public NewlyVisibleObserver getNewlyVisibleObserver() {
+		return newlyVisibleObserver;
+	}
+
+	/**
+	 * Get the observer used to watch for newly invisible objects.
+	 *
+	 * @return The observer used to watch for newly invisible objects.
+	 */
+	public NewlyInvisibleObserver getNewlyInvisibleObserver() {
+		return newlyInvisibleObserver;
+	}
 
 	/**
 	 * Get the objects which are visible to this Vision.
@@ -30,28 +61,25 @@ public class Vision
 	 * @return A set of objects visible to this Vision.
 	 */
 	public Set<WorldObject> getVisibleObjects() {
-		return visionTask.getVisibleObjects();
+		return new HashSet<>(visibleObjects);
 	}
 
 	/**
-	 * Get the objects which have become visible to this Vision since the last
-	 * update.
+	 * Add an object to the collection of visible objects.
 	 *
-	 * @return The objects which have become visible to this Vision since the
-	 * last update
+	 * @param object The object to add.
 	 */
-	public Set<WorldObject> getNewlyVisibleObjects() {
-		return visionTask.getNewlyVisibleObjects();
+	public void addVisibleObject(WorldObject object) {
+		visibleObjects.add(object);
 	}
 
 	/**
-	 * Get s set of objects which have become invisible to this Vision since
-	 * last update.
+	 * Remove the specified object from the collection of visible objects.
 	 *
-	 * @return A set of objects which have become invisible to this Vision.
+	 * @param object The object to be removed.
 	 */
-	public Set<WorldObject> getNewlyInvisibleObjects() {
-		return visionTask.getNewlyInvisibleObjects();
+	public void removeVisibleObject(WorldObject object) {
+		visibleObjects.remove(object);
 	}
 
 	/**

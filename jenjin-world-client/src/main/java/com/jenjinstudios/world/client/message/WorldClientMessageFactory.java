@@ -19,8 +19,8 @@ public class WorldClientMessageFactory
      *
      * @return The generated message.
      */
-    public Message generateStateChangeRequest(MoveState moveState) {
-		Message stateChangeRequest = MessageRegistry.getGlobalRegistry().createMessage("StateChangeRequest");
+    public static Message generateStateChangeRequest(MoveState moveState) {
+        Message stateChangeRequest = MessageRegistry.getGlobalRegistry().createMessage("StateChangeRequest");
 		stateChangeRequest.setArgument("relativeAngle", moveState.angle.getRelativeAngle());
         stateChangeRequest.setArgument("absoluteAngle", moveState.angle.getAbsoluteAngle());
         stateChangeRequest.setArgument("timeOfChange", moveState.timeOfChange);

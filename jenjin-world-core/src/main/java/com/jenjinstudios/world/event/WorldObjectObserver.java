@@ -13,7 +13,7 @@ import java.util.LinkedList;
  */
 public abstract class WorldObjectObserver<E extends WorldEvent>
 {
-	private final Collection<WorldObjectEventHandler<E>> handlers
+	private final Collection<WorldEventHandler<E>> handlers
 		  = new LinkedList<>();
 
 	/**
@@ -22,7 +22,7 @@ public abstract class WorldObjectObserver<E extends WorldEvent>
 	 *
 	 * @param handler The event handler.
 	 */
-	public void registerEventHandler(WorldObjectEventHandler<E> handler) {
+	public void registerEventHandler(WorldEventHandler<E> handler) {
 		handlers.add(handler);
 	}
 
@@ -32,7 +32,7 @@ public abstract class WorldObjectObserver<E extends WorldEvent>
 	 *
 	 * @param handler The handler to be unregistered.
 	 */
-	public void unregisterEventHandler(WorldObjectEventHandler<E> handler) {
+	public void unregisterEventHandler(WorldEventHandler<E> handler) {
 		handlers.remove(handler);
 	}
 

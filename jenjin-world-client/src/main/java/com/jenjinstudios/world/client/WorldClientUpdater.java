@@ -1,12 +1,6 @@
 package com.jenjinstudios.world.client;
 
-import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.world.World;
-import com.jenjinstudios.world.client.message.WorldClientMessageFactory;
-import com.jenjinstudios.world.object.Actor;
-import com.jenjinstudios.world.state.MoveState;
-
-import java.util.List;
 
 /**
  * Responsible for updating the world.
@@ -30,19 +24,9 @@ public class WorldClientUpdater implements Runnable
 	@Override
 	public void run() {
 		World world = worldClient.getWorld();
-		Actor player = worldClient.getPlayer();
 		if (world != null)
 		{
 			world.update();
-		}
-		if (player != null)
-		{
-			List<MoveState> newStates = player.getStateChanges();
-			for (MoveState moveState : newStates) {
-				WorldClientMessageFactory messageFactory = worldClient.getMessageFactory();
-				Message stateChangeRequest = messageFactory.generateStateChangeRequest(moveState);
-				worldClient.enqueueMessage(stateChangeRequest);
-			}
 		}
 	}
 }

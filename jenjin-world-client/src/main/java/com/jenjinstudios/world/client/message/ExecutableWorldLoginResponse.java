@@ -2,6 +2,8 @@ package com.jenjinstudios.world.client.message;
 
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.world.client.WorldClientMessageContext;
+import com.jenjinstudios.world.client.event.PlayerStateHandler;
+import com.jenjinstudios.world.client.event.PlayerStateObserver;
 import com.jenjinstudios.world.math.Vector2D;
 import com.jenjinstudios.world.object.Actor;
 
@@ -36,6 +38,9 @@ public class ExecutableWorldLoginResponse extends WorldClientExecutableMessage<W
 		player.getIdentification().setId(id);
 		Vector2D vector2D = new Vector2D(xCoordinate, yCoordinate);
 		player.getGeometry2D().setPosition(vector2D);
+		PlayerStateObserver observer = new PlayerStateObserver(getContext());
+		observer.registerEventHandler(new PlayerStateHandler());
+		player.addObserver(observer);
 
 		getContext().getWorld().scheduleUpdateTask(() -> {
 			boolean success = (boolean) getMessage().getArgument("success");
@@ -49,7 +54,8 @@ public class ExecutableWorldLoginResponse extends WorldClientExecutableMessage<W
 				getContext().setPlayer(player);
 				getContext().getWorld().getWorldObjects().set(
 					  player.getIdentification().getId(),
-					  player);
+					  player
+				);
 			}
 		});
 		return null;

@@ -7,6 +7,11 @@ import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.object.Actor;
 import com.jenjinstudios.world.server.Player;
 import com.jenjinstudios.world.server.WorldServerMessageContext;
+import com.jenjinstudios.world.server.event.StateObserverTracker;
+import com.jenjinstudios.world.server.event.StateObserverTracker
+	  .NewlyInvisibleEventHandler;
+import com.jenjinstudios.world.server.event.StateObserverTracker
+	  .NewlyVisibleEventHandler;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -64,6 +69,16 @@ public class ExecutableWorldLoginRequest extends WorldExecutableMessage<WorldSer
 			String username = (String) getMessage().getArgument("username");
 			String password = (String) getMessage().getArgument("password");
 			Player player = authenticator.logInUser(username, password);
+			StateObserverTracker stateObserverTracker =
+				  new StateObserverTracker(getContext());
+			NewlyInvisibleEventHandler invisible =
+				  stateObserverTracker.getNewlyInvisibleEventHandler();
+			NewlyVisibleEventHandler visible =
+				  stateObserverTracker.getNewlyVisibleEventHandler();
+			player.getVision().getNewlyVisibleObserver().
+				  registerEventHandler(visible);
+			player.getVision().getNewlyInvisibleObserver().
+				  registerEventHandler(invisible);
 			getContext().setUser(player);
 		}
 	}

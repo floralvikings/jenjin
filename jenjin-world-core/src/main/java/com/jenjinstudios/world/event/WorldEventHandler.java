@@ -6,7 +6,7 @@ package com.jenjinstudios.world.event;
  *
  * @author Caleb Brinkman
  */
-public abstract class WorldObjectEventHandler<E extends WorldEvent>
+public abstract class WorldEventHandler<E extends WorldEvent>
 {
 	/**
 	 * Handle the given event.

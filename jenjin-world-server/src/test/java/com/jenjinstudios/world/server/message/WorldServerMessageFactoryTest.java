@@ -15,9 +15,6 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import java.util.Collections;
-import java.util.List;
-
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
@@ -84,29 +81,6 @@ public class WorldServerMessageFactoryTest
 		assertEquals(message.name, "ActorVisibleMessage", "Message should be ActorVisibleMessage");
 		assertEquals(message.getArgument("name"), "Foo", "Name should be Foo.");
 		assertEquals(message.getArgument("relativeAngle"), Angle.IDLE, "Relative angle should be idle.");
-	}
-
-	/**
-	 * Test generation of a StateChangeMessage.
-	 */
-	@Test
-	public void testGenerateStateChangeMesage() {
-		Actor actor = mock(Actor.class);
-		Identification identification = mock(Identification.class);
-		when(identification.getId()).thenReturn(2468);
-		when(actor.getIdentification()).thenReturn(identification);
-		MoveState m = new MoveState(new Angle(), Vector2D.ORIGIN, 0);
-		when(actor.getStateChanges()).thenReturn(Collections.singletonList(m));
-		List<Message> messages = WorldServerMessageFactory.generateChangeStateMessages(actor);
-
-		Message newState = messages.get(0);
-		assertEquals(newState.getArgument("id"), actor.getIdentification()
-			  .getId(), "Id should be actor id.");
-		assertEquals(newState.getArgument("relativeAngle"), m.angle.getRelativeAngle(), "Angles should be equal.");
-		assertEquals(newState.getArgument("absoluteAngle"), m.angle.getAbsoluteAngle(), "Angles should be equal.");
-		assertEquals(newState.getArgument("timeOfChange"), m.timeOfChange, "Times of change should be equal.");
-		assertEquals(newState.getArgument("xCoordinate"), m.position.getXValue(), "Coordinates should be equal.");
-		assertEquals(newState.getArgument("yCoordinate"), m.position.getYValue(), "Coordinates should be equal.");
 	}
 
 	/**
