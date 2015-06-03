@@ -49,18 +49,18 @@ public class FullPlayerLookup<T extends Player> extends FullUserLookup<T>
 			throw new DatabaseException("yCoord not present in user properties");
 		}
 
-		int zoneId;
+		String zoneId;
 		double xCoord;
 		double yCoord;
 		try {
-			zoneId = Integer.parseInt(zoneIdString);
+			zoneId = zoneIdString;
 			xCoord = Double.parseDouble(xCoordString);
 			yCoord = Double.parseDouble(yCoordString);
 		} catch (NumberFormatException ex) {
 			throw new DatabaseException(ex);
 		}
 
-		user.setZoneID(zoneId);
-		user.getGeometry2D().setPosition(new Vector2D(xCoord, yCoord));
+		user.getIdentification().setZoneId(zoneId);
+		user.getGeometry().setPosition(new Vector2D(xCoord, yCoord));
 	}
 }

@@ -2,7 +2,7 @@ package com.jenjinstudios.world.client;
 
 import com.jenjinstudios.client.net.ClientMessageContext;
 import com.jenjinstudios.world.World;
-import com.jenjinstudios.world.object.Actor;
+import com.jenjinstudios.world.object.WorldObject;
 
 /**
  * Represents the context in which world client messages sould execute.
@@ -12,7 +12,7 @@ import com.jenjinstudios.world.object.Actor;
 public class WorldClientMessageContext extends ClientMessageContext
 {
 	private final WorldFileTracker worldFileTracker = new WorldFileTracker();
-	private Actor player;
+	private WorldObject player;
 	private World world;
 
 	/**
@@ -20,14 +20,14 @@ public class WorldClientMessageContext extends ClientMessageContext
 	 *
 	 * @return The player.
 	 */
-	public Actor getPlayer() { return player; }
+	public WorldObject getPlayer() { return player; }
 
 	/**
 	 * Set the player managed by this context.
 	 *
 	 * @param player The player.
 	 */
-	public void setPlayer(Actor player) { this.player = player; }
+	public void setPlayer(WorldObject player) { this.player = player; }
 
 	/**
 	 * Get the world managed by this context.

@@ -3,6 +3,7 @@ package com.jenjinstudios.world.client.message;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.client.WorldClientMessageContext;
+import com.jenjinstudios.world.math.Vector;
 import com.jenjinstudios.world.math.Vector2D;
 import com.jenjinstudios.world.object.WorldObject;
 
@@ -28,20 +29,20 @@ public class ExecutableObjectVisibleMessage extends WorldClientExecutableMessage
 	public Message execute() {
 		Message message = getMessage();
         String name = (String) message.getArgument("name");
-        int id = (int) message.getArgument("id");
+		String id = (String) message.getArgument("id");
 		int typeId = (int) message.getArgument("typeId");
 		double xCoordinate = (double) message.getArgument("xCoordinate");
 		double yCoordinate = (double) message.getArgument("yCoordinate");
-        Vector2D vector2D = new Vector2D(xCoordinate, yCoordinate);
+		// TODO Switch to 3D Vector
+		Vector vector2D = new Vector2D(xCoordinate, yCoordinate);
 
 		WorldObject newlyVisible = new WorldObject(name);
 		newlyVisible.getIdentification().setId(id);
 		newlyVisible.getIdentification().setTypeId(typeId);
-		newlyVisible.getGeometry2D().setPosition(vector2D);
+		newlyVisible.getGeometry().setPosition(vector2D);
 
 		World world = getContext().getWorld();
-		world.scheduleUpdateTask(() -> world.getWorldObjects().set
-			  (newlyVisible.getIdentification().getId(), newlyVisible));
+		world.scheduleUpdateTask(() -> getContext().getPlayer().getParent().addChild(newlyVisible));
 		return null;
 	}
 }

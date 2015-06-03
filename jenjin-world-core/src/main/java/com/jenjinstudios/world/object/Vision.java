@@ -1,6 +1,6 @@
 package com.jenjinstudios.world.object;
 
-import com.jenjinstudios.world.Location;
+import com.jenjinstudios.world.Cell;
 import com.jenjinstudios.world.event.NewlyInvisibleHandler;
 import com.jenjinstudios.world.event.NewlyInvisibleObserver;
 import com.jenjinstudios.world.event.NewlyVisibleHandler;
@@ -17,7 +17,7 @@ import java.util.Set;
  */
 public class Vision
 {
-	private static final double DEFAULT_VISION_RADIUS = Location.SIZE * 10;
+	private static final double DEFAULT_VISION_RADIUS = Cell.CELL_SIZE * 10;
 	private final NewlyInvisibleObserver newlyInvisibleObserver;
 	private final NewlyVisibleObserver newlyVisibleObserver;
 	private final Set<WorldObject> visibleObjects;

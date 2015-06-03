@@ -24,9 +24,7 @@ public class VisibleStateChangeEvent implements WorldEvent
 	 * @param context The context through which the state change message should
 	 * be broadcast
 	 */
-	public VisibleStateChangeEvent(WorldObject changed,
-								   MoveState state,
-								   MessageContext context)
+	public VisibleStateChangeEvent(WorldObject changed, MoveState state, MessageContext context)
 	{
 		this.changed = changed;
 		this.state = state;

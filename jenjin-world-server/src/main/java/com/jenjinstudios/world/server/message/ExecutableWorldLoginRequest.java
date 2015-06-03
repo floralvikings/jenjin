@@ -4,14 +4,11 @@ import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.server.authentication.AuthenticationException;
 import com.jenjinstudios.server.authentication.Authenticator;
 import com.jenjinstudios.world.World;
-import com.jenjinstudios.world.object.Actor;
 import com.jenjinstudios.world.server.Player;
 import com.jenjinstudios.world.server.WorldServerMessageContext;
 import com.jenjinstudios.world.server.event.StateObserverTracker;
-import com.jenjinstudios.world.server.event.StateObserverTracker
-	  .NewlyInvisibleEventHandler;
-import com.jenjinstudios.world.server.event.StateObserverTracker
-	  .NewlyVisibleEventHandler;
+import com.jenjinstudios.world.server.event.StateObserverTracker.NewlyInvisibleEventHandler;
+import com.jenjinstudios.world.server.event.StateObserverTracker.NewlyVisibleEventHandler;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -55,8 +52,7 @@ public class ExecutableWorldLoginRequest extends WorldExecutableMessage<WorldSer
 			{
 				handleLoginSuccess();
 				world.getWorldObjects().add(getContext().getUser());
-				loginResponse.setArgument("id",
-					  getContext().getUser().getIdentification().getId());
+				loginResponse.setArgument("id", getContext().getUser().getIdentification().getId());
 				getContext().enqueue(loginResponse);
 			}
 		});
@@ -69,16 +65,11 @@ public class ExecutableWorldLoginRequest extends WorldExecutableMessage<WorldSer
 			String username = (String) getMessage().getArgument("username");
 			String password = (String) getMessage().getArgument("password");
 			Player player = authenticator.logInUser(username, password);
-			StateObserverTracker stateObserverTracker =
-				  new StateObserverTracker(getContext());
-			NewlyInvisibleEventHandler invisible =
-				  stateObserverTracker.getNewlyInvisibleEventHandler();
-			NewlyVisibleEventHandler visible =
-				  stateObserverTracker.getNewlyVisibleEventHandler();
-			player.getVision().getNewlyVisibleObserver().
-				  registerEventHandler(visible);
-			player.getVision().getNewlyInvisibleObserver().
-				  registerEventHandler(invisible);
+			StateObserverTracker stateObserverTracker = new StateObserverTracker(getContext());
+			NewlyInvisibleEventHandler invisible = stateObserverTracker.getNewlyInvisibleEventHandler();
+			NewlyVisibleEventHandler visible = stateObserverTracker.getNewlyVisibleEventHandler();
+			player.getVision().getNewlyVisibleObserver().registerEventHandler(visible);
+			player.getVision().getNewlyInvisibleObserver().registerEventHandler(invisible);
 			getContext().setUser(player);
 		}
 	}
@@ -94,19 +85,19 @@ public class ExecutableWorldLoginRequest extends WorldExecutableMessage<WorldSer
 		loginResponse.setArgument("loginTime", getContext().getLoggedInTime());
 		loginResponse.setArgument("xCoordinate", 0d);
 		loginResponse.setArgument("yCoordinate", 0d);
-		loginResponse.setArgument("zoneNumber", -1);
+		loginResponse.setArgument("zoneNumber", "");
 		return loginResponse;
 	}
 
 	private void handleLoginSuccess() { loginResponse = createSuccessResponse(getContext().getUser()); }
 
-	private Message createSuccessResponse(Actor player) {
+	private Message createSuccessResponse(Player player) {
 		Message loginResponse = WorldServerMessageFactory.generateWorldLoginResponse();
 		loginResponse.setArgument("success", true);
 		loginResponse.setArgument("loginTime", getContext().getLoggedInTime());
-		loginResponse.setArgument("xCoordinate", player.getGeometry2D().getPosition().getXValue());
-		loginResponse.setArgument("yCoordinate", player.getGeometry2D().getPosition().getYValue());
-		loginResponse.setArgument("zoneNumber", player.getZoneID());
+		loginResponse.setArgument("xCoordinate", player.getGeometry().getPosition().getXValue());
+		loginResponse.setArgument("yCoordinate", player.getGeometry().getPosition().getYValue());
+		loginResponse.setArgument("zoneNumber", player.getParent().getParent().getId());
 		return loginResponse;
 	}
 }

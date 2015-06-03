@@ -5,7 +5,7 @@ import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.client.WorldClientMessageContext;
 import com.jenjinstudios.world.math.Angle;
 import com.jenjinstudios.world.math.Vector2D;
-import com.jenjinstudios.world.object.Actor;
+import com.jenjinstudios.world.object.WorldObject;
 import com.jenjinstudios.world.util.ActorUtils;
 
 /**
@@ -36,14 +36,14 @@ public class ExecutableForceStateMessage extends WorldClientExecutableMessage<Wo
 
 		World world = getContext().getWorld();
 		world.scheduleUpdateTask(() -> {
-			Actor player = getContext().getPlayer();
+			WorldObject player = getContext().getPlayer();
 			double dist = ((player.getTiming().getLastUpdateEndTime() -
 				  timeOfForce) /
-				  MS_TO_S) * player.getGeometry2D()
+				  MS_TO_S) * player.getGeometry()
 				  .getSpeed();
 			Vector2D corrected = vector2D.getVectorInDirection(dist, angle.getStepAngle());
-			player.getGeometry2D().setPosition(corrected);
-			player.getGeometry2D().setOrientation(angle);
+			player.getGeometry().setPosition(corrected);
+			player.getGeometry().setOrientation(angle);
 
 			ActorUtils.forceIdle(player);
 		});

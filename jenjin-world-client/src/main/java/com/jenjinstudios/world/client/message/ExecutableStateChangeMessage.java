@@ -4,8 +4,8 @@ import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.client.WorldClientMessageContext;
 import com.jenjinstudios.world.math.Angle;
+import com.jenjinstudios.world.math.Vector;
 import com.jenjinstudios.world.math.Vector2D;
-import com.jenjinstudios.world.object.Actor;
 import com.jenjinstudios.world.object.WorldObject;
 
 /**
@@ -29,26 +29,23 @@ public class ExecutableStateChangeMessage extends WorldClientExecutableMessage<W
 
     @Override
 	public Message execute() {
-		int actorID = (int) getMessage().getArgument("id");
+		String actorID = (String) getMessage().getArgument("id");
 		double relativeAngle = (double) getMessage().getArgument("relativeAngle");
         double absoluteAngle = (double) getMessage().getArgument("absoluteAngle");
 		long time = (long) getMessage().getArgument("timeOfChange");
 		double x = (double) getMessage().getArgument("xCoordinate");
         double y = (double) getMessage().getArgument("yCoordinate");
-		Vector2D oldVector = new Vector2D(x, y);
+		// TODO Change to 3D vector
+		Vector oldVector = new Vector2D(x, y);
 		Angle angle = new Angle(absoluteAngle, relativeAngle);
 
 		World world = getContext().getWorld();
 		world.scheduleUpdateTask(() -> {
-			WorldObject obj = world.getWorldObjects().get(actorID);
-			if (obj instanceof Actor)
-			{
-				Actor actor = (Actor) obj;
-				double dist = actor.getGeometry2D().getSpeed() * ((System.currentTimeMillis() - time) / MS_TO_S);
-				Vector2D position = oldVector.getVectorInDirection(dist, angle.getStepAngle());
-				actor.getGeometry2D().setOrientation(angle);
-				actor.getGeometry2D().setPosition(position);
-			}
+			WorldObject obj = (WorldObject) world.findChild(actorID);
+			double dist = obj.getGeometry().getSpeed() * ((System.currentTimeMillis() - time) / MS_TO_S);
+			Vector position = oldVector.getVectorInDirection(dist, angle.getStepAngle());
+			obj.getGeometry().setOrientation(angle);
+			obj.getGeometry().setPosition(position);
 		});
 		return null;
 	}

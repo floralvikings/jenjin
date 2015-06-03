@@ -4,7 +4,6 @@ import com.jenjinstudios.core.Connection;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.server.concurrency.UpdateTask;
 import com.jenjinstudios.world.server.message.WorldServerMessageFactory;
-import com.jenjinstudios.world.state.MoveState;
 
 /**
  * Task to update WorldClientHandlers at intervals.
@@ -20,7 +19,7 @@ public class ConnectionWorldUpdateTask<T extends WorldServerMessageContext<? ext
 		{
 			if (context.needsToSendSpeedMessage())
 			{
-				double moveSpeed = context.getUser().getGeometry2D().getSpeed();
+				double moveSpeed = context.getUser().getGeometry().getSpeed();
 				Message message = WorldServerMessageFactory.generateActorMoveSpeedMessage(moveSpeed);
 				context.enqueue(message);
 				context.setNeedsToSendSpeedMessage(false);
@@ -30,8 +29,6 @@ public class ConnectionWorldUpdateTask<T extends WorldServerMessageContext<? ext
 	}
 
 	private void queueForcesStateMessage(Connection<? extends T> connection) {
-		MoveState forcedState = connection.getMessageContext().getUser().getForcedState();
-		if (forcedState != null)
-			connection.enqueueMessage(WorldServerMessageFactory.generateForcedStateMessage(forcedState));
+		// TODO Use player angle to determine if state is forced
 	}
 }

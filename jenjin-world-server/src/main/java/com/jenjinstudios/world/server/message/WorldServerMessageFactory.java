@@ -2,7 +2,6 @@ package com.jenjinstudios.world.server.message;
 
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageRegistry;
-import com.jenjinstudios.world.object.Actor;
 import com.jenjinstudios.world.object.WorldObject;
 import com.jenjinstudios.world.state.MoveState;
 
@@ -14,14 +13,16 @@ import com.jenjinstudios.world.state.MoveState;
 public class WorldServerMessageFactory
 {
 	public static Message generateNewlyVisibleMessage(WorldObject object) {
-		Message newlyVisibleMessage;
-		if (object instanceof Actor)
-		{
-			newlyVisibleMessage = generateActorVisibleMessage((Actor) object);
-		} else
-		{
-			newlyVisibleMessage = generateObjectVisibleMessage(object);
-		}
+		Message newlyVisibleMessage = MessageRegistry.getGlobalRegistry().createMessage("ActorVisibleMessage");
+		newlyVisibleMessage.setArgument("name", object.getName());
+		newlyVisibleMessage.setArgument("id", object.getIdentification().getId());
+		newlyVisibleMessage.setArgument("typeId", object.getIdentification().getTypeId());
+		newlyVisibleMessage.setArgument("xCoordinate", object.getGeometry().getPosition().getXValue());
+		newlyVisibleMessage.setArgument("yCoordinate", object.getGeometry().getPosition().getYValue());
+		newlyVisibleMessage.setArgument("relativeAngle", object.getGeometry().getOrientation().getRelativeAngle());
+		newlyVisibleMessage.setArgument("absoluteAngle", object.getGeometry().getOrientation().getAbsoluteAngle());
+		newlyVisibleMessage.setArgument("timeOfVisibility", object.getTiming().getLastUpdateStartTime());
+		newlyVisibleMessage.setArgument("moveSpeed", object.getGeometry().getSpeed());
 		return newlyVisibleMessage;
 	}
 
@@ -63,36 +64,4 @@ public class WorldServerMessageFactory
 		return response;
 	}
 
-	private static Message generateActorVisibleMessage(Actor newlyVisible) {
-		Message newlyVisibleMessage;
-		newlyVisibleMessage = MessageRegistry.getGlobalRegistry().createMessage("ActorVisibleMessage");
-		newlyVisibleMessage.setArgument("name", newlyVisible.getName());
-		newlyVisibleMessage.setArgument("id", newlyVisible.getIdentification()
-			  .getId());
-		newlyVisibleMessage.setArgument("typeId", newlyVisible
-			  .getIdentification().getTypeId());
-		newlyVisibleMessage.setArgument("xCoordinate", newlyVisible.getGeometry2D().getPosition().getXValue());
-		newlyVisibleMessage.setArgument("yCoordinate", newlyVisible.getGeometry2D().getPosition().getYValue());
-		newlyVisibleMessage.setArgument("relativeAngle", newlyVisible.getGeometry2D().getOrientation()
-			  .getRelativeAngle());
-		newlyVisibleMessage.setArgument("absoluteAngle", newlyVisible.getGeometry2D().getOrientation()
-			  .getAbsoluteAngle());
-		newlyVisibleMessage.setArgument("timeOfVisibility",
-			  newlyVisible.getTiming().getLastUpdateStartTime());
-		newlyVisibleMessage.setArgument("moveSpeed", newlyVisible.getGeometry2D().getSpeed());
-		return newlyVisibleMessage;
-	}
-
-	private static Message generateObjectVisibleMessage(WorldObject object) {
-		Message newlyVisibleMessage;
-		newlyVisibleMessage = MessageRegistry.getGlobalRegistry().createMessage("ObjectVisibleMessage");
-		newlyVisibleMessage.setArgument("name", object.getName());
-		newlyVisibleMessage.setArgument("id", object.getIdentification().getId
-			  ());
-		newlyVisibleMessage.setArgument("typeId", object.getIdentification()
-			  .getTypeId());
-		newlyVisibleMessage.setArgument("xCoordinate", object.getGeometry2D().getPosition().getXValue());
-		newlyVisibleMessage.setArgument("yCoordinate", object.getGeometry2D().getPosition().getYValue());
-		return newlyVisibleMessage;
-	}
 }

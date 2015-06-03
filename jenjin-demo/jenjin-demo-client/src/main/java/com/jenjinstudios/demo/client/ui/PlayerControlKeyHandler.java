@@ -4,7 +4,7 @@ import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageRegistry;
 import com.jenjinstudios.world.client.WorldClient;
 import com.jenjinstudios.world.math.Angle;
-import com.jenjinstudios.world.object.Actor;
+import com.jenjinstudios.world.object.WorldObject;
 import javafx.event.EventHandler;
 import javafx.scene.input.KeyEvent;
 
@@ -20,7 +20,7 @@ import static com.jenjinstudios.world.math.Angle.*;
 public class PlayerControlKeyHandler implements EventHandler<KeyEvent>
 {
 	private final WorldClient worldClient;
-	private final Actor clientPlayer;
+	private final WorldObject clientPlayer;
 	private final PlayerKeyFlags flags;
 
 	/**
@@ -86,9 +86,9 @@ public class PlayerControlKeyHandler implements EventHandler<KeyEvent>
 	}
 
 	private void setNewAngle() {
-		Angle angle = clientPlayer.getGeometry2D().getOrientation().asIdle();
+		Angle angle = clientPlayer.getGeometry().getOrientation().asIdle();
 		angle = getMoveAngle(angle);
-		clientPlayer.getGeometry2D().setOrientation(angle);
+		clientPlayer.getGeometry().setOrientation(angle);
 	}
 
 }

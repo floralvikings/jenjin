@@ -2,7 +2,6 @@ package com.jenjinstudios.world.client.message;
 
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.world.client.WorldClientMessageContext;
-import com.jenjinstudios.world.object.Actor;
 
 /**
  * Sets the ClientActor step length.
@@ -22,7 +21,7 @@ public class ExecutableActorMoveSpeedMessage extends WorldClientExecutableMessag
 	/** Run asynchronous portion of this message. */
 	@Override
 	public Message execute() {
-		Actor.DEFAULT_MOVE_SPEED = (double) getMessage().getArgument("moveSpeed");
+		// TODO Should probably implement this instead of just ignoring it.
 		return null;
 	}
 }

@@ -8,7 +8,7 @@ import com.jenjinstudios.world.client.message.WorldClientMessageFactory;
 import com.jenjinstudios.world.io.WorldDocumentException;
 import com.jenjinstudios.world.io.WorldDocumentReader;
 import com.jenjinstudios.world.io.WorldDocumentWriter;
-import com.jenjinstudios.world.object.Actor;
+import com.jenjinstudios.world.object.WorldObject;
 
 import java.io.*;
 import java.util.Arrays;
@@ -48,7 +48,7 @@ public class WorldClient<T extends WorldClientMessageContext> extends Client<T>
 
 	public WorldClientMessageFactory getMessageFactory() {return messageFactory; }
 
-	public Actor getPlayer() { return getMessageContext().getPlayer(); }
+	public WorldObject getPlayer() { return getMessageContext().getPlayer(); }
 
 	public World getWorld() { return world; }
 

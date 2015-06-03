@@ -1,6 +1,6 @@
 package com.jenjinstudios.world.math;
 
-import com.jenjinstudios.world.Location;
+import com.jenjinstudios.world.Cell;
 
 /**
  * Represents the spatial properties of a 2-dimensional WorldObject, including {@code position}, {@code orientation},
@@ -10,7 +10,7 @@ import com.jenjinstudios.world.Location;
  */
 public class Geometry2D implements Geometry
 {
-	private static final double DEFAULT_SIZE = Location.SIZE / 2.0;
+	private static final double DEFAULT_SIZE = Cell.CELL_SIZE / 2.0;
 	private Vector2D position = new Vector2D(Vector.ORIGIN);
 	private Vector2D size = new Vector2D(DEFAULT_SIZE, DEFAULT_SIZE);
 	private Angle orientation = new Angle(0.0);

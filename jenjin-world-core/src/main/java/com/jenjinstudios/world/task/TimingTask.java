@@ -1,6 +1,6 @@
 package com.jenjinstudios.world.task;
 
-import com.jenjinstudios.world.World;
+import com.jenjinstudios.world.Node;
 import com.jenjinstudios.world.object.WorldObject;
 
 /**
@@ -10,15 +10,20 @@ import com.jenjinstudios.world.object.WorldObject;
  */
 public class TimingTask extends WorldObjectTaskAdapter
 {
+
 	@Override
-	public void onPreUpdate(World world, WorldObject worldObject) {
-		worldObject.getTiming().setLastUpdateStartTime(System
-			  .currentTimeMillis());
+	public void onPreUpdate(Node node) {
+		if (node instanceof WorldObject) {
+			WorldObject object = (WorldObject) node;
+			object.getTiming().setLastUpdateStartTime(System.currentTimeMillis());
+		}
 	}
 
 	@Override
-	public void onPostUpdate(World world, WorldObject worldObject) {
-		worldObject.getTiming().setLastUpdateEndTime(System.currentTimeMillis
-			  ());
+	public void onPostUpdate(Node node) {
+		if (node instanceof WorldObject) {
+			WorldObject object = (WorldObject) node;
+			object.getTiming().setLastUpdateEndTime(System.currentTimeMillis());
+		}
 	}
 }

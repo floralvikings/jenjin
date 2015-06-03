@@ -1,16 +1,14 @@
 package com.jenjinstudios.world.server.message;
 
 import com.jenjinstudios.core.io.Message;
-import com.jenjinstudios.world.Location;
+import com.jenjinstudios.world.Cell;
 import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.math.Angle;
 import com.jenjinstudios.world.math.MathUtil;
+import com.jenjinstudios.world.math.Vector;
 import com.jenjinstudios.world.math.Vector2D;
-import com.jenjinstudios.world.object.Actor;
 import com.jenjinstudios.world.server.Player;
 import com.jenjinstudios.world.server.WorldServerMessageContext;
-import com.jenjinstudios.world.state.MoveState;
-import com.jenjinstudios.world.util.ZoneUtils;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -43,13 +41,6 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage<WorldSe
 		super(message, context);
 	}
 
-	private void forcePlayerToAngle(Actor player, Angle pAngle) {
-		Vector2D vector2D = player.getGeometry2D().getPosition();
-		MoveState forcedState = new MoveState(pAngle, vector2D,
-			  player.getTiming().getLastUpdateEndTime());
-		player.setForcedState(forcedState);
-	}
-
 	@Override
 	public Message execute() {
 		double relativeAngle = (double) getMessage().getArgument("relativeAngle");
@@ -63,53 +54,51 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage<WorldSe
 
 		World world = getContext().getWorld();
 		world.scheduleUpdateTask(() -> {
-			Actor player = getContext().getUser();
+			Player player = getContext().getUser();
 			if ((player != null) && (world != null)) {
 				double distance = MathUtil.round(
-					  player.getGeometry2D().getSpeed() * (timePast / MS_TO_S),
+					  player.getGeometry().getSpeed() * (timePast / MS_TO_S),
 					  2);
 				position = uncorrectedPosition.getVectorInDirection(
 					  distance,
 					  angle.getStepAngle());
-				if (!locationWalkable(world, player)) {
+				if (!locationWalkable(player)) {
 					LOGGER.log(Level.INFO, "Attempted move to unwalkable " +
 						  "location: {0}", position);
-					Angle pAngle =
-						  player.getGeometry2D().getOrientation().asIdle();
-					forcePlayerToAngle(player, pAngle);
+					Angle pAngle = player.getGeometry().getOrientation().asIdle();
+					player.getGeometry().setOrientation(pAngle);
 				} else if (!isCorrectionSafe(player)) {
-					Angle pAngle = player.getGeometry2D().getOrientation();
-					forcePlayerToAngle(player, pAngle);
+					Angle pAngle = player.getGeometry().getOrientation();
+					player.getGeometry().setOrientation(pAngle);
 				} else {
-					player.getGeometry2D().setOrientation(angle);
-					player.getGeometry2D().setPosition(position);
+					player.getGeometry().setOrientation(angle);
+					player.getGeometry().setPosition(position);
 				}
 			}
 		});
 		return null;
 	}
 
-	private boolean locationWalkable(World world, Actor player) {
-		int zoneID = player.getZoneID();
-		Location location = ZoneUtils.getLocationForCoordinates(world, zoneID, position);
+	private boolean locationWalkable(Player player) {
+		Cell cell = player.getParent();
 		boolean walkable = false;
-		if (location != null)
+		if (cell != null)
 		{
-			String prop = location.getProperties().get("walkable");
+			String prop = cell.getProperty("walkable");
 			walkable = !"false".equals(prop);
 		}
 		return walkable;
 	}
 
-	private boolean isCorrectionSafe(Actor player) {
+	private boolean isCorrectionSafe(Player player) {
 		// Tolerance of a single update to account for timing discrepency.
 		return isDistanceWithinTolerance(player) && isWithinMaxCorrect(player);
 
 	}
 
-	private boolean isWithinMaxCorrect(Actor player) {
+	private boolean isWithinMaxCorrect(Player player) {
 		double clientDistance = uncorrectedPosition.getDistanceToVector(position);
-		double maxCorrect = player.getGeometry2D().getSpeed();
+		double maxCorrect = player.getGeometry().getSpeed();
 		boolean withinMaxCorrect = clientDistance < maxCorrect;
 		if (!withinMaxCorrect)
 		{
@@ -120,22 +109,22 @@ public class ExecutableStateChangeRequest extends WorldExecutableMessage<WorldSe
 		return withinMaxCorrect;
 	}
 
-	private boolean isDistanceWithinTolerance(Actor player) {
-		double tolerance = player.getGeometry2D().getSpeed() / 10; // Allows for 100ms lag.
-		Vector2D proposedPlayerOrigin = getPlayerOrigin(player);
+	private boolean isDistanceWithinTolerance(Player player) {
+		double tolerance = player.getGeometry().getSpeed() / 10; // Allows for 100ms lag.
+		Vector proposedPlayerOrigin = getPlayerOrigin(player);
 		double distance = uncorrectedPosition.getDistanceToVector(proposedPlayerOrigin);
-		boolean distanceWithinTolerance = distance < tolerance;
-		if (!distanceWithinTolerance)
+		boolean withinTolerance = distance < tolerance;
+		if (!withinTolerance)
 		{
 			LOGGER.log(Level.INFO, "Distance to origin oustide of defined tolerance. Distance: {0}, Tolerance: {1}",
 				  new Object[]{distance, tolerance});
 		}
-		return distanceWithinTolerance;
+		return withinTolerance;
 	}
 
-	private Vector2D getPlayerOrigin(Actor player) {
-		double originDistance = player.getGeometry2D().getPosition().getDistanceToVector(uncorrectedPosition);
+	private Vector getPlayerOrigin(Player player) {
+		double originDistance = player.getGeometry().getPosition().getDistanceToVector(uncorrectedPosition);
 		double playerReverseAngle = angle.reverseStepAngle();
-		return player.getGeometry2D().getPosition().getVectorInDirection(originDistance, playerReverseAngle);
+		return player.getGeometry().getPosition().getVectorInDirection(originDistance, playerReverseAngle);
 	}
 }

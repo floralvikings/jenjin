@@ -23,9 +23,7 @@ public class NewlyVisibleEvent implements WorldEvent
 	 * become visible
 	 * @param newlyVisible The WorldObjects which have become visible.
 	 */
-	public NewlyVisibleEvent(WorldObject viewing,
-							 Collection<WorldObject> newlyVisible)
-	{
+	public NewlyVisibleEvent(WorldObject viewing, Collection<WorldObject> newlyVisible) {
 		this.viewing = viewing;
 		this.newlyVisible = newlyVisible;
 	}

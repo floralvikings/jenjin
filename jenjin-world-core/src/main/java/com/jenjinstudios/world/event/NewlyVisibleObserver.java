@@ -1,6 +1,6 @@
 package com.jenjinstudios.world.event;
 
-import com.jenjinstudios.world.World;
+import com.jenjinstudios.world.Node;
 import com.jenjinstudios.world.object.WorldObject;
 
 import java.util.Collection;
@@ -20,27 +20,26 @@ public class NewlyVisibleObserver extends WorldObjectObserver<NewlyVisibleEvent>
 	private Collection<WorldObject> lastVisible = new HashSet<>(10);
 
 	@Override
-	public NewlyVisibleEvent observePreUpdate(World world, WorldObject obj) {
-		return null;
-	}
+	protected NewlyVisibleEvent observePreUpdate(Node node) { return null; }
 
 	@Override
-	public NewlyVisibleEvent observeUpdate(World world, WorldObject obj) {
-		return null;
-	}
+	protected NewlyVisibleEvent observeUpdate(Node node) { return null; }
 
 	@Override
-	public NewlyVisibleEvent observePostUpdate(World world, WorldObject obj) {
-		Collection<WorldObject> current = getVisibleObjects(world, obj);
-		Collection<WorldObject> newVisible = new LinkedList<>(current);
-		newVisible.removeAll(lastVisible);
-
+	protected NewlyVisibleEvent observePostUpdate(Node node) {
 		NewlyVisibleEvent newlyVisibleEvent = null;
-		if (!newVisible.isEmpty()) {
-			newlyVisibleEvent = new NewlyVisibleEvent(obj, newVisible);
-		}
+		if (node instanceof WorldObject) {
+			WorldObject object = (WorldObject) node;
+			Collection<WorldObject> current = getVisibleObjects(object);
+			Collection<WorldObject> newVisible = new LinkedList<>(current);
+			newVisible.removeAll(lastVisible);
 
-		lastVisible = current;
+			if (!newVisible.isEmpty()) {
+				newlyVisibleEvent = new NewlyVisibleEvent(object, newVisible);
+			}
+
+			lastVisible = current;
+		}
 		return newlyVisibleEvent;
 	}
 }

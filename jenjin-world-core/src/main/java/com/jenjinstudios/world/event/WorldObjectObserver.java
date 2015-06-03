@@ -1,7 +1,6 @@
 package com.jenjinstudios.world.event;
 
-import com.jenjinstudios.world.World;
-import com.jenjinstudios.world.object.WorldObject;
+import com.jenjinstudios.world.Node;
 
 import java.util.Collection;
 import java.util.LinkedList;
@@ -37,77 +36,71 @@ public abstract class WorldObjectObserver<E extends WorldEvent>
 	}
 
 	/**
-	 * Observe the given WorldObject in the given World for an event occurring
+	 * Observe the given node for an event occurring
 	 * pre-update, and dispatch the event if necessary.
 	 *
-	 * @param world The world in which to watch for the event.
-	 * @param obj The object to watch for the event.
+	 * @param node The node to watch for an event.
 	 */
-	public void onPreUpdate(World world, WorldObject obj) {
-		E event = observePreUpdate(world, obj);
+	public void onPreUpdate(Node node) {
+		E event = observePreUpdate(node);
 		if (event != null) {
 			handlers.forEach(handler -> handler.handle(event));
 		}
 	}
 
 	/**
-	 * Observe the given WorldObject in the given World for an event occurring
+	 * Observe the given node for an event occurring
 	 * in-update, and dispatch the event if necessary.
 	 *
-	 * @param world The world in which to watch for the event.
-	 * @param obj The object to watch for the event.
+	 * @param node The node to watch for an event.
 	 */
-	public void onUpdate(World world, WorldObject obj) {
-		E event = observeUpdate(world, obj);
+	public void onUpdate(Node node) {
+		E event = observeUpdate(node);
 		if (event != null) {
 			handlers.forEach(handler -> handler.handle(event));
 		}
 	}
 
 	/**
-	 * Observe the given WorldObject in the given World for an event occurring
+	 * Observe the given node for an event occurring
 	 * post-update, and dispatch the event if necessary.
 	 *
-	 * @param world The world in which to watch for the event.
-	 * @param obj The object to watch for the event.
+	 * @param node The node to watch for an event.
 	 */
-	public void onPostUpdate(World world, WorldObject obj) {
-		E event = observePostUpdate(world, obj);
+	public void onPostUpdate(Node node) {
+		E event = observePostUpdate(node);
 		if (event != null) {
 			handlers.forEach(handler -> handler.handle(event));
 		}
 	}
 
 	/**
-	 * Observe the given WorldObject in the given World for an event occurring
+	 * Observe the given node for an event occurring
 	 * pre-update, returning an event if it occurs, and null otherwise.
 	 *
-	 * @param world The world in which to watch for the event.
-	 * @param obj The object to watch for the event.
+	 * @param node the node to watch for the event
 	 *
 	 * @return The event that occurred, if any; null otherwise.
 	 */
-	public abstract E observePreUpdate(World world, WorldObject obj);
+	protected abstract E observePreUpdate(Node node);
 
 	/**
-	 * Observe the given WorldObject in the given World for an event ocurring
+	 * Observe the given node for an event occurring
 	 * in-update, returning an event if it occurs, and null otherwise.
 	 *
-	 * @param world The world in which to watch for the event.
-	 * @param obj The object to watch for the event.
+	 * @param node the node to watch for the event
 	 *
 	 * @return The event that occurred, if any; null otherwise.
 	 */
-	public abstract E observeUpdate(World world, WorldObject obj);
+	protected abstract E observeUpdate(Node node);
 
 	/**
-	 * Observe the given WorldObject in the given World for an event ocurring
+	 * Observe the given node for an event occurring
 	 * post-update, returning an event if it occurs, and null otherwise.
 	 *
-	 * @param world The world in which to watch for the event.
-	 * @param obj The object to watch for the event.
+	 * @param node the node to watch for the event
 	 *
 	 * @return The event that occurred, if any; null otherwise.
 	 */
-	public abstract E observePostUpdate(World world, WorldObject obj);
+	protected abstract E observePostUpdate(Node node);
 }

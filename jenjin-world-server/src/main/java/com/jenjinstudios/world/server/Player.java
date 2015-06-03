@@ -1,14 +1,14 @@
 package com.jenjinstudios.world.server;
 
 import com.jenjinstudios.server.authentication.User;
-import com.jenjinstudios.world.object.Actor;
+import com.jenjinstudios.world.object.WorldObject;
 
 /**
  * Represents a Player in the game world.
  *
  * @author Caleb Brinkman
  */
-public class Player extends Actor implements User
+public class Player extends WorldObject implements User
 {
 	private String password;
 	private String salt;

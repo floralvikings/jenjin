@@ -1,7 +1,6 @@
 package com.jenjinstudios.world.task;
 
-import com.jenjinstudios.world.World;
-import com.jenjinstudios.world.object.WorldObject;
+import com.jenjinstudios.world.Node;
 
 /**
  * Provides empty methods for a WorldObjectTask so that users can implement only needed methods.
@@ -10,12 +9,13 @@ import com.jenjinstudios.world.object.WorldObject;
  */
 public abstract class WorldObjectTaskAdapter implements WorldObjectTask
 {
-	@Override
-	public void onPreUpdate(World world, WorldObject worldObject) { }
 
 	@Override
-	public void onUpdate(World world, WorldObject worldObject) { }
+	public void onPreUpdate(Node node) { }
 
 	@Override
-	public void onPostUpdate(World world, WorldObject worldObject) { }
+	public void onUpdate(Node node) { }
+
+	@Override
+	public void onPostUpdate(Node node) { }
 }

@@ -1,11 +1,10 @@
 package com.jenjinstudios.world.server.event;
 
 import com.jenjinstudios.core.concurrency.MessageContext;
-import com.jenjinstudios.world.World;
+import com.jenjinstudios.world.Node;
 import com.jenjinstudios.world.event.WorldObjectObserver;
 import com.jenjinstudios.world.math.Angle;
-import com.jenjinstudios.world.math.Vector2D;
-import com.jenjinstudios.world.object.Actor;
+import com.jenjinstudios.world.math.Vector;
 import com.jenjinstudios.world.object.WorldObject;
 import com.jenjinstudios.world.state.MoveState;
 
@@ -14,8 +13,7 @@ import com.jenjinstudios.world.state.MoveState;
  *
  * @author Caleb Brinkman
  */
-public class VisibleStateChangeObserver
-	  extends WorldObjectObserver<VisibleStateChangeEvent>
+public class VisibleStateChangeObserver extends WorldObjectObserver<VisibleStateChangeEvent>
 {
 	private final MessageContext context;
 	private Angle lastOrientation;
@@ -31,46 +29,28 @@ public class VisibleStateChangeObserver
 	}
 
 	@Override
-	public VisibleStateChangeEvent observePreUpdate(World world,
-													WorldObject obj)
-	{
-		return null;
-	}
+	protected VisibleStateChangeEvent observePreUpdate(Node node) { return null; }
 
 	@Override
-	public VisibleStateChangeEvent observeUpdate(World world,
-												 WorldObject obj)
-	{
-		return null;
-	}
+	protected VisibleStateChangeEvent observeUpdate(Node node) { return null; }
 
 	@Override
-	public VisibleStateChangeEvent observePostUpdate(World world,
-													 WorldObject obj)
-	{
-		Angle postAngle = obj.getGeometry2D().getOrientation();
-
-		boolean stateChanged = (lastOrientation == null)
-			  ? (postAngle != null)
-			  : !lastOrientation.equals(postAngle);
-
-		if (obj instanceof Actor) {
-			if (((Actor) obj).getForcedState() != null) {
-				stateChanged = true;
-			}
-		}
-
+	protected VisibleStateChangeEvent observePostUpdate(Node node) {
 		VisibleStateChangeEvent stateChangeEvent = null;
+		if(node instanceof WorldObject) {
+			WorldObject obj = (WorldObject) node;
+			Angle postAngle = obj.getGeometry().getOrientation();
+			boolean changed = (lastOrientation == null) ? (postAngle != null) : !lastOrientation.equals(postAngle);
 
-		if (stateChanged) {
-			Vector2D vector2D = obj.getGeometry2D().getPosition();
-			long timeOfChange = obj.getTiming().getLastUpdateEndTime();
-			MoveState state = new MoveState(postAngle, vector2D, timeOfChange);
-			stateChangeEvent =
-				  new VisibleStateChangeEvent(obj, state, context);
+			if(changed) {
+				Vector vector = obj.getGeometry().getPosition();
+				long timeOfChange = obj.getTiming().getLastUpdateEndTime();
+				MoveState state = new MoveState(postAngle, vector, timeOfChange);
+				stateChangeEvent = new VisibleStateChangeEvent(obj, state, context);
+			}
+
+			lastOrientation = obj.getGeometry().getOrientation();
 		}
-
-		lastOrientation = obj.getGeometry2D().getOrientation();
 		return stateChangeEvent;
 	}
 }

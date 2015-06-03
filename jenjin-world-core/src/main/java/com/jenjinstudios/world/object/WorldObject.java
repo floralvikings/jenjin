@@ -1,35 +1,36 @@
 package com.jenjinstudios.world.object;
 
-import com.jenjinstudios.world.event.WorldObjectObserver;
+import com.jenjinstudios.world.Cell;
+import com.jenjinstudios.world.Node;
+import com.jenjinstudios.world.math.Geometry;
 import com.jenjinstudios.world.math.Geometry2D;
 import com.jenjinstudios.world.task.TimingTask;
-import com.jenjinstudios.world.task.WorldObjectTask;
 
 import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedList;
 
 /**
- * Represents an object that exists in the game world.
+ * Represents an object within a Cell in the game world.
+ *
  * @author Caleb Brinkman
  */
-public class WorldObject
+public class WorldObject extends Node
 {
-	private final Collection<WorldObjectTask> tasks;
-	private final Collection<WorldObjectObserver> observers;
+	private final String name;
 	private final Identification identification;
 	private final Vision vision;
 	private final Timing timing;
-	private final String name;
-	private Geometry2D geometry2D;
-	private int zoneID;
+	private Geometry geometry;
+	private Cell parent;
 
+	/**
+	 * Construct a new WorldObject with the given name.
+	 *
+	 * @param name The name of the object.
+	 */
 	public WorldObject(String name) {
 		this.name = name;
-		tasks = new LinkedList<>();
-		observers = new LinkedList<>();
 		identification = new Identification();
-		geometry2D = new Geometry2D();
+		geometry = new Geometry2D();
 		vision = new Vision();
 		timing = new Timing();
 		addTask(new TimingTask());
@@ -37,57 +38,61 @@ public class WorldObject
 		addObserver(vision.getNewlyInvisibleObserver());
 	}
 
-	public void addTask(WorldObjectTask task) { tasks.add(task); }
-
-	public Collection<WorldObjectTask> getTasks() { return Collections.unmodifiableCollection(tasks); }
-
-	public void addObserver(WorldObjectObserver observer) {
-		observers.add(observer);
-	}
-
-	public void removeObserver(WorldObjectObserver observer) {
-		observers.remove(observer);
-	}
-
-	public Collection<WorldObjectObserver> getObservers() {
-		return Collections.unmodifiableCollection(observers);
-	}
-
-	public int getZoneID() { return zoneID; }
-
-	public void setZoneID(int zoneID) { this.zoneID = zoneID; }
-
+	/**
+	 * Get the name of this WorldObject.
+	 *
+	 * @return The name of this WorldObject.
+	 */
 	public String getName() { return name; }
 
-	public Geometry2D getGeometry2D() { return geometry2D; }
+	@Override
+	public Cell getParent() { return parent; }
 
-	public void setGeometry2D(Geometry2D geometry) { this.geometry2D = geometry; }
+	/**
+	 * Set the parent of this WorldObject.
+	 *
+	 * @param parent The Cell that contains this world object.
+	 */
+	public void setParent(Cell parent) { this.parent = parent; }
 
-	public Vision getVision() { return vision; }
+	@Override
+	public Collection<? extends Node> getChildren() { return null; }
 
-	public Timing getTiming() { return timing; }
+	@Override
+	public Node removeChildRecursively(Node child) { return null; }
 
+	/**
+	 * Get the identification values of this object.
+	 *
+	 * @return The identification values of this object.
+	 */
 	public Identification getIdentification() { return identification; }
 
-	@Override
-	public String toString() { return name + ": " + identification.getId(); }
+	/**
+	 * Get the Vision of this object.
+	 *
+	 * @return The Vision of this object.
+	 */
+	public Vision getVision() { return vision; }
 
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (!(o instanceof WorldObject)) return false;
+	/**
+	 * Get the timing of this object.
+	 *
+	 * @return The timing of this object.
+	 */
+	public Timing getTiming() { return timing; }
 
-		WorldObject that = (WorldObject) o;
+	/**
+	 * Get the geometry of this object.
+	 *
+	 * @return The geometry of this object.
+	 */
+	public Geometry getGeometry() { return geometry; }
 
-		return (identification.getId() == that.getIdentification().getId()) &&
-			  name.equals(that.getName());
-
-	}
-
-	@Override
-	public int hashCode() {
-		int result = name.hashCode();
-		result = 31 * result + identification.getId();
-		return result;
-	}
+	/**
+	 * Set the geometry of this object.
+	 *
+	 * @param geometry The new geometry.
+	 */
+	public void setGeometry(Geometry geometry) { this.geometry = geometry; }
 }

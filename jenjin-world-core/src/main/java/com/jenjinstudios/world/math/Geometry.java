@@ -1,9 +1,8 @@
 package com.jenjinstudios.world.math;
 
-import com.jenjinstudios.world.object.WorldObject;
 
 /**
- * Represents the spatial properties of a {@link WorldObject}, including
+ * Represents the spatial properties of a node, including
  * {@code orientation},
  * {@code position}, {@code size} and {@code speed}.
  *

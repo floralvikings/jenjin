@@ -1,67 +1,44 @@
 package com.jenjinstudios.world;
 
-import com.jenjinstudios.world.collections.WorldObjectList;
+import com.jenjinstudios.world.object.WorldObject;
+import com.jenjinstudios.world.task.WorldObjectTaskAdapter;
 
-import java.util.Collection;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
- * Contains all the Zones, Locations and GameObjects.
+ * The root of the game world-tree; children are zones.
+ *
  * @author Caleb Brinkman
  */
-public class World
+public class World extends Node
 {
-
-	/** The list of in-world Zones. */
-	private final TreeMap<Integer, Zone> zones = new TreeMap<>();
-	/** The GameObjects contained in the world. */
-	private final transient WorldObjectList worldObjects = new
-		  WorldObjectList();
 	private final transient Collection<Runnable> scheduledUpdateTasks = new ConcurrentLinkedQueue<>();
-	/** Construct a new World. */
-	public World() { }
+	private final Map<String, Zone> children;
 
 	/**
-	 * Construct a new world with the specified Zone array.
-	 * @param zones The zones used to create the world.
+	 * Construct a new World.
 	 */
-	public World(Zone... zones) {
-		for (Zone z : zones)
-		{
-			this.zones.put(z.getId(), z);
-		}
+	public World() {
+		children = new HashMap<>(1);
+		addTask(new ScheduledOneOffTask());
 	}
-
-	public WorldObjectList getWorldObjects() { return worldObjects; }
-
-	public void update() {
-		synchronized (worldObjects)
-		{
-			worldObjects.refresh();
-			worldObjects.forEach(obj -> {
-				obj.getTasks().forEach(t -> t.onPreUpdate(this, obj));
-				obj.getObservers().forEach(o -> o.onPreUpdate(this, obj));
-			});
-			worldObjects.forEach(obj -> {
-				obj.getTasks().forEach(t -> t.onUpdate(this, obj));
-				obj.getObservers().forEach(o -> o.onUpdate(this, obj));
-			});
-			worldObjects.forEach(obj -> {
-				obj.getTasks().forEach(t -> t.onPostUpdate(this, obj));
-				obj.getObservers().forEach(o -> o.onPostUpdate(this, obj));
-			});
-			scheduledUpdateTasks.forEach(Runnable::run);
-			scheduledUpdateTasks.clear();
-		}
-	}
-
-	public Map<Integer, Zone> getZones() { return zones; }
 
 	/**
-	 * Schedule a task to be executed after the next update.
+	 * Get all WorldObjects which are direct children of any Cell children of the Zone children of this World.
 	 *
+	 * @return All WorldObjects which are direct children of any Cell children of the Zone children of this World.
+	 */
+	public Collection<WorldObject> getWorldObjects() {
+		Collection<WorldObject> worldObjects = new LinkedList<>();
+
+		children.values().forEach(zone -> worldObjects.addAll(zone.getWorldObjects()));
+
+		return worldObjects;
+	}
+
+	/**
+	 * Schedule a task to be run at the end of the next update cycle.  This task will be executed only once.
 	 * @param task The task to execute.
 	 */
 	public void scheduleUpdateTask(Runnable task) {
@@ -71,4 +48,30 @@ public class World
 		}
 	}
 
+	@Override
+	public Node getParent() { return null; }
+
+	@Override
+	public Collection<Zone> getChildren() { return children.values(); }
+
+	@Override
+	public Node removeChildRecursively(Node child) {
+		Node r = children.remove(child.getId());
+		if (r == null) {
+			Iterator<Zone> iterator = children.values().iterator();
+			while (iterator.hasNext() && (r == null)) {
+				r = iterator.next().removeChildRecursively(child);
+			}
+		}
+		return r;
+	}
+
+	private class ScheduledOneOffTask extends WorldObjectTaskAdapter
+	{
+		@Override
+		public void onPostUpdate(Node node) {
+			scheduledUpdateTasks.forEach(Runnable::run);
+			scheduledUpdateTasks.clear();
+		}
+	}
 }

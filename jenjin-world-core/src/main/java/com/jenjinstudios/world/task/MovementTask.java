@@ -1,7 +1,6 @@
 package com.jenjinstudios.world.task;
 
-import com.jenjinstudios.world.World;
-import com.jenjinstudios.world.object.Actor;
+import com.jenjinstudios.world.Node;
 import com.jenjinstudios.world.object.WorldObject;
 import com.jenjinstudios.world.util.ActorUtils;
 
@@ -12,20 +11,13 @@ import com.jenjinstudios.world.util.ActorUtils;
  */
 public class MovementTask extends WorldObjectTaskAdapter
 {
-	@Override
-	public void onPreUpdate(World world, WorldObject worldObject) {
-		if (worldObject instanceof Actor) {
-			Actor actor = (Actor) worldObject;
-			actor.setForcedState(null);
-		}
-	}
 
 	@Override
-	public void onUpdate(World world, WorldObject worldObject) {
-		if (worldObject instanceof Actor) {
-			Actor actor = (Actor) worldObject;
-			if (actor.getGeometry2D().getOrientation().isNotIdle()) {
-				ActorUtils.stepForward(world, actor);
+	public void onUpdate(Node node) {
+		if (node instanceof WorldObject) {
+			WorldObject object = (WorldObject) node;
+			if (object.getGeometry().getOrientation().isNotIdle()) {
+				ActorUtils.stepForward(object);
 			}
 		}
 	}

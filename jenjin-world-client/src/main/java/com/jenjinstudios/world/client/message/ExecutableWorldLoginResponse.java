@@ -4,8 +4,9 @@ import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.world.client.WorldClientMessageContext;
 import com.jenjinstudios.world.client.event.PlayerStateHandler;
 import com.jenjinstudios.world.client.event.PlayerStateObserver;
+import com.jenjinstudios.world.math.Vector;
 import com.jenjinstudios.world.math.Vector2D;
-import com.jenjinstudios.world.object.Actor;
+import com.jenjinstudios.world.object.WorldObject;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -34,10 +35,10 @@ public class ExecutableWorldLoginResponse extends WorldClientExecutableMessage<W
 		int id = (int) getMessage().getArgument("id");
         double xCoordinate = (double) getMessage().getArgument("xCoordinate");
         double yCoordinate = (double) getMessage().getArgument("yCoordinate");
-		Actor player = new Actor(getContext().getUser().getUsername());
+		WorldObject player = new WorldObject(getContext().getUser().getUsername());
 		player.getIdentification().setId(id);
-		Vector2D vector2D = new Vector2D(xCoordinate, yCoordinate);
-		player.getGeometry2D().setPosition(vector2D);
+		Vector vector = new Vector2D(xCoordinate, yCoordinate);
+		player.getGeometry().setPosition(vector);
 		PlayerStateObserver observer = new PlayerStateObserver(getContext());
 		observer.registerEventHandler(new PlayerStateHandler());
 		player.addObserver(observer);

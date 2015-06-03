@@ -7,7 +7,6 @@ import com.jenjinstudios.server.net.ServerInit;
 import com.jenjinstudios.world.World;
 import com.jenjinstudios.world.io.WorldDocumentReader;
 import com.jenjinstudios.world.io.WorldDocumentWriter;
-import com.jenjinstudios.world.util.WorldUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -46,7 +45,7 @@ public class WorldServer<U extends Player, T extends WorldServerMessageContext<U
 			this.world = reader.read();
 		} else
 		{
-			this.world = WorldUtils.createDefaultWorld();
+			this.world = new World();
 			WorldDocumentWriter writer = new WorldDocumentWriter(world);
 			ByteArrayOutputStream bos = new ByteArrayOutputStream();
 			writer.write(bos);

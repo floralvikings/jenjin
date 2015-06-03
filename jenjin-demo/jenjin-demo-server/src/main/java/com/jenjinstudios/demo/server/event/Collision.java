@@ -1,7 +1,8 @@
 package com.jenjinstudios.demo.server.event;
 
-import com.jenjinstudios.world.World;
-import com.jenjinstudios.world.math.Vector2D;
+import com.jenjinstudios.world.Node;
+import com.jenjinstudios.world.Zone;
+import com.jenjinstudios.world.math.Vector;
 import com.jenjinstudios.world.object.WorldObject;
 import com.jenjinstudios.world.task.WorldObjectTaskAdapter;
 import javafx.geometry.Rectangle2D;
@@ -15,37 +16,36 @@ import java.util.Objects;
  */
 public abstract class Collision extends WorldObjectTaskAdapter
 {
+
 	@Override
-	public void onPostUpdate(World world, WorldObject worldObject) {
-		world.getWorldObjects().
-			  stream().
-			  filter(collider -> checkForCollision(worldObject, collider)).
-			  forEach(collider -> onCollision(world, worldObject, collider));
+	public void onPostUpdate(Node node) {
+		if (node instanceof WorldObject) {
+			WorldObject object = (WorldObject) node;
+			Zone zone = object.getParent().getParent();
+			zone.getWorldObjects().stream().
+				  filter(collider -> checkForCollision(object, collider)).
+				  forEach(collider -> onCollision(object, collider));
+		}
 	}
 
-	private boolean checkForCollision(WorldObject target, WorldObject collider) {
+	private static boolean checkForCollision(WorldObject object, WorldObject collider) {
 		boolean collision = false;
-		if (checkRoughCollision(target, collider)) {
-			collision = checkFinerCollision(target, collider);
+		if (checkRoughCollision(object, collider)) {
+			collision = checkFinerCollision(object, collider);
 		}
 		return collision;
 	}
 
-	private static boolean checkRoughCollision(WorldObject target, WorldObject collider) {
-		// TODO Make this more granular.
-		return !Objects.equals(collider, target) && (collider.getZoneID() == target.getZoneID());
-	}
-
-	private static boolean checkFinerCollision(WorldObject target, WorldObject collider) {
+	private static boolean checkFinerCollision(WorldObject object, WorldObject collider) {
 		// TODO Probably shouldn't use JavaFX Rectangle; maybe a private inner class?
-		Rectangle2D objectRect = getCollisionRect(target);
+		Rectangle2D objectRect = getCollisionRect(object);
 		Rectangle2D colliderRect = getCollisionRect(collider);
 		return objectRect.intersects(colliderRect);
 	}
 
-	private static Rectangle2D getCollisionRect(WorldObject obj) {
-		double objectRad = calculateCollisionRad(obj);
-		Vector2D objectVector = obj.getGeometry2D().getPosition();
+	private static Rectangle2D getCollisionRect(WorldObject object) {
+		double objectRad = calculateCollisionRad(object);
+		Vector objectVector = object.getGeometry().getPosition();
 		double objectX = objectVector.getXValue();
 		double objectY = objectVector.getYValue();
 		double objectMinX = objectX - objectRad;
@@ -53,20 +53,22 @@ public abstract class Collision extends WorldObjectTaskAdapter
 		return new Rectangle2D(objectMinX, objectMinY, objectRad, objectRad);
 	}
 
-	private static double calculateCollisionRad(WorldObject collider) {
-		Vector2D size = collider.getGeometry2D().getSize();
+	private static double calculateCollisionRad(WorldObject object) {
+		Vector size = object.getGeometry().getSize();
 		return (size.getXValue() * size.getYValue()) / 2;
+	}
+
+	private static boolean checkRoughCollision(WorldObject object, WorldObject collider) {
+		return !Objects.equals(collider, object) && collider.getParent().isAdjacentTo(object.getParent());
 	}
 
 	/**
 	 * This method should be overridden in subclasses to specify what even should occur when a collision is triggered.
 	 *
-	 * @param world The world in which the collision takes place
-	 * @param target The object with which the collider collided.
-	 * @param collided The object with wich the WorldObject watched by this Collision has collided.
-	 *
+	 * @param object The object with which the collider collided.
+	 * @param collider The object with wich the WorldObject watched by this Collision has collided.
 	 */
-	public abstract void onCollision(World world,
-									 WorldObject target,
-									 WorldObject collided);
+	public abstract void onCollision(WorldObject object, WorldObject collider);
+
+
 }

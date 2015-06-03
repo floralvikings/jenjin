@@ -68,8 +68,7 @@ public class StateObserverTracker
 		@Override
 		public void handle(NewlyInvisibleEvent event) {
 			event.getNewlyInvisible().forEach(o -> {
-				Message msg = WorldServerMessageFactory
-					  .generateNewlyInvisibleMessage(o);
+				Message msg = WorldServerMessageFactory.generateNewlyInvisibleMessage(o);
 				context.enqueue(msg);
 				o.removeObserver(observers.get(o));
 				observers.remove(o);
@@ -89,11 +88,9 @@ public class StateObserverTracker
 		@Override
 		public void handle(NewlyVisibleEvent event) {
 			event.getNewlyVisible().forEach(o -> {
-				Message msg = WorldServerMessageFactory
-					  .generateNewlyVisibleMessage(o);
+				Message msg = WorldServerMessageFactory.generateNewlyVisibleMessage(o);
 				context.enqueue(msg);
-				VisibleStateChangeObserver observer = new
-					  VisibleStateChangeObserver(context);
+				VisibleStateChangeObserver observer = new VisibleStateChangeObserver(context);
 				observer.registerEventHandler(new VisibleStateChangeHandler());
 				o.addObserver(observer);
 				observers.put(o, observer);

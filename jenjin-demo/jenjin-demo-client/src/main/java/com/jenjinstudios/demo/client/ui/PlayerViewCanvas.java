@@ -1,11 +1,9 @@
 package com.jenjinstudios.demo.client.ui;
 
-import com.jenjinstudios.world.Location;
+import com.jenjinstudios.world.Cell;
 import com.jenjinstudios.world.client.WorldClient;
 import com.jenjinstudios.world.math.SightCalculator;
-import com.jenjinstudios.world.object.Actor;
 import com.jenjinstudios.world.object.WorldObject;
-import com.jenjinstudios.world.util.LocationUtils;
 import javafx.application.Platform;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -15,7 +13,6 @@ import javafx.scene.text.Font;
 import javafx.scene.transform.Rotate;
 
 import java.io.InputStream;
-import java.util.Map;
 
 /**
  * Canvas used to render a player view of the world.
@@ -31,10 +28,10 @@ public class PlayerViewCanvas extends Canvas
 	private static final int HUD_FONT_SIZE = 14;
 	private static final int HUD_VERTICAL_OFFSET = 12;
 	private static final double HUD_LINE_OFFSET = 1.5;
-	private static final double LOC_SCALE = SCALE / Location.SIZE;
+	private static final double CELL_SCALE = SCALE / Cell.CELL_SIZE;
 	private final Image playerTile;
 	private final Image bulletTile;
-	private final Actor clientPlayer;
+	private final WorldObject clientPlayer;
 	private final double yOrig = getHeight() / 2;
 	private final double xOrig = getWidth() / 2;
 	private final WorldClient worldClient;
@@ -82,7 +79,7 @@ public class PlayerViewCanvas extends Canvas
 			  "Visible Object Count: " + clientPlayer.getVision()
 					.getVisibleObjects().size(),
 			  clientPlayer.getName(),
-			  clientPlayer.getGeometry2D().getPosition().toString()
+			  clientPlayer.getGeometry().getPosition().toString()
 		};
 
 		for (int i = 0; i < hudStrings.length; i++)
@@ -98,33 +95,29 @@ public class PlayerViewCanvas extends Canvas
 	}
 
 	private void drawLocations() {
-		if (LocationUtils.
-			  getObjectLocation(clientPlayer, worldClient.getWorld()) != null)
+		if (clientPlayer.getParent() != null)
 		{
-			SightCalculator.getVisibleLocations(worldClient.getWorld(),
-				  clientPlayer).
+			SightCalculator.getVisibleCells(clientPlayer).
 				  stream().
-				  filter(location -> location != null).
-				  forEach(this::drawLocation);
+				  filter(cell -> cell != null).
+				  forEach(this::drawCell);
 		}
 	}
 
-	private void drawLocation(Location location) {
-		Location pLoc = LocationUtils.
-			  getObjectLocation(clientPlayer, worldClient.getWorld());
-		int xDiff = location.getX() - pLoc.getX();
-		int yDiff = location.getY() - pLoc.getY();//+ 1;
-		double xBuff = clientPlayer.getGeometry2D().getPosition().getXValue() % Location.SIZE;
-		double yBuff = clientPlayer.getGeometry2D().getPosition().getYValue() % Location.SIZE;
+	private void drawCell(Cell cell) {
+		Cell pCell = clientPlayer.getParent();
+		int xDiff = cell.getXCoordinate() - pCell.getXCoordinate();
+		int yDiff = cell.getYCoordinate() - pCell.getYCoordinate();//+ 1;
+		double xBuff = clientPlayer.getGeometry().getPosition().getXValue() % Cell.CELL_SIZE;
+		double yBuff = clientPlayer.getGeometry().getPosition().getYValue() % Cell.CELL_SIZE;
 
-		double x = xOrig + ((xDiff * SCALE) - (xBuff * LOC_SCALE));
-		double y = yOrig - ((yDiff * SCALE) - (yBuff * LOC_SCALE)) - SCALE;
+		double x = xOrig + ((xDiff * SCALE) - (xBuff * CELL_SCALE));
+		double y = yOrig - ((yDiff * SCALE) - (yBuff * CELL_SCALE)) - SCALE;
 
 		GraphicsContext graphicsContext2D = getGraphicsContext2D();
 
-		Map<String, String> properties = location.getProperties();
-		boolean isBlocked = "false".equals(properties.get("walkable"));
-		boolean indoors = "true".equals(properties.get("indoors"));
+		boolean isBlocked = "false".equals(cell.getProperty("walkable"));
+		boolean indoors = "true".equals(cell.getProperty("indoors"));
 		if (isBlocked)
 		{
 			graphicsContext2D.setFill(Color.GRAY);
@@ -145,17 +138,17 @@ public class PlayerViewCanvas extends Canvas
 	}
 
 	private void drawObject(WorldObject o) {
-		double xDiff = o.getGeometry2D().getPosition().getXValue() - clientPlayer.getGeometry2D().getPosition()
+		double xDiff = o.getGeometry().getPosition().getXValue() - clientPlayer.getGeometry().getPosition()
 			  .getXValue();
-		double yDiff = o.getGeometry2D().getPosition().getYValue() - clientPlayer.getGeometry2D().getPosition()
+		double yDiff = o.getGeometry().getPosition().getYValue() - clientPlayer.getGeometry().getPosition()
 			  .getYValue();
 
-		double x = xOrig + (xDiff * LOC_SCALE);
-		double y = yOrig - (yDiff * LOC_SCALE);
+		double x = xOrig + (xDiff * CELL_SCALE);
+		double y = yOrig - (yDiff * CELL_SCALE);
 
 		GraphicsContext graphicsContext2D = getGraphicsContext2D();
 		graphicsContext2D.save();
-		Rotate r = new Rotate(-Math.toDegrees(o.getGeometry2D().getOrientation().getAbsoluteAngle()), x, y);
+		Rotate r = new Rotate(-Math.toDegrees(o.getGeometry().getOrientation().getAbsoluteAngle()), x, y);
 		graphicsContext2D.setTransform(r.getMxx(), r.getMyx(), r.getMxy(), r.getMyy(), r.getTx(), r.getTy());
 		Image objectTile = getObjectTile(o);
 		graphicsContext2D.drawImage(objectTile, x - (objectTile.getWidth() / 2), y - (objectTile.getHeight() / 2));
