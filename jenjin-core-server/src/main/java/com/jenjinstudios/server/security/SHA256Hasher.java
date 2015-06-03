@@ -31,8 +31,6 @@ public final class SHA256Hasher
 		} catch (NoSuchAlgorithmException e)
 		{
 			LOGGER.log(Level.SEVERE, "No SHA-256 algorithm found; are you using a valid Java implementation?");
-			// FIXME This could be a pretty big security issue for non-compliant JVMs
-			// maybe fall back to a custom SHA-256 implementation?
 		}
 		return passBytes;
 	}

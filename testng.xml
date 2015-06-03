@@ -5,7 +5,5 @@
         <suite-file path="jenjin-core-client/src/test/resources/testng.xml" />
         <suite-file path="jenjin-core-server/src/test/resources/testng.xml" />
         <suite-file path="jenjin-world-core/src/test/resources/testng.xml" />
-        <suite-file path="jenjin-world-client/src/test/resources/testng.xml" />
-        <suite-file path="jenjin-world-server/src/test/resources/testng.xml" />
     </suite-files>
 </suite>

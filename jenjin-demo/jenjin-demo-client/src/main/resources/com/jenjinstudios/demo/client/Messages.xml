@@ -1,7 +1,0 @@
-<?xml version="1.0" ?>
-
-<messages xmlns="https://www.jenjinstudios.com">
-<message name="FireRequest" id="300">
-        <executable>com.jenjinstudios.demo.server.message.ExecutableFireRequest</executable>
-    </message>
-</messages>
