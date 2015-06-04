@@ -18,7 +18,7 @@ public class Point
 	 * @param yCoordinate The Y coordinate of the cell.
 	 * @param zCoordinate The Z coordinate of the cell.
 	 */
-	Point(int xCoordinate, int yCoordinate, int zCoordinate)
+	public Point(int xCoordinate, int yCoordinate, int zCoordinate)
 	{
 		this.xCoordinate = xCoordinate;
 		this.yCoordinate = yCoordinate;
