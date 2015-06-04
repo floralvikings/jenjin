@@ -25,13 +25,24 @@ public class Zone extends Node
 	private final World parent;
 
 	/**
-	 * Construct a new Zone with the specified length, width, and height.
+	 * Construct a new Zone with the specified dimensions and parent.
 	 *
 	 * @param dimension The size of the zone.
 	 * @param parent The parent of this node.
 	 */
 	public Zone(Dimension dimension, World parent) {
-		// TODO Need to add constructor with ID.
+		this(UUID.randomUUID().toString(), dimension, parent);
+	}
+
+	/**
+	 * Construct a new Zone with the specified id, dimensions and parent.
+	 *
+	 * @param id The id of the zone.
+	 * @param dimension The size of the zone.
+	 * @param parent The parent of this node.
+	 */
+	public Zone(String id, Dimension dimension, World parent) {
+		super(id);
 		this.parent = parent;
 		children = new DirectedMultigraph<>(new CellEdgeFactory());
 		populateVertices(dimension.getWidth(), dimension.getDepth(), dimension.getHeight());
