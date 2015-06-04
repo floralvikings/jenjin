@@ -6,7 +6,7 @@ package com.jenjinstudios.world.event;
  *
  * @author Caleb Brinkman
  */
-public interface WorldEvent
+public interface NodeEvent
 {
 
 }

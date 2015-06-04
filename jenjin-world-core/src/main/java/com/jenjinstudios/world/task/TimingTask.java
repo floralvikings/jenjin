@@ -8,7 +8,7 @@ import com.jenjinstudios.world.object.WorldObject;
  *
  * @author Caleb Brinkman
  */
-public class TimingTask extends WorldObjectTaskAdapter
+public class TimingTask extends NodeTaskAdapter
 {
 
 	@Override

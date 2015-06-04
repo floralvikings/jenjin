@@ -139,19 +139,24 @@ public class Cell extends Node
 	public Collection<WorldObject> getChildren() { return Collections.unmodifiableCollection(children); }
 
 	@Override
-	public Node removeChildRecursively(Node child) {
-		Node r = null;
+	public void preUpdate() {
+		getTasks().forEach(t -> t.onPreUpdate(this));
+		getObservers().forEach(t -> t.onPreUpdate(this));
+		getChildren().forEach(WorldObject::preUpdate);
+	}
 
-		if (children.remove(child)) {
-			r = child;
-		} else {
-			Iterator<WorldObject> iterator = children.iterator();
-			while (iterator.hasNext() && (r == null)) {
-				r = iterator.next().removeChildRecursively(child);
-			}
-		}
+	@Override
+	public void update() {
+		getTasks().forEach(t -> t.onUpdate(this));
+		getObservers().forEach(t -> t.onUpdate(this));
+		getChildren().forEach(WorldObject::update);
+	}
 
-		return r;
+	@Override
+	public void postUpdate() {
+		getTasks().forEach(t -> t.onPostUpdate(this));
+		getObservers().forEach(t -> t.onPostUpdate(this));
+		getChildren().forEach(WorldObject::postUpdate);
 	}
 
 }

@@ -7,7 +7,7 @@ package com.jenjinstudios.world.event;
  * @author Caleb Brinkman
  */
 @FunctionalInterface
-public interface WorldEventHandler<E extends WorldEvent>
+public interface NodeEventHandler<E extends NodeEvent>
 {
 	/**
 	 * Handle the given event.

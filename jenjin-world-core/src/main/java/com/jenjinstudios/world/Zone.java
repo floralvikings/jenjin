@@ -7,7 +7,6 @@ import com.jenjinstudios.world.object.WorldObject;
 import org.jgrapht.graph.DirectedMultigraph;
 
 import java.util.*;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
@@ -22,16 +21,15 @@ public class Zone extends Node
 	private static final Logger LOGGER = Logger.getLogger(Zone.class.getName());
 	private static final int EXPECTED_ADJACENT_CELLS = 26;
 	private final DirectedMultigraph<Cell, CellEdge> children;
-	private final World parent;
+	private World parent;
 
 	/**
 	 * Construct a new Zone with the specified dimensions and parent.
 	 *
 	 * @param dimension The size of the zone.
-	 * @param parent The parent of this node.
 	 */
-	public Zone(Dimension dimension, World parent) {
-		this(UUID.randomUUID().toString(), dimension, parent);
+	public Zone(Dimension dimension) {
+		this(UUID.randomUUID().toString(), dimension);
 	}
 
 	/**
@@ -39,11 +37,9 @@ public class Zone extends Node
 	 *
 	 * @param id The id of the zone.
 	 * @param dimension The size of the zone.
-	 * @param parent The parent of this node.
 	 */
-	public Zone(String id, Dimension dimension, World parent) {
+	public Zone(String id, Dimension dimension) {
 		super(id);
-		this.parent = parent;
 		children = new DirectedMultigraph<>(new CellEdgeFactory());
 		populateVertices(dimension.getWidth(), dimension.getDepth(), dimension.getHeight());
 		populateEdges(dimension.getWidth(), dimension.getDepth(), dimension.getHeight());
@@ -119,6 +115,15 @@ public class Zone extends Node
 		return worldObjects;
 	}
 
+	/**
+	 * Set the parent of this zone.
+	 *
+	 * @param parent The parent of this zone.
+	 */
+	public void setParent(World parent) {
+		this.parent = parent;
+	}
+
 	private void populateVertices(int width, int depth, int height) {
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
@@ -184,20 +189,23 @@ public class Zone extends Node
 	public Collection<Cell> getChildren() { return children.vertexSet(); }
 
 	@Override
-	public Node removeChildRecursively(Node child) {
-		Node r = null;
+	public void preUpdate() {
+		getTasks().forEach(t -> t.onPreUpdate(this));
+		getObservers().forEach(t -> t.onPreUpdate(this));
+		getChildren().forEach(Cell::preUpdate);
+	}
 
-		if ((child instanceof Cell) && children.containsVertex((Cell) child)) {
-			Cell cell = (Cell) child;
-			LOGGER.log(Level.INFO, "Removing Cell {0} From Zone {1}", new Object[]{cell, this});
-			children.removeVertex(cell);
-		} else {
-			Iterator<Cell> iterator = children.vertexSet().iterator();
-			while (iterator.hasNext() && (r == null)) {
-				r = iterator.next().removeChildRecursively(child);
-			}
-		}
+	@Override
+	public void update() {
+		getTasks().forEach(t -> t.onUpdate(this));
+		getObservers().forEach(t -> t.onUpdate(this));
+		getChildren().forEach(Cell::update);
+	}
 
-		return r;
+	@Override
+	public void postUpdate() {
+		getTasks().forEach(t -> t.onPostUpdate(this));
+		getObservers().forEach(t -> t.onPostUpdate(this));
+		getChildren().forEach(Cell::postUpdate);
 	}
 }

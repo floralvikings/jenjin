@@ -9,7 +9,7 @@ import com.jenjinstudios.world.object.Vision;
  * @author Caleb Brinkman
  */
 public class NewlyVisibleHandler
-	  implements WorldEventHandler<NewlyVisibleEvent>
+	  implements NodeEventHandler<NewlyVisibleEvent>
 {
 	@Override
 	public void handle(NewlyVisibleEvent event) {

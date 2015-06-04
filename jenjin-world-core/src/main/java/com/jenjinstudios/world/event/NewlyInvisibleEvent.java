@@ -11,7 +11,7 @@ import java.util.LinkedList;
  *
  * @author Caleb Brinkman
  */
-public class NewlyInvisibleEvent implements WorldEvent
+public class NewlyInvisibleEvent implements NodeEvent
 {
 	private final WorldObject viewing;
 	private final Collection<WorldObject> newlyInvisible;

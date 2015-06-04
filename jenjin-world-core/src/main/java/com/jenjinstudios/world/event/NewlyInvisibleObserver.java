@@ -14,7 +14,7 @@ import static com.jenjinstudios.world.math.SightCalculator.getVisibleObjects;
  *
  * @author Caleb Brinkman
  */
-public class NewlyInvisibleObserver extends WorldObjectObserver<NewlyInvisibleEvent>
+public class NewlyInvisibleObserver extends NodeObserver<NewlyInvisibleEvent>
 {
 	private Collection<WorldObject> lastVisible = new HashSet<>(10);
 

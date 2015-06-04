@@ -1,9 +1,12 @@
 package com.jenjinstudios.world;
 
-import com.jenjinstudios.world.event.WorldObjectObserver;
-import com.jenjinstudios.world.task.WorldObjectTask;
+import com.jenjinstudios.world.event.NodeObserver;
+import com.jenjinstudios.world.task.NodeTask;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.UUID;
 
 /**
  * Represents a node in the World tree.  The World node should be the root, with Zone children, which in turn have Cell
@@ -13,8 +16,8 @@ import java.util.*;
  */
 public abstract class Node
 {
-	private final Collection<WorldObjectTask> tasks;
-	private final Collection<WorldObjectObserver> observers;
+	private final Collection<NodeTask> tasks;
+	private final Collection<NodeObserver> observers;
 	private final String id;
 
 	/**
@@ -80,99 +83,56 @@ public abstract class Node
 	}
 
 	/**
-	 * Find the child of this node (inclusive) with the given id, if it exists.  This utilizes a depth-first search.
-	 *
-	 * @param childId The id of the chile node to find.
-	 *
-	 * @return The child node, if it is found; null otherwise.
-	 */
-	public Node findChild(String childId) {
-		Node node = null;
-
-		if (childId.equals(id)) {
-			node = this;
-		} else {
-			Iterator<? extends Node> iterator = getChildren().iterator();
-			while (iterator.hasNext() && (node == null)) {
-				node = iterator.next().findChild(childId);
-			}
-		}
-
-		return node;
-	}
-
-	/**
-	 * Remove the child with the given id from this node tree, if it is present anywhere in the tree below this node.
-	 *
-	 * @param childId The id of the child to remove.
-	 *
-	 * @return The child that was removed; null if no change was made to the tree.
-	 */
-	public Node removeChildRecursively(String childId) {
-		Node node = findChild(childId);
-		return removeChildRecursively(node);
-	}
-
-	/**
-	 * Remove the specified node from the node tree, if it is present anywhere in the tree below this node.
-	 *
-	 * @param child The child to remove from the tree.
-	 *
-	 * @return The child removed, if any; null otherwise.
-	 */
-	public abstract Node removeChildRecursively(Node child);
-
-	/**
 	 * Add a task to be executed each update cycle on this world object.
 	 *
 	 * @param task The task to be executed.
 	 */
-	public void addTask(WorldObjectTask task) { tasks.add(task); }
+	public void addTask(NodeTask task) { tasks.add(task); }
 
 	/**
 	 * Get the tasks to be executed on this WorldObject each update cycle.
 	 *
 	 * @return The tasks to be executed.
 	 */
-	public Iterable<WorldObjectTask> getTasks() { return Collections.unmodifiableCollection(tasks); }
+	public Collection<NodeTask> getTasks() { return Collections.unmodifiableCollection(tasks); }
 
 	/**
 	 * Add an observer to this world object.
 	 *
 	 * @param observer The observer to add.
 	 */
-	public void addObserver(WorldObjectObserver observer) { observers.add(observer); }
+	public void addObserver(NodeObserver observer) { observers.add(observer); }
 
 	/**
 	 * Remove an observer from this WorldObject.
 	 *
 	 * @param observer The observer to remove.
 	 */
-	public void removeObserver(WorldObjectObserver observer) { observers.remove(observer); }
+	public void removeObserver(NodeObserver observer) { observers.remove(observer); }
 
 	/**
 	 * Get the observers obersving this world object.
 	 *
 	 * @return The observers.
 	 */
-	public Iterable<WorldObjectObserver> getObservers() { return Collections.unmodifiableCollection(observers); }
+	public Collection<NodeObserver> getObservers() { return Collections.unmodifiableCollection(observers); }
 
 	/** Used to "set up" a node at the beginning of the update cycle. */
-	public final void preUpdate() {
+	public void preUpdate() {
 		getTasks().forEach(t -> t.onPreUpdate(this));
 		getObservers().forEach(t -> t.onPreUpdate(this));
 		getChildren().forEach(Node::preUpdate);
 	}
 
 	/** Used to update a node. */
-	public final void update() {
+	public void update() {
 		getTasks().forEach(t -> t.onUpdate(this));
 		getObservers().forEach(t -> t.onUpdate(this));
 		getChildren().forEach(Node::update);
 	}
 
 	/** Used to "clean up" an node at the end of the update cycle. */
-	public final void postUpdate() {
+	public void postUpdate() {
 		getTasks().forEach(t -> t.onPostUpdate(this));
 		getObservers().forEach(t -> t.onPostUpdate(this));
 		getChildren().forEach(Node::postUpdate);
