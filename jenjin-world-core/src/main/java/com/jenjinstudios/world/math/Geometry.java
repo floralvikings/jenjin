@@ -8,61 +8,66 @@ package com.jenjinstudios.world.math;
  *
  * @author Caleb Brinkman
  */
-public interface Geometry
+public class Geometry
 {
+	private Vector position;
+	private Orientation orientation;
+	private Vector size;
+	private double speed;
+
 	/**
 	 * Get the position represented in this Geometry.
 	 *
 	 * @return The position.
 	 */
-	Vector getPosition();
+	public Vector getPosition() { return position; }
 
 	/**
 	 * Get the orientation represented by this geometry.
 	 *
 	 * @return The orientation represented by this geometry.
 	 */
-	Angle getOrientation();
+	public Orientation getOrientation() { return orientation; }
 
 	/**
 	 * Get the size represented in this Geometry.
 	 *
 	 * @return The size.
 	 */
-	Vector getSize();
+	public Vector getSize() { return size; }
 
 	/**
 	 * Set the position represented in this geometry.
 	 *
 	 * @param position The position.
 	 */
-	void setPosition(Vector position);
+	public void setPosition(Vector position) { this.position = position; }
 
 	/**
 	 * Set the orientation represented in this geometry.
 	 *
 	 * @param orientation The orientation.
 	 */
-	void setOrientation(Angle orientation);
+	public void setOrientation(Orientation orientation) { this.orientation = orientation; }
 
 	/**
 	 * Set the size represented in this geometry.
 	 *
 	 * @param size The size.
 	 */
-	void setSize(Vector size);
+	public void setSize(Vector size) { this.size = size; }
 
 	/**
 	 * Get the movement speed of the object with this geometry, in units per second.
 	 *
 	 * @return The movement speed represented in this geometry, in units per second.
 	 */
-	double getSpeed();
+	public double getSpeed() { return this.speed; }
 
 	/**
 	 * Set the movement speed represented in this geometry, in units per second.
 	 *
 	 * @param speed The speed represented in this geometry, in units per second.
 	 */
-	void setSpeed(Double speed);
+	public void setSpeed(Double speed) { this.speed = speed; }
 }

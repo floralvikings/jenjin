@@ -3,7 +3,6 @@ package com.jenjinstudios.world.object;
 import com.jenjinstudios.world.Cell;
 import com.jenjinstudios.world.Node;
 import com.jenjinstudios.world.math.Geometry;
-import com.jenjinstudios.world.math.Geometry2D;
 import com.jenjinstudios.world.task.TimingTask;
 
 import java.util.Collection;
@@ -30,7 +29,7 @@ public class WorldObject extends Node
 	public WorldObject(String name) {
 		this.name = name;
 		identification = new Identification();
-		geometry = new Geometry2D();
+		geometry = new Geometry();
 		vision = new Vision();
 		timing = new Timing();
 		addTask(new TimingTask());

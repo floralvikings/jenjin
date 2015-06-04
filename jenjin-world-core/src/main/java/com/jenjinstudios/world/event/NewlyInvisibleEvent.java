@@ -44,7 +44,7 @@ public class NewlyInvisibleEvent implements WorldEvent
 	 *
 	 * @return The WorldObjects which have become visible.
 	 */
-	public Collection<WorldObject> getNewlyInvisible() {
+	public Iterable<WorldObject> getNewlyInvisible() {
 		return new LinkedList<>(newlyInvisible);
 	}
 }

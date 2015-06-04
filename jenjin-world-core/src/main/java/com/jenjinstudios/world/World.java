@@ -29,7 +29,7 @@ public class World extends Node
 	 *
 	 * @return All WorldObjects which are direct children of any Cell children of the Zone children of this World.
 	 */
-	public Collection<WorldObject> getWorldObjects() {
+	public Iterable<WorldObject> getWorldObjects() {
 		Collection<WorldObject> worldObjects = new LinkedList<>();
 
 		children.values().forEach(zone -> worldObjects.addAll(zone.getWorldObjects()));

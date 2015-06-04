@@ -134,7 +134,7 @@ public abstract class Node
 	 *
 	 * @return The tasks to be executed.
 	 */
-	public Collection<WorldObjectTask> getTasks() { return Collections.unmodifiableCollection(tasks); }
+	public Iterable<WorldObjectTask> getTasks() { return Collections.unmodifiableCollection(tasks); }
 
 	/**
 	 * Add an observer to this world object.
@@ -155,7 +155,7 @@ public abstract class Node
 	 *
 	 * @return The observers.
 	 */
-	public Collection<WorldObjectObserver> getObservers() { return Collections.unmodifiableCollection(observers); }
+	public Iterable<WorldObjectObserver> getObservers() { return Collections.unmodifiableCollection(observers); }
 
 	/** Used to "set up" a node at the beginning of the update cycle. */
 	public final void preUpdate() {

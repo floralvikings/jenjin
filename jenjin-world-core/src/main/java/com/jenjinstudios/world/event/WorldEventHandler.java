@@ -6,12 +6,13 @@ package com.jenjinstudios.world.event;
  *
  * @author Caleb Brinkman
  */
-public abstract class WorldEventHandler<E extends WorldEvent>
+@FunctionalInterface
+public interface WorldEventHandler<E extends WorldEvent>
 {
 	/**
 	 * Handle the given event.
 	 *
 	 * @param event The event to be handled.
 	 */
-	public abstract void handle(E event);
+	void handle(E event);
 }

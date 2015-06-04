@@ -85,9 +85,9 @@ public class Zone extends Node
 	 *
 	 * @return The list of cells adjacent to the one specified.
 	 */
-	public List<Cell> getAdjacentCells(Cell cell) {
+	public Collection<Cell> getAdjacentCells(Cell cell) {
 		Set<CellEdge> edges = children.outgoingEdgesOf(cell);
-		List<Cell> adjacents = new ArrayList<>(EXPECTED_ADJACENT_CELLS);
+		Collection<Cell> adjacents = new ArrayList<>(EXPECTED_ADJACENT_CELLS);
 		adjacents.addAll(edges.stream().map(CellEdge::getDestination).collect(Collectors.toList()));
 		return adjacents;
 	}
