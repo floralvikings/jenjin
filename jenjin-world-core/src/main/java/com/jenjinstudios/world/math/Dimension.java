@@ -1,4 +1,4 @@
-package com.jenjinstudios.world;
+package com.jenjinstudios.world.math;
 
 /**
  * Represents width, depth, and height in 3D space.

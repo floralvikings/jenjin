@@ -1,5 +1,7 @@
 package com.jenjinstudios.world;
 
+import com.jenjinstudios.world.math.Dimension;
+import com.jenjinstudios.world.math.Point;
 import com.jenjinstudios.world.math.Vector;
 import com.jenjinstudios.world.object.WorldObject;
 import org.jgrapht.graph.DirectedMultigraph;

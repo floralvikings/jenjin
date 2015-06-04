@@ -1,11 +1,11 @@
-package com.jenjinstudios.world;
+package com.jenjinstudios.world.math;
 
 /**
  * Represents a three dimensional integer point.
  *
  * @author Caleb Brinkman
  */
-class Point
+public class Point
 {
 	private final int xCoordinate;
 	private final int yCoordinate;
@@ -25,14 +25,29 @@ class Point
 		this.zCoordinate = zCoordinate;
 	}
 
+	/**
+	 * Get the x coordinate of this point.
+	 *
+	 * @return The x coordinate of this point.
+	 */
 	public int getxCoordinate() {
 		return xCoordinate;
 	}
 
+	/**
+	 * Get the y coordinate of this point.
+	 *
+	 * @return The y coordinate of this point.
+	 */
 	public int getyCoordinate() {
 		return yCoordinate;
 	}
 
+	/**
+	 * Get the z coordinate of this point.
+	 *
+	 * @return The z coordinate of this point.
+	 */
 	public int getzCoordinate() {
 		return zCoordinate;
 	}

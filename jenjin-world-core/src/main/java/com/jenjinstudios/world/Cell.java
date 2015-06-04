@@ -1,5 +1,6 @@
 package com.jenjinstudios.world;
 
+import com.jenjinstudios.world.math.Point;
 import com.jenjinstudios.world.object.WorldObject;
 
 import java.util.*;
