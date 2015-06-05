@@ -80,4 +80,20 @@ public class WorldTest
 		verify(task).onPostUpdate(zoneArgumentCaptor.capture());
 		verify(task, times(0)).onPostUpdate(nodeArgumentCaptor.capture());
 	}
+
+	/**
+	 * Test the one-time task functionality.
+	 */
+	@Test
+	public void testScheduleOneTimeTask() {
+		World world = new World();
+		Runnable runnable = mock(Runnable.class);
+
+		world.scheduleOneTimeTask(runnable);
+
+		world.postUpdate();
+		world.postUpdate();
+
+		verify(runnable, times(1)).run();
+	}
 }
