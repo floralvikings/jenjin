@@ -6,6 +6,7 @@ import com.jenjinstudios.world.math.Geometry;
 import com.jenjinstudios.world.task.TimingTask;
 
 import java.util.Collection;
+import java.util.LinkedList;
 
 /**
  * Represents an object within a Cell in the game world.
@@ -70,7 +71,7 @@ public class WorldObject extends Node
 	public Cell getParent() { return parent; }
 
 	@Override
-	public Collection<? extends Node> getChildren() { return null; }
+	public Collection<? extends Node> getChildren() { return new LinkedList<>(); }
 
 	@Override
 	public void preUpdate() {
