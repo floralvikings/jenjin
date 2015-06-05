@@ -1,6 +1,7 @@
 package com.jenjinstudios.world.event;
 
 import com.jenjinstudios.world.Node;
+import com.jenjinstudios.world.object.Actor;
 import com.jenjinstudios.world.object.WorldObject;
 
 import java.util.Collection;
@@ -28,14 +29,14 @@ public class NewlyVisibleObserver extends NodeObserver<NewlyVisibleEvent>
 	@Override
 	protected NewlyVisibleEvent observePostUpdate(Node node) {
 		NewlyVisibleEvent newlyVisibleEvent = null;
-		if (node instanceof WorldObject) {
-			WorldObject object = (WorldObject) node;
-			Collection<WorldObject> current = getVisibleObjects(object);
+		if (node instanceof Actor) {
+			Actor actor = (Actor) node;
+			Collection<WorldObject> current = getVisibleObjects(actor);
 			Collection<WorldObject> newVisible = new LinkedList<>(current);
 			newVisible.removeAll(lastVisible);
 
 			if (!newVisible.isEmpty()) {
-				newlyVisibleEvent = new NewlyVisibleEvent(object, newVisible);
+				newlyVisibleEvent = new NewlyVisibleEvent(actor, newVisible);
 			}
 
 			lastVisible = current;

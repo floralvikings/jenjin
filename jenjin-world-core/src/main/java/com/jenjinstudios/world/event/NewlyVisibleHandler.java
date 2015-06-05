@@ -8,8 +8,7 @@ import com.jenjinstudios.world.object.Vision;
  *
  * @author Caleb Brinkman
  */
-public class NewlyVisibleHandler
-	  implements NodeEventHandler<NewlyVisibleEvent>
+public class NewlyVisibleHandler implements NodeEventHandler<NewlyVisibleEvent>
 {
 	@Override
 	public void handle(NewlyVisibleEvent event) {

@@ -1,5 +1,6 @@
 package com.jenjinstudios.world.event;
 
+import com.jenjinstudios.world.object.Actor;
 import com.jenjinstudios.world.object.WorldObject;
 
 import java.util.Collection;
@@ -13,7 +14,7 @@ import java.util.LinkedList;
  */
 public class NewlyInvisibleEvent implements NodeEvent
 {
-	private final WorldObject viewing;
+	private final Actor viewing;
 	private final Collection<WorldObject> newlyInvisible;
 
 	/**
@@ -23,8 +24,7 @@ public class NewlyInvisibleEvent implements NodeEvent
 	 * become visible
 	 * @param newlyInvisible The WorldObjects which have become visible.
 	 */
-	public NewlyInvisibleEvent(WorldObject viewing,
-							   Collection<WorldObject> newlyInvisible)
+	public NewlyInvisibleEvent(Actor viewing, Collection<WorldObject> newlyInvisible)
 	{
 		this.viewing = viewing;
 		this.newlyInvisible = newlyInvisible;
@@ -37,7 +37,7 @@ public class NewlyInvisibleEvent implements NodeEvent
 	 * @return The WorldObject to whom the newly visible objects have become
 	 * visible.
 	 */
-	public WorldObject getViewing() { return viewing; }
+	public Actor getViewing() { return viewing; }
 
 	/**
 	 * Get the WorldObjects which have become visible.
