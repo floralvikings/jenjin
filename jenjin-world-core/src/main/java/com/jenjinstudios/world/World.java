@@ -1,10 +1,7 @@
 package com.jenjinstudios.world;
 
-import com.jenjinstudios.world.object.WorldObject;
-
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -23,19 +20,6 @@ public class World extends Node
 	 */
 	public World() {
 		children = new HashMap<>(1);
-	}
-
-	/**
-	 * Get all WorldObjects which are direct children of any Cell children of the Zone children of this World.
-	 *
-	 * @return All WorldObjects which are direct children of any Cell children of the Zone children of this World.
-	 */
-	public Iterable<WorldObject> getWorldObjects() {
-		Collection<WorldObject> worldObjects = new LinkedList<>();
-
-		children.values().forEach(zone -> worldObjects.addAll(zone.getWorldObjects()));
-
-		return worldObjects;
 	}
 
 	/**
