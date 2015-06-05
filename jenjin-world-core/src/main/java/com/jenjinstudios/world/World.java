@@ -43,9 +43,7 @@ public class World extends Node
 	public void preUpdate() {
 		getTasks().forEach(t -> t.onPreUpdate(this));
 		getObservers().forEach(t -> t.onPreUpdate(this));
-		for (Zone zone : getChildren()) {
-			zone.preUpdate();
-		}
+		getChildren().forEach(Zone::preUpdate);
 	}
 
 	@Override
