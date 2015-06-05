@@ -17,7 +17,7 @@ public class WorldObject extends Node
 {
 	private final String name;
 	private final Timing timing;
-	private Geometry geometry;
+	private final Geometry geometry;
 	private Cell parent;
 
 	/**
