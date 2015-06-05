@@ -6,8 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Marks a method in a NodeTask subclass as a task, so that it will be reflectively executed when called with a
- * parameter of the correct subclass.
+ * Marks a method as dynamic so that it can be reflectively executed by a DynamicMethodSelector.
  *
  * @author Caleb Brinkman
  */
