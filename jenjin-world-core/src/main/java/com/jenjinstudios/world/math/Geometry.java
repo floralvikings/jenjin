@@ -13,7 +13,6 @@ public class Geometry
 	private Vector position;
 	private Orientation orientation;
 	private Vector size;
-	private double speed;
 
 	/**
 	 * Get the position represented in this Geometry.
@@ -57,17 +56,4 @@ public class Geometry
 	 */
 	public void setSize(Vector size) { this.size = size; }
 
-	/**
-	 * Get the movement speed of the object with this geometry, in units per second.
-	 *
-	 * @return The movement speed represented in this geometry, in units per second.
-	 */
-	public double getSpeed() { return this.speed; }
-
-	/**
-	 * Set the movement speed represented in this geometry, in units per second.
-	 *
-	 * @param speed The speed represented in this geometry, in units per second.
-	 */
-	public void setSpeed(Double speed) { this.speed = speed; }
 }
