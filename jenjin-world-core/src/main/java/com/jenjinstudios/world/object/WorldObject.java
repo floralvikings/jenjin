@@ -60,13 +60,6 @@ public class WorldObject extends Node
 	 */
 	public Geometry getGeometry() { return geometry; }
 
-	/**
-	 * Set the geometry of this object.
-	 *
-	 * @param geometry The new geometry.
-	 */
-	public void setGeometry(Geometry geometry) { this.geometry = geometry; }
-
 	@Override
 	public Cell getParent() { return parent; }
 
