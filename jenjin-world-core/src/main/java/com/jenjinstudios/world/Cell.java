@@ -138,25 +138,4 @@ public class Cell extends Node
 	@Override
 	public Collection<WorldObject> getChildren() { return Collections.unmodifiableCollection(children); }
 
-	@Override
-	public void preUpdate() {
-		getTasks().forEach(t -> t.onPreUpdate(this));
-		getObservers().forEach(t -> t.onPreUpdate(this));
-		getChildren().forEach(WorldObject::preUpdate);
-	}
-
-	@Override
-	public void update() {
-		getTasks().forEach(t -> t.onUpdate(this));
-		getObservers().forEach(t -> t.onUpdate(this));
-		getChildren().forEach(WorldObject::update);
-	}
-
-	@Override
-	public void postUpdate() {
-		getTasks().forEach(t -> t.onPostUpdate(this));
-		getObservers().forEach(t -> t.onPostUpdate(this));
-		getChildren().forEach(WorldObject::postUpdate);
-	}
-
 }

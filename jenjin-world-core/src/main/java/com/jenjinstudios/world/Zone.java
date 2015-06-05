@@ -187,25 +187,4 @@ public class Zone extends Node
 
 	@Override
 	public Collection<Cell> getChildren() { return children.vertexSet(); }
-
-	@Override
-	public void preUpdate() {
-		getTasks().forEach(t -> t.onPreUpdate(this));
-		getObservers().forEach(t -> t.onPreUpdate(this));
-		getChildren().forEach(Cell::preUpdate);
-	}
-
-	@Override
-	public void update() {
-		getTasks().forEach(t -> t.onUpdate(this));
-		getObservers().forEach(t -> t.onUpdate(this));
-		getChildren().forEach(Cell::update);
-	}
-
-	@Override
-	public void postUpdate() {
-		getTasks().forEach(t -> t.onPostUpdate(this));
-		getObservers().forEach(t -> t.onPostUpdate(this));
-		getChildren().forEach(Cell::postUpdate);
-	}
 }

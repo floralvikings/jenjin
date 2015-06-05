@@ -1,5 +1,7 @@
 package com.jenjinstudios.world;
 
+import com.jenjinstudios.world.task.NodeTask;
+
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -20,6 +22,7 @@ public class World extends Node
 	 */
 	public World() {
 		children = new HashMap<>(1);
+		addTask(new ExecuteOneOffsTask());
 	}
 
 	/**
@@ -33,35 +36,6 @@ public class World extends Node
 		}
 	}
 
-	@Override
-	public Node getParent() { return null; }
-
-	@Override
-	public Collection<Zone> getChildren() { return children.values(); }
-
-	@Override
-	public void preUpdate() {
-		getTasks().forEach(t -> t.onPreUpdate(this));
-		getObservers().forEach(t -> t.onPreUpdate(this));
-		getChildren().forEach(Zone::preUpdate);
-	}
-
-	@Override
-	public void update() {
-		getTasks().forEach(t -> t.onUpdate(this));
-		getObservers().forEach(t -> t.onUpdate(this));
-		getChildren().forEach(Zone::update);
-	}
-
-	@Override
-	public void postUpdate() {
-		getTasks().forEach(t -> t.onPostUpdate(this));
-		getObservers().forEach(t -> t.onPostUpdate(this));
-		getChildren().forEach(Zone::postUpdate);
-		oneTimeTasks.forEach(Runnable::run);
-		oneTimeTasks.clear();
-	}
-
 	/**
 	 * Add a zone to this world.
 	 *
@@ -70,6 +44,34 @@ public class World extends Node
 	public void addZone(Zone zone) {
 		children.put(zone.getId(), zone);
 		zone.setParent(this);
+	}
+
+	private void runOneTimeTasks() {
+		oneTimeTasks.forEach(Runnable::run);
+		oneTimeTasks.clear();
+	}
+
+	@Override
+	public Node getParent() { return null; }
+
+	@Override
+	public Collection<Zone> getChildren() { return children.values(); }
+
+	/**
+	 * Used to execute a world task once.
+	 */
+	public static class ExecuteOneOffsTask extends NodeTask
+	{
+		/**
+		 * Execute the tasks stored in the world one time schedule, then clear them.
+		 *
+		 * @param world The world.
+		 */
+		@SuppressWarnings("unused")
+		public void onPostUpdate(World world) {
+			world.runOneTimeTasks();
+		}
+
 	}
 
 }

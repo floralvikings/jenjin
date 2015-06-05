@@ -65,25 +65,4 @@ public class WorldObject extends Node
 
 	@Override
 	public Collection<? extends Node> getChildren() { return new LinkedList<>(); }
-
-	@Override
-	public void preUpdate() {
-		getTasks().forEach(t -> t.onPreUpdate(this));
-		getObservers().forEach(t -> t.onPreUpdate(this));
-		getChildren().forEach(Node::preUpdate);
-	}
-
-	@Override
-	public void update() {
-		getTasks().forEach(t -> t.onUpdate(this));
-		getObservers().forEach(t -> t.onUpdate(this));
-		getChildren().forEach(Node::update);
-	}
-
-	@Override
-	public void postUpdate() {
-		getTasks().forEach(t -> t.onPostUpdate(this));
-		getObservers().forEach(t -> t.onPostUpdate(this));
-		getChildren().forEach(Node::postUpdate);
-	}
 }

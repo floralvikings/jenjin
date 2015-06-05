@@ -40,11 +40,12 @@ public class DynamicMethodSelector
 	 */
 	public Object invokeMostSpecificMethod(String methodName, Object... params) throws InvocationTargetException {
 		Method method = findMostSpecificMethod(methodName, params);
-		Object returnValue = null;
+		Object returnValue;
 
 		try {
 			returnValue = method.invoke(object, params);
-		} catch (IllegalAccessException ignored) {
+		} catch (IllegalAccessException ex) {
+			throw new InvocationTargetException(ex);
 			// We have ensured the method is accessible in findMostSpecificMethod
 		}
 
@@ -88,7 +89,9 @@ public class DynamicMethodSelector
 		Method[] methods = targetClass.getMethods();
 		List<Method> temp = new LinkedList<>();
 		for (Method method : methods) {
-			if (method.getName().equals(methodName) && Modifier.isPublic(method.getModifiers())) {
+			boolean methodPublic = Modifier.isPublic(method.getModifiers());
+			boolean classPublic = Modifier.isPublic(targetClass.getModifiers());
+			if (method.getName().equals(methodName) && methodPublic && classPublic) {
 				if (method.getParameterCount() == parameters.length) {
 					boolean match = true;
 					for (int i = 0; i < parameters.length; i++) {
