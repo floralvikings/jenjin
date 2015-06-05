@@ -15,7 +15,6 @@ import java.util.Collection;
 public class WorldObject extends Node
 {
 	private final String name;
-	private final Vision vision;
 	private final Timing timing;
 	private Geometry geometry;
 	private Cell parent;
@@ -28,11 +27,8 @@ public class WorldObject extends Node
 	public WorldObject(String name) {
 		this.name = name;
 		geometry = new Geometry();
-		vision = new Vision();
 		timing = new Timing();
 		addTask(new TimingTask());
-		addObserver(vision.getNewlyVisibleObserver());
-		addObserver(vision.getNewlyInvisibleObserver());
 	}
 
 	/**
@@ -42,15 +38,36 @@ public class WorldObject extends Node
 	 */
 	public String getName() { return name; }
 
-	@Override
-	public Cell getParent() { return parent; }
-
 	/**
 	 * Set the parent of this WorldObject.
 	 *
 	 * @param parent The Cell that contains this world object.
 	 */
 	public void setParent(Cell parent) { this.parent = parent; }
+
+	/**
+	 * Get the timing of this object.
+	 *
+	 * @return The timing of this object.
+	 */
+	public Timing getTiming() { return timing; }
+
+	/**
+	 * Get the geometry of this object.
+	 *
+	 * @return The geometry of this object.
+	 */
+	public Geometry getGeometry() { return geometry; }
+
+	/**
+	 * Set the geometry of this object.
+	 *
+	 * @param geometry The new geometry.
+	 */
+	public void setGeometry(Geometry geometry) { this.geometry = geometry; }
+
+	@Override
+	public Cell getParent() { return parent; }
 
 	@Override
 	public Collection<? extends Node> getChildren() { return null; }
@@ -75,32 +92,4 @@ public class WorldObject extends Node
 		getObservers().forEach(t -> t.onPostUpdate(this));
 		getChildren().forEach(Node::postUpdate);
 	}
-
-	/**
-	 * Get the Vision of this object.
-	 *
-	 * @return The Vision of this object.
-	 */
-	public Vision getVision() { return vision; }
-
-	/**
-	 * Get the timing of this object.
-	 *
-	 * @return The timing of this object.
-	 */
-	public Timing getTiming() { return timing; }
-
-	/**
-	 * Get the geometry of this object.
-	 *
-	 * @return The geometry of this object.
-	 */
-	public Geometry getGeometry() { return geometry; }
-
-	/**
-	 * Set the geometry of this object.
-	 *
-	 * @param geometry The new geometry.
-	 */
-	public void setGeometry(Geometry geometry) { this.geometry = geometry; }
 }
