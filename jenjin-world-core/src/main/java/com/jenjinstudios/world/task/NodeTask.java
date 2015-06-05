@@ -1,9 +1,9 @@
 package com.jenjinstudios.world.task;
 
 import com.jenjinstudios.world.Node;
+import com.jenjinstudios.world.reflection.DynamicInvocationException;
 import com.jenjinstudios.world.reflection.DynamicMethodSelector;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -25,7 +25,7 @@ public abstract class NodeTask
 		DynamicMethodSelector methodSelector = new DynamicMethodSelector(this);
 		try {
 			methodSelector.invokeMostSpecificMethod("onPreUpdate", node);
-		} catch (InvocationTargetException e) {
+		} catch (DynamicInvocationException e) {
 			LOGGER.log(Level.WARNING, "Exception when executing pre-update task", e);
 		}
 	}
@@ -39,7 +39,7 @@ public abstract class NodeTask
 		DynamicMethodSelector methodSelector = new DynamicMethodSelector(this);
 		try {
 			methodSelector.invokeMostSpecificMethod("onUpdate", node);
-		} catch (InvocationTargetException e) {
+		} catch (DynamicInvocationException e) {
 			LOGGER.log(Level.WARNING, "Exception when executing update task", e);
 		}
 	}
@@ -53,30 +53,8 @@ public abstract class NodeTask
 		DynamicMethodSelector methodSelector = new DynamicMethodSelector(this);
 		try {
 			methodSelector.invokeMostSpecificMethod("onPostUpdate", node);
-		} catch (InvocationTargetException e) {
+		} catch (DynamicInvocationException e) {
 			LOGGER.log(Level.WARNING, "Exception when executing post-update task", e);
 		}
 	}
-
-	/**
-	 * This method will be executed before the node updates.
-	 *
-	 * @param node The node on which the task should be executed
-	 */
-	public void onPreUpdate(Node node) { }
-
-	/**
-	 * This method will be executed when the node updates.
-	 *
-	 * @param node The node on which the task should be executed.
-	 */
-	public void onUpdate(Node node) { }
-
-	/**
-	 * This method will be executed after the node updates.
-	 *
-	 * @param node The node on which the task should be executed.
-	 */
-	public void onPostUpdate(Node node) { }
-
 }

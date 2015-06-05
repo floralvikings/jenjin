@@ -1,5 +1,6 @@
 package com.jenjinstudios.world;
 
+import com.jenjinstudios.world.reflection.DynamicMethod;
 import com.jenjinstudios.world.task.NodeTask;
 
 import java.util.Collection;
@@ -67,7 +68,7 @@ public class World extends Node
 		 *
 		 * @param world The world.
 		 */
-		@SuppressWarnings("unused")
+		@DynamicMethod
 		public void onPostUpdate(World world) {
 			world.runOneTimeTasks();
 		}

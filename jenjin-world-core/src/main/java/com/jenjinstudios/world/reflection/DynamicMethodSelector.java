@@ -36,17 +36,22 @@ public class DynamicMethodSelector
 	 *
 	 * @return The return value of the method invoked.
 	 *
-	 * @throws InvocationTargetException If there is an exception when invoking (or thrown by) the method.
+	 * @throws DynamicInvocationException If there is an exception when invoking (or thrown by) the method.
 	 */
-	public Object invokeMostSpecificMethod(String methodName, Object... params) throws InvocationTargetException {
+	public Object invokeMostSpecificMethod(String methodName, Object... params) throws DynamicInvocationException {
 		Method method = findMostSpecificMethod(methodName, params);
-		Object returnValue;
 
+		if (method == null) {
+			throw new DynamicInvocationException("No method " + methodName + " with valid parameter types found.");
+		}
+
+		Object returnValue;
 		try {
 			returnValue = method.invoke(object, params);
 		} catch (IllegalAccessException ex) {
-			throw new InvocationTargetException(ex);
-			// We have ensured the method is accessible in findMostSpecificMethod
+			throw new DynamicInvocationException(ex);
+		} catch (InvocationTargetException e) {
+			throw new DynamicInvocationException("Exception occured when invoking method", e);
 		}
 
 		return returnValue;
@@ -89,9 +94,11 @@ public class DynamicMethodSelector
 		Method[] methods = targetClass.getMethods();
 		List<Method> temp = new LinkedList<>();
 		for (Method method : methods) {
+			boolean methodNameMatch = method.getName().equals(methodName);
 			boolean methodPublic = Modifier.isPublic(method.getModifiers());
+			boolean methodDynamic = method.getAnnotation(DynamicMethod.class) != null;
 			boolean classPublic = Modifier.isPublic(targetClass.getModifiers());
-			if (method.getName().equals(methodName) && methodPublic && classPublic) {
+			if (methodNameMatch && methodPublic && classPublic && methodDynamic) {
 				if (method.getParameterCount() == parameters.length) {
 					boolean match = true;
 					for (int i = 0; i < parameters.length; i++) {

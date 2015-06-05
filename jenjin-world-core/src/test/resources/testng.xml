@@ -11,4 +11,9 @@
             <package name="com.jenjinstudios.world.math" />
         </packages>
     </test>
+    <test name="reflection">
+        <packages>
+            <package name="com.jenjinstudios.world.reflection" />
+        </packages>
+    </test>
 </suite>

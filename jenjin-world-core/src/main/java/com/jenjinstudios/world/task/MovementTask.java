@@ -1,6 +1,7 @@
 package com.jenjinstudios.world.task;
 
 import com.jenjinstudios.world.object.Actor;
+import com.jenjinstudios.world.reflection.DynamicMethod;
 
 /**
  * Causes an actor to during an update.
@@ -14,7 +15,7 @@ public class MovementTask extends NodeTask
 	 *
 	 * @param actor The actor to move forward.
 	 */
-	@SuppressWarnings("unused")
+	@DynamicMethod
 	public void onUpdate(Actor actor) {
 		// TODO Implement movement
 	}

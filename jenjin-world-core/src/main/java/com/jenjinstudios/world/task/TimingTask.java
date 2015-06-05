@@ -1,6 +1,7 @@
 package com.jenjinstudios.world.task;
 
 import com.jenjinstudios.world.object.WorldObject;
+import com.jenjinstudios.world.reflection.DynamicMethod;
 
 /**
  * Tracks the beginning and end of an object's update cycle.
@@ -14,7 +15,7 @@ public class TimingTask extends NodeTask
 	 *
 	 * @param object The object.
 	 */
-	@SuppressWarnings("unused")
+	@DynamicMethod
 	public void onPreUpdate(WorldObject object) {
 		object.getTiming().setLastUpdateStartTime(System.currentTimeMillis());
 	}
@@ -24,7 +25,7 @@ public class TimingTask extends NodeTask
 	 *
 	 * @param object The object.
 	 */
-	@SuppressWarnings("unused")
+	@DynamicMethod
 	public void onPostUpdate(WorldObject object) {
 		object.getTiming().setLastUpdateEndTime(System.currentTimeMillis());
 	}
