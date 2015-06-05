@@ -15,7 +15,6 @@ import java.util.Collection;
 public class WorldObject extends Node
 {
 	private final String name;
-	private final Identification identification;
 	private final Vision vision;
 	private final Timing timing;
 	private Geometry geometry;
@@ -28,7 +27,6 @@ public class WorldObject extends Node
 	 */
 	public WorldObject(String name) {
 		this.name = name;
-		identification = new Identification();
 		geometry = new Geometry();
 		vision = new Vision();
 		timing = new Timing();
@@ -77,13 +75,6 @@ public class WorldObject extends Node
 		getObservers().forEach(t -> t.onPostUpdate(this));
 		getChildren().forEach(Node::postUpdate);
 	}
-
-	/**
-	 * Get the identification values of this object.
-	 *
-	 * @return The identification values of this object.
-	 */
-	public Identification getIdentification() { return identification; }
 
 	/**
 	 * Get the Vision of this object.
