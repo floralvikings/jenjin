@@ -1,9 +1,13 @@
 package com.jenjinstudios.world.event;
 
 import com.jenjinstudios.world.Node;
+import com.jenjinstudios.world.reflection.DynamicInvocationException;
+import com.jenjinstudios.world.reflection.DynamicMethodSelector;
 
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Observes WorldObjects, and dispatches events when necessary.
@@ -12,8 +16,8 @@ import java.util.LinkedList;
  */
 public abstract class NodeObserver<E extends NodeEvent>
 {
-	private final Collection<NodeEventHandler<E>> handlers
-		  = new LinkedList<>();
+	private static final Logger LOGGER = Logger.getLogger(NodeObserver.class.getName());
+	private final Collection<NodeEventHandler<E>> handlers = new LinkedList<>();
 
 	/**
 	 * Register the given event handler, to which events will be dispatched as
@@ -42,9 +46,16 @@ public abstract class NodeObserver<E extends NodeEvent>
 	 * @param node The node to watch for an event.
 	 */
 	public void onPreUpdate(Node node) {
-		E event = observePreUpdate(node);
-		if (event != null) {
-			handlers.forEach(handler -> handler.handle(event));
+		DynamicMethodSelector methodSelector = new DynamicMethodSelector(this);
+		try {
+			E event = (E) methodSelector.invokeMostSpecificMethod("observePreUpdate", node);
+			if (event != null) {
+				handlers.forEach(handler -> handler.handle(event));
+			}
+		} catch (DynamicInvocationException e) {
+			LOGGER.log(Level.WARNING, "Exception when observing node", e);
+		} catch (ClassCastException e) {
+			LOGGER.log(Level.WARNING, "Method return type incorrect", e);
 		}
 	}
 
@@ -55,9 +66,16 @@ public abstract class NodeObserver<E extends NodeEvent>
 	 * @param node The node to watch for an event.
 	 */
 	public void onUpdate(Node node) {
-		E event = observeUpdate(node);
-		if (event != null) {
-			handlers.forEach(handler -> handler.handle(event));
+		DynamicMethodSelector methodSelector = new DynamicMethodSelector(this);
+		try {
+			E event = (E) methodSelector.invokeMostSpecificMethod("observeUpdate", node);
+			if (event != null) {
+				handlers.forEach(handler -> handler.handle(event));
+			}
+		} catch (DynamicInvocationException e) {
+			LOGGER.log(Level.WARNING, "Exception when observing node", e);
+		} catch (ClassCastException e) {
+			LOGGER.log(Level.WARNING, "Method return type incorrect", e);
 		}
 	}
 
@@ -68,39 +86,16 @@ public abstract class NodeObserver<E extends NodeEvent>
 	 * @param node The node to watch for an event.
 	 */
 	public void onPostUpdate(Node node) {
-		E event = observePostUpdate(node);
-		if (event != null) {
-			handlers.forEach(handler -> handler.handle(event));
+		DynamicMethodSelector methodSelector = new DynamicMethodSelector(this);
+		try {
+			E event = (E) methodSelector.invokeMostSpecificMethod("observePostUpdate", node);
+			if (event != null) {
+				handlers.forEach(handler -> handler.handle(event));
+			}
+		} catch (DynamicInvocationException e) {
+			LOGGER.log(Level.WARNING, "Exception when observing node", e);
+		} catch (ClassCastException e) {
+			LOGGER.log(Level.WARNING, "Method return type incorrect", e);
 		}
 	}
-
-	/**
-	 * Observe the given node for an event occurring
-	 * pre-update, returning an event if it occurs, and null otherwise.
-	 *
-	 * @param node the node to watch for the event
-	 *
-	 * @return The event that occurred, if any; null otherwise.
-	 */
-	protected abstract E observePreUpdate(Node node);
-
-	/**
-	 * Observe the given node for an event occurring
-	 * in-update, returning an event if it occurs, and null otherwise.
-	 *
-	 * @param node the node to watch for the event
-	 *
-	 * @return The event that occurred, if any; null otherwise.
-	 */
-	protected abstract E observeUpdate(Node node);
-
-	/**
-	 * Observe the given node for an event occurring
-	 * post-update, returning an event if it occurs, and null otherwise.
-	 *
-	 * @param node the node to watch for the event
-	 *
-	 * @return The event that occurred, if any; null otherwise.
-	 */
-	protected abstract E observePostUpdate(Node node);
 }
