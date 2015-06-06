@@ -12,4 +12,12 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
-public @interface DynamicMethod {}
+public @interface DynamicMethod
+{
+	/**
+	 * The return type of the method marked with this annotation.
+	 *
+	 * @return The return type of the method marked with this annotation.
+	 */
+	Class returnType() default Object.class;
+}
