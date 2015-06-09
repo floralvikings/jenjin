@@ -1,13 +1,12 @@
 package com.jenjinstudios.world;
 
-import com.jenjinstudios.world.math.Dimension;
+import com.jenjinstudios.world.math.Dimensions;
 import com.jenjinstudios.world.math.Point;
 import com.jenjinstudios.world.math.Vector;
 import com.jenjinstudios.world.object.WorldObject;
 import org.jgrapht.graph.DirectedMultigraph;
 
 import java.util.*;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 /**
@@ -18,31 +17,37 @@ import java.util.stream.Collectors;
  */
 public class Zone extends Node
 {
-	private static final Logger LOGGER = Logger.getLogger(Zone.class.getName());
 	private static final int EXPECTED_ADJACENT_CELLS = 26;
 	private final DirectedMultigraph<Cell, CellEdge> children;
+	private final Map<Point, Cell> cellMap;
+	private final Dimensions dimensions;
 	private World parent;
 
 	/**
 	 * Construct a new Zone with the specified dimensions and parent.
 	 *
-	 * @param dimension The size of the zone.
+	 * @param dimensions The size of the zone.
 	 */
-	public Zone(Dimension dimension) {
-		this(UUID.randomUUID().toString(), dimension);
+	public Zone(Dimensions dimensions) {
+		this(UUID.randomUUID().toString(), dimensions);
 	}
 
 	/**
 	 * Construct a new Zone with the specified id, dimensions and parent.
 	 *
 	 * @param id The id of the zone.
-	 * @param dimension The size of the zone.
+	 * @param dimensions The size of the zone.
 	 */
-	public Zone(String id, Dimension dimension) {
+	public Zone(String id, Dimensions dimensions) {
 		super(id);
+		this.dimensions = dimensions;
 		children = new DirectedMultigraph<>(new CellEdgeFactory());
-		populateVertices(dimension.getWidth(), dimension.getDepth(), dimension.getHeight());
-		populateEdges(dimension.getWidth(), dimension.getDepth(), dimension.getHeight());
+		cellMap = new HashMap<>(dimensions.getDepth() * dimensions.getHeight() * dimensions.getWidth());
+		populateVertices();
+		for (Cell cell : children.vertexSet()) {
+			cellMap.put(cell.getPoint(), cell);
+		}
+		populateEdges();
 	}
 
 	/**
@@ -56,17 +61,7 @@ public class Zone extends Node
 	 * {@code
 	 * null}.
 	 */
-	public Cell getCell(int x, int y, int z) {
-		Cell match = null;
-		Cell test = new Cell(new Point(x, y, z), this);
-		Set<Cell> vertices = children.vertexSet();
-		for (Cell cell : vertices) {
-			if (cell.equals(test)) {
-				match = cell;
-			}
-		}
-		return match;
-	}
+	public Cell getCell(int x, int y, int z) { return cellMap.get(new Point(x, y, z)); }
 
 	/**
 	 * Get the cell containing the specific vector.
@@ -124,10 +119,10 @@ public class Zone extends Node
 		this.parent = parent;
 	}
 
-	private void populateVertices(int width, int depth, int height) {
-		for (int x = 0; x < width; x++) {
-			for (int y = 0; y < height; y++) {
-				for (int z = 0; z < depth; z++) {
+	private void populateVertices() {
+		for (int x = 0; x < dimensions.getWidth(); x++) {
+			for (int y = 0; y < dimensions.getHeight(); y++) {
+				for (int z = 0; z < dimensions.getDepth(); z++) {
 					Cell cell = new Cell(new Point(x, y, z), this);
 					children.addVertex(cell);
 				}
@@ -135,10 +130,10 @@ public class Zone extends Node
 		}
 	}
 
-	private void populateEdges(int width, int depth, int height) {
-		for (int x = 0; x < width; x++) {
-			for (int y = 0; y < height; y++) {
-				for (int z = 0; z < depth; z++) {
+	private void populateEdges() {
+		for (int x = 0; x < dimensions.getWidth(); x++) {
+			for (int y = 0; y < dimensions.getHeight(); y++) {
+				for (int z = 0; z < dimensions.getDepth(); z++) {
 					Cell origin = getCell(x, y, z);
 					Collection<Cell> adjacents = calculateAdjacentCells(x, y, z);
 					adjacents.forEach(destination -> {

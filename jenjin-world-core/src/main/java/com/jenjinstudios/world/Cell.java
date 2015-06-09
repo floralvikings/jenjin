@@ -1,6 +1,7 @@
 package com.jenjinstudios.world;
 
 import com.jenjinstudios.world.math.Point;
+import com.jenjinstudios.world.math.Vector;
 import com.jenjinstudios.world.object.WorldObject;
 
 import java.util.*;
@@ -14,9 +15,9 @@ public class Cell extends Node
 {
 	/** The size in units of each cell on a side. */
 	public static final int CELL_SIZE = 10;
-	private final int xCoordinate;
-	private final int yCoordinate;
-	private final int zCoordinate;
+	/** Half the size in units of each cell on a side. */
+	public static final int HALF_CELL_SIZE = CELL_SIZE / 2;
+	private final Point point;
 	private final Map<String, String> properties;
 	private final Collection<WorldObject> children;
 	private final Zone parent;
@@ -28,34 +29,18 @@ public class Cell extends Node
 	 * @param parent The parent node of this cell.
 	 */
 	public Cell(Point point, Zone parent) {
+		this.point = point;
 		this.parent = parent;
-		this.xCoordinate = point.getxCoordinate();
-		this.yCoordinate = point.getyCoordinate();
-		this.zCoordinate = point.getzCoordinate();
 		properties = new HashMap<>(1);
 		children = new ArrayList<>(10);
 	}
 
 	/**
-	 * Get the X coordinate of this cell.
+	 * Get the point containing the coordinates of this cell.
 	 *
-	 * @return The X coordinate of this cell.
+	 * @return The point containing the coordinates of this cell.
 	 */
-	public int getXCoordinate() { return xCoordinate; }
-
-	/**
-	 * Get the Y coordinate of this cell.
-	 *
-	 * @return The Y coordinate of this cell.
-	 */
-	public int getYCoordinate() { return yCoordinate; }
-
-	/**
-	 * Get the Z coordinate of this cell.
-	 *
-	 * @return The Z coordinate of this cell.
-	 */
-	public int getZCoordinate() { return zCoordinate; }
+	public Point getPoint() { return point; }
 
 	/**
 	 * Get the property of this cell with the given name.
@@ -111,25 +96,44 @@ public class Cell extends Node
 		child.setParent(this);
 	}
 
-	@Override
-	public int hashCode() {
-		int result = xCoordinate;
-		result = (31 * result) + yCoordinate;
-		result = (31 * result) + zCoordinate;
-		return result;
+	/**
+	 * Remove the specified child WorldObject from this Cell.
+	 *
+	 * @param child The WorldObject to remove from this Cell's children.
+	 */
+	public void removeChild(WorldObject child) {
+		children.remove(child);
+		child.setParent(null);
 	}
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) return true;
-		if ((obj == null) || (getClass() != obj.getClass())) return false;
+	/**
+	 * Returns whether the given vector is contained within this Cell.
+	 *
+	 * @param vector The vector to evaluate and determine whether contained in this cell.
+	 *
+	 * @return Whether the given vector is contained within this cell.
+	 */
+	public boolean containsVector(Vector vector) {
+		Vector center = getCenter();
 
-		Cell cell = (Cell) obj;
+		boolean contains = Math.abs(vector.getXValue() - center.getXValue()) < HALF_CELL_SIZE;
+		contains &= Math.abs(vector.getYValue() - center.getYValue()) < HALF_CELL_SIZE;
+		contains &= Math.abs(vector.getZValue() - center.getZValue()) < HALF_CELL_SIZE;
 
-		if (xCoordinate != cell.getXCoordinate()) return false;
-		if (yCoordinate != cell.getYCoordinate()) return false;
-		return zCoordinate == cell.getZCoordinate();
+		return contains;
+	}
 
+	/**
+	 * Get the Vector at the center of this Cell.
+	 *
+	 * @return The Vector at the center of this Cell.
+	 */
+	public Vector getCenter() {
+		double centerX = (point.getXCoordinate() * CELL_SIZE) + HALF_CELL_SIZE;
+		double centerY = (point.getYCoordinate() * CELL_SIZE) + HALF_CELL_SIZE;
+		double centerZ = (point.getZCoordinate() * CELL_SIZE) + HALF_CELL_SIZE;
+
+		return new Vector(centerX, centerY, centerZ);
 	}
 
 	@Override
@@ -138,4 +142,22 @@ public class Cell extends Node
 	@Override
 	public Collection<WorldObject> getChildren() { return Collections.unmodifiableCollection(children); }
 
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) return true;
+		if ((obj == null) || (getClass() != obj.getClass())) return false;
+		if (!super.equals(obj)) return false;
+
+		Cell cell = (Cell) obj;
+
+		return point.equals(cell.getPoint());
+
+	}
+
+	@Override
+	public int hashCode() {
+		int result = super.hashCode();
+		result = (31 * result) + point.hashCode();
+		return result;
+	}
 }

@@ -3,7 +3,7 @@ package com.jenjinstudios.world.math;
 /**
  * Represents width, depth, and height in 3D space.
  */
-public class Dimension
+public class Dimensions
 {
 	private final int width;
 	private final int depth;
@@ -16,7 +16,7 @@ public class Dimension
 	 * @param depth The depth.
 	 * @param height The height.
 	 */
-	public Dimension(int width, int depth, int height)
+	public Dimensions(int width, int depth, int height)
 	{
 		this.width = width;
 		this.depth = depth;

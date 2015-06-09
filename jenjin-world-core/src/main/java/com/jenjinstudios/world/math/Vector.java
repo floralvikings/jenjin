@@ -1,5 +1,8 @@
 package com.jenjinstudios.world.math;
 
+import static java.lang.Math.cos;
+import static java.lang.Math.sin;
+
 /**
  * Represents a pair of spatial coordinates; can be used to represent position or (rectangular) size.
  *
@@ -7,6 +10,7 @@ package com.jenjinstudios.world.math;
  */
 public class Vector
 {
+	private static final double EPSILON = 10.0e-6;
 	private final double xValue;
 	private final double yValue;
 	private final double zValue;
@@ -80,16 +84,17 @@ public class Vector
 	 * @return The new Vector.
 	 */
 	public Vector getVectorInDirection(double distance, Orientation orientation) {
-		double zAngleSin = Math.sin(orientation.getzAngle());
-		double xUnit = Math.cos(orientation.getXyAngle()) * zAngleSin;
-		double yUnit = Math.sin(orientation.getXyAngle()) * zAngleSin;
-		double zUnit = Math.cos(orientation.getzAngle());
+		double yaw = orientation.getYaw();
+		double pitch = orientation.getPitch();
+		double pitchSin = sin(pitch);
+		double pitchCos = cos(pitch);
+		double yawCos = cos(yaw);
+		double yawSin = sin(yaw);
+		double x = yawCos * pitchCos * distance;
+		double y = pitchSin * distance;
+		double z = yawSin * pitchCos * distance;
 
-		double xVal = xValue + (distance * xUnit);
-		double yVal = yValue + (distance * yUnit);
-		double zVal = zValue + (distance * zUnit);
-
-		return new Vector(xVal, yVal, zVal);
+		return new Vector(x + xValue, y + yValue, z + zValue);
 	}
 
 	@Override
@@ -99,9 +104,9 @@ public class Vector
 
 		Vector vector = (Vector) obj;
 
-		if (Double.compare(vector.getXValue(), xValue) != 0) return false;
-		if (Double.compare(vector.getYValue(), yValue) != 0) return false;
-		return Double.compare(vector.getZValue(), zValue) == 0;
+		if ((vector.getXValue() - xValue) > EPSILON) return false;
+		if ((vector.getYValue() - yValue) > EPSILON) return false;
+		return (vector.getYValue() - yValue) < EPSILON;
 
 	}
 

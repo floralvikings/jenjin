@@ -30,25 +30,40 @@ public class Point
 	 *
 	 * @return The x coordinate of this point.
 	 */
-	public int getxCoordinate() {
-		return xCoordinate;
-	}
+	public int getXCoordinate() { return xCoordinate; }
 
 	/**
 	 * Get the y coordinate of this point.
 	 *
 	 * @return The y coordinate of this point.
 	 */
-	public int getyCoordinate() {
-		return yCoordinate;
-	}
+	public int getYCoordinate() { return yCoordinate; }
 
 	/**
 	 * Get the z coordinate of this point.
 	 *
 	 * @return The z coordinate of this point.
 	 */
-	public int getzCoordinate() {
-		return zCoordinate;
+	public int getZCoordinate() { return zCoordinate; }
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) return true;
+		if ((obj == null) || (getClass() != obj.getClass())) return false;
+
+		Point point = (Point) obj;
+
+		if (xCoordinate != point.getXCoordinate()) return false;
+		if (yCoordinate != point.getYCoordinate()) return false;
+		return zCoordinate == point.getZCoordinate();
+
+	}
+
+	@Override
+	public int hashCode() {
+		int result = xCoordinate;
+		result = (31 * result) + yCoordinate;
+		result = (31 * result) + zCoordinate;
+		return result;
 	}
 }

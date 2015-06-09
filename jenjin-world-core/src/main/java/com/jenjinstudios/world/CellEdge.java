@@ -28,9 +28,9 @@ public class CellEdge
 	}
 
 	private static Direction calculateDirection(Cell origin, Cell destination) {
-		int xDiff = (int) Math.signum(origin.getXCoordinate() - destination.getXCoordinate());
-		int yDiff = (int) Math.signum(origin.getYCoordinate() - destination.getYCoordinate());
-		int zDiff = (int) Math.signum(origin.getZCoordinate() - destination.getZCoordinate());
+		int xDiff = (int) Math.signum(origin.getPoint().getXCoordinate() - destination.getPoint().getXCoordinate());
+		int yDiff = (int) Math.signum(origin.getPoint().getYCoordinate() - destination.getPoint().getYCoordinate());
+		int zDiff = (int) Math.signum(origin.getPoint().getZCoordinate() - destination.getPoint().getZCoordinate());
 
 		Direction direction;
 		if (xDiff < 0) {
