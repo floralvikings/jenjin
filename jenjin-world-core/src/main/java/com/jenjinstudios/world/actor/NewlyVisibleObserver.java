@@ -1,8 +1,6 @@
 package com.jenjinstudios.world.actor;
 
 import com.jenjinstudios.world.event.NodeObserver;
-import com.jenjinstudios.world.math.BasicSightCalculator;
-import com.jenjinstudios.world.math.SightCalculator;
 import com.jenjinstudios.world.object.WorldObject;
 import com.jenjinstudios.world.reflection.DynamicMethod;
 
@@ -29,8 +27,7 @@ public class NewlyVisibleObserver extends NodeObserver<NewlyVisibleEvent>
 	 */
 	@DynamicMethod
 	protected NewlyVisibleEvent observePostUpdate(Actor actor) {
-		SightCalculator sightCalculator = new BasicSightCalculator(actor);
-		Collection<WorldObject> current = sightCalculator.getVisibleObjects();
+		Collection<WorldObject> current = actor.getVision().getVisibleObjects();
 		Collection<WorldObject> newVisible = new LinkedList<>(current);
 		newVisible.removeAll(lastVisible);
 

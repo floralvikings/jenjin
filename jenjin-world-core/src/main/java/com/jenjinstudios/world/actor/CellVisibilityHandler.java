@@ -1,7 +1,6 @@
 package com.jenjinstudios.world.actor;
 
 import com.jenjinstudios.world.event.NodeEventHandler;
-import com.jenjinstudios.world.math.BasicSightCalculator;
 import com.jenjinstudios.world.math.SightCalculator;
 import com.jenjinstudios.world.object.WorldObject;
 
@@ -14,11 +13,19 @@ import java.util.Collection;
  */
 public class CellVisibilityHandler implements NodeEventHandler<CellChangeEvent>
 {
+	private final SightCalculator sightCalculator;
+
+	/**
+	 * Construct a new CellVisibilityHandler that will utilize the given SightCalculator to determine cell visibility.
+	 *
+	 * @param sightCalculator The sight calculator used to determine cell visibility.
+	 */
+	public CellVisibilityHandler(SightCalculator sightCalculator) { this.sightCalculator = sightCalculator; }
+
 	@Override
 	public void handle(CellChangeEvent event) {
 		Actor actor = event.getActor();
 		Vision vision = actor.getVision();
-		SightCalculator sightCalculator = new BasicSightCalculator(actor);
 		Collection<WorldObject> visibles = sightCalculator.getVisibleObjects();
 		visibles.forEach(vision::addVisibleObject);
 	}
