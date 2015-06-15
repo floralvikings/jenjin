@@ -32,9 +32,6 @@ public class Point
 	public static Point getPoint(short x, short y, short z) {
 		long longFromCoords = longFromCoords(x, y, z);
 		Point point = POINTS.get(longFromCoords);
-		short x2 = (short) (longFromCoords >> X_SHIFT);
-		short x3 = (short) (longFromCoords >> Y_SHIFT);
-		short x4 = (short) longFromCoords;
 		if (point == null) {
 			point = new Point(x, y, z);
 			POINTS.put(longFromCoords, point);
