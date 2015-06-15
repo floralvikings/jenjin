@@ -3,7 +3,6 @@ package com.jenjinstudios.world.object;
 import com.jenjinstudios.world.Cell;
 import com.jenjinstudios.world.Node;
 import com.jenjinstudios.world.math.Geometry;
-import com.jenjinstudios.world.task.TimingTask;
 
 import java.util.Collection;
 import java.util.LinkedList;

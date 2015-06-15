@@ -1,7 +1,7 @@
-package com.jenjinstudios.world.task;
+package com.jenjinstudios.world.object;
 
-import com.jenjinstudios.world.object.WorldObject;
 import com.jenjinstudios.world.reflection.DynamicMethod;
+import com.jenjinstudios.world.task.NodeTask;
 
 /**
  * Tracks the beginning and end of an object's update cycle.
