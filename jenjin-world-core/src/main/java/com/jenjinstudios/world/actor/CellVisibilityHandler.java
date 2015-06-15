@@ -26,7 +26,7 @@ public class CellVisibilityHandler implements NodeEventHandler<CellChangeEvent>
 	public void handle(CellChangeEvent event) {
 		Actor actor = event.getActor();
 		Vision vision = actor.getVision();
-		Collection<WorldObject> visibles = sightCalculator.getVisibleObjects();
+		Collection<WorldObject> visibles = sightCalculator.getVisibleObjects(actor);
 		visibles.forEach(vision::addVisibleObject);
 	}
 }
