@@ -15,26 +15,16 @@ import java.util.LinkedList;
  */
 public class BasicSightCalculator implements SightCalculator
 {
-	private final Actor actor;
-
-	/**
-	 * Construct a new SightCalculator that calculates sight within the given zone.
-	 *
-	 * @param actor The zone.
-	 */
-	public BasicSightCalculator(Actor actor) {
-		this.actor = actor;
-	}
 
 	@Override
-	public Collection<WorldObject> getVisibleObjects() {
+	public Collection<WorldObject> getVisibleObjects(Actor actor) {
 		Collection<WorldObject> objects = new LinkedList<>();
-		getVisibleCells().forEach(cell -> objects.addAll(cell.getChildren()));
+		getVisibleCells(actor).forEach(cell -> objects.addAll(cell.getChildren()));
 		return objects;
 	}
 
 	@Override
-	public Collection<Cell> getVisibleCells() {
+	public Collection<Cell> getVisibleCells(Actor actor) {
 		Zone zone = actor.getParent().getParent();
 		Collection<Cell> visibles = new LinkedList<>();
 		int range = (short) (actor.getVision().getRadius() / 2);
