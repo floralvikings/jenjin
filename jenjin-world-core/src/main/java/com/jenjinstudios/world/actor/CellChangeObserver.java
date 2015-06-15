@@ -1,7 +1,7 @@
-package com.jenjinstudios.world.event;
+package com.jenjinstudios.world.actor;
 
 import com.jenjinstudios.world.Cell;
-import com.jenjinstudios.world.actor.Actor;
+import com.jenjinstudios.world.event.NodeObserver;
 import com.jenjinstudios.world.reflection.DynamicMethod;
 
 import java.util.Objects;

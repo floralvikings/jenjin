@@ -1,7 +1,6 @@
-package com.jenjinstudios.world.event;
+package com.jenjinstudios.world.actor;
 
-import com.jenjinstudios.world.actor.Actor;
-import com.jenjinstudios.world.actor.Vision;
+import com.jenjinstudios.world.event.NodeEventHandler;
 import com.jenjinstudios.world.math.BasicSightCalculator;
 import com.jenjinstudios.world.math.SightCalculator;
 import com.jenjinstudios.world.object.WorldObject;
