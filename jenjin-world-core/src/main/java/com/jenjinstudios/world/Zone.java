@@ -3,11 +3,8 @@ package com.jenjinstudios.world;
 import com.jenjinstudios.world.math.Dimensions;
 import com.jenjinstudios.world.math.Point;
 import com.jenjinstudios.world.math.Vector;
-import com.jenjinstudios.world.object.WorldObject;
-import org.jgrapht.graph.DirectedMultigraph;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * Represents a 3-dimensional grid of Cell nodes.  These are not meant to be constructed programmatically; they should
@@ -18,8 +15,7 @@ import java.util.stream.Collectors;
 public class Zone extends Node
 {
 	private static final int EXPECTED_ADJACENT_CELLS = 26;
-	private final DirectedMultigraph<Cell, CellEdge> children;
-	private final Map<Point, Cell> cellMap;
+	private final Map<Point, Cell> children;
 	private final Dimensions dimensions;
 	private World parent;
 
@@ -28,9 +24,7 @@ public class Zone extends Node
 	 *
 	 * @param dimensions The size of the zone.
 	 */
-	public Zone(Dimensions dimensions) {
-		this(UUID.randomUUID().toString(), dimensions);
-	}
+	public Zone(Dimensions dimensions) { this(UUID.randomUUID().toString(), dimensions); }
 
 	/**
 	 * Construct a new Zone with the specified id, dimensions and parent.
@@ -41,14 +35,21 @@ public class Zone extends Node
 	public Zone(String id, Dimensions dimensions) {
 		super(id);
 		this.dimensions = dimensions;
-		children = new DirectedMultigraph<>(new CellEdgeFactory());
-		cellMap = new HashMap<>(dimensions.getDepth() * dimensions.getHeight() * dimensions.getWidth());
-		populateVertices();
-		for (Cell cell : children.vertexSet()) {
-			cellMap.put(cell.getPoint(), cell);
+		int maxSize = dimensions.getDepth() * dimensions.getHeight() * dimensions.getWidth();
+		if (maxSize <= 0) {
+			maxSize = Integer.MAX_VALUE;
 		}
-		populateEdges();
+		children = new HashMap<>(maxSize);
 	}
+
+	/**
+	 * Get the cell at the given point.
+	 *
+	 * @param p The point.
+	 *
+	 * @return The cell at {@code p}.
+	 */
+	public Cell getCell(Point p) { return children.containsKey(p) ? children.get(p) : populateCell(p); }
 
 	/**
 	 * Get the cell with the specified coordinates.
@@ -61,7 +62,7 @@ public class Zone extends Node
 	 * {@code
 	 * null}.
 	 */
-	public Cell getCell(int x, int y, int z) { return cellMap.get(new Point(x, y, z)); }
+	public Cell getCell(short x, short y, short z) { return getCell(Point.getPoint(x, y, z)); }
 
 	/**
 	 * Get the cell containing the specific vector.
@@ -74,10 +75,10 @@ public class Zone extends Node
 		double gridX = vector.getXValue() / Cell.CELL_SIZE;
 		double gridY = vector.getYValue() / Cell.CELL_SIZE;
 		double gridZ = vector.getZValue() / Cell.CELL_SIZE;
-		gridX = (gridX < 0) ? -1 : gridX;
-		gridY = (gridY < 0) ? -1 : gridY;
-		gridZ = (gridZ < 0) ? -1 : gridZ;
-		return getCell((int) gridX, (int) gridY, (int) gridZ);
+		gridX = ((gridX < 0) && (gridX >= -1)) ? -1 : gridX;
+		gridY = ((gridY < 0) && (gridY >= -1)) ? -1 : gridY;
+		gridZ = ((gridZ < 0) && (gridZ >= -1)) ? -1 : gridZ;
+		return getCell((short) gridX, (short) gridY, (short) gridZ);
 	}
 
 	/**
@@ -90,24 +91,41 @@ public class Zone extends Node
 	 * @return The list of cells adjacent to the one specified.
 	 */
 	public Collection<Cell> getAdjacentCells(Cell cell) {
-		Set<CellEdge> edges = children.outgoingEdgesOf(cell);
 		Collection<Cell> adjacents = new ArrayList<>(EXPECTED_ADJACENT_CELLS);
-		adjacents.addAll(edges.stream().map(CellEdge::getDestination).collect(Collectors.toList()));
+		for (int x = -1; x <= 1; x++) {
+			for (int y = -1; y <= 1; y++) {
+				for (int z = -1; z <= 1; z++) {
+					Point p = cell.getPoint();
+					short aX = (short) (p.getXCoordinate() + x);
+					short aY = (short) (p.getYCoordinate() + y);
+					short aZ = (short) (p.getZCoordinate() + z);
+					Cell adjacent = getCell(aX, aY, aZ);
+					if ((adjacent != null) && !Objects.equals(adjacent, cell)) {
+						adjacents.add(adjacent);
+					}
+				}
+			}
+		}
 		return adjacents;
 	}
 
 	/**
-	 * Returns the WorldObjects contained in the child Cells of this Zone.  Note that this only returns "first
-	 * generation" world objects; i.e. objects that are direct children of the Cells.
+	 * Returns true if the two cells specified are adjacent to one another, and neither is null.
 	 *
-	 * @return WorldObjects contained in the child Cells of this Zone.
+	 * @param cell1 The first cell to test for adjacence.
+	 * @param cell2 The second cell to test for adjacence.
+	 *
+	 * @return Whether the two cells are adjacent.
 	 */
-	public Collection<WorldObject> getWorldObjects() {
-		Collection<WorldObject> worldObjects = new LinkedList<>();
-
-		children.vertexSet().forEach(cell -> worldObjects.addAll(cell.getChildren()));
-
-		return worldObjects;
+	public boolean areAdjacent(Cell cell1, Cell cell2) {
+		boolean adjacent;
+		if ((cell1 == null) || (cell2 == null)) {
+			adjacent = false;
+		} else {
+			adjacent = this.equals(cell1.getParent()) && this.equals(cell2.getParent());
+			adjacent &= cell1.getPoint().isAdjacentTo(cell2.getPoint());
+		}
+		return adjacent;
 	}
 
 	/**
@@ -119,67 +137,57 @@ public class Zone extends Node
 		this.parent = parent;
 	}
 
-	private void populateVertices() {
-		for (int x = 0; x < dimensions.getWidth(); x++) {
-			for (int y = 0; y < dimensions.getHeight(); y++) {
-				for (int z = 0; z < dimensions.getDepth(); z++) {
-					Cell cell = new Cell(new Point(x, y, z), this);
-					children.addVertex(cell);
+	/**
+	 * Get the dimensions of this Zone.
+	 *
+	 * @return The dimensions of this Zone.
+	 */
+	public Dimensions getDimensions() { return dimensions; }
+
+	/**
+	 * Get the count of cells that have been populated into this zone.  Note that this is different from the maximum
+	 * number of cells; this method only returns cells which have actually been initialized and added to the cell map.
+	 * This does include cells which have been initialized to {@code null}
+	 *
+	 * @return The number of cells that have been populated into this zone.
+	 */
+	public long populatedCellCount() { return children.size(); }
+
+	private Cell populateCell(Point p) {
+		Cell cell = new Cell(p, this);
+		children.put(p, cell);
+		populateAdjacentCells(cell);
+		return cell;
+	}
+
+	private void populateAdjacentCells(Cell cell) {
+		for (short x = -1; x <= 1; x++) {
+			for (short y = -1; y <= 1; y++) {
+				for (short z = -1; z <= 1; z++) {
+					short xAdj = (short) (cell.getPoint().getXCoordinate() + x);
+					short yAdj = (short) (cell.getPoint().getYCoordinate() + y);
+					short zAdj = (short) (cell.getPoint().getZCoordinate() + z);
+					Point p = Point.getPoint(xAdj, yAdj, zAdj);
+					if (!children.containsKey(p) && withinBounds(p)) {
+						Cell adjCell = new Cell(p, this);
+						children.put(p, adjCell);
+					}
 				}
 			}
 		}
 	}
 
-	private void populateEdges() {
-		for (int x = 0; x < dimensions.getWidth(); x++) {
-			for (int y = 0; y < dimensions.getHeight(); y++) {
-				for (int z = 0; z < dimensions.getDepth(); z++) {
-					Cell origin = getCell(x, y, z);
-					Collection<Cell> adjacents = calculateAdjacentCells(x, y, z);
-					adjacents.forEach(destination -> {
-						if (destination != null) {
-							children.addEdge(origin, destination);
-						}
-					});
-				}
-			}
-		}
-	}
-
-	private Collection<Cell> calculateAdjacentCells(int x, int y, int z) {
-		Collection<Cell> adjacentCells = new LinkedList<>();
-		adjacentCells.add(getCell(x - 1, y - 1, z - 1));
-		adjacentCells.add(getCell(x - 1, y - 1, z));
-		adjacentCells.add(getCell(x - 1, y - 1, z + 1));
-		adjacentCells.add(getCell(x - 1, y, z - 1));
-		adjacentCells.add(getCell(x - 1, y, z));
-		adjacentCells.add(getCell(x - 1, y, z + 1));
-		adjacentCells.add(getCell(x - 1, y + 1, z - 1));
-		adjacentCells.add(getCell(x - 1, y + 1, z));
-		adjacentCells.add(getCell(x - 1, y + 1, z + 1));
-		adjacentCells.add(getCell(x, y - 1, z - 1));
-		adjacentCells.add(getCell(x, y - 1, z));
-		adjacentCells.add(getCell(x, y - 1, z + 1));
-		adjacentCells.add(getCell(x, y, z - 1));
-		adjacentCells.add(getCell(x, y, z + 1));
-		adjacentCells.add(getCell(x, y + 1, z - 1));
-		adjacentCells.add(getCell(x, y + 1, z));
-		adjacentCells.add(getCell(x, y + 1, z + 1));
-		adjacentCells.add(getCell(x + 1, y - 1, z - 1));
-		adjacentCells.add(getCell(x + 1, y - 1, z));
-		adjacentCells.add(getCell(x + 1, y - 1, z + 1));
-		adjacentCells.add(getCell(x + 1, y, z - 1));
-		adjacentCells.add(getCell(x + 1, y, z));
-		adjacentCells.add(getCell(x + 1, y, z + 1));
-		adjacentCells.add(getCell(x + 1, y + 1, z - 1));
-		adjacentCells.add(getCell(x + 1, y + 1, z));
-		adjacentCells.add(getCell(x + 1, y + 1, z + 1));
-		return adjacentCells;
+	private boolean withinBounds(Point p) {
+		boolean bigEnough = (p.getXCoordinate() >= 0) && (p.getYCoordinate() >= 0) && (p.getZCoordinate() >= 0);
+		boolean smallEnough = (p.getXCoordinate() < dimensions.getWidth())
+			  && (p.getYCoordinate() < dimensions.getHeight())
+			  && (p.getZCoordinate() < dimensions.getDepth());
+		return bigEnough && smallEnough;
 	}
 
 	@Override
 	public World getParent() { return parent; }
 
 	@Override
-	public Collection<Cell> getChildren() { return children.vertexSet(); }
+	public Collection<Cell> getChildren() { return children.values(); }
 }

@@ -1,6 +1,6 @@
-package com.jenjinstudios.world.object;
+package com.jenjinstudios.world.actor;
 
-import com.jenjinstudios.world.Cell;
+import com.jenjinstudios.world.object.WorldObject;
 
 /**
  * Represents a WorldObject which can move and see other objects.
@@ -9,9 +9,8 @@ import com.jenjinstudios.world.Cell;
  */
 public class Actor extends WorldObject
 {
-	private static final double DEFAULT_MOVE_SPEED = Cell.CELL_SIZE;
 	private final Vision vision;
-	private double moveSpeed = DEFAULT_MOVE_SPEED;
+	private final Movement movement;
 
 	/**
 	 * Construct a new Actor with the given name.
@@ -20,9 +19,11 @@ public class Actor extends WorldObject
 	 */
 	public Actor(String name) {
 		super(name);
+		movement = new Movement();
 		vision = new Vision();
 		addObserver(vision.getNewlyVisibleObserver());
 		addObserver(vision.getNewlyInvisibleObserver());
+		addTask(new MovementTask());
 	}
 
 	/**
@@ -33,16 +34,9 @@ public class Actor extends WorldObject
 	public Vision getVision() { return vision; }
 
 	/**
-	 * Get the speed at which this actor moves.
+	 * Get the movement object with details about how this actor is currently moving.
 	 *
-	 * @return The speed (in units per second) at which this actor moves.
+	 * @return The movement object with details about how this actor is currently moving.
 	 */
-	public double getMoveSpeed() { return moveSpeed; }
-
-	/**
-	 * Set the speed (in units per second) at which this actor moves.
-	 *
-	 * @param moveSpeed The speed (in units per second) at which this actor moves.
-	 */
-	public void setMoveSpeed(double moveSpeed) { this.moveSpeed = moveSpeed; }
+	public Movement getMovement() { return movement; }
 }

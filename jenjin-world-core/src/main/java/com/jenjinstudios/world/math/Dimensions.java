@@ -28,25 +28,26 @@ public class Dimensions
 	 *
 	 * @return The width of this dimension.
 	 */
-	public int getWidth() {
-		return width;
-	}
+	public int getWidth() { return width; }
 
 	/**
 	 * Get the depth of this dimension.
 	 *
 	 * @return The depth of this dimension.
 	 */
-	public int getDepth() {
-		return depth;
-	}
+	public int getDepth() { return depth; }
 
 	/**
 	 * Get the height of this dimension.
 	 *
 	 * @return The height of this dimension.
 	 */
-	public int getHeight() {
-		return height;
-	}
+	public int getHeight() { return height; }
+
+	/**
+	 * Get the total volume contained by this Dimensions.
+	 *
+	 * @return The total volume (depth * width * height) of this Dimensions.
+	 */
+	public int getVolume() { return depth * width * height; }
 }

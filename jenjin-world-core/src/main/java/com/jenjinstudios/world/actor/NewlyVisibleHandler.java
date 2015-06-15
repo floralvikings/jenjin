@@ -1,6 +1,6 @@
-package com.jenjinstudios.world.event;
+package com.jenjinstudios.world.actor;
 
-import com.jenjinstudios.world.object.Vision;
+import com.jenjinstudios.world.event.NodeEventHandler;
 
 /**
  * Handles a newly visible object by adding it to the list of visible objects in

@@ -1,6 +1,6 @@
-package com.jenjinstudios.world.event;
+package com.jenjinstudios.world.actor;
 
-import com.jenjinstudios.world.object.Vision;
+import com.jenjinstudios.world.event.NodeEventHandler;
 
 /**
  * Handles a newly invisible object by adding removing it from the list of

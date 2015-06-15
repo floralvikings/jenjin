@@ -1,6 +1,6 @@
-package com.jenjinstudios.world.event;
+package com.jenjinstudios.world.actor;
 
-import com.jenjinstudios.world.object.Actor;
+import com.jenjinstudios.world.event.NodeEvent;
 import com.jenjinstudios.world.object.WorldObject;
 
 import java.util.Collection;

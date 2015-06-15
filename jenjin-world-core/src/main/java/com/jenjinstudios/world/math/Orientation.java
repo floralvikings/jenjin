@@ -1,6 +1,7 @@
 package com.jenjinstudios.world.math;
 
 import static java.lang.Double.NEGATIVE_INFINITY;
+import static java.lang.Math.*;
 
 /**
  * Represents an orientation in 3D space using yaw (the angle on the xz plane) and pitch (the angle on the yz plane).
@@ -9,9 +10,13 @@ import static java.lang.Double.NEGATIVE_INFINITY;
  */
 public class Orientation
 {
-	/** Represents an orientation that points nowhere. */
-	public static final Orientation SELF_ORIENTATION = new Orientation(NEGATIVE_INFINITY, NEGATIVE_INFINITY);
-	private static final double DELTA = 5.96e-08;
+	private static final double PI_OVER_TWO = PI * 0.5;
+	/** Represents an orientation that points straight north. */
+	public static final Orientation NORTH = new Orientation(PI_OVER_TWO, 0);
+	/** Represents an orientation that points straight east. */
+	public static final Orientation EAST = new Orientation(0, 0);
+	/** Represents an orientation that points nowhere; useful for speficying a "directionless" state. */
+	public static final Orientation NOWHERE = new Orientation(NEGATIVE_INFINITY, NEGATIVE_INFINITY);
 	private final double pitch;
 	private final double yaw;
 
@@ -41,12 +46,15 @@ public class Orientation
 	public double getYaw() { return yaw; }
 
 	/**
-	 * Returns whether this orientation is a cardinal orientation.
+	 * Get the directional unit vector corresponding to this Orientation.
 	 *
-	 * @return Whether this orientation is a cardinal orientation.
+	 * @return The directional unit vector corresponding to this Orientation.
 	 */
-	public boolean isCardinalOrOrdinal() {
-		return (Math.abs(pitch % (Math.PI / 4)) < DELTA) && (Math.abs(yaw % (Math.PI / 4)) < DELTA);
+	public Vector getDirectionalVector() {
+		double x = cos(yaw) * cos(pitch);
+		double y = sin(pitch);
+		double z = sin(yaw) * cos(pitch);
+		return new Vector(x, y, z);
 	}
 
 	@Override

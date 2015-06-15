@@ -1,14 +1,14 @@
-package com.jenjinstudios.world.event;
+package com.jenjinstudios.world.actor;
 
-import com.jenjinstudios.world.object.Actor;
+import com.jenjinstudios.world.event.NodeObserver;
+import com.jenjinstudios.world.math.BasicSightCalculator;
+import com.jenjinstudios.world.math.SightCalculator;
 import com.jenjinstudios.world.object.WorldObject;
 import com.jenjinstudios.world.reflection.DynamicMethod;
 
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
-
-import static com.jenjinstudios.world.math.SightCalculator.getVisibleObjects;
 
 /**
  * Observes a world object and dispatches a NewlyVisibleEvent when to handlers when an object enters the observed
@@ -29,7 +29,8 @@ public class NewlyVisibleObserver extends NodeObserver<NewlyVisibleEvent>
 	 */
 	@DynamicMethod
 	protected NewlyVisibleEvent observePostUpdate(Actor actor) {
-		Collection<WorldObject> current = getVisibleObjects(actor);
+		SightCalculator sightCalculator = new BasicSightCalculator(actor);
+		Collection<WorldObject> current = sightCalculator.getVisibleObjects();
 		Collection<WorldObject> newVisible = new LinkedList<>(current);
 		newVisible.removeAll(lastVisible);
 

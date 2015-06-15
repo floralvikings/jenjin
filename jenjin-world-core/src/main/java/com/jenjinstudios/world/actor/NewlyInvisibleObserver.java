@@ -1,13 +1,13 @@
-package com.jenjinstudios.world.event;
+package com.jenjinstudios.world.actor;
 
-import com.jenjinstudios.world.object.Actor;
+import com.jenjinstudios.world.event.NodeObserver;
+import com.jenjinstudios.world.math.BasicSightCalculator;
+import com.jenjinstudios.world.math.SightCalculator;
 import com.jenjinstudios.world.object.WorldObject;
 import com.jenjinstudios.world.reflection.DynamicMethod;
 
 import java.util.Collection;
 import java.util.HashSet;
-
-import static com.jenjinstudios.world.math.SightCalculator.getVisibleObjects;
 
 /**
  * Observes world objects and triggers events when objects become invisible to them.
@@ -27,7 +27,8 @@ public class NewlyInvisibleObserver extends NodeObserver<NewlyInvisibleEvent>
 	 */
 	@DynamicMethod
 	protected NewlyInvisibleEvent observePostUpdate(Actor actor) {
-		Collection<WorldObject> current = getVisibleObjects(actor);
+		SightCalculator sightCalculator = new BasicSightCalculator(actor);
+		Collection<WorldObject> current = sightCalculator.getVisibleObjects();
 		lastVisible.removeAll(current);
 
 		NewlyInvisibleEvent newlyInvisibleEvent = null;
