@@ -8,8 +8,6 @@ import com.jenjinstudios.world.object.Timing;
 import com.jenjinstudios.world.reflection.DynamicMethod;
 import com.jenjinstudios.world.task.NodeTask;
 
-import java.util.Objects;
-
 import static com.jenjinstudios.world.math.Orientation.NOWHERE;
 
 /**
@@ -32,7 +30,7 @@ public class MovementTask extends NodeTask
 			Vector newVector = getNewVector(actor);
 			Zone zone = actor.getParent().getParent();
 
-			if (Objects.equals(actor.getParent(), zone.getCell(newVector))) {
+			if (actor.getParent().equals(zone.getCell(newVector))) {
 				actor.getGeometry().setPosition(newVector);
 			} else {
 				moveBetweenCells(actor, newVector);
