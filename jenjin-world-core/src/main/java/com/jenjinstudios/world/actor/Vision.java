@@ -3,6 +3,7 @@ package com.jenjinstudios.world.actor;
 import com.jenjinstudios.world.Cell;
 import com.jenjinstudios.world.object.WorldObject;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -51,7 +52,7 @@ public class Vision
 	 *
 	 * @return A set of objects visible to this Vision.
 	 */
-	public Set<WorldObject> getVisibleObjects() { return new HashSet<>(visibleObjects); }
+	public Collection<WorldObject> getVisibleObjects() { return new HashSet<>(visibleObjects); }
 
 	/**
 	 * Add an object to the collection of visible objects.
