@@ -21,14 +21,14 @@ public abstract class Node
 	private final String id;
 
 	/**
-	 * Construct a new WorldNode with a random id.
+	 * Construct a new Node with a random id.
 	 */
 	protected Node() {
 		this(UUID.randomUUID().toString());
 	}
 
 	/**
-	 * Construct a new WorldNode with the given id.
+	 * Construct a new Node with the given id.
 	 *
 	 * @param id The ID of the node.
 	 */
@@ -70,7 +70,7 @@ public abstract class Node
 	public void addTask(NodeTask task) { tasks.add(task); }
 
 	/**
-	 * Get the tasks to be executed on this WorldObject each update cycle.
+	 * Get the tasks to be executed on this Node each update cycle.
 	 *
 	 * @return The tasks to be executed.
 	 */
@@ -84,7 +84,7 @@ public abstract class Node
 	public void addObserver(NodeObserver observer) { observers.add(observer); }
 
 	/**
-	 * Remove an observer from this WorldObject.
+	 * Remove an observer from this Node.
 	 *
 	 * @param observer The observer to remove.
 	 */
