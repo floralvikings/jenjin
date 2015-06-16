@@ -41,4 +41,19 @@ public class WorldTest
 
 		Assert.assertTrue(world.getChildren().contains(zone), "World's children should contain the added zone.");
 	}
+
+	/**
+	 * Test the getZone method.
+	 */
+	@Test
+	public void testGetZone() {
+		World world = new World();
+
+		Zone zone = mock(Zone.class);
+		when(zone.getId()).thenReturn("foo");
+
+		world.addZone(zone);
+
+		Assert.assertEquals(world.getZone("foo"), zone, "Zones should be equal.");
+	}
 }
