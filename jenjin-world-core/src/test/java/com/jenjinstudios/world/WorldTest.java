@@ -1,5 +1,6 @@
 package com.jenjinstudios.world;
 
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.*;
@@ -25,5 +26,19 @@ public class WorldTest
 		world.postUpdate();
 
 		verify(runnable, times(1)).run();
+	}
+
+	/**
+	 * Test the addZone method.
+	 */
+	@Test
+	public void testAddZone() {
+		World world = new World();
+
+		Zone zone = mock(Zone.class);
+
+		world.addZone(zone);
+
+		Assert.assertTrue(world.getChildren().contains(zone), "World's children should contain the added zone.");
 	}
 }
