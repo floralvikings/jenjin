@@ -59,6 +59,15 @@ public class World extends Node
 	public Collection<Zone> getChildren() { return children.values(); }
 
 	/**
+	 * Get the zone with the specified identification string.
+	 *
+	 * @param id The identifier of the zone to retrieve.
+	 *
+	 * @return The zone with the specified identifier.
+	 */
+	public Zone getZone(String id) { return children.get(id); }
+
+	/**
 	 * Used to execute a world task once.
 	 */
 	public static class ExecuteOneOffsTask extends NodeTask
