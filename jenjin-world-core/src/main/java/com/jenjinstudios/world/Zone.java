@@ -65,6 +65,19 @@ public class Zone extends Node
 	public Cell getCell(short x, short y, short z) { return getCell(Point.getPoint(x, y, z)); }
 
 	/**
+	 * Get the cell with the specified coordinates; convenience method to avoid casting to short in method calls.
+	 *
+	 * @param x The x coordinate.
+	 * @param y The y coordinate.
+	 * @param z The z coordinate.
+	 *
+	 * @return The retrieved cell; if the cell with the specified coordinates doesn't exist in this zone, returns
+	 * {@code
+	 * null}.
+	 */
+	public Cell getCell(int x, int y, int z) { return getCell((short) x, (short) y, (short) z); }
+
+	/**
 	 * Get the cell containing the specific vector.
 	 *
 	 * @param vector The vector.
