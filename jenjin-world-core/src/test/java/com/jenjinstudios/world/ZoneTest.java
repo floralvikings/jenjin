@@ -53,4 +53,20 @@ public class ZoneTest
 			Assert.assertTrue(zDiff <= 1, "Z difference must be less than or equal to one");
 		}
 	}
+
+	/**
+	 * Test the areAdjacent method.
+	 */
+	@Test
+	public void testAreAdjacent() {
+		Zone zone = new Zone(new Dimensions(100, 100, 100));
+
+		Cell center = zone.getCell(49, 49, 49);
+		Cell adjacent = zone.getCell(48, 48, 48);
+		Cell notAdjacent = zone.getCell(45, 45, 45);
+
+		Assert.assertTrue(zone.areAdjacent(center, adjacent), "Cells should be adjacent");
+		Assert.assertFalse(zone.areAdjacent(center, notAdjacent), "Cells should not be adjacent");
+		Assert.assertFalse(zone.areAdjacent(center, null), "Cells should not be adjacent");
+	}
 }
