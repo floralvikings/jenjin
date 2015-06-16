@@ -30,7 +30,7 @@ public class Cell extends Node
 	 * @param point The grid point at which this Cell is placed.
 	 * @param parent The parent node of this cell.
 	 */
-	public Cell(Point point, Zone parent) {
+	protected Cell(Point point, Zone parent) {
 		this.point = point;
 		this.parent = parent;
 		children = new HashSet<>(10);
