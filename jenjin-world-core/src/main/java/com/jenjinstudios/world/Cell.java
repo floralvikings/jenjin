@@ -75,4 +75,60 @@ public class Cell extends Node
 			  "id=" + getId() +
 			  '}';
 	}
+
+	/**
+	 * Get the primary property of this cell.
+	 *
+	 * @return The short representing the primary property of this cell.
+	 */
+	public short getPrimaryProperty() { return primaryProperty; }
+
+	/**
+	 * Set the primary property of this cell.
+	 *
+	 * @param primaryProperty The short representing the new primary property of this cell.
+	 */
+	public void setPrimaryProperty(short primaryProperty) { this.primaryProperty = primaryProperty; }
+
+	/**
+	 * Get the secondary property of this cell.
+	 *
+	 * @return The short representing the secondary property of this cell.
+	 */
+	public short getSecondaryProperty() { return secondaryProperty; }
+
+	/**
+	 * Set the secondary property of this cell.
+	 *
+	 * @param secondaryProperty The short representing the new secondary property of this cell.
+	 */
+	public void setSecondaryProperty(short secondaryProperty) { this.secondaryProperty = secondaryProperty; }
+
+	/**
+	 * Get the tertiary property of this cell.
+	 *
+	 * @return The short representing the tertiary property of this cell.
+	 */
+	public short getTertiaryProperty() { return tertiaryProperty; }
+
+	/**
+	 * Set the tertiary property of this cell.
+	 *
+	 * @param tertiaryProperty The short representing the new tertiary property of this cell.
+	 */
+	public void setTertiaryProperty(short tertiaryProperty) { this.tertiaryProperty = tertiaryProperty; }
+
+	/**
+	 * Get the quaternary property of this cell.
+	 *
+	 * @return The short representing the quaternary property of this cell.
+	 */
+	public short getQuaternaryProperty() { return quaternaryProperty; }
+
+	/**
+	 * Set the quaternary property of this cell.
+	 *
+	 * @param quaternaryProperty The short representing the new primary property of this cell.
+	 */
+	public void setQuaternaryProperty(short quaternaryProperty) { this.quaternaryProperty = quaternaryProperty; }
 }
