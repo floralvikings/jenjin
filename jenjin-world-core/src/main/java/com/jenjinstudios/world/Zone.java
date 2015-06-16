@@ -20,14 +20,14 @@ public class Zone extends Node
 	private World parent;
 
 	/**
-	 * Construct a new Zone with the specified dimensions and parent.
+	 * Construct a new Zone with the specified dimensions.
 	 *
 	 * @param dimensions The size of the zone.
 	 */
 	public Zone(Dimensions dimensions) { this(UUID.randomUUID().toString(), dimensions); }
 
 	/**
-	 * Construct a new Zone with the specified id, dimensions and parent.
+	 * Construct a new Zone with the specified id and dimensions.
 	 *
 	 * @param id The id of the zone.
 	 * @param dimensions The size of the zone.
