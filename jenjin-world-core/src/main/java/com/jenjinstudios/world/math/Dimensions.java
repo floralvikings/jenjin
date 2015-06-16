@@ -44,10 +44,4 @@ public class Dimensions
 	 */
 	public int getHeight() { return height; }
 
-	/**
-	 * Get the total volume contained by this Dimensions.
-	 *
-	 * @return The total volume (depth * width * height) of this Dimensions.
-	 */
-	public int getVolume() { return depth * width * height; }
 }
