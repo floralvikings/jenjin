@@ -3,7 +3,8 @@ package com.jenjinstudios.world;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * Test the world class.
@@ -12,21 +13,6 @@ import static org.mockito.Mockito.*;
  */
 public class WorldTest
 {
-	/**
-	 * Test the one-time task functionality.
-	 */
-	@Test
-	public void testScheduleOneTimeTask() {
-		World world = new World();
-		Runnable runnable = mock(Runnable.class);
-
-		world.scheduleOneTimeTask(runnable);
-
-		world.postUpdate();
-		world.postUpdate();
-
-		verify(runnable, times(1)).run();
-	}
 
 	/**
 	 * Test the addZone method.
@@ -55,5 +41,14 @@ public class WorldTest
 		world.addZone(zone);
 
 		Assert.assertEquals(world.getZone("foo"), zone, "Zones should be equal.");
+	}
+
+	/**
+	 * Test the getParent method.
+	 */
+	@Test
+	public void testGetParent() {
+		World world = new World();
+		Assert.assertNull(world.getParent(), "World should have null parent.");
 	}
 }
