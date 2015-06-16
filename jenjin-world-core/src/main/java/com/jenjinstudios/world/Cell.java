@@ -63,19 +63,6 @@ public class Cell extends Node
 		child.setParent(null);
 	}
 
-	@Override
-	public Zone getParent() { return parent; }
-
-	@Override
-	public Collection<WorldObject> getChildren() { return Collections.unmodifiableCollection(children); }
-
-	@Override
-	public String toString() {
-		return "Cell{" +
-			  "id=" + getId() +
-			  '}';
-	}
-
 	/**
 	 * Get the primary property of this cell.
 	 *
@@ -131,4 +118,17 @@ public class Cell extends Node
 	 * @param quaternaryProperty The short representing the new primary property of this cell.
 	 */
 	public void setQuaternaryProperty(short quaternaryProperty) { this.quaternaryProperty = quaternaryProperty; }
+
+	@Override
+	public Zone getParent() { return parent; }
+
+	@Override
+	public Collection<WorldObject> getChildren() { return Collections.unmodifiableCollection(children); }
+
+	@Override
+	public String toString() {
+		return "Cell{" +
+			  "id=" + getId() +
+			  '}';
+	}
 }
