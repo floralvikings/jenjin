@@ -63,26 +63,6 @@ public abstract class Node
 	public String getId() { return id; }
 
 	/**
-	 * Convenience method to determine if this node is a root node; equivalent to {@code getParent() == null}.
-	 *
-	 * @return Whether this node is a root node (has no parent).
-	 */
-	public boolean isRoot() { return getParent() == null; }
-
-	/**
-	 * Convenience method to traverse up the tree until the root node is found.
-	 *
-	 * @return The root node of the tree containing this node.
-	 */
-	public Node getRoot() {
-		Node node = this;
-		while (!node.isRoot()) {
-			node = node.getParent();
-		}
-		return node;
-	}
-
-	/**
 	 * Add a task to be executed each update cycle on this world object.
 	 *
 	 * @param task The task to be executed.
