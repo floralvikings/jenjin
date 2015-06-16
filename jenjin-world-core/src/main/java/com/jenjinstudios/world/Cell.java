@@ -44,22 +44,6 @@ public class Cell extends Node
 	public Point getPoint() { return point; }
 
 	/**
-	 * Get a collection of cells adjacent to this one.
-	 *
-	 * @return A collection of cells adjacent to this one.
-	 */
-	public Collection<Cell> getAdjacentCells() { return parent.getAdjacentCells(this); }
-
-	/**
-	 * Return whether this Cell is adjacent to the given cell.
-	 *
-	 * @param cell The cell to determine adjacence.
-	 *
-	 * @return Whether the cell is adjacent to this one.
-	 */
-	public boolean isAdjacentTo(Cell cell) { return getAdjacentCells().contains(cell); }
-
-	/**
 	 * Add the specified child WorldObject to this Cell.
 	 *
 	 * @param child The WorldObject to add to this Cell's children.
