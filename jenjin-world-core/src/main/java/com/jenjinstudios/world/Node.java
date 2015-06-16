@@ -34,7 +34,7 @@ public abstract class Node
 	 */
 	protected Node(String id) {
 		if (id == null) {
-			throw new IllegalArgumentException("ID of WorldNode may not be null.");
+			throw new IllegalArgumentException("ID of Node may not be null.");
 		}
 		this.id = id;
 		tasks = new LinkedList<>();
