@@ -6,6 +6,11 @@
             <package name="com.jenjinstudios.world" />
         </packages>
     </test>
+    <test name="actor">
+        <packages>
+            <package name="com.jenjinstudios.world.actor" />
+        </packages>
+    </test>
     <test name="math">
         <packages>
             <package name="com.jenjinstudios.world.math" />
