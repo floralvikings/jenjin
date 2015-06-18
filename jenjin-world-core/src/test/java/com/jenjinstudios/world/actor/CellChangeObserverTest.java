@@ -40,5 +40,9 @@ public class CellChangeObserverTest
 
 		CellChangeEvent event3 = cellChangeObserver.observePostUpdate(actor);
 		Assert.assertNotNull(event3, "Third event should not be null (cell changed).");
+
+		Assert.assertEquals(event3.getActor(), actor, "Actors should be equal");
+		Assert.assertEquals(event3.getPrevious(), cell1, "Previous Cell should be cell1");
+		Assert.assertEquals(event3.getCurrent(), cell2, "Current Cell should be cell2");
 	}
 }
