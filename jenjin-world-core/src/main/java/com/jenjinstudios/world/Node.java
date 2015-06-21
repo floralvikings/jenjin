@@ -97,27 +97,6 @@ public abstract class Node
 	 */
 	public Iterable<NodeObserver> getObservers() { return Collections.unmodifiableCollection(observers); }
 
-	/** Used to "set up" a node at the beginning of the update cycle. */
-	public void preUpdate() {
-		getTasks().forEach(t -> t.executePreUpdate(this));
-		getObservers().forEach(t -> t.onPreUpdate(this));
-		getChildren().forEach(Node::preUpdate);
-	}
-
-	/** Used to update a node. */
-	public void update() {
-		getTasks().forEach(t -> t.executeUpdate(this));
-		getObservers().forEach(t -> t.onUpdate(this));
-		getChildren().forEach(Node::update);
-	}
-
-	/** Used to "clean up" an node at the end of the update cycle. */
-	public void postUpdate() {
-		getTasks().forEach(t -> t.executePostUpdate(this));
-		getObservers().forEach(t -> t.onPostUpdate(this));
-		getChildren().forEach(Node::postUpdate);
-	}
-
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) return true;
