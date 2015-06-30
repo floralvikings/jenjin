@@ -29,7 +29,7 @@ public class NewlyInvisibleObserver extends NodeObserver<NewlyInvisibleEvent>
 		lastVisible.removeAll(current);
 
 		NewlyInvisibleEvent newlyInvisibleEvent = null;
-		if (!current.isEmpty()) {
+		if (!lastVisible.isEmpty()) {
 			newlyInvisibleEvent = new NewlyInvisibleEvent(actor, lastVisible);
 		}
 
