@@ -36,5 +36,6 @@ public class NewlyInvisibleObserverTest
 		Assert.assertNotNull(event02, "Event should have been raised.");
 		Assert.assertEquals(event02.getNewlyInvisible().size(), 1, "Should be one newly invisible object");
 		Assert.assertTrue(event02.getNewlyInvisible().contains(visible), "Should contain newly invisible object");
+		Assert.assertEquals(event02.getViewing(), actor, "Actor should be viewing.");
 	}
 }
