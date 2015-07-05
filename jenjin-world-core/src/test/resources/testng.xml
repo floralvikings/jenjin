@@ -11,6 +11,11 @@
             <package name="com.jenjinstudios.world.actor" />
         </packages>
     </test>
+    <test name="event">
+        <packages>
+            <package name="com.jenjinstudios.world.event" />
+        </packages>
+    </test>
     <test name="math">
         <packages>
             <package name="com.jenjinstudios.world.math" />
