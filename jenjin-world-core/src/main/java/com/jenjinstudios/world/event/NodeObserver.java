@@ -6,7 +6,7 @@ import com.jenjinstudios.world.reflection.DynamicMethodSelector;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.LinkedList;
+import java.util.HashSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -18,7 +18,7 @@ import java.util.logging.Logger;
 public abstract class NodeObserver<E extends NodeEvent>
 {
 	private static final Logger LOGGER = Logger.getLogger(NodeObserver.class.getName());
-	private final Collection<NodeEventHandler<E>> handlers = new LinkedList<>();
+	private final Collection<NodeEventHandler<E>> handlers = new HashSet<>(1);
 
 	/**
 	 * Register the given event handler, to which events will be dispatched as
