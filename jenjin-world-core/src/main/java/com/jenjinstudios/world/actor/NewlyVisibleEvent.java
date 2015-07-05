@@ -43,7 +43,7 @@ public class NewlyVisibleEvent implements NodeEvent
 	 *
 	 * @return The WorldObjects which have become visible.
 	 */
-	public Iterable<WorldObject> getNewlyVisible() {
+	public Collection<WorldObject> getNewlyVisible() {
 		return new LinkedList<>(newlyVisible);
 	}
 }
