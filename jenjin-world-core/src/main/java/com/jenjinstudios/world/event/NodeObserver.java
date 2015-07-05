@@ -14,7 +14,7 @@ import java.util.logging.Logger;
  *
  * @author Caleb Brinkman
  */
-public class NodeObserver<E extends NodeEvent>
+public abstract class NodeObserver<E extends NodeEvent>
 {
 	private static final Logger LOGGER = Logger.getLogger(NodeObserver.class.getName());
 	private final Collection<NodeEventHandler<E>> handlers = new LinkedList<>();
