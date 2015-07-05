@@ -5,6 +5,7 @@ import com.jenjinstudios.world.reflection.DynamicInvocationException;
 import com.jenjinstudios.world.reflection.DynamicMethodSelector;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -38,6 +39,13 @@ public abstract class NodeObserver<E extends NodeEvent>
 	public void unregisterEventHandler(NodeEventHandler<E> handler) {
 		handlers.remove(handler);
 	}
+
+	/**
+	 * Get an unmodifiable copy of this Observer's collection of event handlers.
+	 *
+	 * @return An <b>unmodifiable</b> copy of this Observer's event handlers.
+	 */
+	public Collection<NodeEventHandler<E>> getEventHandlers() { return Collections.unmodifiableCollection(handlers); }
 
 	/**
 	 * Observe the given node for an event occurring
