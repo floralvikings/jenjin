@@ -81,6 +81,11 @@ public class MessageExecutor
 
 		private void executeMessage(Message message) {
 			List<ExecutableMessage> executables = exMessageFactory.getExecutableMessagesFor(message);
+			if (executables.isEmpty()) {
+				LOGGER.log(Level.WARNING, "Invalid message received from MessageReader");
+				Message invalid = generateInvalidMessage(message.getID(), message.name);
+				threadPool.enqueueMessage(invalid);
+			}
 			for (ExecutableMessage executable : executables)
 			{
 				if (executable == null)
