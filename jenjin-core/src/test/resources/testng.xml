@@ -1,32 +1,17 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
 
 <suite name="jenjin-core" verbose="1">
-    <test name="core">
+    <test name="jenjin-core">
+        <groups>
+            <run>
+                <include name="unit" />
+            </run>
+        </groups>
         <packages>
             <package name="com.jenjinstudios.core" />
-        </packages>
-    </test>
-
-    <test name="io">
-        <packages>
             <package name="com.jenjinstudios.core.io" />
-        </packages>
-    </test>
-
-    <test name="message">
-        <packages>
             <package name="com.jenjinstudios.core.message" />
-        </packages>
-    </test>
-
-    <test name="concurrency">
-        <packages>
             <package name="com.jenjinstudios.core.concurrency" />
-        </packages>
-    </test>
-
-    <test name="xml">
-        <packages>
             <package name="com.jenjinstudios.core.xml" />
         </packages>
     </test>

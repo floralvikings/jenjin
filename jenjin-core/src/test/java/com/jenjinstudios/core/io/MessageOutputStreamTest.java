@@ -26,8 +26,8 @@ public class MessageOutputStreamTest
 	/**
 	 * Register messages for testing purposes.
 	 */
-	@BeforeClass
-	public void setUp() {
+    @BeforeClass(groups = "unit")
+    public void setUp() {
 		MESSAGE_REGISTRY.register("Test Message Registry",
 			  getClass().getClassLoader().getResourceAsStream("test/jenjinstudios/core/Messages.xml"));
 		MESSAGE_REGISTRY.register("Core Message Registry",
@@ -37,8 +37,8 @@ public class MessageOutputStreamTest
 	/**
 	 * Clear the message registry.
 	 */
-	@AfterClass
-	public void clearMessageRegistry() {
+    @AfterClass(groups = "unit")
+    public void clearMessageRegistry() {
 		MessageRegistry.getGlobalRegistry().clear();
 	}
 
@@ -47,7 +47,7 @@ public class MessageOutputStreamTest
      *
      * @throws Exception If there's an exception.
      */
-    @Test
+    @Test(groups = "unit")
     public void testWriteMessage() throws Exception {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         MessageOutputStream mos = new MessageOutputStream(bos);
@@ -71,7 +71,7 @@ public class MessageOutputStreamTest
      *
      * @throws Exception If there's an exception.
      */
-    @Test(expectedExceptions = IOException.class)
+    @Test(expectedExceptions = IOException.class, groups = "unit")
     public void testEncryptedMessageNoPublicKey() throws Exception {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         MessageOutputStream mos = new MessageOutputStream(bos);
@@ -87,7 +87,7 @@ public class MessageOutputStreamTest
      *
      * @throws Exception If there's an exception.
      */
-    @Test
+    @Test(groups = "unit")
     public void testEncryptedMessage() throws Exception {
 
         KeyPair keyPair = generateRSAKeyPair();
@@ -119,7 +119,7 @@ public class MessageOutputStreamTest
      *
      * @throws Exception If there's an exception.
      */
-    @Test
+    @Test(groups = "unit")
     public void testAllTypesMessage() throws Exception {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         MessageOutputStream mos = new MessageOutputStream(bos);

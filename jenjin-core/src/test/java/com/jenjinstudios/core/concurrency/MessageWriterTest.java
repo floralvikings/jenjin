@@ -23,7 +23,7 @@ public class MessageWriterTest
 	 *
 	 * @throws Exception If there's an exception.
 	 */
-	@Test
+	@Test(groups = "unit")
 	public void testAsynchronousWrite() throws Exception {
 		Message message = mock(Message.class);
 		MessageOutputStream outputStream = mock(MessageOutputStream.class);
@@ -43,7 +43,7 @@ public class MessageWriterTest
 	 *
 	 * @throws Exception If there's an exception.
 	 */
-	@Test
+	@Test(groups = "unit")
 	public void testIsErrored() throws Exception {
 		Message message = mock(Message.class);
 		MessageOutputStream outputStream = mock(MessageOutputStream.class);
@@ -63,7 +63,7 @@ public class MessageWriterTest
 	 *
 	 * @throws Exception If there's an exception.
 	 */
-	@Test
+	@Test(groups = "unit")
 	public void testIsErroredWithError() throws Exception {
 		Message message = mock(Message.class);
 		MessageOutputStream outputStream = mock(MessageOutputStream.class);

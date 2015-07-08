@@ -16,7 +16,7 @@ public class MessageRegistryTest
 	/**
 	 * Test the register method.
 	 */
-	@Test
+	@Test(groups = "unit")
 	public void testRegister() {
 		String messageFile = "test/jenjinstudios/core/Messages.xml";
 		InputStream in = getClass().getClassLoader().getResourceAsStream(messageFile);
@@ -32,7 +32,7 @@ public class MessageRegistryTest
 	/**
 	 * Test the clear method.
 	 */
-	@Test
+	@Test(groups = "unit")
 	public void testClear() {
 		String messageFile = "test/jenjinstudios/core/Messages.xml";
 		InputStream in = getClass().getClassLoader().getResourceAsStream(messageFile);
@@ -49,7 +49,7 @@ public class MessageRegistryTest
 	/**
 	 * Test the createMessage method.
 	 */
-	@Test
+	@Test(groups = "unit")
 	public void testCreateMessage() {
 		String messageFile = "test/jenjinstudios/core/Messages.xml";
 		InputStream in = getClass().getClassLoader().getResourceAsStream(messageFile);

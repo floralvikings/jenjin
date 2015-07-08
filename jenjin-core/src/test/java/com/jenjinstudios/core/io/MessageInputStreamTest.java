@@ -28,7 +28,7 @@ public class MessageInputStreamTest
 	/**
 	 * Register messages for testing purposes.
 	 */
-	@BeforeClass
+	@BeforeClass(groups = "unit")
 	public void setUp() {
 		MessageRegistry.getGlobalRegistry().register("Test Message Registry",
 			  getClass().getClassLoader().getResourceAsStream("test/jenjinstudios/core/Messages.xml"));
@@ -39,7 +39,7 @@ public class MessageInputStreamTest
 	/**
 	 * Clear the message registry.
 	 */
-	@AfterClass
+	@AfterClass(groups = "unit")
 	public void clearMessageRegistry() {
 		MessageRegistry.getGlobalRegistry().clear();
 	}
@@ -49,7 +49,7 @@ public class MessageInputStreamTest
 	 *
 	 * @throws IOException If there's an IOException.
 	 */
-	@Test
+	@Test(groups = "unit")
 	public void testReadValidMessage() throws IOException {
 		DataInputStreamMock dataInputStreamMock = new DataInputStreamMock();
 		dataInputStreamMock.mockReadShort((short) 0);
@@ -70,7 +70,7 @@ public class MessageInputStreamTest
 	 * Test reading an invalid message.
 	 * @throws IOException If there's an (unexpected) IOException.
 	 */
-	@Test(expectedExceptions = MessageTypeException.class)
+	@Test(expectedExceptions = MessageTypeException.class, groups = "unit")
 	public void testReadInvalidMessage() throws IOException {
 		DataInputStreamMock mock = new DataInputStreamMock();
 		mock.mockReadShort((short) -256); // Invalid message number
@@ -88,7 +88,7 @@ public class MessageInputStreamTest
 	 * Test sending an encrypted message with no key.
 	 * @throws IOException If there's an IOException
 	 */
-	@Test
+	@Test(groups = "unit")
 	public void testEncryptedMessageNoKey() throws IOException {
 		DataInputStreamMock mock = new DataInputStreamMock();
 		mock.mockReadShort((short) -3);
@@ -107,7 +107,7 @@ public class MessageInputStreamTest
 	 * Test the proper reading of an encrypted string.
 	 * @throws Exception If there's an exception.
 	 */
-	@Test
+	@Test(groups = "unit")
 	public void testEncryptedMessage() throws Exception {
 		DataInputStreamMock mock = new DataInputStreamMock();
 		mock.mockReadShort((short) -3);
@@ -137,7 +137,7 @@ public class MessageInputStreamTest
 	 * Test each type of message argument.
 	 * @throws Exception If there's an Exception.
 	 */
-	@Test
+	@Test(groups = "unit")
 	public void testAllTypesMessage() throws Exception {
 		DataInputStreamMock mock = new DataInputStreamMock();
 		mock.mockReadShort((short) -4);

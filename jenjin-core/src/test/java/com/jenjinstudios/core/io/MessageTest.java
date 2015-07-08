@@ -22,7 +22,7 @@ public class MessageTest
 	/**
 	 * Test a successful invocation of the Message varargs constructor.
 	 */
-	@Test
+	@Test(groups = "unit")
 	public void testVarargsConstructor() {
 		MessageType messageType = createMessageTypeMock();
 		Message message = new Message(messageType, "123", 456, 789L);
@@ -32,7 +32,7 @@ public class MessageTest
 	/**
 	 * Test the varargs constructor with an invalid number of arguments.
 	 */
-	@Test(expectedExceptions = IllegalArgumentException.class)
+	@Test(expectedExceptions = IllegalArgumentException.class, groups = "unit")
 	public void testVaragsConstructorInvalidCount() {
 		MessageType messageType = createMessageTypeMock();
 		//noinspection ResultOfObjectAllocationIgnored
@@ -42,7 +42,7 @@ public class MessageTest
 	/**
 	 * Test the varargs constructor with an invalid argument type.
 	 */
-	@Test(expectedExceptions = IllegalArgumentException.class)
+	@Test(expectedExceptions = IllegalArgumentException.class, groups = "unit")
 	public void testVarargsConstructorInvalidType() {
 		MessageType messageType = createMessageTypeMock();
 		//noinspection ResultOfObjectAllocationIgnored
@@ -52,7 +52,7 @@ public class MessageTest
 	/**
 	 * Test setting an argument with an invalid name.
 	 */
-	@Test(expectedExceptions = IllegalArgumentException.class)
+	@Test(expectedExceptions = IllegalArgumentException.class, groups = "unit")
 	public void testSetInvalidArgument() {
 		MessageType messageType = createMessageTypeMock();
 		Message message = new Message(messageType);
@@ -62,7 +62,7 @@ public class MessageTest
 	/**
 	 * Test the getArgument method.
 	 */
-	@Test
+	@Test(groups = "unit")
 	public void testGetArgument() {
 		MessageType messageType = createMessageTypeMock();
 		Message message = new Message(messageType, "123", 456, 789L);
@@ -72,7 +72,7 @@ public class MessageTest
 	/**
 	 * Test the getID method.
 	 */
-	@Test
+	@Test(groups = "unit")
 	public void testGetId() {
 		MessageType messageType = createMessageTypeMock();
 		Message message = new Message(messageType);
@@ -82,7 +82,7 @@ public class MessageTest
 	/**
 	 * Test the getArgs method while arguments are not all assigned.
 	 */
-	@Test(expectedExceptions = IllegalStateException.class)
+	@Test(expectedExceptions = IllegalStateException.class, groups = "unit")
 	public void testGetArgsWhileInvalid() {
 		MessageType messageType = createMessageTypeMock();
 		Message message = new Message(messageType);
@@ -92,7 +92,7 @@ public class MessageTest
 	/**
 	 * Test the toString method.
 	 */
-	@Test
+	@Test(groups = "unit")
 	public void testToString() {
 		MessageType messageType = createMessageTypeMock();
 		Message message = new Message(messageType);

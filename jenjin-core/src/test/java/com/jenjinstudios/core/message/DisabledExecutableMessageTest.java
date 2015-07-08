@@ -17,8 +17,8 @@ public class DisabledExecutableMessageTest
     /**
      * Ensure that the DisabledMessage cannot be invoked.
      */
-    @Test(expectedExceptions = IllegalStateException.class)
-    public void testMessageExecution() {
+	@Test(expectedExceptions = IllegalStateException.class, groups = "unit")
+	public void testMessageExecution() {
 		Message message = mock(Message.class);
 		MessageContext context = mock(MessageContext.class);
 

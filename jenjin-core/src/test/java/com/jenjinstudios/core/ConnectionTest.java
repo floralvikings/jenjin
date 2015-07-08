@@ -29,7 +29,7 @@ public class ConnectionTest
 	/**
 	 * Set up the message registry.
 	 */
-	@BeforeClass
+	@BeforeClass(groups = "unit")
 	public void setUp() {
 		MESSAGE_REGISTRY.register("Test Message Registry",
 			  getClass().getClassLoader().getResourceAsStream("test/jenjinstudios/core/Messages.xml"));
@@ -40,7 +40,7 @@ public class ConnectionTest
 	/**
 	 * Clear the message registry.
 	 */
-	@AfterClass
+	@AfterClass(groups = "unit")
 	public void clearMessageRegistry() {
 		MESSAGE_REGISTRY.clear();
 	}
@@ -50,7 +50,7 @@ public class ConnectionTest
 	 *
 	 * @throws Exception If there's an exception.
 	 */
-	@Test
+	@Test(groups = "unit")
 	public void testShutDown() throws Exception {
 		DataInputStreamMock dataInputStreamMock = new DataInputStreamMock();
 		InputStream in = dataInputStreamMock.getIn();
@@ -72,7 +72,7 @@ public class ConnectionTest
 	 *
 	 * @throws Exception If there's an exception.
 	 */
-	@Test
+	@Test(groups = "unit")
 	public void testPingRequest() throws Exception {
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 
@@ -102,7 +102,7 @@ public class ConnectionTest
 	 *
 	 * @throws Exception If there's an exception.
 	 */
-	@Test
+	@Test(groups = "unit")
 	public void testPingResponse() throws Exception {
 		// Spoof an invalid message
 		DataInputStreamMock dataInputStreamMock = new DataInputStreamMock();

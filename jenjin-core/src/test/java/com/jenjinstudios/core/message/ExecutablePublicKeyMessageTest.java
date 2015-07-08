@@ -26,7 +26,7 @@ public class ExecutablePublicKeyMessageTest
 	/**
 	 * Set up the message registry.
 	 */
-	@BeforeClass
+	@BeforeClass(groups = "unit")
 	public void setUp() {
 		MessageRegistry.getGlobalRegistry().register("Test Message Registry",
 			  getClass().getClassLoader().getResourceAsStream("test/jenjinstudios/core/Messages.xml"));
@@ -37,7 +37,7 @@ public class ExecutablePublicKeyMessageTest
 	/**
 	 * Clear the message registry.
 	 */
-	@AfterClass
+	@AfterClass(groups = "unit")
 	public void clearMessageRegistry() {
 		MessageRegistry.getGlobalRegistry().clear();
 	}
@@ -45,8 +45,8 @@ public class ExecutablePublicKeyMessageTest
     /**
      * Test key verification.
      */
-    @Test
-    public void testVerification() {
+	@Test(groups = "unit")
+	public void testVerification() {
 		KeyPair rsaKeyPair = Connection.generateRSAKeyPair();
 		Message message = Connection.generatePublicKeyMessage(rsaKeyPair.getPublic());
 		InetAddress address = InetAddress.getLoopbackAddress();
@@ -64,8 +64,8 @@ public class ExecutablePublicKeyMessageTest
     /**
      * Test verification bypass when no verified keys are present.
      */
-    @Test
-    public void testVerificationNoKeys() {
+	@Test(groups = "unit")
+	public void testVerificationNoKeys() {
 		KeyPair rsaKeyPair = Connection.generateRSAKeyPair();
 		Message message = Connection.generatePublicKeyMessage(rsaKeyPair.getPublic());
 		InetAddress address = InetAddress.getLoopbackAddress();
@@ -85,8 +85,8 @@ public class ExecutablePublicKeyMessageTest
     /**
      * Test failed key verification due to invalid key.
      */
-    @Test
-    public void testVerificationInvalidKey() {
+	@Test(groups = "unit")
+	public void testVerificationInvalidKey() {
 		KeyPair rsaKeyPair = Connection.generateRSAKeyPair();
 		KeyPair invalidKeyPair = Connection.generateRSAKeyPair();
 		Message message = Connection.generatePublicKeyMessage(invalidKeyPair.getPublic());
@@ -108,8 +108,8 @@ public class ExecutablePublicKeyMessageTest
     /**
      * Test invalid key verification due to unknown host.
      */
-    @Test
-    public void testVerificationNoAddress() {
+	@Test(groups = "unit")
+	public void testVerificationNoAddress() {
 		KeyPair rsaKeyPair = Connection.generateRSAKeyPair();
 		KeyPair invalidKeyPair = Connection.generateRSAKeyPair();
 		Message message = Connection.generatePublicKeyMessage(invalidKeyPair.getPublic());

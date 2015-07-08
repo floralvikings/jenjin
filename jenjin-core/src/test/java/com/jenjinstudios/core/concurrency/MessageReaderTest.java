@@ -23,7 +23,7 @@ public class MessageReaderTest
 	 *
 	 * @throws Exception If there's and exception.
 	 */
-	@Test
+	@Test(groups = "unit")
 	public void testAsynchronousReading() throws Exception {
 		Message message = mock(Message.class);
 		when(message.getArgument("requestTimeMillis")).thenReturn(12345L);
@@ -50,7 +50,7 @@ public class MessageReaderTest
 	 *
 	 * @throws Exception If there's an exception.
 	 */
-	@Test
+	@Test(groups = "unit")
 	public void testIsErrored() throws Exception {
 		MessageInputStream inputStream = mock(MessageInputStream.class);
 		// Mock a blocking read.
@@ -69,7 +69,7 @@ public class MessageReaderTest
 	 *
 	 * @throws Exception If there's an exception.
 	 */
-	@Test
+	@Test(groups = "unit")
 	public void testIsErroredWithError() throws Exception {
 		MessageInputStream inputStream = mock(MessageInputStream.class);
 		// Mock a blocking read.
