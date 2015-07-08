@@ -8,11 +8,7 @@
             </run>
         </groups>
         <packages>
-            <package name="com.jenjinstudios.core" />
-            <package name="com.jenjinstudios.core.io" />
-            <package name="com.jenjinstudios.core.message" />
-            <package name="com.jenjinstudios.core.concurrency" />
-            <package name="com.jenjinstudios.core.xml" />
+            <package name="com.jenjinstudios.core.*" />
         </packages>
     </test>
 </suite>
