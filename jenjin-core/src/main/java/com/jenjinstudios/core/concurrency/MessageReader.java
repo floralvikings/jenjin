@@ -5,6 +5,7 @@ import com.jenjinstudios.core.io.MessageInputStream;
 
 import java.io.EOFException;
 import java.io.IOException;
+import java.net.SocketException;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.concurrent.Executors;
@@ -96,7 +97,7 @@ public class MessageReader
 					incoming.add(message);
 				}
 				errored = false;
-			} catch (EOFException ignored) {
+			} catch (EOFException | SocketException ignored) {
 				if (!errored) {    // Only log the message once.
 					LOGGER.log(Level.INFO, "Client Disconnected");
 				}
