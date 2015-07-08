@@ -3,7 +3,7 @@
 <messages xmlns="https://www.jenjinstudios.com">
 
     <message name="Test" id="-5">
-        <executable>test.jenjinstudios.integration.connection.message.ExecutableTest</executable>
+        <executable>com.jenjinstudios.core.integration.connection.TestExecutableMessage</executable>
         <argument type="String" name="encryptedString" />
     </message>
 

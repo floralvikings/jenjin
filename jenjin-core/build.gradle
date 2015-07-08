@@ -1,5 +1,1 @@
 description = 'Jenjin Core I/O Classes'
-
-test {
-    maxParallelForks = 8;
-}

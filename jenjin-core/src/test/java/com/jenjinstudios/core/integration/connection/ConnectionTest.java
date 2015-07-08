@@ -1,4 +1,4 @@
-package test.jenjinstudios.integration.connection;
+package com.jenjinstudios.core.integration.connection;
 
 import com.jenjinstudios.core.Connection;
 import com.jenjinstudios.core.concurrency.MessageContext;
@@ -28,18 +28,18 @@ public class ConnectionTest
 	/**
 	 * Register messages used for testing.
 	 */
-	@BeforeClass
+	@BeforeClass(groups = "integration")
 	public void registerTestMessages() {
 		InputStream stream = getClass().
 			  getClassLoader().
-			  getResourceAsStream("test/jenjinstudios/integration/connection/Messages.xml");
+			  getResourceAsStream("test/jenjinstudios/core/integration/connection/Messages.xml");
 		MessageRegistry.getGlobalRegistry().register("Integration test messages", stream);
 	}
 
 	/**
 	 * Clear the message registry after testing.
 	 */
-	@AfterClass
+	@AfterClass(groups = "integration")
 	public void clearMessageRegistry() {
 		MessageRegistry.getGlobalRegistry().clear();
 	}
@@ -49,7 +49,7 @@ public class ConnectionTest
 	 *
 	 * @throws Exception If there's an exception.
 	 */
-	@Test
+	@Test(groups = "integration")
 	public void integrationTest() throws Exception {
 		ConnectionPair connectionPair = new ConnectionPair();
 		Connection connectionOne = connectionPair.getConnectionOne();

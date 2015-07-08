@@ -11,4 +11,16 @@
             <package name="com.jenjinstudios.core.*" />
         </packages>
     </test>
+
+    <test name="jenjin-core-integration" verbose="1">
+        <groups>
+            <run>
+                <include name="integration" />
+            </run>
+        </groups>
+
+        <packages>
+            <package name="com.jenjinstudios.core.*" />
+        </packages>
+    </test>
 </suite>
