@@ -1,4 +1,4 @@
-package test.jenjinstudios.integration.integration;
+package test.jenjinstudios.integration.connection;
 
 import com.jenjinstudios.core.Connection;
 import com.jenjinstudios.core.concurrency.MessageContext;

@@ -1,4 +1,4 @@
-package test.jenjinstudios.integration.integration.message;
+package test.jenjinstudios.integration.connection.message;
 
 import com.jenjinstudios.core.concurrency.ExecutableMessage;
 import com.jenjinstudios.core.concurrency.MessageContext;
