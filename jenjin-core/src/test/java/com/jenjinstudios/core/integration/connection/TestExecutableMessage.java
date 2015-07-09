@@ -24,7 +24,8 @@ public class TestExecutableMessage extends ExecutableMessage<MessageContext>
 
 	@Override
 	public Message execute() {
-		getContext().setName("Message Executed");
+		String newName = (String) getMessage().getArgument("encryptedString");
+		getContext().setName(newName);
 		return null;
 	}
 }

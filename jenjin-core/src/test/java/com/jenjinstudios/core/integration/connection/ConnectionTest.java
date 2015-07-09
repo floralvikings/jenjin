@@ -3,7 +3,6 @@ package com.jenjinstudios.core.integration.connection;
 import com.jenjinstudios.core.Connection;
 import com.jenjinstudios.core.concurrency.MessageContext;
 import com.jenjinstudios.core.io.*;
-import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -24,16 +23,23 @@ import java.util.logging.Logger;
 public class ConnectionTest
 {
 	private static final Logger LOGGER = Logger.getLogger(ConnectionTest.class.getName());
+	private Connection connectionOne;
+	private Connection connectionTwo;
 
 	/**
-	 * Register messages used for testing.
+	 * Register messages used for testing, and set up a pair of connections for testing.
+	 *
+	 * @throws Exception If there's an exception during setup.
 	 */
 	@BeforeClass(groups = "integration")
-	public void registerTestMessages() {
+	public void registerTestMessages() throws Exception {
 		InputStream stream = getClass().
 			  getClassLoader().
 			  getResourceAsStream("test/jenjinstudios/core/integration/connection/Messages.xml");
 		MessageRegistry.getGlobalRegistry().register("Integration test messages", stream);
+		ConnectionPair connectionPair = new ConnectionPair();
+		connectionOne = connectionPair.getConnectionOne();
+		connectionTwo = connectionPair.getConnectionTwo();
 	}
 
 	/**
@@ -41,20 +47,24 @@ public class ConnectionTest
 	 */
 	@AfterClass(groups = "integration")
 	public void clearMessageRegistry() {
+		// Make sure they can shut down w/o exceptions
+		connectionOne.shutdown();
+		connectionTwo.shutdown();
+
 		MessageRegistry.getGlobalRegistry().clear();
 	}
 
 	/**
-	 * Run the integration tests for Connection.
+	 * Run the integration tests for Connection.  This test will send a series of messages back and forth, stopping
+	 * until certain conditions are met.  If one of these hangs, the test will be stuck until the timeout, causing
+	 * it to
+	 * fail.
 	 *
 	 * @throws Exception If there's an exception.
 	 */
-	@Test(groups = "integration")
+	@SuppressWarnings({"BusyWait", "MethodWithMoreThanThreeNegations"})
+	@Test(groups = "integration", timeOut = 30000)
 	public void integrationTest() throws Exception {
-		ConnectionPair connectionPair = new ConnectionPair();
-		Connection connectionOne = connectionPair.getConnectionOne();
-		Connection connectionTwo = connectionPair.getConnectionTwo();
-
 		connectionOne.start();
 		connectionTwo.start();
 
@@ -64,23 +74,25 @@ public class ConnectionTest
 		Message message = MessageRegistry.getGlobalRegistry().createMessage("Test");
 		message.setArgument("encryptedString", "FooBar");
 
+		LOGGER.log(Level.INFO, "Enqueueing first message to connectionTwo");
 		connectionOne.enqueueMessage(message);
-
-		// Give the second connection time to read the message
-		Thread.sleep(100);
-		Assert.assertEquals(connectionTwo.getMessageContext().getName(), "Message Executed", "Message not executed.");
-
-		// Sleep for a while, then send another message to mimic real communication.
-		Thread.sleep(100);
+		while (!"FooBar".equals(connectionTwo.getMessageContext().getName())) { Thread.sleep(10); }
+		LOGGER.log(Level.INFO, "connectionTwo received and executed first message");
+		LOGGER.log(Level.INFO, "Enqueueing first message to connectionOne");
 		connectionTwo.enqueueMessage(message);
-
-		// Sleep to give the connection time to retrieve the message.
-		Thread.sleep(100);
-		Assert.assertEquals(connectionOne.getMessageContext().getName(), "Message Executed", "Message not executed.");
-
-		// Make sure they can shut down w/o exceptions
-		connectionOne.shutdown();
-		connectionTwo.shutdown();
+		while (!"FooBar".equals(connectionOne.getMessageContext().getName())) { Thread.sleep(10); }
+		LOGGER.log(Level.INFO, "connectionOne received and executed first message");
+		LOGGER.log(Level.INFO, "Sending message with no valid executable to connectionTwo");
+		Message errorCausing = MessageRegistry.getGlobalRegistry().createMessage("Malformed");
+		errorCausing.setArgument("someString", "Baz");
+		connectionOne.enqueueMessage(errorCausing);
+		connectionTwo.getMessageContext().setName("Reset");
+		connectionOne.getMessageContext().setName("Reset");
+		connectionOne.enqueueMessage(message);
+		while (!"FooBar".equals(connectionTwo.getMessageContext().getName())) { Thread.sleep(10); }
+		connectionTwo.enqueueMessage(message);
+		while (!"FooBar".equals(connectionOne.getMessageContext().getName())) { Thread.sleep(10); }
+		LOGGER.log(Level.INFO, "Neither connection shutdown after sending and receiving errored message");
 	}
 
 	private static class SocketPair
@@ -101,12 +113,10 @@ public class ConnectionTest
 			final Socket[] socketArray = new Socket[1];
 
 			Thread listenThread = new Thread(() -> {
-				try
-				{
+				try {
 					socketArray[0] = serverSocket.accept();
 					LOGGER.log(Level.INFO, "Server accepted socket");
-				} catch (IOException e)
-				{
+				} catch (IOException e) {
 					LOGGER.log(Level.SEVERE, "Couldn't create socket.");
 				}
 			});
@@ -117,8 +127,7 @@ public class ConnectionTest
 			Thread.sleep(100);
 
 			socketTwo = socketArray[0];
-			if (socketTwo == null)
-			{
+			if (socketTwo == null) {
 				throw new IOException("Couldn't create socket.");
 			}
 		}

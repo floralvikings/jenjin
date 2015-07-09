@@ -7,4 +7,9 @@
         <argument type="String" name="encryptedString" />
     </message>
 
+    <message name="Malformed" id="-6">
+        <executable>com.jenjinstudios.core.integration.connection.MalformedExecutableMessage</executable>
+        <argument type="String" name="someString" />
+    </message>
+
 </messages>
