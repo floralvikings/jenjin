@@ -95,6 +95,15 @@ public class MessageRegistry
 	}
 
 	/**
+	 * Clone the given message, including type and any filled arguments.
+	 * @param message The message to clone.
+	 * @return A copy of the given message.
+	 */
+	public Message cloneMessage(Message message) {
+		return new Message(message);
+	}
+
+	/**
 	 * Attempt to parse the given InputStream for an XML serialized message group.
 	 *
 	 * @param streamName The name of the stream; typically a filename.

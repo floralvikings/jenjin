@@ -3,6 +3,7 @@ package com.jenjinstudios.core.io;
 import com.jenjinstudios.core.xml.ArgumentType;
 import com.jenjinstudios.core.xml.MessageType;
 
+import java.util.Collections;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -42,14 +43,22 @@ public class Message
 		argumentsByName = new TreeMap<>();
 	}
 
+	Message(Message message) {
+		this.id = message.getID();
+		this.messageType = message.getMessageType();
+		this.name = message.name;
+		argumentsByName = new TreeMap<>();
+		message.getArgumentsByName().forEach(this::setArgument);
+	}
+
 	/**
 	 * Set the argument with the given name to the argument of the given value.
 	 *
      * @param argumentName The name of the argument.
      * @param argument The value to be stored in the argument.
      *
-     * @throws java.lang.IllegalArgumentException If the name or type of of the argument is invalid.
-     */
+	 * @throws IllegalArgumentException If the name or type of of the argument is invalid.
+	 */
     public void setArgument(String argumentName, Object argument) {
         ArgumentType argType = null;
         for (ArgumentType a : messageType.getArguments())
@@ -109,6 +118,20 @@ public class Message
         }
         return argsArray;
     }
+
+	/**
+	 * Get the type of this message.
+	 *
+	 * @return The type of this message.
+	 */
+	public MessageType getMessageType() { return messageType; }
+
+	/**
+	 * Get the argument map of this message.
+	 *
+	 * @return The argument map of this message.
+	 */
+	public Map<String, Object> getArgumentsByName() { return Collections.unmodifiableMap(argumentsByName); }
 
     boolean isInvalid() { return argumentsByName.size() != messageType.getArguments().size(); }
 

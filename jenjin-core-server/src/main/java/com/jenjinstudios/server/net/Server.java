@@ -4,11 +4,14 @@ import com.jenjinstudios.core.Connection;
 import com.jenjinstudios.core.io.MessageRegistry;
 import com.jenjinstudios.server.authentication.Authenticator;
 import com.jenjinstudios.server.authentication.User;
+import com.jenjinstudios.server.concurrency.BroadcastMessage;
 import com.jenjinstudios.server.concurrency.ConnectionPool;
+import com.jenjinstudios.server.concurrency.UpdateTask;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.KeyPair;
+import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -40,6 +43,7 @@ public class Server<U extends User, C extends ServerMessageContext<U>>
 		rsaKeyPair = (initInfo.getKeyPair() == null) ? Connection.generateRSAKeyPair() : initInfo.getKeyPair();
 		ups = initInfo.getUps();
 		connectionPool = new ConnectionPool<>(initInfo.getPort(), initInfo.getContextClass());
+		connectionPool.addUpdateTask(new BroadcastTask());
 		connectionPool.addShutdownTask(new EmergencyLogoutTask<>());
 		connectionPool.addConnectionAddedTask(connection -> {
 			connection.setRSAKeyPair(rsaKeyPair);
@@ -80,5 +84,15 @@ public class Server<U extends User, C extends ServerMessageContext<U>>
 	 * @return The ConnectionPool that manages connections for this server.
 	 */
 	protected ConnectionPool<C> getConnectionPool() { return connectionPool; }
+
+	private class BroadcastTask implements UpdateTask<C>
+	{
+
+		@Override
+		public void update(Connection<? extends C> connection) {
+			Collection<BroadcastMessage> broadcasts = connection.getMessageContext().getBroadcasts();
+			broadcasts.forEach(connectionPool::broadcastMessage);
+		}
+	}
 
 }

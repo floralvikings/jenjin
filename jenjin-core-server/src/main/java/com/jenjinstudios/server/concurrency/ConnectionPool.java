@@ -2,6 +2,7 @@ package com.jenjinstudios.server.concurrency;
 
 import com.jenjinstudios.core.Connection;
 import com.jenjinstudios.core.concurrency.MessageContext;
+import com.jenjinstudios.core.io.Message;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -83,6 +84,25 @@ public class ConnectionPool<T extends MessageContext>
 				shutdownTasks.forEach(task -> task.shutdown(value));
 			});
 
+		}
+	}
+
+	/**
+	 * Broadcast the specified message to all connections.
+	 *
+	 * @param broadcastMessage The message to broadcast to all connections.
+	 */
+	public void broadcastMessage(BroadcastMessage broadcastMessage) {
+		Collection<String> targets = broadcastMessage.getTargets();
+		Message message = broadcastMessage.getMessage();
+		if (targets.isEmpty()) {
+			synchronized (connections) {
+				connections.forEach((id, conn) -> conn.enqueueMessage(message));
+			}
+		} else {
+			synchronized (connections) {
+				targets.forEach(id -> connections.get(id).enqueueMessage(message));
+			}
 		}
 	}
 

@@ -3,6 +3,11 @@ package com.jenjinstudios.server.net;
 import com.jenjinstudios.core.concurrency.MessageContext;
 import com.jenjinstudios.server.authentication.Authenticator;
 import com.jenjinstudios.server.authentication.User;
+import com.jenjinstudios.server.concurrency.BroadcastMessage;
+
+import java.util.Collection;
+import java.util.Collections;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * Context for messages executed by a connection on a server.
@@ -11,6 +16,7 @@ import com.jenjinstudios.server.authentication.User;
  */
 public class ServerMessageContext<T extends User> extends MessageContext
 {
+	private final Collection<BroadcastMessage> broadcasts = new ConcurrentLinkedQueue<>();
 	private Authenticator<T> authenticator;
 	private T user;
 	private long loggedInTime;
@@ -56,4 +62,18 @@ public class ServerMessageContext<T extends User> extends MessageContext
 	 * @return The time in milliseconds from the epoch.
 	 */
 	public long getLoggedInTime() { return loggedInTime; }
+
+	/**
+	 * Get the messages that have been requested to be broadcast.
+	 *
+	 * @return The messages that have been requested to be broadcast.
+	 */
+	public Collection<BroadcastMessage> getBroadcasts() { return Collections.unmodifiableCollection(broadcasts); }
+
+	/**
+	 * Request to broadcast the given message.
+	 *
+	 * @param message The message to be broadcast.
+	 */
+	public void requestBroadcast(BroadcastMessage message) { broadcasts.add(message); }
 }
