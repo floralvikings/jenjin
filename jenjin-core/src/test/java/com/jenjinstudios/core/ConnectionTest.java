@@ -63,8 +63,7 @@ public class ConnectionTest
 		Connection connection = new Connection<>(messageStreamPair, new MessageContext());
 		connection.shutdown();
 
-		Assert.assertTrue(connection.getMessageStreamPair().getOut().isClosed(), "MessageOutputStream should be " +
-			  "closed");
+		Assert.assertTrue(messageStreamPair.getOut().isClosed(), "MessageOutputStream should be closed");
 	}
 
 	/**

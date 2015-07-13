@@ -22,10 +22,11 @@ import java.util.logging.Logger;
  *
  * @author Caleb Brinkman
  */
-public class Connection<T extends MessageContext> extends MessageThreadPool<T>
+public class Connection<T extends MessageContext>
 {
 	private static final int KEYSIZE = 512;
 	private static final Logger LOGGER = Logger.getLogger(Connection.class.getName());
+	private final MessageThreadPool<T> messageThreadPool;
 
 	/**
 	 * Construct a new connection using the given MessageIO for reading and writing messages.
@@ -34,9 +35,9 @@ public class Connection<T extends MessageContext> extends MessageThreadPool<T>
 	 * @param context The context in which messages should be executed.
 	 */
 	public Connection(MessageStreamPair streams, T context) {
-		super(streams, context);
-		getMessageContext().setAddress(streams.getAddress());
-		getMessageContext().setName("Connection");
+		messageThreadPool = new MessageThreadPool<>(streams, context);
+		messageThreadPool.getMessageContext().setAddress(streams.getAddress());
+		messageThreadPool.getMessageContext().setName("Connection");
 		InputStream stream = getClass().getClassLoader().getResourceAsStream("com/jenjinstudios/core/io/Messages.xml");
 		MessageRegistry.getGlobalRegistry().register("Core XML Registry", stream);
 	}
@@ -82,9 +83,40 @@ public class Connection<T extends MessageContext> extends MessageThreadPool<T>
 	public void setRSAKeyPair(KeyPair rsaKeyPair) {
 		if (rsaKeyPair != null)
 		{
-			getMessageStreamPair().getIn().setPrivateKey(rsaKeyPair.getPrivate());
+			messageThreadPool.getMessageStreamPair().getIn().setPrivateKey(rsaKeyPair.getPrivate());
 			Message message = generatePublicKeyMessage(rsaKeyPair.getPublic());
-			enqueueMessage(message);
+			messageThreadPool.enqueueMessage(message);
 		}
 	}
+
+	/**
+	 * Shutdown this connection.
+	 */
+	public void shutdown() { messageThreadPool.shutdown(); }
+
+	/**
+	 * Start this connection.
+	 */
+	public void start() { messageThreadPool.start(); }
+
+	/**
+	 * Get the message context of this Connection.
+	 *
+	 * @return The message context of this Connection.
+	 */
+	public T getMessageContext() { return messageThreadPool.getMessageContext(); }
+
+	/**
+	 * Queue up the supplied message to be written.
+	 *
+	 * @param message The message to be sent.
+	 */
+	public void enqueueMessage(Message message) { messageThreadPool.enqueueMessage(message); }
+
+	/**
+	 * Get the unique ID of this MessageThreadPool.
+	 *
+	 * @return The unique ID of this MessageThreadPool.
+	 */
+	public String getId() { return messageThreadPool.getId(); }
 }

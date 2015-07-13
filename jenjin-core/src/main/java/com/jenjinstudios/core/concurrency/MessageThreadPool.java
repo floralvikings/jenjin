@@ -34,7 +34,7 @@ public class MessageThreadPool<T extends MessageContext>
 	 * @param messageStreamPair The MessageIO containing the streams to read/write.
 	 * @param context The context in which messages in this thread pool should execute messages.
 	 */
-	protected MessageThreadPool(MessageStreamPair messageStreamPair, T context) {
+	public MessageThreadPool(MessageStreamPair messageStreamPair, T context) {
 		this.messageStreamPair = messageStreamPair;
 		this.messageContext = context;
 		messageWriter = new MessageWriter(messageStreamPair.getOut(), context);
