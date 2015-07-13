@@ -1,5 +1,5 @@
 rootProject.name = 'jenjin'
-include ':jenjin-core-server', ':jenjin-core-client', ':jenjin-world-server', ':jenjin-world-client', ':jenjin-core',
+include ':jenjin-core-server', ':jenjin-core-client', ':jenjin-core',
         ':jenjin-world-core'
 
 project(':jenjin-core-server').projectDir = "$rootDir/jenjin-core-server" as File
