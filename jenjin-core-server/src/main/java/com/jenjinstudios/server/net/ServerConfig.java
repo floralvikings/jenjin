@@ -1,6 +1,7 @@
 package com.jenjinstudios.server.net;
 
 import com.jenjinstudios.core.connection.ConnectionConfig;
+import com.jenjinstudios.server.authentication.User;
 import com.jenjinstudios.server.concurrency.ConnectionAddedTask;
 import com.jenjinstudios.server.concurrency.ShutdownTask;
 import com.jenjinstudios.server.concurrency.UpdateTask;
@@ -15,11 +16,11 @@ import static java.util.Collections.unmodifiableCollection;
  *
  * @author Caleb Brinkman
  */
-public class ServerConfig<T extends ServerMessageContext> extends ConnectionConfig<T>
+public class ServerConfig<U extends User, T extends ServerMessageContext<U>> extends ConnectionConfig<T>
 {
-	private Collection<UpdateTask> updateTasks;
-	private Collection<ConnectionAddedTask> connectionAddedTasks;
-	private Collection<ShutdownTask> shutdownTasks;
+	private Collection<UpdateTask<T>> updateTasks;
+	private Collection<ConnectionAddedTask<T>> connectionAddedTasks;
+	private Collection<ShutdownTask<T>> shutdownTasks;
 	private KeyPair keyPair;
 	private int ups;
 
@@ -42,14 +43,14 @@ public class ServerConfig<T extends ServerMessageContext> extends ConnectionConf
 	 *
 	 * @return The update tasks to be run by the server.
 	 */
-	public Collection<UpdateTask> getUpdateTasks() { return unmodifiableCollection(updateTasks); }
+	public Collection<UpdateTask<T>> getUpdateTasks() { return unmodifiableCollection(updateTasks); }
 
 	/**
 	 * Get the connection added tasks to be run by the server.
 	 *
 	 * @return The connection added tasks to be run by the server.
 	 */
-	public Collection<ConnectionAddedTask> getConnectionAddedTasks() {
+	public Collection<ConnectionAddedTask<T>> getConnectionAddedTasks() {
 		return unmodifiableCollection(connectionAddedTasks);
 	}
 
@@ -58,5 +59,5 @@ public class ServerConfig<T extends ServerMessageContext> extends ConnectionConf
 	 *
 	 * @return The shutdown tasks to be run by the server.
 	 */
-	public Collection<ShutdownTask> getShutdownTasks() { return unmodifiableCollection(shutdownTasks); }
+	public Collection<ShutdownTask<T>> getShutdownTasks() { return unmodifiableCollection(shutdownTasks); }
 }

@@ -38,7 +38,7 @@ public class Server<U extends User, C extends ServerMessageContext<U>>
 	 *
 	 * @throws IOException If there is an error registering messages.
 	 */
-	public Server(Authenticator<U> authenticator, ServerConfig<C> config) throws
+	public Server(Authenticator<U> authenticator, ServerConfig<U, C> config) throws
 		  IOException {
 		LOGGER.log(Level.FINE, "Initializing Server.");
 		rsaKeyPair = (config.getKeyPair() == null) ? Connection.generateRSAKeyPair() : config.getKeyPair();
