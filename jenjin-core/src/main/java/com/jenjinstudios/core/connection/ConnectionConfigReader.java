@@ -5,6 +5,8 @@ import com.google.gson.stream.JsonReader;
 
 import java.io.*;
 import java.lang.reflect.Type;
+import java.util.Collections;
+import java.util.Map;
 
 /**
  * Used to read connection configuration from a JSON file.
@@ -54,9 +56,21 @@ public class ConnectionConfigReader
 	 * @return The deserialized ConnectionConfig.
 	 */
 	public <T extends ConnectionConfig> T read(Type configType) {
-		Gson gson = new GsonBuilder()
-			  .registerTypeAdapter(Class.class, new ClassDeserializer())
-			  .create();
+		return read(configType, Collections.<Type, JsonDeserializer>emptyMap());
+	}
+
+	/**
+	 * Read the constructor-supplied JSON data into a ConnectionConfig object.
+	 *
+	 * @param configType The type of the configuration to be read in.
+	 * @param deserializers A Map of TypeAdapters to use when deserializing.
+	 *
+	 * @return The deserialized ConnectionConfig.
+	 */
+	public <T extends ConnectionConfig> T read(Type configType, Map<Type, JsonDeserializer> deserializers) {
+		GsonBuilder builder = new GsonBuilder().registerTypeAdapter(Class.class, new ClassDeserializer());
+		if (deserializers != null) { deserializers.forEach(builder::registerTypeAdapter); }
+		Gson gson = builder.create();
 		JsonReader reader = new JsonReader(new InputStreamReader(inputStream));
 		return gson.fromJson(reader, configType);
 	}

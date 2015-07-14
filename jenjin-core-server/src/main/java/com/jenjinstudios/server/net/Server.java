@@ -1,7 +1,6 @@
 package com.jenjinstudios.server.net;
 
 import com.jenjinstudios.core.Connection;
-import com.jenjinstudios.core.io.MessageRegistry;
 import com.jenjinstudios.server.authentication.Authenticator;
 import com.jenjinstudios.server.authentication.User;
 import com.jenjinstudios.server.concurrency.BroadcastMessage;
@@ -9,7 +8,6 @@ import com.jenjinstudios.server.concurrency.ConnectionPool;
 import com.jenjinstudios.server.concurrency.UpdateTask;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.security.KeyPair;
 import java.util.Collection;
 import java.util.logging.Level;
@@ -50,8 +48,9 @@ public class Server<U extends User, C extends ServerMessageContext<U>>
 			connection.setRSAKeyPair(rsaKeyPair);
 			connection.getMessageContext().setAuthenticator(authenticator);
 		});
-		InputStream stream = getClass().getClassLoader().getResourceAsStream("com/jenjinstudios/server/Messages.xml");
-		MessageRegistry.getGlobalRegistry().register("Core Client/Server Messages", stream);
+		config.getConnectionAddedTasks().forEach(connectionPool::addConnectionAddedTask);
+		config.getUpdateTasks().forEach(connectionPool::addUpdateTask);
+		config.getShutdownTasks().forEach(connectionPool::addShutdownTask);
 	}
 
 

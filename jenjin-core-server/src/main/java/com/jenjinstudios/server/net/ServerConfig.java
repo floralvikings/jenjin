@@ -8,6 +8,7 @@ import com.jenjinstudios.server.concurrency.UpdateTask;
 
 import java.security.KeyPair;
 import java.util.Collection;
+import java.util.LinkedList;
 
 import static java.util.Collections.unmodifiableCollection;
 
@@ -18,11 +19,17 @@ import static java.util.Collections.unmodifiableCollection;
  */
 public class ServerConfig<U extends User, T extends ServerMessageContext<U>> extends ConnectionConfig<T>
 {
-	private Collection<UpdateTask<T>> updateTasks;
-	private Collection<ConnectionAddedTask<T>> connectionAddedTasks;
-	private Collection<ShutdownTask<T>> shutdownTasks;
+	private final Collection<UpdateTask<T>> updateTasks;
+	private final Collection<ConnectionAddedTask<T>> connectionAddedTasks;
+	private final Collection<ShutdownTask<T>> shutdownTasks;
 	private KeyPair keyPair;
 	private int ups;
+
+	private ServerConfig() {
+		updateTasks = new LinkedList<>();
+		connectionAddedTasks = new LinkedList<>();
+		shutdownTasks = new LinkedList<>();
+	}
 
 	/**
 	 * Get the KeyPair used for encryption and decryption.
