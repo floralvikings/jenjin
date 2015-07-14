@@ -30,7 +30,7 @@ public class ConnectionListener<T extends MessageContext> implements Runnable
 	private final Collection<Connection<T>> newConnections;
 	private final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
 	private final ServerSocket serverSocket;
-	private final ConnectionConfig config;
+	private final ConnectionConfig<T> config;
 
 	/**
 	 * Construct a new ConnectionListener that will provide incoming connections with the given configuration.
@@ -39,7 +39,7 @@ public class ConnectionListener<T extends MessageContext> implements Runnable
 	 *
 	 * @throws IOException If there's an exception when setting up a server socket.
 	 */
-	public ConnectionListener(ConnectionConfig config) throws IOException {
+	public ConnectionListener(ConnectionConfig<T> config) throws IOException {
 		this.config = config;
 		this.newConnections = new LinkedList<>();
 		serverSocket = new ServerSocket(config.getPort());

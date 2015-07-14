@@ -40,7 +40,7 @@ public class ConnectionPool<T extends MessageContext>
 	 *
 	 * @throws IOException If there's an exception when creating the server socket.
 	 */
-	public ConnectionPool(ConnectionConfig config) throws IOException {
+	public ConnectionPool(ConnectionConfig<T> config) throws IOException {
 		connectionListener = new ConnectionListener<>(config);
 	}
 
