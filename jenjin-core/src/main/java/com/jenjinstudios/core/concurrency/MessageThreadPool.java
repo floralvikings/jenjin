@@ -1,7 +1,8 @@
 package com.jenjinstudios.core.concurrency;
 
 import com.jenjinstudios.core.io.Message;
-import com.jenjinstudios.core.io.MessageStreamPair;
+import com.jenjinstudios.core.io.MessageInputStream;
+import com.jenjinstudios.core.io.MessageOutputStream;
 
 import java.util.UUID;
 import java.util.concurrent.Executors;
@@ -20,7 +21,7 @@ public class MessageThreadPool<T extends MessageContext>
 {
 	private static final Logger LOGGER = Logger.getLogger(MessageThreadPool.class.getName());
 	private final String id = UUID.randomUUID().toString();
-	private final MessageStreamPair messageStreamPair;
+	private final MessageInputStream inputStream;
 	private final MessageExecutor messageExecutor;
 	private final MessageReader messageReader;
 	private final MessageWriter messageWriter;
@@ -31,14 +32,15 @@ public class MessageThreadPool<T extends MessageContext>
 	/**
 	 * Construct a MessageThreadPool whose threads will read from and write to the given MessageIO streams.
 	 *
-	 * @param messageStreamPair The MessageIO containing the streams to read/write.
-	 * @param context The context in which messages in this thread pool should execute messages.
+	 * @param inStream The message input stream.
+	 * @param outStream The message output stream.
+	 * @param context The message context.
 	 */
-	public MessageThreadPool(MessageStreamPair messageStreamPair, T context) {
-		this.messageStreamPair = messageStreamPair;
+	public MessageThreadPool(MessageInputStream inStream, MessageOutputStream outStream, T context) {
 		this.messageContext = context;
-		messageWriter = new MessageWriter(messageStreamPair.getOut(), context);
-		messageReader = new MessageReader(messageStreamPair.getIn());
+		this.inputStream = inStream;
+		messageWriter = new MessageWriter(outStream, context);
+		messageReader = new MessageReader(inStream);
 		errorChecker = new ErrorChecker();
 		messageExecutor = new MessageExecutor(this);
 		messageExecutor.setMessageContext(context);
@@ -79,7 +81,7 @@ public class MessageThreadPool<T extends MessageContext>
 	 *
 	 * @return The MessageIO containing the keys and streams used by this connection.
 	 */
-	public MessageStreamPair getMessageStreamPair() { return messageStreamPair; }
+	public MessageInputStream getInputStream() { return inputStream; }
 
 	/**
 	 * Queue up the supplied message to be written.

@@ -1,6 +1,7 @@
 package com.jenjinstudios.server.net;
 
 import com.jenjinstudios.core.Connection;
+import com.jenjinstudios.core.connection.ConnectionConfig;
 import com.jenjinstudios.core.io.MessageRegistry;
 import com.jenjinstudios.server.authentication.Authenticator;
 import com.jenjinstudios.server.authentication.User;
@@ -35,14 +36,15 @@ public class Server<U extends User, C extends ServerMessageContext<U>>
 	 *
 	 * @param initInfo The information used to initialize the server.
 	 * @param authenticator The Authenticator used to authenticate users for this server.
+	 * @param config The configuration for incoming connections.
 	 *
 	 * @throws IOException If there is an error registering messages.
 	 */
-	public Server(ServerInit<C> initInfo, Authenticator<U> authenticator) throws IOException {
+	public Server(ServerInit<C> initInfo, Authenticator<U> authenticator, ConnectionConfig config) throws IOException {
 		LOGGER.log(Level.FINE, "Initializing Server.");
 		rsaKeyPair = (initInfo.getKeyPair() == null) ? Connection.generateRSAKeyPair() : initInfo.getKeyPair();
 		ups = initInfo.getUps();
-		connectionPool = new ConnectionPool<>(initInfo.getPort(), initInfo.getContextClass());
+		connectionPool = new ConnectionPool<>(config);
 		connectionPool.addUpdateTask(new BroadcastTask());
 		connectionPool.addShutdownTask(new EmergencyLogoutTask<>());
 		connectionPool.addConnectionAddedTask(connection -> {

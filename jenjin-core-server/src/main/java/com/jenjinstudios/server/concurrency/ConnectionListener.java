@@ -2,12 +2,12 @@ package com.jenjinstudios.server.concurrency;
 
 import com.jenjinstudios.core.Connection;
 import com.jenjinstudios.core.concurrency.MessageContext;
+import com.jenjinstudios.core.connection.ConnectionConfig;
+import com.jenjinstudios.core.connection.ConnectionInstantiationException;
 import com.jenjinstudios.core.io.MessageInputStream;
 import com.jenjinstudios.core.io.MessageOutputStream;
-import com.jenjinstudios.core.io.MessageStreamPair;
 
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Collection;
@@ -27,25 +27,22 @@ import java.util.logging.Logger;
 public class ConnectionListener<T extends MessageContext> implements Runnable
 {
 	private static final Logger LOGGER = Logger.getLogger(ConnectionListener.class.getName());
-	private final Class<T> contextClass;
 	private final Collection<Connection<T>> newConnections;
 	private final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
 	private final ServerSocket serverSocket;
+	private final ConnectionConfig config;
 
 	/**
-	 * Construct a new ConnectionListener, which will listen on the given port and pass each new connection an instance
-	 * of contextClass.
+	 * Construct a new ConnectionListener that will provide incoming connections with the given configuration.
 	 *
-	 * @param port The port number on which to listen.
-	 * @param contextClass The class of MessageContext that will be passed into the new connections.
+	 * @param config The configuration for incoming connections.
 	 *
-	 * @throws java.io.IOException If there is an error when creating the server socket.
+	 * @throws IOException If there's an exception when setting up a server socket.
 	 */
-	public ConnectionListener(int port, Class<T> contextClass) throws IOException
-	{
-		this.contextClass = contextClass;
+	public ConnectionListener(ConnectionConfig config) throws IOException {
+		this.config = config;
 		this.newConnections = new LinkedList<>();
-		serverSocket = new ServerSocket(port);
+		serverSocket = new ServerSocket(config.getPort());
 	}
 
 	/**
@@ -55,11 +52,9 @@ public class ConnectionListener<T extends MessageContext> implements Runnable
 	 */
 	public Iterable<Connection<T>> getNewConnections() {
 		Collection<Connection<T>> temp = new LinkedList<>();
-		synchronized (newConnections)
-		{
+		synchronized (newConnections) {
 			Iterator<Connection<T>> iterator = newConnections.iterator();
-			while (iterator.hasNext())
-			{
+			while (iterator.hasNext()) {
 				temp.add(iterator.next());
 				iterator.remove();
 			}
@@ -80,11 +75,9 @@ public class ConnectionListener<T extends MessageContext> implements Runnable
 	 */
 	public void shutdown()
 	{
-		try
-		{
+		try {
 			serverSocket.close();
-		} catch (IOException e)
-		{
+		} catch (IOException e) {
 			LOGGER.log(Level.SEVERE, "Unable to close server socket", e);
 		}
 		executorService.shutdown();
@@ -92,45 +85,28 @@ public class ConnectionListener<T extends MessageContext> implements Runnable
 
 	@Override
 	public void run() {
-		try
-		{
+		try {
 			Socket socket = serverSocket.accept();
 			MessageInputStream inputStream = new MessageInputStream(socket.getInputStream());
 			MessageOutputStream outputStream = new MessageOutputStream(socket.getOutputStream());
-			MessageStreamPair streamPair = new MessageStreamPair(inputStream, outputStream);
-			Connection<T> connection = createConnection(streamPair);
-			if (connection != null)
-			{
-				synchronized (newConnections)
-				{
+			Connection<T> connection = createConnection(inputStream, outputStream);
+			if (connection != null) {
+				synchronized (newConnections) {
 					newConnections.add(connection);
 				}
 			}
-		} catch (IOException e)
-		{
+		} catch (IOException e) {
 			LOGGER.log(Level.WARNING, "Error connecting to client: ", e);
 		}
 	}
 
-	private T createMessageContext() {
-		T context = null;
-		try
-		{
-			context = contextClass.getConstructor().newInstance();
-		} catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e)
-		{
-			LOGGER.log(Level.SEVERE, "Unable to instantiate context; missing default constructor?", e);
-		}
-		return context;
-	}
-
-	private Connection<T> createConnection(MessageStreamPair streamPair)
+	private Connection<T> createConnection(MessageInputStream inputStream, MessageOutputStream outputStream)
 	{
 		Connection<T> newConnection = null;
-		T context = createMessageContext();
-		if (context != null)
-		{
-			newConnection = new Connection<>(streamPair, context);
+		try {
+			newConnection = new Connection<>(config, inputStream, outputStream);
+		} catch (ConnectionInstantiationException e) {
+			LOGGER.log(Level.WARNING, "Unable to instantiate connection", e);
 		}
 		return newConnection;
 	}

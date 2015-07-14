@@ -1,11 +1,11 @@
 package com.jenjinstudios.client.net;
 
 import com.jenjinstudios.core.Connection;
+import com.jenjinstudios.core.connection.ConnectionConfig;
+import com.jenjinstudios.core.connection.ConnectionInstantiationException;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageRegistry;
-import com.jenjinstudios.core.io.MessageStreamPair;
 
-import java.io.InputStream;
 import java.security.KeyPair;
 import java.util.LinkedList;
 import java.util.List;
@@ -26,17 +26,16 @@ public class Client<T extends ClientMessageContext> extends Connection<T>
 	private final ClientLoop clientLoop = new ClientLoop(this);
 
     /**
-     * Construct a new client and attempt to connect to the server over the specified port.
-     *
-	 * @param messageStreamPair The MessageIO used to send and receive messages.
-	 * @param context The message context in which this client will execute messages.
+	 * Construct a new client with the given configuration, input stream, and output stream.
+	 *
+	 * @param config The connection configuration
+	 * @throws ConnectionInstantiationException If there's an exception initializing the connection.
 	 */
-	protected Client(MessageStreamPair messageStreamPair, T context) {
-		super(messageStreamPair, context);
+	public Client(ConnectionConfig<T> config) throws ConnectionInstantiationException
+	{
+		super(config);
 		executorService = Executors.newSingleThreadScheduledExecutor();
 		repeatedTasks = new LinkedList<>();
-		InputStream stream = getClass().getClassLoader().getResourceAsStream("com/jenjinstudios/client/Messages.xml");
-		MessageRegistry.getGlobalRegistry().register("Core Client/Server Messages", stream);
 	}
 
     /**

@@ -2,11 +2,17 @@ package com.jenjinstudios.core;
 
 import com.jenjinstudios.core.concurrency.MessageContext;
 import com.jenjinstudios.core.concurrency.MessageThreadPool;
+import com.jenjinstudios.core.connection.ConnectionConfig;
+import com.jenjinstudios.core.connection.ConnectionInstantiationException;
 import com.jenjinstudios.core.io.Message;
+import com.jenjinstudios.core.io.MessageInputStream;
+import com.jenjinstudios.core.io.MessageOutputStream;
 import com.jenjinstudios.core.io.MessageRegistry;
-import com.jenjinstudios.core.io.MessageStreamPair;
 
-import java.io.InputStream;
+import java.io.*;
+import java.lang.reflect.InvocationTargetException;
+import java.net.InetAddress;
+import java.net.Socket;
 import java.security.Key;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
@@ -29,17 +35,91 @@ public class Connection<T extends MessageContext>
 	private final MessageThreadPool<T> messageThreadPool;
 
 	/**
-	 * Construct a new connection using the given MessageIO for reading and writing messages.
-	 *
-	 * @param streams The MessageIO containing the input and output streams
-	 * @param context The context in which messages should be executed.
+	 * Construct a new Connection with the given configuration, input stream, and output stream.
+	 * @param config The connection configuration.
+	 * @param in The input stream.
+	 * @param out The output stream.
+	 * @throws ConnectionInstantiationException If there is an exception when instantiating the connection.
 	 */
-	public Connection(MessageStreamPair streams, T context) {
-		messageThreadPool = new MessageThreadPool<>(streams, context);
-		messageThreadPool.getMessageContext().setAddress(streams.getAddress());
-		messageThreadPool.getMessageContext().setName("Connection");
-		InputStream stream = getClass().getClassLoader().getResourceAsStream("com/jenjinstudios/core/io/Messages.xml");
-		MessageRegistry.getGlobalRegistry().register("Core XML Registry", stream);
+	public Connection(ConnectionConfig<T> config, MessageInputStream in, MessageOutputStream out)
+		  throws ConnectionInstantiationException
+	{
+		InetAddress address = config.getAddress();
+		Class<T> contextClass = config.getContextClass();
+
+		T context;
+		try {
+			context = contextClass.getConstructor().newInstance();
+		} catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException
+			  e) {
+			throw new ConnectionInstantiationException(e);
+		}
+
+		for (String s : config.getMessageRegistryFiles()) {
+			registerMessages(s);
+		}
+
+		messageThreadPool = new MessageThreadPool(in, out, context);
+		messageThreadPool.getMessageContext().setAddress(address);
+	}
+
+	/**
+	 * Construct a new Connection with the given configuration.
+	 * @param config The configuration of this connection.
+	 * @throws ConnectionInstantiationException If there is an exception when instantiating the connection.
+	 */
+	public Connection(ConnectionConfig<T> config) throws ConnectionInstantiationException {
+		InetAddress address = config.getAddress();
+		Class<T> contextClass = config.getContextClass();
+
+		T context;
+		try {
+			context = contextClass.getConstructor().newInstance();
+		} catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException
+			  e) {
+			throw new ConnectionInstantiationException(e);
+		}
+
+		for (String s : config.getMessageRegistryFiles()) {
+			registerMessages(s);
+		}
+
+		MessageInputStream inputStream;
+		MessageOutputStream outputStream;
+		try {
+			Socket socket = new Socket(config.getAddress(), config.getPort());
+			inputStream = new MessageInputStream(socket.getInputStream());
+			outputStream = new MessageOutputStream(socket.getOutputStream());
+		} catch (IOException e) {
+			throw new ConnectionInstantiationException(e);
+		}
+		messageThreadPool = new MessageThreadPool(inputStream, outputStream, context);
+		messageThreadPool.getMessageContext().setAddress(address);
+	}
+
+	/**
+	 * Return whether the threads managed by this pool are running.
+	 *
+	 * @return Whether the threads managed by this pool are running.
+	 */
+	public boolean isRunning() { return messageThreadPool.isRunning(); }
+
+	private void registerMessages(String s) throws ConnectionInstantiationException {
+		File file = new File(s);
+		InputStream stream;
+		if (file.exists()) {
+			try {
+				stream = new FileInputStream(s);
+			} catch (FileNotFoundException e) {
+				throw new ConnectionInstantiationException(e);
+			}
+		} else {
+			stream = getClass().getClassLoader().getResourceAsStream(s);
+			if (stream == null) {
+				throw new ConnectionInstantiationException("Unable to find message registry " + s);
+			}
+		}
+		MessageRegistry.getGlobalRegistry().register(s, stream);
 	}
 
 	/**
@@ -62,13 +142,11 @@ public class Connection<T extends MessageContext>
 	 */
 	public static KeyPair generateRSAKeyPair() {
 		KeyPair keyPair = null;
-		try
-		{
+		try {
 			KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
 			keyPairGenerator.initialize(KEYSIZE);
 			keyPair = keyPairGenerator.generateKeyPair();
-		} catch (NoSuchAlgorithmException e)
-		{
+		} catch (NoSuchAlgorithmException e) {
 			LOGGER.log(Level.SEVERE, "Unable to create RSA key pair!", e);
 		}
 		return keyPair;
@@ -81,9 +159,8 @@ public class Connection<T extends MessageContext>
 	 * @param rsaKeyPair The keypair to use for encryption/decrytion.
 	 */
 	public void setRSAKeyPair(KeyPair rsaKeyPair) {
-		if (rsaKeyPair != null)
-		{
-			messageThreadPool.getMessageStreamPair().getIn().setPrivateKey(rsaKeyPair.getPrivate());
+		if (rsaKeyPair != null) {
+			messageThreadPool.getInputStream().setPrivateKey(rsaKeyPair.getPrivate());
 			Message message = generatePublicKeyMessage(rsaKeyPair.getPublic());
 			messageThreadPool.enqueueMessage(message);
 		}

@@ -2,11 +2,18 @@ package com.jenjinstudios.core.integration.connection;
 
 import com.jenjinstudios.core.Connection;
 import com.jenjinstudios.core.concurrency.MessageContext;
-import com.jenjinstudios.core.io.*;
+import com.jenjinstudios.core.connection.ConnectionConfig;
+import com.jenjinstudios.core.connection.ConnectionConfigReader;
+import com.jenjinstudios.core.connection.ConnectionInstantiationException;
+import com.jenjinstudios.core.io.Message;
+import com.jenjinstudios.core.io.MessageInputStream;
+import com.jenjinstudios.core.io.MessageOutputStream;
+import com.jenjinstudios.core.io.MessageRegistry;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetAddress;
@@ -23,6 +30,16 @@ import java.util.logging.Logger;
 public class ConnectionTest
 {
 	private static final Logger LOGGER = Logger.getLogger(ConnectionTest.class.getName());
+	private static final String CONFIG_STRING = "{\n" +
+		  "\"secure\":\"false\",\n" +
+		  "\"address\":\"127.0.0.1\",\n" +
+		  "\"port\":\"1234\",\n" +
+		  "\"messageRegistryFiles\":[\n" +
+		  	"\"test/jenjinstudios/core/integration/connection/Messages.xml\"," +
+		  	"\"com/jenjinstudios/core/io/Messages.xml\"" +
+		  "], \n" +
+		  "\"contextClass\":\"" + MessageContext.class.getName() + "\"\n" +
+		  '}';
 	private Connection connectionOne;
 	private Connection connectionTwo;
 
@@ -146,21 +163,23 @@ public class ConnectionTest
 			return connectionTwo;
 		}
 
-		private ConnectionPair() throws IOException, InterruptedException {
+		private ConnectionPair() throws IOException, InterruptedException, ConnectionInstantiationException {
+			ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(CONFIG_STRING.getBytes());
+			ConnectionConfigReader reader = new ConnectionConfigReader(byteArrayInputStream);
+			ConnectionConfig config = reader.read(ConnectionConfig.class);
+
 			SocketPair socketPair = new SocketPair();
 			Socket socketOne = socketPair.getSocketOne();
 			Socket socketTwo = socketPair.getSocketTwo();
 
 			MessageInputStream inputStreamOne = new MessageInputStream(socketOne.getInputStream());
 			MessageOutputStream outputStreamOne = new MessageOutputStream(socketOne.getOutputStream());
-			MessageStreamPair messageStreamPairOne = new MessageStreamPair(inputStreamOne, outputStreamOne);
 
 			MessageInputStream inputStreamTwo = new MessageInputStream(socketTwo.getInputStream());
 			MessageOutputStream outputStreamTwo = new MessageOutputStream(socketTwo.getOutputStream());
-			MessageStreamPair messageStreamPairTwo = new MessageStreamPair(inputStreamTwo, outputStreamTwo);
 
-			connectionOne = new Connection<>(messageStreamPairOne, new MessageContext());
-			connectionTwo = new Connection<>(messageStreamPairTwo, new MessageContext());
+			connectionOne = new Connection<>(config, inputStreamOne, outputStreamOne);
+			connectionTwo = new Connection<>(config, inputStreamTwo, outputStreamTwo);
 		}
 	}
 }
