@@ -1,9 +1,12 @@
-package com.jenjinstudios.core.connection;
+package com.jenjinstudios.core.serialization;
 
-import com.google.gson.*;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializer;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import com.jenjinstudios.core.concurrency.MessageContext;
+import com.jenjinstudios.core.connection.ConnectionConfig;
 
 import java.io.*;
 import java.lang.reflect.Type;
@@ -74,18 +77,4 @@ public class ConnectionConfigReader<C extends MessageContext>
 		return gson.fromJson(reader, new TypeToken<ConnectionConfig<C>>() {}.getType());
 	}
 
-	private static class ClassDeserializer implements JsonDeserializer<Class>
-	{
-		@Override
-		public Class deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
-			  throws JsonParseException
-		{
-			String className = json.getAsString();
-			try {
-				return Class.forName(className);
-			} catch (ClassNotFoundException e) {
-				throw new JsonParseException(e);
-			}
-		}
-	}
 }

@@ -1,6 +1,7 @@
-package com.jenjinstudios.core.connection;
+package com.jenjinstudios.core.serialization;
 
 import com.jenjinstudios.core.concurrency.MessageContext;
+import com.jenjinstudios.core.connection.ConnectionConfig;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
