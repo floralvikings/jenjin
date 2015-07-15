@@ -166,7 +166,7 @@ public class ConnectionTest
 		private ConnectionPair() throws IOException, InterruptedException, ConnectionInstantiationException {
 			ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(CONFIG_STRING.getBytes());
 			ConnectionConfigReader reader = new ConnectionConfigReader(byteArrayInputStream);
-			ConnectionConfig config = reader.read(ConnectionConfig.class);
+			ConnectionConfig config = reader.read();
 
 			SocketPair socketPair = new SocketPair();
 			Socket socketOne = socketPair.getSocketOne();

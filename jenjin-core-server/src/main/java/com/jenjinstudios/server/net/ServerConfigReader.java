@@ -1,18 +1,14 @@
 package com.jenjinstudios.server.net;
 
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParseException;
-import com.jenjinstudios.core.connection.ConnectionConfig;
-import com.jenjinstudios.core.connection.ConnectionConfigReader;
+import com.google.gson.*;
+import com.google.gson.reflect.TypeToken;
+import com.google.gson.stream.JsonReader;
+import com.jenjinstudios.server.authentication.User;
 import com.jenjinstudios.server.concurrency.ConnectionAddedTask;
 import com.jenjinstudios.server.concurrency.ShutdownTask;
 import com.jenjinstudios.server.concurrency.UpdateTask;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
+import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Type;
 import java.util.Collections;
@@ -24,8 +20,10 @@ import java.util.Map;
  *
  * @author Caleb Brinkman
  */
-public class ServerConfigReader extends ConnectionConfigReader
+public class ServerConfigReader<U extends User, C extends ServerMessageContext<U>>
 {
+	private final InputStream inputStream;
+
 	/**
 	 * Construct a new ServerConfigReader.
 	 *
@@ -33,7 +31,7 @@ public class ServerConfigReader extends ConnectionConfigReader
 	 *
 	 * @throws FileNotFoundException If the file doesn't exist.
 	 */
-	public ServerConfigReader(String path) throws FileNotFoundException { super(path); }
+	public ServerConfigReader(String path) throws FileNotFoundException { this(new File(path)); }
 
 	/**
 	 * Construct a new ServerConfigReader.
@@ -42,42 +40,42 @@ public class ServerConfigReader extends ConnectionConfigReader
 	 *
 	 * @throws FileNotFoundException If the file doesn't exist.
 	 */
-	public ServerConfigReader(File file) throws FileNotFoundException { super(file); }
+	public ServerConfigReader(File file) throws FileNotFoundException { this(new FileInputStream(file)); }
 
 	/**
 	 * Construct a new ServerConfigReader.
 	 *
 	 * @param inputStream The stream containing the config file.
 	 */
-	public ServerConfigReader(InputStream inputStream) { super(inputStream); }
+	public ServerConfigReader(InputStream inputStream) { this.inputStream = inputStream; }
 
 	/**
 	 * Read the constructor-supplied JSON data into a ServerConfig object.
 	 *
-	 * @param configType The type of the configuration to be read in.
-	 *
 	 * @return The deserialized ServerConfig.
 	 */
-	@Override
-	public <T extends ConnectionConfig> T read(Type configType) {
-		return read(configType, Collections.<Type, JsonDeserializer>emptyMap());
+	public ServerConfig<U, C> read() {
+		return read(Collections.<Type, JsonDeserializer>emptyMap());
 	}
 
 	/**
 	 * Read the constructor-supplied JSON data into a ServerConfig object.
 	 *
-	 * @param configType The type of the configuration to be read in.
 	 * @param deserializers A Map of TypeAdapters to use when deserializing.
 	 *
 	 * @return The deserialized ServerConfig.
 	 */
-	@Override
-	public <T extends ConnectionConfig> T read(Type configType, Map<Type, JsonDeserializer> deserializers) {
+	public ServerConfig<U, C> read(Map<Type, JsonDeserializer> deserializers) {
 		Map<Type, JsonDeserializer> adapterMap = new HashMap<>(deserializers);
 		adapterMap.put(UpdateTask.class, new UpdateTaskDeserializer());
-		adapterMap.put(UpdateTask.class, new ShutdownTaskDeserializer());
-		adapterMap.put(UpdateTask.class, new ConnectionAddedTaskDeserializer());
-		return super.read(configType, adapterMap);
+		adapterMap.put(ShutdownTask.class, new ShutdownTaskDeserializer());
+		adapterMap.put(ConnectionAddedTask.class, new ConnectionAddedTaskDeserializer());
+		adapterMap.put(Class.class, new ClassDeserializer());
+		GsonBuilder builder = new GsonBuilder();
+		adapterMap.forEach(builder::registerTypeAdapter);
+		Gson gson = builder.create();
+		JsonReader reader = new JsonReader(new InputStreamReader(inputStream));
+		return gson.fromJson(reader, new TypeToken<ServerConfig<U, C>>() {}.getType());
 	}
 
 	private static class UpdateTaskDeserializer implements JsonDeserializer<UpdateTask>
@@ -150,6 +148,21 @@ public class ServerConfigReader extends ConnectionConfigReader
 				  | ClassCastException
 				  | NoSuchMethodException
 				  | InvocationTargetException e) {
+				throw new JsonParseException(e);
+			}
+		}
+	}
+
+	private static class ClassDeserializer implements JsonDeserializer<Class>
+	{
+		@Override
+		public Class deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+			  throws JsonParseException
+		{
+			String className = json.getAsString();
+			try {
+				return Class.forName(className);
+			} catch (ClassNotFoundException e) {
 				throw new JsonParseException(e);
 			}
 		}

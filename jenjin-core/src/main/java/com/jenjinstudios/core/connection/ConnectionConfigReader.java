@@ -1,7 +1,9 @@
 package com.jenjinstudios.core.connection;
 
 import com.google.gson.*;
+import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
+import com.jenjinstudios.core.concurrency.MessageContext;
 
 import java.io.*;
 import java.lang.reflect.Type;
@@ -13,7 +15,7 @@ import java.util.Map;
  *
  * @author Caleb Brinkman
  */
-public class ConnectionConfigReader
+public class ConnectionConfigReader<C extends MessageContext>
 {
 	private final InputStream inputStream;
 
@@ -51,28 +53,25 @@ public class ConnectionConfigReader
 	/**
 	 * Read the constructor-supplied JSON data into a ConnectionConfig object.
 	 *
-	 * @param configType The type of the configuration to be read in.
-	 *
 	 * @return The deserialized ConnectionConfig.
 	 */
-	public <T extends ConnectionConfig> T read(Type configType) {
-		return read(configType, Collections.<Type, JsonDeserializer>emptyMap());
+	public ConnectionConfig<C> read() {
+		return read(Collections.<Type, JsonDeserializer>emptyMap());
 	}
 
 	/**
 	 * Read the constructor-supplied JSON data into a ConnectionConfig object.
 	 *
-	 * @param configType The type of the configuration to be read in.
 	 * @param deserializers A Map of TypeAdapters to use when deserializing.
 	 *
 	 * @return The deserialized ConnectionConfig.
 	 */
-	public <T extends ConnectionConfig> T read(Type configType, Map<Type, JsonDeserializer> deserializers) {
+	public ConnectionConfig<C> read(Map<Type, JsonDeserializer> deserializers) {
 		GsonBuilder builder = new GsonBuilder().registerTypeAdapter(Class.class, new ClassDeserializer());
 		if (deserializers != null) { deserializers.forEach(builder::registerTypeAdapter); }
 		Gson gson = builder.create();
 		JsonReader reader = new JsonReader(new InputStreamReader(inputStream));
-		return gson.fromJson(reader, configType);
+		return gson.fromJson(reader, new TypeToken<ConnectionConfig<C>>() {}.getType());
 	}
 
 	private static class ClassDeserializer implements JsonDeserializer<Class>

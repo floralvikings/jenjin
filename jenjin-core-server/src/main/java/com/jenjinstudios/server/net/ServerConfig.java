@@ -17,11 +17,12 @@ import static java.util.Collections.unmodifiableCollection;
  *
  * @author Caleb Brinkman
  */
-public class ServerConfig<U extends User, T extends ServerMessageContext<U>> extends ConnectionConfig<T>
+public class ServerConfig<U extends User, T extends ServerMessageContext<U>>
 {
 	private final Collection<UpdateTask<T>> updateTasks;
 	private final Collection<ConnectionAddedTask<T>> connectionAddedTasks;
 	private final Collection<ShutdownTask<T>> shutdownTasks;
+	private ConnectionConfig<T> connectionConfig;
 	private KeyPair keyPair;
 	private int ups;
 
@@ -67,4 +68,11 @@ public class ServerConfig<U extends User, T extends ServerMessageContext<U>> ext
 	 * @return The shutdown tasks to be run by the server.
 	 */
 	public Collection<ShutdownTask<T>> getShutdownTasks() { return unmodifiableCollection(shutdownTasks); }
+
+	/**
+	 * Get the ConnectionConfig that will be used by connections to the server.
+	 *
+	 * @return The ConnectionConfig that will be used by connections to the server.
+	 */
+	public ConnectionConfig<T> getConnectionConfig() { return connectionConfig; }
 }

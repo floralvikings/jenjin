@@ -29,8 +29,8 @@ public class ConnectionConfigReaderTest
 			  "\"contextClass\":\"" + MessageContext.class.getName() + "\"\n" +
 			  '}';
 		ByteArrayInputStream inputStream = new ByteArrayInputStream(testJson.getBytes());
-		ConnectionConfigReader reader = new ConnectionConfigReader(inputStream);
-		ConnectionConfig connectionConfig = reader.read(ConnectionConfig.class);
+		ConnectionConfigReader<MessageContext> reader = new ConnectionConfigReader<>(inputStream);
+		ConnectionConfig<MessageContext> connectionConfig = reader.read();
 		Assert.assertFalse(connectionConfig.isSecure(), "Should not be secure");
 		Assert.assertEquals(connectionConfig.getAddress(), InetAddress.getLoopbackAddress(), "Address not correct");
 		Assert.assertTrue(connectionConfig.getMessageRegistryFiles().isEmpty(), "Message registry should be empty");

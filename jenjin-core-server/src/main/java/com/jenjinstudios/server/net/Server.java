@@ -41,7 +41,7 @@ public class Server<U extends User, C extends ServerMessageContext<U>>
 		LOGGER.log(Level.FINE, "Initializing Server.");
 		rsaKeyPair = (config.getKeyPair() == null) ? Connection.generateRSAKeyPair() : config.getKeyPair();
 		ups = config.getUps();
-		connectionPool = new ConnectionPool<>(config);
+		connectionPool = new ConnectionPool<>(config.getConnectionConfig());
 		connectionPool.addUpdateTask(new BroadcastTask());
 		connectionPool.addShutdownTask(new EmergencyLogoutTask<>());
 		connectionPool.addConnectionAddedTask(connection -> {
