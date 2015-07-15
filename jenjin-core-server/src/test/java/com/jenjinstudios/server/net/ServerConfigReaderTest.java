@@ -1,5 +1,6 @@
 package com.jenjinstudios.server.net;
 
+import com.jenjinstudios.server.serialization.ServerConfigReader;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

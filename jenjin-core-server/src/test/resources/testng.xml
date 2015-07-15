@@ -31,4 +31,10 @@
             <package name="com.jenjinstudios.server.security" />
         </packages>
     </test>
+
+    <test name="serialization">
+        <packages>
+            <package name="com.jenjinstudios.server.serialization" />
+        </packages>
+    </test>
 </suite>
