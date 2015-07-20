@@ -10,6 +10,7 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
 
 /**
  * Test the BasicUserSqlUpdate class.
@@ -46,7 +47,7 @@ public class JenjinUserSqlUpdateTest
 		boolean changed = update.update(user);
 		Assert.assertTrue(changed, "Database should have changed.");
 
-		DatabaseLookup<BasicUser> lookup = new JenjinUserSqlLookup<>(new BasicUserFactory(), connection);
+		DatabaseLookup<BasicUser, ResultSet> lookup = new JenjinUserSqlLookup<>(new BasicUserFactory(), connection);
 		BasicUser lookupUser = lookup.lookup("TestAccount1");
 
 		Assert.assertTrue(lookupUser.isLoggedIn(), "User should be logged in.");

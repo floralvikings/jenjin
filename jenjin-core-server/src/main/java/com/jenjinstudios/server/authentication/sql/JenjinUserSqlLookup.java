@@ -2,9 +2,11 @@ package com.jenjinstudios.server.authentication.sql;
 
 import com.jenjinstudios.server.authentication.User;
 import com.jenjinstudios.server.authentication.UserFactory;
+import com.jenjinstudios.server.authentication.UserLookup;
 import com.jenjinstudios.server.database.DatabaseException;
-import com.jenjinstudios.server.database.DatabaseLookup;
+import com.sun.rowset.CachedRowSetImpl;
 
+import javax.sql.rowset.CachedRowSet;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -25,7 +27,8 @@ import java.util.logging.Logger;
  *
  * @author Caleb Brinkman
  */
-public class JenjinUserSqlLookup<T extends User> implements DatabaseLookup<T>
+public class JenjinUserSqlLookup<T extends User> implements UserLookup<T, ResultSet>
+
 {
 	private static final String PASSWORD_COL = "password";
 	private static final String USERNAME_COL = "username";
@@ -33,7 +36,7 @@ public class JenjinUserSqlLookup<T extends User> implements DatabaseLookup<T>
 	private static final String SALT_COL = "salt";
 	private static final Logger LOGGER = Logger.getLogger(JenjinUserSqlLookup.class.getName());
 	private final UserFactory<T> userFactory;
-	private final Connection sqlConnection;
+	private final Connection connection;
 
 	/**
 	 * Construct a new JenjinUserSqlLookup, using the specified {@code UserFactory} to create User instances, and the
@@ -43,63 +46,62 @@ public class JenjinUserSqlLookup<T extends User> implements DatabaseLookup<T>
 	 * @param sqlConnection The connection to the SQL database, from which this will retrieve user data.
 	 */
 	public JenjinUserSqlLookup(UserFactory<T> userFactory, Connection sqlConnection) {
+		this.connection = sqlConnection;
 		this.userFactory = userFactory;
-		this.sqlConnection = sqlConnection;
 	}
 
 	@Override
-	public T lookup(String key) throws DatabaseException {
-		T user = null;
-		ResultSet resultSet = null;
+	public ResultSet getDbResults(String key) throws DatabaseException {
+		CachedRowSet resultSet = null;
 		PreparedStatement preparedStatement = null;
 		try {
 			String query = "SELECT * FROM JenjinUsers WHERE username = ?";
-			preparedStatement = sqlConnection.prepareStatement(query);
+			preparedStatement = connection.prepareStatement(query);
 			preparedStatement.setObject(1, key);
-			resultSet = preparedStatement.executeQuery();
-
-			user = buildUser(resultSet);
+			ResultSet raw = preparedStatement.executeQuery();
+			resultSet = new CachedRowSetImpl();
+			resultSet.populate(raw);
 		} catch (SQLException ex) {
 			throw new DatabaseException("Exception when retrieving user data from SQL Database: ", ex);
 		} finally {
 			if (preparedStatement != null) {
 				try {
+					// Closing the statement closes result set.
 					preparedStatement.close();
 				} catch (SQLException ex) {
 					LOGGER.log(Level.WARNING, "Unable to close prepared statement", ex);
 				}
 			}
-			if (resultSet != null) {
-				try {
-					resultSet.close();
-				} catch (SQLException ex) {
-					LOGGER.log(Level.WARNING, "Unable to close result set", ex);
-				}
-			}
 		}
-		if (user == null) {
-			LOGGER.log(Level.FINEST, "Attempted to retrieve nonexistant user {0}", key);
-		}
-		return user;
+		return resultSet;
 	}
 
-	private T buildUser(ResultSet resultSet) throws SQLException, DatabaseException {
+	@Override
+	public T create(ResultSet dbResults) throws DatabaseException {
 		T retrievedUser = null;
-		if (resultSet.next()) {
-			String username = resultSet.getString(USERNAME_COL);
-			String password = resultSet.getString(PASSWORD_COL);
-			boolean loggedIn = resultSet.getBoolean(LOGGEDIN_COL);
-			String salt = resultSet.getString(SALT_COL);
+		try {
+			if (dbResults.next()) {
+				String username = dbResults.getString(USERNAME_COL);
+				String password = dbResults.getString(PASSWORD_COL);
+				boolean loggedIn = dbResults.getBoolean(LOGGEDIN_COL);
+				String salt = dbResults.getString(SALT_COL);
 
-			if (resultSet.next()) {
-				throw new DatabaseException("Multiple users with this username detected!");
+				if (dbResults.next()) {
+					throw new DatabaseException("Multiple users with this username detected!");
+				}
+
+				retrievedUser = userFactory.createUser(username);
+				retrievedUser.setPassword(password);
+				retrievedUser.setSalt(salt);
+				retrievedUser.setLoggedIn(loggedIn);
 			}
-
-			retrievedUser = userFactory.createUser(username);
-			retrievedUser.setPassword(password);
-			retrievedUser.setSalt(salt);
-			retrievedUser.setLoggedIn(loggedIn);
+		} catch (SQLException ex) {
+			throw new DatabaseException(ex);
 		}
 		return retrievedUser;
 	}
+
+	@Override
+	public UserFactory<T> getUserFactory() { return userFactory; }
+
 }

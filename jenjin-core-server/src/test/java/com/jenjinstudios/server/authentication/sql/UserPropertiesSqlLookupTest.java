@@ -7,6 +7,7 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.util.Map;
 
 /**
@@ -38,7 +39,7 @@ public class UserPropertiesSqlLookupTest
 		Connection connection = testConnectionFactory.createPropertiesTestConnection();
 		String username = "TestAccount1";
 
-		DatabaseLookup<Map<String, String>> lookup = new UserPropertiesSqlLookup(connection);
+		DatabaseLookup<Map<String, String>, ResultSet> lookup = new UserPropertiesSqlLookup(connection);
 		Map<String, String> properties = lookup.lookup(username);
 		Assert.assertEquals(properties.size(), 2, "Two properties should exist");
 		String property1 = properties.get("property1");
@@ -55,7 +56,7 @@ public class UserPropertiesSqlLookupTest
 		Connection connection = testConnectionFactory.createPropertiesTestConnectionInvalid();
 		String username = "TestAccount1";
 
-		DatabaseLookup<Map<String, String>> lookup = new UserPropertiesSqlLookup(connection);
+		DatabaseLookup<Map<String, String>, ResultSet> lookup = new UserPropertiesSqlLookup(connection);
 		lookup.lookup(username);
 	}
 
@@ -69,7 +70,7 @@ public class UserPropertiesSqlLookupTest
 		Connection connection = testConnectionFactory.createPropertiesTestConnection();
 		String username = "Fake account.";
 
-		DatabaseLookup<Map<String, String>> lookup = new UserPropertiesSqlLookup(connection);
+		DatabaseLookup<Map<String, String>, ResultSet> lookup = new UserPropertiesSqlLookup(connection);
 		Map<String, String> properties = lookup.lookup(username);
 		Assert.assertNull(properties, "Should not have found any properties.");
 	}

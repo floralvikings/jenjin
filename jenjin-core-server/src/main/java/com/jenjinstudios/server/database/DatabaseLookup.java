@@ -5,8 +5,7 @@ package com.jenjinstudios.server.database;
  *
  * @author Caleb Brinkman
  */
-@FunctionalInterface
-public interface DatabaseLookup<T>
+public interface DatabaseLookup<T, R>
 {
 	/**
 	 * Lookup the object in the database with the given key.
@@ -17,6 +16,32 @@ public interface DatabaseLookup<T>
 	 *
 	 * @throws DatabaseException If there's an exception when interacting with the database.
 	 */
-	T lookup(String key) throws DatabaseException;
+	default T lookup(String key) throws DatabaseException {
+		R results = getDbResults(key);
+		return create(results);
+	}
+
+	/**
+	 * Query the database and return the results.  This method is responsible for any resource cleanup necessary after
+	 * the query has been made.
+	 *
+	 * @param key The key used to look up the data.
+	 *
+	 * @return The results of the query.
+	 *
+	 * @throws DatabaseException If there's an exception when querying the database.
+	 */
+	R getDbResults(String key) throws DatabaseException;
+
+	/**
+	 * Create a new T given the database results.
+	 *
+	 * @param dbResults The results of a database query.
+	 *
+	 * @return The created T.
+	 *
+	 * @throws DatabaseException If the data in {@code dbResults} is unable to be deserialized into T.
+	 */
+	T create(R dbResults) throws DatabaseException;
 
 }

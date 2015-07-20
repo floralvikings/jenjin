@@ -8,6 +8,7 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.util.Collections;
 import java.util.Map;
 
@@ -43,7 +44,7 @@ public class UserPropertiesSqlUpdateTest
 		boolean changed = update.update(updatedProperty, "TestAccount1");
 		Assert.assertTrue(changed, "Property should have been changed.");
 
-		DatabaseLookup<Map<String, String>> lookup = new UserPropertiesSqlLookup(connection);
+		DatabaseLookup<Map<String, String>, ResultSet> lookup = new UserPropertiesSqlLookup(connection);
 		Map<String, String> lookupProperties = lookup.lookup("TestAccount1");
 		Assert.assertEquals(lookupProperties.get("property1"), "newValue", "Values should be equal");
 	}

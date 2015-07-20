@@ -10,10 +10,11 @@ import java.util.Map;
  *
  * @author Caleb Brinkman
  */
-public abstract class FullUserLookup<T extends User> implements DatabaseLookup<T>
+public class FullUserLookup<T extends User> implements UserLookup<T, UserDbResult<T>>
 {
-	private final DatabaseLookup<T> userLookup;
-	private final DatabaseLookup<Map<String, String>> propertiesLookup;
+	private final UserLookup<T, UserDbResult<T>> userLookup;
+	private final DatabaseLookup<Map<String, String>, UserDbResult<T>> propertiesLookup;
+	private final UserFactory<T> userFactory;
 
 	/**
 	 * Construct a new FullUserLookup that will use the given DatabaseLookup objects to retrieve data and build a user,
@@ -21,43 +22,33 @@ public abstract class FullUserLookup<T extends User> implements DatabaseLookup<T
 	 *
 	 * @param userLookup The DatabaseLookup that will return the user.
 	 * @param propertiesLookup The DatabaseLookup that will return the properties.
+	 * @param userFactory The factory used for creating users.
 	 */
-	protected FullUserLookup(DatabaseLookup<T> userLookup, DatabaseLookup<Map<String, String>> propertiesLookup) {
+	public FullUserLookup(UserLookup<T, UserDbResult<T>> userLookup,
+						  DatabaseLookup<Map<String, String>, UserDbResult<T>> propertiesLookup,
+						  UserFactory<T> userFactory)
+	{
 		this.userLookup = userLookup;
 		this.propertiesLookup = propertiesLookup;
+		this.userFactory = userFactory;
 	}
 
-	/**
-	 * Retrieve a User from the database, including all custom properties; the first argument is the username, all
-	 * other
-	 * arguments are ignored.
-	 *
-	 * @param key The username.
-	 *
-	 * @return The retrieved User.
-	 *
-	 * @throws DatabaseException If there is an exception when retriving user data from the database.
-	 */
 	@Override
-	public T lookup(String key) throws DatabaseException {
-		Map<String, String> properties = propertiesLookup.lookup(key);
+	public UserDbResult<T> getDbResults(String key) throws DatabaseException {
 		T user = userLookup.lookup(key);
+		Map<String, String> properties = propertiesLookup.lookup(key);
 
-		parseUserProperties(properties, user);
-
-		return user;
+		return new UserDbResult<>(user, properties);
 	}
 
-	/**
-	 * Using the supplied Map, parse and set properties on the supplied User.  This method is meant to be
-	 * implemented in
-	 * subclasses that require custom properties to be added to a user before the user is meant for use.
-	 *
-	 * @param properties The key value pairs of properties retrieved from a database, to be added to {@code user}.
-	 * @param user The user to which the supplied properties should be added.
-	 *
-	 * @throws com.jenjinstudios.server.database.DatabaseException If there is an exception when parsing user
-	 * properties.
-	 */
-	protected abstract void parseUserProperties(Map<String, String> properties, T user) throws DatabaseException;
+	@Override
+	public T create(UserDbResult<T> dbResults) throws DatabaseException {
+		T user = dbResults.getUser();
+		Map<String, String> properties = dbResults.getProperties();
+		userFactory.populateUser(user, properties);
+		return null;
+	}
+
+	@Override
+	public UserFactory<T> getUserFactory() { return userFactory; }
 }

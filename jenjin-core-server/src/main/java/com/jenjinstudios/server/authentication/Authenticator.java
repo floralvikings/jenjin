@@ -1,7 +1,6 @@
 package com.jenjinstudios.server.authentication;
 
 import com.jenjinstudios.server.database.DatabaseException;
-import com.jenjinstudios.server.database.DatabaseLookup;
 import com.jenjinstudios.server.database.DatabaseUpdate;
 import com.jenjinstudios.server.security.SHA256Hasher;
 
@@ -12,7 +11,7 @@ import com.jenjinstudios.server.security.SHA256Hasher;
  */
 public class Authenticator<T extends User>
 {
-	private final DatabaseLookup<T> userLookup;
+	private final UserLookup<T, ?> userLookup;
 	private final DatabaseUpdate<T> userUpdate;
 
 	/**
@@ -20,7 +19,7 @@ public class Authenticator<T extends User>
 	 * @param lookup The user lookup.
 	 * @param update The user update.
 	 */
-	public Authenticator(DatabaseLookup<T> lookup, DatabaseUpdate<T> update) {
+	public Authenticator(UserLookup<T, ?> lookup, DatabaseUpdate<T> update) {
 		this.userLookup = lookup;
 		this.userUpdate = update;
 	}
@@ -105,7 +104,7 @@ public class Authenticator<T extends User>
 		if (user != null)
 		{
 			String hashedPass = SHA256Hasher.getSaltedSHA256String(password, user.getSalt());
-			boolean passwordIncorrect = (hashedPass == null) || !hashedPass.equalsIgnoreCase(user.getPassword());
+			boolean passwordIncorrect = !hashedPass.equalsIgnoreCase(user.getPassword());
 
 			if (passwordIncorrect)
 				user = null;

@@ -9,6 +9,7 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
 
 /**
  * Test the UserPropertiesSqlLookup class.
@@ -38,7 +39,7 @@ public class JenjinUserSqlLookupTest
 	public void testLookupValidUser() throws Exception
 	{
 		Connection connection = testConnectionFactory.createUserTestConnection();
-		DatabaseLookup<BasicUser> lookup = new JenjinUserSqlLookup<>(new BasicUserFactory(), connection);
+		DatabaseLookup<BasicUser, ResultSet> lookup = new JenjinUserSqlLookup<>(new BasicUserFactory(), connection);
 		BasicUser user = lookup.lookup("TestAccount1");
 
 		Assert.assertNotNull(user, "User should not be null");
@@ -52,7 +53,7 @@ public class JenjinUserSqlLookupTest
 	@Test(expectedExceptions = DatabaseException.class)
 	public void testLookupWithMissingColumn() throws Exception {
 		Connection connection = testConnectionFactory.createUserTestConnectionMissingColumn();
-		DatabaseLookup<BasicUser> lookup = new JenjinUserSqlLookup<>(new BasicUserFactory(), connection);
+		DatabaseLookup<BasicUser, ResultSet> lookup = new JenjinUserSqlLookup<>(new BasicUserFactory(), connection);
 		lookup.lookup("TestAccount1");
 	}
 
@@ -64,7 +65,7 @@ public class JenjinUserSqlLookupTest
 	@Test(expectedExceptions = DatabaseException.class)
 	public void testLookupDuplicateUser() throws Exception {
 		Connection connection = testConnectionFactory.createUserTestConnectionDuplicateUser();
-		DatabaseLookup<BasicUser> lookup = new JenjinUserSqlLookup<>(new BasicUserFactory(), connection);
+		DatabaseLookup<BasicUser, ResultSet> lookup = new JenjinUserSqlLookup<>(new BasicUserFactory(), connection);
 		lookup.lookup("TestAccount1");
 	}
 
@@ -76,7 +77,7 @@ public class JenjinUserSqlLookupTest
 	@Test
 	public void testLookupFakeUser() throws Exception {
 		Connection connection = testConnectionFactory.createUserTestConnection();
-		DatabaseLookup<BasicUser> lookup = new JenjinUserSqlLookup<>(new BasicUserFactory(), connection);
+		DatabaseLookup<BasicUser, ResultSet> lookup = new JenjinUserSqlLookup<>(new BasicUserFactory(), connection);
 		BasicUser user = lookup.lookup("Not a real user");
 		Assert.assertNull(user, "User should not exist");
 	}
