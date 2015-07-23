@@ -21,25 +21,28 @@ import java.sql.SQLException;
  */
 public class JenjinUserSqlUpdate<T extends User> implements DatabaseUpdate<T>
 {
-	private final Connection sqlConnection;
+    private final Connection connection;
+
+    /** Used by Gson. */
+    private JenjinUserSqlUpdate() { this(null); }
 
 	/**
 	 * Construct a new {@code JenjinUserSqlUpdate} instance which will make updates to the SQL database on the supplied
 	 * database connection.
 	 *
-	 * @param sqlConnection The {@link java.sql.Connection} that will be used to make updates to the database.
-	 */
-	public JenjinUserSqlUpdate(Connection sqlConnection) {
-		this.sqlConnection = sqlConnection;
-	}
+     * @param connection The {@link Connection} that will be used to make updates to the database.
+     */
+    public JenjinUserSqlUpdate(Connection connection) {
+        this.connection = connection;
+    }
 
 	@Override
 	public boolean update(T object) throws DatabaseException {
 		String query = "UPDATE JenjinUsers SET loggedin = ?, password = ?, salt = ? WHERE username = ?";
 		boolean changesMade;
-		try (PreparedStatement preparedStatement = sqlConnection.prepareStatement(query)) {
-			preparedStatement.setObject(1, object.isLoggedIn());
-			preparedStatement.setObject(2, object.getPassword());
+        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setObject(1, object.isLoggedIn());
+            preparedStatement.setObject(2, object.getPassword());
 			preparedStatement.setObject(3, object.getSalt());
 			preparedStatement.setObject(4, object.getUsername());
 			changesMade = preparedStatement.executeUpdate() > 0;

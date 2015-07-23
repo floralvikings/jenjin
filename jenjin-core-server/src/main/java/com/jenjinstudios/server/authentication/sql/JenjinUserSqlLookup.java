@@ -2,8 +2,8 @@ package com.jenjinstudios.server.authentication.sql;
 
 import com.jenjinstudios.server.authentication.User;
 import com.jenjinstudios.server.authentication.UserFactory;
-import com.jenjinstudios.server.authentication.UserLookup;
 import com.jenjinstudios.server.database.DatabaseException;
+import com.jenjinstudios.server.database.DatabaseLookup;
 import com.sun.rowset.CachedRowSetImpl;
 
 import javax.sql.rowset.CachedRowSet;
@@ -27,7 +27,7 @@ import java.util.logging.Logger;
  *
  * @author Caleb Brinkman
  */
-public class JenjinUserSqlLookup<T extends User> implements UserLookup<T, ResultSet>
+public class JenjinUserSqlLookup<T extends User> implements DatabaseLookup<T, ResultSet>
 
 {
 	private static final String PASSWORD_COL = "password";
@@ -38,6 +38,9 @@ public class JenjinUserSqlLookup<T extends User> implements UserLookup<T, Result
 	private final UserFactory<T> userFactory;
 	private final Connection connection;
 
+    /** Used by Gson. */
+    private JenjinUserSqlLookup() { this(null, null); }
+
 	/**
 	 * Construct a new JenjinUserSqlLookup, using the specified {@code UserFactory} to create User instances, and the
 	 * specified {@code Connection} to connect to and retrieve data from a SQL database.
@@ -45,8 +48,8 @@ public class JenjinUserSqlLookup<T extends User> implements UserLookup<T, Result
 	 * @param userFactory The {@code UserFactory} that will be utilized to get instances of the desired User type.
 	 * @param sqlConnection The connection to the SQL database, from which this will retrieve user data.
 	 */
-	public JenjinUserSqlLookup(UserFactory<T> userFactory, Connection sqlConnection) {
-		this.connection = sqlConnection;
+    protected JenjinUserSqlLookup(UserFactory<T> userFactory, Connection sqlConnection) {
+        this.connection = sqlConnection;
 		this.userFactory = userFactory;
 	}
 
@@ -100,8 +103,5 @@ public class JenjinUserSqlLookup<T extends User> implements UserLookup<T, Result
 		}
 		return retrievedUser;
 	}
-
-	@Override
-	public UserFactory<T> getUserFactory() { return userFactory; }
 
 }

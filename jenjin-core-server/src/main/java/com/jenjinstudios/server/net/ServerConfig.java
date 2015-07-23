@@ -1,6 +1,7 @@
 package com.jenjinstudios.server.net;
 
 import com.jenjinstudios.core.connection.ConnectionConfig;
+import com.jenjinstudios.server.authentication.Authenticator;
 import com.jenjinstudios.server.authentication.User;
 import com.jenjinstudios.server.concurrency.ConnectionAddedTask;
 import com.jenjinstudios.server.concurrency.ShutdownTask;
@@ -22,8 +23,9 @@ public class ServerConfig<U extends User, T extends ServerMessageContext<U>>
 	private final Collection<UpdateTask<T>> updateTasks;
 	private final Collection<ConnectionAddedTask<T>> connectionAddedTasks;
 	private final Collection<ShutdownTask<T>> shutdownTasks;
-	private ConnectionConfig<T> connectionConfig;
-	private KeyPair keyPair;
+    private Authenticator<U> authenticator;
+    private ConnectionConfig<T> connectionConfig;
+    private KeyPair keyPair;
 	private int ups;
 
 	private ServerConfig() {
@@ -75,4 +77,11 @@ public class ServerConfig<U extends User, T extends ServerMessageContext<U>>
 	 * @return The ConnectionConfig that will be used by connections to the server.
 	 */
 	public ConnectionConfig<T> getConnectionConfig() { return connectionConfig; }
+
+    /**
+     * Get the Authenticator used to authenticate users for the server.
+     *
+     * @return The Authenticator used to authenticate users for the server.
+     */
+    public Authenticator<U> getAuthenticator() { return authenticator; }
 }

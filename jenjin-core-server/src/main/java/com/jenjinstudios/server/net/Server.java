@@ -1,7 +1,6 @@
 package com.jenjinstudios.server.net;
 
 import com.jenjinstudios.core.Connection;
-import com.jenjinstudios.server.authentication.Authenticator;
 import com.jenjinstudios.server.authentication.User;
 import com.jenjinstudios.server.concurrency.BroadcastMessage;
 import com.jenjinstudios.server.concurrency.ConnectionPool;
@@ -28,17 +27,20 @@ public class Server<U extends User, C extends ServerMessageContext<U>>
 	private final int ups;
 	private final KeyPair rsaKeyPair;
 
+    /** Used by Gson. */
+    private Server() throws IOException { this(null); }
+
 	/**
 	 * Construct a new Server.
 	 *
-	 * @param authenticator The Authenticator used to authenticate users for this server.
 	 * @param config The configuration for incoming connections.
 	 *
 	 * @throws IOException If there is an error registering messages.
 	 */
-	public Server(Authenticator<U> authenticator, ServerConfig<U, C> config) throws
-		  IOException {
-		LOGGER.log(Level.FINE, "Initializing Server.");
+    public Server(ServerConfig<U, C> config) throws
+          IOException
+    {
+        LOGGER.log(Level.FINE, "Initializing Server.");
 		rsaKeyPair = (config.getKeyPair() == null) ? Connection.generateRSAKeyPair() : config.getKeyPair();
 		ups = config.getUps();
 		connectionPool = new ConnectionPool<>(config.getConnectionConfig());
@@ -46,9 +48,9 @@ public class Server<U extends User, C extends ServerMessageContext<U>>
 		connectionPool.addShutdownTask(new EmergencyLogoutTask<>());
 		connectionPool.addConnectionAddedTask(connection -> {
 			connection.setRSAKeyPair(rsaKeyPair);
-			connection.getMessageContext().setAuthenticator(authenticator);
-		});
-		config.getConnectionAddedTasks().forEach(connectionPool::addConnectionAddedTask);
+            connection.getMessageContext().setAuthenticator(config.getAuthenticator());
+        });
+        config.getConnectionAddedTasks().forEach(connectionPool::addConnectionAddedTask);
 		config.getUpdateTasks().forEach(connectionPool::addUpdateTask);
 		config.getShutdownTasks().forEach(connectionPool::addShutdownTask);
 	}
@@ -78,15 +80,8 @@ public class Server<U extends User, C extends ServerMessageContext<U>>
 		connectionPool.shutdown();
 	}
 
-	/**
-	 * Get the ConnectionPool that manages connections for this server.
-	 *
-	 * @return The ConnectionPool that manages connections for this server.
-	 */
-	protected ConnectionPool<C> getConnectionPool() { return connectionPool; }
-
-	private class BroadcastTask implements UpdateTask<C>
-	{
+    private class BroadcastTask implements UpdateTask<C>
+    {
 
 		@Override
 		public void update(Connection<? extends C> connection) {

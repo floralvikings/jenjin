@@ -18,6 +18,9 @@ public class UserPropertiesSqlUpdate implements DatabaseUpdate<Map<String, Strin
 {
 	private final Connection connection;
 
+    /** Used by Gson. */
+    private UserPropertiesSqlUpdate() { this(null); }
+
 	/**
 	 * Construct a new UserPropertiesSqlUpdate instance which will make updates to the given SQL connection.
 	 *

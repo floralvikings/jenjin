@@ -10,11 +10,14 @@ import java.util.Map;
  *
  * @author Caleb Brinkman
  */
-public class FullUserLookup<T extends User> implements UserLookup<T, UserDbResult<T>>
+public class FullUserLookup<T extends User> implements DatabaseLookup<T, UserDbResult<T>>
 {
-	private final UserLookup<T, UserDbResult<T>> userLookup;
-	private final DatabaseLookup<Map<String, String>, UserDbResult<T>> propertiesLookup;
-	private final UserFactory<T> userFactory;
+    private final DatabaseLookup<T, ?> userLookup;
+    private final DatabaseLookup<Map<String, String>, ?> propertiesLookup;
+    private final UserFactory<T> userFactory;
+
+    /** Used by Gson. */
+    private FullUserLookup() { this(null, null, null); }
 
 	/**
 	 * Construct a new FullUserLookup that will use the given DatabaseLookup objects to retrieve data and build a user,
@@ -24,10 +27,10 @@ public class FullUserLookup<T extends User> implements UserLookup<T, UserDbResul
 	 * @param propertiesLookup The DatabaseLookup that will return the properties.
 	 * @param userFactory The factory used for creating users.
 	 */
-	public FullUserLookup(UserLookup<T, UserDbResult<T>> userLookup,
-						  DatabaseLookup<Map<String, String>, UserDbResult<T>> propertiesLookup,
-						  UserFactory<T> userFactory)
-	{
+    public FullUserLookup(DatabaseLookup<T, ?> userLookup,
+                          DatabaseLookup<Map<String, String>, ?> propertiesLookup,
+                          UserFactory<T> userFactory)
+    {
 		this.userLookup = userLookup;
 		this.propertiesLookup = propertiesLookup;
 		this.userFactory = userFactory;
@@ -48,7 +51,4 @@ public class FullUserLookup<T extends User> implements UserLookup<T, UserDbResul
 		userFactory.populateUser(user, properties);
 		return null;
 	}
-
-	@Override
-	public UserFactory<T> getUserFactory() { return userFactory; }
 }

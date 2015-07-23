@@ -1,6 +1,7 @@
 package com.jenjinstudios.server.authentication;
 
 import com.jenjinstudios.server.database.DatabaseException;
+import com.jenjinstudios.server.database.DatabaseLookup;
 import com.jenjinstudios.server.database.DatabaseUpdate;
 import com.jenjinstudios.server.security.SHA256Hasher;
 
@@ -11,17 +12,17 @@ import com.jenjinstudios.server.security.SHA256Hasher;
  */
 public class Authenticator<T extends User>
 {
-	private final UserLookup<T, ?> userLookup;
-	private final DatabaseUpdate<T> userUpdate;
+    private final DatabaseLookup<T, ?> userLookup;
+    private final DatabaseUpdate<T> userUpdate;
 
 	/**
 	 * Construct a new Authenticator using the given UserLookup and UserUpdate to find and update users.
 	 * @param lookup The user lookup.
 	 * @param update The user update.
 	 */
-	public Authenticator(UserLookup<T, ?> lookup, DatabaseUpdate<T> update) {
-		this.userLookup = lookup;
-		this.userUpdate = update;
+    public Authenticator(DatabaseLookup<T, ?> lookup, DatabaseUpdate<T> update) {
+        this.userLookup = lookup;
+        this.userUpdate = update;
 	}
 
 	/**

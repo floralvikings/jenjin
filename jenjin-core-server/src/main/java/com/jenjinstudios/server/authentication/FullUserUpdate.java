@@ -15,14 +15,17 @@ public abstract class FullUserUpdate<T extends User> implements DatabaseUpdate<T
 	private final DatabaseUpdate<T> userUpdate;
 	private final DatabaseUpdate<Map<String, String>> propertiesUpdate;
 
+    /** Used by Gson. */
+    private FullUserUpdate() { this(null, null); }
+
 	/**
 	 * Construct a new FullUserUpdate instance that will use the supplied DatabaseUpdate instances to update users and
 	 * their properties.
 	 *
-	 * @param userUpdate The {@link com.jenjinstudios.server.database.DatabaseUpdate} that will be used to update the
-	 * user in the database.
-	 * @param propertiesUpdate The {@link com.jenjinstudios.server.database.DatabaseUpdate} that will be used to update
-	 * the user's custom properties in the database.
+     * @param userUpdate The {@link DatabaseUpdate} that will be used to update the
+     * user in the database.
+     * @param propertiesUpdate The {@link DatabaseUpdate} that will be used to update
+     * the user's custom properties in the database.
 	 */
 	protected FullUserUpdate(DatabaseUpdate<T> userUpdate, DatabaseUpdate<Map<String, String>> propertiesUpdate) {
 		this.userUpdate = userUpdate;
@@ -38,8 +41,8 @@ public abstract class FullUserUpdate<T extends User> implements DatabaseUpdate<T
 	}
 
 	/**
-	 * Build a {@link java.util.Map} of properties from the given user.  The keys of this map should be the names of
-	 * the
+     * Build a {@link Map} of properties from the given user.  The keys of this map should be the names of
+     * the
 	 * properties (likely the same as the property name in the class) and the values should be String
 	 * representations of
 	 * the values of those properties.

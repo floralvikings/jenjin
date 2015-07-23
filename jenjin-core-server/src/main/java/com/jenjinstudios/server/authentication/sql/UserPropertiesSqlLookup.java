@@ -24,6 +24,9 @@ public class UserPropertiesSqlLookup implements DatabaseLookup<Map<String, Strin
 	private static final Logger LOGGER = Logger.getLogger(UserPropertiesSqlLookup.class.getName());
 	private final Connection connection;
 
+    /** Used by Gson. */
+    private UserPropertiesSqlLookup() { this(null); }
+
 	/**
 	 * Construct a new UserPropertiesLookup that utilizes the given SQL connection, searching for properties with the
 	 * for the given username.
