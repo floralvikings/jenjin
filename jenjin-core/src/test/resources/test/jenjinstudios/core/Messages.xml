@@ -15,10 +15,6 @@
         <argument type="String[]" name="testStringArray" />
     </message>
 
-    <message name="TestEncryptedMessage" id="-3">
-        <argument type="String" encrypt="true" name="encryptedString" />
-    </message>
-
     <message name="DisabledMessage" id="-2">
         <executable>com.jenjinstudios.core.message.DisabledExecutableMessage</executable>
     </message>

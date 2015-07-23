@@ -1,7 +1,6 @@
 package com.jenjinstudios.core;
 
 import com.jenjinstudios.core.concurrency.MessageContext;
-import com.jenjinstudios.core.connection.ConnectionConfig;
 import com.jenjinstudios.core.io.*;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -60,10 +59,8 @@ public class ConnectionTest
 
 		MessageInputStream messageInputStream = new MessageInputStream(in);
 		MessageOutputStream messageOutputStream = new MessageOutputStream(bos);
-		ConnectionConfig connectionConfig = mock(ConnectionConfig.class);
-		when(connectionConfig.getContextClass()).thenReturn(MessageContext.class);
-		Connection connection = new Connection<>(connectionConfig, messageInputStream, messageOutputStream);
-		connection.shutdown();
+        Connection connection = new Connection<>(MessageContext.class, messageInputStream, messageOutputStream);
+        connection.shutdown();
 
 		Assert.assertTrue(messageOutputStream.isClosed(), "MessageOutputStream should be closed");
 	}
@@ -83,12 +80,11 @@ public class ConnectionTest
         Message pingRequest = MESSAGE_REGISTRY.createMessage("PingRequest");
         pingRequest.setArgument("requestTimeMillis", REQUEST_TIME_SPOOF);
 
-        when(messageInputStream.readMessage()).thenReturn(pingRequest).thenReturn(MESSAGE_REGISTRY.createMessage
-              ("BlankMessage"));
-		ConnectionConfig connectionConfig = mock(ConnectionConfig.class);
-		when(connectionConfig.getContextClass()).thenReturn(MessageContext.class);
-		Connection connection = new Connection<>(connectionConfig, messageInputStream, messageOutputStream);
-		connection.start();
+        when(messageInputStream.readMessage())
+              .thenReturn(pingRequest)
+              .thenReturn(MESSAGE_REGISTRY.createMessage("BlankMessage"));
+        Connection connection = new Connection<>(MessageContext.class, messageInputStream, messageOutputStream);
+        connection.start();
 		Thread.sleep(100);
 		connection.shutdown();
 
@@ -118,9 +114,7 @@ public class ConnectionTest
 
 		MessageInputStream messageInputStream = new MessageInputStream(in);
 		MessageOutputStream messageOutputStream = new MessageOutputStream(bos);
-		ConnectionConfig connectionConfig = mock(ConnectionConfig.class);
-		when(connectionConfig.getContextClass()).thenReturn(MessageContext.class);
-		Connection connection = new Connection<>(connectionConfig, messageInputStream, messageOutputStream);
+        Connection connection = new Connection<>(MessageContext.class, messageInputStream, messageOutputStream);
 
 		connection.start();
 		Thread.sleep(100);

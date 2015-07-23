@@ -3,19 +3,10 @@ package com.jenjinstudios.core.io;
 import com.jenjinstudios.core.xml.ArgumentType;
 import com.jenjinstudios.core.xml.MessageType;
 
-import javax.crypto.BadPaddingException;
-import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
-import javax.xml.bind.DatatypeConverter;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.security.InvalidKeyException;
-import java.security.Key;
-import java.security.NoSuchAlgorithmException;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -27,7 +18,6 @@ public class MessageOutputStream extends DataOutputStream
 {
     private static final Logger LOGGER = Logger.getLogger(MessageOutputStream.class.getName());
     private final MessageRegistry messageRegistry;
-    private Cipher encryptCipher;
     private boolean closed;
 
     /**
@@ -57,24 +47,8 @@ public class MessageOutputStream extends DataOutputStream
         List<ArgumentType> argumentTypes = messageType.getArguments();
         int id = message.getID();
         writeShort(id);
-        for (int i = 0; i < args.length; i++)
-            writeArgument(args[i], argumentTypes.get(i).isEncrypt());
+        for (Object arg : args) writeArgument(arg);
     }
-
-	/**
-	 * Write a message using the supplied Key to encrypt the message.
-	 *
-	 * @param message The message to write.
-	 * @param encryptionKey The key used to encrypt any outgoing parameters.
-	 *
-	 * @throws IOException If there is an error writing to the output stream.
-	 */
-	public void writeMessage(Message message, Key encryptionKey) throws IOException {
-		Cipher oldCipher = encryptCipher;
-		setPublicKey(encryptionKey);
-		writeMessage(message);
-		encryptCipher = oldCipher;
-	}
 
     /**
      * Return whether this stream has been closed.
@@ -85,27 +59,11 @@ public class MessageOutputStream extends DataOutputStream
         return closed;
     }
 
-    /**
-     * Set the {@code PublicKey} used to encrypt message arguments which require it.
-     *
-     * @param publicKey The public key.
-     */
-    public void setPublicKey(Key publicKey) {
-        try
-        {
-            encryptCipher = Cipher.getInstance(publicKey.getAlgorithm());
-            encryptCipher.init(Cipher.ENCRYPT_MODE, publicKey);
-        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException e)
-        {
-            LOGGER.log(Level.SEVERE, "Unable to create cipher, messages will not be decrypted.", e);
-        }
-    }
-
     @SuppressWarnings("OverlyComplexMethod")
-    private void writeArgument(Object arg, boolean encryptStrings) throws IOException {
+    private void writeArgument(Object arg) throws IOException {
         // Shh... Just look away.  It's better this way.
         //noinspection IfStatementWithTooManyBranches
-        if (arg instanceof String) writeString((String) arg, encryptStrings);
+        if (arg instanceof String) writeString((String) arg);
         else if (arg instanceof Integer) writeInt((int) arg);
         else if (arg instanceof Short) writeShort((short) arg);
         else if (arg instanceof Long) writeLong((long) arg);
@@ -114,43 +72,16 @@ public class MessageOutputStream extends DataOutputStream
         else if (arg instanceof Boolean) writeBoolean((boolean) arg);
         else if (arg instanceof Byte) writeByte((byte) arg);
         else if (arg instanceof byte[]) writeByteArray((byte[]) arg);
-        else if (arg instanceof String[]) writeStringArray((String[]) arg, encryptStrings);
+        else if (arg instanceof String[]) writeStringArray((String[]) arg);
         else throw new IOException("Invalid argument type passed to MessageOutputStream: " + arg.getClass().getName());
     }
 
-    void writeString(String s, boolean encrypt) throws IOException {
-        if (encrypt)
-        {
-            if (encryptCipher == null)
-            {
-				LOGGER.log(Level.SEVERE, "AES key not set, message will not be encrypted");
-				throw new IOException("Unable to encrypt sensitive data.");
-            } else
-            {
-                try
-                {
-                    byte[] sBytes = s.getBytes("UTF-8");
-                    String encryptedString = DatatypeConverter.printHexBinary(encryptCipher.doFinal(sBytes));
-                    writeBoolean(true);
-                    writeUTF(encryptedString);
-                } catch (IllegalBlockSizeException | BadPaddingException | IllegalStateException e)
-                {
-                    LOGGER.log(Level.SEVERE, "Error encrypting string, will use unencrypted.", e);
-                    throw new IOException("Unable to encrypt sensitive data.", e);
-                }
-            }
-        } else
-        {
-            writeBoolean(false);
-            writeUTF(s);
-        }
+    void writeString(String s) throws IOException { writeUTF(s); }
 
-    }
-
-    private void writeStringArray(String[] strings, boolean encryptStrings) throws IOException {
+    private void writeStringArray(String... strings) throws IOException {
         int stringsLength = strings.length;
         writeInt(stringsLength);
-        for (String s : strings) writeString(s, encryptStrings);
+        for (String s : strings) writeString(s);
     }
 
     private void writeByteArray(byte... bytes) throws IOException {

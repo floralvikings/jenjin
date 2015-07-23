@@ -13,32 +13,49 @@ import java.io.ByteArrayInputStream;
  */
 public class ServerConfigReaderTest
 {
-	/**
-	 * Test the read method.
-	 *
-	 * @throws Exception If there's an exception.
-	 */
-	@Test
-	public void testRead() throws Exception {
-		String testJson = "{\n " +
-			  "\"connectionConfig\": {" +
-			  "\"secure\":\"true\",\n" +
-			  "\"address\":\"127.0.0.1\",\n" +
-			  "\"port\":\"1234\",\n" +
-			  "\"messageRegistryFiles\":[], \n" +
-			  "\"contextClass\":\"" + ServerMessageContext.class.getName() + "\" \n" +
-			  "}, \n" +
-			  "\"updateTasks\":[], \n" +
-			  "\"shutdownTasks\":[ \n" +
-			  "\"com.jenjinstudios.server.net.EmergencyLogoutTask\" \n" +
-			  "], \n" +
-			  "\"connectionAddedTasks\":[] \n" +
-			  '}';
-		ByteArrayInputStream inputStream = new ByteArrayInputStream(testJson.getBytes());
-		ServerConfigReader reader = new ServerConfigReader(inputStream);
-		ServerConfig serverConfig = reader.read();
-		Assert.assertFalse(serverConfig.getShutdownTasks().isEmpty(), "Tasks should not be empty");
-		Assert.assertNotNull(serverConfig.getConnectionConfig(), "Connection config should not be null");
-		Assert.assertTrue(serverConfig.getConnectionConfig().isSecure(), "Connection should be secure");
-	}
+    /**
+     * Test the read method.
+     *
+     * @throws Exception If there's an exception.
+     */
+    @Test
+    public void testRead() throws Exception {
+        String testJson = "{\n" +
+              "\t\"ups\": 50,\n" +
+              "\t\"port\": 1234,\n" +
+              "\t\"contextClass\": \"com.jenjinstudios.server.net.ServerMessageContext\",\n" +
+              "\t\"updateTasks\": [ ],\n" +
+              "\t\"shutdownTasks\":[\n" +
+              "\t\t\"com.jenjinstudios.server.net.EmergencyLogoutTask\"\n" +
+              "\t],\n" +
+              "\t\"connectionAddedTasks\": [ ],\n" +
+              "\t\"authenticator\": {\n" +
+              "\t\t\"databaseLookup\": {\n" +
+              "\t\t\t\"class\":\"com.jenjinstudios.server.authentication.sql.JenjinUserSqlLookup\",\n" +
+              "\t\t\t\"fields\": {\n" +
+              "\t\t\t\t\"connection\": {\n" +
+              "\t\t\t\t\t\"driver\":\"java.lang.String\",\n" +
+              "\t\t\t\t\t\"connectionString\":\"foo\"\n" +
+              "\t\t\t\t},\n" +
+              "\t\t\t\t\"userFactory\": {\n" +
+              "\t\t\t\t\t\"class\":\"com.jenjinstudios.server.authentication.BasicUserFactory\"\t\n" +
+              "\t\t\t\t}\n" +
+              "\t\t\t}\n" +
+              "\t\t},\n" +
+              "\t\t\"databaseUpdate\": {\n" +
+              "\t\t\t\"class\":\"com.jenjinstudios.server.authentication.sql.JenjinUserSqlUpdate\",\n" +
+              "\t\t\t\"fields\": {\n" +
+              "\t\t\t\t\"connection\": {\n" +
+              "\t\t\t\t\t\"driver\":\"java.lang.String\",\n" +
+              "\t\t\t\t\t\"connectionString\":\"foo\"\n" +
+              "\t\t\t\t}\n" +
+              "\t\t\t}\n" +
+              "\t\t}\n" +
+              "\t}\n" +
+              '}';
+        ByteArrayInputStream inputStream = new ByteArrayInputStream(testJson.getBytes());
+        ServerConfigReader reader = new ServerConfigReader(inputStream);
+        ServerConfig serverConfig = reader.read();
+        Assert.assertFalse(serverConfig.getShutdownTasks().isEmpty(), "Tasks should not be empty");
+    }
 }

@@ -3,18 +3,9 @@ package com.jenjinstudios.core.io;
 import com.jenjinstudios.core.xml.ArgumentType;
 import com.jenjinstudios.core.xml.MessageType;
 
-import javax.crypto.BadPaddingException;
-import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
-import javax.xml.bind.DatatypeConverter;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-import java.security.InvalidKeyException;
-import java.security.Key;
-import java.security.NoSuchAlgorithmException;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.logging.Level;
@@ -30,7 +21,6 @@ public class MessageInputStream extends DataInputStream
 {
     private static final Logger LOGGER = Logger.getLogger(MessageInputStream.class.getName());
     private final MessageRegistry messageRegistry;
-    private Cipher decryptCipher;
 
     /**
      * Construct a new {@code MessageInputStream} which will read from the specified {@code InputStream}.
@@ -69,24 +59,8 @@ public class MessageInputStream extends DataInputStream
 
     }
 
-    /**
-     * Set the {@code PrivateKey} used by this stream to decrypt incoming messages.
-     *
-     * @param privateKey The private key.
-     */
-    public void setPrivateKey(Key privateKey) {
-        try
-        {
-            decryptCipher = Cipher.getInstance(privateKey.getAlgorithm());
-            decryptCipher.init(Cipher.DECRYPT_MODE, privateKey);
-        } catch (InvalidKeyException | NoSuchAlgorithmException | NoSuchPaddingException e)
-        {
-            LOGGER.log(Level.SEVERE, "Unable to create cipher, messages will not be decrypted.", e);
-        }
-    }
-
-	private Object[] readMessageArgs(Deque<Class> classes) throws IOException {
-		Object[] args = new Object[classes.size()];
+    private Object[] readMessageArgs(Deque<Class> classes) throws IOException {
+        Object[] args = new Object[classes.size()];
 
         for (int i = 0; i < args.length; i++)
         {
@@ -147,7 +121,7 @@ public class MessageInputStream extends DataInputStream
             switch (currentClass)
             {
                 case "java.lang.String":
-                    currentArg = readString();
+                    currentArg = readUTF();
                     break;
                 case "int":
                     currentArg = readInt();
@@ -198,7 +172,7 @@ public class MessageInputStream extends DataInputStream
         String[] strings = new String[size];
         for (int i = 0; i < strings.length; i++)
         {
-            strings[i] = readString();
+            strings[i] = readUTF();
         }
         return strings;
     }
@@ -217,36 +191,6 @@ public class MessageInputStream extends DataInputStream
                   "Expected " + size + ", got " + numBytesRead);
         }
         return bytes;
-    }
-
-    private String readString() throws IOException {
-        boolean encrypted = readBoolean();
-        String received = readUTF();
-        if (encrypted)
-        {
-            received = decryptString(received);
-        }
-        return received;
-    }
-
-    private String decryptString(String encrypted) throws UnsupportedEncodingException {
-        String decrypted = encrypted;
-        if (decryptCipher != null)
-        {
-            try
-            {
-                byte[] encBytes = DatatypeConverter.parseHexBinary(encrypted);
-                byte[] decBytes = decryptCipher.doFinal(encBytes);
-                decrypted = new String(decBytes, "UTF-8");
-            } catch (IllegalBlockSizeException | BadPaddingException e)
-            {
-                LOGGER.log(Level.WARNING, "Unable to decrypt message: ", e);
-            }
-        } else
-        {
-            LOGGER.log(Level.SEVERE, "AES key not properly set, unable to decrypt messages.");
-        }
-        return decrypted;
     }
 
 }

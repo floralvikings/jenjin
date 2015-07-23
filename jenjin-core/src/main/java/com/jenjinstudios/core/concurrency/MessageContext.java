@@ -18,11 +18,10 @@ public class MessageContext
 	private final LinkedList<Message> outgoing = new LinkedList<>();
 	private String name;
 	private InetAddress address;
-	private Key encryptionKey;
 
-	/**
-	 * Construct a new MessageContext.
-	 */
+    /**
+     * Construct a new MessageContext.
+     */
 	public MessageContext() {
 		this.pingTracker = new PingTracker();
 		this.verifiedKeys = new HashMap<>(10);
@@ -78,23 +77,9 @@ public class MessageContext
 	 */
 	public PingTracker getPingTracker() { return pingTracker; }
 
-	/**
-	 * The key used to encrypt messages sent in this context.
-	 *
-	 * @return The key used to encrypt messages sent in this context.
-	 */
-	public Key getEncryptionKey() { return encryptionKey; }
-
-	/**
-	 * Set the key used to encrypt messages sent in this context.
-	 *
-	 * @param encryptionKey The key used to encrypt messages sent in this context.
-	 */
-	public void setEncryptionKey(Key encryptionKey) { this.encryptionKey = encryptionKey; }
-
-	/**
-	 * Get the (unmodifiable) map of internet addresses and keys with which they are associated that are verified to
-	 * be correlated.
+    /**
+     * Get the (unmodifiable) map of internet addresses and keys with which they are associated that are verified to
+     * be correlated.
 	 *
 	 * @return The map of internet addresses and keys with which they are associated that are verified to be
 	 * correlated.

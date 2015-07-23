@@ -55,9 +55,9 @@ public final class AuthenticationHelper
 	}
 
 	/**
-	 * Generate a LoginRequest message.  This message will be encrypted if possible.
-	 *
-	 * @param user The User for which to generate the login request.
+     * Generate a LoginRequest message.
+     *
+     * @param user The User for which to generate the login request.
 	 *
 	 * @return The LoginRequest message.
 	 */

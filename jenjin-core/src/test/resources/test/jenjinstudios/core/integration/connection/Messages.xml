@@ -2,12 +2,12 @@
 
 <messages xmlns="https://www.jenjinstudios.com">
 
-    <message name="Test" id="-5">
+    <message name="Test" id="-6">
         <executable>com.jenjinstudios.core.integration.connection.TestExecutableMessage</executable>
-        <argument type="String" name="encryptedString" />
+        <argument type="String" name="someString" />
     </message>
 
-    <message name="Malformed" id="-6">
+    <message name="Malformed" id="-5">
         <executable>com.jenjinstudios.core.integration.connection.MalformedExecutableMessage</executable>
         <argument type="String" name="someString" />
     </message>

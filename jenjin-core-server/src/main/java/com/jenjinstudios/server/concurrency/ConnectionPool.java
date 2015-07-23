@@ -2,7 +2,6 @@ package com.jenjinstudios.server.concurrency;
 
 import com.jenjinstudios.core.Connection;
 import com.jenjinstudios.core.concurrency.MessageContext;
-import com.jenjinstudios.core.connection.ConnectionConfig;
 import com.jenjinstudios.core.io.Message;
 
 import java.io.IOException;
@@ -38,11 +37,12 @@ public class ConnectionPool<T extends MessageContext>
 	 *
 	 * @param config The configuration to use for connections.
 	 *
-	 * @throws IOException If there's an exception when creating the server socket.
-	 */
-	public ConnectionPool(ConnectionConfig<T> config) throws IOException {
-		connectionListener = new ConnectionListener<>(config);
-	}
+     * @param port The port number on which to listen for connections.
+     * @throws IOException If there's an exception when creating the server socket.
+     */
+    public ConnectionPool(Class<T> config, int port) throws IOException {
+        connectionListener = new ConnectionListener<>(config, port);
+    }
 
 	/**
 	 * Add a connection to the pool.

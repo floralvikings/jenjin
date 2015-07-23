@@ -2,18 +2,15 @@ package com.jenjinstudios.core.integration.connection;
 
 import com.jenjinstudios.core.Connection;
 import com.jenjinstudios.core.concurrency.MessageContext;
-import com.jenjinstudios.core.connection.ConnectionConfig;
 import com.jenjinstudios.core.connection.ConnectionInstantiationException;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageInputStream;
 import com.jenjinstudios.core.io.MessageOutputStream;
 import com.jenjinstudios.core.io.MessageRegistry;
-import com.jenjinstudios.core.serialization.ConnectionConfigReader;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetAddress;
@@ -30,18 +27,8 @@ import java.util.logging.Logger;
 public class ConnectionTest
 {
 	private static final Logger LOGGER = Logger.getLogger(ConnectionTest.class.getName());
-	private static final String CONFIG_STRING = "{\n" +
-		  "\"secure\":\"false\",\n" +
-		  "\"address\":\"127.0.0.1\",\n" +
-		  "\"port\":\"1234\",\n" +
-		  "\"messageRegistryFiles\":[\n" +
-		  	"\"test/jenjinstudios/core/integration/connection/Messages.xml\"," +
-		  	"\"com/jenjinstudios/core/io/Messages.xml\"" +
-		  "], \n" +
-		  "\"contextClass\":\"" + MessageContext.class.getName() + "\"\n" +
-		  '}';
-	private Connection connectionOne;
-	private Connection connectionTwo;
+    private Connection connectionOne;
+    private Connection connectionTwo;
 
 	/**
 	 * Register messages used for testing, and set up a pair of connections for testing.
@@ -89,7 +76,7 @@ public class ConnectionTest
 		Thread.sleep(100);
 
 		Message message = MessageRegistry.getGlobalRegistry().createMessage("Test");
-		message.setArgument("encryptedString", "FooBar");
+        message.setArgument("someString", "FooBar");
 
 		LOGGER.log(Level.INFO, "Enqueueing first message to connectionTwo");
 		connectionOne.enqueueMessage(message);
@@ -99,17 +86,6 @@ public class ConnectionTest
 		connectionTwo.enqueueMessage(message);
 		while (!"FooBar".equals(connectionOne.getMessageContext().getName())) { Thread.sleep(10); }
 		LOGGER.log(Level.INFO, "connectionOne received and executed first message");
-		LOGGER.log(Level.INFO, "Sending message with no valid executable to connectionTwo");
-		Message errorCausing = MessageRegistry.getGlobalRegistry().createMessage("Malformed");
-		errorCausing.setArgument("someString", "Baz");
-		connectionOne.enqueueMessage(errorCausing);
-		connectionTwo.getMessageContext().setName("Reset");
-		connectionOne.getMessageContext().setName("Reset");
-		connectionOne.enqueueMessage(message);
-		while (!"FooBar".equals(connectionTwo.getMessageContext().getName())) { Thread.sleep(10); }
-		connectionTwo.enqueueMessage(message);
-		while (!"FooBar".equals(connectionOne.getMessageContext().getName())) { Thread.sleep(10); }
-		LOGGER.log(Level.INFO, "Neither connection shutdown after sending and receiving errored message");
 	}
 
 	private static class SocketPair
@@ -164,13 +140,9 @@ public class ConnectionTest
 		}
 
 		private ConnectionPair() throws IOException, InterruptedException, ConnectionInstantiationException {
-			ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(CONFIG_STRING.getBytes());
-			ConnectionConfigReader reader = new ConnectionConfigReader(byteArrayInputStream);
-			ConnectionConfig config = reader.read();
-
-			SocketPair socketPair = new SocketPair();
-			Socket socketOne = socketPair.getSocketOne();
-			Socket socketTwo = socketPair.getSocketTwo();
+            SocketPair socketPair = new SocketPair();
+            Socket socketOne = socketPair.getSocketOne();
+            Socket socketTwo = socketPair.getSocketTwo();
 
 			MessageInputStream inputStreamOne = new MessageInputStream(socketOne.getInputStream());
 			MessageOutputStream outputStreamOne = new MessageOutputStream(socketOne.getOutputStream());
@@ -178,8 +150,8 @@ public class ConnectionTest
 			MessageInputStream inputStreamTwo = new MessageInputStream(socketTwo.getInputStream());
 			MessageOutputStream outputStreamTwo = new MessageOutputStream(socketTwo.getOutputStream());
 
-			connectionOne = new Connection<>(config, inputStreamOne, outputStreamOne);
-			connectionTwo = new Connection<>(config, inputStreamTwo, outputStreamTwo);
-		}
-	}
+            connectionOne = new Connection<>(MessageContext.class, inputStreamOne, outputStreamOne);
+            connectionTwo = new Connection<>(MessageContext.class, inputStreamTwo, outputStreamTwo);
+        }
+    }
 }

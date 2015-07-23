@@ -13,12 +13,6 @@ import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.security.Key;
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
-import java.security.NoSuchAlgorithmException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * The Connection class utilizes a MessageInputStream and MessageOutputStream to read and write messages to another
@@ -30,23 +24,18 @@ import java.util.logging.Logger;
  */
 public class Connection<T extends MessageContext>
 {
-	private static final int KEYSIZE = 512;
-	private static final Logger LOGGER = Logger.getLogger(Connection.class.getName());
-	private final MessageThreadPool<T> messageThreadPool;
+    private final MessageThreadPool<T> messageThreadPool;
 
 	/**
 	 * Construct a new Connection with the given configuration, input stream, and output stream.
-	 * @param config The connection configuration.
-	 * @param in The input stream.
-	 * @param out The output stream.
+     * @param contextClass The class used to instantiate the message context.
+     * @param in The input stream.
+     * @param out The output stream.
 	 * @throws ConnectionInstantiationException If there is an exception when instantiating the connection.
 	 */
-	public Connection(ConnectionConfig<T> config, MessageInputStream in, MessageOutputStream out)
-		  throws ConnectionInstantiationException
-	{
-		InetAddress address = config.getAddress();
-		Class<T> contextClass = config.getContextClass();
-
+    public Connection(Class<T> contextClass, MessageInputStream in, MessageOutputStream out)
+          throws ConnectionInstantiationException
+    {
 		T context;
 		try {
 			context = contextClass.getConstructor().newInstance();
@@ -55,12 +44,7 @@ public class Connection<T extends MessageContext>
 			throw new ConnectionInstantiationException(e);
 		}
 
-		for (String s : config.getMessageRegistryFiles()) {
-			registerMessages(s);
-		}
-
 		messageThreadPool = new MessageThreadPool(in, out, context);
-		messageThreadPool.getMessageContext().setAddress(address);
 	}
 
 	/**
@@ -122,53 +106,9 @@ public class Connection<T extends MessageContext>
 		MessageRegistry.getGlobalRegistry().register(s, stream);
 	}
 
-	/**
-	 * Generate a PublicKeyMessage for the given {@code PublicKey}.
-	 *
-	 * @param publicKey The {@code PublicKey} for which to generate a {@code Message}.
-	 *
-	 * @return The generated message.
-	 */
-	public static Message generatePublicKeyMessage(Key publicKey) {
-		Message publicKeyMessage = MessageRegistry.getGlobalRegistry().createMessage("PublicKeyMessage");
-		publicKeyMessage.setArgument("publicKey", publicKey.getEncoded());
-		return publicKeyMessage;
-	}
-
-	/**
-	 * Generate an RSA-512 Public-Private Key Pair.
-	 *
-	 * @return The generated {@code KeyPair}, or null if the KeyPair could not be created.
-	 */
-	public static KeyPair generateRSAKeyPair() {
-		KeyPair keyPair = null;
-		try {
-			KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
-			keyPairGenerator.initialize(KEYSIZE);
-			keyPair = keyPairGenerator.generateKeyPair();
-		} catch (NoSuchAlgorithmException e) {
-			LOGGER.log(Level.SEVERE, "Unable to create RSA key pair!", e);
-		}
-		return keyPair;
-	}
-
-	/**
-	 * Set the RSA public/private key pair used to encrypt outgoing and decrypt incoming messages, and queue a message
-	 * containing the public key.
-	 *
-	 * @param rsaKeyPair The keypair to use for encryption/decrytion.
-	 */
-	public void setRSAKeyPair(KeyPair rsaKeyPair) {
-		if (rsaKeyPair != null) {
-			messageThreadPool.getInputStream().setPrivateKey(rsaKeyPair.getPrivate());
-			Message message = generatePublicKeyMessage(rsaKeyPair.getPublic());
-			messageThreadPool.enqueueMessage(message);
-		}
-	}
-
-	/**
-	 * Shutdown this connection.
-	 */
+    /**
+     * Shutdown this connection.
+     */
 	public void shutdown() { messageThreadPool.shutdown(); }
 
 	/**

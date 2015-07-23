@@ -6,7 +6,6 @@ import com.jenjinstudios.core.connection.ConnectionInstantiationException;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageRegistry;
 
-import java.security.KeyPair;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.Executors;
@@ -70,9 +69,6 @@ public class Client<T extends ClientMessageContext> extends Connection<T>
 
     @Override
     public void start() {
-        KeyPair rsaKeyPair = generateRSAKeyPair();
-        setRSAKeyPair(rsaKeyPair);
-
         // Finally, send a ping request to establish latency.
 		enqueueMessage(generatePingRequest());
 

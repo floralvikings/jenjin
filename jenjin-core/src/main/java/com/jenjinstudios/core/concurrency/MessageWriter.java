@@ -4,7 +4,6 @@ import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageOutputStream;
 
 import java.io.IOException;
-import java.security.Key;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.concurrent.Executors;
@@ -84,17 +83,9 @@ public class MessageWriter
 		protected boolean sendNextMessage(Deque<Message> outgoing) {
 			boolean noErrorThisExecution = true;
 			Message message = outgoing.removeFirst();
-			Key encryptionKey = (context != null) ? context.getEncryptionKey() : null;
-			try
-			{
-				if (encryptionKey != null)
-				{
-					outputStream.writeMessage(message, encryptionKey);
-				} else
-				{
-					outputStream.writeMessage(message);
-				}
-				errored = false;
+            try {
+                outputStream.writeMessage(message);
+                errored = false;
 			} catch (IOException e)
 			{
 				LOGGER.log(Level.WARNING, "MessageWriter encountered an error while writing message", e);

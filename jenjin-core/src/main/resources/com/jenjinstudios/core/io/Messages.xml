@@ -17,10 +17,4 @@
         <argument type="long" name="requestTimeMillis" />
         <executable>com.jenjinstudios.core.message.ExecutablePingResponse</executable>
     </message>
-
-    <message name="PublicKeyMessage" id="3">
-        <argument type="byte[]" name="publicKey" />
-        <executable>com.jenjinstudios.core.message.ExecutablePublicKeyMessage</executable>
-    </message>
-
 </messages>

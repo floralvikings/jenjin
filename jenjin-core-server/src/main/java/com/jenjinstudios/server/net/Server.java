@@ -7,15 +7,13 @@ import com.jenjinstudios.server.concurrency.ConnectionPool;
 import com.jenjinstudios.server.concurrency.UpdateTask;
 
 import java.io.IOException;
-import java.security.KeyPair;
 import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
  * Manages a ConnectionPool which listens for incoming connections an executes tasks on them as dictated by the tasks
- * added; maintains the RSA key pair used to encrypt/decrypt messages, and the Authenticator used to authenticate
- * users.
+ * added and the Authenticator used to authenticate users.
  *
  * @param <U> The type of user that will be added in this server.
  * @param <C> The type of MessageContext that will be passed to messages received by connections on this server.
@@ -25,7 +23,6 @@ public class Server<U extends User, C extends ServerMessageContext<U>>
 	private static final Logger LOGGER = Logger.getLogger(Server.class.getName());
 	private final ConnectionPool<C> connectionPool;
 	private final int ups;
-	private final KeyPair rsaKeyPair;
 
     /** Used by Gson. */
     private Server() throws IOException { this(null); }
@@ -37,19 +34,16 @@ public class Server<U extends User, C extends ServerMessageContext<U>>
 	 *
 	 * @throws IOException If there is an error registering messages.
 	 */
-    public Server(ServerConfig<U, C> config) throws
-          IOException
+    public Server(ServerConfig<U, C> config) throws IOException
     {
         LOGGER.log(Level.FINE, "Initializing Server.");
-		rsaKeyPair = (config.getKeyPair() == null) ? Connection.generateRSAKeyPair() : config.getKeyPair();
 		ups = config.getUps();
-		connectionPool = new ConnectionPool<>(config.getConnectionConfig());
-		connectionPool.addUpdateTask(new BroadcastTask());
+        connectionPool = new ConnectionPool<>(config.getContextClass(), config.getPort());
+        connectionPool.addUpdateTask(new BroadcastTask());
 		connectionPool.addShutdownTask(new EmergencyLogoutTask<>());
-		connectionPool.addConnectionAddedTask(connection -> {
-			connection.setRSAKeyPair(rsaKeyPair);
-            connection.getMessageContext().setAuthenticator(config.getAuthenticator());
-        });
+        connectionPool.addConnectionAddedTask(connection ->
+                    connection.getMessageContext().setAuthenticator(config.getAuthenticator())
+        );
         config.getConnectionAddedTasks().forEach(connectionPool::addConnectionAddedTask);
 		config.getUpdateTasks().forEach(connectionPool::addUpdateTask);
 		config.getShutdownTasks().forEach(connectionPool::addShutdownTask);

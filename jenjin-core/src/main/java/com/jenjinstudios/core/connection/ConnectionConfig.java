@@ -2,8 +2,6 @@ package com.jenjinstudios.core.connection;
 
 import com.jenjinstudios.core.concurrency.MessageContext;
 
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.InetAddress;
 import java.util.Collection;
 import java.util.Collections;
@@ -15,10 +13,8 @@ import java.util.Collections;
  */
 public class ConnectionConfig<T extends MessageContext>
 {
-	private transient InputStream inputStream;
-	private transient OutputStream outputStream;
-	private InetAddress address;
-	private Class<T> contextClass;
+    private InetAddress address;
+    private Class<T> contextClass;
 	private Collection<String> messageRegistryFiles;
 	private boolean secure;
 	private int port;
