@@ -6,6 +6,7 @@ import com.jenjinstudios.core.connection.ConnectionInstantiationException;
 import com.jenjinstudios.core.io.MessageInputStream;
 import com.jenjinstudios.core.io.MessageOutputStream;
 
+import javax.net.ssl.SSLServerSocketFactory;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -37,12 +38,13 @@ public class ConnectionListener<T extends MessageContext> implements Runnable
      * @param contextClass The context class for incoming connections.
      * @param port The port number on which to listen for connections.
      *
+     * @param secure Whether the connections created should use SSL sockets.
      * @throws IOException If there's an exception when setting up a server socket.
      */
-    public ConnectionListener(Class<T> contextClass, int port) throws IOException {
+    public ConnectionListener(Class<T> contextClass, int port, boolean secure) throws IOException {
         this.contextClass = contextClass;
         this.newConnections = new LinkedList<>();
-        serverSocket = new ServerSocket(port);
+        serverSocket = secure ? SSLServerSocketFactory.getDefault().createServerSocket(port) : new ServerSocket(port);
     }
 
     /**

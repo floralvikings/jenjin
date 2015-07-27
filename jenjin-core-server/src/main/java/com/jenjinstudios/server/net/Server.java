@@ -38,7 +38,7 @@ public class Server<U extends User, C extends ServerMessageContext<U>>
     {
         LOGGER.log(Level.FINE, "Initializing Server.");
 		ups = config.getUps();
-        connectionPool = new ConnectionPool<>(config.getContextClass(), config.getPort());
+        connectionPool = new ConnectionPool<>(config.getContextClass(), config.getPort(), config.isSecure());
         connectionPool.addUpdateTask(new BroadcastTask());
 		connectionPool.addShutdownTask(new EmergencyLogoutTask<>());
         connectionPool.addConnectionAddedTask(connection ->

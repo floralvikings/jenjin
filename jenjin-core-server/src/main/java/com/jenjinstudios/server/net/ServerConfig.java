@@ -25,9 +25,10 @@ public class ServerConfig<U extends User, T extends ServerMessageContext<U>>
     private Authenticator<U> authenticator;
     private int ups;
     private int port;
+    private boolean secure;
 
-	private ServerConfig() {
-		updateTasks = new LinkedList<>();
+    private ServerConfig() {
+        updateTasks = new LinkedList<>();
 		connectionAddedTasks = new LinkedList<>();
 		shutdownTasks = new LinkedList<>();
 	}
@@ -83,4 +84,10 @@ public class ServerConfig<U extends User, T extends ServerMessageContext<U>>
      */
     public int getPort() { return port; }
 
+    /**
+     * Get whether the server with this configuration should use SSL sockets for connections.
+     *
+     * @return Whether the server will use SSL sockets for connections.
+     */
+    public boolean isSecure() { return secure; }
 }

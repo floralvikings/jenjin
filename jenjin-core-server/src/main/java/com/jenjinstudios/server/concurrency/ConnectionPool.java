@@ -38,10 +38,12 @@ public class ConnectionPool<T extends MessageContext>
 	 * @param config The configuration to use for connections.
 	 *
      * @param port The port number on which to listen for connections.
+     * @param secure Whether the connections made should use SSL sockets.
+     *
      * @throws IOException If there's an exception when creating the server socket.
      */
-    public ConnectionPool(Class<T> config, int port) throws IOException {
-        connectionListener = new ConnectionListener<>(config, port);
+    public ConnectionPool(Class<T> config, int port, boolean secure) throws IOException {
+        connectionListener = new ConnectionListener<>(config, port, secure);
     }
 
 	/**
