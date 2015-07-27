@@ -7,6 +7,7 @@ import com.jenjinstudios.core.io.MessageInputStream;
 import com.jenjinstudios.core.io.MessageOutputStream;
 import com.jenjinstudios.core.io.MessageRegistry;
 
+import javax.net.ssl.SSLSocketFactory;
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.net.InetAddress;
@@ -69,9 +70,11 @@ public class Connection<T extends MessageContext>
 		MessageInputStream inputStream;
 		MessageOutputStream outputStream;
 		try {
-			Socket socket = new Socket(config.getAddress(), config.getPort());
-			inputStream = new MessageInputStream(socket.getInputStream());
-			outputStream = new MessageOutputStream(socket.getOutputStream());
+            Socket socket = config.isSecure()
+                  ? SSLSocketFactory.getDefault().createSocket(config.getAddress(), config.getPort())
+                  : new Socket(config.getAddress(), config.getPort());
+            inputStream = new MessageInputStream(socket.getInputStream());
+            outputStream = new MessageOutputStream(socket.getOutputStream());
 		} catch (IOException e) {
 			throw new ConnectionInstantiationException(e);
 		}
