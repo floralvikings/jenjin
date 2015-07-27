@@ -137,4 +137,9 @@ public class Connection<T extends MessageContext>
 	 * @return The unique ID of this MessageThreadPool.
 	 */
 	public String getId() { return messageThreadPool.getId(); }
+
+    @Override
+    public String toString() {
+        return "Connection: " + getId() + " (" + getMessageContext().getAddress() + ')';
+    }
 }
