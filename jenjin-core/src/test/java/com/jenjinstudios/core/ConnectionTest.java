@@ -1,6 +1,7 @@
 package com.jenjinstudios.core;
 
 import com.jenjinstudios.core.concurrency.MessageContext;
+import com.jenjinstudios.core.connection.Connection;
 import com.jenjinstudios.core.io.*;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;

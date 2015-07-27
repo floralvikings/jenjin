@@ -1,9 +1,7 @@
-package com.jenjinstudios.core;
+package com.jenjinstudios.core.connection;
 
 import com.jenjinstudios.core.concurrency.MessageContext;
 import com.jenjinstudios.core.concurrency.MessageThreadPool;
-import com.jenjinstudios.core.connection.ConnectionConfig;
-import com.jenjinstudios.core.connection.ConnectionInstantiationException;
 import com.jenjinstudios.core.io.Message;
 import com.jenjinstudios.core.io.MessageInputStream;
 import com.jenjinstudios.core.io.MessageOutputStream;

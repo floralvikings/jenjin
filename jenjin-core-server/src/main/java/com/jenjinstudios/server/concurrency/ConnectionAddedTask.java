@@ -1,7 +1,7 @@
 package com.jenjinstudios.server.concurrency;
 
-import com.jenjinstudios.core.Connection;
 import com.jenjinstudios.core.concurrency.MessageContext;
+import com.jenjinstudios.core.connection.Connection;
 
 /**
  * Invoked when a Connection is added to a connection pool.

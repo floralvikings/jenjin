@@ -1,6 +1,6 @@
 package com.jenjinstudios.server.net;
 
-import com.jenjinstudios.core.Connection;
+import com.jenjinstudios.core.connection.Connection;
 import com.jenjinstudios.server.authentication.User;
 import com.jenjinstudios.server.concurrency.BroadcastMessage;
 import com.jenjinstudios.server.concurrency.ConnectionPool;

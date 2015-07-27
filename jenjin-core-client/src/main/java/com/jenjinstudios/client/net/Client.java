@@ -1,6 +1,6 @@
 package com.jenjinstudios.client.net;
 
-import com.jenjinstudios.core.Connection;
+import com.jenjinstudios.core.connection.Connection;
 import com.jenjinstudios.core.connection.ConnectionConfig;
 import com.jenjinstudios.core.connection.ConnectionInstantiationException;
 import com.jenjinstudios.core.io.Message;

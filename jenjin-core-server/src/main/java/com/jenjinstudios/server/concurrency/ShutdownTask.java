@@ -1,7 +1,7 @@
 package com.jenjinstudios.server.concurrency;
 
-import com.jenjinstudios.core.Connection;
 import com.jenjinstudios.core.concurrency.MessageContext;
+import com.jenjinstudios.core.connection.Connection;
 
 /**
  * Used to represent a task which will be invoked when a thread pool is shut down.

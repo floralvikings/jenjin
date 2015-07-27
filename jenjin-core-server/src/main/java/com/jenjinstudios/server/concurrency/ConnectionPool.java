@@ -1,7 +1,7 @@
 package com.jenjinstudios.server.concurrency;
 
-import com.jenjinstudios.core.Connection;
 import com.jenjinstudios.core.concurrency.MessageContext;
+import com.jenjinstudios.core.connection.Connection;
 import com.jenjinstudios.core.io.Message;
 
 import java.io.IOException;
