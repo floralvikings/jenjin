@@ -8,8 +8,6 @@ import com.jenjinstudios.world.math.Vector;
 import com.jenjinstudios.world.object.Timing;
 import org.testng.annotations.Test;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyDouble;
 import static org.mockito.Mockito.*;
 
 /**

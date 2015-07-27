@@ -67,11 +67,9 @@ public class Server<U extends User, C extends ServerMessageContext<U>>
 
 	/**
 	 * Shutdown all active connections and stop listening for new ones.
-	 *
-	 * @throws IOException If there's an exception when whutting down clients.
 	 */
-	public void shutdown() throws IOException {
-		connectionPool.shutdown();
+    public void shutdown() {
+        connectionPool.shutdown();
 	}
 
     private class BroadcastTask implements UpdateTask<C>

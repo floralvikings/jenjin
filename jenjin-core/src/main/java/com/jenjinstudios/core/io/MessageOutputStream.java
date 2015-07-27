@@ -1,13 +1,8 @@
 package com.jenjinstudios.core.io;
 
-import com.jenjinstudios.core.xml.ArgumentType;
-import com.jenjinstudios.core.xml.MessageType;
-
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.List;
-import java.util.logging.Logger;
 
 /**
  * An implementation of a {@code DataOutputStream} used to write {@code Message} objects to an {@code OutputStream}.
@@ -16,8 +11,6 @@ import java.util.logging.Logger;
  */
 public class MessageOutputStream extends DataOutputStream
 {
-    private static final Logger LOGGER = Logger.getLogger(MessageOutputStream.class.getName());
-    private final MessageRegistry messageRegistry;
     private boolean closed;
 
     /**
@@ -27,8 +20,7 @@ public class MessageOutputStream extends DataOutputStream
      */
     public MessageOutputStream(OutputStream out) {
         super(out);
-		this.messageRegistry = MessageRegistry.getGlobalRegistry();
-	}
+    }
 
     /**
      * Write the given {@code Message} to the output stream.
@@ -43,8 +35,6 @@ public class MessageOutputStream extends DataOutputStream
             throw new IOException("Cannot write message: stream closed");
         }
         Object[] args = message.getArgs();
-        MessageType messageType = messageRegistry.getMessageType(message.getID());
-        List<ArgumentType> argumentTypes = messageType.getArguments();
         int id = message.getID();
         writeShort(id);
         for (Object arg : args) writeArgument(arg);

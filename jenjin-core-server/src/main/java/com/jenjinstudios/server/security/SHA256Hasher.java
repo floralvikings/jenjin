@@ -30,8 +30,8 @@ public final class SHA256Hasher
 			passBytes = md.digest(passBytes);
 		} catch (NoSuchAlgorithmException e)
 		{
-			LOGGER.log(Level.SEVERE, "No SHA-256 algorithm found; are you using a valid Java implementation?");
-		}
+            LOGGER.log(Level.SEVERE, "No SHA-256 algorithm found; are you using a valid Java implementation?", e);
+        }
 		return passBytes;
 	}
 
