@@ -74,7 +74,7 @@ public abstract class Node
 	 *
 	 * @return The tasks to be executed.
 	 */
-	public Collection<NodeTask> getTasks() { return Collections.unmodifiableCollection(tasks); }
+    public Iterable<NodeTask> getTasks() { return Collections.unmodifiableCollection(tasks); }
 
 	/**
 	 * Add an observer to this world object.
@@ -95,7 +95,7 @@ public abstract class Node
 	 *
 	 * @return The observers.
 	 */
-	public Collection<NodeObserver> getObservers() { return Collections.unmodifiableCollection(observers); }
+    public Iterable<NodeObserver> getObservers() { return Collections.unmodifiableCollection(observers); }
 
 	@Override
 	public boolean equals(Object obj) {

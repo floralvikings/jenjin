@@ -25,6 +25,14 @@ public class NodeUpdaterTest
 		Node genThreeChild = mock(Node.class);
 		doReturn(Arrays.asList(genTwoParent, genTwoSibling)).when(root).getChildren();
 		doReturn(Collections.singletonList(genThreeChild)).when(genTwoParent).getChildren();
+        when(root.getTasks()).thenReturn(Collections.emptyList());
+        when(genTwoParent.getTasks()).thenReturn(Collections.emptyList());
+        when(genTwoSibling.getTasks()).thenReturn(Collections.emptyList());
+        when(genThreeChild.getTasks()).thenReturn(Collections.emptyList());
+        when(root.getObservers()).thenReturn(Collections.emptyList());
+        when(genTwoParent.getObservers()).thenReturn(Collections.emptyList());
+        when(genTwoSibling.getObservers()).thenReturn(Collections.emptyList());
+        when(genThreeChild.getObservers()).thenReturn(Collections.emptyList());
 
 		NodeUpdater nodeUpdater = new NodeUpdater(root);
 		nodeUpdater.runUpdateCycle();
