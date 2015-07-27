@@ -4,9 +4,9 @@ import com.jenjinstudios.server.authentication.User;
 import com.jenjinstudios.server.authentication.UserFactory;
 import com.jenjinstudios.server.database.DatabaseException;
 import com.jenjinstudios.server.database.DatabaseLookup;
-import com.sun.rowset.CachedRowSetImpl;
 
 import javax.sql.rowset.CachedRowSet;
+import javax.sql.rowset.RowSetProvider;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -62,8 +62,8 @@ public class JenjinUserSqlLookup<T extends User> implements DatabaseLookup<T, Re
 			preparedStatement = connection.prepareStatement(query);
 			preparedStatement.setObject(1, key);
 			ResultSet raw = preparedStatement.executeQuery();
-			resultSet = new CachedRowSetImpl();
-			resultSet.populate(raw);
+            resultSet = RowSetProvider.newFactory().createCachedRowSet();
+            resultSet.populate(raw);
 		} catch (SQLException ex) {
 			throw new DatabaseException("Exception when retrieving user data from SQL Database: ", ex);
 		} finally {

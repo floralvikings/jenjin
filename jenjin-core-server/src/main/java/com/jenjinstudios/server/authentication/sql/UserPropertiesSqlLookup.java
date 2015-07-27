@@ -2,9 +2,9 @@ package com.jenjinstudios.server.authentication.sql;
 
 import com.jenjinstudios.server.database.DatabaseException;
 import com.jenjinstudios.server.database.DatabaseLookup;
-import com.sun.rowset.CachedRowSetImpl;
 
 import javax.sql.rowset.CachedRowSet;
+import javax.sql.rowset.RowSetProvider;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -46,9 +46,9 @@ public class UserPropertiesSqlLookup implements DatabaseLookup<Map<String, Strin
 			preparedStatement = connection.prepareStatement(query);
 			preparedStatement.setObject(1, key);
 			ResultSet raw = preparedStatement.executeQuery();
-			resultSet = new CachedRowSetImpl();
-			resultSet.populate(raw);
-		} catch (SQLException ex) {
+            resultSet = RowSetProvider.newFactory().createCachedRowSet();
+            resultSet.populate(raw);
+        } catch (SQLException ex) {
 			throw new DatabaseException("Exception when retrieving properties data from SQL Database: ", ex);
 		} finally {
 			if (preparedStatement != null) {
