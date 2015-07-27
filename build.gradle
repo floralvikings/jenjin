@@ -15,8 +15,8 @@ subprojects {
 
     dependencies {
         testCompile 'org.testng:testng:6.8.7'
-        testCompile 'org.mockito:mockito-all:1.9.5'
-        testCompile 'org.powermock:powermock-mockito-release-full:1.5.4'
+        testCompile 'org.mockito:mockito-all:2.0.2-beta'
+        testCompile 'org.powermock:powermock-mockito-release-full:1.6.2'
     }
 
     test {
