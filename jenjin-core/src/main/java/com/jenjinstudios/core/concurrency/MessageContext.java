@@ -3,11 +3,8 @@ package com.jenjinstudios.core.concurrency;
 import com.jenjinstudios.core.io.Message;
 
 import java.net.InetAddress;
-import java.security.Key;
 import java.util.Deque;
-import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.Map;
 
 /**
  * Used to represent data that should be passed into an executable message on construction.
@@ -16,19 +13,10 @@ import java.util.Map;
  */
 public class MessageContext
 {
-	private final Map<InetAddress, Key> verifiedKeys;
-	private final PingTracker pingTracker;
-	private final LinkedList<Message> outgoing = new LinkedList<>();
+    private final PingTracker pingTracker = new PingTracker();
+    private final LinkedList<Message> outgoing = new LinkedList<>();
 	private String name;
 	private InetAddress address;
-
-    /**
-     * Construct a new MessageContext.
-     */
-	public MessageContext() {
-		this.pingTracker = new PingTracker();
-		this.verifiedKeys = new HashMap<>(10);
-	}
 
 	/**
 	 * Enqueue a message to be written to the output stream.
