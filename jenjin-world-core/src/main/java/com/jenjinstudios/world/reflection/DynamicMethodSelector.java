@@ -16,17 +16,17 @@ import java.util.List;
 public class DynamicMethodSelector
 {
 	private final Class targetClass;
-	private final Object object;
+    private final Object target;
 
 	/**
 	 * Construct a new DynamicMethodSelector that will choose methods from the provided class.
 	 *
-	 * @param object The object from which to choose methods.
-	 */
-	public DynamicMethodSelector(Object object) {
-		this.object = object;
-		this.targetClass = object.getClass();
-	}
+     * @param target The target from which to choose methods.
+     */
+    public DynamicMethodSelector(Object target) {
+        this.target = target;
+        this.targetClass = target.getClass();
+    }
 
 	/**
 	 * Invoke the most specific method specified with the method name and parameters.
@@ -47,8 +47,8 @@ public class DynamicMethodSelector
 
 		Object returnValue;
 		try {
-			returnValue = method.invoke(object, params);
-		} catch (IllegalAccessException ex) {
+            returnValue = method.invoke(target, params);
+        } catch (IllegalAccessException ex) {
 			throw new DynamicInvocationException(ex);
 		} catch (InvocationTargetException e) {
 			throw new DynamicInvocationException("Exception occured when invoking method", e);
